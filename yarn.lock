@@ -5626,7 +5626,7 @@ __metadata:
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.24.6
     "@tanstack/react-query-devtools": ^4.24.6
-    "@types/react": ^18.0.28
+    "@types/react": ^18.2.0
     "@types/react-helmet": ^6.1.6
     babel-loader: ^9.1.2
     bn.js: ^5.2.1
@@ -5723,7 +5723,7 @@ __metadata:
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.24.6
     "@tanstack/react-query-devtools": ^4.24.6
-    "@types/react": ^18.0.28
+    "@types/react": ^18.2.0
     "@types/react-helmet": ^6.1.6
     babel-loader: ^9.1.2
     babel-plugin-istanbul: ^6.1.1
@@ -8779,7 +8779,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.28, @types/react@npm:^18.2.0":
+"@types/react@npm:*, @types/react@npm:^18.2.0":
   version: 18.2.7
   resolution: "@types/react@npm:18.2.7"
   dependencies:
