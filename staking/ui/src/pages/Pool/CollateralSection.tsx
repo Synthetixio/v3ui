@@ -2,7 +2,7 @@ import { Box, Divider, Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
 import { wei } from '@synthetixio/wei';
-import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v2/formatters';
+import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { InfoIcon } from '@chakra-ui/icons';

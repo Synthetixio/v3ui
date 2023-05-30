@@ -1,5 +1,5 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { formatNumberToUsd } from '@snx-v2/formatters';
+import { formatNumberToUsd } from '@snx-v3/formatters';
 import { BorderBox } from '@snx-v3/BorderBox';
 
 export interface StatsProps {

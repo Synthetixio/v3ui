@@ -13,8 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "./ui",
-    "incremental": true,
+    "incremental": false,
     "types": ["cypress"]
   },
 

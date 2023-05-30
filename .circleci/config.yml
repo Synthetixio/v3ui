@@ -30,7 +30,8 @@ commands:
               exit 0
             else
               echo "node_modules could not be restored from cache, activating fallback installation"
-              yarn install --immutable --immutable-cache
+              # yarn install --immutable --immutable-cache
+              yarn install --immutable
             fi
 
       - save_cache:
@@ -42,36 +43,6 @@ commands:
           key: yarn-install-state-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
           paths:
             - '.yarn/install-state.gz'
-
-  checksum:
-    steps:
-      - run: |-
-          git ls-files -s contracts docs oracle-manager-ui spot-markets staking subgraphs theme tools > "/tmp/checksum.txt"
-          cat "/tmp/checksum.txt"
-
-  build-save:
-    steps:
-      - checksum
-      - run: cp "/tmp/checksum.txt" "/tmp/build-cache.txt"
-      - save_cache:
-          key: build-no-private-{{ .Environment.CACHE_VERSION }}-{{ checksum "/tmp/checksum.txt" }}
-          paths:
-            - './contracts'
-            - './docs'
-            - './oracle-manager-ui'
-            - './spot-markets'
-            - './staking'
-            - './subgraphs'
-            - './theme'
-            - './tools'
-            - '/tmp/build-cache.txt'
-
-  build-restore:
-    steps:
-      - checksum
-      - restore_cache:
-          keys:
-            - build-no-private-{{ .Environment.CACHE_VERSION }}-{{ checksum "/tmp/checksum.txt" }}
 
   install-foundry:
     steps:
@@ -175,7 +146,8 @@ jobs:
           keys:
             - node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
 
-      - run: yarn install --immutable --immutable-cache
+      # - run: yarn install --immutable --immutable-cache
+      - run: yarn install --immutable
 
       - save_cache:
           key: node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}

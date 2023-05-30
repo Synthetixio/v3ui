@@ -16,7 +16,6 @@
     "@snx-cy/onLogAdded": "workspace:*",
     "@snx-cy/printBrowserLogs": "workspace:*",
     "@snx-v3/staking-ui": "workspace:*",
-    "@synthetixio/v2-ui": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "cypress": "^12.5.1",
     "ethers": "^5.7.2",
