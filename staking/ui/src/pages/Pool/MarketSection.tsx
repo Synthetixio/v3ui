@@ -21,7 +21,7 @@ import {
   calculatePoolPerformanceSevenDays,
   calculatePoolPerformanceLifetime,
 } from '@snx-v3/calculations';
-import { formatNumberToUsd, formatPercent } from '@snx-v2/formatters';
+import { formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { useMarketNamesById } from '@snx-v3/useMarketNamesById';
 import { TrendText } from '@snx-v3/TrendText';

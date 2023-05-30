@@ -1,5 +1,5 @@
 {
-  "name": "@snx-v3/ui",
+  "name": "@snx-v3/staking-ui",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -10,14 +10,13 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "standalone-install": "yarn workspaces focus '@synthetixio/v3-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/ui' run build"
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/staking-ui' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.5.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@snx-v2/formatters": "workspace:*",
     "@snx-v3/AccountsSelector": "workspace:*",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/BorderBox": "workspace:*",
@@ -38,6 +37,7 @@
     "@snx-v3/calculations": "workspace:*",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/format": "workspace:*",
+    "@snx-v3/formatters": "workspace:*",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*",

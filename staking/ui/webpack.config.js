@@ -26,16 +26,13 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /v2\/lib/,
+    /contracts/,
+    /theme/,
 
-    /v3\/lib/,
-    /v3\/contracts/,
-    /v3\/components/,
-    /v3\/cypress/,
-    /v3\/theme/,
-    /v3\/ui/,
-
-    /packages\/wei\/src/,
+    /staking\/lib/,
+    /staking\/components/,
+    /staking\/cypress/,
+    /staking\/ui/,
   ],
   resolve: {
     fullySpecified: false,

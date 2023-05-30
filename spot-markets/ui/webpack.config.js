@@ -25,20 +25,17 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /v2\/lib/,
+    /contracts/,
+    /theme/,
 
-    /v3\/lib/,
-    /v3\/contracts/,
-    /v3\/components/,
-    /v3\/cypress/,
-    /v3\/theme/,
-    /v3\/ui/,
+    /staking\/lib/,
+    /staking\/components/,
+    /staking\/cypress/,
+    /staking\/ui/,
 
-    /v3\/spot-markets\/contracts/,
-    /v3\/spot-markets\/lib/,
-    /v3\/spot-markets\/ui/,
-
-    /packages\/wei\/src/,
+    /spot-markets\/contracts/,
+    /spot-markets\/lib/,
+    /spot-markets\/ui/,
   ],
   resolve: {
     fullySpecified: false,
