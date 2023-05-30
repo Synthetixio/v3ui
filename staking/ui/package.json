@@ -1,5 +1,5 @@
 {
-  "name": "@snx-v3/ui",
+  "name": "@snx-v3/staking-ui",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "standalone-install": "yarn workspaces focus '@synthetixio/v3-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/ui' run build"
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/staking-ui' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
