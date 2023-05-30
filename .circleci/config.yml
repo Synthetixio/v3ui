@@ -340,15 +340,6 @@ workflows:
       - tests:
           requires: [yarn-install]
 
-      - perps-watcher-ipfs:
-          requires: [tests, typecheck]
-          filters:
-            branches:
-              only:
-                - release
-                - master
-                - ipfs-deploy
-
       - staking-cy:
           requires: [yarn-install]
       - staking-e2e:

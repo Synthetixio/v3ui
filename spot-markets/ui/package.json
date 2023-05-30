@@ -42,7 +42,7 @@
     "@babel/runtime-corejs3": "^7.20.13",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@tanstack/react-query": "^4.24.6",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.2.0",
     "@types/react-helmet": "^6.1.6",
     "babel-loader": "^9.1.2",
     "bn.js": "^5.2.1",
