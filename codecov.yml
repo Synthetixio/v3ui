@@ -1,0 +1,37 @@
+codecov:
+  require_ci_to_pass: yes
+  notify:
+    wait_for_ci: yes
+
+github_checks:
+  annotations: no # for now let's not fail the build when coverage decreases
+
+comment:
+  layout: 'reach, diff, flags, files'
+  behavior: once
+  require_changes: false # if true: only post the comment if coverage changes
+
+ignore:
+  - '**/*.cy.*'
+  - '**/*.test.*'
+  - '**/*.e2e.*'
+  - '**/*.stories.*'
+  - '.circleci'
+  - '.github'
+  - 'packages/'
+  - 'tools'
+  - 'v1'
+  - 'v2'
+  - 'v3/cypress'
+  - 'v3/contracts'
+  - 'v3/docs'
+  - 'v3/oracle-manager-ui'
+  - 'v3/subgraphs'
+  - 'v3/ui/.storybook'
+  - 'v3/ui/assert-deployment.js'
+  - 'v3/ui/babel.config.js'
+  - 'v3/ui/jest.config.js'
+  - 'v3/ui/webpack.config.js'
+  - 'babel.config.js'
+  - 'jest.config.js'
+  - 'jest.global.js'
