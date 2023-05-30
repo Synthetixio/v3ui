@@ -5,7 +5,6 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "test": "NODE_ENV=test jest",
     "typecheck": "tsc --noEmit",
     "standalone-install": "yarn workspaces focus '@synthetixio/oracle-manager-ui'",
     "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@synthetixio/oracle-manager-ui' run build"
@@ -46,7 +45,6 @@
     "crypto-browserify": "^3.12.0",
     "css-loader": "^6.7.3",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^29.4.2",
     "react-refresh": "^0.14.0",
     "stream-browserify": "^3.0.0",
     "style-loader": "^3.3.1",
