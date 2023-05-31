@@ -56,20 +56,10 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export declare namespace NodeDefinition {
-  export type DataStruct = {
-    nodeType: PromiseOrValue<BigNumberish>;
-    parameters: PromiseOrValue<BytesLike>;
-    parents: PromiseOrValue<BytesLike>[];
-  };
+  export type DataStruct = { nodeType: BigNumberish; parameters: BytesLike; parents: BytesLike[] };
 
   export type DataStructOutput = [number, string, string[]] & {
     nodeType: number;
@@ -80,10 +70,10 @@ export declare namespace NodeDefinition {
 
 export declare namespace NodeOutput {
   export type DataStruct = {
-    price: PromiseOrValue<BigNumberish>;
-    timestamp: PromiseOrValue<BigNumberish>;
-    __slotAvailableForFutureUse1: PromiseOrValue<BigNumberish>;
-    __slotAvailableForFutureUse2: PromiseOrValue<BigNumberish>;
+    price: BigNumberish;
+    timestamp: BigNumberish;
+    __slotAvailableForFutureUse1: BigNumberish;
+    __slotAvailableForFutureUse2: BigNumberish;
   };
 
   export type DataStructOutput = [BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -128,27 +118,21 @@ export interface OracleManagerProxyInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: 'acceptOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getImplementation', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'nominateNewOwner',
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'nominateNewOwner', values: [string]): string;
   encodeFunctionData(functionFragment: 'nominatedOwner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'renounceNomination', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'simulateUpgradeTo',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: 'upgradeTo', values: [PromiseOrValue<string>]): string;
-  encodeFunctionData(functionFragment: 'getNode', values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: 'simulateUpgradeTo', values: [string]): string;
+  encodeFunctionData(functionFragment: 'upgradeTo', values: [string]): string;
+  encodeFunctionData(functionFragment: 'getNode', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'getNodeId',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[]]
+    values: [BigNumberish, BytesLike, BytesLike[]]
   ): string;
-  encodeFunctionData(functionFragment: 'process', values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: 'process', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'registerNode',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[]]
+    values: [BigNumberish, BytesLike, BytesLike[]]
   ): string;
 
   decodeFunctionResult(functionFragment: 'acceptOwnership', data: BytesLike): Result;
@@ -238,111 +222,97 @@ export interface OracleManagerProxy extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<[string]>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getNode(
-      nodeId: PromiseOrValue<BytesLike>,
+      nodeId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[NodeDefinition.DataStructOutput] & { node: NodeDefinition.DataStructOutput }>;
 
     getNodeId(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
       overrides?: CallOverrides
     ): Promise<[string] & { nodeId: string }>;
 
     process(
-      nodeId: PromiseOrValue<BytesLike>,
+      nodeId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[NodeOutput.DataStructOutput] & { node: NodeOutput.DataStructOutput }>;
 
     registerNode(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
-  acceptOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   getImplementation(overrides?: CallOverrides): Promise<string>;
 
   nominateNewOwner(
-    newNominatedOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newNominatedOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  renounceNomination(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   simulateUpgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   upgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getNode(
-    nodeId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<NodeDefinition.DataStructOutput>;
+  getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeDefinition.DataStructOutput>;
 
   getNodeId(
-    nodeType: PromiseOrValue<BigNumberish>,
-    parameters: PromiseOrValue<BytesLike>,
-    parents: PromiseOrValue<BytesLike>[],
+    nodeType: BigNumberish,
+    parameters: BytesLike,
+    parents: BytesLike[],
     overrides?: CallOverrides
   ): Promise<string>;
 
-  process(
-    nodeId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<NodeOutput.DataStructOutput>;
+  process(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeOutput.DataStructOutput>;
 
   registerNode(
-    nodeType: PromiseOrValue<BigNumberish>,
-    parameters: PromiseOrValue<BytesLike>,
-    parents: PromiseOrValue<BytesLike>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    nodeType: BigNumberish,
+    parameters: BytesLike,
+    parents: BytesLike[],
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -350,10 +320,7 @@ export interface OracleManagerProxy extends BaseContract {
 
     getImplementation(overrides?: CallOverrides): Promise<string>;
 
-    nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    nominateNewOwner(newNominatedOwner: string, overrides?: CallOverrides): Promise<void>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
@@ -361,34 +328,25 @@ export interface OracleManagerProxy extends BaseContract {
 
     renounceNomination(overrides?: CallOverrides): Promise<void>;
 
-    simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    simulateUpgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    upgradeTo(newImplementation: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    upgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    getNode(
-      nodeId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<NodeDefinition.DataStructOutput>;
+    getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeDefinition.DataStructOutput>;
 
     getNodeId(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
       overrides?: CallOverrides
     ): Promise<string>;
 
-    process(
-      nodeId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<NodeOutput.DataStructOutput>;
+    process(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeOutput.DataStructOutput>;
 
     registerNode(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
       overrides?: CallOverrides
     ): Promise<string>;
   };
@@ -400,11 +358,8 @@ export interface OracleManagerProxy extends BaseContract {
     'OwnerNominated(address)'(newOwner?: null): OwnerNominatedEventFilter;
     OwnerNominated(newOwner?: null): OwnerNominatedEventFilter;
 
-    'Upgraded(address,address)'(
-      self?: PromiseOrValue<string> | null,
-      implementation?: null
-    ): UpgradedEventFilter;
-    Upgraded(self?: PromiseOrValue<string> | null, implementation?: null): UpgradedEventFilter;
+    'Upgraded(address,address)'(self?: string | null, implementation?: null): UpgradedEventFilter;
+    Upgraded(self?: string | null, implementation?: null): UpgradedEventFilter;
 
     'NodeRegistered(bytes32,uint8,bytes,bytes32[])'(
       nodeId?: null,
@@ -421,104 +376,92 @@ export interface OracleManagerProxy extends BaseContract {
   };
 
   estimateGas: {
-    acceptOwnership(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     getImplementation(overrides?: CallOverrides): Promise<BigNumber>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getNode(nodeId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     getNodeId(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    process(nodeId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    process(nodeId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     registerNode(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getNode(
-      nodeId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getNodeId(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    process(
-      nodeId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    process(nodeId: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     registerNode(
-      nodeType: PromiseOrValue<BigNumberish>,
-      parameters: PromiseOrValue<BytesLike>,
-      parents: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nodeType: BigNumberish,
+      parameters: BytesLike,
+      parents: BytesLike[],
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }
