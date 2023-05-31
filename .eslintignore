@@ -9,7 +9,6 @@ packages/queries/subgraphs
 **/tmp/
 **/.next/
 **/out/
-**/storybook-static/
 **/.nyc_output
 **/junit.xml
 **/generated
