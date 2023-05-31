@@ -37,7 +37,7 @@ function VaultRowUi({
               {liquidityPosition?.collateralValue.gt(0) ? (
                 <Amount value={liquidityPosition.collateralValue} prefix="$" />
               ) : (
-                '$200'
+                '-'
               )}
             </Text>
             <Text fontSize="xs" color="gray.500">

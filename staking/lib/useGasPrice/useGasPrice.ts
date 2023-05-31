@@ -58,6 +58,7 @@ export const getGasPrice = async ({
     throw new Error(`Could not fetch and compute network fee. ${e}`);
   }
 };
+
 export type GasPrices = Awaited<ReturnType<typeof getGasPrice>>;
 
 export const useGasPrice = () => {

@@ -61,6 +61,7 @@ export function DepositFormUi({
   }, [collateralType?.symbol, tokenBalance, ethBalance]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
+
   const onSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -242,6 +243,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const ethBalance = useEthBalance();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
+
   const accountCollateral = accountCollaterals.data?.find(
     (coll) => coll.tokenAddress === collateralType?.tokenAddress
   );
