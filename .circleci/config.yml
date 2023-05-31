@@ -12,37 +12,7 @@ parameters:
 commands:
   yarn-install:
     steps:
-      - restore_cache:
-          keys:
-            - node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-
-      # yarn's state of installation
-      - restore_cache:
-          keys:
-            - yarn-install-state-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-
-      - run:
-          name: yarn install
-          command: |-
-            # Check if we restored cache and have node_modules already
-            if [ -f "node_modules/.yarn-state.yml" ] && [ -f ".yarn/install-state.gz" ]; then
-              echo "node_modules restored from cache"
-              exit 0
-            else
-              echo "node_modules could not be restored from cache, activating fallback installation"
-              # yarn install --immutable --immutable-cache
-              yarn install --immutable
-            fi
-
-      - save_cache:
-          key: node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-          paths:
-            - 'node_modules'
-
-      - save_cache:
-          key: yarn-install-state-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-          paths:
-            - '.yarn/install-state.gz'
+      - run: yarn install --immutable --immutable-cache
 
   install-foundry:
     steps:
@@ -108,62 +78,6 @@ commands:
           command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | jq
 
 jobs:
-  yarn-install:
-    working_directory: /tmp/app
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    environment:
-      CYPRESS_CRASH_REPORTS: 0
-      CYPRESS_INSTALL_BINARY: 0
-    steps:
-      - checkout
-
-      # yarn's state of installation
-      - restore_cache:
-          keys:
-            - yarn-install-state-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-
-      # yarn's own state of node_modules
-      - restore_cache:
-          keys:
-            - yarn-state-node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-
-      - run:
-          name: Halt if node_modules exist in cache
-          command: |-
-            # Check if we restored cache and have node_modules already
-            if [ -f "node_modules/.yarn-state.yml" ]; then
-              echo "SKIP, no changes detected"
-              circleci-agent step halt
-            fi
-
-      #
-      # Proceed with installing node modules, but to speed things up, restore caches
-      #
-
-      # node_modules cache
-      - restore_cache:
-          keys:
-            - node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-
-      # - run: yarn install --immutable --immutable-cache
-      - run: yarn install --immutable
-
-      - save_cache:
-          key: node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-          paths:
-            - 'node_modules'
-
-      - save_cache:
-          key: yarn-install-state-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-          paths:
-            - '.yarn/install-state.gz'
-
-      - save_cache:
-          key: yarn-state-node-modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
-          paths:
-            - 'node_modules/.yarn-state.yml'
-
   checks:
     working_directory: /tmp/app
     docker:
@@ -332,24 +246,17 @@ workflows:
 
   ui:
     jobs:
-      - yarn-install
-      - checks:
-          requires: [yarn-install]
-      - typecheck:
-          requires: [yarn-install]
-      - tests:
-          requires: [yarn-install]
+      - checks
+      - typecheck
+      - tests
 
-      - staking-cy:
-          requires: [yarn-install]
+      - staking-cy
       - staking-e2e:
           chain: optimism-mainnet
           name: staking-e2e-optimism-mainnet
-          requires: [yarn-install]
       - staking-e2e:
           chain: optimism-goerli
           name: staking-e2e-optimism-goerli
-          requires: [yarn-install]
       - staking-ipfs:
           requires: [tests, typecheck, staking-cy, staking-e2e-optimism-mainnet]
           filters:
