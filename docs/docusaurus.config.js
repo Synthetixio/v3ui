@@ -24,7 +24,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           // Please change this to your repo.
-          editUrl: 'https://github.com/synthetixio/js-monorepo/tree/master/v3/docs',
+          editUrl: 'https://github.com/synthetixio/v3ui/tree/master/docs',
         },
         blog: false,
         theme: {
