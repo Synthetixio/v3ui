@@ -2,8 +2,7 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
 require.resolve('@docusaurus/preset-classic'); // This notifies deps that this package is in use.
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const { themes } = require('prism-react-renderer');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -25,7 +24,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           // Please change this to your repo.
-          editUrl: 'https://github.com/synthetixio/js-monorepo/tree/master/v3/docs',
+          editUrl: 'https://github.com/synthetixio/v3ui/tree/master/docs',
         },
         blog: false,
         theme: {
@@ -86,8 +85,8 @@ const config = {
         indexName: 'synthetixio_snx_docs',
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: themes.github,
+        darkTheme: themes.dracula,
       },
     }),
 };

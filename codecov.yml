@@ -24,7 +24,6 @@ ignore:
   - 'docs'
   - 'oracle-manager-ui'
   - 'subgraphs'
-  - 'staking/ui/.storybook'
   - 'staking/ui/assert-deployment.js'
   - 'staking/ui/babel.config.js'
   - 'staking/ui/jest.config.js'

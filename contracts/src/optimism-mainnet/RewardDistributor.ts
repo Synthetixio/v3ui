@@ -27,13 +27,7 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export interface RewardDistributorInterface extends utils.Interface {
   functions: {
@@ -57,33 +51,15 @@ export interface RewardDistributorInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'distributeRewards',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'initialize',
-    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'initialize', values: [string, string, string]): string;
   encodeFunctionData(functionFragment: 'name', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'payout',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'supportsInterface',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
+  encodeFunctionData(functionFragment: 'supportsInterface', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'token', values?: undefined): string;
 
   decodeFunctionResult(functionFragment: 'distributeRewards', data: BytesLike): Result;
@@ -122,106 +98,97 @@ export interface RewardDistributor extends BaseContract {
 
   functions: {
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     initialize(
-      rewardManager: PromiseOrValue<string>,
-      token_: PromiseOrValue<string>,
-      name_: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      rewardManager: string,
+      token_: string,
+      name_: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
     payout(
-      arg0: PromiseOrValue<BigNumberish>,
-      arg1: PromiseOrValue<BigNumberish>,
-      arg2: PromiseOrValue<string>,
-      sender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: BigNumberish,
+      arg1: BigNumberish,
+      arg2: string,
+      sender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
     token(overrides?: CallOverrides): Promise<[string]>;
   };
 
   distributeRewards(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    start: PromiseOrValue<BigNumberish>,
-    duration: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    start: BigNumberish,
+    duration: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   initialize(
-    rewardManager: PromiseOrValue<string>,
-    token_: PromiseOrValue<string>,
-    name_: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    rewardManager: string,
+    token_: string,
+    name_: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
   payout(
-    arg0: PromiseOrValue<BigNumberish>,
-    arg1: PromiseOrValue<BigNumberish>,
-    arg2: PromiseOrValue<string>,
-    sender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    arg0: BigNumberish,
+    arg1: BigNumberish,
+    arg2: string,
+    sender: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  supportsInterface(
-    interfaceId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   token(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     initialize(
-      rewardManager: PromiseOrValue<string>,
-      token_: PromiseOrValue<string>,
-      name_: PromiseOrValue<string>,
+      rewardManager: string,
+      token_: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
     payout(
-      arg0: PromiseOrValue<BigNumberish>,
-      arg1: PromiseOrValue<BigNumberish>,
-      arg2: PromiseOrValue<string>,
-      sender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
+      arg1: BigNumberish,
+      arg2: string,
+      sender: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     token(overrides?: CallOverrides): Promise<string>;
   };
@@ -230,70 +197,67 @@ export interface RewardDistributor extends BaseContract {
 
   estimateGas: {
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     initialize(
-      rewardManager: PromiseOrValue<string>,
-      token_: PromiseOrValue<string>,
-      name_: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      rewardManager: string,
+      token_: string,
+      name_: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     payout(
-      arg0: PromiseOrValue<BigNumberish>,
-      arg1: PromiseOrValue<BigNumberish>,
-      arg2: PromiseOrValue<string>,
-      sender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: BigNumberish,
+      arg1: BigNumberish,
+      arg2: string,
+      sender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      rewardManager: PromiseOrValue<string>,
-      token_: PromiseOrValue<string>,
-      name_: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      rewardManager: string,
+      token_: string,
+      name_: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     payout(
-      arg0: PromiseOrValue<BigNumberish>,
-      arg1: PromiseOrValue<BigNumberish>,
-      arg2: PromiseOrValue<string>,
-      sender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: BigNumberish,
+      arg1: BigNumberish,
+      arg2: string,
+      sender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

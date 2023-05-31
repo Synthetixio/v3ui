@@ -5,7 +5,7 @@
   },
   "version": "1.1.0",
   "description": "Synthetix app theme",
-  "repository": "Synthetixio/js-monorepo",
+  "repository": "Synthetixio/v3ui",
   "homepage": "https://synthetixio.github.io/ui",
   "license": "MIT",
   "main": "./build/index.js",
@@ -23,27 +23,25 @@
     "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'"
   },
   "peerDependencies": {
-    "@chakra-ui/icons": "^2.0.9",
-    "@chakra-ui/react": "^2.2.8",
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "framer-motion": "^7.0.0",
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.6.1",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "framer-motion": "^10.12.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@chakra-ui/icons": "^2.0.17",
-    "@chakra-ui/react": "^2.5.0",
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.6.1",
     "@chakra-ui/theme-tools": "^2.0.17",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@storybook/react": "^6.5.16",
-    "eslint": "^8.34.0",
-    "framer-motion": "^7.0.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "eslint": "^8.41.0",
+    "framer-motion": "^10.12.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.4"
   },
   "browserslist": [
     "last 1 Chrome version",

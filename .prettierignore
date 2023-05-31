@@ -15,7 +15,6 @@ spot-markets/contracts/deployments
 **/tmp/
 **/.next/
 **/out/
-**/storybook-static/
 **/.nyc_output
 **/junit.xml
 subgraphs/tests/.latest.json

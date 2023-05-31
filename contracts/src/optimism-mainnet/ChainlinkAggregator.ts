@@ -37,13 +37,7 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export interface ChainlinkAggregatorInterface extends utils.Interface {
   functions: {
@@ -87,45 +81,26 @@ export interface ChainlinkAggregatorInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: 'allRoundDataShouldRevert', values?: undefined): string;
   encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'entries', values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(functionFragment: 'getAnswer', values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(
-    functionFragment: 'getRoundData',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getTimestamp',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'entries', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getAnswer', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getRoundData', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getTimestamp', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'keyDecimals', values?: undefined): string;
   encodeFunctionData(functionFragment: 'latestRound', values?: undefined): string;
   encodeFunctionData(functionFragment: 'latestRoundData', values?: undefined): string;
   encodeFunctionData(functionFragment: 'latestRoundDataShouldRevert', values?: undefined): string;
   encodeFunctionData(functionFragment: 'roundId', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'setAllRoundDataShouldRevert',
-    values: [PromiseOrValue<boolean>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setDecimals',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'setAllRoundDataShouldRevert', values: [boolean]): string;
+  encodeFunctionData(functionFragment: 'setDecimals', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'setLatestAnswer',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setLatestAnswerWithRound',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setLatestRoundDataShouldRevert',
-    values: [PromiseOrValue<boolean>]
-  ): string;
+  encodeFunctionData(functionFragment: 'setLatestRoundDataShouldRevert', values: [boolean]): string;
 
   decodeFunctionResult(functionFragment: 'allRoundDataShouldRevert', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result;
@@ -177,7 +152,7 @@ export interface ChainlinkAggregator extends BaseContract {
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     entries(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -189,20 +164,14 @@ export interface ChainlinkAggregator extends BaseContract {
       }
     >;
 
-    getAnswer(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getAnswer(_roundId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getRoundData(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _roundId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
-    getTimestamp(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getTimestamp(_roundId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     keyDecimals(overrides?: CallOverrides): Promise<[number]>;
 
@@ -217,31 +186,31 @@ export interface ChainlinkAggregator extends BaseContract {
     roundId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     setAllRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setDecimals(
-      _decimals: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _decimals: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setLatestAnswer(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setLatestAnswerWithRound(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      _roundId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setLatestRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
@@ -250,7 +219,7 @@ export interface ChainlinkAggregator extends BaseContract {
   decimals(overrides?: CallOverrides): Promise<number>;
 
   entries(
-    arg0: PromiseOrValue<BigNumberish>,
+    arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -262,17 +231,14 @@ export interface ChainlinkAggregator extends BaseContract {
     }
   >;
 
-  getAnswer(_roundId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
+  getAnswer(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getRoundData(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _roundId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
-  getTimestamp(
-    _roundId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getTimestamp(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   keyDecimals(overrides?: CallOverrides): Promise<number>;
 
@@ -287,31 +253,31 @@ export interface ChainlinkAggregator extends BaseContract {
   roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
   setAllRoundDataShouldRevert(
-    _shouldRevert: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _shouldRevert: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setDecimals(
-    _decimals: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _decimals: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setLatestAnswer(
-    answer: PromiseOrValue<BigNumberish>,
-    timestamp: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    answer: BigNumberish,
+    timestamp: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setLatestAnswerWithRound(
-    answer: PromiseOrValue<BigNumberish>,
-    timestamp: PromiseOrValue<BigNumberish>,
-    _roundId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    answer: BigNumberish,
+    timestamp: BigNumberish,
+    _roundId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setLatestRoundDataShouldRevert(
-    _shouldRevert: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _shouldRevert: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -320,7 +286,7 @@ export interface ChainlinkAggregator extends BaseContract {
     decimals(overrides?: CallOverrides): Promise<number>;
 
     entries(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -332,20 +298,14 @@ export interface ChainlinkAggregator extends BaseContract {
       }
     >;
 
-    getAnswer(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAnswer(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getRoundData(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _roundId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
-    getTimestamp(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getTimestamp(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     keyDecimals(overrides?: CallOverrides): Promise<number>;
 
@@ -359,28 +319,25 @@ export interface ChainlinkAggregator extends BaseContract {
 
     roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setAllRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setAllRoundDataShouldRevert(_shouldRevert: boolean, overrides?: CallOverrides): Promise<void>;
 
-    setDecimals(_decimals: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+    setDecimals(_decimals: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setLatestAnswer(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
+      answer: BigNumberish,
+      timestamp: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setLatestAnswerWithRound(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      _roundId: PromiseOrValue<BigNumberish>,
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      _roundId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setLatestRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
+      _shouldRevert: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -392,22 +349,13 @@ export interface ChainlinkAggregator extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    entries(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
+    entries(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getAnswer(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAnswer(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoundData(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRoundData(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getTimestamp(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getTimestamp(_roundId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     keyDecimals(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -420,31 +368,31 @@ export interface ChainlinkAggregator extends BaseContract {
     roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setAllRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setDecimals(
-      _decimals: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _decimals: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setLatestAnswer(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setLatestAnswerWithRound(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      _roundId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setLatestRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
@@ -453,25 +401,13 @@ export interface ChainlinkAggregator extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    entries(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    entries(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getAnswer(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getAnswer(_roundId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRoundData(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getRoundData(_roundId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getTimestamp(
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getTimestamp(_roundId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     keyDecimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -484,31 +420,31 @@ export interface ChainlinkAggregator extends BaseContract {
     roundId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setAllRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setDecimals(
-      _decimals: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _decimals: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setLatestAnswer(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setLatestAnswerWithRound(
-      answer: PromiseOrValue<BigNumberish>,
-      timestamp: PromiseOrValue<BigNumberish>,
-      _roundId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      answer: BigNumberish,
+      timestamp: BigNumberish,
+      _roundId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setLatestRoundDataShouldRevert(
-      _shouldRevert: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _shouldRevert: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -24,12 +24,7 @@ const options = {
     'out',
     'tmp',
   ],
-  ignoreMatches: [
-    // Must keep ts dependency so depcheck works over Typescript files
-    'typescript',
-    '@types/jest',
-    'webpack-dev-server',
-  ],
+  ignoreMatches: [],
   parsers: {
     '**/*.js': [depcheck.parser.es6, depcheck.parser.jsx],
     '**/*.jsx': depcheck.parser.jsx,

@@ -245,19 +245,10 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export declare namespace IAccountModule {
-  export type AccountPermissionsStruct = {
-    user: PromiseOrValue<string>;
-    permissions: PromiseOrValue<BytesLike>[];
-  };
+  export type AccountPermissionsStruct = { user: string; permissions: BytesLike[] };
 
   export type AccountPermissionsStructOutput = [string, string[]] & {
     user: string;
@@ -266,10 +257,7 @@ export declare namespace IAccountModule {
 }
 
 export declare namespace CollateralLock {
-  export type DataStruct = {
-    amountD18: PromiseOrValue<BigNumberish>;
-    lockExpirationTime: PromiseOrValue<BigNumberish>;
-  };
+  export type DataStruct = { amountD18: BigNumberish; lockExpirationTime: BigNumberish };
 
   export type DataStructOutput = [BigNumber, BigNumber] & {
     amountD18: BigNumber;
@@ -279,13 +267,13 @@ export declare namespace CollateralLock {
 
 export declare namespace CollateralConfiguration {
   export type DataStruct = {
-    depositingEnabled: PromiseOrValue<boolean>;
-    issuanceRatioD18: PromiseOrValue<BigNumberish>;
-    liquidationRatioD18: PromiseOrValue<BigNumberish>;
-    liquidationRewardD18: PromiseOrValue<BigNumberish>;
-    oracleNodeId: PromiseOrValue<BytesLike>;
-    tokenAddress: PromiseOrValue<string>;
-    minDelegationD18: PromiseOrValue<BigNumberish>;
+    depositingEnabled: boolean;
+    issuanceRatioD18: BigNumberish;
+    liquidationRatioD18: BigNumberish;
+    liquidationRewardD18: BigNumberish;
+    oracleNodeId: BytesLike;
+    tokenAddress: string;
+    minDelegationD18: BigNumberish;
   };
 
   export type DataStructOutput = [
@@ -309,9 +297,9 @@ export declare namespace CollateralConfiguration {
 
 export declare namespace ILiquidationModule {
   export type LiquidationDataStruct = {
-    debtLiquidated: PromiseOrValue<BigNumberish>;
-    collateralLiquidated: PromiseOrValue<BigNumberish>;
-    amountRewarded: PromiseOrValue<BigNumberish>;
+    debtLiquidated: BigNumberish;
+    collateralLiquidated: BigNumberish;
+    amountRewarded: BigNumberish;
   };
 
   export type LiquidationDataStructOutput = [BigNumber, BigNumber, BigNumber] & {
@@ -323,9 +311,9 @@ export declare namespace ILiquidationModule {
 
 export declare namespace MarketConfiguration {
   export type DataStruct = {
-    marketId: PromiseOrValue<BigNumberish>;
-    weightD18: PromiseOrValue<BigNumberish>;
-    maxDebtShareValueD18: PromiseOrValue<BigNumberish>;
+    marketId: BigNumberish;
+    weightD18: BigNumberish;
+    maxDebtShareValueD18: BigNumberish;
   };
 
   export type DataStructOutput = [BigNumber, BigNumber, BigNumber] & {
@@ -577,487 +565,285 @@ export interface CoreProxyInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: 'acceptOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getImplementation', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'nominateNewOwner',
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'nominateNewOwner', values: [string]): string;
   encodeFunctionData(functionFragment: 'nominatedOwner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'renounceNomination', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'simulateUpgradeTo',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: 'upgradeTo', values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: 'simulateUpgradeTo', values: [string]): string;
+  encodeFunctionData(functionFragment: 'upgradeTo', values: [string]): string;
   encodeFunctionData(
     functionFragment: 'addToFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
-  encodeFunctionData(functionFragment: 'getDeniers', values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagAllowAll',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagDenyAll',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'isFeatureAllowed',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getDeniers', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagAllowAll', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagAllowlist', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagDenyAll', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'isFeatureAllowed', values: [BytesLike, string]): string;
   encodeFunctionData(
     functionFragment: 'removeFromFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setDeniers',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>[]]
-  ): string;
+  encodeFunctionData(functionFragment: 'setDeniers', values: [BytesLike, string[]]): string;
   encodeFunctionData(
     functionFragment: 'setFeatureFlagAllowAll',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<boolean>]
+    values: [BytesLike, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: 'setFeatureFlagDenyAll',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<boolean>]
+    values: [BytesLike, boolean]
   ): string;
   encodeFunctionData(functionFragment: 'createAccount()', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'createAccount(uint128)',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getAccountLastInteraction',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getAccountOwner',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getAccountPermissions',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'createAccount(uint128)', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getAccountLastInteraction', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getAccountOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getAccountPermissions', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getAccountTokenAddress', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'grantPermission',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'hasPermission',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'isAuthorized',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'notifyAccountTransfer',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'renouncePermission',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: 'revokePermission',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'associateDebt',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getAssociatedSystem',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getAssociatedSystem', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'initOrUpgradeNft',
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
+    values: [BytesLike, string, string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'initOrUpgradeToken',
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BytesLike, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'registerUnmanagedSystem',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'cleanExpiredLocks',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'createLock',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'deposit',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'getAccountAvailableCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getAccountCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getLocks',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'withdraw',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'configureCollateral',
     values: [CollateralConfiguration.DataStruct]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getCollateralConfiguration',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getCollateralConfigurations',
-    values: [PromiseOrValue<boolean>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getCollateralPrice',
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getCollateralConfiguration', values: [string]): string;
+  encodeFunctionData(functionFragment: 'getCollateralConfigurations', values: [boolean]): string;
+  encodeFunctionData(functionFragment: 'getCollateralPrice', values: [string]): string;
   encodeFunctionData(
     functionFragment: 'burnUsd',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'mintUsd',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'isPositionLiquidatable',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'isVaultLiquidatable',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'liquidate',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'liquidateVault',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'configureMaximumMarketCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'depositMarketCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'getMarketCollateralAmount',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketCollateralValue',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getMarketCollateralValue', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'getMaximumMarketCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'withdrawMarketCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'depositMarketUsd',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'distributeDebtToPools',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketCollateral',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketDebtPerShare',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getMarketCollateral', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getMarketDebtPerShare', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'getMarketFees',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketMinDelegateTime',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketNetIssuance',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketReportedDebt',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketTotalDebt',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getMarketMinDelegateTime', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getMarketNetIssuance', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getMarketReportedDebt', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getMarketTotalDebt', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'getMinLiquidityRatio(uint128)',
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'getMinLiquidityRatio()', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getOracleManager', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getUsdToken', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'getWithdrawableMarketUsd',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'isMarketCapacityLocked',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: 'registerMarket', values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: 'getWithdrawableMarketUsd', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'isMarketCapacityLocked', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'registerMarket', values: [string]): string;
   encodeFunctionData(
     functionFragment: 'setMarketMinDelegateTime',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setMinLiquidityRatio(uint128,uint256)',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setMinLiquidityRatio(uint256)',
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'withdrawMarketUsd',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: 'multicall', values: [PromiseOrValue<BytesLike>[]]): string;
-  encodeFunctionData(
-    functionFragment: 'addApprovedPool',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'multicall', values: [BytesLike[]]): string;
+  encodeFunctionData(functionFragment: 'addApprovedPool', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getApprovedPools', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getPreferredPool', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'removeApprovedPool',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setPreferredPool',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'acceptPoolOwnership',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'createPool',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getNominatedPoolOwner',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getPoolConfiguration',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getPoolName',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getPoolOwner',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'nominatePoolOwner',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'rebalancePool',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'renouncePoolNomination',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'revokePoolNomination',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'removeApprovedPool', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setPreferredPool', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'acceptPoolOwnership', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'createPool', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'getNominatedPoolOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPoolConfiguration', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPoolName', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPoolOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'nominatePoolOwner', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'rebalancePool', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'renouncePoolNomination', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'revokePoolNomination', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'setPoolConfiguration',
-    values: [PromiseOrValue<BigNumberish>, MarketConfiguration.DataStruct[]]
+    values: [BigNumberish, MarketConfiguration.DataStruct[]]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setPoolName',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'setPoolName', values: [BigNumberish, string]): string;
   encodeFunctionData(
     functionFragment: 'claimRewards',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'distributeRewards',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, string, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'getRewardRate',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [BigNumberish, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'registerRewardsDistributor',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [BigNumberish, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'removeRewardsDistributor',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [BigNumberish, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'updateRewards',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'configureOracleManager',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: 'getConfig', values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: 'getConfigAddress',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getConfigUint',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'registerCcip',
-    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setConfig',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
+  encodeFunctionData(functionFragment: 'configureOracleManager', values: [string]): string;
+  encodeFunctionData(functionFragment: 'getConfig', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getConfigAddress', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getConfigUint', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'registerCcip', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'setConfig', values: [BytesLike, BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'delegateCollateral',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'getPosition',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getPositionCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getPositionCollateralRatio',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getPositionDebt',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getVaultCollateral',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getVaultCollateralRatio',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'getVaultDebt',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getVaultDebt', values: [BigNumberish, string]): string;
 
   decodeFunctionResult(functionFragment: 'acceptOwnership', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getImplementation', data: BytesLike): Result;
@@ -1869,109 +1655,91 @@ export interface CoreProxy extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<[string]>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string[]]>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<[string[]]>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string[]]>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<[string[]]>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    'createAccount()'(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     'createAccount(uint128)'(
-      requestedAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAccountLastInteraction(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getAccountOwner(
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getAccountOwner(accountId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     getAccountPermissions(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [IAccountModule.AccountPermissionsStructOutput[]] & {
@@ -1982,115 +1750,115 @@ export interface CoreProxy extends BaseContract {
     getAccountTokenAddress(overrides?: CallOverrides): Promise<[string]>;
 
     grantPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     hasPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     isAuthorized(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     notifyAccountTransfer(
-      to: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     renouncePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     revokePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     associateDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
+      id: BytesLike,
       overrides?: CallOverrides
     ): Promise<[string, string] & { addr: string; kind: string }>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     cleanExpiredLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     createLock(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      expireTimestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      expireTimestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     deposit(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAccountAvailableCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getAccountCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber] & {
@@ -2101,176 +1869,158 @@ export interface CoreProxy extends BaseContract {
     >;
 
     getLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[CollateralLock.DataStructOutput[]] & { locks: CollateralLock.DataStructOutput[] }>;
 
     withdraw(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getCollateralConfiguration(
-      collateralType: PromiseOrValue<string>,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[CollateralConfiguration.DataStructOutput]>;
 
     getCollateralConfigurations(
-      hideDisabled: PromiseOrValue<boolean>,
+      hideDisabled: boolean,
       overrides?: CallOverrides
     ): Promise<[CollateralConfiguration.DataStructOutput[]]>;
 
-    getCollateralPrice(
-      collateralType: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     burnUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     mintUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isPositionLiquidatable(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isVaultLiquidatable(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     liquidate(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     liquidateVault(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      maxUsd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      maxUsd: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     depositMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getMarketCollateralAmount(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { collateralAmountD18: BigNumber }>;
 
     getMarketCollateralValue(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     withdrawMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     depositMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     distributeDebtToPools(
-      marketId: PromiseOrValue<BigNumberish>,
-      maxIter: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      maxIter: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getMarketDebtPerShare(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getMarketFees(
-      arg0: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { depositFeeAmount: BigNumber; withdrawFeeAmount: BigNumber }
     >;
 
-    getMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[number]>;
+    getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<[number]>;
 
-    getMarketNetIssuance(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getMarketReportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getMarketTotalDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     'getMinLiquidityRatio(uint128)'(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -2281,52 +2031,49 @@ export interface CoreProxy extends BaseContract {
     getUsdToken(overrides?: CallOverrides): Promise<[string]>;
 
     getWithdrawableMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    isMarketCapacityLocked(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    isMarketCapacityLocked(marketId: BigNumberish, overrides?: CallOverrides): Promise<[boolean]>;
 
     registerMarket(
-      market: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      market: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      minDelegateTime: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minDelegateTime: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
-      marketId: PromiseOrValue<BigNumberish>,
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'setMinLiquidityRatio(uint256)'(
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     withdrawMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     multicall(
-      data: PromiseOrValue<BytesLike>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      data: BytesLike[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     addApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<[BigNumber[]]>;
@@ -2334,431 +2081,395 @@ export interface CoreProxy extends BaseContract {
     getPreferredPool(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     removeApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPreferredPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     acceptPoolOwnership(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     createPool(
-      requestedPoolId: PromiseOrValue<BigNumberish>,
-      owner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedPoolId: BigNumberish,
+      owner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getNominatedPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     getPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[MarketConfiguration.DataStructOutput[]]>;
 
     getPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { poolName: string }>;
 
-    getPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     nominatePoolOwner(
-      nominatedOwner: PromiseOrValue<string>,
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nominatedOwner: string,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     rebalancePool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     renouncePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     revokePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      name: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     claimRewards(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getRewardRate(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     registerRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     removeRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     updateRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureOracleManager(
-      oracleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      oracleManagerAddress: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getConfig(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string] & { v: string }>;
+    getConfig(k: BytesLike, overrides?: CallOverrides): Promise<[string] & { v: string }>;
 
-    getConfigAddress(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string] & { v: string }>;
+    getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<[string] & { v: string }>;
 
-    getConfigUint(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { v: BigNumber }>;
+    getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<[BigNumber] & { v: BigNumber }>;
 
     registerCcip(
-      ccipSend: PromiseOrValue<string>,
-      ccipReceive: PromiseOrValue<string>,
-      ccipTokenPool: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      ccipSend: string,
+      ccipReceive: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setConfig(
-      k: PromiseOrValue<BytesLike>,
-      v: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      k: BytesLike,
+      v: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     delegateCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      newCollateralAmountD18: PromiseOrValue<BigNumberish>,
-      leverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      newCollateralAmountD18: BigNumberish,
+      leverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPosition(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPositionCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
     getPositionCollateralRatio(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPositionDebt(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getVaultCollateral(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
     getVaultCollateralRatio(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getVaultDebt(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
-  acceptOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   getImplementation(overrides?: CallOverrides): Promise<string>;
 
   nominateNewOwner(
-    newNominatedOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newNominatedOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  renounceNomination(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   simulateUpgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   upgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   addToFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string[]>;
+  getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-  getFeatureFlagAllowAll(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
-  getFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string[]>;
+  getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-  getFeatureFlagDenyAll(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   isFeatureAllowed(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+    feature: BytesLike,
+    account: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   removeFromFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setDeniers(
-    feature: PromiseOrValue<BytesLike>,
-    deniers: PromiseOrValue<string>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    deniers: string[],
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagAllowAll(
-    feature: PromiseOrValue<BytesLike>,
-    allowAll: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    allowAll: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagDenyAll(
-    feature: PromiseOrValue<BytesLike>,
-    denyAll: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    denyAll: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  'createAccount()'(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  'createAccount()'(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   'createAccount(uint128)'(
-    requestedAccountId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    requestedAccountId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getAccountLastInteraction(
-    accountId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getAccountLastInteraction(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getAccountOwner(
-    accountId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getAccountOwner(accountId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getAccountPermissions(
-    accountId: PromiseOrValue<BigNumberish>,
+    accountId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
 
   getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
   grantPermission(
-    accountId: PromiseOrValue<BigNumberish>,
-    permission: PromiseOrValue<BytesLike>,
-    user: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    permission: BytesLike,
+    user: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   hasPermission(
-    accountId: PromiseOrValue<BigNumberish>,
-    permission: PromiseOrValue<BytesLike>,
-    user: PromiseOrValue<string>,
+    accountId: BigNumberish,
+    permission: BytesLike,
+    user: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   isAuthorized(
-    accountId: PromiseOrValue<BigNumberish>,
-    permission: PromiseOrValue<BytesLike>,
-    user: PromiseOrValue<string>,
+    accountId: BigNumberish,
+    permission: BytesLike,
+    user: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   notifyAccountTransfer(
-    to: PromiseOrValue<string>,
-    accountId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    to: string,
+    accountId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   renouncePermission(
-    accountId: PromiseOrValue<BigNumberish>,
-    permission: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    permission: BytesLike,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   revokePermission(
-    accountId: PromiseOrValue<BigNumberish>,
-    permission: PromiseOrValue<BytesLike>,
-    user: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    permission: BytesLike,
+    user: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   associateDebt(
-    marketId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    accountId: PromiseOrValue<BigNumberish>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    accountId: BigNumberish,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAssociatedSystem(
-    id: PromiseOrValue<BytesLike>,
+    id: BytesLike,
     overrides?: CallOverrides
   ): Promise<[string, string] & { addr: string; kind: string }>;
 
   initOrUpgradeNft(
-    id: PromiseOrValue<BytesLike>,
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    uri: PromiseOrValue<string>,
-    impl: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    name: string,
+    symbol: string,
+    uri: string,
+    impl: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   initOrUpgradeToken(
-    id: PromiseOrValue<BytesLike>,
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    decimals: PromiseOrValue<BigNumberish>,
-    impl: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    name: string,
+    symbol: string,
+    decimals: BigNumberish,
+    impl: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   registerUnmanagedSystem(
-    id: PromiseOrValue<BytesLike>,
-    endpoint: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    endpoint: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   cleanExpiredLocks(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    offset: PromiseOrValue<BigNumberish>,
-    count: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    collateralType: string,
+    offset: BigNumberish,
+    count: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   createLock(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    expireTimestamp: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    expireTimestamp: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   deposit(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    collateralType: string,
+    tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAccountAvailableCollateral(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    accountId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getAccountCollateral(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    accountId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber, BigNumber] & {
@@ -2769,176 +2480,155 @@ export interface CoreProxy extends BaseContract {
   >;
 
   getLocks(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    offset: PromiseOrValue<BigNumberish>,
-    count: PromiseOrValue<BigNumberish>,
+    accountId: BigNumberish,
+    collateralType: string,
+    offset: BigNumberish,
+    count: BigNumberish,
     overrides?: CallOverrides
   ): Promise<CollateralLock.DataStructOutput[]>;
 
   withdraw(
-    accountId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    collateralType: string,
+    tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureCollateral(
     config: CollateralConfiguration.DataStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getCollateralConfiguration(
-    collateralType: PromiseOrValue<string>,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<CollateralConfiguration.DataStructOutput>;
 
   getCollateralConfigurations(
-    hideDisabled: PromiseOrValue<boolean>,
+    hideDisabled: boolean,
     overrides?: CallOverrides
   ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
-  getCollateralPrice(
-    collateralType: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   burnUsd(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   mintUsd(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isPositionLiquidatable(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isVaultLiquidatable(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   liquidate(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    liquidateAsAccountId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   liquidateVault(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-    maxUsd: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    liquidateAsAccountId: BigNumberish,
+    maxUsd: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureMaximumMarketCollateral(
-    marketId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   depositMarketCollateral(
-    marketId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    collateralType: string,
+    tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getMarketCollateralAmount(
-    marketId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    marketId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getMarketCollateralValue(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMarketCollateralValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getMaximumMarketCollateral(
-    marketId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    marketId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   withdrawMarketCollateral(
-    marketId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    collateralType: string,
+    tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   depositMarketUsd(
-    marketId: PromiseOrValue<BigNumberish>,
-    target: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    target: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   distributeDebtToPools(
-    marketId: PromiseOrValue<BigNumberish>,
-    maxIter: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    maxIter: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getMarketCollateral(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getMarketDebtPerShare(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getMarketFees(
-    arg0: PromiseOrValue<BigNumberish>,
-    amount: PromiseOrValue<BigNumberish>,
+    arg0: BigNumberish,
+    amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { depositFeeAmount: BigNumber; withdrawFeeAmount: BigNumber }
   >;
 
-  getMarketMinDelegateTime(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<number>;
+  getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
-  getMarketNetIssuance(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getMarketReportedDebt(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getMarketTotalDebt(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   'getMinLiquidityRatio(uint128)'(
-    marketId: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -2948,53 +2638,47 @@ export interface CoreProxy extends BaseContract {
 
   getUsdToken(overrides?: CallOverrides): Promise<string>;
 
-  getWithdrawableMarketUsd(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getWithdrawableMarketUsd(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  isMarketCapacityLocked(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  isMarketCapacityLocked(marketId: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
   registerMarket(
-    market: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    market: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setMarketMinDelegateTime(
-    marketId: PromiseOrValue<BigNumberish>,
-    minDelegateTime: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    minDelegateTime: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'setMinLiquidityRatio(uint128,uint256)'(
-    marketId: PromiseOrValue<BigNumberish>,
-    minLiquidityRatio: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    minLiquidityRatio: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'setMinLiquidityRatio(uint256)'(
-    minLiquidityRatio: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    minLiquidityRatio: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   withdrawMarketUsd(
-    marketId: PromiseOrValue<BigNumberish>,
-    target: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    target: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   multicall(
-    data: PromiseOrValue<BytesLike>[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    data: BytesLike[],
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   addApprovedPool(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getApprovedPools(overrides?: CallOverrides): Promise<BigNumber[]>;
@@ -3002,195 +2686,192 @@ export interface CoreProxy extends BaseContract {
   getPreferredPool(overrides?: CallOverrides): Promise<BigNumber>;
 
   removeApprovedPool(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPreferredPool(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   acceptPoolOwnership(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   createPool(
-    requestedPoolId: PromiseOrValue<BigNumberish>,
-    owner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    requestedPoolId: BigNumberish,
+    owner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getNominatedPoolOwner(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getPoolConfiguration(
-    poolId: PromiseOrValue<BigNumberish>,
+    poolId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<MarketConfiguration.DataStructOutput[]>;
 
-  getPoolName(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+  getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  getPoolOwner(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+  getPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   nominatePoolOwner(
-    nominatedOwner: PromiseOrValue<string>,
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    nominatedOwner: string,
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   rebalancePool(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   renouncePoolNomination(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   revokePoolNomination(
-    poolId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPoolConfiguration(
-    poolId: PromiseOrValue<BigNumberish>,
+    poolId: BigNumberish,
     newMarketConfigurations: MarketConfiguration.DataStruct[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPoolName(
-    poolId: PromiseOrValue<BigNumberish>,
-    name: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    name: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   claimRewards(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    distributor: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    distributor: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   distributeRewards(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    start: PromiseOrValue<BigNumberish>,
-    duration: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    amount: BigNumberish,
+    start: BigNumberish,
+    duration: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getRewardRate(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    distributor: PromiseOrValue<string>,
+    poolId: BigNumberish,
+    collateralType: string,
+    distributor: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   registerRewardsDistributor(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    distributor: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    distributor: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   removeRewardsDistributor(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    distributor: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    distributor: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   updateRewards(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    accountId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    accountId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureOracleManager(
-    oracleManagerAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    oracleManagerAddress: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getConfig(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getConfig(k: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-  getConfigAddress(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-  getConfigUint(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+  getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
   registerCcip(
-    ccipSend: PromiseOrValue<string>,
-    ccipReceive: PromiseOrValue<string>,
-    ccipTokenPool: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ccipSend: string,
+    ccipReceive: string,
+    ccipTokenPool: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setConfig(
-    k: PromiseOrValue<BytesLike>,
-    v: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    k: BytesLike,
+    v: BytesLike,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   delegateCollateral(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    newCollateralAmountD18: PromiseOrValue<BigNumberish>,
-    leverage: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    newCollateralAmountD18: BigNumberish,
+    leverage: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPosition(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPositionCollateral(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
   getPositionCollateralRatio(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPositionDebt(
-    accountId: PromiseOrValue<BigNumberish>,
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    accountId: BigNumberish,
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getVaultCollateral(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
+    poolId: BigNumberish,
+    collateralType: string,
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
   getVaultCollateralRatio(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getVaultDebt(
-    poolId: PromiseOrValue<BigNumberish>,
-    collateralType: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    poolId: BigNumberish,
+    collateralType: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -3198,10 +2879,7 @@ export interface CoreProxy extends BaseContract {
 
     getImplementation(overrides?: CallOverrides): Promise<string>;
 
-    nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    nominateNewOwner(newNominatedOwner: string, overrides?: CallOverrides): Promise<void>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
@@ -3209,200 +2887,181 @@ export interface CoreProxy extends BaseContract {
 
     renounceNomination(overrides?: CallOverrides): Promise<void>;
 
-    simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    simulateUpgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    upgradeTo(newImplementation: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    upgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string[]>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string[]>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setDeniers(feature: BytesLike, deniers: string[], overrides?: CallOverrides): Promise<void>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
+      feature: BytesLike,
+      allowAll: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
+      feature: BytesLike,
+      denyAll: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     'createAccount()'(overrides?: CallOverrides): Promise<BigNumber>;
 
     'createAccount(uint128)'(
-      requestedAccountId: PromiseOrValue<BigNumberish>,
+      requestedAccountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getAccountLastInteraction(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getAccountOwner(
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getAccountOwner(accountId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     getAccountPermissions(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
 
     getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
     grantPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     hasPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     isAuthorized(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     notifyAccountTransfer(
-      to: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
+      to: string,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     renouncePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
+      accountId: BigNumberish,
+      permission: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     revokePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     associateDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
+      id: BytesLike,
       overrides?: CallOverrides
     ): Promise<[string, string] & { addr: string; kind: string }>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
+      id: BytesLike,
+      endpoint: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     cleanExpiredLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     createLock(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      expireTimestamp: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      expireTimestamp: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     deposit(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getAccountAvailableCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getAccountCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber] & {
@@ -3413,17 +3072,17 @@ export interface CoreProxy extends BaseContract {
     >;
 
     getLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<CollateralLock.DataStructOutput[]>;
 
     withdraw(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -3433,156 +3092,132 @@ export interface CoreProxy extends BaseContract {
     ): Promise<void>;
 
     getCollateralConfiguration(
-      collateralType: PromiseOrValue<string>,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<CollateralConfiguration.DataStructOutput>;
 
     getCollateralConfigurations(
-      hideDisabled: PromiseOrValue<boolean>,
+      hideDisabled: boolean,
       overrides?: CallOverrides
     ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
-    getCollateralPrice(
-      collateralType: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     burnUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mintUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     isPositionLiquidatable(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     isVaultLiquidatable(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     liquidate(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<ILiquidationModule.LiquidationDataStructOutput>;
 
     liquidateVault(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      maxUsd: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      maxUsd: BigNumberish,
       overrides?: CallOverrides
     ): Promise<ILiquidationModule.LiquidationDataStructOutput>;
 
     configureMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     depositMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getMarketCollateralAmount(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMarketCollateralValue(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketCollateralValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     withdrawMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     depositMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     distributeDebtToPools(
-      marketId: PromiseOrValue<BigNumberish>,
-      maxIter: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      maxIter: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    getMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketDebtPerShare(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketDebtPerShare(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketFees(
-      arg0: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { depositFeeAmount: BigNumber; withdrawFeeAmount: BigNumber }
     >;
 
-    getMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<number>;
+    getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
-    getMarketNetIssuance(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketReportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketTotalDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     'getMinLiquidityRatio(uint128)'(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3592,197 +3227,162 @@ export interface CoreProxy extends BaseContract {
 
     getUsdToken(overrides?: CallOverrides): Promise<string>;
 
-    getWithdrawableMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getWithdrawableMarketUsd(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    isMarketCapacityLocked(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    isMarketCapacityLocked(marketId: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    registerMarket(market: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
+    registerMarket(market: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     setMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      minDelegateTime: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      minDelegateTime: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
-      marketId: PromiseOrValue<BigNumberish>,
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      minLiquidityRatio: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     'setMinLiquidityRatio(uint256)'(
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
+      minLiquidityRatio: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     withdrawMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    multicall(data: PromiseOrValue<BytesLike>[], overrides?: CallOverrides): Promise<string[]>;
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
-    addApprovedPool(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+    addApprovedPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<BigNumber[]>;
 
     getPreferredPool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    removeApprovedPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    setPreferredPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setPreferredPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    acceptPoolOwnership(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    acceptPoolOwnership(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     createPool(
-      requestedPoolId: PromiseOrValue<BigNumberish>,
-      owner: PromiseOrValue<string>,
+      requestedPoolId: BigNumberish,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getNominatedPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     getPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<MarketConfiguration.DataStructOutput[]>;
 
-    getPoolName(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+    getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    getPoolOwner(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+    getPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     nominatePoolOwner(
-      nominatedOwner: PromiseOrValue<string>,
-      poolId: PromiseOrValue<BigNumberish>,
+      nominatedOwner: string,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rebalancePool(poolId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+    rebalancePool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    renouncePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    renouncePoolNomination(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    revokePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    revokePoolNomination(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setPoolName(poolId: BigNumberish, name: string, overrides?: CallOverrides): Promise<void>;
 
     claimRewards(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getRewardRate(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     registerRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     removeRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     updateRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber[], string[]]>;
 
-    configureOracleManager(
-      oracleManagerAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    configureOracleManager(oracleManagerAddress: string, overrides?: CallOverrides): Promise<void>;
 
-    getConfig(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getConfig(k: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-    getConfigAddress(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-    getConfigUint(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     registerCcip(
-      ccipSend: PromiseOrValue<string>,
-      ccipReceive: PromiseOrValue<string>,
-      ccipTokenPool: PromiseOrValue<string>,
+      ccipSend: string,
+      ccipReceive: string,
+      ccipTokenPool: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setConfig(
-      k: PromiseOrValue<BytesLike>,
-      v: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setConfig(k: BytesLike, v: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     delegateCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      newCollateralAmountD18: PromiseOrValue<BigNumberish>,
-      leverage: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      newCollateralAmountD18: BigNumberish,
+      leverage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getPosition(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -3794,41 +3394,41 @@ export interface CoreProxy extends BaseContract {
     >;
 
     getPositionCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
     getPositionCollateralRatio(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPositionDebt(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVaultCollateral(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
 
     getVaultCollateralRatio(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVaultDebt(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -3840,358 +3440,355 @@ export interface CoreProxy extends BaseContract {
     'OwnerNominated(address)'(newOwner?: null): OwnerNominatedEventFilter;
     OwnerNominated(newOwner?: null): OwnerNominatedEventFilter;
 
-    'Upgraded(address,address)'(
-      self?: PromiseOrValue<string> | null,
-      implementation?: null
-    ): UpgradedEventFilter;
-    Upgraded(self?: PromiseOrValue<string> | null, implementation?: null): UpgradedEventFilter;
+    'Upgraded(address,address)'(self?: string | null, implementation?: null): UpgradedEventFilter;
+    Upgraded(self?: string | null, implementation?: null): UpgradedEventFilter;
 
     'FeatureFlagAllowAllSet(bytes32,bool)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       allowAll?: null
     ): FeatureFlagAllowAllSetEventFilter;
     FeatureFlagAllowAllSet(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       allowAll?: null
     ): FeatureFlagAllowAllSetEventFilter;
 
     'FeatureFlagAllowlistAdded(bytes32,address)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistAddedEventFilter;
     FeatureFlagAllowlistAdded(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistAddedEventFilter;
 
     'FeatureFlagAllowlistRemoved(bytes32,address)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistRemovedEventFilter;
     FeatureFlagAllowlistRemoved(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistRemovedEventFilter;
 
     'FeatureFlagDeniersReset(bytes32,address[])'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       deniers?: null
     ): FeatureFlagDeniersResetEventFilter;
     FeatureFlagDeniersReset(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       deniers?: null
     ): FeatureFlagDeniersResetEventFilter;
 
     'FeatureFlagDenyAllSet(bytes32,bool)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       denyAll?: null
     ): FeatureFlagDenyAllSetEventFilter;
     FeatureFlagDenyAllSet(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       denyAll?: null
     ): FeatureFlagDenyAllSetEventFilter;
 
     'AccountCreated(uint128,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      accountId?: BigNumberish | null,
+      owner?: string | null
     ): AccountCreatedEventFilter;
     AccountCreated(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      accountId?: BigNumberish | null,
+      owner?: string | null
     ): AccountCreatedEventFilter;
 
     'PermissionGranted(uint128,bytes32,address,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      permission?: PromiseOrValue<BytesLike> | null,
-      user?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      permission?: BytesLike | null,
+      user?: string | null,
       sender?: null
     ): PermissionGrantedEventFilter;
     PermissionGranted(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      permission?: PromiseOrValue<BytesLike> | null,
-      user?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      permission?: BytesLike | null,
+      user?: string | null,
       sender?: null
     ): PermissionGrantedEventFilter;
 
     'PermissionRevoked(uint128,bytes32,address,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      permission?: PromiseOrValue<BytesLike> | null,
-      user?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      permission?: BytesLike | null,
+      user?: string | null,
       sender?: null
     ): PermissionRevokedEventFilter;
     PermissionRevoked(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      permission?: PromiseOrValue<BytesLike> | null,
-      user?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      permission?: BytesLike | null,
+      user?: string | null,
       sender?: null
     ): PermissionRevokedEventFilter;
 
     'DebtAssociated(uint128,uint128,address,uint128,uint256,int256)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       accountId?: null,
       amount?: null,
       updatedDebt?: null
     ): DebtAssociatedEventFilter;
     DebtAssociated(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       accountId?: null,
       amount?: null,
       updatedDebt?: null
     ): DebtAssociatedEventFilter;
 
     'AssociatedSystemSet(bytes32,bytes32,address,address)'(
-      kind?: PromiseOrValue<BytesLike> | null,
-      id?: PromiseOrValue<BytesLike> | null,
+      kind?: BytesLike | null,
+      id?: BytesLike | null,
       proxy?: null,
       impl?: null
     ): AssociatedSystemSetEventFilter;
     AssociatedSystemSet(
-      kind?: PromiseOrValue<BytesLike> | null,
-      id?: PromiseOrValue<BytesLike> | null,
+      kind?: BytesLike | null,
+      id?: BytesLike | null,
       proxy?: null,
       impl?: null
     ): AssociatedSystemSetEventFilter;
 
     'CollateralLockCreated(uint128,address,uint256,uint64)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
       expireTimestamp?: null
     ): CollateralLockCreatedEventFilter;
     CollateralLockCreated(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
       expireTimestamp?: null
     ): CollateralLockCreatedEventFilter;
 
     'CollateralLockExpired(uint128,address,uint256,uint64)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
       expireTimestamp?: null
     ): CollateralLockExpiredEventFilter;
     CollateralLockExpired(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
       expireTimestamp?: null
     ): CollateralLockExpiredEventFilter;
 
     'Deposited(uint128,address,uint256,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): DepositedEventFilter;
     Deposited(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): DepositedEventFilter;
 
     'Withdrawn(uint128,address,uint256,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): WithdrawnEventFilter;
     Withdrawn(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): WithdrawnEventFilter;
 
     'CollateralConfigured(address,tuple)'(
-      collateralType?: PromiseOrValue<string> | null,
+      collateralType?: string | null,
       config?: null
     ): CollateralConfiguredEventFilter;
     CollateralConfigured(
-      collateralType?: PromiseOrValue<string> | null,
+      collateralType?: string | null,
       config?: null
     ): CollateralConfiguredEventFilter;
 
     'IssuanceFeePaid(uint128,uint128,address,uint256)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       feeAmount?: null
     ): IssuanceFeePaidEventFilter;
     IssuanceFeePaid(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       feeAmount?: null
     ): IssuanceFeePaidEventFilter;
 
     'UsdBurned(uint128,uint128,address,uint256,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): UsdBurnedEventFilter;
     UsdBurned(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): UsdBurnedEventFilter;
 
     'UsdMinted(uint128,uint128,address,uint256,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): UsdMintedEventFilter;
     UsdMinted(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): UsdMintedEventFilter;
 
     'Liquidation(uint128,uint128,address,tuple,uint128,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       liquidationData?: null,
       liquidateAsAccountId?: null,
       sender?: null
     ): LiquidationEventFilter;
     Liquidation(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       liquidationData?: null,
       liquidateAsAccountId?: null,
       sender?: null
     ): LiquidationEventFilter;
 
     'VaultLiquidation(uint128,address,tuple,uint128,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       liquidationData?: null,
       liquidateAsAccountId?: null,
       sender?: null
     ): VaultLiquidationEventFilter;
     VaultLiquidation(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       liquidationData?: null,
       liquidateAsAccountId?: null,
       sender?: null
     ): VaultLiquidationEventFilter;
 
     'MarketCollateralDeposited(uint128,address,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): MarketCollateralDepositedEventFilter;
     MarketCollateralDeposited(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): MarketCollateralDepositedEventFilter;
 
     'MarketCollateralWithdrawn(uint128,address,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): MarketCollateralWithdrawnEventFilter;
     MarketCollateralWithdrawn(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       tokenAmount?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): MarketCollateralWithdrawnEventFilter;
 
     'MaximumMarketCollateralConfigured(uint128,address,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       systemAmount?: null,
-      owner?: PromiseOrValue<string> | null
+      owner?: string | null
     ): MaximumMarketCollateralConfiguredEventFilter;
     MaximumMarketCollateralConfigured(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      collateralType?: string | null,
       systemAmount?: null,
-      owner?: PromiseOrValue<string> | null
+      owner?: string | null
     ): MaximumMarketCollateralConfiguredEventFilter;
 
     'MarketRegistered(address,uint128,address)'(
-      market?: PromiseOrValue<string> | null,
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      sender?: PromiseOrValue<string> | null
+      market?: string | null,
+      marketId?: BigNumberish | null,
+      sender?: string | null
     ): MarketRegisteredEventFilter;
     MarketRegistered(
-      market?: PromiseOrValue<string> | null,
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      sender?: PromiseOrValue<string> | null
+      market?: string | null,
+      marketId?: BigNumberish | null,
+      sender?: string | null
     ): MarketRegisteredEventFilter;
 
     'MarketSystemFeePaid(uint128,uint256)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       feeAmount?: null
     ): MarketSystemFeePaidEventFilter;
     MarketSystemFeePaid(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       feeAmount?: null
     ): MarketSystemFeePaidEventFilter;
 
     'MarketUsdDeposited(uint128,address,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      target?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      target?: string | null,
       amount?: null,
-      market?: PromiseOrValue<string> | null
+      market?: string | null
     ): MarketUsdDepositedEventFilter;
     MarketUsdDeposited(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      target?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      target?: string | null,
       amount?: null,
-      market?: PromiseOrValue<string> | null
+      market?: string | null
     ): MarketUsdDepositedEventFilter;
 
     'MarketUsdWithdrawn(uint128,address,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      target?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      target?: string | null,
       amount?: null,
-      market?: PromiseOrValue<string> | null
+      market?: string | null
     ): MarketUsdWithdrawnEventFilter;
     MarketUsdWithdrawn(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      target?: PromiseOrValue<string> | null,
+      marketId?: BigNumberish | null,
+      target?: string | null,
       amount?: null,
-      market?: PromiseOrValue<string> | null
+      market?: string | null
     ): MarketUsdWithdrawnEventFilter;
 
     'SetMarketMinLiquidityRatio(uint128,uint256)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       minLiquidityRatio?: null
     ): SetMarketMinLiquidityRatioEventFilter;
     SetMarketMinLiquidityRatio(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       minLiquidityRatio?: null
     ): SetMarketMinLiquidityRatioEventFilter;
 
     'SetMinDelegateTime(uint128,uint32)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       minDelegateTime?: null
     ): SetMinDelegateTimeEventFilter;
     SetMinDelegateTime(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       minDelegateTime?: null
     ): SetMinDelegateTimeEventFilter;
 
@@ -4205,105 +3802,105 @@ export interface CoreProxy extends BaseContract {
     PreferredPoolSet(poolId?: null): PreferredPoolSetEventFilter;
 
     'PoolConfigurationSet(uint128,tuple[],address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      poolId?: BigNumberish | null,
       markets?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): PoolConfigurationSetEventFilter;
     PoolConfigurationSet(
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      poolId?: BigNumberish | null,
       markets?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): PoolConfigurationSetEventFilter;
 
     'PoolCreated(uint128,address,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null,
+      sender?: string | null
     ): PoolCreatedEventFilter;
     PoolCreated(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null,
+      sender?: string | null
     ): PoolCreatedEventFilter;
 
     'PoolNameUpdated(uint128,string,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      poolId?: BigNumberish | null,
       name?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): PoolNameUpdatedEventFilter;
     PoolNameUpdated(
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      poolId?: BigNumberish | null,
       name?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): PoolNameUpdatedEventFilter;
 
     'PoolNominationRenounced(uint128,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolNominationRenouncedEventFilter;
     PoolNominationRenounced(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolNominationRenouncedEventFilter;
 
     'PoolNominationRevoked(uint128,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolNominationRevokedEventFilter;
     PoolNominationRevoked(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolNominationRevokedEventFilter;
 
     'PoolOwnerNominated(uint128,address,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      nominatedOwner?: PromiseOrValue<string> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      nominatedOwner?: string | null,
+      owner?: string | null
     ): PoolOwnerNominatedEventFilter;
     PoolOwnerNominated(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      nominatedOwner?: PromiseOrValue<string> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      nominatedOwner?: string | null,
+      owner?: string | null
     ): PoolOwnerNominatedEventFilter;
 
     'PoolOwnershipAccepted(uint128,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolOwnershipAcceptedEventFilter;
     PoolOwnershipAccepted(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      owner?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      owner?: string | null
     ): PoolOwnershipAcceptedEventFilter;
 
     'SetMinLiquidityRatio(uint256)'(minLiquidityRatio?: null): SetMinLiquidityRatioEventFilter;
     SetMinLiquidityRatio(minLiquidityRatio?: null): SetMinLiquidityRatioEventFilter;
 
     'RewardsClaimed(uint128,uint128,address,address,uint256)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       distributor?: null,
       amount?: null
     ): RewardsClaimedEventFilter;
     RewardsClaimed(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       distributor?: null,
       amount?: null
     ): RewardsClaimedEventFilter;
 
     'RewardsDistributed(uint128,address,address,uint256,uint256,uint256)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       distributor?: null,
       amount?: null,
       start?: null,
       duration?: null
     ): RewardsDistributedEventFilter;
     RewardsDistributed(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
       distributor?: null,
       amount?: null,
       start?: null,
@@ -4311,434 +3908,391 @@ export interface CoreProxy extends BaseContract {
     ): RewardsDistributedEventFilter;
 
     'RewardsDistributorRegistered(uint128,address,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
-      distributor?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
+      distributor?: string | null
     ): RewardsDistributorRegisteredEventFilter;
     RewardsDistributorRegistered(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
-      distributor?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
+      distributor?: string | null
     ): RewardsDistributorRegisteredEventFilter;
 
     'RewardsDistributorRemoved(uint128,address,address)'(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
-      distributor?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
+      distributor?: string | null
     ): RewardsDistributorRemovedEventFilter;
     RewardsDistributorRemoved(
-      poolId?: PromiseOrValue<BigNumberish> | null,
-      collateralType?: PromiseOrValue<string> | null,
-      distributor?: PromiseOrValue<string> | null
+      poolId?: BigNumberish | null,
+      collateralType?: string | null,
+      distributor?: string | null
     ): RewardsDistributorRemovedEventFilter;
 
     'DelegationUpdated(uint128,uint128,address,uint256,uint256,address)'(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
       leverage?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): DelegationUpdatedEventFilter;
     DelegationUpdated(
-      accountId?: PromiseOrValue<BigNumberish> | null,
-      poolId?: PromiseOrValue<BigNumberish> | null,
+      accountId?: BigNumberish | null,
+      poolId?: BigNumberish | null,
       collateralType?: null,
       amount?: null,
       leverage?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): DelegationUpdatedEventFilter;
   };
 
   estimateGas: {
-    acceptOwnership(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     getImplementation(overrides?: CallOverrides): Promise<BigNumber>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    'createAccount()'(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     'createAccount(uint128)'(
-      requestedAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAccountLastInteraction(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getAccountOwner(
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAccountOwner(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getAccountPermissions(
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAccountPermissions(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getAccountTokenAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     grantPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     hasPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     isAuthorized(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     notifyAccountTransfer(
-      to: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     renouncePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     revokePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     associateDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     cleanExpiredLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     createLock(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      expireTimestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      expireTimestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     deposit(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAccountAvailableCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getAccountCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     withdraw(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getCollateralConfiguration(
-      collateralType: PromiseOrValue<string>,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getCollateralConfigurations(
-      hideDisabled: PromiseOrValue<boolean>,
+      hideDisabled: boolean,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCollateralPrice(
-      collateralType: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     burnUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     mintUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     isPositionLiquidatable(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     isVaultLiquidatable(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     liquidate(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     liquidateVault(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      maxUsd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      maxUsd: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     depositMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getMarketCollateralAmount(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMarketCollateralValue(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketCollateralValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     withdrawMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     depositMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     distributeDebtToPools(
-      marketId: PromiseOrValue<BigNumberish>,
-      maxIter: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      maxIter: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketDebtPerShare(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getMarketFees(
-      arg0: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketNetIssuance(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketReportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketTotalDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     'getMinLiquidityRatio(uint128)'(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -4748,53 +4302,44 @@ export interface CoreProxy extends BaseContract {
 
     getUsdToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getWithdrawableMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getWithdrawableMarketUsd(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    isMarketCapacityLocked(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    isMarketCapacityLocked(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerMarket(
-      market: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    registerMarket(market: string, overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     setMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      minDelegateTime: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minDelegateTime: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
-      marketId: PromiseOrValue<BigNumberish>,
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     'setMinLiquidityRatio(uint256)'(
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     withdrawMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     multicall(
-      data: PromiseOrValue<BytesLike>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      data: BytesLike[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     addApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<BigNumber>;
@@ -4802,598 +4347,574 @@ export interface CoreProxy extends BaseContract {
     getPreferredPool(overrides?: CallOverrides): Promise<BigNumber>;
 
     removeApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPreferredPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     acceptPoolOwnership(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     createPool(
-      requestedPoolId: PromiseOrValue<BigNumberish>,
-      owner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedPoolId: BigNumberish,
+      owner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getNominatedPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPoolConfiguration(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     nominatePoolOwner(
-      nominatedOwner: PromiseOrValue<string>,
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nominatedOwner: string,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     rebalancePool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     renouncePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     revokePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      name: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     claimRewards(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getRewardRate(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     registerRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     removeRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     updateRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureOracleManager(
-      oracleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      oracleManagerAddress: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getConfig(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getConfig(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getConfigAddress(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getConfigUint(k: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     registerCcip(
-      ccipSend: PromiseOrValue<string>,
-      ccipReceive: PromiseOrValue<string>,
-      ccipTokenPool: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      ccipSend: string,
+      ccipReceive: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setConfig(
-      k: PromiseOrValue<BytesLike>,
-      v: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      k: BytesLike,
+      v: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     delegateCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      newCollateralAmountD18: PromiseOrValue<BigNumberish>,
-      leverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      newCollateralAmountD18: BigNumberish,
+      leverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPosition(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPositionCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPositionCollateralRatio(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPositionDebt(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getVaultCollateral(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVaultCollateralRatio(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getVaultDebt(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    'createAccount()'(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     'createAccount(uint128)'(
-      requestedAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAccountLastInteraction(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getAccountOwner(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getAccountPermissions(
-      accountId: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getAccountTokenAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     grantPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     hasPermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isAuthorized(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     notifyAccountTransfer(
-      to: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     renouncePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     revokePermission(
-      accountId: PromiseOrValue<BigNumberish>,
-      permission: PromiseOrValue<BytesLike>,
-      user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      permission: BytesLike,
+      user: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     associateDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     cleanExpiredLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     createLock(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      expireTimestamp: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      expireTimestamp: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAccountAvailableCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getAccountCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getLocks(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      offset: PromiseOrValue<BigNumberish>,
-      count: PromiseOrValue<BigNumberish>,
+      accountId: BigNumberish,
+      collateralType: string,
+      offset: BigNumberish,
+      count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(
-      accountId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getCollateralConfiguration(
-      collateralType: PromiseOrValue<string>,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCollateralConfigurations(
-      hideDisabled: PromiseOrValue<boolean>,
+      hideDisabled: boolean,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCollateralPrice(
-      collateralType: PromiseOrValue<string>,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     burnUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     mintUsd(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isPositionLiquidatable(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isVaultLiquidatable(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     liquidate(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     liquidateVault(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      liquidateAsAccountId: PromiseOrValue<BigNumberish>,
-      maxUsd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      liquidateAsAccountId: BigNumberish,
+      maxUsd: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     depositMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketCollateralAmount(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketCollateralValue(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMaximumMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      collateralType: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     depositMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     distributeDebtToPools(
-      marketId: PromiseOrValue<BigNumberish>,
-      maxIter: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      maxIter: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketCollateral(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketDebtPerShare(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketFees(
-      arg0: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketNetIssuance(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketReportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketTotalDebt(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     'getMinLiquidityRatio(uint128)'(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -5404,52 +4925,52 @@ export interface CoreProxy extends BaseContract {
     getUsdToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getWithdrawableMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isMarketCapacityLocked(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     registerMarket(
-      market: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      market: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setMarketMinDelegateTime(
-      marketId: PromiseOrValue<BigNumberish>,
-      minDelegateTime: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minDelegateTime: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
-      marketId: PromiseOrValue<BigNumberish>,
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'setMinLiquidityRatio(uint256)'(
-      minLiquidityRatio: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      minLiquidityRatio: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     withdrawMarketUsd(
-      marketId: PromiseOrValue<BigNumberish>,
-      target: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      target: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     multicall(
-      data: PromiseOrValue<BytesLike>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      data: BytesLike[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     addApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -5457,210 +4978,195 @@ export interface CoreProxy extends BaseContract {
     getPreferredPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     removeApprovedPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPreferredPool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     acceptPoolOwnership(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     createPool(
-      requestedPoolId: PromiseOrValue<BigNumberish>,
-      owner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      requestedPoolId: BigNumberish,
+      owner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getNominatedPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getPoolOwner(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nominatePoolOwner(
-      nominatedOwner: PromiseOrValue<string>,
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      nominatedOwner: string,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     rebalancePool(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     renouncePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     revokePoolNomination(
-      poolId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPoolConfiguration(
-      poolId: PromiseOrValue<BigNumberish>,
+      poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPoolName(
-      poolId: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      name: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     distributeRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      start: PromiseOrValue<BigNumberish>,
-      duration: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      amount: BigNumberish,
+      start: BigNumberish,
+      duration: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getRewardRate(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     registerRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     removeRewardsDistributor(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      distributor: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      distributor: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     updateRewards(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      accountId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      accountId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureOracleManager(
-      oracleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      oracleManagerAddress: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getConfig(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getConfig(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getConfigAddress(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getConfigUint(
-      k: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     registerCcip(
-      ccipSend: PromiseOrValue<string>,
-      ccipReceive: PromiseOrValue<string>,
-      ccipTokenPool: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      ccipSend: string,
+      ccipReceive: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setConfig(
-      k: PromiseOrValue<BytesLike>,
-      v: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      k: BytesLike,
+      v: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     delegateCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      newCollateralAmountD18: PromiseOrValue<BigNumberish>,
-      leverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      newCollateralAmountD18: BigNumberish,
+      leverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPosition(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPositionCollateral(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPositionCollateralRatio(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPositionDebt(
-      accountId: PromiseOrValue<BigNumberish>,
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      accountId: BigNumberish,
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getVaultCollateral(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
+      poolId: BigNumberish,
+      collateralType: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getVaultCollateralRatio(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getVaultDebt(
-      poolId: PromiseOrValue<BigNumberish>,
-      collateralType: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      poolId: BigNumberish,
+      collateralType: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }
