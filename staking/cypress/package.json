@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.5.0",
-    "@cypress/code-coverage": "^3.10.0",
+    "@cypress/code-coverage": "^3.10.6",
     "@snx-cy/onLogAdded": "workspace:*",
     "@snx-cy/printBrowserLogs": "workspace:*",
     "@snx-v3/staking-ui": "workspace:*",
