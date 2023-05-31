@@ -5399,6 +5399,7 @@ __metadata:
     css-loader: ^6.7.3
     framer-motion: ^7.0.0
     html-webpack-plugin: ^5.5.0
+    process: ^0.11.10
     react: ^18.2.0
     react-dom: ^18.2.0
     react-helmet: ^6.1.0
@@ -5494,6 +5495,7 @@ __metadata:
     framer-motion: ^7.0.0
     html-webpack-plugin: ^5.5.0
     i18next: ^21.10.0
+    process: ^0.11.10
     react: ^18.2.0
     react-dom: ^18.2.0
     react-helmet: ^6.1.0
@@ -6223,6 +6225,7 @@ __metadata:
     ethers: ^5.7.2
     framer-motion: ^7.0.0
     html-webpack-plugin: ^5.5.0
+    process: ^0.11.10
     react: ^18.2.0
     react-dom: ^18.2.0
     react-hook-form: ^7.41.5
@@ -18984,6 +18987,13 @@ __metadata:
   dependencies:
     fromentries: ^1.2.0
   checksum: 597769e3db6a8e2cb1cd64a952bbc150220588debac31c7cf1a9f620ce981e25583d8d70848d8a14953577608512984a8808c3be77e09af8ebdcdc14ec23a295
+  languageName: node
+  linkType: hard
+
+"process@npm:^0.11.10":
+  version: 0.11.10
+  resolution: "process@npm:0.11.10"
+  checksum: bfcce49814f7d172a6e6a14d5fa3ac92cc3d0c3b9feb1279774708a719e19acd673995226351a082a9ae99978254e320ccda4240ddc474ba31a76c79491ca7c3
   languageName: node
   linkType: hard
 
