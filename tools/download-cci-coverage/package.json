@@ -7,10 +7,10 @@
     "./*.js"
   ],
   "version": "1.0.0",
-  "author": "Nikita <noisekit@btnk.au>",
-  "repository": "github:Synthetixio/js-monorepo",
+  "author": "Nikita <nikita@cc.snxdao.io>",
+  "repository": "github:Synthetixio/v3ui",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.9"
+    "node-fetch": "^2.6.11"
   }
 }
