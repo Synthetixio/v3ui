@@ -9,12 +9,15 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { PoolBox } from '@snx-v3/PoolBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { HomeLink } from '@snx-v3/HomeLink';
+import { Wei } from '@synthetixio/wei';
+import { Amount } from '@snx-v3/Amount';
 
-const DepositUi: FC<{ collateralDisplaySymbol?: string; DepositForm: FC; PoolBox: FC }> = ({
-  collateralDisplaySymbol,
-  PoolBox,
-  DepositForm,
-}) => {
+const DepositUi: FC<{
+  collateralDisplaySymbol?: string;
+  minDelegation?: Wei;
+  DepositForm: FC;
+  PoolBox: FC;
+}> = ({ collateralDisplaySymbol, minDelegation, PoolBox, DepositForm }) => {
   return (
     <Flex height="100%" flexDirection="column">
       <HomeLink />
@@ -63,6 +66,10 @@ const DepositUi: FC<{ collateralDisplaySymbol?: string; DepositForm: FC; PoolBox
           <Heading mt={4} mb={2} size="sm" color="gray.50">
             Deposit {collateralDisplaySymbol}
           </Heading>
+          <Text fontSize="sm" color="gray.500" my={1}>
+            The minumum deposit amount is{' '}
+            <Amount value={minDelegation} suffix={` ${collateralDisplaySymbol}`} />
+          </Text>
           <DepositForm />
         </BorderBox>
         <Box maxW={{ base: 'full', md: '400px' }} width="full">
@@ -96,6 +103,7 @@ export const Deposit = () => {
   return (
     <DepositUi
       collateralDisplaySymbol={collateralType?.displaySymbol}
+      minDelegation={collateralType?.minDelegationD18}
       DepositForm={DepositForm}
       PoolBox={PoolBox}
     />

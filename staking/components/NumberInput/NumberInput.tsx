@@ -9,14 +9,25 @@ export interface NumberInputProps extends InputProps {
 
 export const NUMBER_REGEX = /^([0-9]*[.])?[0-9]{0,18}$/;
 
+function cleanupNumber(value: Wei) {
+  // Cleanup trailing precision zeroes
+  const float = parseFloat(value.toString());
+  if (float === value.toNumber()) {
+    return `${float}`;
+  }
+  return value.toString();
+}
+
 export function NumberInput({
   value,
   onChange,
+  min,
   max,
   InputProps,
 }: {
   onChange?: (value: Wei) => void;
   value: Wei;
+  min?: Wei;
   max?: Wei;
   InputProps?: NumberInputProps;
 }) {
@@ -58,23 +69,22 @@ export function NumberInput({
       ref.current.setCustomValidity('Value required');
       return;
     }
+    if (min && min.gte(0) && value && value.lt(min)) {
+      ref.current.setCustomValidity(`Value smaller than minimum of ${cleanupNumber(min)}`);
+      return;
+    }
     if (max && max.gte(0) && value && value.gt(max)) {
-      ref.current.setCustomValidity('Value greater than max');
+      ref.current.setCustomValidity(`Value greater than maximum of ${cleanupNumber(max)}`);
       return;
     }
     ref.current.setCustomValidity('');
-  }, [inputValue, max, value]);
+  }, [inputValue, min, max, value]);
 
   useEffect(() => {
     if (value.eq(0)) {
       return setInputValue('');
     }
-    // Cleanup trailing precision zeroes
-    const float = parseFloat(value.toString());
-    if (float === value.toNumber()) {
-      return setInputValue(`${float}`);
-    }
-    return setInputValue(value.toString());
+    return setInputValue(cleanupNumber(value));
   }, [value]);
 
   return (

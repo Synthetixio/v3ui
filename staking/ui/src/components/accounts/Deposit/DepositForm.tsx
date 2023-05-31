@@ -147,6 +147,8 @@ export function DepositFormUi({
                 InputProps={{
                   'data-testid': 'deposit amount input',
                 }}
+                min={collateralType.minDelegationD18}
+                max={combinedTokenBalance}
               />
               <Flex
                 flexDirection="column"
