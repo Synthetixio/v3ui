@@ -20,7 +20,7 @@ export const computeGasFee = (baseFeePerGas: BigNumber, maxPriorityFeePerGas: nu
 
 const getGasPriceFromProvider = async (provider: InfuraProvider) => {
   try {
-    const gasPrice = await provider.getGasPrice();
+    const gasPrice = (await provider.getGasPrice()).mul(1.1);
     return {
       fastest: { gasPrice },
       fast: { gasPrice },
