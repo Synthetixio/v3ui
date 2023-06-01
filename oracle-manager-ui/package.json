@@ -18,7 +18,7 @@
     "@snx-v3/useMulticall3": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
-    "@tanstack/react-query": "^4.24.6",
+    "@tanstack/react-query": "^4.29.12",
     "ethers": "^5.7.2",
     "framer-motion": "^10.12.16",
     "react": "^18.2.0",

@@ -5718,7 +5718,7 @@ __metadata:
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     "@tanstack/react-query-devtools": ^4.29.12
     "@types/react": ^18.2.7
     "@types/react-helmet": ^6.1.6
@@ -5809,7 +5809,7 @@ __metadata:
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     "@tanstack/react-query-devtools": ^4.29.12
     "@types/react": ^18.2.7
     "@types/react-helmet": ^6.1.6
@@ -5871,7 +5871,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5883,7 +5883,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -5896,7 +5896,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -5907,7 +5907,7 @@ __metadata:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
     react-router-dom: ^6.11.2
   languageName: unknown
@@ -5920,7 +5920,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
   languageName: unknown
   linkType: soft
@@ -5933,7 +5933,7 @@ __metadata:
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -5964,7 +5964,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -5979,7 +5979,7 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
     zod: ^3.21.4
@@ -6002,7 +6002,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6017,7 +6017,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -6031,7 +6031,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6057,7 +6057,7 @@ __metadata:
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useOptimismLayer1Fee": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -6071,7 +6071,7 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -6092,7 +6092,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -6107,7 +6107,7 @@ __metadata:
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6117,7 +6117,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     zod: ^3.21.4
   languageName: unknown
@@ -6130,7 +6130,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6144,7 +6144,7 @@ __metadata:
     "@ethersproject/transactions": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -6165,7 +6165,7 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
     zod: ^3.21.4
   languageName: unknown
@@ -6179,7 +6179,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/zod": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
     zod: ^3.21.4
   languageName: unknown
@@ -6191,7 +6191,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -6207,7 +6207,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -6220,7 +6220,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-spot-markets-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6231,7 +6231,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-spot-markets-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6244,7 +6244,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
   languageName: unknown
   linkType: soft
@@ -6256,7 +6256,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
   languageName: unknown
   linkType: soft
 
@@ -6271,7 +6271,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -6298,7 +6298,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -6315,7 +6315,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -6330,7 +6330,7 @@ __metadata:
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -6734,7 +6734,7 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
-    "@tanstack/react-query": ^4.24.6
+    "@tanstack/react-query": ^4.29.12
     "@types/react": ^18.2.7
     "@types/react-dom": ^18.2.4
     babel-loader: ^9.1.2
