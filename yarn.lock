@@ -5802,7 +5802,7 @@ __metadata:
     "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
-    "@snx-v3/useV2DebtBalance": "workspace:*"
+    "@snx-v3/useV2Synthetix": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -6277,9 +6277,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2DebtBalance@workspace:*, @snx-v3/useV2DebtBalance@workspace:staking/lib/useV2DebtBalance":
+"@snx-v3/useV2Synthetix@workspace:*, @snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/useV2DebtBalance@workspace:staking/lib/useV2DebtBalance"
+  resolution: "@snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/contracts": ^1.2.2

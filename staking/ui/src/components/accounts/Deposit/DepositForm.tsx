@@ -25,7 +25,7 @@ import { DepositModal, DepositModalProps } from '@snx-v3/DepositModal';
 import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useV2TransferrableBalance } from '@snx-v3/useV2DebtBalance';
+import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export function DepositFormUi({
   collateralType,
@@ -271,7 +271,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const collateralType = useCollateralType(params.collateralSymbol);
 
   const ethBalance = useEthBalance();
-  const transferrable = useV2TransferrableBalance();
+  const transferrable = useV2Synthetix();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
 
