@@ -110,6 +110,7 @@ export function Playground() {
     [accountCollateralUnlockDate.data]
   );
   const [timeToUnlock, setTimeToUnlock] = React.useState(formatTimeToUnlock());
+
   React.useEffect(() => {
     const interval = setInterval(() => setTimeToUnlock(formatTimeToUnlock()), 1_000);
     return () => clearInterval(interval);

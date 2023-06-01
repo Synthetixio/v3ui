@@ -65,7 +65,7 @@ export const RepayUi: FC<{
                 if (!snxUSDBalance) {
                   return;
                 }
-                setDebtChange(snxUSDBalance.mul(-1));
+                setDebtChange(snxUSDBalance.neg());
               }}
             >
               <Text>snxUSD Balance:</Text>
@@ -89,11 +89,13 @@ export const Repay = () => {
   const { data: USDProxy } = useUSDProxy();
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
   return (

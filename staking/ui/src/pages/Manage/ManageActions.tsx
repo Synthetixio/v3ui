@@ -122,6 +122,7 @@ export const ManageAction = () => {
     useContext(ManagePositionContext);
 
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const liquidityPosition = useLiquidityPosition({
     accountId: params.accountId,
     poolId: params.poolId,
@@ -136,6 +137,7 @@ export const ManageAction = () => {
     collateralChange,
     debtChange,
   });
+
   const parsedActionParam = ManageActionSchema.safeParse(params.manageAction);
   const parsedAction = parsedActionParam.success ? parsedActionParam.data : null;
 
