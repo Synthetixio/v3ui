@@ -10,11 +10,15 @@ import { PoolBox } from '@snx-v3/PoolBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { HomeLink } from '@snx-v3/HomeLink';
 
-const DepositUi: FC<{ collateralDisplaySymbol?: string; DepositForm: FC; PoolBox: FC }> = ({
+function DepositUi({
   collateralDisplaySymbol,
   PoolBox,
   DepositForm,
-}) => {
+}: {
+  collateralDisplaySymbol?: string;
+  DepositForm: FC;
+  PoolBox: FC;
+}) {
   return (
     <Flex height="100%" flexDirection="column">
       <HomeLink />
@@ -71,9 +75,9 @@ const DepositUi: FC<{ collateralDisplaySymbol?: string; DepositForm: FC; PoolBox
       </Flex>
     </Flex>
   );
-};
+}
 
-export const Deposit = () => {
+export function Deposit() {
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
   const navigate = useNavigate();
@@ -100,4 +104,4 @@ export const Deposit = () => {
       PoolBox={PoolBox}
     />
   );
-};
+}
