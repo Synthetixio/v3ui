@@ -7,11 +7,11 @@ import { NumberInput } from '@snx-v3/NumberInput';
 import { PercentBadges } from '@snx-v3/PercentBadges';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useEthBalance } from '@snx-v3/useEthBalance';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -147,7 +147,7 @@ export const Deposit = () => {
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
 
-  const { data: tokenBalance } = useTokenBalance(collateralType?.tokenAddress);
+  const { data: tokenBalance } = useV2Synthetix();
   const { data: ethBalance } = useEthBalance();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });

@@ -9,7 +9,7 @@ import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 const ChangeStat: FC<{
@@ -76,7 +76,8 @@ export const ManageStatsUi: FC<{
         </Text>
         <Flex justifyContent="space-between" alignItems="center" data-testid="manage stats debt">
           <ChangeStat
-            value={liquidityPosition.debt}
+            // TODO, need a function to burn to target so dust debt not left over
+            value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
             newValue={newDebt}
             formatFn={(val: Wei) => currency(val, { currency: 'USD', style: 'currency' })}
             hasChanges={hasChanges}
@@ -89,7 +90,12 @@ export const ManageStatsUi: FC<{
         </Text>
         <Flex justifyContent="space-between" alignItems="center">
           <ChangeStat
-            value={liquidityPosition.cRatio}
+            // TODO, need a function to burn to target so dust debt not left over
+            value={
+              liquidityPosition.cRatio.lt(0.01) || liquidityPosition.cRatio.gt(50000)
+                ? wei(0)
+                : liquidityPosition.cRatio
+            }
             newValue={newCratio}
             formatFn={(val: Wei) => currency(val, { style: 'percent' })}
             hasChanges={hasChanges}
@@ -109,11 +115,13 @@ export const ManageStats = () => {
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
@@ -122,7 +130,9 @@ export const ManageStats = () => {
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   if (!liquidityPosition || !collateralType) return null; // TODO skeleton
+
   return (
     <ManageStatsUi
       hasChanges={hasChanges}

@@ -25,8 +25,10 @@ export const useTokenBalance = (address?: string, networkId?: number) => {
           ? new InfuraProvider(networkId, process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
           : connectedProvider;
       const contract = new Contract(tokenAddress, abi, provider);
+
       return BalanceSchema.parse(await contract.balanceOf(wallet.address));
     },
     enabled: Boolean((networkId ?? network.id) && wallet?.address && tokenAddress),
+    refetchInterval: 5000,
   });
 };

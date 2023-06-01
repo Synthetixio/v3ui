@@ -18,7 +18,6 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Multistep } from '@snx-v3/Multistep';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
@@ -31,6 +30,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
+import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -66,6 +66,7 @@ export const DepositModalUi: FC<{
     approve: isWETH ? 2 : 1,
     deposit: isWETH ? 3 : 2,
   };
+
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -221,7 +222,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   });
 
   const ethBalance = useEthBalance();
-  const tokenBalance = useTokenBalance(collateralType?.tokenAddress);
+  const transferrable = useV2Synthetix();
 
   const accounts = useAccounts();
 
@@ -232,6 +233,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
+
+  // TODO: Update logic on new account id
   const newAccountId = useMemo(() => `${Math.floor(Math.random() * 10000000000)}`, []);
 
   const { exec: wrapEth, wethBalance } = useWrapEth();
@@ -240,6 +243,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
       ? collateralChange.sub(wethBalance || 0)
       : wei(0);
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
+
   const { exec: execDeposit } = useDeposit({
     accountId: params.accountId,
     newAccountId,
@@ -280,7 +284,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           throw Error('Wrapping failed', { cause: error });
         }
       },
-
       [ServiceNames.approveWETH]: async () => {
         try {
           toast({
@@ -324,7 +327,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           await execDeposit();
           await Promise.all([
             ethBalance.refetch(),
-            tokenBalance.refetch(),
+            transferrable.refetch(),
             accounts.refetch(),
             refetchAllowance(),
             accountCollaterals.refetch(),
@@ -356,8 +359,10 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
       },
     },
   });
+
   const wrapAmountString = wrapAmount.toString();
   const isSuccessOrDeposit = state.matches(State.success) || state.matches(State.deposit);
+
   useEffect(() => {
     if (isSuccessOrDeposit) {
       // We do this to ensure the success state displays the wrap amount used before deposit
@@ -365,6 +370,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     }
     send(Events.SET_WRAP_AMOUNT, { wrapAmount: wei(wrapAmountString) });
   }, [wrapAmountString, send, isSuccessOrDeposit]);
+
   useEffect(() => {
     send(Events.SET_REQUIRE_APPROVAL, { requireApproval });
   }, [requireApproval, send]);

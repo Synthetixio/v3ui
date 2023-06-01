@@ -52,7 +52,7 @@ export const RepayUi: FC<{
                 if (!currentDebt) {
                   return;
                 }
-                setDebtChange(currentDebt.mul(-1));
+                setDebtChange(currentDebt.neg());
               }}
             >
               <Text>Debt:</Text>
@@ -65,7 +65,7 @@ export const RepayUi: FC<{
                 if (!snxUSDBalance) {
                   return;
                 }
-                setDebtChange(snxUSDBalance.mul(-1));
+                setDebtChange(snxUSDBalance.neg());
               }}
             >
               <Text>snxUSD Balance:</Text>
@@ -89,20 +89,25 @@ export const Repay = () => {
   const { data: USDProxy } = useUSDProxy();
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
   const { data: balance } = useTokenBalance(USDProxy?.address);
+
+  const debtExists = liquidityPosition?.debt.gt(0.01);
+  const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
 
   return (
     <RepayUi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
-      snxUSDBalance={balance}
-      currentDebt={liquidityPosition?.debt}
-      max={Wei.min(liquidityPosition?.debt || wei(0), balance || wei(0))}
+      snxUSDBalance={flooredBalance}
+      currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
+      max={Wei.max(liquidityPosition?.debt || wei(0), balance || wei(0))}
     />
   );
 };

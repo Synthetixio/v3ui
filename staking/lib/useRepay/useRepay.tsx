@@ -41,6 +41,7 @@ const createPopulateTransaction = ({
       }
     );
 };
+
 export const useRepay = (
   {
     accountId,
@@ -58,6 +59,7 @@ export const useRepay = (
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { gasSpeed } = useGasSpeed();
   const { data: CoreProxy } = useCoreProxy();
+
   const populateTransaction = createPopulateTransaction({
     CoreProxy,
     accountId,
@@ -65,6 +67,7 @@ export const useRepay = (
     collateralTypeAddress,
     debtChange,
   });
+
   const signer = useSigner();
   const { name: networkName, id: networkId } = useNetwork();
 
@@ -78,16 +81,19 @@ export const useRepay = (
           populateTransaction(),
           getGasPrice({ networkId, networkName }),
         ]);
+
         const gasLimit = populatedTxn.gasLimit || BigNumber.from(0);
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit,
           gasPrices,
           gasSpeed,
         });
+
         const txn = await signer.sendTransaction({
           ...populatedTxn,
           ...gasOptionsForTransaction,
         });
+
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
