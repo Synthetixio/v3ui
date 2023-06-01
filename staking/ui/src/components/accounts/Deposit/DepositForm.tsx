@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, Box, Button, Flex, Text } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
@@ -218,7 +218,20 @@ export function DepositFormUi({
             }}
             activeBadge={activeBadge}
           />
+
+          <Alert mt={2} status="info">
+            <AlertIcon />
+            <AlertDescription>
+              You need to deposit{' '}
+              <Amount
+                value={collateralType.minDelegationD18}
+                suffix={` ${collateralType.symbol}`}
+              />{' '}
+              minimum
+            </AlertDescription>
+          </Alert>
         </Box>
+
         <Button mt={4} size="md" px="8" type="submit" w="full" data-testid="deposit collateral">
           Deposit Collateral
         </Button>
