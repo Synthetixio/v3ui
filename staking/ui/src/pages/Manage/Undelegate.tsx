@@ -1,5 +1,15 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { Button, Flex, Text, Tooltip } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Button,
+  Flex,
+  Text,
+  Tooltip,
+  AlertTitle,
+  Collapse,
+} from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
@@ -10,12 +20,13 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import Wei, { wei } from '@synthetixio/wei';
-import { FC, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
   currentCollateral?: Wei;
+  minDelegation?: Wei;
   currentDebt?: Wei;
   max?: Wei;
   displaySymbol: string;
@@ -28,8 +39,20 @@ export const UndelegateUi: FC<{
   displaySymbol,
   symbol,
   currentCollateral,
+  minDelegation,
   currentDebt,
 }) => {
+  const onMaxClick = React.useCallback(() => {
+    if (!max) {
+      return;
+    }
+    setCollateralChange(max.mul(-1));
+  }, [max, setCollateralChange]);
+  const showRepayDebtTooltip = currentDebt?.gt(0);
+  const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
+  const isValidLeftover =
+    leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
+
   return (
     <Flex flexDirection="column" gap={2}>
       <Text fontSize="md" fontWeight="700">
@@ -40,49 +63,62 @@ export const UndelegateUi: FC<{
         issuance ratio. To be able to undelegate all of the collateral you need to repay your debt
         first
       </Text>
-      <BorderBox display="flex" py={1} px={2}>
-        <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-          <CollateralIcon symbol={symbol} />
-          {displaySymbol}
-        </Text>
-        <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-          <NumberInput
-            InputProps={{
-              isRequired: true,
-              'data-testid': 'undelegate amount input',
-              'data-max': max?.toString(),
-            }}
-            value={collateralChange.abs()}
-            onChange={(val) => setCollateralChange(val.mul(-1))}
-            max={max}
-          />
-          <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
-            <Flex
-              gap="1"
-              cursor="pointer"
-              onClick={() => {
-                if (!max) {
-                  return;
-                }
-                setCollateralChange(max.mul(-1));
-              }}
-            >
-              <Tooltip
-                isDisabled={!currentDebt?.eq(0)}
-                label={`Your total collateral balance is: ${currency(
-                  currentCollateral || wei(0)
-                )}. To be able to undelegate all of the collateral you need to repay all of your debt`}
-              >
-                <Text display="flex" alignItems="center" gap={1}>
-                  <InfoOutlineIcon /> Max {displaySymbol} to undelegate:
-                </Text>
-              </Tooltip>
 
-              <Amount value={max} data-testid="available to undelegate" />
+      <BorderBox flexDirection="column" py={1} px={2}>
+        <Flex flexDirection="row" justifyContent="space-between" width="100%">
+          <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
+            <CollateralIcon symbol={symbol} />
+            {displaySymbol}
+          </Text>
+          <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
+            <NumberInput
+              InputProps={{
+                isRequired: true,
+                'data-testid': 'undelegate amount input',
+                'data-max': max?.toString(),
+              }}
+              value={collateralChange.abs()}
+              onChange={(val) => setCollateralChange(val.mul(-1))}
+              max={max}
+            />
+            <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
+              <Flex gap="1" cursor="pointer" onClick={onMaxClick}>
+                {showRepayDebtTooltip ? (
+                  <Tooltip
+                    label={`Your total collateral balance is: ${currency(
+                      currentCollateral || wei(0)
+                    )}. To be able to undelegate all of the collateral you need to repay all of your debt`}
+                  >
+                    <Text display="flex" alignItems="center" gap={1}>
+                      <InfoOutlineIcon /> Max {displaySymbol} to undelegate:
+                    </Text>
+                  </Tooltip>
+                ) : (
+                  <Text display="flex" alignItems="center" gap={1}>
+                    Max {displaySymbol} to undelegate:
+                  </Text>
+                )}
+
+                <Amount value={max} data-testid="available to undelegate" />
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
+
+        <Collapse in={!isValidLeftover} animateOpacity>
+          <Alert mt={2} status="info">
+            <AlertIcon />
+            <Flex direction="column">
+              <AlertTitle>
+                The minimal delegated amount is{' '}
+                <Amount value={minDelegation} suffix={` ${symbol}`} />
+              </AlertTitle>
+              <AlertDescription>You can close your position by undelegating Max.</AlertDescription>
+            </Flex>
+          </Alert>
+        </Collapse>
       </BorderBox>
+
       <Button data-testid="undelegate submit" type="submit" isDisabled={!max}>
         Undelegate {displaySymbol}
       </Button>
@@ -118,6 +154,7 @@ export const Undelegate = () => {
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}
       symbol={collateralType.symbol}
+      minDelegation={collateralType.minDelegationD18}
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
       currentCollateral={liquidityPosition?.collateralAmount}
