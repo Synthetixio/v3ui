@@ -9,7 +9,7 @@
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/useMulticall3": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^4.24.6",
     "react": "^18.2.0"
   }
 }
