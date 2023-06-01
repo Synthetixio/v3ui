@@ -92,7 +92,7 @@ const ManageActionUi: FC<{
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="deposit" activeAction={manageAction}>
-          <ArrowDownIcon w="15px" h="15px" mr={1} /> Deposit Collateral
+          <ArrowDownIcon w="15px" h="15px" mr={1} /> Delegate Collateral
         </ActionButton>
         <ActionButton onClick={setActiveAction} action="repay" activeAction={manageAction}>
           <DollarCircle mr={1} /> Repay snxUSD

@@ -44,7 +44,7 @@ export const DepositUi: FC<{
   return (
     <Flex flexDirection="column" gap={2}>
       <Text fontSize="md" fontWeight="700">
-        Deposit {displaySymbol}
+        Delegate {displaySymbol}
       </Text>
       <Text fontSize="sm" color="gray.400">
         Take an interest-free loan against your collateral. This increases your debt and decreases
@@ -136,7 +136,7 @@ export const DepositUi: FC<{
         />
       </BorderBox>
       <Button data-testid="deposit submit" type="submit">
-        Deposit {displaySymbol}
+        Delegate {displaySymbol}
       </Button>
     </Flex>
   );
