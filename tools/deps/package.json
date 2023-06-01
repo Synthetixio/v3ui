@@ -2,8 +2,8 @@
   "name": "@synthetixio/deps",
   "private": true,
   "version": "1.0.0",
-  "author": "Nikita <noisekit@btnk.au>",
-  "repository": "github:Synthetixio/js-monorepo",
+  "author": "Nikita <nikita@cc.snxdao.io>",
+  "repository": "github:Synthetixio/v3ui",
   "license": "MIT",
   "bin": {
     "deps": "./deps.js",
@@ -13,7 +13,13 @@
   },
   "devDependencies": {
     "depcheck": "^1.4.3",
-    "prettier": "^2.8.4",
-    "typescript": "^4.9.5"
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
+  },
+  "depcheck": {
+    "ignorePatterns": [],
+    "ignoreMatches": [
+      "typescript"
+    ]
   }
 }

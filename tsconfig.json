@@ -13,8 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": false,
-    "types": ["cypress"]
+    "incremental": false
   },
 
   "exclude": [
@@ -27,10 +26,8 @@
     "**/*.test.tsx",
     "**/*.stories.tsx",
     "**/stories/**",
-    "**/build/**",
     "**/cache/**",
-    "**/dist/**",
-    "./spot-markets/ui/prototype/**"
+    "spot-markets/ui/prototype/**"
   ],
 
   "include": ["**/*.ts", "**/*.tsx"]

@@ -166,20 +166,14 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export declare namespace OrderFees {
   export type DataStruct = {
-    fixedFees: PromiseOrValue<BigNumberish>;
-    utilizationFees: PromiseOrValue<BigNumberish>;
-    skewFees: PromiseOrValue<BigNumberish>;
-    wrapperFees: PromiseOrValue<BigNumberish>;
+    fixedFees: BigNumberish;
+    utilizationFees: BigNumberish;
+    skewFees: BigNumberish;
+    wrapperFees: BigNumberish;
   };
 
   export type DataStructOutput = [BigNumber, BigNumber, BigNumber, BigNumber] & {
@@ -192,15 +186,15 @@ export declare namespace OrderFees {
 
 export declare namespace AsyncOrderClaim {
   export type DataStruct = {
-    id: PromiseOrValue<BigNumberish>;
-    owner: PromiseOrValue<string>;
-    orderType: PromiseOrValue<BigNumberish>;
-    amountEscrowed: PromiseOrValue<BigNumberish>;
-    settlementStrategyId: PromiseOrValue<BigNumberish>;
-    settlementTime: PromiseOrValue<BigNumberish>;
-    minimumSettlementAmount: PromiseOrValue<BigNumberish>;
-    settledAt: PromiseOrValue<BigNumberish>;
-    referrer: PromiseOrValue<string>;
+    id: BigNumberish;
+    owner: string;
+    orderType: BigNumberish;
+    amountEscrowed: BigNumberish;
+    settlementStrategyId: BigNumberish;
+    settlementTime: BigNumberish;
+    minimumSettlementAmount: BigNumberish;
+    settledAt: BigNumberish;
+    referrer: string;
   };
 
   export type DataStructOutput = [
@@ -228,17 +222,17 @@ export declare namespace AsyncOrderClaim {
 
 export declare namespace SettlementStrategy {
   export type DataStruct = {
-    strategyType: PromiseOrValue<BigNumberish>;
-    settlementDelay: PromiseOrValue<BigNumberish>;
-    settlementWindowDuration: PromiseOrValue<BigNumberish>;
-    priceVerificationContract: PromiseOrValue<string>;
-    feedId: PromiseOrValue<BytesLike>;
-    url: PromiseOrValue<string>;
-    settlementReward: PromiseOrValue<BigNumberish>;
-    priceDeviationTolerance: PromiseOrValue<BigNumberish>;
-    minimumUsdExchangeAmount: PromiseOrValue<BigNumberish>;
-    maxRoundingLoss: PromiseOrValue<BigNumberish>;
-    disabled: PromiseOrValue<boolean>;
+    strategyType: BigNumberish;
+    settlementDelay: BigNumberish;
+    settlementWindowDuration: BigNumberish;
+    priceVerificationContract: string;
+    feedId: BytesLike;
+    url: string;
+    settlementReward: BigNumberish;
+    priceDeviationTolerance: BigNumberish;
+    minimumUsdExchangeAmount: BigNumberish;
+    maxRoundingLoss: BigNumberish;
+    disabled: boolean;
   };
 
   export type DataStructOutput = [
@@ -416,307 +410,180 @@ export interface SpotMarketProxyInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: 'acceptOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getImplementation', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'nominateNewOwner',
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'nominateNewOwner', values: [string]): string;
   encodeFunctionData(functionFragment: 'nominatedOwner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'renounceNomination', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'simulateUpgradeTo',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: 'upgradeTo', values: [PromiseOrValue<string>]): string;
-  encodeFunctionData(
-    functionFragment: 'acceptMarketOwnership',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'createSynth',
-    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getAssociatedSystem',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getMarketOwner',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: 'getSynth', values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(
-    functionFragment: 'getSynthImpl',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'simulateUpgradeTo', values: [string]): string;
+  encodeFunctionData(functionFragment: 'upgradeTo', values: [string]): string;
+  encodeFunctionData(functionFragment: 'acceptMarketOwnership', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'createSynth', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'getAssociatedSystem', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getMarketOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getSynth', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getSynthImpl', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'initOrUpgradeNft',
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
+    values: [BytesLike, string, string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'initOrUpgradeToken',
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BytesLike, string, string, BigNumberish, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'minimumCredit',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: 'name', values: [PromiseOrValue<BigNumberish>]): string;
+  encodeFunctionData(functionFragment: 'minimumCredit', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'name', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'nominateMarketOwner',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'registerUnmanagedSystem',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'renounceMarketNomination',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'reportedDebt',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'renounceMarketNomination', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'reportedDebt', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'setDecayRate',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setSynthImplementation',
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: 'setSynthetix', values: [PromiseOrValue<string>]): string;
-  encodeFunctionData(
-    functionFragment: 'supportsInterface',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
+  encodeFunctionData(functionFragment: 'setSynthImplementation', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setSynthetix', values: [string]): string;
+  encodeFunctionData(functionFragment: 'supportsInterface', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'updatePriceData',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    values: [BigNumberish, BytesLike, BytesLike]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'upgradeSynthImpl',
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'upgradeSynthImpl', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'buy',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'buyExactIn',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'buyExactOut',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'quoteBuyExactIn',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'quoteBuyExactOut',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'quoteSellExactIn',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'quoteSellExactOut',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'sell',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'sellExactIn',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'sellExactOut',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'cancelOrder',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: 'cancelOrder', values: [BigNumberish, BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'commitOrder',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: 'getAsyncOrderClaim',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'PRECISION', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'settleOrder',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'settlePythOrder',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
+  encodeFunctionData(functionFragment: 'settleOrder', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'settlePythOrder', values: [BytesLike, BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'addSettlementStrategy',
-    values: [PromiseOrValue<BigNumberish>, SettlementStrategy.DataStruct]
+    values: [BigNumberish, SettlementStrategy.DataStruct]
   ): string;
   encodeFunctionData(
     functionFragment: 'getSettlementStrategy',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setSettlementStrategyEnabled',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<boolean>]
+    values: [BigNumberish, BigNumberish, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: 'setWrapper',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'unwrap',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'wrap',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setAsyncFixedFee',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setAtomicFixedFee',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setCollateralLeverage',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setCustomTransactorFees',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setFeeCollector',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'setFeeCollector', values: [BigNumberish, string]): string;
   encodeFunctionData(
     functionFragment: 'setMarketSkewScale',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setMarketUtilizationFees',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'setWrapperFees',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'updateReferrerShare',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: 'addToFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
-  encodeFunctionData(functionFragment: 'getDeniers', values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagAllowAll',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getFeatureFlagDenyAll',
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'isFeatureAllowed',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: 'getDeniers', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagAllowAll', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagAllowlist', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getFeatureFlagDenyAll', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'isFeatureAllowed', values: [BytesLike, string]): string;
   encodeFunctionData(
     functionFragment: 'removeFromFeatureFlagAllowlist',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'setDeniers',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>[]]
-  ): string;
+  encodeFunctionData(functionFragment: 'setDeniers', values: [BytesLike, string[]]): string;
   encodeFunctionData(
     functionFragment: 'setFeatureFlagAllowAll',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<boolean>]
+    values: [BytesLike, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: 'setFeatureFlagDenyAll',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<boolean>]
+    values: [BytesLike, boolean]
   ): string;
 
   decodeFunctionResult(functionFragment: 'acceptOwnership', data: BytesLike): Result;
@@ -1270,177 +1137,173 @@ export interface SpotMarketProxy extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<[string]>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     acceptMarketOwnership(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     createSynth(
-      tokenName: PromiseOrValue<string>,
-      tokenSymbol: PromiseOrValue<string>,
-      synthOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenName: string,
+      tokenSymbol: string,
+      synthOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
+      id: BytesLike,
       overrides?: CallOverrides
     ): Promise<[string, string] & { addr: string; kind: string }>;
 
     getMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { marketOwner: string }>;
 
     getSynth(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { synthAddress: string }>;
 
     getSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { implAddress: string }>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     minimumCredit(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { lockedAmount: BigNumber }>;
 
     name(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { marketName: string }>;
 
     nominateMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     renounceMarketNomination(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     reportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { reportedDebtAmount: BigNumber }>;
 
     setDecayRate(
-      marketId: PromiseOrValue<BigNumberish>,
-      rate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      rate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setSynthImplementation(
-      synthImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setSynthetix(
-      synthetix: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthetix: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean] & { isSupported: boolean }>;
 
     updatePriceData(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      buyFeedId: PromiseOrValue<BytesLike>,
-      sellFeedId: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      buyFeedId: BytesLike,
+      sellFeedId: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     upgradeSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     buy(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     buyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     buyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      maxUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      maxUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     quoteBuyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -1450,8 +1313,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteBuyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -1461,8 +1324,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteSellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -1472,8 +1335,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteSellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -1483,48 +1346,48 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     sell(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     sellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     sellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      maxSynthAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      maxSynthAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     cancelOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     commitOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      orderType: PromiseOrValue<BigNumberish>,
-      amountProvided: PromiseOrValue<BigNumberish>,
-      settlementStrategyId: PromiseOrValue<BigNumberish>,
-      minimumSettlementAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      orderType: BigNumberish,
+      amountProvided: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      minimumSettlementAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAsyncOrderClaim(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [AsyncOrderClaim.DataStructOutput] & { asyncOrderClaim: AsyncOrderClaim.DataStructOutput }
@@ -1533,26 +1396,26 @@ export interface SpotMarketProxy extends BaseContract {
     PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     settleOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     settlePythOrder(
-      result: PromiseOrValue<BytesLike>,
-      extraData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      result: BytesLike,
+      extraData: BytesLike,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     addSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       strategy: SettlementStrategy.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [SettlementStrategy.DataStructOutput] & {
@@ -1561,306 +1424,281 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     setSettlementStrategyEnabled(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
-      enabled: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
+      enabled: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setWrapper(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapCollateralType: PromiseOrValue<string>,
-      maxWrappableAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapCollateralType: string,
+      maxWrappableAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     unwrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      unwrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      unwrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     wrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setAsyncFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      asyncFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      asyncFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setAtomicFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      atomicFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      atomicFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setCollateralLeverage(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      collateralLeverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      collateralLeverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setCustomTransactorFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      transactor: PromiseOrValue<string>,
-      fixedFeeAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      transactor: string,
+      fixedFeeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeeCollector(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      feeCollector: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      feeCollector: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setMarketSkewScale(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      skewScale: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      skewScale: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setMarketUtilizationFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      utilizationFeeRate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      utilizationFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setWrapperFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      wrapFee: PromiseOrValue<BigNumberish>,
-      unwrapFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      wrapFee: BigNumberish,
+      unwrapFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     updateReferrerShare(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      sharePercentage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      referrer: string,
+      sharePercentage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string[]]>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<[string[]]>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string[]]>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<[string[]]>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
-  acceptOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  acceptOwnership(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   getImplementation(overrides?: CallOverrides): Promise<string>;
 
   nominateNewOwner(
-    newNominatedOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newNominatedOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  renounceNomination(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  renounceNomination(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   simulateUpgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   upgradeTo(
-    newImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   acceptMarketOwnership(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   createSynth(
-    tokenName: PromiseOrValue<string>,
-    tokenSymbol: PromiseOrValue<string>,
-    synthOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    tokenName: string,
+    tokenSymbol: string,
+    synthOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAssociatedSystem(
-    id: PromiseOrValue<BytesLike>,
+    id: BytesLike,
     overrides?: CallOverrides
   ): Promise<[string, string] & { addr: string; kind: string }>;
 
-  getMarketOwner(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  getSynth(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+  getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  getSynthImpl(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+  getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   initOrUpgradeNft(
-    id: PromiseOrValue<BytesLike>,
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    uri: PromiseOrValue<string>,
-    impl: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    name: string,
+    symbol: string,
+    uri: string,
+    impl: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   initOrUpgradeToken(
-    id: PromiseOrValue<BytesLike>,
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    decimals: PromiseOrValue<BigNumberish>,
-    impl: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    name: string,
+    symbol: string,
+    decimals: BigNumberish,
+    impl: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  minimumCredit(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  minimumCredit(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  name(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+  name(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   nominateMarketOwner(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    newNominatedOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    newNominatedOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   registerUnmanagedSystem(
-    id: PromiseOrValue<BytesLike>,
-    endpoint: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    id: BytesLike,
+    endpoint: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   renounceMarketNomination(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  reportedDebt(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  reportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   setDecayRate(
-    marketId: PromiseOrValue<BigNumberish>,
-    rate: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    rate: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setSynthImplementation(
-    synthImplementation: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthImplementation: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setSynthetix(
-    synthetix: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthetix: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  supportsInterface(
-    interfaceId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   updatePriceData(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    buyFeedId: PromiseOrValue<BytesLike>,
-    sellFeedId: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    buyFeedId: BytesLike,
+    sellFeedId: BytesLike,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   upgradeSynthImpl(
-    marketId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   buy(
-    marketId: PromiseOrValue<BigNumberish>,
-    usdAmount: PromiseOrValue<BigNumberish>,
-    minAmountReceived: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    usdAmount: BigNumberish,
+    minAmountReceived: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   buyExactIn(
-    marketId: PromiseOrValue<BigNumberish>,
-    usdAmount: PromiseOrValue<BigNumberish>,
-    minAmountReceived: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    usdAmount: BigNumberish,
+    minAmountReceived: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   buyExactOut(
-    marketId: PromiseOrValue<BigNumberish>,
-    synthAmount: PromiseOrValue<BigNumberish>,
-    maxUsdAmount: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    synthAmount: BigNumberish,
+    maxUsdAmount: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   quoteBuyExactIn(
-    marketId: PromiseOrValue<BigNumberish>,
-    usdAmount: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    usdAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, OrderFees.DataStructOutput] & {
@@ -1870,8 +1708,8 @@ export interface SpotMarketProxy extends BaseContract {
   >;
 
   quoteBuyExactOut(
-    marketId: PromiseOrValue<BigNumberish>,
-    synthAmount: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    synthAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, OrderFees.DataStructOutput] & {
@@ -1881,8 +1719,8 @@ export interface SpotMarketProxy extends BaseContract {
   >;
 
   quoteSellExactIn(
-    marketId: PromiseOrValue<BigNumberish>,
-    synthAmount: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    synthAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, OrderFees.DataStructOutput] & {
@@ -1892,8 +1730,8 @@ export interface SpotMarketProxy extends BaseContract {
   >;
 
   quoteSellExactOut(
-    marketId: PromiseOrValue<BigNumberish>,
-    usdAmount: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    usdAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, OrderFees.DataStructOutput] & {
@@ -1903,213 +1741,204 @@ export interface SpotMarketProxy extends BaseContract {
   >;
 
   sell(
-    marketId: PromiseOrValue<BigNumberish>,
-    synthAmount: PromiseOrValue<BigNumberish>,
-    minUsdAmount: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    synthAmount: BigNumberish,
+    minUsdAmount: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   sellExactIn(
-    marketId: PromiseOrValue<BigNumberish>,
-    synthAmount: PromiseOrValue<BigNumberish>,
-    minAmountReceived: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    synthAmount: BigNumberish,
+    minAmountReceived: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   sellExactOut(
-    marketId: PromiseOrValue<BigNumberish>,
-    usdAmount: PromiseOrValue<BigNumberish>,
-    maxSynthAmount: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    usdAmount: BigNumberish,
+    maxSynthAmount: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   cancelOrder(
-    marketId: PromiseOrValue<BigNumberish>,
-    asyncOrderId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    asyncOrderId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   commitOrder(
-    marketId: PromiseOrValue<BigNumberish>,
-    orderType: PromiseOrValue<BigNumberish>,
-    amountProvided: PromiseOrValue<BigNumberish>,
-    settlementStrategyId: PromiseOrValue<BigNumberish>,
-    minimumSettlementAmount: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    orderType: BigNumberish,
+    amountProvided: BigNumberish,
+    settlementStrategyId: BigNumberish,
+    minimumSettlementAmount: BigNumberish,
+    referrer: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAsyncOrderClaim(
-    marketId: PromiseOrValue<BigNumberish>,
-    asyncOrderId: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    asyncOrderId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<AsyncOrderClaim.DataStructOutput>;
 
   PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
 
   settleOrder(
-    marketId: PromiseOrValue<BigNumberish>,
-    asyncOrderId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    asyncOrderId: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   settlePythOrder(
-    result: PromiseOrValue<BytesLike>,
-    extraData: PromiseOrValue<BytesLike>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    result: BytesLike,
+    extraData: BytesLike,
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   addSettlementStrategy(
-    marketId: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
     strategy: SettlementStrategy.DataStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getSettlementStrategy(
-    marketId: PromiseOrValue<BigNumberish>,
-    strategyId: PromiseOrValue<BigNumberish>,
+    marketId: BigNumberish,
+    strategyId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<SettlementStrategy.DataStructOutput>;
 
   setSettlementStrategyEnabled(
-    marketId: PromiseOrValue<BigNumberish>,
-    strategyId: PromiseOrValue<BigNumberish>,
-    enabled: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    strategyId: BigNumberish,
+    enabled: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setWrapper(
-    marketId: PromiseOrValue<BigNumberish>,
-    wrapCollateralType: PromiseOrValue<string>,
-    maxWrappableAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    wrapCollateralType: string,
+    maxWrappableAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   unwrap(
-    marketId: PromiseOrValue<BigNumberish>,
-    unwrapAmount: PromiseOrValue<BigNumberish>,
-    minAmountReceived: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    unwrapAmount: BigNumberish,
+    minAmountReceived: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   wrap(
-    marketId: PromiseOrValue<BigNumberish>,
-    wrapAmount: PromiseOrValue<BigNumberish>,
-    minAmountReceived: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    marketId: BigNumberish,
+    wrapAmount: BigNumberish,
+    minAmountReceived: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setAsyncFixedFee(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    asyncFixedFee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    asyncFixedFee: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setAtomicFixedFee(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    atomicFixedFee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    atomicFixedFee: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setCollateralLeverage(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    collateralLeverage: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    collateralLeverage: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setCustomTransactorFees(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    transactor: PromiseOrValue<string>,
-    fixedFeeAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    transactor: string,
+    fixedFeeAmount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeeCollector(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    feeCollector: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    feeCollector: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setMarketSkewScale(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    skewScale: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    skewScale: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setMarketUtilizationFees(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    utilizationFeeRate: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    utilizationFeeRate: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setWrapperFees(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    wrapFee: PromiseOrValue<BigNumberish>,
-    unwrapFee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    wrapFee: BigNumberish,
+    unwrapFee: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   updateReferrerShare(
-    synthMarketId: PromiseOrValue<BigNumberish>,
-    referrer: PromiseOrValue<string>,
-    sharePercentage: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    synthMarketId: BigNumberish,
+    referrer: string,
+    sharePercentage: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   addToFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string[]>;
+  getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-  getFeatureFlagAllowAll(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
-  getFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string[]>;
+  getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-  getFeatureFlagDenyAll(
-    feature: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   isFeatureAllowed(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+    feature: BytesLike,
+    account: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   removeFromFeatureFlagAllowlist(
-    feature: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setDeniers(
-    feature: PromiseOrValue<BytesLike>,
-    deniers: PromiseOrValue<string>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    deniers: string[],
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagAllowAll(
-    feature: PromiseOrValue<BytesLike>,
-    allowAll: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    allowAll: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagDenyAll(
-    feature: PromiseOrValue<BytesLike>,
-    denyAll: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    feature: BytesLike,
+    denyAll: boolean,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -2117,10 +1946,7 @@ export interface SpotMarketProxy extends BaseContract {
 
     getImplementation(overrides?: CallOverrides): Promise<string>;
 
-    nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    nominateNewOwner(newNominatedOwner: string, overrides?: CallOverrides): Promise<void>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<string>;
 
@@ -2128,124 +1954,94 @@ export interface SpotMarketProxy extends BaseContract {
 
     renounceNomination(overrides?: CallOverrides): Promise<void>;
 
-    simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    simulateUpgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    upgradeTo(newImplementation: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    upgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    acceptMarketOwnership(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    acceptMarketOwnership(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     createSynth(
-      tokenName: PromiseOrValue<string>,
-      tokenSymbol: PromiseOrValue<string>,
-      synthOwner: PromiseOrValue<string>,
+      tokenName: string,
+      tokenSymbol: string,
+      synthOwner: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
+      id: BytesLike,
       overrides?: CallOverrides
     ): Promise<[string, string] & { addr: string; kind: string }>;
 
-    getMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    getSynth(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+    getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    getSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    minimumCredit(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    minimumCredit(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    name(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+    name(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     nominateMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      newNominatedOwner: PromiseOrValue<string>,
+      synthMarketId: BigNumberish,
+      newNominatedOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
+      id: BytesLike,
+      endpoint: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    renounceMarketNomination(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    renounceMarketNomination(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    reportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    reportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     setDecayRate(
-      marketId: PromiseOrValue<BigNumberish>,
-      rate: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      rate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSynthImplementation(
-      synthImplementation: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setSynthImplementation(synthImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    setSynthetix(synthetix: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    setSynthetix(synthetix: string, overrides?: CallOverrides): Promise<void>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     updatePriceData(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      buyFeedId: PromiseOrValue<BytesLike>,
-      sellFeedId: PromiseOrValue<BytesLike>,
+      synthMarketId: BigNumberish,
+      buyFeedId: BytesLike,
+      sellFeedId: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    upgradeSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    upgradeSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     buy(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2255,10 +2051,10 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     buyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2268,10 +2064,10 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     buyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      maxUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      maxUsdAmount: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2281,8 +2077,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteBuyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2292,8 +2088,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteBuyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2303,8 +2099,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteSellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2314,8 +2110,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     quoteSellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2325,10 +2121,10 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     sell(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minUsdAmount: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2338,10 +2134,10 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     sellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2351,10 +2147,10 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     sellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      maxSynthAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      maxSynthAmount: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2364,32 +2160,32 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     cancelOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     commitOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      orderType: PromiseOrValue<BigNumberish>,
-      amountProvided: PromiseOrValue<BigNumberish>,
-      settlementStrategyId: PromiseOrValue<BigNumberish>,
-      minimumSettlementAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
+      marketId: BigNumberish,
+      orderType: BigNumberish,
+      amountProvided: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      minimumSettlementAmount: BigNumberish,
+      referrer: string,
       overrides?: CallOverrides
     ): Promise<AsyncOrderClaim.DataStructOutput>;
 
     getAsyncOrderClaim(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<AsyncOrderClaim.DataStructOutput>;
 
     PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
 
     settleOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2399,8 +2195,8 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     settlePythOrder(
-      result: PromiseOrValue<BytesLike>,
-      extraData: PromiseOrValue<BytesLike>,
+      result: BytesLike,
+      extraData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2410,35 +2206,35 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     addSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       strategy: SettlementStrategy.DataStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<SettlementStrategy.DataStructOutput>;
 
     setSettlementStrategyEnabled(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
-      enabled: PromiseOrValue<boolean>,
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
+      enabled: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setWrapper(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapCollateralType: PromiseOrValue<string>,
-      maxWrappableAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      wrapCollateralType: string,
+      maxWrappableAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     unwrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      unwrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      unwrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2448,9 +2244,9 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     wrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      wrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, OrderFees.DataStructOutput] & {
@@ -2460,112 +2256,99 @@ export interface SpotMarketProxy extends BaseContract {
     >;
 
     setAsyncFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      asyncFixedFee: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      asyncFixedFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setAtomicFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      atomicFixedFee: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      atomicFixedFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setCollateralLeverage(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      collateralLeverage: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      collateralLeverage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setCustomTransactorFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      transactor: PromiseOrValue<string>,
-      fixedFeeAmount: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      transactor: string,
+      fixedFeeAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setFeeCollector(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      feeCollector: PromiseOrValue<string>,
+      synthMarketId: BigNumberish,
+      feeCollector: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setMarketSkewScale(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      skewScale: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      skewScale: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setMarketUtilizationFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      utilizationFeeRate: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      utilizationFeeRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setWrapperFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      wrapFee: PromiseOrValue<BigNumberish>,
-      unwrapFee: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      wrapFee: BigNumberish,
+      unwrapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     updateReferrerShare(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      sharePercentage: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
+      referrer: string,
+      sharePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string[]>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string[]>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setDeniers(feature: BytesLike, deniers: string[], overrides?: CallOverrides): Promise<void>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
+      feature: BytesLike,
+      allowAll: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
+      feature: BytesLike,
+      denyAll: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -2577,92 +2360,85 @@ export interface SpotMarketProxy extends BaseContract {
     'OwnerNominated(address)'(newOwner?: null): OwnerNominatedEventFilter;
     OwnerNominated(newOwner?: null): OwnerNominatedEventFilter;
 
-    'Upgraded(address,address)'(
-      self?: PromiseOrValue<string> | null,
-      implementation?: null
-    ): UpgradedEventFilter;
-    Upgraded(self?: PromiseOrValue<string> | null, implementation?: null): UpgradedEventFilter;
+    'Upgraded(address,address)'(self?: string | null, implementation?: null): UpgradedEventFilter;
+    Upgraded(self?: string | null, implementation?: null): UpgradedEventFilter;
 
     'AssociatedSystemSet(bytes32,bytes32,address,address)'(
-      kind?: PromiseOrValue<BytesLike> | null,
-      id?: PromiseOrValue<BytesLike> | null,
+      kind?: BytesLike | null,
+      id?: BytesLike | null,
       proxy?: null,
       impl?: null
     ): AssociatedSystemSetEventFilter;
     AssociatedSystemSet(
-      kind?: PromiseOrValue<BytesLike> | null,
-      id?: PromiseOrValue<BytesLike> | null,
+      kind?: BytesLike | null,
+      id?: BytesLike | null,
       proxy?: null,
       impl?: null
     ): AssociatedSystemSetEventFilter;
 
     'MarketNominationRenounced(uint128,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       nominee?: null
     ): MarketNominationRenouncedEventFilter;
     MarketNominationRenounced(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       nominee?: null
     ): MarketNominationRenouncedEventFilter;
 
     'MarketOwnerChanged(uint128,address,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       oldOwner?: null,
       newOwner?: null
     ): MarketOwnerChangedEventFilter;
     MarketOwnerChanged(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       oldOwner?: null,
       newOwner?: null
     ): MarketOwnerChangedEventFilter;
 
     'MarketOwnerNominated(uint128,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       newOwner?: null
     ): MarketOwnerNominatedEventFilter;
     MarketOwnerNominated(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       newOwner?: null
     ): MarketOwnerNominatedEventFilter;
 
     'SynthImplementationUpgraded(uint256,address,address)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      proxy?: PromiseOrValue<string> | null,
+      synthMarketId?: BigNumberish | null,
+      proxy?: string | null,
       implementation?: null
     ): SynthImplementationUpgradedEventFilter;
     SynthImplementationUpgraded(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      proxy?: PromiseOrValue<string> | null,
+      synthMarketId?: BigNumberish | null,
+      proxy?: string | null,
       implementation?: null
     ): SynthImplementationUpgradedEventFilter;
 
     'SynthPriceDataUpdated(uint256,bytes32,bytes32)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      buyFeedId?: PromiseOrValue<BytesLike> | null,
-      sellFeedId?: PromiseOrValue<BytesLike> | null
+      synthMarketId?: BigNumberish | null,
+      buyFeedId?: BytesLike | null,
+      sellFeedId?: BytesLike | null
     ): SynthPriceDataUpdatedEventFilter;
     SynthPriceDataUpdated(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      buyFeedId?: PromiseOrValue<BytesLike> | null,
-      sellFeedId?: PromiseOrValue<BytesLike> | null
+      synthMarketId?: BigNumberish | null,
+      buyFeedId?: BytesLike | null,
+      sellFeedId?: BytesLike | null
     ): SynthPriceDataUpdatedEventFilter;
 
-    'SynthRegistered(uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null
-    ): SynthRegisteredEventFilter;
-    SynthRegistered(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null
-    ): SynthRegisteredEventFilter;
+    'SynthRegistered(uint256)'(synthMarketId?: BigNumberish | null): SynthRegisteredEventFilter;
+    SynthRegistered(synthMarketId?: BigNumberish | null): SynthRegisteredEventFilter;
 
     'SynthBought(uint256,uint256,tuple,uint256,address)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       synthReturned?: null,
       fees?: null,
       collectedFees?: null,
       referrer?: null
     ): SynthBoughtEventFilter;
     SynthBought(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       synthReturned?: null,
       fees?: null,
       collectedFees?: null,
@@ -2670,14 +2446,14 @@ export interface SpotMarketProxy extends BaseContract {
     ): SynthBoughtEventFilter;
 
     'SynthSold(uint256,uint256,tuple,uint256,address)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountReturned?: null,
       fees?: null,
       collectedFees?: null,
       referrer?: null
     ): SynthSoldEventFilter;
     SynthSold(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountReturned?: null,
       fees?: null,
       collectedFees?: null,
@@ -2685,1042 +2461,985 @@ export interface SpotMarketProxy extends BaseContract {
     ): SynthSoldEventFilter;
 
     'OrderCancelled(uint128,uint128,tuple,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      asyncOrderId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      asyncOrderId?: BigNumberish | null,
       asyncOrderClaim?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): OrderCancelledEventFilter;
     OrderCancelled(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      asyncOrderId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      asyncOrderId?: BigNumberish | null,
       asyncOrderClaim?: null,
-      sender?: PromiseOrValue<string> | null
+      sender?: string | null
     ): OrderCancelledEventFilter;
 
     'OrderCommitted(uint128,uint8,uint256,uint128,address,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      orderType?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      orderType?: BigNumberish | null,
       amountProvided?: null,
       asyncOrderId?: null,
-      sender?: PromiseOrValue<string> | null,
+      sender?: string | null,
       referrer?: null
     ): OrderCommittedEventFilter;
     OrderCommitted(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      orderType?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      orderType?: BigNumberish | null,
       amountProvided?: null,
       asyncOrderId?: null,
-      sender?: PromiseOrValue<string> | null,
+      sender?: string | null,
       referrer?: null
     ): OrderCommittedEventFilter;
 
     'OrderSettled(uint128,uint128,uint256,tuple,uint256,address)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      asyncOrderId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      asyncOrderId?: BigNumberish | null,
       finalOrderAmount?: null,
       fees?: null,
       collectedFees?: null,
-      settler?: PromiseOrValue<string> | null
+      settler?: string | null
     ): OrderSettledEventFilter;
     OrderSettled(
-      marketId?: PromiseOrValue<BigNumberish> | null,
-      asyncOrderId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
+      asyncOrderId?: BigNumberish | null,
       finalOrderAmount?: null,
       fees?: null,
       collectedFees?: null,
-      settler?: PromiseOrValue<string> | null
+      settler?: string | null
     ): OrderSettledEventFilter;
 
     'SettlementStrategyAdded(uint128,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      strategyId?: PromiseOrValue<BigNumberish> | null
+      synthMarketId?: BigNumberish | null,
+      strategyId?: BigNumberish | null
     ): SettlementStrategyAddedEventFilter;
     SettlementStrategyAdded(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      strategyId?: PromiseOrValue<BigNumberish> | null
+      synthMarketId?: BigNumberish | null,
+      strategyId?: BigNumberish | null
     ): SettlementStrategyAddedEventFilter;
 
     'SettlementStrategyUpdated(uint128,uint256,bool)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      strategyId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
+      strategyId?: BigNumberish | null,
       enabled?: null
     ): SettlementStrategyUpdatedEventFilter;
     SettlementStrategyUpdated(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      strategyId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
+      strategyId?: BigNumberish | null,
       enabled?: null
     ): SettlementStrategyUpdatedEventFilter;
 
     'SynthUnwrapped(uint256,uint256,tuple,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountUnwrapped?: null,
       fees?: null,
       feesCollected?: null
     ): SynthUnwrappedEventFilter;
     SynthUnwrapped(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountUnwrapped?: null,
       fees?: null,
       feesCollected?: null
     ): SynthUnwrappedEventFilter;
 
     'SynthWrapped(uint256,uint256,tuple,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountWrapped?: null,
       fees?: null,
       feesCollected?: null
     ): SynthWrappedEventFilter;
     SynthWrapped(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       amountWrapped?: null,
       fees?: null,
       feesCollected?: null
     ): SynthWrappedEventFilter;
 
     'WrapperSet(uint256,address,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      wrapCollateralType?: PromiseOrValue<string> | null,
+      synthMarketId?: BigNumberish | null,
+      wrapCollateralType?: string | null,
       maxWrappableAmount?: null
     ): WrapperSetEventFilter;
     WrapperSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
-      wrapCollateralType?: PromiseOrValue<string> | null,
+      synthMarketId?: BigNumberish | null,
+      wrapCollateralType?: string | null,
       maxWrappableAmount?: null
     ): WrapperSetEventFilter;
 
     'AsyncFixedFeeSet(uint256,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       asyncFixedFee?: null
     ): AsyncFixedFeeSetEventFilter;
     AsyncFixedFeeSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       asyncFixedFee?: null
     ): AsyncFixedFeeSetEventFilter;
 
     'AtomicFixedFeeSet(uint256,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       atomicFixedFee?: null
     ): AtomicFixedFeeSetEventFilter;
     AtomicFixedFeeSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       atomicFixedFee?: null
     ): AtomicFixedFeeSetEventFilter;
 
     'CollateralLeverageSet(uint256,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       collateralLeverage?: null
     ): CollateralLeverageSetEventFilter;
     CollateralLeverageSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       collateralLeverage?: null
     ): CollateralLeverageSetEventFilter;
 
     'FeeCollectorSet(uint256,address)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       feeCollector?: null
     ): FeeCollectorSetEventFilter;
     FeeCollectorSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       feeCollector?: null
     ): FeeCollectorSetEventFilter;
 
     'MarketSkewScaleSet(uint256,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       skewScale?: null
     ): MarketSkewScaleSetEventFilter;
     MarketSkewScaleSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       skewScale?: null
     ): MarketSkewScaleSetEventFilter;
 
     'MarketUtilizationFeesSet(uint256,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       utilizationFeeRate?: null
     ): MarketUtilizationFeesSetEventFilter;
     MarketUtilizationFeesSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       utilizationFeeRate?: null
     ): MarketUtilizationFeesSetEventFilter;
 
     'ReferrerShareUpdated(uint128,address,uint256)'(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       referrer?: null,
       sharePercentage?: null
     ): ReferrerShareUpdatedEventFilter;
     ReferrerShareUpdated(
-      marketId?: PromiseOrValue<BigNumberish> | null,
+      marketId?: BigNumberish | null,
       referrer?: null,
       sharePercentage?: null
     ): ReferrerShareUpdatedEventFilter;
 
     'TransactorFixedFeeSet(uint256,address,uint256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       transactor?: null,
       fixedFeeAmount?: null
     ): TransactorFixedFeeSetEventFilter;
     TransactorFixedFeeSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       transactor?: null,
       fixedFeeAmount?: null
     ): TransactorFixedFeeSetEventFilter;
 
     'WrapperFeesSet(uint256,int256,int256)'(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       wrapFee?: null,
       unwrapFee?: null
     ): WrapperFeesSetEventFilter;
     WrapperFeesSet(
-      synthMarketId?: PromiseOrValue<BigNumberish> | null,
+      synthMarketId?: BigNumberish | null,
       wrapFee?: null,
       unwrapFee?: null
     ): WrapperFeesSetEventFilter;
 
     'FeatureFlagAllowAllSet(bytes32,bool)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       allowAll?: null
     ): FeatureFlagAllowAllSetEventFilter;
     FeatureFlagAllowAllSet(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       allowAll?: null
     ): FeatureFlagAllowAllSetEventFilter;
 
     'FeatureFlagAllowlistAdded(bytes32,address)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistAddedEventFilter;
     FeatureFlagAllowlistAdded(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistAddedEventFilter;
 
     'FeatureFlagAllowlistRemoved(bytes32,address)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistRemovedEventFilter;
     FeatureFlagAllowlistRemoved(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       account?: null
     ): FeatureFlagAllowlistRemovedEventFilter;
 
     'FeatureFlagDeniersReset(bytes32,address[])'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       deniers?: null
     ): FeatureFlagDeniersResetEventFilter;
     FeatureFlagDeniersReset(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       deniers?: null
     ): FeatureFlagDeniersResetEventFilter;
 
     'FeatureFlagDenyAllSet(bytes32,bool)'(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       denyAll?: null
     ): FeatureFlagDenyAllSetEventFilter;
     FeatureFlagDenyAllSet(
-      feature?: PromiseOrValue<BytesLike> | null,
+      feature?: BytesLike | null,
       denyAll?: null
     ): FeatureFlagDenyAllSetEventFilter;
   };
 
   estimateGas: {
-    acceptOwnership(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     getImplementation(overrides?: CallOverrides): Promise<BigNumber>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     acceptMarketOwnership(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     createSynth(
-      tokenName: PromiseOrValue<string>,
-      tokenSymbol: PromiseOrValue<string>,
-      synthOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenName: string,
+      tokenSymbol: string,
+      synthOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getSynth(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
+    getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    minimumCredit(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    minimumCredit(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    name(marketId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
+    name(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     nominateMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     renounceMarketNomination(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    reportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    reportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     setDecayRate(
-      marketId: PromiseOrValue<BigNumberish>,
-      rate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      rate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setSynthImplementation(
-      synthImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    setSynthetix(
-      synthetix: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    setSynthetix(synthetix: string, overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     updatePriceData(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      buyFeedId: PromiseOrValue<BytesLike>,
-      sellFeedId: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      buyFeedId: BytesLike,
+      sellFeedId: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     upgradeSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     buy(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     buyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     buyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      maxUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      maxUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     quoteBuyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     quoteBuyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     quoteSellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     quoteSellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     sell(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     sellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     sellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      maxSynthAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      maxSynthAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     cancelOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     commitOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      orderType: PromiseOrValue<BigNumberish>,
-      amountProvided: PromiseOrValue<BigNumberish>,
-      settlementStrategyId: PromiseOrValue<BigNumberish>,
-      minimumSettlementAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      orderType: BigNumberish,
+      amountProvided: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      minimumSettlementAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAsyncOrderClaim(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
 
     settleOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     settlePythOrder(
-      result: PromiseOrValue<BytesLike>,
-      extraData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      result: BytesLike,
+      extraData: BytesLike,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     addSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       strategy: SettlementStrategy.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setSettlementStrategyEnabled(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
-      enabled: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
+      enabled: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setWrapper(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapCollateralType: PromiseOrValue<string>,
-      maxWrappableAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapCollateralType: string,
+      maxWrappableAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     unwrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      unwrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      unwrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     wrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setAsyncFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      asyncFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      asyncFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setAtomicFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      atomicFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      atomicFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setCollateralLeverage(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      collateralLeverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      collateralLeverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setCustomTransactorFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      transactor: PromiseOrValue<string>,
-      fixedFeeAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      transactor: string,
+      fixedFeeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeeCollector(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      feeCollector: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      feeCollector: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setMarketSkewScale(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      skewScale: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      skewScale: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setMarketUtilizationFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      utilizationFeeRate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      utilizationFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setWrapperFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      wrapFee: PromiseOrValue<BigNumberish>,
-      unwrapFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      wrapFee: BigNumberish,
+      unwrapFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     updateReferrerShare(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      sharePercentage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      referrer: string,
+      sharePercentage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getDeniers(feature: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagAllowAll(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagAllowlist(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getFeatureFlagDenyAll(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    acceptOwnership(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     getImplementation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nominateNewOwner(
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     nominatedOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceNomination(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    renounceNomination(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     simulateUpgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     upgradeTo(
-      newImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     acceptMarketOwnership(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     createSynth(
-      tokenName: PromiseOrValue<string>,
-      tokenSymbol: PromiseOrValue<string>,
-      synthOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenName: string,
+      tokenSymbol: string,
+      synthOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getAssociatedSystem(
-      id: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
+      synthMarketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getSynth(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initOrUpgradeNft(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      uri: PromiseOrValue<string>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      uri: string,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     initOrUpgradeToken(
-      id: PromiseOrValue<BytesLike>,
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      decimals: PromiseOrValue<BigNumberish>,
-      impl: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      name: string,
+      symbol: string,
+      decimals: BigNumberish,
+      impl: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    minimumCredit(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    minimumCredit(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    name(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    name(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nominateMarketOwner(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      newNominatedOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      newNominatedOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     registerUnmanagedSystem(
-      id: PromiseOrValue<BytesLike>,
-      endpoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      id: BytesLike,
+      endpoint: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     renounceMarketNomination(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    reportedDebt(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    reportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setDecayRate(
-      marketId: PromiseOrValue<BigNumberish>,
-      rate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      rate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setSynthImplementation(
-      synthImplementation: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthImplementation: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setSynthetix(
-      synthetix: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthetix: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     updatePriceData(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      buyFeedId: PromiseOrValue<BytesLike>,
-      sellFeedId: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      buyFeedId: BytesLike,
+      sellFeedId: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     upgradeSynthImpl(
-      marketId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     buy(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     buyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     buyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      maxUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      maxUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     quoteBuyExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     quoteBuyExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     quoteSellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     quoteSellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     sell(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minUsdAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minUsdAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     sellExactIn(
-      marketId: PromiseOrValue<BigNumberish>,
-      synthAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      synthAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     sellExactOut(
-      marketId: PromiseOrValue<BigNumberish>,
-      usdAmount: PromiseOrValue<BigNumberish>,
-      maxSynthAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      usdAmount: BigNumberish,
+      maxSynthAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     cancelOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     commitOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      orderType: PromiseOrValue<BigNumberish>,
-      amountProvided: PromiseOrValue<BigNumberish>,
-      settlementStrategyId: PromiseOrValue<BigNumberish>,
-      minimumSettlementAmount: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      orderType: BigNumberish,
+      amountProvided: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      minimumSettlementAmount: BigNumberish,
+      referrer: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAsyncOrderClaim(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     PRECISION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     settleOrder(
-      marketId: PromiseOrValue<BigNumberish>,
-      asyncOrderId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      asyncOrderId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     settlePythOrder(
-      result: PromiseOrValue<BytesLike>,
-      extraData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      result: BytesLike,
+      extraData: BytesLike,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     addSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
       strategy: SettlementStrategy.DataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getSettlementStrategy(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setSettlementStrategyEnabled(
-      marketId: PromiseOrValue<BigNumberish>,
-      strategyId: PromiseOrValue<BigNumberish>,
-      enabled: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      strategyId: BigNumberish,
+      enabled: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setWrapper(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapCollateralType: PromiseOrValue<string>,
-      maxWrappableAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapCollateralType: string,
+      maxWrappableAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     unwrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      unwrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      unwrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     wrap(
-      marketId: PromiseOrValue<BigNumberish>,
-      wrapAmount: PromiseOrValue<BigNumberish>,
-      minAmountReceived: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      marketId: BigNumberish,
+      wrapAmount: BigNumberish,
+      minAmountReceived: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setAsyncFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      asyncFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      asyncFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setAtomicFixedFee(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      atomicFixedFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      atomicFixedFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setCollateralLeverage(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      collateralLeverage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      collateralLeverage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setCustomTransactorFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      transactor: PromiseOrValue<string>,
-      fixedFeeAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      transactor: string,
+      fixedFeeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeeCollector(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      feeCollector: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      feeCollector: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setMarketSkewScale(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      skewScale: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      skewScale: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setMarketUtilizationFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      utilizationFeeRate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      utilizationFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setWrapperFees(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      wrapFee: PromiseOrValue<BigNumberish>,
-      unwrapFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      wrapFee: BigNumberish,
+      unwrapFee: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     updateReferrerShare(
-      synthMarketId: PromiseOrValue<BigNumberish>,
-      referrer: PromiseOrValue<string>,
-      sharePercentage: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      synthMarketId: BigNumberish,
+      referrer: string,
+      sharePercentage: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     addToFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
+      feature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isFeatureAllowed(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      feature: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     removeFromFeatureFlagAllowlist(
-      feature: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setDeniers(
-      feature: PromiseOrValue<BytesLike>,
-      deniers: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      deniers: string[],
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagAllowAll(
-      feature: PromiseOrValue<BytesLike>,
-      allowAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      allowAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagDenyAll(
-      feature: PromiseOrValue<BytesLike>,
-      denyAll: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      feature: BytesLike,
+      denyAll: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

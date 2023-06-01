@@ -4,10 +4,10 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/icons": "^2.0.17",
-    "@chakra-ui/react": "^2.5.0",
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.6.1",
     "@snx-v3/usePools": "workspace:*",
     "react": "^18.2.0",
-    "react-router-dom": "^6.8.1"
+    "react-router-dom": "^6.11.2"
   }
 }

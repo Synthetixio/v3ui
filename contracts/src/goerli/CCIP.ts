@@ -21,21 +21,15 @@ import type {
 } from 'ethers';
 import type { FunctionFragment, Result } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
 export declare namespace IEVM2AnySubscriptionOnRampRouterInterface {
   export type EVM2AnySubscriptionMessageStruct = {
-    receiver: PromiseOrValue<BytesLike>;
-    data: PromiseOrValue<BytesLike>;
-    tokens: PromiseOrValue<string>[];
-    amounts: PromiseOrValue<BigNumberish>[];
-    gasLimit: PromiseOrValue<BigNumberish>;
+    receiver: BytesLike;
+    data: BytesLike;
+    tokens: string[];
+    amounts: BigNumberish[];
+    gasLimit: BigNumberish;
   };
 
   export type EVM2AnySubscriptionMessageStructOutput = [
@@ -63,7 +57,7 @@ export interface CCIPInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'ccipSend',
     values: [
-      PromiseOrValue<BigNumberish>,
+      BigNumberish,
       IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct
     ]
   ): string;
@@ -99,21 +93,21 @@ export interface CCIP extends BaseContract {
 
   functions: {
     ccipSend(
-      destChainId: PromiseOrValue<BigNumberish>,
+      destChainId: BigNumberish,
       message: IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
   ccipSend(
-    destChainId: PromiseOrValue<BigNumberish>,
+    destChainId: BigNumberish,
     message: IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     ccipSend(
-      destChainId: PromiseOrValue<BigNumberish>,
+      destChainId: BigNumberish,
       message: IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -123,17 +117,17 @@ export interface CCIP extends BaseContract {
 
   estimateGas: {
     ccipSend(
-      destChainId: PromiseOrValue<BigNumberish>,
+      destChainId: BigNumberish,
       message: IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     ccipSend(
-      destChainId: PromiseOrValue<BigNumberish>,
+      destChainId: BigNumberish,
       message: IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

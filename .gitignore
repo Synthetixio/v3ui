@@ -36,7 +36,7 @@ pids
 /build/stats.json
 
 .yarn/*
-#!.yarn/cache
+!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
@@ -50,7 +50,6 @@ pids
 **/.coverage_contracts
 **/dist
 **/node_modules
-**/storybook-static
 
 staged-txns.txt
 
