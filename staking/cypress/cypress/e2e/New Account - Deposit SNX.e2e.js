@@ -6,10 +6,10 @@ it('creates new account with first deposit of SNX', () => {
   });
   cy.connectWallet().then(({ address }) => {
     cy.task('setEthBalance', { address, balance: 100 });
-    cy.task('getSnx', { address, amount: 20 });
+    cy.task('getSnx', { address, amount: 100 });
   });
 
-  cy.viewport(800, 800);
+  cy.viewport(1000, 800);
   cy.visit(
     generatePath('/deposit/:collateralSymbol/:poolId', {
       poolId: '1',
@@ -17,13 +17,14 @@ it('creates new account with first deposit of SNX', () => {
     })
   );
 
-  cy.get('[data-testid="deposit amount input"]').type(`10`);
+  cy.get('[data-testid="deposit amount input"]').type(`20`);
 
   cy.get('[data-testid="deposit collateral"]').should('be.enabled').click();
 
   cy.get('[data-testid="deposit modal"]')
     .should('include.text', 'Approve SNX transfer')
-    .and('include.text', 'Deposit SNX');
+    .and('include.text', 'Delegate SNX')
+    .and('include.text', 'This will deposit and delegate 20 SNX to TEST_POOL.');
 
   cy.get('[data-testid="deposit confirm button"]').should('include.text', 'Start').click();
 
