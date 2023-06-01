@@ -53,7 +53,6 @@ function DepositUi({
           </Text>
         </Box>
       </Flex>
-
       <Divider my={8} bg="gray.900" />
       <Flex alignItems="stretch" flexWrap={{ base: 'wrap', md: 'nowrap' }} gap={4}>
         <BorderBox flexGrow={1} p={4} flexDirection="column">

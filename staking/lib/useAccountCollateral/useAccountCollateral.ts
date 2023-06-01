@@ -17,15 +17,18 @@ export type AccountCollateralType = {
 export function useAccountCollateral({ accountId }: { accountId?: string }) {
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
+
   const network = useNetwork();
+
   const collateralTypes = useCollateralTypes();
+
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 
   return useQuery({
     queryKey: [network.name, { accountId }, 'AccountCollateral', { tokens: tokenAddresses }],
     enabled: Boolean(CoreProxy && Multicall3 && accountId && tokenAddresses.length > 0),
     queryFn: async function (): Promise<AccountCollateralType[]> {
-      if (!CoreProxy || !Multicall3 || !accountId || tokenAddresses.length < 1) throw 'OMG';
+      if (!CoreProxy || !Multicall3 || !accountId || tokenAddresses.length < 1) throw 'OMFG';
 
       const { returnData } = await Multicall3.callStatic.aggregate(
         tokenAddresses.flatMap((tokenAddress) => [
@@ -53,6 +56,7 @@ export function useAccountCollateral({ accountId }: { accountId?: string }) {
         );
         const { totalAssigned, totalDeposited, totalLocked } =
           CoreProxy.interface.decodeFunctionResult('getAccountCollateral', returnData[i * 2 + 1]);
+
         return {
           symbol: collateralTypes.data?.find((c) => c.tokenAddress === tokenAddress)?.symbol ?? '',
           tokenAddress,

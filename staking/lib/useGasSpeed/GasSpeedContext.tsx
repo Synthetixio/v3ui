@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 
 export type GasSpeed = 'average' | 'fast' | 'fastest';
+
 export const GasSpeedContext = createContext<{
   gasSpeed: GasSpeed;
   setGasSpeed: Dispatch<SetStateAction<GasSpeed>>;

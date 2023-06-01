@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import {
   CollateralTypeSelector,
@@ -26,6 +25,7 @@ import { DepositModal, DepositModalProps } from '@snx-v3/DepositModal';
 import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export function DepositFormUi({
   collateralType,
@@ -70,6 +70,7 @@ export function DepositFormUi({
   }, [collateralType?.symbol, tokenBalance, ethBalance]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
+
   const onSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -268,10 +269,12 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const isConnected = useIsConnected();
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
-  const tokenBalance = useTokenBalance(collateralType?.tokenAddress);
+
   const ethBalance = useEthBalance();
+  const transferrable = useV2Synthetix();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
+
   const accountCollateral = accountCollaterals.data?.find(
     (coll) => coll.tokenAddress === collateralType?.tokenAddress
   );
@@ -283,7 +286,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
       openConnectModal={() => onboard.connectWallet()}
       collateralType={collateralType}
       accountCollateral={accountCollateral}
-      tokenBalance={tokenBalance.data}
+      tokenBalance={transferrable.data}
       ethBalance={ethBalance.data}
       poolId={params.poolId}
       accountId={params.accountId}

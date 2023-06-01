@@ -5804,6 +5804,7 @@ __metadata:
     "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
+    "@snx-v3/useV2Synthetix": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -6279,6 +6280,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useV2Synthetix@workspace:*, @snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/contracts": ^1.2.2
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useVaultsData@workspace:*, @snx-v3/useVaultsData@workspace:staking/lib/useVaultsData":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useVaultsData@workspace:staking/lib/useVaultsData"
@@ -6666,6 +6679,16 @@ __metadata:
     "@svgr/plugin-jsx": ^6.5.1
     "@svgr/plugin-svgo": ^6.5.1
   checksum: d10582eb4fa82a5b6d314cb49f2c640af4fd3a60f5b76095d2b14e383ef6a43a6f4674b68774a21787dbde69dec0a251cfcfc3f9a96c82754ba5d5c6daf785f0
+  languageName: node
+  linkType: hard
+
+"@synthetixio/contracts@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@synthetixio/contracts@npm:1.2.2"
+  dependencies:
+    "@ethersproject/abi": ^5.7.0
+    "@ethersproject/providers": ^5.7.2
+  checksum: 824be427964f080576ef6a0c8a355d69521dfef74ffec59499e03fbe4172705759b67decce8ddde750fdd069f6b57fe0a10a515da159418461af31747643063d
   languageName: node
   linkType: hard
 

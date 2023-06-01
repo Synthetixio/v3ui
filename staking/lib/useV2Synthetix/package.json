@@ -1,0 +1,13 @@
+{
+  "name": "@snx-v3/useV2Synthetix",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@synthetixio/contracts": "^1.2.2",
+    "@synthetixio/wei": "^2.74.4",
+    "@tanstack/react-query": "^4.29.12",
+    "ethers": "^5.7.2"
+  }
+}
