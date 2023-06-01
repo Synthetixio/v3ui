@@ -21,7 +21,7 @@ export async function importSynthetix(chainName: string) {
   }
 }
 
-export function useV2TransferrableBalance() {
+export function useV2Synthetix() {
   const network = useNetwork();
   const account = useWallet();
   const signer = useSigner();

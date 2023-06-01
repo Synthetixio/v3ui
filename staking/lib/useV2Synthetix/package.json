@@ -1,5 +1,5 @@
 {
-  "name": "@snx-v3/useV2DebtBalance",
+  "name": "@snx-v3/useV2Synthetix",
   "private": true,
   "main": "index.ts",
   "version": "0.0.1",
