@@ -6885,7 +6885,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^4.24.6":
+"@tanstack/react-query@npm:^4.29.12":
   version: 4.29.12
   resolution: "@tanstack/react-query@npm:4.29.12"
   dependencies:

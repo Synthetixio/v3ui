@@ -66,7 +66,8 @@
     "browserslist": "4",
     "caniuse-lite": "1",
     "ethers": "^5.7.2",
-    "classnames": "2.3.2"
+    "classnames": "2.3.2",
+    "@tanstack/react-query": "^4.29.12"
   },
   "husky": {
     "hooks": {
