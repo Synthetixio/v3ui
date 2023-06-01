@@ -8,7 +8,10 @@ export const calculateSevenDaysPnlGrowth = (marketSnapshots?: MarketSnapshotByWe
   const end = marketSnapshots[0].pnl;
   const start = marketSnapshots[1]?.pnl || wei(0);
 
-  return { value: end.sub(start), percentage: start.eq(0) ? undefined : end.sub(start).div(start) };
+  return {
+    value: end.sub(start),
+    percentage: start.eq(0) ? undefined : end.sub(start).div(start.abs()),
+  };
 };
 
 export const calculatePoolPerformanceLifetime = (poolData?: PoolType) => {
@@ -25,11 +28,10 @@ export const calculatePoolPerformanceSevenDays = (poolData?: PoolType) => {
   if (!total || !totalSevenDaysAgo) {
     return undefined;
   }
-
   return {
     value: total.sub(totalSevenDaysAgo), // Not that this value does not take into account that other pools might have exposure to markets
     growthPercentage: totalSevenDaysAgo.eq(0)
       ? undefined
-      : total.sub(totalSevenDaysAgo).div(totalSevenDaysAgo),
+      : total.sub(totalSevenDaysAgo).div(totalSevenDaysAgo.abs()),
   };
 };

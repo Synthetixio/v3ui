@@ -33,6 +33,14 @@ describe('calculateSevenDaysPnlGrowth', () => {
       percentage: wei(-0.5),
     });
   });
+  test('last week negative this week more negative', () => {
+    expect(
+      calculateSevenDaysPnlGrowth([{ pnl: wei(-5008.54) }, { pnl: wei(-569.21) }] as any)
+    ).toEqual({
+      value: wei('-4439.330000000000000000'),
+      percentage: wei('-7.799107535004655575'),
+    });
+  });
 });
 
 describe('calculatePoolPerformanceLifetime', () => {
@@ -131,7 +139,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       } as any)
     ).toEqual({
       value: wei(50),
-      growthPercentage: wei(-0.5),
+      growthPercentage: wei(0.5),
     });
   });
   test('handles 0 growth', () => {
