@@ -31,7 +31,7 @@ export const ManageUi: FC<{ collateralType: CollateralType }> = ({ collateralTyp
         {collateralType.displaySymbol} Vault
       </Heading>
       <Text color="gray.500" fontSize="sm">
-        Deposit your collateral SNX to borrow snxUSD and contribute to the network collateral. If
+        Delegate your collateral SNX to borrow snxUSD and contribute to the network collateral. If
         you’ve never staked on Synthetix V3 before, please read through this quick introduction
         first.
       </Text>
