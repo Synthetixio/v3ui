@@ -98,12 +98,14 @@ export const Repay = () => {
 
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
+  const debtExists = liquidityPosition?.debt.gt(0.01);
+
   return (
     <RepayUi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       snxUSDBalance={balance}
-      currentDebt={liquidityPosition?.debt}
+      currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
       max={Wei.min(liquidityPosition?.debt || wei(0), balance || wei(0))}
     />
   );
