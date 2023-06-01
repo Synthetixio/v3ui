@@ -5441,7 +5441,7 @@ __metadata:
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
-    "@snx-v3/useV2Synthetix": "workspace:^"
+    "@snx-v3/useV2Synthetix": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@xstate/react": ^3.2.2
@@ -6280,7 +6280,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2Synthetix@workspace:*, @snx-v3/useV2Synthetix@workspace:^, @snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix":
+"@snx-v3/useV2Synthetix@workspace:*, @snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix"
   dependencies:
