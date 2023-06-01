@@ -1,12 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const cp = require('child_process');
-const fs = require('fs');
-const prettier = require('prettier');
-const { fgReset, fgRed, fgGreen, fgYellow, fgCyan } = require('./lib/colors');
-
-const prettierOptions = JSON.parse(fs.readFileSync(`${__dirname}/../../.prettierrc`, 'utf8'));
+const { fgReset, fgRed, fgGreen, fgCyan } = require('./lib/colors');
 
 // ignore certain deps that are explicitly mismatched versions
 function ignored({ parent, name, _version, absolutePath }) {
@@ -68,7 +63,7 @@ async function run() {
 
   const mismatched = mismatchedUnfiltered.filter((item) => !ignored(item));
 
-  mismatched.forEach(({ parent, name, version, location }) => {
+  mismatched.forEach(({ parent, name, version }) => {
     console.log(
       '⚠️ Dependency version mismatch',
       `${fgRed}"${name}@${version}"${fgReset} found in ${fgCyan}${parent}${fgReset}`,
