@@ -8,8 +8,6 @@ const { fgReset, fgRed, fgGreen, fgYellow, fgCyan } = require('./lib/colors');
 
 const prettierOptions = JSON.parse(fs.readFileSync(`${__dirname}/../../.prettierrc`, 'utf8'));
 
-const isFix = process.argv.includes('--fix');
-
 // ignore certain deps that are explicitly mismatched versions
 function ignored({ parent, name, _version, absolutePath }) {
   const packageJson = require(`${absolutePath}/package.json`);
@@ -76,31 +74,7 @@ async function run() {
       `${fgRed}"${name}@${version}"${fgReset} found in ${fgCyan}${parent}${fgReset}`,
       `(expected ${fgGreen}${unique[name]}${fgReset})`
     );
-    if (isFix) {
-      const packageJson = JSON.parse(fs.readFileSync(`${ROOT}/${location}/package.json`, 'utf-8'));
-      if ('dependencies' in packageJson && name in packageJson.dependencies) {
-        packageJson.dependencies[name] = unique[name];
-      }
-      if ('devDependencies' in packageJson && name in packageJson.devDependencies) {
-        packageJson.devDependencies[name] = unique[name];
-      }
-      console.log(`...FIXING ${fgYellow}${location}/package.json${fgReset}`);
-      fs.writeFileSync(
-        `${ROOT}/${location}/package.json`,
-        prettier.format(JSON.stringify(packageJson, null, '  '), {
-          parser: 'json',
-          ...prettierOptions,
-        })
-      );
-    }
   });
-
-  if (mismatched.length > 0 && isFix) {
-    console.log('');
-    console.log(`${fgGreen}Packages fixed: ${fgGreen}${mismatched.length}${fgReset}`);
-    cp.execSync('yarn install', { encoding: 'utf-8', stdio: 'inherit' });
-    return;
-  }
 
   if (mismatched.length > 0) {
     console.log('');
