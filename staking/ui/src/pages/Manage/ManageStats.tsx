@@ -91,7 +91,11 @@ export const ManageStatsUi: FC<{
         <Flex justifyContent="space-between" alignItems="center">
           <ChangeStat
             // TODO, need a function to burn to target so dust debt not left over
-            value={liquidityPosition.cRatio.lt(0.01) ? wei(0) : liquidityPosition.cRatio}
+            value={
+              liquidityPosition.cRatio.lt(0.01) || liquidityPosition.cRatio.gt(50000)
+                ? wei(0)
+                : liquidityPosition.cRatio
+            }
             newValue={newCratio}
             formatFn={(val: Wei) => currency(val, { style: 'percent' })}
             hasChanges={hasChanges}

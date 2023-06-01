@@ -29,5 +29,6 @@ export const useTokenBalance = (address?: string, networkId?: number) => {
       return BalanceSchema.parse(await contract.balanceOf(wallet.address));
     },
     enabled: Boolean((networkId ?? network.id) && wallet?.address && tokenAddress),
+    refetchInterval: 5000,
   });
 };

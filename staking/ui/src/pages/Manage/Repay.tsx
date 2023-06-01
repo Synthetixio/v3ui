@@ -52,7 +52,7 @@ export const RepayUi: FC<{
                 if (!currentDebt) {
                   return;
                 }
-                setDebtChange(currentDebt.mul(-1));
+                setDebtChange(currentDebt.neg());
               }}
             >
               <Text>Debt:</Text>
@@ -99,14 +99,15 @@ export const Repay = () => {
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0.01);
+  const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
 
   return (
     <RepayUi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
-      snxUSDBalance={balance}
+      snxUSDBalance={flooredBalance}
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
-      max={Wei.min(liquidityPosition?.debt || wei(0), balance || wei(0))}
+      max={Wei.max(liquidityPosition?.debt || wei(0), balance || wei(0))}
     />
   );
 };
