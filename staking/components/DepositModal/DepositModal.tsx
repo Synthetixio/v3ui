@@ -30,7 +30,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
-import { useV2Synthetix } from '../../lib/useV2Synthetix';
+import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
