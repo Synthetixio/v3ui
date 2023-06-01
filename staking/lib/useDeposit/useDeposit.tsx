@@ -5,9 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
-import { BigNumber } from 'ethers';
+import { BigNumber, BytesLike } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
 const createPopulateTransaction = ({
   CoreProxy,
@@ -17,6 +18,7 @@ const createPopulateTransaction = ({
   collateralTypeAddress,
   collateralChange,
   currentCollateral,
+  availableCollateral,
 }: {
   CoreProxy?: CoreProxyType;
   accountId?: string;
@@ -25,30 +27,37 @@ const createPopulateTransaction = ({
   collateralTypeAddress?: string;
   collateralChange: Wei;
   currentCollateral: Wei;
+  availableCollateral?: Wei;
 }) => {
-  if (!(CoreProxy && poolId && collateralTypeAddress)) return;
+  if (!(CoreProxy && poolId && collateralTypeAddress && availableCollateral)) return;
   if (collateralChange.eq(0)) return;
 
   const id = accountId ?? newAccountId;
-  const accountCalls = accountId
-    ? []
-    : // @ts-ignore
-      [CoreProxy.interface.encodeFunctionData('createAccount(uint128)', [BigNumber.from(id)])];
 
-  const calls = accountCalls.concat([
-    CoreProxy.interface.encodeFunctionData('deposit', [
-      BigNumber.from(id),
-      collateralTypeAddress,
-      collateralChange.toBN(),
-    ]),
-    CoreProxy.interface.encodeFunctionData('delegateCollateral', [
-      BigNumber.from(id),
-      BigNumber.from(poolId),
-      collateralTypeAddress,
-      currentCollateral.add(collateralChange).toBN(),
-      wei(1).toBN(),
-    ]),
+  // create account only when no account exists
+  const createAccount = accountId
+    ? undefined
+    : CoreProxy.interface.encodeFunctionData('createAccount(uint128)', [BigNumber.from(id)]);
+
+  // optionally deposit if available collateral not enough
+  const deposit =
+    availableCollateral && availableCollateral.gte(collateralChange)
+      ? undefined
+      : CoreProxy.interface.encodeFunctionData('deposit', [
+          BigNumber.from(id),
+          collateralTypeAddress,
+          collateralChange.sub(availableCollateral).toBN(), // only deposit what's needed
+        ]);
+
+  const delegate = CoreProxy.interface.encodeFunctionData('delegateCollateral', [
+    BigNumber.from(id),
+    BigNumber.from(poolId),
+    collateralTypeAddress,
+    currentCollateral.add(collateralChange).toBN(),
+    wei(1).toBN(),
   ]);
+
+  const calls = [createAccount, deposit, delegate].filter(Boolean) as BytesLike[];
 
   return () =>
     CoreProxy.populateTransaction.multicall(calls, {
@@ -76,11 +85,18 @@ export const useDeposit = (
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { gasSpeed } = useGasSpeed();
+
+  const accountCollaterals = useAccountCollateral({ accountId });
+  const accountCollateral = accountCollaterals.data?.find(
+    (coll) => coll.tokenAddress === collateralTypeAddress
+  );
+
   const populateTransaction = createPopulateTransaction({
     CoreProxy,
     accountId,
     newAccountId,
     poolId,
+    availableCollateral: accountCollateral?.availableCollateral,
     currentCollateral,
     collateralTypeAddress,
     collateralChange,

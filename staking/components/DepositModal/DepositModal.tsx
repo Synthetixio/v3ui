@@ -28,6 +28,8 @@ import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
 
 export const DepositModalUi: FC<{
@@ -38,6 +40,8 @@ export const DepositModalUi: FC<{
   state: StateFrom<typeof DepositMachine>;
   setInfiniteApproval: (x: boolean) => void;
   onSubmit: () => void;
+  availableCollateral: Wei;
+  poolName: string;
 }> = ({
   collateralChange,
   isOpen,
@@ -46,6 +50,8 @@ export const DepositModalUi: FC<{
   setInfiniteApproval,
   onSubmit,
   state,
+  availableCollateral,
+  poolName,
 }) => {
   const wrapAmount = state.context.wrapAmount;
   const infiniteApproval = state.context.infiniteApproval;
@@ -111,8 +117,59 @@ export const DepositModalUi: FC<{
 
           <Multistep
             step={stepNumbers.deposit}
-            title={`Deposit ${collateralType?.symbol}`}
-            subtitle={`This will transfer your ${collateralType?.symbol} to Synthetix.`}
+            title={`Delegate ${collateralType?.symbol}`}
+            subtitle={
+              <>
+                {state.matches(State.success) ? (
+                  <Text>
+                    <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
+                    delegated to {poolName}.
+                  </Text>
+                ) : (
+                  <>
+                    {availableCollateral && availableCollateral.gt(wei(0)) ? (
+                      <>
+                        {availableCollateral.gte(collateralChange) ? (
+                          <Text>
+                            This will delegate{' '}
+                            <Amount
+                              value={collateralChange}
+                              suffix={` ${collateralType?.symbol}`}
+                            />{' '}
+                            to {poolName}.
+                          </Text>
+                        ) : (
+                          <>
+                            <Text>
+                              This will delegate{' '}
+                              <Amount
+                                value={availableCollateral}
+                                suffix={` ${collateralType?.symbol}`}
+                              />{' '}
+                              to {poolName}.
+                            </Text>
+                            <Text>
+                              An additional{' '}
+                              <Amount
+                                value={collateralChange.sub(availableCollateral)}
+                                suffix={` ${collateralType?.symbol}`}
+                              />{' '}
+                              will be deposited and delegated from your wallet.
+                            </Text>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <Text>
+                        This will deposit and delegate{' '}
+                        <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> to{' '}
+                        {poolName}.
+                      </Text>
+                    )}
+                  </>
+                )}
+              </>
+            }
             status={{
               failed: error?.step === State.deposit,
               disabled: state.matches(State.success) && requireApproval,
@@ -188,6 +245,12 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     currentCollateral: currentCollateral,
   });
 
+  const poolData = usePoolData(params.poolId);
+  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
+  const accountCollateral = accountCollaterals.data?.find(
+    (coll) => coll.tokenAddress === collateralType?.tokenAddress
+  );
+
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
   const [state, send] = useMachine(DepositMachine, {
@@ -213,13 +276,14 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           throw Error('Wrapping failed', { cause: error });
         }
       },
+
       [ServiceNames.approveWETH]: async () => {
         try {
           toast({
             title: 'Approve collateral for transfer',
             description: params.accountId
-              ? 'The next transaction will deposit this collateral.'
-              : 'The next transaction will create your account and and deposit this collateral',
+              ? 'The next transaction will delegate this collateral.'
+              : 'The next transaction will create your account and and delegate this collateral',
             status: 'info',
           });
 
@@ -243,12 +307,13 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           throw Error('Approve failed', { cause: error });
         }
       },
+
       [ServiceNames.executeDeposit]: async () => {
         try {
           toast.closeAll();
           toast({
             title: Boolean(params.accountId)
-              ? 'Depositing your collateral'
+              ? 'Delegating your collateral'
               : 'Creating your account and depositing collateral',
             description: '',
           });
@@ -258,12 +323,13 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             tokenBalance.refetch(),
             accounts.refetch(),
             refetchAllowance(),
+            accountCollaterals.refetch(),
             Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),
           ]);
           toast.closeAll();
           toast({
             title: 'Success',
-            description: 'Your deposited collateral amounts have been updated.',
+            description: 'Your delegated collateral amount has been updated.',
             status: 'success',
             duration: 5000,
           });
@@ -273,7 +339,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             console.error(new Error(contractError.name), contractError);
           }
           toast({
-            title: 'Could not complete account creation',
+            title: 'Could not complete delegating collateral',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
@@ -281,7 +347,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             ),
             status: 'error',
           });
-          throw Error('Deposit failed', { cause: error });
+          throw Error('Delegate collateral failed', { cause: error });
         }
       },
     },
@@ -336,6 +402,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     }
     send(Events.RUN);
   }, [handleClose, send, state]);
+
   return (
     <DepositModalUi
       collateralChange={collateralChange}
@@ -347,6 +414,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
         send(Events.SET_INFINITE_APPROVAL, { infiniteApproval });
       }}
       onSubmit={onSubmit}
+      poolName={poolData?.data?.name || ''}
+      availableCollateral={accountCollateral?.availableCollateral || wei(0)}
     />
   );
 };

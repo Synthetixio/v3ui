@@ -9,6 +9,8 @@ export function Step({ status, children }: PropsWithChildren<{ status: Multistep
     <Flex
       width={10}
       height={10}
+      minWidth={10}
+      minHeight={10}
       justifyContent="center"
       alignItems="center"
       bg={statusColor(status)}
