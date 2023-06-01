@@ -1,4 +1,13 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  Text,
+} from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
 import { useEthBalance } from '@snx-v3/useEthBalance';
@@ -148,6 +157,8 @@ export function DepositFormUi({
                 InputProps={{
                   'data-testid': 'deposit amount input',
                 }}
+                min={collateralType.minDelegationD18}
+                max={combinedTokenBalance}
               />
               <Flex
                 flexDirection="column"
@@ -196,6 +207,7 @@ export function DepositFormUi({
               </Flex>
             </Flex>
           </Flex>
+
           <PercentBadges
             disabled={combinedTokenBalance ? combinedTokenBalance.eq(0) : false}
             onBadgePress={(badgeNum) => {
@@ -217,7 +229,25 @@ export function DepositFormUi({
             }}
             activeBadge={activeBadge}
           />
+
+          <Collapse
+            in={inputAmount.gt(0) && inputAmount.lt(collateralType.minDelegationD18)}
+            animateOpacity
+          >
+            <Alert mt={2} status="info">
+              <AlertIcon />
+              <AlertDescription>
+                You need to deposit{' '}
+                <Amount
+                  value={collateralType.minDelegationD18}
+                  suffix={` ${collateralType.symbol}`}
+                />{' '}
+                minimum
+              </AlertDescription>
+            </Alert>
+          </Collapse>
         </Box>
+
         <Button mt={4} size="md" px="8" type="submit" w="full" data-testid="deposit collateral">
           Deposit Collateral
         </Button>
