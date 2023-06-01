@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -19,13 +19,10 @@ export function useAccountCollateral({ accountId }: { accountId?: string }) {
   const { data: Multicall3 } = useMulticall3();
 
   const network = useNetwork();
-  const wallet = useWallet();
 
   const collateralTypes = useCollateralTypes();
 
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
-
-  // console.log('eoa wallet', wallet?.address);
 
   return useQuery({
     queryKey: [network.name, { accountId }, 'AccountCollateral', { tokens: tokenAddresses }],

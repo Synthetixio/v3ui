@@ -156,6 +156,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   const params = useParams();
   const { data: CoreProxy } = useCoreProxy();
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: collateralType?.tokenAddress,
     amount: collateralChange.toBN(),
@@ -164,12 +165,15 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const ethBalance = useEthBalance();
   const tokenBalance = useTokenBalance(collateralType?.tokenAddress);
+
   const accounts = useAccounts();
+
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
     tokenAddress: collateralType?.tokenAddress,
     poolId: params.poolId,
   });
+
   const toast = useToast({ isClosable: true, duration: 9000 });
   const newAccountId = useMemo(() => `${Math.floor(Math.random() * 10000000000)}`, []);
 
