@@ -52,7 +52,7 @@ export const useDeposit = (
           CoreProxy &&
           poolId &&
           collateralTypeAddress &&
-          accountCollateral?.availableCollateral
+          (!accountId || accountCollateral?.availableCollateral)
         )
       )
         return;
@@ -68,16 +68,16 @@ export const useDeposit = (
           ? undefined
           : CoreProxy.interface.encodeFunctionData('createAccount(uint128)', [BigNumber.from(id)]);
 
+        const availableCollateral = accountCollateral?.availableCollateral || wei(0);
+
         // optionally deposit if available collateral not enough
-        const deposit =
-          accountCollateral?.availableCollateral &&
-          accountCollateral?.availableCollateral.gte(collateralChange)
-            ? undefined
-            : CoreProxy.interface.encodeFunctionData('deposit', [
-                BigNumber.from(id),
-                collateralTypeAddress,
-                collateralChange.sub(accountCollateral?.availableCollateral).toBN(), // only deposit what's needed
-              ]);
+        const deposit = availableCollateral.gte(collateralChange)
+          ? undefined
+          : CoreProxy.interface.encodeFunctionData('deposit', [
+              BigNumber.from(id),
+              collateralTypeAddress,
+              collateralChange.sub(availableCollateral).toBN(), // only deposit what's needed
+            ]);
 
         const delegate = CoreProxy.interface.encodeFunctionData('delegateCollateral', [
           BigNumber.from(id),
