@@ -6038,7 +6038,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useEthPrice@workspace:*, @snx-v3/useEthPrice@workspace:staking/lib/useEthPrice":
+"@snx-v3/useEthPrice@workspace:staking/lib/useEthPrice":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useEthPrice@workspace:staking/lib/useEthPrice"
   dependencies:
@@ -6052,15 +6052,9 @@ __metadata:
   resolution: "@snx-v3/useGasOptions@workspace:staking/lib/useGasOptions"
   dependencies:
     "@ethersproject/bignumber": ^5.7.0
-    "@ethersproject/contracts": ^5.7.0
     "@snx-v3/constants": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useEthPrice": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
-    "@snx-v3/useGasSpeed": "workspace:*"
-    "@snx-v3/useOptimismLayer1Fee": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -6134,21 +6128,6 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": ^4.29.12
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useOptimismLayer1Fee@workspace:*, @snx-v3/useOptimismLayer1Fee@workspace:staking/lib/useOptimismLayer1Fee":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useOptimismLayer1Fee@workspace:staking/lib/useOptimismLayer1Fee"
-  dependencies:
-    "@ethersproject/bignumber": ^5.7.0
-    "@ethersproject/contracts": ^5.7.0
-    "@ethersproject/providers": ^5.7.2
-    "@ethersproject/transactions": ^5.7.0
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
-    react: ^18.2.0
   languageName: unknown
   linkType: soft
 
