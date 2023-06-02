@@ -1,29 +1,15 @@
 import { useReducer } from 'react';
 import { useAllowance } from '@snx-v3/useAllowance';
-import { useGasOptions } from '@snx-v3/useGasOptions';
 import { BigNumber, ethers } from 'ethers';
 import { useMutation } from '@tanstack/react-query';
-import { useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
+import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
+import { getGasPrice } from '@snx-v3/useGasPrice';
+import { useGasSpeed } from '@snx-v3/useGasSpeed';
 
 const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
 
-const createPopulateTransaction = ({
-  contractAddress,
-  spender,
-  signer,
-}: {
-  contractAddress?: string;
-  spender?: string;
-  signer?: ethers.Signer | null;
-}) => {
-  if (!(contractAddress && spender && signer)) return;
-  const contract = new ethers.Contract(contractAddress, approveAbi, signer);
-  return (amount: BigNumber) =>
-    contract.populateTransaction.approve(spender, amount, {
-      gasLimit: contract.estimateGas.approve(spender, amount),
-    });
-};
 export const useApprove = (
   {
     contractAddress,
@@ -39,34 +25,40 @@ export const useApprove = (
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: allowance, refetch: refetchAllowance } = useAllowance({ contractAddress, spender });
   const signer = useSigner();
-  const populateTransaction = createPopulateTransaction({
-    contractAddress,
-    spender,
-    signer,
-  });
-
-  const { data } = useGasOptions({
-    populateTransaction,
-    queryKeys: [{ withSigner: Boolean(signer), spender, contractAddress, amount }],
-    transactionArgs: amount,
-  });
-  const { gasOptionsForTransaction } = data || {};
   const sufficientAllowance = Boolean(allowance?.gte(amount));
+
+  const { gasSpeed } = useGasSpeed();
+  const { name: networkName, id: networkId } = useNetwork();
 
   const mutation = useMutation({
     mutationFn: async (infiniteApproval: boolean) => {
-      if (!signer || !populateTransaction) return;
+      if (!(signer && contractAddress && spender)) return;
       if (sufficientAllowance) return;
+
       try {
         dispatch({ type: 'prompting' });
 
-        const populatedTxn = await populateTransaction(
-          infiniteApproval ? ethers.constants.MaxUint256 : amount
-        );
-        const txn = await signer.sendTransaction({
-          ...populatedTxn,
-          ...gasOptionsForTransaction,
+        const contract = new ethers.Contract(contractAddress, approveAbi, signer);
+        const amountToAppove = infiniteApproval ? ethers.constants.MaxUint256 : amount;
+
+        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasLimitPromised = contract.estimateGas.approve(spender, amountToAppove);
+        const populatedTxnPromised = contract.populateTransaction.approve(spender, amountToAppove, {
+          gasLimit: gasLimitPromised,
         });
+        const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
+          gasPricesPromised,
+          gasLimitPromised,
+          populatedTxnPromised,
+        ]);
+
+        const gasOptionsForTransaction = formatGasPriceForTransaction({
+          gasLimit,
+          gasPrices,
+          gasSpeed,
+        });
+
+        const txn = await signer.sendTransaction({ ...populatedTxn, ...gasOptionsForTransaction });
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
