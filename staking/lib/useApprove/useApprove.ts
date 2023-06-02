@@ -20,13 +20,18 @@ export const useApprove = (
     amount: BigNumber;
     spender?: string;
   },
-  eventHandlers?: { onSuccess?: () => void; onMutate?: () => void; onError?: (e: Error) => void }
+  eventHandlers?: {
+    onSuccess?: () => void;
+    onMutate?: () => void;
+    onError?: (e: Error) => void;
+  }
 ) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: allowance, refetch: refetchAllowance } = useAllowance({ contractAddress, spender });
-  const signer = useSigner();
+
   const sufficientAllowance = Boolean(allowance?.gte(amount));
 
+  const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
   const { name: networkName, id: networkId } = useNetwork();
 

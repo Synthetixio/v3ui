@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { useCoreProxy, CoreProxyType } from '@snx-v3/useCoreProxy';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
@@ -8,39 +8,6 @@ import Wei from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-
-const createPopulateTransaction = ({
-  CoreProxy,
-  accountId,
-  poolId,
-  collateralTypeAddress,
-  debtChange,
-}: {
-  CoreProxy?: CoreProxyType;
-  accountId?: string;
-  poolId?: string;
-  collateralTypeAddress?: string;
-  debtChange: Wei;
-}) => {
-  if (!(CoreProxy && poolId && accountId && collateralTypeAddress)) return;
-  if (debtChange.eq(0)) return;
-
-  return () =>
-    CoreProxy.populateTransaction.burnUsd(
-      BigNumber.from(accountId),
-      BigNumber.from(poolId),
-      collateralTypeAddress,
-      debtChange.abs().toBN(),
-      {
-        gasLimit: CoreProxy.estimateGas.burnUsd(
-          BigNumber.from(accountId),
-          BigNumber.from(poolId),
-          collateralTypeAddress,
-          debtChange.abs().toBN()
-        ),
-      }
-    );
-};
 
 export const useRepay = (
   {
@@ -54,46 +21,55 @@ export const useRepay = (
     collateralTypeAddress?: string;
     debtChange: Wei;
   },
-  eventHandlers?: { onSuccess?: () => void; onMutate?: () => void; onError?: (e: Error) => void }
+  eventHandlers?: {
+    onSuccess?: () => void;
+    onMutate?: () => void;
+    onError?: (e: Error) => void;
+  }
 ) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
-  const { gasSpeed } = useGasSpeed();
   const { data: CoreProxy } = useCoreProxy();
 
-  const populateTransaction = createPopulateTransaction({
-    CoreProxy,
-    accountId,
-    poolId,
-    collateralTypeAddress,
-    debtChange,
-  });
-
   const signer = useSigner();
+  const { gasSpeed } = useGasSpeed();
   const { name: networkName, id: networkId } = useNetwork();
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!signer || !populateTransaction) return;
+      if (!signer) return;
+      if (!(CoreProxy && poolId && accountId && collateralTypeAddress)) return;
+      if (debtChange.eq(0)) return;
+
       try {
         dispatch({ type: 'prompting' });
 
-        const [populatedTxn, gasPrices] = await Promise.all([
-          populateTransaction(),
-          getGasPrice({ networkId, networkName }),
+        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasLimitPromised = CoreProxy.estimateGas.burnUsd(
+          BigNumber.from(accountId),
+          BigNumber.from(poolId),
+          collateralTypeAddress,
+          debtChange.abs().toBN()
+        );
+        const populatedTxnPromised = CoreProxy.populateTransaction.burnUsd(
+          BigNumber.from(accountId),
+          BigNumber.from(poolId),
+          collateralTypeAddress,
+          debtChange.abs().toBN(),
+          { gasLimit: gasLimitPromised }
+        );
+        const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
+          gasPricesPromised,
+          gasLimitPromised,
+          populatedTxnPromised,
         ]);
 
-        const gasLimit = populatedTxn.gasLimit || BigNumber.from(0);
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit,
           gasPrices,
           gasSpeed,
         });
 
-        const txn = await signer.sendTransaction({
-          ...populatedTxn,
-          ...gasOptionsForTransaction,
-        });
-
+        const txn = await signer.sendTransaction({ ...populatedTxn, ...gasOptionsForTransaction });
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
