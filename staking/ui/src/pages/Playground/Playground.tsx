@@ -144,6 +144,7 @@ export function Playground() {
       console.log({ result });
       refetchAccounts();
     } catch (e: any) {
+      console.error(e);
       const contractError = errorParserCoreProxy(e);
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
@@ -177,6 +178,7 @@ export function Playground() {
       tokenBalance.refetch();
       accountCollateral.refetch();
     } catch (e: any) {
+      console.error(e);
       const contractError = errorParserCoreProxy(e);
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
@@ -211,6 +213,7 @@ export function Playground() {
       console.log({ result });
       accountCollateral.refetch();
     } catch (e: any) {
+      console.error(e);
       const contractError = errorParserCoreProxy(e);
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
@@ -244,6 +247,7 @@ export function Playground() {
       tokenBalance.refetch();
       accountCollateral.refetch();
     } catch (e: any) {
+      console.error(e);
       const contractError = errorParserCoreProxy(e);
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
