@@ -24,6 +24,7 @@ import type { StateFrom } from 'xstate';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -110,6 +111,10 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
     currentCollateral: currentCollateral,
   });
 
+  const { refetch: refetchAccountCollateral } = useAccountCollateral({
+    accountId: params.accountId,
+  });
+
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
@@ -122,6 +127,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
         try {
           await execUndelegate();
           await refetchLiquidityPosition();
+          await refetchAccountCollateral();
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
