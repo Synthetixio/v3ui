@@ -25,7 +25,7 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   poolName?: string;
-}> = ({ vaultsData, poolName }) => {
+}> = ({ vaultsData }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
