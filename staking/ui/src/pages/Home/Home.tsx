@@ -103,7 +103,7 @@ export function HomeUi({
               </Fade>
             </Skeleton>
             <Fade in={!isLoading && !!preferredPool}>
-              <Text ml={{ base: 0, md: 2 }} color="gray.400">{`Pool #${
+              <Text display="none" ml={{ base: 0, md: 2 }} color="gray.400">{`Pool #${
                 preferredPool?.id || 1
               }`}</Text>
             </Fade>
@@ -125,7 +125,7 @@ export function HomeUi({
             </Fade>
           )}
         </Flex>
-        <Skeleton isLoaded={!isLoading} mt={2}>
+        <Skeleton display="none" isLoaded={!isLoading} mt={2}>
           <Fade in={!isLoading}>
             <Text color="gray.500">
               The Spartan Council Pool is the primary pool of Synthetix. All collateral will be

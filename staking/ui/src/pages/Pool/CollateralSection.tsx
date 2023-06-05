@@ -31,10 +31,7 @@ export const CollateralSectionUi: FC<{
   return (
     <BorderBox padding={4} flexDirection="column" data-testid="pool collateral types">
       <Text fontWeight={700} fontSize="xl">
-        Collateral Types
-      </Text>
-      <Text color="gray.400" fontSize="sm">
-        {poolName}
+        Pool Collateralization
       </Text>
       <BorderBox padding={4} mt={4} flexDirection="column">
         <Flex
@@ -51,7 +48,7 @@ export const CollateralSectionUi: FC<{
           >
             Total TVL
             <Tooltip label="Total TVL for Pool">
-              <InfoIcon w="10px" h="10px" />
+              <InfoIcon display="none" w="10px" h="10px" />
             </Tooltip>
           </Text>
           {vaultsData === undefined ? (
@@ -76,7 +73,7 @@ export const CollateralSectionUi: FC<{
           >
             Total Debt
             <Tooltip label="Total Debt for Pool">
-              <InfoIcon w="10px" h="10px" />
+              <InfoIcon display="none" w="10px" h="10px" />
             </Tooltip>
           </Text>
           {vaultsData === undefined ? (
@@ -103,6 +100,7 @@ export const CollateralSectionUi: FC<{
                   <Box
                     display="flex"
                     px={4}
+                    mb={2}
                     flexDirection="column"
                     borderBottom="1px"
                     borderColor="gray.900"
@@ -147,21 +145,21 @@ export const CollateralSectionUi: FC<{
                           fontSize="md"
                           fontWeight={700}
                           color="white"
-                          data-testid="collateral amount"
+                          data-testid="collateral value"
                         >
-                          {formatNumber(vaultCollateral.collateral.amount.toNumber())}{' '}
-                          {vaultCollateral.collateralType.displaySymbol}
+                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber())}
                         </Text>
                         <Text
                           fontSize="sm"
                           color="gray.500"
                           fontWeight="400"
-                          data-testid="collateral value"
+                          data-testid="collateral amount"
                         >
-                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber())}
+                          {formatNumber(vaultCollateral.collateral.amount.toNumber())}{' '}
+                          {vaultCollateral.collateralType.displaySymbol}
                         </Text>
                       </Flex>
-                      <Flex flexBasis="30%" flexDirection="column">
+                      <Flex flexBasis="50%" flexDirection="column">
                         <Text
                           mt={2}
                           fontSize="sm"
@@ -169,7 +167,7 @@ export const CollateralSectionUi: FC<{
                           textTransform="uppercase"
                           whiteSpace="nowrap"
                         >
-                          Vault Debt
+                          Debt
                         </Text>
                         <Text
                           fontSize="md"
@@ -179,23 +177,13 @@ export const CollateralSectionUi: FC<{
                         >
                           {formatNumberToUsd(vaultCollateral.debt.toNumber())}
                         </Text>
-                      </Flex>
-                      <Flex flexBasis="20%" flexDirection="column">
                         <Text
-                          mt={2}
                           fontSize="sm"
                           color="gray.500"
-                          textTransform="uppercase"
-                          whiteSpace="nowrap"
-                        >
-                          C-Ratio
-                        </Text>
-                        <Text
-                          fontSize="md"
-                          fontWeight={700}
-                          color="white"
+                          fontWeight="400"
                           data-testid="collateral cratio"
                         >
+                          VAULT C-RATIO:{' '}
                           {vaultCollateral.debt.eq(0)
                             ? '-'
                             : formatPercent(
@@ -208,7 +196,6 @@ export const CollateralSectionUi: FC<{
                       </Flex>
                     </Flex>
                   </Box>
-                  <Divider my={4} />
                 </React.Fragment>
               );
             })}
