@@ -7,9 +7,10 @@ describe('Pool page / Collateral section', () => {
     cy.viewport(800, 500);
 
     cy.mount(<CollateralSectionUi vaultsData={[] as VaultsDataType} poolName="POOL_NAME" />);
-    cy.get('[data-testid="pool collateral types"]')
-      .should('include.text', 'Collateral Types')
-      .and('include.text', 'POOL_NAME');
+    cy.get('[data-testid="pool collateral types"]').should(
+      'include.text',
+      'Pool Collateralization'
+    );
 
     cy.get('[data-testid="pool tvl"]').should('have.text', '$0.00');
     cy.get('[data-testid="pool total debt"]').should('have.text', '$0.00');
@@ -40,9 +41,10 @@ describe('Pool page / Collateral section', () => {
         poolName="POOL_NAME"
       />
     );
-    cy.get('[data-testid="pool collateral types"]')
-      .should('include.text', 'Collateral Types')
-      .and('include.text', 'POOL_NAME');
+    cy.get('[data-testid="pool collateral types"]').should(
+      'include.text',
+      'Pool Collateralization'
+    );
 
     cy.get('[data-testid="pool tvl"]').should('have.text', '$10.00');
     cy.get('[data-testid="pool total debt"]').should('have.text', '$0.00');
@@ -96,9 +98,10 @@ describe('Pool page / Collateral section', () => {
         poolName="POOL_NAME"
       />
     );
-    cy.get('[data-testid="pool collateral types"]')
-      .should('include.text', 'Collateral Types')
-      .and('include.text', 'POOL_NAME');
+    cy.get('[data-testid="pool collateral types"]').should(
+      'include.text',
+      'Pool Collateralization'
+    );
 
     cy.get('[data-testid="pool tvl"]').should('have.text', '$520.00');
     cy.get('[data-testid="pool total debt"]').should('have.text', '$110.00');
