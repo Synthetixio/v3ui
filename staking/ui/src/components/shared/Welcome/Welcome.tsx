@@ -9,9 +9,9 @@ export const Welcome = () => (
           This is an experimental prototype for Synthetix V3.{' '}
           <Text fontWeight="bold" display="inline">
             Any incentives (including voting power) are exclusively determined based on
-            participation in the{' '}
+            participation in{' '}
             <Link textDecoration="underline" href="https://staking.synthetix.io">
-              Synthetix V2 system
+              Synthetix V2
             </Link>
             .
           </Text>
