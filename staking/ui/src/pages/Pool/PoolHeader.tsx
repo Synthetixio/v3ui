@@ -9,11 +9,11 @@ export const PoolHeaderUi = ({ poolData }: { poolData: PoolType }) => {
         <Heading fontWeight={700} fontSize="3xl">
           {poolData.name}
         </Heading>
-        <Text fontSize="sm" color="gray.400">
+        <Text display="none" fontSize="sm" color="gray.400">
           Pool #{poolData.id}
         </Text>
       </Flex>
-      <Text color="gray.400" fontSize="sm" mt={2}>
+      <Text display="none" color="gray.400" fontSize="sm" mt={2}>
         The Spartan Council Pool is the primary pool of Synthetix. All collateral will be deposited
         in this pool by default.
       </Text>

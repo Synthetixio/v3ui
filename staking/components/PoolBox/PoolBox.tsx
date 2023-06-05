@@ -37,7 +37,7 @@ const PoolBoxUi: FC<{
           <Skeleton w={16} height={6} />
         </Flex>
       )}
-      <Text color="gray.400" mt={2} fontSize="sm">
+      <Text display="none" color="gray.400" mt={2} fontSize="sm">
         The Spartan Council Pool is the primary pool of Synthetix. All collateral will be deposited
         in this pool by default.
       </Text>

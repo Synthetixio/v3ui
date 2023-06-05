@@ -54,7 +54,6 @@ describe('Pool page / Market section', () => {
     );
     cy.get('#app')
       .should('include.text', 'Markets')
-      .and('include.text', 'POOL_NAME')
       .and('include.text', 'No markets configured for the pool');
   });
 
@@ -195,7 +194,6 @@ describe('Pool page / Market section', () => {
     );
     cy.get('[data-testid="pool markets"]')
       .and('include.text', 'Markets')
-      .and('include.text', 'POOL_NAME')
       .and('include.text', 'Last 7 Days')
       .and('include.text', 'Performance Lifetime');
 

@@ -126,9 +126,6 @@ export function MarketSectionUi({
       <Text fontSize="xl" fontWeight={700}>
         Markets
       </Text>
-      <Text color="gray.400" fontSize="sm">
-        {poolData?.name}
-      </Text>
       <Flex mt={4} gap={4} flexDirection={{ base: 'column', sm: 'row' }}>
         <BorderBox paddingY={2} paddingX={4} flexGrow="1" flexDirection="column">
           <Text
@@ -198,27 +195,21 @@ export function MarketSectionUi({
                     <Tr
                       onClick={() => logMarket(market)}
                       key={id}
-                      color="gray.500"
                       data-testid="pool market"
                       data-market={id}
                     >
                       <StyledTd isLastItem={isLastItem}>
-                        <Text
-                          fontSize="sm"
-                          display="block"
-                          color="gray.50"
-                          data-testid="market name"
-                        >
+                        <Text fontSize="sm" display="block" data-testid="market name">
                           {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
                         </Text>
-                        <Text fontSize="xs" display="block" color="gray.50" data-testid="market id">
+                        <Text fontSize="xs" display="none" color="gray.500" data-testid="market id">
                           ID: {market.id}
                         </Text>
                       </StyledTd>
                       <StyledTd isLastItem={isLastItem} fontSize="sm" data-testid="pool allocation">
                         {poolData.total_weight ? (
                           <>
-                            <Text display="block" color="gray.50">
+                            <Text display="block">
                               {formatPercent(weight.div(poolData.total_weight).toNumber())}
                             </Text>
                             {/* TODO, figure out max debt. See notion ticket "Pool page market max debt" */}
