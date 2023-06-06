@@ -54,6 +54,7 @@ const statusColor = (txnStatus: TransactionStatus) => {
   if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
   return 'gray.700';
 };
+
 export const RepayModalUi: React.FC<{
   onClose: () => void;
   debtChange: Wei;
@@ -148,6 +149,7 @@ export const RepayModal: React.FC<{
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
+
   const execRepayWithErrorParser = useCallback(async () => {
     try {
       await execRepay();
@@ -172,6 +174,7 @@ export const RepayModal: React.FC<{
 
   const { txnStatus } = txnState;
   if (!params.poolId || !params.accountId || !collateralType) return null;
+
   return (
     <RepayModalUi
       execRepay={execRepayWithErrorParser}

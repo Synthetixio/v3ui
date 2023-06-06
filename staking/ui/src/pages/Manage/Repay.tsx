@@ -84,8 +84,9 @@ export const RepayUi: FC<{
     </Flex>
   );
 };
+
 export const Repay = () => {
-  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
+  const { debtChange, dispatch } = useContext(ManagePositionContext);
   const { data: USDProxy } = useUSDProxy();
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
@@ -103,7 +104,7 @@ export const Repay = () => {
 
   return (
     <RepayUi
-      setDebtChange={setDebtChange}
+      setDebtChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
       debtChange={debtChange}
       snxUSDBalance={flooredBalance}
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}

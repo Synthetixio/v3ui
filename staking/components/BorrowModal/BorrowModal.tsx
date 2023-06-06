@@ -54,6 +54,7 @@ const statusColor = (txnStatus: TransactionStatus) => {
   if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
   return 'gray.700';
 };
+
 export const BorrowModalUi: React.FC<{
   onClose: () => void;
   debtChange: Wei;
@@ -134,6 +135,7 @@ export const BorrowModal: React.FC<{
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const {
     exec: execBorrow,
     txnState,
@@ -148,6 +150,7 @@ export const BorrowModal: React.FC<{
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
+
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();

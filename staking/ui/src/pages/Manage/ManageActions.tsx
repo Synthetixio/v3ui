@@ -7,7 +7,6 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
-import { wei } from '@synthetixio/wei';
 import {
   FC,
   FormEvent,
@@ -118,8 +117,7 @@ export const ManageAction = () => {
   const params = useParams();
   const [_, setQueryParam] = useSearchParams();
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
-  const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
-    useContext(ManagePositionContext);
+  const { debtChange, collateralChange, dispatch } = useContext(ManagePositionContext);
 
   const collateralType = useCollateralType(params.collateralSymbol);
 
@@ -179,8 +177,7 @@ export const ManageAction = () => {
       <ManageActionUi
         onSubmit={onSubmit}
         setActiveAction={(action) => {
-          setCollateralChange(wei(0));
-          setDebtChange(wei(0));
+          dispatch({ type: 'reset' });
           setQueryParam({ manageAction: action });
         }}
         manageAction={parsedAction || undefined}
@@ -190,8 +187,7 @@ export const ManageAction = () => {
           <RepayModal
             onClose={() => {
               liquidityPosition.refetch();
-              setCollateralChange(wei(0));
-              setDebtChange(wei(0));
+              dispatch({ type: 'reset' });
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'repay'}
@@ -201,8 +197,7 @@ export const ManageAction = () => {
           <BorrowModal
             onClose={() => {
               liquidityPosition.refetch();
-              setCollateralChange(wei(0));
-              setDebtChange(wei(0));
+              dispatch({ type: 'reset' });
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'borrow'}
@@ -213,8 +208,7 @@ export const ManageAction = () => {
             collateralChange={collateralChange}
             onClose={() => {
               liquidityPosition.refetch();
-              setCollateralChange(wei(0));
-              setDebtChange(wei(0));
+              dispatch({ type: 'reset' });
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'deposit'}
@@ -224,8 +218,7 @@ export const ManageAction = () => {
           <UndelegateModal
             onClose={() => {
               liquidityPosition.refetch();
-              setCollateralChange(wei(0));
-              setDebtChange(wei(0));
+              dispatch({ type: 'reset' });
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'undelegate'}

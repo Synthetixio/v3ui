@@ -44,12 +44,14 @@ export const useRepay = (
         dispatch({ type: 'prompting' });
 
         const gasPricesPromised = getGasPrice({ networkName, networkId });
+
         const gasLimitPromised = CoreProxy.estimateGas.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
           debtChange.abs().toBN()
         );
+
         const populatedTxnPromised = CoreProxy.populateTransaction.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
@@ -57,6 +59,7 @@ export const useRepay = (
           debtChange.abs().toBN(),
           { gasLimit: gasLimitPromised }
         );
+
         const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
           gasPricesPromised,
           gasLimitPromised,
