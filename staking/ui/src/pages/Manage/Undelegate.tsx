@@ -20,7 +20,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import Wei, { wei } from '@synthetixio/wei';
-import React, { FC, useContext } from 'react';
+import { FC, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
@@ -42,12 +42,13 @@ export const UndelegateUi: FC<{
   minDelegation,
   currentDebt,
 }) => {
-  const onMaxClick = React.useCallback(() => {
+  const onMaxClick = useCallback(() => {
     if (!max) {
       return;
     }
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
+
   const showRepayDebtTooltip = currentDebt?.gt(0);
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
   const isValidLeftover =
@@ -98,13 +99,11 @@ export const UndelegateUi: FC<{
                     Max {displaySymbol} to undelegate:
                   </Text>
                 )}
-
                 <Amount value={max} data-testid="available to undelegate" />
               </Flex>
             </Flex>
           </Flex>
         </Flex>
-
         <Collapse in={!isValidLeftover} animateOpacity>
           <Alert mt={2} status="info">
             <AlertIcon />
@@ -118,23 +117,27 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-
       <Button data-testid="undelegate submit" type="submit" isDisabled={!max}>
         Undelegate {displaySymbol}
       </Button>
     </Flex>
   );
 };
+
 export const Undelegate = () => {
-  const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
+  const { collateralChange, debtChange, dispatch } = useContext(ManagePositionContext);
   const params = useParams();
+
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
   if (!collateralType) return null;
+
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
@@ -143,6 +146,7 @@ export const Undelegate = () => {
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
@@ -155,7 +159,7 @@ export const Undelegate = () => {
       displaySymbol={collateralType.displaySymbol}
       symbol={collateralType.symbol}
       minDelegation={collateralType.minDelegationD18}
-      setCollateralChange={setCollateralChange}
+      setCollateralChange={(val) => dispatch({ type: 'setCollateralChange', payload: val })}
       collateralChange={collateralChange}
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}

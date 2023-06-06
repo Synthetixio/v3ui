@@ -66,7 +66,7 @@ const BorrowUi: FC<{
 };
 
 export const Borrow = () => {
-  const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
+  const { debtChange, collateralChange, dispatch } = useContext(ManagePositionContext);
   const params = useParams();
 
   const collateralType = useCollateralType(params.collateralSymbol);
@@ -86,5 +86,11 @@ export const Borrow = () => {
     debtChange: debtChange,
   });
 
-  return <BorrowUi setDebtChange={setDebtChange} debtChange={debtChange} maxDebt={maxDebt} />;
+  return (
+    <BorrowUi
+      setDebtChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
+      debtChange={debtChange}
+      maxDebt={maxDebt}
+    />
+  );
 };
