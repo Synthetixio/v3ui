@@ -2,13 +2,13 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Action, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { PercentBadges } from '@snx-v3/PercentBadges';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import Wei, { wei } from '@synthetixio/wei';
-import { FC, useContext, useMemo, useState } from 'react';
+import { Dispatch, FC, useContext, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
@@ -20,17 +20,18 @@ export const DepositUi: FC<{
   tokenBalance?: Wei;
   displaySymbol: string;
   symbol: string;
-  setCollateralChange: (val: Wei) => void;
+  dispatch: Dispatch<Action>;
 }> = ({
   accountCollateral,
   collateralChange,
-  setCollateralChange,
+  dispatch,
   displaySymbol,
   symbol,
   tokenBalance,
   ethBalance,
 }) => {
   const [activeBadge, setActiveBadge] = useState(0);
+
   const combinedTokenBalance = useMemo(() => {
     if (symbol !== 'WETH') {
       return tokenBalance;
@@ -66,7 +67,7 @@ export const DepositUi: FC<{
                 value={collateralChange}
                 onChange={(value) => {
                   setActiveBadge(0);
-                  setCollateralChange(value);
+                  dispatch({ type: 'setCollateralChange', payload: value });
                 }}
                 max={combinedTokenBalance}
               />
@@ -80,7 +81,12 @@ export const DepositUi: FC<{
                   <Flex
                     gap="1"
                     cursor="pointer"
-                    onClick={() => setCollateralChange(accountCollateral.availableCollateral)}
+                    onClick={() =>
+                      dispatch({
+                        type: 'setCollateralChange',
+                        payload: accountCollateral.availableCollateral,
+                      })
+                    }
                   >
                     <Text>Available {accountCollateral.symbol} Collateral:</Text>
                     <Amount value={accountCollateral?.availableCollateral} />
@@ -93,7 +99,7 @@ export const DepositUi: FC<{
                     if (!tokenBalance) {
                       return;
                     }
-                    setCollateralChange(tokenBalance);
+                    dispatch({ type: 'setCollateralChange', payload: tokenBalance });
                   }}
                 >
                   <Text>{symbol} Balance:</Text>
@@ -107,7 +113,7 @@ export const DepositUi: FC<{
                       if (!ethBalance) {
                         return;
                       }
-                      setCollateralChange(ethBalance);
+                      dispatch({ type: 'setCollateralChange', payload: ethBalance });
                     }}
                   >
                     <Text>ETH Balance:</Text>
@@ -125,12 +131,12 @@ export const DepositUi: FC<{
               return;
             }
             if (activeBadge === badgeNum) {
-              setCollateralChange(wei(0));
+              dispatch({ type: 'setCollateralChange', payload: wei(0) });
               setActiveBadge(0);
               return;
             }
             setActiveBadge(badgeNum);
-            setCollateralChange(combinedTokenBalance.mul(badgeNum));
+            dispatch({ type: 'setCollateralChange', payload: combinedTokenBalance.mul(badgeNum) });
           }}
           activeBadge={activeBadge}
         />
@@ -165,7 +171,7 @@ export const Deposit = () => {
       tokenBalance={tokenBalance}
       ethBalance={ethBalance}
       symbol={collateralType.symbol}
-      setCollateralChange={(val) => dispatch({ type: 'setCollateralChange', payload: val })}
+      dispatch={dispatch}
       collateralChange={collateralChange}
     />
   );

@@ -3,8 +3,8 @@ import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import { FC, useContext } from 'react';
+import { Action, ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Dispatch, FC, useContext } from 'react';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
@@ -14,8 +14,8 @@ import Wei from '@synthetixio/wei';
 const BorrowUi: FC<{
   debtChange: Wei;
   maxDebt: Wei;
-  setDebtChange: (val: Wei) => void;
-}> = ({ debtChange, setDebtChange, maxDebt }) => {
+  dispatch: Dispatch<Action>;
+}> = ({ debtChange, maxDebt, dispatch }) => {
   return (
     <Flex flexDirection="column" gap={2}>
       <Text fontSize="md" fontWeight="700">
@@ -38,7 +38,7 @@ const BorrowUi: FC<{
               'data-max': maxDebt.toString(),
             }}
             value={debtChange}
-            onChange={(val) => setDebtChange(val)}
+            onChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
             max={maxDebt}
           />
           <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
@@ -49,7 +49,7 @@ const BorrowUi: FC<{
                 if (!maxDebt) {
                   return;
                 }
-                setDebtChange(maxDebt);
+                dispatch({ type: 'setDebtChange', payload: maxDebt });
               }}
             >
               <Text>Max Borrow:</Text>
@@ -86,11 +86,5 @@ export const Borrow = () => {
     debtChange: debtChange,
   });
 
-  return (
-    <BorrowUi
-      setDebtChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
-      debtChange={debtChange}
-      maxDebt={maxDebt}
-    />
-  );
+  return <BorrowUi dispatch={dispatch} debtChange={debtChange} maxDebt={maxDebt} />;
 };

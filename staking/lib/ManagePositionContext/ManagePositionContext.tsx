@@ -17,7 +17,7 @@ interface State {
   collateralChange: Wei;
 }
 
-interface Action {
+export interface Action {
   type: 'setDebtChange' | 'setCollateralChange' | 'reset';
   payload?: Wei;
 }
