@@ -1,7 +1,7 @@
 import { Button, Flex, Text, Tooltip } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { DebtChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
@@ -14,7 +14,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { constants } from 'ethers';
 
 export const RepayUi: FC<{
-  debtChange: Wei;
+  debtChange: DebtChange;
   max?: Wei;
   snxUSDBalance?: Wei;
   currentDebt?: Wei;
@@ -94,7 +94,7 @@ export const RepayUi: FC<{
               'data-testid': 'repay amount input',
               'data-max': max?.toString(),
             }}
-            value={debtChange.abs()}
+            value={debtChange.amount.abs()}
             onChange={(val) => setDebtChange(val.mul(-1))}
             max={max}
           />

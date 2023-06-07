@@ -3,7 +3,7 @@ import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { Action, ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Action, DebtChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { Dispatch, FC, useContext } from 'react';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -12,7 +12,7 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 
 const BorrowUi: FC<{
-  debtChange: Wei;
+  debtChange: DebtChange;
   maxDebt: Wei;
   dispatch: Dispatch<Action>;
 }> = ({ debtChange, maxDebt, dispatch }) => {
@@ -37,7 +37,7 @@ const BorrowUi: FC<{
               'data-testid': 'borrow amount input',
               'data-max': maxDebt.toString(),
             }}
-            value={debtChange}
+            value={debtChange.amount}
             onChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
             max={maxDebt}
           />

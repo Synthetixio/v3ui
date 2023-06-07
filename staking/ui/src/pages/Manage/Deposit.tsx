@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
-import { Action, ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Action, CollateralChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { PercentBadges } from '@snx-v3/PercentBadges';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -15,7 +15,7 @@ import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
-  collateralChange: Wei;
+  collateralChange: CollateralChange;
   ethBalance?: Wei;
   tokenBalance?: Wei;
   displaySymbol: string;
@@ -64,7 +64,7 @@ export const DepositUi: FC<{
                   'data-testid': 'deposit amount input',
                   'data-max': combinedTokenBalance?.toString(),
                 }}
-                value={collateralChange}
+                value={collateralChange.amount}
                 onChange={(value) => {
                   setActiveBadge(0);
                   dispatch({ type: 'setCollateralChange', payload: value });

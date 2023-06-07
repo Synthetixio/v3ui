@@ -5395,6 +5395,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    ethers: ^6.4.2
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5546,6 +5547,7 @@ __metadata:
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    ethers: ^6.4.2
     react: ^18.2.0
   languageName: unknown
   linkType: soft

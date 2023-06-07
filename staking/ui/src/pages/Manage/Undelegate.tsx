@@ -14,7 +14,7 @@ import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { CollateralChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -24,7 +24,7 @@ import { FC, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
-  collateralChange: Wei;
+  collateralChange: CollateralChange;
   currentCollateral?: Wei;
   minDelegation?: Wei;
   currentDebt?: Wei;
@@ -78,7 +78,7 @@ export const UndelegateUi: FC<{
                 'data-testid': 'undelegate amount input',
                 'data-max': max?.toString(),
               }}
-              value={collateralChange.abs()}
+              value={collateralChange.amount.abs()}
               onChange={(val) => setCollateralChange(val.mul(-1))}
               max={max}
             />

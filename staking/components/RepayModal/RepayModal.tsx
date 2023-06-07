@@ -13,17 +13,18 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import Wei from '@synthetixio/wei';
+import { wei } from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
 import { CheckIcon, CloseIcon } from '@snx-v3/Multistep';
 import { PropsWithChildren, useCallback, useContext } from 'react';
 import { useRepay } from '@snx-v3/useRepay';
 import { useParams } from '@snx-v3/useParams';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { DebtChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { constants } from 'ethers';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -57,7 +58,7 @@ const statusColor = (txnStatus: TransactionStatus) => {
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
-  debtChange: Wei;
+  debtChange: DebtChange;
   isOpen: boolean;
   txnStatus: TransactionStatus;
   execRepay: () => void;
@@ -92,7 +93,7 @@ export const RepayModalUi: React.FC<{
               <StepIcon txnStatus={txnStatus}>1</StepIcon>
             </Flex>
             <Text>
-              Repay <Amount value={debtChange.abs()} suffix={` snxUSD`} />
+              Repay <Amount value={debtChange.amount.abs()} suffix={` snxUSD`} />
             </Text>
           </Flex>
           <Button
@@ -139,6 +140,8 @@ export const RepayModal: React.FC<{
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
 
+  const repayAmount = debtChange.type === 'burnMax' ? wei(constants.MaxUint256) : debtChange.amount;
+
   const {
     exec: execRepay,
     txnState,
@@ -147,7 +150,7 @@ export const RepayModal: React.FC<{
     accountId: params.accountId,
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
-    debtChange,
+    debtChange: repayAmount,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });

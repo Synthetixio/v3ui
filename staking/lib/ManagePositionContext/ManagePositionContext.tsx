@@ -1,9 +1,19 @@
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, createContext, PropsWithChildren, Dispatch, useReducer } from 'react';
 
+export interface DebtChange {
+  type: 'burnMax' | 'mintMax' | 'custom';
+  amount: Wei;
+}
+
+export interface CollateralChange {
+  type: 'depositMax' | 'withdrawMax' | 'custom';
+  amount: Wei;
+}
+
 interface State {
-  debtChange: Wei;
-  collateralChange: Wei;
+  debtChange: DebtChange;
+  collateralChange: CollateralChange;
 }
 
 export interface Action {
@@ -12,8 +22,14 @@ export interface Action {
 }
 
 const initialState: State = {
-  debtChange: wei(0),
-  collateralChange: wei(0),
+  debtChange: {
+    type: 'custom',
+    amount: wei(0),
+  },
+  collateralChange: {
+    type: 'custom',
+    amount: wei(0),
+  },
 };
 
 export const ManagePositionContext = createContext<{
@@ -28,14 +44,33 @@ export const ManagePositionContext = createContext<{
 const reducerFn = (state: State, action: Action): State => {
   switch (action.type) {
     case 'setDebtChange':
-      return { ...state, debtChange: action?.payload || wei(0) };
+      return {
+        ...state,
+        debtChange:
+          {
+            type: 'custom',
+            amount: action?.payload || wei(0),
+          } || wei(0),
+      };
     case 'setCollateralChange':
-      return { ...state, collateralChange: action?.payload || wei(0) };
+      return {
+        ...state,
+        collateralChange: {
+          type: 'custom',
+          amount: action?.payload || wei(0),
+        },
+      };
     case 'reset':
       return {
         ...state,
-        debtChange: wei(0),
-        collateralChange: wei(0),
+        debtChange: {
+          type: 'custom',
+          amount: wei(0),
+        },
+        collateralChange: {
+          type: 'custom',
+          amount: wei(0),
+        },
       };
     default:
       return state;
