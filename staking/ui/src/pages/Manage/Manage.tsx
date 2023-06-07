@@ -50,7 +50,7 @@ export const ManageUi: FC<{
       <Flex mb={3} alignItems="top" gap={3.5}>
         <Heading
           fontSize="1xl"
-          fontWeight="700"
+          fontWeight="400"
           color="gray.200"
           display="inline-flex"
           alignItems="center"
