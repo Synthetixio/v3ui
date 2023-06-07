@@ -6,7 +6,7 @@ export const PercentBadges: FC<{
   activeBadge: number;
 }> = ({ onBadgePress, activeBadge, disabled }) => {
   return (
-    <Flex w="100%" justifyContent="space-between" mt={1}>
+    <Flex w="100%" justifyContent="space-between" mt={2} mb={1}>
       <Badge
         variant="percent"
         sx={{

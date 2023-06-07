@@ -42,15 +42,14 @@ export const DepositUi: FC<{
   }, [symbol, tokenBalance, ethBalance]);
 
   return (
-    <Flex flexDirection="column" gap={2}>
-      <Text fontSize="md" fontWeight="700">
-        Delegate {displaySymbol}
+    <Flex flexDirection="column">
+      <Text fontSize="md" fontWeight="700" mb="0.5">
+        Add {displaySymbol}
       </Text>
-      <Text fontSize="sm" color="gray.400">
-        Take an interest-free loan against your collateral. This increases your debt and decreases
-        your C-Ratio.
+      <Text fontSize="sm" color="gray.400" mb="4">
+        Provide additional collateral to this position. This will increase the position’s C-Ratio.
       </Text>
-      <BorderBox display="flex" py={1} px={2} flexDirection="column">
+      <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
         <Flex>
           <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
             <CollateralIcon symbol={symbol} />
@@ -136,7 +135,7 @@ export const DepositUi: FC<{
         />
       </BorderBox>
       <Button data-testid="deposit submit" type="submit">
-        Delegate {displaySymbol}
+        Add {displaySymbol}
       </Button>
     </Flex>
   );

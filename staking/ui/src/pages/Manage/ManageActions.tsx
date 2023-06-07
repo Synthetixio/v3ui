@@ -92,7 +92,7 @@ const ManageActionUi: FC<{
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="deposit" activeAction={manageAction}>
-          <ArrowDownIcon w="15px" h="15px" mr={1} /> Delegate Collateral
+          <ArrowDownIcon w="15px" h="15px" mr={1} /> Add Collateral
         </ActionButton>
         <ActionButton onClick={setActiveAction} action="repay" activeAction={manageAction}>
           <DollarCircle mr={1} /> Repay snxUSD
@@ -100,14 +100,14 @@ const ManageActionUi: FC<{
       </Flex>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="undelegate" activeAction={manageAction}>
-          <ArrowUpIcon w="15px" h="15px" mr={1} /> Undelegate Collateral
+          <ArrowUpIcon w="15px" h="15px" mr={1} /> Remove Collateral
         </ActionButton>
         <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
           <BorrowIcon mr={1} /> Borrow snxUSD
         </ActionButton>
       </Flex>
       {manageAction ? (
-        <Flex direction="column" mt={4}>
+        <Flex direction="column" mt={6}>
           <Action manageAction={manageAction} />
         </Flex>
       ) : null}

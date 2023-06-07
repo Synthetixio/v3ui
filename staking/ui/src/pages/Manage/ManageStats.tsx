@@ -3,7 +3,6 @@ import { Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 
 import { currency } from '@snx-v3/format';
-import { PoolBox } from '@snx-v3/PoolBox';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
@@ -47,9 +46,9 @@ export const ManageStatsUi: FC<{
 }) => {
   return (
     <Flex direction="column" gap={2}>
-      <BorderBox px={4} py={2} display="flex" gap={1} flexDirection="column">
+      <BorderBox px={4} py={2} flexDirection="column">
         <Text color="gray.500" fontSize="sm">
-          Collateral
+          COLLATERAL
         </Text>
         <Flex
           justifyContent="space-between"
@@ -62,17 +61,18 @@ export const ManageStatsUi: FC<{
             formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
             hasChanges={hasChanges}
           />
-          <Text fontWeight="400" color="gray.500" fontSize="md">
-            {currency(liquidityPosition.collateralValue, {
-              currency: 'USD',
-              style: 'currency',
-            })}
-          </Text>
         </Flex>
+        <Text fontWeight="400" color="gray.500" fontSize="xs">
+          Current Value:{' '}
+          {currency(liquidityPosition.collateralValue, {
+            currency: 'USD',
+            style: 'currency',
+          })}
+        </Text>
       </BorderBox>
-      <BorderBox px={4} py={2} display="flex" gap={1} flexDirection="column">
+      <BorderBox px={4} py={2} flexDirection="column">
         <Text color="gray.500" fontSize="sm">
-          Debt
+          DEBT
         </Text>
         <Flex justifyContent="space-between" alignItems="center" data-testid="manage stats debt">
           <ChangeStat
@@ -84,7 +84,7 @@ export const ManageStatsUi: FC<{
           />
         </Flex>
       </BorderBox>
-      <BorderBox px={4} py={2} display="flex" gap={1} flexDirection="column">
+      <BorderBox px={4} py={2} flexDirection="column">
         <Text color="gray.500" fontSize="sm" data-testid="manage stats c-ratio">
           C-RATIO
         </Text>
@@ -100,12 +100,11 @@ export const ManageStatsUi: FC<{
             formatFn={(val: Wei) => currency(val, { style: 'percent' })}
             hasChanges={hasChanges}
           />
-          <Text fontWeight="400" color="gray.500" fontSize="md">
-            {currency(collateralType.liquidationRatioD18, { style: 'percent' })}
-          </Text>
         </Flex>
+        <Text fontWeight="400" color="gray.500" fontSize="xs">
+          Liquidation C-Ratio: {currency(collateralType.liquidationRatioD18, { style: 'percent' })}
+        </Text>
       </BorderBox>
-      <PoolBox />
     </Flex>
   );
 };
