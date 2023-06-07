@@ -31,7 +31,7 @@ export const ManageUi: FC<{
           alignItems="center"
           mb="1"
         >
-          {poolName} Pool Liquidity Position
+          {poolName} Liquidity Position
         </Heading>
 
         <Button
@@ -47,7 +47,7 @@ export const ManageUi: FC<{
           Pool Info
         </Button>
       </Flex>
-      <Flex mb={3} alignItems="top" gap={3.5}>
+      <Flex mb={5} alignItems="top" gap={3.5}>
         <Heading
           fontSize="1xl"
           fontWeight="400"
