@@ -20,15 +20,15 @@ export const RepayUi: FC<{
   setDebtChange: (val: Wei) => void;
 }> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance }) => {
   return (
-    <Flex flexDirection="column" gap={2}>
-      <Text fontSize="md" fontWeight="700">
+    <Flex flexDirection="column">
+      <Text fontSize="md" fontWeight="700" mb="0.5">
         Repay snxUSD
       </Text>
-      <Text fontSize="sm" color="gray.400">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam consectetur dignissimos velit
-        odio cum vitae facilis?
+      <Text fontSize="sm" color="gray.400" mb="4">
+        Pay down your position’s debt with snxUSD. This decreases your debt and increases your
+        C-Ratio.
       </Text>
-      <BorderBox display="flex" py={1} px={2}>
+      <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
           snxUSD
@@ -44,9 +44,10 @@ export const RepayUi: FC<{
             onChange={(val) => setDebtChange(val.mul(-1))}
             max={max}
           />
-          <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
+          <Flex flexDirection="row" justifyContent="right" fontSize="xs" color="whiteAlpha.700">
             <Flex
               gap="1"
+              mr="3"
               cursor="pointer"
               onClick={() => {
                 if (!currentDebt) {
@@ -56,7 +57,9 @@ export const RepayUi: FC<{
               }}
             >
               <Text>Debt:</Text>
-              <Amount value={currentDebt} data-testid="current debt" />
+              <Text display="inline">
+                $<Amount value={currentDebt} data-testid="current debt" />
+              </Text>
             </Flex>
             <Flex
               gap="1"
@@ -68,8 +71,10 @@ export const RepayUi: FC<{
                 setDebtChange(snxUSDBalance.neg());
               }}
             >
-              <Text>snxUSD Balance:</Text>
-              <Amount value={snxUSDBalance} data-testid="available snxUSD balance" />
+              <Text>Balance:</Text>
+              <Text display="inline">
+                <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> snxUSD
+              </Text>
             </Flex>
           </Flex>
         </Flex>

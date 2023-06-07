@@ -1,4 +1,3 @@
-import { InfoOutlineIcon } from '@chakra-ui/icons';
 import {
   Alert,
   AlertDescription,
@@ -6,13 +5,11 @@ import {
   Button,
   Flex,
   Text,
-  Tooltip,
   AlertTitle,
   Collapse,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { currency } from '@snx-v3/format';
 import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
@@ -40,7 +37,6 @@ export const UndelegateUi: FC<{
   symbol,
   currentCollateral,
   minDelegation,
-  currentDebt,
 }) => {
   const onMaxClick = React.useCallback(() => {
     if (!max) {
@@ -48,23 +44,22 @@ export const UndelegateUi: FC<{
     }
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
-  const showRepayDebtTooltip = currentDebt?.gt(0);
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
   return (
-    <Flex flexDirection="column" gap={2}>
-      <Text fontSize="md" fontWeight="700">
-        Undelegate {displaySymbol}
+    <Flex flexDirection="column">
+      <Text fontSize="md" fontWeight="700" mb="0.5">
+        Remove {displaySymbol}
       </Text>
-      <Text fontSize="sm" color="gray.400">
-        Undelegate collateral. The max amount you can undelegate is based on your debt and the
-        issuance ratio. To be able to undelegate all of the collateral you need to repay your debt
-        first
+      <Text fontSize="sm" color="gray.400" mb="4">
+        Removing collateral from this position will transfer it to the account’s Available
+        Collateral balance for withdrawal. Collateral may only be removed if the resulting C-Ratio
+        is above the Issuance C-Ratio.
       </Text>
 
-      <BorderBox flexDirection="column" py={1} px={2}>
+      <BorderBox flexDirection="column" py={2} px={3} mb="4">
         <Flex flexDirection="row" justifyContent="space-between" width="100%">
           <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
             <CollateralIcon symbol={symbol} />
@@ -83,23 +78,10 @@ export const UndelegateUi: FC<{
             />
             <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
               <Flex gap="1" cursor="pointer" onClick={onMaxClick}>
-                {showRepayDebtTooltip ? (
-                  <Tooltip
-                    label={`Your total collateral balance is: ${currency(
-                      currentCollateral || wei(0)
-                    )}. To be able to undelegate all of the collateral you need to repay all of your debt`}
-                  >
-                    <Text display="flex" alignItems="center" gap={1}>
-                      <InfoOutlineIcon /> Max {displaySymbol} to undelegate:
-                    </Text>
-                  </Tooltip>
-                ) : (
-                  <Text display="flex" alignItems="center" gap={1}>
-                    Max {displaySymbol} to undelegate:
-                  </Text>
-                )}
-
-                <Amount value={max} data-testid="available to undelegate" />
+                <Text display="flex" alignItems="center" gap={1}>
+                  Max:
+                </Text>
+                <Amount value={max} data-testid="available to undelegate" /> {displaySymbol}
               </Flex>
             </Flex>
           </Flex>
@@ -113,14 +95,14 @@ export const UndelegateUi: FC<{
                 The minimal delegated amount is{' '}
                 <Amount value={minDelegation} suffix={` ${symbol}`} />
               </AlertTitle>
-              <AlertDescription>You can close your position by undelegating Max.</AlertDescription>
+              <AlertDescription>You can close your position by undelegating max.</AlertDescription>
             </Flex>
           </Alert>
         </Collapse>
       </BorderBox>
 
       <Button data-testid="undelegate submit" type="submit" isDisabled={!max}>
-        Undelegate {displaySymbol}
+        Remove {displaySymbol}
       </Button>
     </Flex>
   );

@@ -51,7 +51,7 @@ export function AvailableCollateralUi({
         </Text>
         <Alert
           ml="auto"
-          status={timeToUnlock === '~' ? 'loading' : timeToUnlock ? 'error' : 'success'}
+          status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
           width="540px"
           title={unlockDate}
         >
@@ -90,7 +90,7 @@ export function AvailableCollateral() {
 
   const formatTimeToUnlock = React.useCallback(() => {
     if (accountCollateralUnlockDate.isLoading) {
-      return '~';
+      return '—';
     }
     if (
       !accountCollateralUnlockDate.data ||
@@ -109,7 +109,7 @@ export function AvailableCollateral() {
 
   const unlockDate = React.useMemo(() => {
     if (accountCollateralUnlockDate.isLoading) {
-      return '~';
+      return '—';
     }
     if (
       !accountCollateralUnlockDate.data ||

@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Text, Heading, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Text, Heading, Spinner, Button } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -8,42 +8,83 @@ import { ManageAction } from './ManageActions';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from './ManageStats';
 import { HomeLink } from '@snx-v3/HomeLink';
+import { usePoolData } from '@snx-v3/usePoolData';
+import { useNavigate, NavigateFunction, generatePath } from 'react-router-dom';
 
-export const ManageUi: FC<{ collateralType: CollateralType }> = ({ collateralType }) => {
+export const ManageUi: FC<{
+  collateralType: CollateralType;
+  poolName?: string;
+  poolId?: string;
+  navigate: NavigateFunction;
+}> = ({ collateralType, poolName, poolId, navigate }) => {
   return (
     <Box>
-      <HomeLink />
-      <Heading
-        fontWeight={700}
-        fontSize="3xl"
-        color="gray.50"
-        display="flex"
-        alignItems="center"
-        gap={2}
-      >
-        <CollateralIcon
-          symbol={collateralType.symbol}
-          width="30px"
-          height="30px"
-          fill="#0B0B22"
-          color="#00D1FF"
-        />
-        {collateralType.displaySymbol} Vault
-      </Heading>
-      <Text color="gray.500" fontSize="sm">
-        Delegate your collateral SNX to borrow snxUSD and contribute to the network collateral. If
-        you’ve never staked on Synthetix V3 before, please read through this quick introduction
-        first.
-      </Text>
-      <Divider my={8} bg="gray.900" />
+      <Box mb="4">
+        <HomeLink />
+      </Box>
+      <Flex>
+        <Heading
+          fontWeight={700}
+          fontSize="2xl"
+          color="gray.50"
+          display="flex"
+          alignItems="center"
+          mb="1"
+        >
+          {poolName} Pool Liquidity Position
+        </Heading>
+
+        <Button
+          ml="auto"
+          size="sm"
+          onClick={() =>
+            navigate({
+              pathname: generatePath('/pools/:poolId', { poolId: poolId! }),
+            })
+          }
+          variant="outline"
+        >
+          Pool Info
+        </Button>
+      </Flex>
+      <Flex mb={3} alignItems="top" gap={3.5}>
+        <Heading
+          fontSize="1xl"
+          fontWeight="400"
+          color="gray.200"
+          display="inline-flex"
+          alignItems="center"
+        >
+          Pool #{poolId}
+        </Heading>
+        <Heading
+          fontSize="1xl"
+          fontWeight="400"
+          color="gray.200"
+          display="inline-flex"
+          alignItems="center"
+        >
+          <CollateralIcon
+            symbol={collateralType.symbol}
+            width="28px"
+            height="28px"
+            fill="#0B0B22"
+            color="#00D1FF"
+          />
+          {collateralType.displaySymbol} Vault
+        </Heading>
+      </Flex>
       <Flex gap={4}>
-        <BorderBox p={4} flexDirection="column">
-          <Text fontWeight="700" fontSize="xl" color="gray.50">
-            Manage C-Ratio
+        <BorderBox p={4} flexDirection="column" pb={5}>
+          <Text fontWeight="700" fontSize="xl" color="gray.50" mb="1">
+            Manage Position
           </Text>
-          <Text color="gray.400" fontSize="sm">
-            Your Collateralization Ratio (C-ratio) is the health of your position, and determines
-            your participation in rewards. C-ratio = Collateral/Debt.
+          <Text color="gray.400" fontSize="sm" mb="2">
+            The Collateralization Ratio (C-Ratio) is calculated by dividing the value of the
+            position’s collateral by the value of the position’s debt.{' '}
+            <Text fontWeight="700" display="inline" color="white">
+              This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
+            </Text>
           </Text>
           <ManageAction />
         </BorderBox>
@@ -57,7 +98,9 @@ export const ManageUi: FC<{ collateralType: CollateralType }> = ({ collateralTyp
 
 export const Manage = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: poolData } = usePoolData(params.poolId);
 
   if (!collateralType) {
     return <Spinner />; // TODO skeleton
@@ -65,7 +108,12 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
-      <ManageUi collateralType={collateralType} />
+      <ManageUi
+        collateralType={collateralType}
+        navigate={navigate}
+        poolName={poolData?.name}
+        poolId={poolData?.id}
+      />
     </ManagePositionProvider>
   );
 };
