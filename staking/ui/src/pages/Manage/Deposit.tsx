@@ -149,7 +149,10 @@ export const DepositUi: FC<{
 };
 
 export const Deposit = () => {
-  const { collateralChange, dispatch } = useContext(ManagePositionContext);
+  const {
+    state: { collateralChange },
+    dispatch,
+  } = useContext(ManagePositionContext);
 
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);

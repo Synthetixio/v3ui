@@ -132,9 +132,13 @@ export const RepayModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
 }> = ({ onClose, isOpen }) => {
-  const { debtChange } = useContext(ManagePositionContext);
+  const {
+    state: { debtChange },
+  } = useContext(ManagePositionContext);
+
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
+
   const {
     exec: execRepay,
     txnState,

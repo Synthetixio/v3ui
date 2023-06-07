@@ -117,7 +117,10 @@ export const ManageAction = () => {
   const params = useParams();
   const [_, setQueryParam] = useSearchParams();
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
-  const { debtChange, collateralChange, dispatch } = useContext(ManagePositionContext);
+  const {
+    state: { debtChange, collateralChange },
+    dispatch,
+  } = useContext(ManagePositionContext);
 
   const collateralType = useCollateralType(params.collateralSymbol);
 

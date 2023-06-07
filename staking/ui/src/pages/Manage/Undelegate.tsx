@@ -125,7 +125,10 @@ export const UndelegateUi: FC<{
 };
 
 export const Undelegate = () => {
-  const { collateralChange, debtChange, dispatch } = useContext(ManagePositionContext);
+  const {
+    state: { collateralChange, debtChange },
+    dispatch,
+  } = useContext(ManagePositionContext);
   const params = useParams();
 
   const collateralType = useCollateralType(params.collateralSymbol);

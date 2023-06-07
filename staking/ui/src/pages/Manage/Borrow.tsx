@@ -66,7 +66,11 @@ const BorrowUi: FC<{
 };
 
 export const Borrow = () => {
-  const { debtChange, collateralChange, dispatch } = useContext(ManagePositionContext);
+  const {
+    state: { debtChange, collateralChange },
+    dispatch,
+  } = useContext(ManagePositionContext);
+
   const params = useParams();
 
   const collateralType = useCollateralType(params.collateralSymbol);

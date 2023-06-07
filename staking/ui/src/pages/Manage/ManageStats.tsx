@@ -112,7 +112,9 @@ export const ManageStatsUi: FC<{
 
 export const ManageStats = () => {
   const params = useParams();
-  const { debtChange, collateralChange } = useContext(ManagePositionContext);
+  const {
+    state: { debtChange, collateralChange },
+  } = useContext(ManagePositionContext);
 
   const collateralType = useCollateralType(params.collateralSymbol);
 
