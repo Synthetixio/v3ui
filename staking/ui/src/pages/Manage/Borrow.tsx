@@ -17,15 +17,15 @@ const BorrowUi: FC<{
   dispatch: Dispatch<Action>;
 }> = ({ debtChange, maxDebt, dispatch }) => {
   return (
-    <Flex flexDirection="column" gap={2}>
-      <Text fontSize="md" fontWeight="700">
+    <Flex flexDirection="column">
+      <Text fontSize="md" fontWeight="700" mb="0.5">
         Borrow snxUSD
       </Text>
-      <Text fontSize="sm" color="gray.400">
-        Take an interest-free loan against your collateral. This increases your debt and decreases
-        your C-Ratio.
+      <Text fontSize="sm" color="gray.400" mb="4">
+        Take an interest-free loan of snxUSD against your collateral. This increases your debt and
+        decreases your C-Ratio.
       </Text>
-      <BorderBox display="flex" py={1} px={2}>
+      <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
           snxUSD
@@ -52,8 +52,8 @@ const BorrowUi: FC<{
                 dispatch({ type: 'setDebtChange', payload: maxDebt });
               }}
             >
-              <Text>Max Borrow:</Text>
-              <Amount value={maxDebt} />
+              <Text>Max:</Text>
+              <Amount value={maxDebt} /> snxUSD
             </Flex>
           </Flex>
         </Flex>

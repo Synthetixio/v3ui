@@ -10,7 +10,7 @@ describe('Pool Page', () => {
         MarketSection={() => <div>MarketSection</div>}
       />
     );
-    cy.contains('a', 'Home').should('exist');
+    cy.contains('a', 'Dashboard').should('exist');
     cy.contains('div', 'PoolHeader').should('exist');
     cy.contains('div', 'CollateralSection').should('exist');
     cy.contains('div', 'MarketSection').should('exist');
