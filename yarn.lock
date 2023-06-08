@@ -6326,6 +6326,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/validatePosition@workspace:staking/lib/validatePosition"
   dependencies:
+    "@snx-v3/ManagePositionContext": "workspace:*"
     "@synthetixio/wei": ^2.74.4
   languageName: unknown
   linkType: soft

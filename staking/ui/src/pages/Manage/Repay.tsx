@@ -11,6 +11,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { Dispatch, FC, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { InfoIcon } from '@chakra-ui/icons';
+import { Amount } from '@snx-v3/Amount';
 
 export const RepayUi: FC<{
   burnToTargetAmount: Wei;
@@ -32,7 +33,14 @@ export const RepayUi: FC<{
     if (!currentDebt) {
       return;
     }
-    dispatch({ type: 'setBurnMax', payload: currentDebt });
+    dispatch({ type: 'setBurnMax', payload: currentDebt.neg() });
+  };
+
+  const setBurnBalance = () => {
+    if (!snxUSDBalance) {
+      return;
+    }
+    dispatch({ type: 'setDebtChange', payload: snxUSDBalance.neg() });
   };
 
   const insufficientBalance = snxUSDBalance?.lt(debtChange.amount.abs());
@@ -101,6 +109,14 @@ export const RepayUi: FC<{
             onChange={(val) => dispatch({ type: 'setDebtChange', payload: val.mul(-1) })}
             max={max}
           />
+          <Flex flexDirection="row" justifyContent="right" fontSize="xs" color="whiteAlpha.700">
+            <Flex gap="1" cursor="pointer" onClick={setBurnBalance}>
+              <Text>Balance:</Text>
+              <Text display="inline">
+                <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> snxUSD
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
       </BorderBox>
       {insufficientBalance && (
@@ -145,9 +161,10 @@ export const Repay = () => {
   const debtExists = liquidityPosition?.debt.gt(0.01);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
 
-  const burnToTargetAmount = liquidityPosition?.cRatio.lt(collateralType?.issuanceRatioD18)
-    ? liquidityPosition?.debt.mul(collateralType?.issuanceRatioD18.div(liquidityPosition?.cRatio)) // TODO: TEST THIS
-    : wei(0);
+  const burnToTargetAmount =
+    debtExists && liquidityPosition?.cRatio.lt(collateralType?.issuanceRatioD18)
+      ? liquidityPosition?.debt.mul(collateralType?.issuanceRatioD18.div(liquidityPosition?.cRatio)) // TODO: TEST THIS
+      : wei(0);
 
   return (
     <RepayUi
