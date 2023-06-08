@@ -21,7 +21,10 @@ export const validatePosition = ({
   // We should use a display value to render the change in debt or collateral (and the change in C-ratio)
 
   const targetCRatio = issuanceRatioD18 ? issuanceRatioD18 : wei(1);
+
+  // In the case of max burn or max mint we don't want to use
   const newDebt = wei(debt || 0).add(debtChange);
+
   const newCollateralAmount = wei(collateralAmount || 0).add(collateralChange);
 
   const collateralPrice = wei(collateralValue || 0).div(
