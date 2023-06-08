@@ -17,7 +17,7 @@ interface State {
 }
 
 export interface Action {
-  type: 'setDebtChange' | 'setCollateralChange' | 'setBurnMax' | 'reset';
+  type: 'setDebtChange' | 'setCollateralChange' | 'setBurnMax' | 'mintMax' | 'reset';
   payload?: Wei;
 }
 
@@ -43,6 +43,7 @@ export const ManagePositionContext = createContext<{
 
 const reducerFn = (state: State, action: Action): State => {
   switch (action.type) {
+    // Debt management
     case 'setDebtChange':
       return {
         ...state,
@@ -52,6 +53,25 @@ const reducerFn = (state: State, action: Action): State => {
             amount: action?.payload || wei(0),
           } || wei(0),
       };
+
+    case 'setBurnMax':
+      return {
+        ...state,
+        debtChange: {
+          type: 'burnMax',
+          amount: action?.payload || wei(0),
+        },
+      };
+
+    case 'mintMax':
+      return {
+        ...state,
+        debtChange: {
+          type: 'burnMax',
+          amount: action?.payload || wei(0),
+        },
+      };
+
     case 'setCollateralChange':
       return {
         ...state,
@@ -60,6 +80,8 @@ const reducerFn = (state: State, action: Action): State => {
           amount: action?.payload || wei(0),
         },
       };
+
+    // Global reset
     case 'reset':
       return {
         ...state,
@@ -72,6 +94,7 @@ const reducerFn = (state: State, action: Action): State => {
           amount: wei(0),
         },
       };
+
     default:
       return state;
   }

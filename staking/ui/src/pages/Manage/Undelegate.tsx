@@ -50,7 +50,7 @@ export const UndelegateUi: FC<{
   }, [max, setCollateralChange]);
 
   const showRepayDebtTooltip = currentDebt?.gt(0);
-  const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
+  const leftoverCollateral = currentCollateral?.add(collateralChange.amount) || wei(0);
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 

@@ -1,44 +1,47 @@
-import { Button, Flex, Text, Tooltip } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, Button, Flex, Text, Tooltip } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
-import { DebtChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Action, DebtChange, ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
-import { FC, useContext } from 'react';
+import { Dispatch, FC, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { InfoIcon } from '@chakra-ui/icons';
-import { constants } from 'ethers';
 
 export const RepayUi: FC<{
+  burnToTargetAmount: Wei;
   debtChange: DebtChange;
   max?: Wei;
   snxUSDBalance?: Wei;
   currentDebt?: Wei;
-  setDebtChange: (val: Wei) => void;
-}> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance }) => {
+  dispatch: Dispatch<Action>;
+}> = ({ debtChange, max, currentDebt, snxUSDBalance, dispatch, burnToTargetAmount }) => {
   const setBurnToTarget = () => {
     if (!snxUSDBalance) {
       return;
     }
-    setDebtChange(snxUSDBalance.neg());
+
+    dispatch({ type: 'setDebtChange', payload: burnToTargetAmount });
   };
 
   const setClearDebt = () => {
     if (!currentDebt) {
       return;
     }
-    setDebtChange(wei(-constants.MaxUint256));
+    dispatch({ type: 'setBurnMax', payload: currentDebt });
   };
+
+  const insufficientBalance = snxUSDBalance?.lt(debtChange.amount.abs());
 
   return (
     <Flex flexDirection="column" gap={2}>
       <Flex alignItems="center">
         <Text fontSize="md" fontWeight="700" color="white">
-          Burn
+          Repay snxUSD
         </Text>
         <Tooltip
           borderRadius="md"
@@ -77,7 +80,7 @@ export const RepayUi: FC<{
           fontSize="12px"
           lineHeight="16px"
           height="28px"
-          onClick={() => setDebtChange(wei(0))}
+          onClick={() => dispatch({ type: 'setDebtChange', payload: wei(0) })}
         >
           Custom
         </Button>
@@ -87,7 +90,7 @@ export const RepayUi: FC<{
           <DollarCircle />
           snxUSD
         </Text>
-        <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
+        <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1} p={2}>
           <NumberInput
             InputProps={{
               isRequired: true,
@@ -95,11 +98,21 @@ export const RepayUi: FC<{
               'data-max': max?.toString(),
             }}
             value={debtChange.amount.abs()}
-            onChange={(val) => setDebtChange(val.mul(-1))}
+            onChange={(val) => dispatch({ type: 'setDebtChange', payload: val.mul(-1) })}
             max={max}
           />
         </Flex>
       </BorderBox>
+      {insufficientBalance && (
+        <Alert my={2} status="error" borderRadius="md">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertDescription color="white" fontWeight="bold">
+              Insufficient Balance
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      )}
       <Button
         data-testid="repay submit"
         type="submit"
@@ -132,9 +145,14 @@ export const Repay = () => {
   const debtExists = liquidityPosition?.debt.gt(0.01);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
 
+  const burnToTargetAmount = liquidityPosition?.cRatio.lt(collateralType?.issuanceRatioD18)
+    ? liquidityPosition?.debt.mul(collateralType?.issuanceRatioD18.div(liquidityPosition?.cRatio)) // TODO: TEST THIS
+    : wei(0);
+
   return (
     <RepayUi
-      setDebtChange={(val) => dispatch({ type: 'setDebtChange', payload: val })}
+      burnToTargetAmount={burnToTargetAmount}
+      dispatch={dispatch}
       debtChange={debtChange}
       snxUSDBalance={flooredBalance}
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}

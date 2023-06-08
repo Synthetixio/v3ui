@@ -1,6 +1,24 @@
 import { CollateralChange, DebtChange } from '@snx-v3/ManagePositionContext';
 import { Wei, wei } from '@synthetixio/wei';
 
+function calculateNewDebt(debt: Wei, debtChange: DebtChange) {
+  const newDebt = debt.add(debtChange.amount);
+
+  if (newDebt.lt(0)) {
+    return wei(0);
+  }
+
+  return debt.add(debtChange.amount);
+}
+
+function calculateNewCollateral(collateral: Wei, collateralChange: CollateralChange) {
+  return collateral.add(collateralChange.amount);
+}
+
+function calculateNewCRatio(debt: Wei, collateral: Wei, collateralPrice: Wei) {
+  return debt.gt(0) ? collateralPrice.mul(collateral).div(debt) : wei(0);
+}
+
 export const validatePosition = ({
   issuanceRatioD18,
   collateralAmount,
@@ -16,24 +34,18 @@ export const validatePosition = ({
   collateralChange: CollateralChange;
   debtChange: DebtChange;
 }) => {
-  // TODO: In the case that we are minting max, or burning max etc, we will use ethers.constants.MaxUint256,
-  // however this causes some UI related issues in displaying changes in debt and collateral. For these cases
-  // We should use a display value to render the change in debt or collateral (and the change in C-ratio)
-
   const targetCRatio = issuanceRatioD18 ? issuanceRatioD18 : wei(1);
 
-  // In the case of max burn or max mint we don't want to use
-  const newDebt = wei(debt || 0).add(debtChange);
-
-  const newCollateralAmount = wei(collateralAmount || 0).add(collateralChange);
+  const newDebt = calculateNewDebt(debt || wei(0), debtChange);
+  const newCollateral = calculateNewCollateral(collateralAmount || wei(0), collateralChange);
 
   const collateralPrice = wei(collateralValue || 0).div(
     collateralAmount?.gt(0) ? collateralAmount : wei(1)
   );
 
-  const newCRatio = newDebt.gt(0) ? collateralPrice.mul(newCollateralAmount).div(newDebt) : wei(0);
+  const newCRatio = calculateNewCRatio(newDebt, newCollateral, collateralPrice);
 
-  const maybeMaxDebt = wei(newCollateralAmount)
+  const maybeMaxDebt = wei(newCollateral)
     .mul(collateralPrice)
     .div(targetCRatio)
     .sub(debt || 0);
@@ -41,15 +53,14 @@ export const validatePosition = ({
   const maxDebt = maybeMaxDebt.gte(0) ? maybeMaxDebt : wei(0);
 
   const isValid =
-    (newCRatio.gte(targetCRatio) || newCRatio.lte(0)) &&
-    (newDebt.eq(0) || newCollateralAmount.gt(0));
+    (newCRatio.gte(targetCRatio) || newCRatio.lte(0)) && (newDebt.eq(0) || newCollateral.gt(0));
 
   return {
     isValid,
     hasChanges: !collateralChange.amount.eq(0) || !debtChange.amount.eq(0),
     newCRatio,
     newDebt,
-    newCollateralAmount,
+    newCollateral,
     maxDebt,
   };
 };

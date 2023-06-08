@@ -72,6 +72,7 @@ export const useLiquidityPosition = ({
 }) => {
   const { data: CoreProxy } = useCoreProxy();
   const network = useNetwork();
+
   return useQuery({
     queryKey: [
       network.name,

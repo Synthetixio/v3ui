@@ -123,7 +123,7 @@ export const ManageStats = () => {
     poolId: params.poolId,
   });
 
-  const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
+  const { newCRatio, newCollateral, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
     collateralValue: liquidityPosition?.collateralValue,
@@ -139,7 +139,7 @@ export const ManageStats = () => {
       hasChanges={hasChanges}
       newCratio={newCRatio}
       newDebt={newDebt}
-      newCollateralAmount={newCollateralAmount}
+      newCollateralAmount={newCollateral}
       liquidityPosition={liquidityPosition}
       collateralType={collateralType}
     />
