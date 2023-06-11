@@ -13,7 +13,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import { wei } from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
 import { CheckIcon, CloseIcon } from '@snx-v3/Multistep';
 import { PropsWithChildren, useCallback, useContext } from 'react';
@@ -24,7 +23,6 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { constants } from 'ethers';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -140,7 +138,8 @@ export const RepayModal: React.FC<{
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
 
-  const repayAmount = debtChange.type === 'burnMax' ? wei(constants.MaxUint256) : debtChange.amount;
+  // Currently getting a gas estimation error when using constants.MaxUint256 so keep this line commented out
+  // const repayAmount = debtChange.type === 'burnMax' ? wei(constants.MaxUint256) : debtChange.amount;
 
   const {
     exec: execRepay,
@@ -150,7 +149,7 @@ export const RepayModal: React.FC<{
     accountId: params.accountId,
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
-    debtChange: repayAmount,
+    debtChange: debtChange.amount,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });

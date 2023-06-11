@@ -48,9 +48,11 @@ export const useApprove = (
 
         const gasPricesPromised = getGasPrice({ networkName, networkId });
         const gasLimitPromised = contract.estimateGas.approve(spender, amountToAppove);
+
         const populatedTxnPromised = contract.populateTransaction.approve(spender, amountToAppove, {
           gasLimit: gasLimitPromised,
         });
+
         const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
           gasPricesPromised,
           gasLimitPromised,

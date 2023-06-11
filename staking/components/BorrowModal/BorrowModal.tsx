@@ -13,7 +13,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import { wei } from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
 import { CheckIcon, CloseIcon } from '@snx-v3/Multistep';
 import { PropsWithChildren, useCallback, useContext } from 'react';
@@ -24,7 +23,6 @@ import { useBorrow } from '@snx-v3/useBorrow';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { constants } from 'ethers';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -139,8 +137,9 @@ export const BorrowModal: React.FC<{
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
 
-  const borrowAmount =
-    debtChange.type === 'mintMax' ? wei(constants.MaxUint256) : debtChange.amount;
+  // TODO: Figure out gas estimation error on mintMax
+  // const borrowAmount =
+  //   debtChange.type === 'mintMax' ? wei(constants.MaxUint256) : debtChange.amount;
 
   const {
     exec: execBorrow,
@@ -150,7 +149,7 @@ export const BorrowModal: React.FC<{
     accountId: params.accountId,
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
-    debtChange: borrowAmount,
+    debtChange: debtChange?.amount,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
