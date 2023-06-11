@@ -104,6 +104,9 @@ export const ManageStatsUi: FC<{
         <Text fontWeight="400" color="gray.500" fontSize="xs">
           Liquidation C-Ratio: {currency(collateralType.liquidationRatioD18, { style: 'percent' })}
         </Text>
+        <Text fontWeight="400" color="gray.500" fontSize="xs">
+          Target C-Ratio: {currency(collateralType.issuanceRatioD18, { style: 'percent' })}
+        </Text>
       </BorderBox>
     </Flex>
   );

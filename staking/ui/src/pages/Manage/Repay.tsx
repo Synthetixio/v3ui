@@ -26,7 +26,7 @@ export const RepayUi: FC<{
       return;
     }
 
-    dispatch({ type: 'setDebtChange', payload: burnToTargetAmount });
+    dispatch({ type: 'setDebtChange', payload: burnToTargetAmount.neg() });
   };
 
   const setClearDebt = () => {
