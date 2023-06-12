@@ -5394,8 +5394,6 @@ __metadata:
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@synthetixio/wei": ^2.74.4
-    ethers: ^6.4.2
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5430,6 +5428,7 @@ __metadata:
     "@chakra-ui/react": ^2.6.1
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
@@ -5546,8 +5545,6 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
-    "@synthetixio/wei": ^2.74.4
-    ethers: ^6.4.2
     react: ^18.2.0
   languageName: unknown
   linkType: soft

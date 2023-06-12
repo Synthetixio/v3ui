@@ -31,9 +31,10 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
 import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
+import { CollateralChange } from '@snx-v3/ManagePositionContext';
 
 export const DepositModalUi: FC<{
-  collateralChange: Wei;
+  collateralChange: CollateralChange;
   isOpen: boolean;
   onClose: () => void;
   collateralType?: CollateralType;
@@ -82,8 +83,8 @@ export const DepositModalUi: FC<{
               subtitle={
                 wrapAmount.eq(0) ? (
                   <Text as="div">
-                    <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> from
-                    balance will be used.
+                    <Amount value={collateralChange.amount} suffix={` ${collateralType?.symbol}`} />{' '}
+                    from balance will be used.
                   </Text>
                 ) : (
                   <Text as="div">
@@ -123,18 +124,18 @@ export const DepositModalUi: FC<{
               <>
                 {state.matches(State.success) ? (
                   <Text>
-                    <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
+                    <Amount value={collateralChange.amount} suffix={` ${collateralType?.symbol}`} />{' '}
                     delegated to {poolName}.
                   </Text>
                 ) : (
                   <>
                     {availableCollateral && availableCollateral.gt(wei(0)) ? (
                       <>
-                        {availableCollateral.gte(collateralChange) ? (
+                        {availableCollateral.gte(collateralChange.amount) ? (
                           <Text>
                             This will delegate{' '}
                             <Amount
-                              value={collateralChange}
+                              value={collateralChange.amount}
                               suffix={` ${collateralType?.symbol}`}
                             />{' '}
                             to {poolName}.
@@ -152,7 +153,7 @@ export const DepositModalUi: FC<{
                             <Text>
                               An additional{' '}
                               <Amount
-                                value={collateralChange.sub(availableCollateral)}
+                                value={collateralChange.amount.sub(availableCollateral)}
                                 suffix={` ${collateralType?.symbol}`}
                               />{' '}
                               will be deposited and delegated from your wallet.
@@ -163,8 +164,11 @@ export const DepositModalUi: FC<{
                     ) : (
                       <Text>
                         This will deposit and delegate{' '}
-                        <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> to{' '}
-                        {poolName}.
+                        <Amount
+                          value={collateralChange.amount}
+                          suffix={` ${collateralType?.symbol}`}
+                        />{' '}
+                        to {poolName}.
                       </Text>
                     )}
                   </>
@@ -205,10 +209,11 @@ export const DepositModalUi: FC<{
   );
 };
 export type DepositModalProps = FC<{
-  collateralChange: Wei;
+  collateralChange: CollateralChange;
   isOpen: boolean;
   onClose: () => void;
 }>;
+
 export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralChange }) => {
   const navigate = useNavigate();
   const params = useParams();
@@ -217,7 +222,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: collateralType?.tokenAddress,
-    amount: collateralChange.toBN(),
+    amount: collateralChange.amount.toBN(),
     spender: CoreProxy?.address,
   });
 
@@ -239,8 +244,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const { exec: wrapEth, wethBalance } = useWrapEth();
   const wrapAmount =
-    collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
-      ? collateralChange.sub(wethBalance || 0)
+    collateralType?.symbol === 'WETH' && collateralChange.amount.gt(wethBalance || 0)
+      ? collateralChange.amount.sub(wethBalance || 0)
       : wei(0);
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
 
@@ -249,7 +254,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     newAccountId,
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
-    collateralChange,
+    collateralChange: collateralChange.amount,
     currentCollateral: currentCollateral,
   });
 

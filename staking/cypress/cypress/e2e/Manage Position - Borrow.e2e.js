@@ -4,6 +4,7 @@ it('should borrow against already deposited SNX collateral', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
+
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 20 });
@@ -36,6 +37,7 @@ it('should borrow against already deposited SNX collateral', () => {
   cy.location().should((loc) => {
     expect(loc.search).to.include('manageAction=borrow');
   });
+
   cy.get('[data-testid="manage action"][data-action="borrow"]')
     .should('exist')
     .should('have.attr', 'data-active', 'true');

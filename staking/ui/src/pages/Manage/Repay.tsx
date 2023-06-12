@@ -115,6 +115,10 @@ export const RepayUi: FC<{
               <Text display="inline">
                 <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> snxUSD
               </Text>
+              {/* Retain for test */}
+              <Text display="none">
+                <Amount value={currentDebt} data-testid="current debt" />
+              </Text>
             </Flex>
           </Flex>
         </Flex>

@@ -255,7 +255,7 @@ export function DepositFormUi({
 
       {amount.gt(0) ? (
         <DepositModal
-          collateralChange={amount}
+          collateralChange={{ type: 'custom', amount }}
           isOpen={isOpenDeposit}
           onClose={() => setIsOpenDeposit(false)}
         />

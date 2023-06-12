@@ -55,6 +55,7 @@ type DepositEvents =
   | { type: EventNamesType['RESET'] };
 
 type StateType = typeof State;
+
 type MachineState =
   | {
       value: StateType['idle'];

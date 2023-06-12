@@ -91,6 +91,7 @@ export type UndelegateModalProps = FC<{
   isOpen: boolean;
   onClose: () => void;
 }>;
+
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
@@ -153,7 +154,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
     },
   });
 
-  const collateralChangeString = collateralChange.toString();
+  const collateralChangeString = collateralChange.amount.toString();
 
   useEffect(() => {
     send(Events.SET_AMOUNT, { amount: wei(collateralChangeString).abs() });
