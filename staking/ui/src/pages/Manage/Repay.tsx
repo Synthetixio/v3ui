@@ -167,7 +167,9 @@ export const Repay = () => {
 
   const burnToTargetAmount =
     debtExists && liquidityPosition?.cRatio.lt(collateralType?.issuanceRatioD18)
-      ? liquidityPosition?.debt.mul(collateralType?.issuanceRatioD18.div(liquidityPosition?.cRatio)) // TODO: TEST THIS
+      ? liquidityPosition?.debt
+          .mul(wei(1).sub(collateralType?.issuanceRatioD18.div(liquidityPosition?.cRatio)))
+          .abs() // TODO: TEST THIS
       : wei(0);
 
   return (
