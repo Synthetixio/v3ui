@@ -31,6 +31,11 @@ it('should borrow against already deposited SNX collateral', () => {
     cy.visit(`${path}?manageAction=borrow`);
   });
 
+  // Need to wait for max debt to be fetched
+  cy.get('[data-testid="borrow amount input"]')
+    .should('have.attr', 'data-max')
+    .and('not.match', /^0\.00/); // .and ensures both assertions are waiting for resolution
+
   // Because token price can change, let's not hardcode any number
   // Use max debt but round it to the closest round number
   cy.get('[data-testid="borrow amount input"]').then(($el) => {

@@ -38,8 +38,14 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
     cy.visit(`${path}?manageAction=repay`);
   });
 
-  cy.get('[data-testid="current debt"]').should('not.have.text', '-');
-  cy.get('[data-testid="available snxUSD balance"]').should('not.have.text', '-');
+  // Need to wait for max repay amount to be fetched
+  cy.get('[data-testid="repay amount input"]')
+    .should('have.attr', 'data-max')
+    .and('not.match', /^0\.00/); // .and ensures both assertions are waiting for resolution
+
+  // Unfortunatrly on Borrow and Repay we default to 0 and no longer show `-` for unfetched data
+  //  cy.get('[data-testid="current debt"]').should('not.have.text', '-');
+  //  cy.get('[data-testid="available snxUSD balance"]').should('not.have.text', '-');
 
   cy.get('@debt').then((debt) => {
     cy.get('[data-testid="repay amount input"]').type(`${debt}`);
