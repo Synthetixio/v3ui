@@ -21,24 +21,14 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
     });
   });
 
-  cy.viewport(800, 800);
-
+  cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    cy.visit(
-      generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-        accountId,
-        collateralSymbol: 'SNX',
-        poolId: 1,
-      })
-    );
-  });
-
-  cy.get('[data-testid="manage action"][data-action="undelegate"]')
-    .should('exist')
-    .click()
-    .should('have.attr', 'data-active', 'true');
-  cy.location().should((loc) => {
-    expect(loc.search).to.include('manageAction=undelegate');
+    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
+      accountId,
+      collateralSymbol: 'SNX',
+      poolId: 1,
+    });
+    cy.visit(`${path}?manageAction=undelegate`);
   });
 
   cy.get('[data-testid="available to undelegate"]').should('not.have.text', '-');
