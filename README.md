@@ -38,9 +38,6 @@ Using `codegen-graph-ts` as an example
 - Create the intended destination folder inside monorepo `mkdir -p tools/codegen-graph-ts`
 - Move all the package files into `tools/codegen-graph-ts`
 - Remove all the files that won't be used (CI config, lockfile, etc)
-- Commit looks like this:
-
-  ![docs/move-to-monorepo.png](docs/move-to-monorepo.png)
 
 ### 2. Add remote to monorepo
 
@@ -62,8 +59,6 @@ git merge codegen-graph-ts/move-to-monorepo --allow-unrelated-histories
 ```
 
 Because we moved all the files into the separate folder we have no merge conflicts and at the same time we have full history added to the git tree
-
-![docs/move-to-monorepo-merge.png](docs/move-to-monorepo-merge.png)
 
 Now we can remove remote as it is no longer necessary and cleanup all the added tags too
 

@@ -7,11 +7,9 @@ dist
 packages/queries/subgraphs
 cache
 artifacts
-.docusaurus
 **/subgraph.yaml
 contracts/src
 contracts/deployments
-spot-markets/contracts/deployments
 **/tmp/
 **/.next/
 **/out/
@@ -19,6 +17,3 @@ spot-markets/contracts/deployments
 **/junit.xml
 subgraphs/tests/.latest.json
 .yarnrc.yml
-
-# temporary
-spot-markets/ui/prototype

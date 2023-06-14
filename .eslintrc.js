@@ -53,7 +53,6 @@ module.exports = {
         'staking/lib/**/*',
         'theme/**/*',
         'oracle-manager-ui/**/*',
-        'spot-markets/ui/**/*',
       ],
 
       env: {
