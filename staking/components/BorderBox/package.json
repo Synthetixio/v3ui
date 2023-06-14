@@ -4,6 +4,6 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/react": "^2.6.1"
+    "@chakra-ui/react": "^2.7.0"
   }
 }
