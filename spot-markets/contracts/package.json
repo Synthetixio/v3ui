@@ -28,10 +28,10 @@
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.0.0",
-    "@usecannon/cli": "^2.4.14",
+    "@usecannon/cli": "^2.4.15",
     "ethers": "^5.7.2",
     "prettier": "^2.8.8",
     "typechain": "^8.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }

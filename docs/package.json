@@ -16,7 +16,7 @@
     "@docusaurus/core": "^2.4.1",
     "@docusaurus/preset-classic": "^2.4.1",
     "@synthetixio/v3-contracts": "workspace:*",
-    "prism-react-renderer": "^2.0.4",
+    "prism-react-renderer": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
