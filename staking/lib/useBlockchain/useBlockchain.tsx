@@ -84,7 +84,11 @@ export const DEFAULT_NETWORK =
   DEFAULT_NETWORK_NAME in NETWORKS ? NETWORKS[DEFAULT_NETWORK_NAME] : NETWORKS['optimism-mainnet'];
 
 const injected = injectedModule();
-const walletConnect = walletConnectModule();
+const walletConnect = walletConnectModule({
+  version: 2,
+  projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
+  requiredChains: [NETWORKS['mainnet'].id, NETWORKS['optimism-mainnet'].id],
+});
 
 const wallets = [injected, walletConnect];
 

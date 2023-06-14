@@ -23,21 +23,12 @@ it('should deposit additional SNX collateral', () => {
 
   cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    cy.visit(
-      generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-        accountId,
-        collateralSymbol: 'SNX',
-        poolId: 1,
-      })
-    );
-  });
-
-  cy.get('[data-testid="manage action"][data-action="deposit"]')
-    .should('exist')
-    .click()
-    .should('have.attr', 'data-active', 'true');
-  cy.location().should((loc) => {
-    expect(loc.search).to.include('manageAction=deposit');
+    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
+      accountId,
+      collateralSymbol: 'SNX',
+      poolId: 1,
+    });
+    cy.visit(`${path}?manageAction=deposit`);
   });
 
   cy.get('[data-testid="manage stats collateral"]').should('include.text', '20 SNX');

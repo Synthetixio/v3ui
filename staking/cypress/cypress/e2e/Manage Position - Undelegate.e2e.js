@@ -21,26 +21,22 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
     });
   });
 
-  cy.viewport(800, 800);
-
+  cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    cy.visit(
-      generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-        accountId,
-        collateralSymbol: 'SNX',
-        poolId: 1,
-      })
-    );
+    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
+      accountId,
+      collateralSymbol: 'SNX',
+      poolId: 1,
+    });
+    cy.visit(`${path}?manageAction=undelegate`);
   });
 
-  cy.get('[data-testid="manage action"][data-action="undelegate"]')
-    .should('exist')
-    .click()
-    .should('have.attr', 'data-active', 'true');
-  cy.location().should((loc) => {
-    expect(loc.search).to.include('manageAction=undelegate');
-  });
+  // Need to wait for max undelegate amount to be fetched
+  cy.get('[data-testid="undelegate amount input"]')
+    .should('have.attr', 'data-max')
+    .and('not.match', /^0\.00/); // .and ensures both assertions are waiting for resolution
 
+  // on Undelegate page we still show `-` for yet unfetched data, unlike Borrow/Repay
   cy.get('[data-testid="available to undelegate"]').should('not.have.text', '-');
 
   // undelegate only half of the collateral provided
