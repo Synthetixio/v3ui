@@ -7,7 +7,6 @@ dist
 packages/queries/subgraphs
 cache
 artifacts
-.docusaurus
 **/subgraph.yaml
 contracts/src
 contracts/deployments

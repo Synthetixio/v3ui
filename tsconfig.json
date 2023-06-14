@@ -17,7 +17,6 @@
   },
 
   "exclude": [
-    "**/docs/**",
     "**/subgraphs/**",
     "**/node_modules/**",
     "**/coverage/**",

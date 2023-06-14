@@ -21,7 +21,6 @@ ignore:
   - 'tools'
   - 'staking/cypress'
   - 'contracts'
-  - 'docs'
   - 'oracle-manager-ui'
   - 'subgraphs'
   - 'staking/ui/assert-deployment.js'

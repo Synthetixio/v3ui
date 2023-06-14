@@ -6,7 +6,6 @@ dist
 .vscode
 .yarn
 packages/queries/subgraphs
-.docusaurus
 **/tmp/
 **/.next/
 **/out/
