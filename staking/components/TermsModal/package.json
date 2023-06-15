@@ -4,10 +4,10 @@
   "main": "index.tsx",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/react": "^2.7.0",
+    "@chakra-ui/react": "^2.6.1",
     "@snx-v3/constants": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "react": "^18.2.0",
-    "react-router-dom": "^6.12.1"
+    "react-router-dom": "^6.11.2"
   }
 }
