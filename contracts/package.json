@@ -22,7 +22,8 @@
     "fetch": "./fetch.sh",
     "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
     "cannon": "cannon",
-    "upgrade-contracts": "yarn fetch-deployments && yarn build"
+    "upgrade-contracts": "yarn fetch-deployments && yarn build",
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",

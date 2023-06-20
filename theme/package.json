@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsc --build --verbose",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
-    "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'"
+    "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
+    "prepublishOnly": "yarn build"
   },
   "peerDependencies": {
     "@chakra-ui/icons": "^2.0.19",
