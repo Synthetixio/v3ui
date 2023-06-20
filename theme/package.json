@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Synthetix app theme",
   "repository": "Synthetixio/v3ui",
   "homepage": "https://synthetixio.github.io/ui",
@@ -49,5 +49,6 @@
     "last 1 Firefox version",
     "last 1 Edge version",
     "last 1 Opera version"
-  ]
+  ],
+  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }
