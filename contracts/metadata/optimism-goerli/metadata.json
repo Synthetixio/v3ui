@@ -250,7 +250,7 @@
       }
     }
   },
-  "miscUrl": "ipfs://QmeLWHyVXdUyCBuhbFE6rvaTych1LYMaE6HhiZKcc71GE5",
+  "miscUrl": "ipfs://QmXiHSoJxJYvRnWa2vBW8sLBXc8LXkgyjTZMC6PRuH2q7w",
   "options": {
     "owner": "0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9",
     "salt": "snax",
@@ -258,7 +258,7 @@
   },
   "meta": {
     "name": "@synthetixio/main",
-    "version": "3.1.1",
+    "version": "3.1.2-dev.42382285",
     "description": "Core Synthetix Protocol Contracts",
     "publishConfig": {
       "access": "public"
@@ -279,21 +279,22 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
-      "@synthetixio/common-config": "3.1.1",
-      "@synthetixio/core-contracts": "3.1.1",
-      "@synthetixio/core-modules": "3.1.1",
-      "@synthetixio/core-utils": "3.1.1",
-      "@synthetixio/oracle-manager": "3.1.1",
+      "@synthetixio/common-config": "3.1.2-dev.42382285",
+      "@synthetixio/core-contracts": "3.1.2-dev.42382285",
+      "@synthetixio/core-modules": "3.1.2-dev.42382285",
+      "@synthetixio/core-utils": "3.1.2-dev.42382285",
+      "@synthetixio/oracle-manager": "3.1.2-dev.42382285",
+      "@synthetixio/router": "3.1.2-dev.42382285",
       "@synthetixio/wei": "2.74.4",
-      "@usecannon/builder": "2.4.7",
-      "ethers": "^5.0.0",
+      "@usecannon/builder": "2.4.15",
+      "ethers": "^5.7.2",
       "handlebars": "^4.7.7",
       "hardhat": "2.13.0",
       "solidity-ast": "0.4.46",
       "solidity-docgen": "0.6.0-beta.31",
       "ts-node": "10.9.1"
     },
-    "gitHead": "1f2838102418c17ab4fa8d173ed290eb46948beb"
+    "gitHead": "423822856076ddee0fb67d6757c7f1228a52eea8"
   },
   "status": "complete"
 }

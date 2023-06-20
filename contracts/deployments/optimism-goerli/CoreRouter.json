@@ -1,5 +1,5 @@
 {
-  "address": "0x1Caf5be045392011D46351e78b104d6052487Ed9",
+  "address": "0xBA5C7fB60e89070AA9547B90EA984d9DfACe50B7",
   "abi": [
     {
       "inputs": [
@@ -4643,7 +4643,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0xa14db5a7e3f6fd28addd8a145e3eb885c6f2a2b616c4fc07c5eed498c65d1333",
+  "deployTxnHash": "0x625beeab796d8fb7e09038330ff3ec5c5b8672a07f3cc694ff6637be7c97d2c8",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }
