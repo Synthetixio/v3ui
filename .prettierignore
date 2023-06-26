@@ -4,10 +4,8 @@ node_modules
 dist
 .vscode
 .yarn
-packages/queries/subgraphs
 cache
 artifacts
-**/subgraph.yaml
 contracts/src
 contracts/deployments
 **/tmp/
@@ -15,5 +13,4 @@ contracts/deployments
 **/out/
 **/.nyc_output
 **/junit.xml
-subgraphs/tests/.latest.json
 .yarnrc.yml
