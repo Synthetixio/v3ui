@@ -4,20 +4,12 @@
   "version": "3.0.2",
   "exact": false,
   "changelog": false,
-  "ignoreChanges": [
-    "**/*.cy.*",
-    "**/*.test.*",
-    "**/*.e2e.*",
-    "**/cypress/**"
-  ],
+  "ignoreChanges": ["**/*.cy.*", "**/*.test.*", "**/*.e2e.*", "**/cypress/**"],
   "private": false,
   "push": true,
   "command": {
     "version": {
-      "allowBranch": [
-        "master",
-        "lerna"
-      ]
+      "allowBranch": ["master", "lerna"]
     }
   }
 }
