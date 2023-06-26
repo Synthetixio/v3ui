@@ -4,7 +4,7 @@
     "access": "public"
   },
   "description": "peripheral smart contracts for frontend",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "main": "./index.js",
   "files": [
     "build",
@@ -22,16 +22,18 @@
     "fetch": "./fetch.sh",
     "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
     "cannon": "cannon",
-    "upgrade-contracts": "yarn fetch-deployments && yarn build"
+    "upgrade-contracts": "yarn fetch-deployments && yarn build",
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.0.0",
-    "@usecannon/cli": "^2.4.14",
+    "@usecannon/cli": "^2.4.16",
     "ethers": "^5.7.2",
     "prettier": "^2.8.8",
     "typechain": "^8.2.0",
     "typescript": "^5.0.4"
-  }
+  },
+  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }

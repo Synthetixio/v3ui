@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.1.0",
+  "version": "3.0.2",
   "description": "Synthetix app theme",
   "repository": "Synthetixio/v3ui",
   "homepage": "https://synthetixio.github.io/ui",
@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsc --build --verbose",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
-    "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'"
+    "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
+    "prepublishOnly": "yarn build"
   },
   "peerDependencies": {
     "@chakra-ui/icons": "^2.0.19",
@@ -48,5 +49,6 @@
     "last 1 Firefox version",
     "last 1 Edge version",
     "last 1 Opera version"
-  ]
+  ],
+  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }
