@@ -600,7 +600,7 @@ export const theme = extendTheme({
     'heading-4xl': {
       fontSize: { base: '60px', lg: '72px' },
       fontFamily: 'heading',
-      lineHeight: '72px',
+      lineHeight: '120%',
       fontWeight: 700,
     },
     'heading-3xl': {
@@ -618,7 +618,7 @@ export const theme = extendTheme({
     'heading-xl': {
       fontSize: { base: '30px', lg: '48px' },
       fontFamily: 'heading',
-      lineHeight: { base: '36px', lg: '43.2px' },
+      lineHeight: { base: '36px', lg: '120%' },
       fontWeight: 700,
     },
     'heading-lg': {
