@@ -85,7 +85,7 @@ jobs:
     steps:
       - checkout
       - yarn-install
-      - run: yarn npm audit --recursive --severity=critical
+      - run: yarn npm audit
       - run: yarn dedupe --check
       - run: yarn deps
       - run: yarn deps:mismatched
@@ -105,9 +105,6 @@ jobs:
           path: './junit.xml'
       - store_artifacts:
           path: 'coverage'
-
-      - run: yarn workspace @snx-v3/subgraphs test
-      - run: yarn workspace @snx-v3/subgraphs test --coverage
 
   typecheck:
     working_directory: /tmp/app

@@ -8,15 +8,12 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['<rootDir>/**/*.test.{js,jsx,ts,tsx}'],
-  testPathIgnorePatterns: ['<rootDir>/subgraphs/'],
+  testPathIgnorePatterns: [],
   collectCoverageFrom: [
-    '<rootDir>/tools/codegen-graph-ts/**/*.d.{js,jsx,ts,tsx}',
-    '<rootDir>/tools/generate-subgraph-query/**/*.d.{js,jsx,ts,tsx}',
     '<rootDir>/theme/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/libs/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/staking/ui/**/*.{js,jsx,ts,tsx}',
     '!<rootDir>/**/*.d.ts',
     '!<rootDir>/**/*.test.{js,jsx,ts,tsx}',
-    '!<rootDir>/subgraphs',
   ],
 };

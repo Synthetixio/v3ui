@@ -5,7 +5,6 @@ node_modules
 dist
 .vscode
 .yarn
-packages/queries/subgraphs
 **/tmp/
 **/.next/
 **/out/
