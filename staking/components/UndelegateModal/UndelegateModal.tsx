@@ -47,11 +47,11 @@ export const UndelegateModalUi: FC<{
 
           <Multistep
             step={1}
-            title="Undelegate"
+            title="Remove collateral"
             subtitle={
               <Text as="div">
-                <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be undelegated
-                from the pool.
+                <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be removed from
+                the pool.
               </Text>
             }
             status={{
@@ -135,7 +135,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
           }
           toast.closeAll();
           toast({
-            title: 'Undelegate failed',
+            title: 'Remove collateral failed',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
@@ -143,7 +143,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
             ),
             status: 'error',
           });
-          throw Error('Undelegate failed', { cause: error });
+          throw Error('Remove collateral failed', { cause: error });
         }
       },
     },
