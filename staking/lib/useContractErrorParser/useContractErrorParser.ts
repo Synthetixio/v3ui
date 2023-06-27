@@ -15,7 +15,12 @@ export function useContractErrorParser(Contract?: ethers.Contract) {
         return undefined;
       }
       try {
-        const errorParsed = Contract.interface.parseError(error.error.data.data);
+        const errorData = error?.error?.data?.data || error?.error?.error?.data; // add more options as we find them
+        if (!errorData) {
+          console.error({ error }); // intentional logging as object so we can inspect all properties
+          return undefined;
+        }
+        const errorParsed = Contract.interface.parseError(errorData);
         const errorArgs = Object.fromEntries(
           Object.entries(errorParsed.args)
             .filter(([key]) => `${parseInt(key)}` !== key)
@@ -46,12 +51,13 @@ export function useContractErrorParser(Contract?: ethers.Contract) {
         );
 
         return {
-          data: error.error.data.data,
+          data: errorData,
           name: errorParsed.name,
           signature: errorParsed.signature,
           args: errorArgs,
         };
       } catch (e) {
+        console.error(e);
         return undefined;
       }
     },
