@@ -202,7 +202,7 @@ export function MarketSectionUi({
                         <Text fontSize="sm" display="block" data-testid="market name">
                           {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
                         </Text>
-                        <Text fontSize="xs" display="none" color="gray.500" data-testid="market id">
+                        <Text fontSize="xs" color="gray.500" data-testid="market id">
                           ID: {market.id}
                         </Text>
                       </StyledTd>
