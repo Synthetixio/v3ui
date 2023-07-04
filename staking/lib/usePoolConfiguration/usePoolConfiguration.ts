@@ -3,11 +3,11 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { z } from 'zod';
-import { NumberSchema, WeiSchema } from '@snx-v3/zod';
+import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
 
 export const MarketConfigurationSchema = z.object({
-  id: NumberSchema,
+  id: SmallIntSchema,
   weight: WeiSchema,
   maxDebtShareValue: WeiSchema,
   isLocked: z.boolean(),
