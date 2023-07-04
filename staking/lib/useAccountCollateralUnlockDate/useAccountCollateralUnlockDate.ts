@@ -31,7 +31,6 @@ export function useAccountCollateralUnlockDate({ accountId }: { accountId?: stri
             ethers.utils.formatBytes32String('accountTimeoutWithdraw'),
           ]),
         },
-        // TODO: add getConfig call when config is available
       ]);
 
       const [lastInteraction] = CoreProxy.interface.decodeFunctionResult(

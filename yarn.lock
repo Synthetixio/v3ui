@@ -5153,6 +5153,7 @@ __metadata:
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useMarketNamesById": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
@@ -5482,6 +5483,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/usePoolConfiguration@workspace:*, @snx-v3/usePoolConfiguration@workspace:staking/lib/usePoolConfiguration":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/usePoolConfiguration@workspace:staking/lib/usePoolConfiguration"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/zod": "workspace:*"
+    "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
+    react: ^18.2.0
+    zod: ^3.21.4
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/usePoolData@workspace:*, @snx-v3/usePoolData@workspace:staking/lib/usePoolData":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePoolData@workspace:staking/lib/usePoolData"
@@ -5649,6 +5665,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/zod@workspace:staking/lib/zod"
   dependencies:
+    "@synthetixio/wei": ^2.74.4
     ethers: ^5.7.2
     zod: ^3.21.4
   languageName: unknown
