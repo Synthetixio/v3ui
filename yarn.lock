@@ -4860,7 +4860,7 @@ __metadata:
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
-    "@snx-v3/useV2Synthetix": "workspace:*"
+    "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@xstate/react": ^3.2.2
@@ -5157,8 +5157,8 @@ __metadata:
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
+    "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
-    "@snx-v3/useV2Synthetix": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -5567,6 +5567,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useTransferableSynthetix@workspace:*, @snx-v3/useTransferableSynthetix@workspace:staking/lib/useTransferableSynthetix":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTransferableSynthetix@workspace:staking/lib/useTransferableSynthetix"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useUSDProxy@workspace:*, @snx-v3/useUSDProxy@workspace:staking/lib/useUSDProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useUSDProxy@workspace:staking/lib/useUSDProxy"
@@ -5592,18 +5604,6 @@ __metadata:
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
     react: ^18.2.0
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useV2Synthetix@workspace:*, @snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useV2Synthetix@workspace:staking/lib/useV2Synthetix"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/contracts": ^1.2.2
-    "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
-    ethers: ^5.7.2
   languageName: unknown
   linkType: soft
 
@@ -5838,16 +5838,6 @@ __metadata:
     "@stablelib/random": ^1.0.2
     "@stablelib/wipe": ^1.0.1
   checksum: f8537066b542b6770c1b5b2ae5ad0688d1b986e4bf818067c152c123a5471531987bbf024224f75f387f481ccc5b628e391e49e92102b8b1a3e2d449d6105402
-  languageName: node
-  linkType: hard
-
-"@synthetixio/contracts@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "@synthetixio/contracts@npm:1.2.2"
-  dependencies:
-    "@ethersproject/abi": ^5.7.0
-    "@ethersproject/providers": ^5.7.2
-  checksum: 824be427964f080576ef6a0c8a355d69521dfef74ffec59499e03fbe4172705759b67decce8ddde750fdd069f6b57fe0a10a515da159418461af31747643063d
   languageName: node
   linkType: hard
 
