@@ -14,6 +14,8 @@ export type Multicall3Type =
 
 export async function importMulticall3(chainName: string) {
   switch (chainName) {
+    case 'cannon':
+      return import('@synthetixio/v3-contracts/build/cannon/Multicall3');
     case 'mainnet':
       return import('@synthetixio/v3-contracts/build/mainnet/Multicall3');
     case 'goerli':

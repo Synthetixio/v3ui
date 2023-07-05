@@ -14,6 +14,8 @@ export type CoreProxyType =
 
 export async function importCoreProxy(chainName: string) {
   switch (chainName) {
+    case 'cannon':
+      return import('@synthetixio/v3-contracts/build/cannon/CoreProxy');
     case 'mainnet':
       return import('@synthetixio/v3-contracts/build/mainnet/CoreProxy');
     case 'goerli':

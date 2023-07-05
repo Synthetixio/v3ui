@@ -14,6 +14,8 @@ export type AccountProxyType =
 
 export async function importAccountProxy(chainName: string) {
   switch (chainName) {
+    case 'cannon':
+      return import('@synthetixio/v3-contracts/build/cannon/AccountProxy');
     case 'mainnet':
       return import('@synthetixio/v3-contracts/build/mainnet/AccountProxy');
     case 'goerli':

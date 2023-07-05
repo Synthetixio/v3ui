@@ -14,6 +14,8 @@ export type USDProxyType =
 
 export async function importUSDProxy(chainName: string) {
   switch (chainName) {
+    case 'cannon':
+      return import('@synthetixio/v3-contracts/build/cannon/USDProxy');
     case 'mainnet':
       return import('@synthetixio/v3-contracts/build/mainnet/USDProxy');
     case 'goerli':
