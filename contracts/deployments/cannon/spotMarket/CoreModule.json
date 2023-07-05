@@ -1,5 +1,5 @@
 {
-  "address": "0x381aeF01aB853657163ccbBFC1A993D49a77307c",
+  "address": "0xD8aAaD19E284C4481738d088A09A0f879dA8A3dF",
   "abi": [
     {
       "inputs": [
@@ -204,13 +204,10 @@
       "type": "function"
     }
   ],
-  "constructorArgs": [
-    "0x2F4a58770bDaBFef1f3Cee0eF6Ad05Db4F4d954E",
-    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  ],
+  "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x2c294788d2628df939540ffd4e5d6a8367cb9d565fabfc29b681db277696aa67",
-  "sourceName": "contracts/Proxy.sol",
-  "contractName": "Proxy",
-  "deployedOn": "contract.InitialCoreProxy"
+  "deployTxnHash": "0x334b52f1cd6a338a6d1ad265e1fab27c1e26ca64fee390f150f2bedeeba7b06b",
+  "sourceName": "contracts/modules/CoreModule.sol",
+  "contractName": "CoreModule",
+  "deployedOn": "contract.CoreModule"
 }

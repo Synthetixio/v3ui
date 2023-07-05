@@ -206,10 +206,10 @@
   ],
   "constructorArgs": [
     "0x606ACC428283663F0EFA30c75f39912BdfF49364",
-    "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   ],
   "linkedLibraries": {},
-  "deployTxnHash": "0x06859cc33fccde65c1c371b48851e4fa33f71246fb910f96be571d3dcfe94602",
+  "deployTxnHash": "0xf7c4be404161cf7ba230077b3c33c78cfbe810d2514ddac38c7a423eeb031172",
   "sourceName": "contracts/Proxy.sol",
   "contractName": "Proxy",
   "deployedOn": "contract.InitialProxy"

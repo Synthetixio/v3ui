@@ -1,5 +1,5 @@
 {
-  "address": "0x629673e90e428069AeB328DE4EF2040a7C22f723",
+  "address": "0xa0Cb2b24a2d929992c56c8BbcD585967Dbd8DB0C",
   "abi": [
     {
       "inputs": [
@@ -204,172 +204,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "expected",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "actual",
-          "type": "bytes32"
-        }
-      ],
-      "name": "MismatchAssociatedSystemKind",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "MissingAssociatedSystem",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "kind",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "proxy",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "impl",
-          "type": "address"
-        }
-      ],
-      "name": "AssociatedSystemSet",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getAssociatedSystem",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "addr",
-          "type": "address"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "kind",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "impl",
-          "type": "address"
-        }
-      ],
-      "name": "initOrUpgradeNft",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "internalType": "uint8",
-          "name": "decimals",
-          "type": "uint8"
-        },
-        {
-          "internalType": "address",
-          "name": "impl",
-          "type": "address"
-        }
-      ],
-      "name": "initOrUpgradeToken",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address",
-          "name": "endpoint",
-          "type": "address"
-        }
-      ],
-      "name": "registerUnmanagedSystem",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "AlreadyInitialized",
       "type": "error"
@@ -404,6 +238,11 @@
         }
       ],
       "name": "InsufficientBalance",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDecayRate",
       "type": "error"
     },
     {
@@ -473,6 +312,19 @@
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "advanceEpoch",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -524,7 +376,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "owner",
+          "name": "user",
           "type": "address"
         }
       ],
@@ -543,7 +395,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "target",
+          "name": "from",
           "type": "address"
         },
         {
@@ -558,26 +410,16 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
+      "inputs": [],
+      "name": "decayRate",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "burnWithAllowance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -681,7 +523,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "target",
+          "name": "to",
           "type": "address"
         },
         {
@@ -732,6 +574,19 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDecayRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "symbol",
       "outputs": [
@@ -746,11 +601,24 @@
     },
     {
       "inputs": [],
-      "name": "totalSupply",
+      "name": "totalShares",
       "outputs": [
         {
           "internalType": "uint256",
           "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "supply",
           "type": "uint256"
         }
       ],
@@ -776,35 +644,6 @@
           "internalType": "bool",
           "name": "",
           "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "destChainId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferCrossChain",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "feesPaid",
-          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -840,8 +679,8 @@
       "type": "function"
     }
   ],
-  "deployTxnHash": "",
-  "sourceName": "",
-  "contractName": "",
-  "deployedOn": "invoke.init_usd"
+  "deployedOn": "router.SynthRouter",
+  "deployTxnHash": "0x0fe01772f5fd27e3b3915d9b9cdeadcd1b31b1a4cff663f9a8cd447e8a64511d",
+  "contractName": "SynthRouter",
+  "sourceName": "SynthRouter.sol"
 }

@@ -622,7 +622,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xc1f7dbbc222b01da0a7b7230688eb4fb42c8fa8dd38f94e959cb48c76e8765be",
+  "deployTxnHash": "0x4297ac8200953659b1317b6865155e4420b3d25433f28dbffdcb608923bf90c1",
   "sourceName": "contracts/modules/core/MarketManagerModule.sol",
   "contractName": "MarketManagerModule",
   "deployedOn": "contract.MarketManagerModule"

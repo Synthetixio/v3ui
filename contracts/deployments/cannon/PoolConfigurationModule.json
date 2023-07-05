@@ -140,7 +140,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xe4b8621797b9cab7b00b86090e1403957909686cad23b1f5e2736e14ddfe952a",
+  "deployTxnHash": "0x6fbf680c365f2e64c54a799f999ee4c83d1ebabcc31b9c5b4cb7ef8a8ab344dc",
   "sourceName": "contracts/modules/core/PoolConfigurationModule.sol",
   "contractName": "PoolConfigurationModule",
   "deployedOn": "contract.PoolConfigurationModule"
