@@ -30,7 +30,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
-import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
+import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -222,7 +222,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   });
 
   const ethBalance = useEthBalance();
-  const transferrable = useV2Synthetix();
+  const transferrable = useTransferableSynthetix();
 
   const accounts = useAccounts();
 
