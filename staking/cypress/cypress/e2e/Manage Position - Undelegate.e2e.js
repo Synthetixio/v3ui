@@ -6,16 +6,16 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
   });
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
-    cy.task('getSnx', { address, amount: 500 });
+    cy.task('getSnx', { address, amount: 100_500 });
     cy.task('approveCollateral', { privateKey, symbol: 'SNX' });
     cy.task('createAccount', { privateKey }).then((accountId) => {
       cy.wrap(accountId).as('accountId');
-      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 200 });
+      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 100_500 });
       cy.task('delegateCollateral', {
         privateKey,
         symbol: 'SNX',
         accountId,
-        amount: 200,
+        amount: 100_500,
         poolId: 1,
       });
     });
@@ -40,7 +40,7 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
   cy.get('[data-testid="available to undelegate"]').should('not.have.text', '-');
 
   // undelegate only half of the collateral provided
-  cy.get('[data-testid="undelegate amount input"]').type('5');
+  cy.get('[data-testid="undelegate amount input"]').type('500');
 
   cy.get('[data-testid="undelegate submit"]').should('be.enabled').click();
 
@@ -49,8 +49,8 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
     .and('include.text', 'Complete this action');
 
   cy.get('[data-testid="undelegate modal"]')
-    .should('include.text', `Undelegate`)
-    .and('include.text', `5 SNX will be undelegated`);
+    .should('include.text', `Remove collateral`)
+    .and('include.text', `500 SNX will be removed`);
 
   cy.get('[data-testid="undelegate confirm button"]').should('include.text', 'Start').click();
 
@@ -65,6 +65,6 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
 
   cy.get('[data-testid="undelegate modal"]').should('not.exist');
 
-  cy.get('[data-testid="manage stats collateral"]').should('include.text', `195 SNX`);
-  cy.get('[data-testid="available to undelegate"]').should('have.text', '195');
+  cy.get('[data-testid="manage stats collateral"]').should('include.text', `100,000 SNX`);
+  cy.get('[data-testid="available to undelegate"]').should('have.text', '100,000 SNX');
 });

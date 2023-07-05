@@ -7,7 +7,7 @@
   "files": [
     "./*.js"
   ],
-  "version": "3.0.2",
+  "version": "3.1.0",
   "author": "Nikita <nikita@cc.snxdao.io>",
   "repository": "github:Synthetixio/v3ui",
   "license": "MIT",

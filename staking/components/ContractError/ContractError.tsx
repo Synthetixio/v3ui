@@ -3,8 +3,10 @@ import { Button, Collapse, Text } from '@chakra-ui/react';
 import format from 'date-fns/format';
 import { ContractErrorType } from '@snx-v3/useContractErrorParser';
 
+const defaultOpen = window?.localStorage?.CONTRACT_ERROR_OPEN === 'true';
+
 export function ContractError({ contractError }: { contractError: ContractErrorType }) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
     <>
