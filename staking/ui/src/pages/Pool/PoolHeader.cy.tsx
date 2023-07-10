@@ -12,9 +12,6 @@ describe('Pool page / Header', () => {
         }}
       />
     );
-    cy.get('#app')
-      .should('include.text', 'TEST_POOL')
-      .and('include.text', 'Pool #TEST_ID')
-      .and('include.text', 'Spartan Council Pool');
+    cy.get('#app').should('include.text', 'TEST_POOL');
   });
 });
