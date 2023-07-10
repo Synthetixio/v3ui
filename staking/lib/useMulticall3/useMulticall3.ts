@@ -1,12 +1,14 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import type { Multicall3 as Multicall3Cannon } from '@synthetixio/v3-contracts/build/cannon/Multicall3';
 import type { Multicall3 as Multicall3Mainnet } from '@synthetixio/v3-contracts/build/mainnet/Multicall3';
 import type { Multicall3 as Multicall3Goerli } from '@synthetixio/v3-contracts/build/goerli/Multicall3';
 import type { Multicall3 as Multicall3OptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3';
 import type { Multicall3 as Multicall3OptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/Multicall3';
 
 export type Multicall3Type =
+  | Multicall3Cannon
   | Multicall3Mainnet
   | Multicall3Goerli
   | Multicall3OptimismMainnet

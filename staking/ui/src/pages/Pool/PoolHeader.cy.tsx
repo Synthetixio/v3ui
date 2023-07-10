@@ -5,11 +5,10 @@ describe('Pool page / Header', () => {
     cy.viewport(800, 500);
     cy.mount(
       <PoolHeaderUi
-        poolData={{
+        pool={{
           id: 'TEST_ID',
           name: 'TEST_POOL',
-          total_weight: null,
-          configurations: [],
+          isPreferred: true,
         }}
       />
     );
