@@ -1,13 +1,12 @@
-import { Box, Divider, Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
 import { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { InfoIcon } from '@chakra-ui/icons';
-import { usePoolData } from '@snx-v3/usePoolData';
 import { CollateralIcon } from '@snx-v3/icons';
+import { usePool } from '@snx-v3/usePools';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -47,9 +46,6 @@ export const CollateralSectionUi: FC<{
             color="white"
           >
             Total TVL
-            <Tooltip label="Total TVL for Pool">
-              <InfoIcon display="none" w="10px" h="10px" />
-            </Tooltip>
           </Text>
           {vaultsData === undefined ? (
             <Skeleton w={16} h={6} />
@@ -72,9 +68,6 @@ export const CollateralSectionUi: FC<{
             color="white"
           >
             Total Debt
-            <Tooltip label="Total Debt for Pool">
-              <InfoIcon display="none" w="10px" h="10px" />
-            </Tooltip>
           </Text>
           {vaultsData === undefined ? (
             <Skeleton mt={1} w={16} h={6} />
@@ -209,7 +202,8 @@ export const CollateralSection = () => {
   const params = useParams();
 
   const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-  const { data: poolData } = usePoolData(params.poolId);
 
-  return <CollateralSectionUi vaultsData={vaultsData} poolName={poolData?.name} />;
+  const pool = usePool(params.poolId);
+
+  return <CollateralSectionUi vaultsData={vaultsData} poolName={pool?.name} />;
 };

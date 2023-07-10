@@ -5,8 +5,8 @@ import { PoolHeader } from './PoolHeader';
 import { MarketSection } from './MarketSection';
 import { CollateralSection } from './CollateralSection';
 import { useParams } from '@snx-v3/useParams';
-import { usePoolData } from '@snx-v3/usePoolData';
 import { HomeLink } from '@snx-v3/HomeLink';
+import { usePool } from '@snx-v3/usePools';
 
 export const PoolUi: FC<{
   PoolHeader: FC;
@@ -33,8 +33,8 @@ export const PoolUi: FC<{
 
 export const Pool = () => {
   const params = useParams();
-  const { data: poolData } = usePoolData(params.poolId);
-  const title = poolData ? `Pool #${poolData.id} / ${poolData.name}` : 'Pool';
+  const pool = usePool(params.poolId);
+  const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
   return (
     <>
       <Helmet>
