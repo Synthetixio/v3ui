@@ -9,7 +9,6 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -19,7 +18,7 @@ import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { VaultRow } from './VaultRow';
-import { usePreferredPool } from '@snx-v3/usePreferredPool';
+import { PoolsType, usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { LiquidityPositionType, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
@@ -52,7 +51,7 @@ const LoadingRow = () => (
 
 export function HomeUi({
   collateralTypes,
-  preferredPool,
+  pools,
   navigate,
   liquidityPositions,
   isLoading,
@@ -61,7 +60,7 @@ export function HomeUi({
   AvailableCollateral,
 }: {
   collateralTypes?: CollateralType[];
-  preferredPool?: { name: string; id: string };
+  pools: PoolsType;
   accountId?: string;
   navigate: NavigateFunction;
   liquidityPositions?: LiquidityPositionType[];
@@ -86,96 +85,132 @@ export function HomeUi({
         <Welcome />
       </Box>
       <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} />
-      <BorderBox p={4} mt={8} flexDir="column">
-        <Flex
-          justifyContent="space-between"
-          flexWrap={{ base: 'wrap', md: 'nowrap' }}
-          alignItems="center"
-        >
+
+      {isLoading ? (
+        <BorderBox p={4} mt={8} flexDir="column">
           <Flex
-            alignItems="baseline"
-            justifyContent="flex-start"
-            flexDirection={{ base: 'column', md: 'row' }}
+            justifyContent="space-between"
+            flexWrap={{ base: 'wrap', md: 'nowrap' }}
+            alignItems="center"
           >
-            <Skeleton isLoaded={!isLoading && !!preferredPool}>
-              <Fade in={!isLoading && !!preferredPool}>
-                <Heading fontSize="2xl">{preferredPool?.name || 'Unnamed Pool'}</Heading>
-              </Fade>
-            </Skeleton>
-            <Fade in={!isLoading && !!preferredPool}>
-              <Text display="none" ml={{ base: 0, md: 2 }} color="gray.400">{`Pool #${
-                preferredPool?.id || 1
-              }`}</Text>
-            </Fade>
+            <Flex
+              alignItems="baseline"
+              justifyContent="flex-start"
+              flexDirection={{ base: 'column', md: 'row' }}
+            >
+              <Skeleton />
+            </Flex>
           </Flex>
-          {preferredPool?.id && (
-            <Fade in={!isLoading && !!preferredPool}>
-              <Button
-                mt={{ base: 2, md: 0 }}
-                size="sm"
-                onClick={() =>
-                  navigate({
-                    pathname: generatePath('/pools/:poolId', { poolId: preferredPool.id }),
-                  })
-                }
-                variant="outline"
+        </BorderBox>
+      ) : (
+        <>
+          {pools.map((pool) => (
+            <BorderBox key={pool.id} p={4} mt={8} flexDir="column">
+              <Flex
+                justifyContent="space-between"
+                flexWrap={{ base: 'wrap', md: 'nowrap' }}
+                alignItems="center"
               >
-                Pool Info
-              </Button>
-            </Fade>
-          )}
-        </Flex>
-        <Skeleton display="none" isLoaded={!isLoading} mt={2}>
-          <Fade in={!isLoading}>
-            <Text color="gray.500">
-              The Spartan Council Pool is the primary pool of Synthetix. All collateral will be
-              deposited in this pool by default.
-            </Text>
-          </Fade>
-        </Skeleton>
-        <Box overflowX="auto">
-          <Table mt={8} size="sm" variant="unstyled" mb="9">
-            <Thead sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-              <Tr>
-                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  Collateral
-                </Th>
-                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  Debt
-                </Th>
-                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  C-Ratio
-                </Th>
-                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  Issuance Ratio
-                </Th>
-                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  Liquidation Ratio
-                </Th>
-                <Th
-                  color="gray.500"
-                  fontSize="xs"
-                  lineHeight="4"
-                  pb="2"
-                  textTransform="initial"
-                ></Th>
-              </Tr>
-            </Thead>
-            <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-              {preferredPool && collateralTypes ? (
-                collateralTypes.map((c) => (
-                  <VaultRow key={c.tokenAddress} collateralType={c} poolId={preferredPool.id} />
-                ))
-              ) : (
-                <>
-                  <LoadingRow />
-                  <LoadingRow />
-                </>
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-      </BorderBox>
+                <Flex
+                  alignItems="baseline"
+                  justifyContent="flex-start"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                >
+                  <Fade in>
+                    <Heading fontSize="2xl">{pool.name}</Heading>
+                  </Fade>
+                </Flex>
+                {pool.id && (
+                  <Fade in>
+                    <Button
+                      mt={{ base: 2, md: 0 }}
+                      size="sm"
+                      onClick={() =>
+                        navigate({ pathname: generatePath('/pools/:poolId', { poolId: pool.id }) })
+                      }
+                      variant="outline"
+                    >
+                      Pool Info
+                    </Button>
+                  </Fade>
+                )}
+              </Flex>
+              <Box overflowX="auto">
+                <Table mt={8} size="sm" variant="unstyled" mb="9">
+                  <Thead sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
+                    <Tr>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="3"
+                        textTransform="initial"
+                      >
+                        Collateral
+                      </Th>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="3"
+                        textTransform="initial"
+                      >
+                        Debt
+                      </Th>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="3"
+                        textTransform="initial"
+                      >
+                        C-Ratio
+                      </Th>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="3"
+                        textTransform="initial"
+                      >
+                        Issuance Ratio
+                      </Th>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="3"
+                        textTransform="initial"
+                      >
+                        Liquidation Ratio
+                      </Th>
+                      <Th
+                        color="gray.500"
+                        fontSize="xs"
+                        lineHeight="4"
+                        pb="2"
+                        textTransform="initial"
+                      ></Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
+                    {collateralTypes ? (
+                      collateralTypes.map((c) => (
+                        <VaultRow key={c.tokenAddress} collateralType={c} poolId={pool.id} />
+                      ))
+                    ) : (
+                      <>
+                        <LoadingRow />
+                        <LoadingRow />
+                      </>
+                    )}
+                  </Tbody>
+                </Table>
+              </Box>
+            </BorderBox>
+          ))}
+        </>
+      )}
 
       <AvailableCollateral />
     </Flex>
@@ -185,8 +220,7 @@ export function HomeUi({
 export function Home() {
   const { isLoading: accountsLoading } = useAccounts();
   const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
-  const { data: preferredPool, isLoading: preferredPoolLoading } = usePreferredPool();
-
+  const pools = usePools();
   const params = useParams();
   const navigate = useNavigate();
 
@@ -202,7 +236,7 @@ export function Home() {
   const isLoading =
     accountsLoading ||
     collateralTypesLoading ||
-    preferredPoolLoading ||
+    pools.isLoading ||
     (liquidityPositionLoading && liquidityInitialLoading);
 
   return (
@@ -217,7 +251,7 @@ export function Home() {
           liquidityPositionsById ? Object.values(liquidityPositionsById) : undefined
         }
         collateralTypes={collateralTypes}
-        preferredPool={preferredPool}
+        pools={pools.data || []}
         navigate={navigate}
         VaultRow={VaultRow}
         AvailableCollateral={AvailableCollateral}

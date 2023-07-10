@@ -49,7 +49,7 @@ export const useVaultsData = (poolId?: number) => {
       const collateralResult = multicallResult.slice(0, collateralCalls.length);
       const debtResult = multicallResult.slice(collateralCalls.length);
 
-      return collateralResult.map((bytes, i) => {
+      return collateralResult.map((bytes: string, i: number) => {
         const debtBytes = debtResult[i];
         const decodedDebt = CoreProxyContract.interface.decodeFunctionResult(
           'getVaultDebt',

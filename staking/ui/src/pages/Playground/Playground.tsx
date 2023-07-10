@@ -3,7 +3,6 @@
 import { Box, Button, Input, Select, Text, useToast } from '@chakra-ui/react';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { usePreferredPool } from '@snx-v3/usePreferredPool';
 import { ethers } from 'ethers';
 import React from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
@@ -16,6 +15,7 @@ import { Amount } from '@snx-v3/Amount';
 import { createSearchParams, generatePath, useNavigate } from 'react-router-dom';
 import { useParams } from '@snx-v3/useParams';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { usePools, usePool } from '@snx-v3/usePools';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
@@ -42,6 +42,36 @@ function AccountSelector() {
       {accounts.map((accountId) => (
         <option key={accountId} value={accountId}>
           {accountId}
+        </option>
+      ))}
+    </Select>
+  );
+}
+
+function PoolSelector() {
+  const params = useParams();
+  const { data: pools = [] } = usePools();
+  const navigate = useNavigate();
+
+  return (
+    <Select
+      placeholder="Select pool"
+      value={params.poolId}
+      onChange={(e) => {
+        navigate({
+          pathname: generatePath('/playground'),
+          search: createSearchParams({ ...params, poolId: e.target.value }).toString(),
+        });
+      }}
+      display="inline-block"
+      width="20em"
+      mr="1em"
+    >
+      {pools.map((pool) => (
+        <option key={pool.id} value={pool.id}>
+          {pool.isPreferred ? '* ' : null}
+          {pool.name}
+          {pool.isPreferred ? ' (preferred)' : null}
         </option>
       ))}
     </Select>
@@ -90,7 +120,7 @@ export function Playground() {
     (collateral) => collateral.symbol === symbol
   );
 
-  const { data: preferredPool } = usePreferredPool();
+  const pool = usePool(params.poolId);
 
   const accountCollateral = useAccountCollateral({ accountId });
   const accountCollateralData = accountCollateral.data?.find(
@@ -198,12 +228,12 @@ export function Playground() {
 
   const delegate = async () => {
     const $input: HTMLInputElement | null = document.querySelector('[name="delegate"]');
-    if (!$input || !preferredPool?.id || !accountId || !tokenAddress || !CoreProxy) throw 'OMG';
+    if (!$input || !pool?.id || !accountId || !tokenAddress || !CoreProxy) throw 'OMG';
 
     try {
       const tx = await CoreProxy.delegateCollateral(
         ethers.BigNumber.from(accountId),
-        ethers.BigNumber.from(preferredPool.id),
+        ethers.BigNumber.from(pool.id),
         tokenAddress,
         ethers.utils.parseEther($input.value),
         ethers.utils.parseEther(`1`)
@@ -291,7 +321,7 @@ export function Playground() {
 
       {accountCollateralData ? (
         <>
-          <Box mt={10} p={1}>
+          <Box p={1}>
             <Text>
               {symbol} address:{' '}
               <code
@@ -308,32 +338,40 @@ export function Playground() {
             <Text>
               Wallet Balance: <Amount value={tokenBalance.data} /> {symbol}
             </Text>
+          </Box>
+
+          <Box mt={10} p={1} verticalAlign="middle">
+            <Input type="number" step={1} min={0} name="deposit" width="20em" mr="1em" />
+            <Button onClick={deposit}>Deposit</Button>
+          </Box>
+          <Box p={1}>
             <Text>
               Deposited: <Amount value={accountCollateralData.totalDeposited} /> {symbol}
             </Text>
           </Box>
-          <Box p={1} verticalAlign="middle">
-            <Input type="number" step={1} min={0} name="deposit" width="20em" mr="1em" />
-            <Button onClick={deposit}>Deposit</Button>
-          </Box>
 
-          <Box mt={10} p={1}>
+          <Box mt={10} p={1} verticalAlign="middle">
+            <PoolSelector />
+            <Input
+              isDisabled={!pool}
+              type="number"
+              step={1}
+              min={0}
+              name="delegate"
+              width="20em"
+              mr="1em"
+            />
+            <Button isDisabled={!pool} onClick={delegate}>
+              Update delegated
+            </Button>
+          </Box>
+          <Box p={1}>
             <Text>
               Delegated: <Amount value={accountCollateralData.totalAssigned} /> {symbol}
             </Text>
           </Box>
-          <Box p={1} verticalAlign="middle">
-            <Input type="number" step={1} min={0} name="delegate" width="20em" mr="1em" />
-            <Button onClick={delegate}>Update delegated</Button>
-          </Box>
 
           <Box mt={10} p={1}>
-            <Text>
-              Available collateral: <Amount value={accountCollateralData.availableCollateral} />{' '}
-              {symbol}
-            </Text>
-          </Box>
-          <Box p={1}>
             <Text
               title={
                 accountCollateralUnlockDate.data
@@ -362,6 +400,12 @@ export function Playground() {
               mr="1em"
             />
             <Button onClick={withdraw}>Withdraw</Button>
+          </Box>
+          <Box p={1}>
+            <Text>
+              Available collateral:{' '}
+              <Amount value={accountCollateralData.availableCollateral} suffix={` ${symbol}`} />
+            </Text>
           </Box>
         </>
       ) : null}

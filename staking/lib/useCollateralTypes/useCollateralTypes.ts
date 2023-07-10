@@ -41,7 +41,7 @@ async function loadSymbols({
     callData: ERC20Interface.encodeFunctionData('symbol'),
   }));
   const multicallResult = await Multicall3.callStatic.aggregate(calls);
-  return multicallResult.returnData.map((bytes) =>
+  return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
   );
 }
@@ -59,7 +59,7 @@ async function loadPrices({
     CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
   );
   const multicallResult = await CoreProxy.callStatic.multicall(calls);
-  return multicallResult.map((bytes) => {
+  return multicallResult.map((bytes: string) => {
     const decoded = CoreProxy.interface.decodeFunctionResult('getCollateralPrice', bytes)[0];
     return PriceSchema.parse(decoded);
   });

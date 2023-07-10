@@ -4859,7 +4859,7 @@ __metadata:
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/usePoolData": "workspace:*"
+    "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
@@ -4931,6 +4931,7 @@ __metadata:
     "@snx-v3/format": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
+    "@snx-v3/usePools": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     react: ^18.2.0
     react-router-dom: ^6.11.2
@@ -5155,7 +5156,7 @@ __metadata:
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
-    "@snx-v3/usePreferredPool": "workspace:*"
+    "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
@@ -5517,21 +5518,10 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/usePreferredPool": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
     react: ^18.2.0
-    zod: ^3.21.4
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/usePreferredPool@workspace:*, @snx-v3/usePreferredPool@workspace:staking/lib/usePreferredPool":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePreferredPool@workspace:staking/lib/usePreferredPool"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@tanstack/react-query": ^4.29.12
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
