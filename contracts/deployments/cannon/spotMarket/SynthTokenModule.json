@@ -1,5 +1,5 @@
 {
-  "address": "0xc4C69b65ca3BFF98839A63a23AFb639a445f51A6",
+  "address": "0x38ADA250C264A1472cF232f415DD87623Be9fF16",
   "abi": [
     {
       "inputs": [],
@@ -39,6 +39,11 @@
       "type": "error"
     },
     {
+      "inputs": [],
+      "name": "InvalidDecayRate",
+      "type": "error"
+    },
+    {
       "inputs": [
         {
           "internalType": "string",
@@ -52,22 +57,6 @@
         }
       ],
       "name": "InvalidParameter",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "expected",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "actual",
-          "type": "bytes32"
-        }
-      ],
-      "name": "MismatchAssociatedSystemKind",
       "type": "error"
     },
     {
@@ -132,6 +121,19 @@
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "advanceEpoch",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -183,7 +185,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "owner",
+          "name": "user",
           "type": "address"
         }
       ],
@@ -202,7 +204,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "target",
+          "name": "from",
           "type": "address"
         },
         {
@@ -217,26 +219,16 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
+      "inputs": [],
+      "name": "decayRate",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "burnWithAllowance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -340,7 +332,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "target",
+          "name": "to",
           "type": "address"
         },
         {
@@ -391,6 +383,19 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDecayRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "symbol",
       "outputs": [
@@ -405,11 +410,24 @@
     },
     {
       "inputs": [],
-      "name": "totalSupply",
+      "name": "totalShares",
       "outputs": [
         {
           "internalType": "uint256",
           "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "supply",
           "type": "uint256"
         }
       ],
@@ -435,35 +453,6 @@
           "internalType": "bool",
           "name": "",
           "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "destChainId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferCrossChain",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "feesPaid",
-          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -501,8 +490,8 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xf8cbbf698776cff2f1fd4ea050d71e0e781170f8fdd7ef21a75f5de2ae8cd2e8",
-  "sourceName": "contracts/modules/usd/USDTokenModule.sol",
-  "contractName": "USDTokenModule",
-  "deployedOn": "contract.USDTokenModule"
+  "deployTxnHash": "0x5129ddea41ae7d1653cdff738189e6a83ecc5118469f6f653971e0b0c84eee24",
+  "sourceName": "contracts/modules/token/SynthTokenModule.sol",
+  "contractName": "SynthTokenModule",
+  "deployedOn": "contract.SynthTokenModule"
 }

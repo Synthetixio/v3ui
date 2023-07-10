@@ -206,7 +206,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xc7282fd5ab63a1077cc6ae41978220e01af1c7b62455fce50707ae4010e0b15e",
+  "deployTxnHash": "0xc8e67903a631af22c18acfec1849abcb94b43c4fb9d4ae362588538297bb6d91",
   "sourceName": "contracts/modules/CoreModule.sol",
   "contractName": "CoreModule",
   "deployedOn": "contract.CoreModule"
