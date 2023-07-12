@@ -34,7 +34,7 @@ export const abi = [
   'error UnprocessableNode(bytes32 nodeId)',
   'error UnsupportedOperation(uint8 operation)',
   'event NodeRegistered(bytes32 nodeId, uint8 nodeType, bytes parameters, bytes32[] parents)',
-  'function getNode(bytes32 nodeId) view returns (tuple(uint8 nodeType, bytes parameters, bytes32[] parents) node)',
+  'function getNode(bytes32 nodeId) pure returns (tuple(uint8 nodeType, bytes parameters, bytes32[] parents) node)',
   'function getNodeId(uint8 nodeType, bytes parameters, bytes32[] parents) pure returns (bytes32 nodeId)',
   'function process(bytes32 nodeId) view returns (tuple(int256 price, uint256 timestamp, uint256 __slotAvailableForFutureUse1, uint256 __slotAvailableForFutureUse2) node)',
   'function registerNode(uint8 nodeType, bytes parameters, bytes32[] parents) returns (bytes32 nodeId)',

@@ -78,6 +78,10 @@ export const abi = [
   'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl)',
   'function initOrUpgradeToken(bytes32 id, string name, string symbol, uint8 decimals, address impl)',
   'function registerUnmanagedSystem(bytes32 id, address endpoint)',
+  'error InvalidMessage()',
+  'error NotCcipRouter(address)',
+  'error UnsupportedNetwork(uint64)',
+  'function ccipReceive(tuple(bytes32 messageId, uint64 sourceChainSelector, bytes sender, bytes data, tuple(address token, uint256 amount)[] tokenAmounts) message)',
   'error AccountActivityTimeoutPending(uint128 accountId, uint256 currentTime, uint256 requiredTime)',
   'error CollateralDepositDisabled(address collateralType)',
   'error CollateralNotFound()',
@@ -103,6 +107,9 @@ export const abi = [
   'function getCollateralConfiguration(address collateralType) view returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18))',
   'function getCollateralConfigurations(bool hideDisabled) view returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18)[])',
   'function getCollateralPrice(address collateralType) view returns (uint256)',
+  'error InsufficientCcipFee(uint256 requiredAmount, uint256 availableAmount)',
+  'event TransferCrossChainInitiated(uint64 indexed destChainId, uint256 indexed amount, address sender)',
+  'function transferCrossChain(uint64 destChainId, uint256 amount) payable returns (uint256 gasTokenUsed)',
   'error InsufficientDebt(int256 currentDebt)',
   'error PoolNotFound(uint128 poolId)',
   'event IssuanceFeePaid(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 feeAmount)',
@@ -187,7 +194,7 @@ export const abi = [
   'function getPoolName(uint128 poolId) view returns (string poolName)',
   'function getPoolOwner(uint128 poolId) view returns (address)',
   'function nominatePoolOwner(address nominatedOwner, uint128 poolId)',
-  'function rebalancePool(uint128 poolId)',
+  'function rebalancePool(uint128 poolId, address optionalCollateralType)',
   'function renouncePoolNomination(uint128 poolId)',
   'function revokePoolNomination(uint128 poolId)',
   'function setMinLiquidityRatio(uint256 minLiquidityRatio)',
@@ -208,12 +215,15 @@ export const abi = [
   'function registerRewardsDistributor(uint128 poolId, address collateralType, address distributor)',
   'function removeRewardsDistributor(uint128 poolId, address collateralType, address distributor)',
   'function updateRewards(uint128 poolId, address collateralType, uint128 accountId) returns (uint256[], address[])',
+  'event NewSupportedCrossChainNetwork(uint64 newChainId)',
+  'function configureChainlinkCrossChain(address ccipRouter, address ccipTokenPool)',
   'function configureOracleManager(address oracleManagerAddress)',
   'function getConfig(bytes32 k) view returns (bytes32 v)',
   'function getConfigAddress(bytes32 k) view returns (address v)',
   'function getConfigUint(bytes32 k) view returns (uint256 v)',
-  'function registerCcip(address ccipSend, address ccipReceive, address ccipTokenPool)',
   'function setConfig(bytes32 k, bytes32 v)',
+  'function setSupportedCrossChainNetworks(uint64[] supportedNetworks, uint64[] ccipSelectors) returns (uint256 numRegistered)',
+  'function supportsInterface(bytes4 interfaceId) view returns (bool)',
   'error InsufficientDelegation(uint256 minDelegation)',
   'error InvalidCollateralAmount()',
   'error InvalidLeverage(uint256 leverage)',
@@ -222,7 +232,7 @@ export const abi = [
   'function getPosition(uint128 accountId, uint128 poolId, address collateralType) returns (uint256 collateralAmount, uint256 collateralValue, int256 debt, uint256 collateralizationRatio)',
   'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
   'function getPositionCollateralRatio(uint128 accountId, uint128 poolId, address collateralType) returns (uint256)',
-  'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) returns (int256)',
+  'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) returns (int256 debt)',
   'function getVaultCollateral(uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
   'function getVaultCollateralRatio(uint128 poolId, address collateralType) returns (uint256)',
   'function getVaultDebt(uint128 poolId, address collateralType) returns (int256)',
@@ -253,6 +263,37 @@ export declare namespace IAccountModule {
   export type AccountPermissionsStructOutput = [string, string[]] & {
     user: string;
     permissions: string[];
+  };
+}
+
+export declare namespace CcipClient {
+  export type EVMTokenAmountStruct = { token: string; amount: BigNumberish };
+
+  export type EVMTokenAmountStructOutput = [string, BigNumber] & {
+    token: string;
+    amount: BigNumber;
+  };
+
+  export type Any2EVMMessageStruct = {
+    messageId: BytesLike;
+    sourceChainSelector: BigNumberish;
+    sender: BytesLike;
+    data: BytesLike;
+    tokenAmounts: CcipClient.EVMTokenAmountStruct[];
+  };
+
+  export type Any2EVMMessageStructOutput = [
+    string,
+    BigNumber,
+    string,
+    string,
+    CcipClient.EVMTokenAmountStructOutput[]
+  ] & {
+    messageId: string;
+    sourceChainSelector: BigNumber;
+    sender: string;
+    data: string;
+    tokenAmounts: CcipClient.EVMTokenAmountStructOutput[];
   };
 }
 
@@ -360,6 +401,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'initOrUpgradeNft(bytes32,string,string,string,address)': FunctionFragment;
     'initOrUpgradeToken(bytes32,string,string,uint8,address)': FunctionFragment;
     'registerUnmanagedSystem(bytes32,address)': FunctionFragment;
+    'ccipReceive((bytes32,uint64,bytes,bytes,(address,uint256)[]))': FunctionFragment;
     'cleanExpiredLocks(uint128,address,uint256,uint256)': FunctionFragment;
     'createLock(uint128,address,uint256,uint64)': FunctionFragment;
     'deposit(uint128,address,uint256)': FunctionFragment;
@@ -371,6 +413,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'getCollateralConfiguration(address)': FunctionFragment;
     'getCollateralConfigurations(bool)': FunctionFragment;
     'getCollateralPrice(address)': FunctionFragment;
+    'transferCrossChain(uint64,uint256)': FunctionFragment;
     'burnUsd(uint128,uint128,address,uint256)': FunctionFragment;
     'mintUsd(uint128,uint128,address,uint256)': FunctionFragment;
     'isPositionLiquidatable(uint128,uint128,address)': FunctionFragment;
@@ -416,7 +459,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'getPoolName(uint128)': FunctionFragment;
     'getPoolOwner(uint128)': FunctionFragment;
     'nominatePoolOwner(address,uint128)': FunctionFragment;
-    'rebalancePool(uint128)': FunctionFragment;
+    'rebalancePool(uint128,address)': FunctionFragment;
     'renouncePoolNomination(uint128)': FunctionFragment;
     'revokePoolNomination(uint128)': FunctionFragment;
     'setPoolConfiguration(uint128,(uint128,uint128,int128)[])': FunctionFragment;
@@ -427,12 +470,14 @@ export interface CoreProxyInterface extends utils.Interface {
     'registerRewardsDistributor(uint128,address,address)': FunctionFragment;
     'removeRewardsDistributor(uint128,address,address)': FunctionFragment;
     'updateRewards(uint128,address,uint128)': FunctionFragment;
+    'configureChainlinkCrossChain(address,address)': FunctionFragment;
     'configureOracleManager(address)': FunctionFragment;
     'getConfig(bytes32)': FunctionFragment;
     'getConfigAddress(bytes32)': FunctionFragment;
     'getConfigUint(bytes32)': FunctionFragment;
-    'registerCcip(address,address,address)': FunctionFragment;
     'setConfig(bytes32,bytes32)': FunctionFragment;
+    'setSupportedCrossChainNetworks(uint64[],uint64[])': FunctionFragment;
+    'supportsInterface(bytes4)': FunctionFragment;
     'delegateCollateral(uint128,uint128,address,uint256,uint256)': FunctionFragment;
     'getPosition(uint128,uint128,address)': FunctionFragment;
     'getPositionCollateral(uint128,uint128,address)': FunctionFragment;
@@ -480,6 +525,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'initOrUpgradeNft'
       | 'initOrUpgradeToken'
       | 'registerUnmanagedSystem'
+      | 'ccipReceive'
       | 'cleanExpiredLocks'
       | 'createLock'
       | 'deposit'
@@ -491,6 +537,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'getCollateralConfiguration'
       | 'getCollateralConfigurations'
       | 'getCollateralPrice'
+      | 'transferCrossChain'
       | 'burnUsd'
       | 'mintUsd'
       | 'isPositionLiquidatable'
@@ -547,12 +594,14 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'registerRewardsDistributor'
       | 'removeRewardsDistributor'
       | 'updateRewards'
+      | 'configureChainlinkCrossChain'
       | 'configureOracleManager'
       | 'getConfig'
       | 'getConfigAddress'
       | 'getConfigUint'
-      | 'registerCcip'
       | 'setConfig'
+      | 'setSupportedCrossChainNetworks'
+      | 'supportsInterface'
       | 'delegateCollateral'
       | 'getPosition'
       | 'getPositionCollateral'
@@ -641,6 +690,10 @@ export interface CoreProxyInterface extends utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
+    functionFragment: 'ccipReceive',
+    values: [CcipClient.Any2EVMMessageStruct]
+  ): string;
+  encodeFunctionData(
     functionFragment: 'cleanExpiredLocks',
     values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
@@ -675,6 +728,10 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'getCollateralConfiguration', values: [string]): string;
   encodeFunctionData(functionFragment: 'getCollateralConfigurations', values: [boolean]): string;
   encodeFunctionData(functionFragment: 'getCollateralPrice', values: [string]): string;
+  encodeFunctionData(
+    functionFragment: 'transferCrossChain',
+    values: [BigNumberish, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: 'burnUsd',
     values: [BigNumberish, BigNumberish, string, BigNumberish]
@@ -777,7 +834,7 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'getPoolName', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getPoolOwner', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'nominatePoolOwner', values: [string, BigNumberish]): string;
-  encodeFunctionData(functionFragment: 'rebalancePool', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'rebalancePool', values: [BigNumberish, string]): string;
   encodeFunctionData(functionFragment: 'renouncePoolNomination', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'revokePoolNomination', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -809,12 +866,20 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'updateRewards',
     values: [BigNumberish, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: 'configureChainlinkCrossChain',
+    values: [string, string]
+  ): string;
   encodeFunctionData(functionFragment: 'configureOracleManager', values: [string]): string;
   encodeFunctionData(functionFragment: 'getConfig', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigAddress', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigUint', values: [BytesLike]): string;
-  encodeFunctionData(functionFragment: 'registerCcip', values: [string, string, string]): string;
   encodeFunctionData(functionFragment: 'setConfig', values: [BytesLike, BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: 'setSupportedCrossChainNetworks',
+    values: [BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(functionFragment: 'supportsInterface', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'delegateCollateral',
     values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
@@ -880,6 +945,7 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'initOrUpgradeNft', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'initOrUpgradeToken', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'registerUnmanagedSystem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'ccipReceive', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'cleanExpiredLocks', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'createLock', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
@@ -891,6 +957,7 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getCollateralConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralConfigurations', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralPrice', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferCrossChain', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'burnUsd', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'mintUsd', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isPositionLiquidatable', data: BytesLike): Result;
@@ -953,12 +1020,14 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'registerRewardsDistributor', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'removeRewardsDistributor', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'updateRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'configureChainlinkCrossChain', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'configureOracleManager', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigUint', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'registerCcip', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setConfig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setSupportedCrossChainNetworks', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'supportsInterface', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'delegateCollateral', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPosition', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPositionCollateral', data: BytesLike): Result;
@@ -987,6 +1056,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'Deposited(uint128,address,uint256,address)': EventFragment;
     'Withdrawn(uint128,address,uint256,address)': EventFragment;
     'CollateralConfigured(address,tuple)': EventFragment;
+    'TransferCrossChainInitiated(uint64,uint256,address)': EventFragment;
     'IssuanceFeePaid(uint128,uint128,address,uint256)': EventFragment;
     'UsdBurned(uint128,uint128,address,uint256,address)': EventFragment;
     'UsdMinted(uint128,uint128,address,uint256,address)': EventFragment;
@@ -1016,6 +1086,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'RewardsDistributed(uint128,address,address,uint256,uint256,uint256)': EventFragment;
     'RewardsDistributorRegistered(uint128,address,address)': EventFragment;
     'RewardsDistributorRemoved(uint128,address,address)': EventFragment;
+    'NewSupportedCrossChainNetwork(uint64)': EventFragment;
     'DelegationUpdated(uint128,uint128,address,uint256,uint256,address)': EventFragment;
   };
 
@@ -1037,6 +1108,7 @@ export interface CoreProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'CollateralConfigured'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'TransferCrossChainInitiated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'IssuanceFeePaid'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'UsdBurned'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'UsdMinted'): EventFragment;
@@ -1066,6 +1138,7 @@ export interface CoreProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributed'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributorRegistered'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributorRemoved'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'NewSupportedCrossChainNetwork'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'DelegationUpdated'): EventFragment;
 }
 
@@ -1272,6 +1345,19 @@ export type CollateralConfiguredEvent = TypedEvent<
 >;
 
 export type CollateralConfiguredEventFilter = TypedEventFilter<CollateralConfiguredEvent>;
+
+export interface TransferCrossChainInitiatedEventObject {
+  destChainId: BigNumber;
+  amount: BigNumber;
+  sender: string;
+}
+export type TransferCrossChainInitiatedEvent = TypedEvent<
+  [BigNumber, BigNumber, string],
+  TransferCrossChainInitiatedEventObject
+>;
+
+export type TransferCrossChainInitiatedEventFilter =
+  TypedEventFilter<TransferCrossChainInitiatedEvent>;
 
 export interface IssuanceFeePaidEventObject {
   accountId: BigNumber;
@@ -1615,6 +1701,17 @@ export type RewardsDistributorRemovedEvent = TypedEvent<
 
 export type RewardsDistributorRemovedEventFilter = TypedEventFilter<RewardsDistributorRemovedEvent>;
 
+export interface NewSupportedCrossChainNetworkEventObject {
+  newChainId: BigNumber;
+}
+export type NewSupportedCrossChainNetworkEvent = TypedEvent<
+  [BigNumber],
+  NewSupportedCrossChainNetworkEventObject
+>;
+
+export type NewSupportedCrossChainNetworkEventFilter =
+  TypedEventFilter<NewSupportedCrossChainNetworkEvent>;
+
 export interface DelegationUpdatedEventObject {
   accountId: BigNumber;
   poolId: BigNumber;
@@ -1827,6 +1924,11 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     cleanExpiredLocks(
       accountId: BigNumberish,
       collateralType: string,
@@ -1899,6 +2001,12 @@ export interface CoreProxy extends BaseContract {
     ): Promise<[CollateralConfiguration.DataStructOutput[]]>;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     burnUsd(
       accountId: BigNumberish,
@@ -2123,6 +2231,7 @@ export interface CoreProxy extends BaseContract {
 
     rebalancePool(
       poolId: BigNumberish,
+      optionalCollateralType: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2193,6 +2302,12 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     configureOracleManager(
       oracleManagerAddress: string,
       overrides?: Overrides & { from?: string }
@@ -2204,18 +2319,19 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<[BigNumber] & { v: BigNumber }>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -2438,6 +2554,11 @@ export interface CoreProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  ccipReceive(
+    message: CcipClient.Any2EVMMessageStruct,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   cleanExpiredLocks(
     accountId: BigNumberish,
     collateralType: string,
@@ -2510,6 +2631,12 @@ export interface CoreProxy extends BaseContract {
   ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
   getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  transferCrossChain(
+    destChainId: BigNumberish,
+    amount: BigNumberish,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   burnUsd(
     accountId: BigNumberish,
@@ -2725,6 +2852,7 @@ export interface CoreProxy extends BaseContract {
 
   rebalancePool(
     poolId: BigNumberish,
+    optionalCollateralType: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2795,6 +2923,12 @@ export interface CoreProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  configureChainlinkCrossChain(
+    ccipRouter: string,
+    ccipTokenPool: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   configureOracleManager(
     oracleManagerAddress: string,
     overrides?: Overrides & { from?: string }
@@ -2806,18 +2940,19 @@ export interface CoreProxy extends BaseContract {
 
   getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-  registerCcip(
-    ccipSend: string,
-    ccipReceive: string,
-    ccipTokenPool: string,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
   setConfig(
     k: BytesLike,
     v: BytesLike,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  setSupportedCrossChainNetworks(
+    supportedNetworks: BigNumberish[],
+    ccipSelectors: BigNumberish[],
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   delegateCollateral(
     accountId: BigNumberish,
@@ -3030,6 +3165,8 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    ccipReceive(message: CcipClient.Any2EVMMessageStruct, overrides?: CallOverrides): Promise<void>;
+
     cleanExpiredLocks(
       accountId: BigNumberish,
       collateralType: string,
@@ -3102,6 +3239,12 @@ export interface CoreProxy extends BaseContract {
     ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     burnUsd(
       accountId: BigNumberish,
@@ -3294,7 +3437,11 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rebalancePool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    rebalancePool(
+      poolId: BigNumberish,
+      optionalCollateralType: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renouncePoolNomination(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -3353,6 +3500,12 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[], string[]]>;
 
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     configureOracleManager(oracleManagerAddress: string, overrides?: CallOverrides): Promise<void>;
 
     getConfig(k: BytesLike, overrides?: CallOverrides): Promise<string>;
@@ -3361,14 +3514,15 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setConfig(k: BytesLike, v: BytesLike, overrides?: CallOverrides): Promise<void>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -3613,6 +3767,17 @@ export interface CoreProxy extends BaseContract {
       collateralType?: string | null,
       config?: null
     ): CollateralConfiguredEventFilter;
+
+    'TransferCrossChainInitiated(uint64,uint256,address)'(
+      destChainId?: BigNumberish | null,
+      amount?: BigNumberish | null,
+      sender?: null
+    ): TransferCrossChainInitiatedEventFilter;
+    TransferCrossChainInitiated(
+      destChainId?: BigNumberish | null,
+      amount?: BigNumberish | null,
+      sender?: null
+    ): TransferCrossChainInitiatedEventFilter;
 
     'IssuanceFeePaid(uint128,uint128,address,uint256)'(
       accountId?: BigNumberish | null,
@@ -3929,6 +4094,11 @@ export interface CoreProxy extends BaseContract {
       distributor?: string | null
     ): RewardsDistributorRemovedEventFilter;
 
+    'NewSupportedCrossChainNetwork(uint64)'(
+      newChainId?: null
+    ): NewSupportedCrossChainNetworkEventFilter;
+    NewSupportedCrossChainNetwork(newChainId?: null): NewSupportedCrossChainNetworkEventFilter;
+
     'DelegationUpdated(uint128,uint128,address,uint256,uint256,address)'(
       accountId?: BigNumberish | null,
       poolId?: BigNumberish | null,
@@ -4110,6 +4280,11 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     cleanExpiredLocks(
       accountId: BigNumberish,
       collateralType: string,
@@ -4176,6 +4351,12 @@ export interface CoreProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
 
     burnUsd(
       accountId: BigNumberish,
@@ -4383,6 +4564,7 @@ export interface CoreProxy extends BaseContract {
 
     rebalancePool(
       poolId: BigNumberish,
+      optionalCollateralType: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4453,6 +4635,12 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     configureOracleManager(
       oracleManagerAddress: string,
       overrides?: Overrides & { from?: string }
@@ -4464,18 +4652,19 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -4711,6 +4900,11 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     cleanExpiredLocks(
       accountId: BigNumberish,
       collateralType: string,
@@ -4779,6 +4973,12 @@ export interface CoreProxy extends BaseContract {
     getCollateralPrice(
       collateralType: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     burnUsd(
@@ -5020,6 +5220,7 @@ export interface CoreProxy extends BaseContract {
 
     rebalancePool(
       poolId: BigNumberish,
+      optionalCollateralType: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -5090,6 +5291,12 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     configureOracleManager(
       oracleManagerAddress: string,
       overrides?: Overrides & { from?: string }
@@ -5101,17 +5308,21 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     delegateCollateral(
