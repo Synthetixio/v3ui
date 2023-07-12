@@ -76,19 +76,19 @@ export const feeSuggestion = async (
   const baseFeeToMax = (base: Wei, prio: Wei) => base.mul(wei(2, GWEI_DECIMALS)).add(prio);
   return {
     average: {
-      maxPriorityFeePerGas: averageMaxPriorityFee,
-      maxFeePerGas: baseFeeToMax(baseFeePerGas, averageMaxPriorityFee),
-      baseFeePerGas,
+      maxPriorityFeePerGas: averageMaxPriorityFee.toBN(),
+      maxFeePerGas: baseFeeToMax(baseFeePerGas, averageMaxPriorityFee).toBN(),
+      baseFeePerGas: baseFeePerGas.toBN(),
     },
     fast: {
-      maxPriorityFeePerGas: fastMaxPriorityFee,
-      maxFeePerGas: baseFeeToMax(baseFeePerGas, fastMaxPriorityFee),
-      baseFeePerGas,
+      maxPriorityFeePerGas: fastMaxPriorityFee.toBN(),
+      maxFeePerGas: baseFeeToMax(baseFeePerGas, fastMaxPriorityFee).toBN(),
+      baseFeePerGas: baseFeePerGas.toBN(),
     },
     fastest: {
-      maxPriorityFeePerGas: fastestMaxPriorityFee,
-      maxFeePerGas: baseFeeToMax(baseFeePerGas, fastestMaxPriorityFee),
-      baseFeePerGas,
+      maxPriorityFeePerGas: fastestMaxPriorityFee.toBN(),
+      maxFeePerGas: baseFeeToMax(baseFeePerGas, fastestMaxPriorityFee).toBN(),
+      baseFeePerGas: baseFeePerGas.toBN(),
     },
   };
 };
