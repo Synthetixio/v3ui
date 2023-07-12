@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
@@ -32,7 +32,7 @@ export const useRepay = (
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
-  const { name: networkName, id: networkId } = useNetwork();
+  const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -43,7 +43,7 @@ export const useRepay = (
       try {
         dispatch({ type: 'prompting' });
 
-        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasPricesPromised = getGasPrice({ provider });
         const gasLimitPromised = CoreProxy.estimateGas.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),

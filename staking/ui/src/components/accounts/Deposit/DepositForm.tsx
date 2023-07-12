@@ -7,6 +7,7 @@ import {
   Collapse,
   Flex,
   Text,
+  Link,
 } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
@@ -167,18 +168,14 @@ export function DepositFormUi({
                 color="whiteAlpha.700"
               >
                 {accountCollateral && accountCollateral?.availableCollateral.gt(0) ? (
-                  <Flex
-                    gap="1"
-                    cursor="pointer"
-                    onClick={() => setInputAmount(accountCollateral?.availableCollateral)}
-                  >
-                    <Text>Available {accountCollateral.symbol} Collateral:</Text>
-                    <Amount value={accountCollateral?.availableCollateral} />
-                  </Flex>
+                  <Link onClick={() => setInputAmount(accountCollateral?.availableCollateral)}>
+                    <Amount
+                      prefix={`Available ${accountCollateral.symbol} Collateral: `}
+                      value={accountCollateral?.availableCollateral}
+                    />
+                  </Link>
                 ) : null}
-                <Flex
-                  gap="1"
-                  cursor="pointer"
+                <Link
                   onClick={() => {
                     if (!tokenBalance) {
                       return;
@@ -186,9 +183,11 @@ export function DepositFormUi({
                     setInputAmount(tokenBalance);
                   }}
                 >
-                  <Text>{collateralType.symbol} Wallet Balance:</Text>
-                  <Amount value={tokenBalance} />
-                </Flex>
+                  <Amount
+                    prefix={`${collateralType.symbol} Wallet Balance: `}
+                    value={tokenBalance}
+                  />
+                </Link>
                 {collateralType?.symbol === 'WETH' ? (
                   <Flex
                     gap="1"
