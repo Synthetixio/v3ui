@@ -5255,6 +5255,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/feeSuggestion@workspace:*, @snx-v3/feeSuggestion@workspace:staking/lib/feeSuggestion":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/feeSuggestion@workspace:staking/lib/feeSuggestion"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    ethers: ^5.7.2
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/format@workspace:*, @snx-v3/format@workspace:staking/lib/format":
   version: 0.0.0-use.local
   resolution: "@snx-v3/format@workspace:staking/lib/format"
@@ -5602,12 +5612,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGasPrice@workspace:staking/lib/useGasPrice"
   dependencies:
-    "@ethersproject/bignumber": ^5.7.0
-    "@ethersproject/providers": ^5.7.2
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/feeSuggestion": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
   linkType: soft
