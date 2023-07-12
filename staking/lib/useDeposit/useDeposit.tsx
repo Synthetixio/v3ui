@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber, BytesLike } from 'ethers';
@@ -42,7 +42,7 @@ export const useDeposit = (
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
-  const { name: networkName, id: networkId } = useNetwork();
+  const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -89,7 +89,7 @@ export const useDeposit = (
 
         const calls = [createAccount, deposit, delegate].filter(Boolean) as BytesLike[];
 
-        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasPricesPromised = getGasPrice({ provider });
         const gasLimitPromised = CoreProxy.estimateGas.multicall(calls);
         const populatedTxnPromised = CoreProxy.populateTransaction.multicall(calls, {
           gasLimit: gasLimitPromised,

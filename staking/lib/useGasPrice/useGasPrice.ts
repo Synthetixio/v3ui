@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { wei } from '@synthetixio/wei';
-import { InfuraProvider } from '@ethersproject/providers';
+import type { JsonRpcProvider } from '@ethersproject/providers';
 import { BigNumber } from '@ethersproject/bignumber';
 import { GWEI_DECIMALS } from '@snx-v3/constants';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
 
 const MULTIPLIER = wei(2, GWEI_DECIMALS);
 
@@ -18,7 +18,7 @@ export const computeGasFee = (baseFeePerGas: BigNumber, maxPriorityFeePerGas: nu
   };
 };
 
-const getGasPriceFromProvider = async (provider: InfuraProvider) => {
+const getGasPriceFromProvider = async (provider: JsonRpcProvider) => {
   try {
     const gasPrice = await provider.getGasPrice();
     return {
@@ -31,18 +31,11 @@ const getGasPriceFromProvider = async (provider: InfuraProvider) => {
   }
 };
 
-export const getGasPrice = async ({
-  networkName,
-  networkId,
-}: {
-  networkName: string;
-  networkId: number;
-}) => {
-  const provider = new InfuraProvider(networkId, process.env.NEXT_PUBLIC_INFURA_PROJECT_ID);
-
+export const getGasPrice = async ({ provider }: { provider: JsonRpcProvider }) => {
   try {
+    const network = await provider.getNetwork();
     // If network is Mainnet then we use EIP1559
-    if (networkName === 'mainnet') {
+    if (network.chainId === 1) {
       const block = await provider.getBlock('latest');
       if (block.baseFeePerGas) {
         return {
@@ -63,13 +56,14 @@ export type GasPrices = Awaited<ReturnType<typeof getGasPrice>>;
 
 export const useGasPrice = () => {
   const network = useNetwork();
+  const provider = useProvider();
 
   return useQuery({
     queryKey: [network.name, 'GasPrice'],
     queryFn: async () => {
-      return getGasPrice({ networkId: network.id, networkName: network.name });
+      return getGasPrice({ provider });
     },
 
-    enabled: Boolean(network.name && network.id),
+    enabled: Boolean(provider),
   });
 };
