@@ -19,11 +19,21 @@ export function useTransferableSynthetix() {
       if (!(provider && accountAddress && snxAddress)) throw 'OMG';
       const contract = new ethers.Contract(
         snxAddress,
-        ['function transferableSynthetix(address account) view returns (uint256 transferable)'],
+        [
+          'function balanceOf(address owner) view returns (uint256)',
+          'function transferableSynthetix(address account) view returns (uint256 transferable)',
+        ],
         provider
       );
-      const amount = await contract.transferableSynthetix(accountAddress);
-      return wei(amount);
+      try {
+        // Normal case for SNX case
+        const transferableSynthetix = await contract.transferableSynthetix(accountAddress);
+        return wei(transferableSynthetix);
+      } catch (e) {
+        // For local deployment we are dealing with a standard mintable token
+        const balance = await contract.balanceOf(accountAddress);
+        return wei(balance);
+      }
     },
   });
 }
