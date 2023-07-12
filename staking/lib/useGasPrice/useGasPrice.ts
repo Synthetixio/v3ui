@@ -18,12 +18,11 @@ const getGasPriceFromProvider = async (provider: ethers.providers.JsonRpcProvide
 
 export const getGasPrice = async ({ provider }: { provider: ethers.providers.JsonRpcProvider }) => {
   try {
-    const network = await provider.getNetwork();
-    // If network is Mainnet then we use EIP1559
-    if (network.chainId === 1 || network.chainId === 10) {
+    const block = await provider.getBlock('latest');
+    if (block.baseFeePerGas) {
       return feeSuggestion(provider);
     }
-    // When Testnet, Optimism network or missing baseFeePerGas we get the Gas Price through the provider
+    // When missing baseFeePerGas we get the Gas Price through the provider
     return getGasPriceFromProvider(provider);
   } catch (e) {
     throw new Error(`Could not fetch and compute network fee. ${e}`);
@@ -37,11 +36,8 @@ export const useGasPrice = () => {
   const provider = useProvider();
 
   return useQuery({
-    queryKey: [network.name, 'GasPrice'],
-    queryFn: async () => {
-      return getGasPrice({ provider });
-    },
-
     enabled: Boolean(provider),
+    queryKey: [network.name, 'GasPrice'],
+    queryFn: () => getGasPrice({ provider }),
   });
 };
