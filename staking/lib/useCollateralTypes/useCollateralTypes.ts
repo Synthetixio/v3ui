@@ -96,7 +96,7 @@ async function loadCollateralTypes({
   }));
 }
 
-export function useCollateralTypes(includeSnxUsd = false) {
+export function useCollateralTypes() {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
@@ -108,7 +108,6 @@ export function useCollateralTypes(includeSnxUsd = false) {
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
 
-      if (includeSnxUsd) return collateralTypes;
       return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
     },
     placeholderData: [],
