@@ -106,7 +106,9 @@ export function useCollateralTypes() {
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      return loadCollateralTypes({ CoreProxy, Multicall3 });
+      const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
+
+      return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
     },
     placeholderData: [],
     enabled: Boolean(CoreProxy && Multicall3),
