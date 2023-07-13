@@ -13,7 +13,7 @@ import {
 import { Balance } from '@snx-v3/Balance';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import Head from 'react-helmet';
 // import { TeleporterModal } from './TeleporterModal';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -22,30 +22,40 @@ import {
   NETWORKS,
   Network,
   onboard,
-  useIsConnected,
   useNetwork,
   useSetNetwork,
   useWallet,
 } from '@snx-v3/useBlockchain';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
 
 const NETWORKS_ARRAY = Object.values(NETWORKS).filter((network) => network.isSupported);
 
-export const Teleporter = () => {
-  const { data: USDProxy } = useUSDProxy();
-  const [amount, setAmount] = useState(wei(0));
-  const wallet = useWallet();
-  useIsConnected;
-  const activeNetwork = useNetwork();
-  const setNetwork = useSetNetwork();
-
-  const [to, setTo] = useState<Network | undefined>();
-  const { data: balance } = useTokenBalance(USDProxy?.address);
-  // Only fetch when to is set
-  const { data: toBalance } = useTokenBalance(to ? USDProxy?.address : undefined, to?.id);
-
+export const TeleporterUi: FC<{
+  connectedWallet?: string;
+  amount: Wei;
+  setAmount: (val: Wei) => void;
+  activeNetwork: Network;
+  setActiveNetwork: (network: Network) => void;
+  balance?: Wei;
+  toBalance?: Wei;
+  toNetworkBalance?: Wei;
+  toNetwork?: Network;
+  setToNetwork: (network?: Network) => void;
+  usdProxyAddress?: string;
+}> = ({
+  connectedWallet,
+  amount,
+  setAmount,
+  activeNetwork,
+  setActiveNetwork,
+  balance,
+  toNetworkBalance,
+  toNetwork,
+  setToNetwork,
+  usdProxyAddress,
+}) => {
   return (
     <Box maxW="600px">
       <HomeLink />
@@ -97,9 +107,10 @@ export const Teleporter = () => {
                     return (
                       <MenuItem
                         onClick={() => {
-                          setNetwork(chain);
-                          if (chain.id === to?.id) {
-                            setTo(undefined);
+                          setActiveNetwork(chain);
+                          if (chain.id === toNetwork?.id) {
+                            // If user pick the same network as to, reset toNetwork
+                            setToNetwork(undefined);
                           }
                         }}
                         display="flex"
@@ -143,7 +154,7 @@ export const Teleporter = () => {
                 onMax={setAmount}
                 balance={balance}
                 symbol="snxUSD"
-                address={USDProxy?.address || ''}
+                address={usdProxyAddress || ''}
               />
             </Flex>
           </Flex>
@@ -165,9 +176,9 @@ export const Teleporter = () => {
                     mr={1}
                     width="fit-content"
                   >
-                    {to ? (
+                    {toNetwork ? (
                       <>
-                        <to.Icon />
+                        <toNetwork.Icon />
                         <Text
                           variant="nav"
                           fontSize="sm"
@@ -176,7 +187,7 @@ export const Teleporter = () => {
                           mr={2}
                           display={{ base: 'none', md: 'initial' }}
                         >
-                          {to.label}
+                          {toNetwork.label}
                         </Text>
                       </>
                     ) : (
@@ -196,7 +207,7 @@ export const Teleporter = () => {
                       return (
                         <MenuItem
                           onClick={() => {
-                            setTo(chain);
+                            setToNetwork(chain);
                           }}
                           display="flex"
                           alignItems="center"
@@ -232,29 +243,58 @@ export const Teleporter = () => {
                 }}
                 value={amount}
                 onChange={(val) => setAmount(val)}
-                max={toBalance}
+                max={balance} // max is still the from balance
               />
               <Balance
                 hideBuyButton
                 onMax={setAmount}
-                balance={toBalance}
+                balance={toNetworkBalance}
                 symbol="snxUSD"
-                address={USDProxy?.address || ''}
+                address={usdProxyAddress || ''}
               />
             </Flex>
           </Flex>
         </BorderBox>
-        {!wallet ? (
+        {!connectedWallet ? (
           <Button type="submit" onClick={() => onboard.connectWallet()}>
             Connect Wallet
           </Button>
         ) : (
-          <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && to)}>
+          <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && toNetwork)}>
             Teleport
           </Button>
         )}
       </BorderBox>
-      {/* <Tele[porterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+      {/* <TeleporterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
     </Box>
+  );
+};
+
+export const Teleporter = () => {
+  const { data: USDProxy } = useUSDProxy();
+  const [amount, setAmount] = useState(wei(0));
+  const connectedWallet = useWallet();
+  const activeNetwork = useNetwork();
+  const setNetwork = useSetNetwork();
+  const [toNetwork, setToNetwork] = useState<Network | undefined>();
+  const { data: balance } = useTokenBalance(USDProxy?.address);
+  const { data: toBalance } = useTokenBalance(
+    toNetwork ? USDProxy?.address : undefined, // Only fetch when toNetwork is set
+    toNetwork?.id
+  );
+
+  return (
+    <TeleporterUi
+      connectedWallet={connectedWallet?.address}
+      activeNetwork={activeNetwork}
+      balance={balance}
+      amount={amount}
+      setAmount={setAmount}
+      toNetwork={toNetwork}
+      setToNetwork={setToNetwork}
+      setActiveNetwork={setNetwork}
+      toNetworkBalance={toBalance}
+      usdProxyAddress={USDProxy?.address}
+    />
   );
 };
