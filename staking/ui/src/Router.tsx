@@ -10,7 +10,7 @@ import { Deposit } from './pages/Deposit';
 // import { Market } from './pages/Markets/Market';
 import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
-import { Teleporter } from './pages/Teleporter/Teleporter';
+import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
 
 export const Router = () => {
