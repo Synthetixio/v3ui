@@ -18,7 +18,15 @@ import Head from 'react-helmet';
 // import { TeleporterModal } from './TeleporterModal';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ChevronDown, ChevronUp, DollarCircle, CCIP } from '@snx-v3/icons';
-import { NETWORKS, Network, useNetwork, useSetNetwork } from '@snx-v3/useBlockchain';
+import {
+  NETWORKS,
+  Network,
+  onboard,
+  useIsConnected,
+  useNetwork,
+  useSetNetwork,
+  useWallet,
+} from '@snx-v3/useBlockchain';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -28,7 +36,8 @@ const NETWORKS_ARRAY = Object.values(NETWORKS).filter((network) => network.isSup
 export const Teleporter = () => {
   const { data: USDProxy } = useUSDProxy();
   const [amount, setAmount] = useState(wei(0));
-
+  const wallet = useWallet();
+  useIsConnected;
   const activeNetwork = useNetwork();
   const setNetwork = useSetNetwork();
 
@@ -235,9 +244,15 @@ export const Teleporter = () => {
             </Flex>
           </Flex>
         </BorderBox>
-        <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && to)}>
-          Teleport
-        </Button>
+        {!wallet ? (
+          <Button type="submit" onClick={() => onboard.connectWallet()}>
+            Connect Wallet
+          </Button>
+        ) : (
+          <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && to)}>
+            Teleport
+          </Button>
+        )}
       </BorderBox>
       {/* <Tele[porterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
     </Box>
