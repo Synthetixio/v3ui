@@ -39,7 +39,7 @@ export const Teleporter = () => {
 
   return (
     <Box maxW="600px">
-      <HomeLink text="Home" />
+      <HomeLink />
       <Head>
         <title>Teleport snxUSD</title>
       </Head>
@@ -111,7 +111,7 @@ export const Teleporter = () => {
 
           <Flex>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-              <DollarCircle />
+              <DollarCircle width="35px" height="35px" />
               snxUSD
             </Text>
             <Flex
@@ -205,9 +205,9 @@ export const Teleporter = () => {
             )}
           </Menu>
 
-          <Flex px={3}>
-            <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-              <DollarCircle />
+          <Flex>
+            <Text display="flex" gap={2} alignItems="center">
+              <DollarCircle width="35px" height="35px" />
               snxUSD
             </Text>
             <Flex
