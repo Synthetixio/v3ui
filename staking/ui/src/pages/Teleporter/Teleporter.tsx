@@ -226,6 +226,7 @@ export const Teleporter = () => {
                 max={toBalance}
               />
               <Balance
+                hideBuyButton
                 onMax={setAmount}
                 balance={toBalance}
                 symbol="snxUSD"
