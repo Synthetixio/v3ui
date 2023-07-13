@@ -1,299 +1,244 @@
-export {};
-/*
-import { ArrowDownIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Container,
+  Divider,
   Flex,
   Heading,
-  Image,
-  InputGroup,
-  InputRightAddon,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
   Text,
-  useToast,
 } from '@chakra-ui/react';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useMemo, useState } from 'react';
-import Head from 'react-helmet';
-import { useSwitchNetwork } from 'wagmi';
-import { NumberInput } from '@snx-v3/NumberInput';
 import { Balance } from '@snx-v3/Balance';
-import { useContract } from '../../hooks/useContract';
+import { NumberInput } from '@snx-v3/NumberInput';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { contracts } from '../../utils/constants';
-import testnetIcon from './testnet.png';
-import { TeleporterModal } from './TeleporterModal';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useState } from 'react';
+import Head from 'react-helmet';
+// import { TeleporterModal } from './TeleporterModal';
+import { BorderBox } from '@snx-v3/BorderBox';
+import { ChevronDown, ChevronUp, DollarCircle, CCIP } from '@snx-v3/icons';
+import { NETWORKS, Network, useNetwork, useSetNetwork } from '@snx-v3/useBlockchain';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { wei } from '@synthetixio/wei';
+import { HomeLink } from '@snx-v3/HomeLink';
 
-const chains = [
-  {
-    id: 5,
-    logo: testnetIcon,
-    label: 'Goerli',
-  },
-  {
-    id: 420,
-    logo: testnetIcon,
-    label: 'Optimism Goerli',
-  },
-];
+const NETWORKS_ARRAY = Object.values(NETWORKS).filter((network) => network.isSupported);
 
 export const Teleporter = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toast = useToast();
-  const { openConnectModal } = useConnectModal();
+  const { data: USDProxy } = useUSDProxy();
   const [amount, setAmount] = useState(wei(0));
 
-  const { switchNetwork } = useSwitchNetwork();
-  const network = useNetwork();
-  const signer = useSigner();
-  const hasWalletConnected = Boolean(signer);
+  const activeNetwork = useNetwork();
+  const setNetwork = useSetNetwork();
 
-  const teleportChains = chains.sort((chain) => (chain.id === network?.id ? -1 : 1));
-
-  const [from, setFrom] = useState(teleportChains[0].id);
-  const [to, setTo] = useState(teleportChains[1].id);
-
-  const snxUsdProxy = useContract(contracts.SNX_USD_PROXY);
-  const tokenBalance = useTokenBalance(snxUsdProxy?.address, from);
-
-  const fromChain = useMemo(() => chains.find((chain) => chain.id === from), [from]);
-  const toChain = useMemo(() => chains.find((chain) => chain.id === to), [to]);
+  const [to, setTo] = useState<Network | undefined>();
+  const { data: balance } = useTokenBalance(USDProxy?.address);
+  // Only fetch when to is set
+  const { data: toBalance } = useTokenBalance(to ? USDProxy?.address : undefined, to?.id);
 
   return (
-    <>
+    <Box maxW="600px">
+      <HomeLink text="Home" />
       <Head>
         <title>Teleport snxUSD</title>
       </Head>
-      <Container mb="8" maxW="1024px" py="4">
-        <Flex height="100%" direction="column" flex="1" py={[4, 6, 12]}>
-          <Heading size="lg" mb="3">
-            Teleport snxUSD
-          </Heading>
-          <Text mb="7" color="whiteAlpha.800">
-            Transfer snxUSD in your wallet across chains without slippage.
-          </Text>
-
-          <Box bg="whiteAlpha.200" p="6" pb="4" borderRadius="12px">
-            <Text lineHeight="1" fontSize="sm" fontWeight={600} mb="2.5" color="gray.300">
-              From
-            </Text>
-            <Stack direction={['column', 'column', 'row']} spacing="20px" mb="3">
-              <Menu>
-                <MenuButton
-                  minHeight="48px"
-                  minWidth={['0px', '200px']}
-                  borderWidth="1px"
-                  borderColor="gray.800"
-                  borderRadius="6px"
-                  alignItems="center"
-                  cursor="pointer"
-                  type="button"
-                >
-                  <Flex alignItems="center" justify="space-between" mx={2}>
-                    <Flex>
-                      <Image
-                        alt={fromChain?.label}
-                        width="24px"
-                        height="24px"
-                        mr={2}
-                        src={fromChain?.logo}
-                      />
-                      <Text fontWeight="600">{fromChain?.label}</Text>
-                    </Flex>
-                    <ChevronDownIcon opacity="0.66" w="5" h="5" />
-                  </Flex>
-                </MenuButton>
-                <MenuList background="black">
-                  {teleportChains.map((chain) => (
-                    <MenuItem
-                      onClick={() => {
-                        if (to === chain.id) {
-                          const id = teleportChains.find((item) => item.id !== to)?.id;
-                          if (!id) {
-                            return;
-                          }
-                          setTo(id);
-                        }
-                        setFrom(chain.id);
-                      }}
-                      display="flex"
-                      alignItems="center"
-                      key={chain.id}
+      <Flex justifyContent="space-between">
+        <Heading size="lg">Teleport snxUSD</Heading>
+        <CCIP />
+      </Flex>
+      <Text mt={2} color="gray.500">
+        Teleport your assets between layers using the teleporter. This transaction can take up to 30
+        minutes. Read more about teleporter and CCIP.
+      </Text>
+      <Divider mt={4} mb={4} />
+      <BorderBox flexDirection="column" p="4">
+        <BorderBox flexDirection="column" p="4">
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <Flex alignItems="center" gap={2}>
+                  <Text>From</Text>
+                  <MenuButton
+                    as={Button}
+                    variant="outline"
+                    colorScheme="gray"
+                    sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
+                    mr={1}
+                    width="fit-content"
+                  >
+                    <activeNetwork.Icon />
+                    <Text
+                      variant="nav"
+                      fontSize="sm"
+                      fontWeight={700}
+                      ml={1.5}
+                      mr={2}
+                      display={{ base: 'none', md: 'initial' }}
                     >
-                      <Image alt={chain.label} width="24px" height="24px" mr={2} src={chain.logo} />
-
-                      <Text fontWeight="600">{chain.label}</Text>
-                    </MenuItem>
-                  ))}
+                      {activeNetwork.label}
+                    </Text>
+                    <Flex display={{ base: 'none', md: 'initial' }}>
+                      {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
+                    </Flex>
+                  </MenuButton>
+                </Flex>
+                <MenuList background="black">
+                  {NETWORKS_ARRAY.filter((chain) => chain.id !== activeNetwork.id).map((chain) => {
+                    return (
+                      <MenuItem
+                        onClick={() => {
+                          setNetwork(chain);
+                          if (chain.id === to?.id) {
+                            setTo(undefined);
+                          }
+                        }}
+                        display="flex"
+                        alignItems="center"
+                        key={chain.id}
+                      >
+                        <chain.Icon />
+                        <Text variant="nav" ml={2}>
+                          {chain.label}
+                        </Text>
+                      </MenuItem>
+                    );
+                  })}
                 </MenuList>
-              </Menu>
+              </>
+            )}
+          </Menu>
 
-              <InputGroup size="lg" ml="6">
-                <NumberInput
-                  InputProps={{
-                    size: 'lg',
-                    type: 'number',
-                    placeholder: '0.0',
-                    id: 'amount',
-                    min: '0',
-                    textAlign: 'right',
-                    borderColor: 'gray.800',
-                    border: '1px',
-                    borderTopRightRadius: 'none',
-                    borderBottomRightRadius: 'none',
-                  }}
-                  value={amount}
-                  onChange={setAmount}
-                  max={tokenBalance.data}
-                />
-                <InputRightAddon borderColor="gray.800" bg="whiteAlpha.100">
-                  snxUSD
-                </InputRightAddon>
-              </InputGroup>
-            </Stack>
-
-            <Flex alignItems="center" justifyContent="flex-end">
+          <Flex>
+            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+              <DollarCircle />
+              snxUSD
+            </Text>
+            <Flex
+              flexDirection="column"
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              flexGrow={1}
+            >
+              <NumberInput
+                InputProps={{
+                  isRequired: true,
+                  'data-max': balance?.toString(),
+                  autoFocus: true,
+                }}
+                value={amount}
+                onChange={(val) => setAmount(val)}
+                max={balance}
+              />
               <Balance
                 onMax={setAmount}
-                balance={tokenBalance.data}
+                balance={balance}
                 symbol="snxUSD"
-                address={snxUsdProxy?.address}
+                address={USDProxy?.address || ''}
               />
             </Flex>
-          </Box>
+          </Flex>
 
-          <ArrowDownIcon w={5} h={5} mx="auto" mt="6" mb="5" opacity="0.66" />
+          <Flex alignItems="center" justifyContent="flex-end"></Flex>
+        </BorderBox>
 
-          <Box bg="whiteAlpha.200" mb="10" p="6" pb="4" borderRadius="12px">
-            <Text lineHeight="1" fontSize="sm" fontWeight={600} mb="2.5" color="gray.300">
-              To
-            </Text>
-            <Stack direction={['column', 'column', 'row']} spacing="20px" mb="3">
-              <Menu>
-                <MenuButton
-                  minHeight="48px"
-                  minWidth={['0px', '200px']}
-                  borderWidth="1px"
-                  borderColor="gray.800"
-                  borderRadius="6px"
-                  alignItems="center"
-                  cursor="pointer"
-                  type="button"
-                >
-                  <Flex alignItems="center" justify="space-between" mx={2}>
-                    <Flex>
-                      <Image
-                        alt={toChain?.label}
-                        width="24px"
-                        height="24px"
-                        mr={2}
-                        src={toChain?.logo}
-                      />
-                      <Text fontWeight="600">{toChain?.label}</Text>
+        <BorderBox flexDirection="column" p="4" mt={4}>
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <Flex alignItems="center" gap={2}>
+                  <Text>To</Text>
+                  <MenuButton
+                    as={Button}
+                    variant="outline"
+                    colorScheme="gray"
+                    sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
+                    mr={1}
+                    width="fit-content"
+                  >
+                    {to ? (
+                      <>
+                        <to.Icon />
+                        <Text
+                          variant="nav"
+                          fontSize="sm"
+                          fontWeight={700}
+                          ml={1.5}
+                          mr={2}
+                          display={{ base: 'none', md: 'initial' }}
+                        >
+                          {to.label}
+                        </Text>
+                      </>
+                    ) : (
+                      'Select Network'
+                    )}
+                    <Flex display={{ base: 'none', md: 'initial' }}>
+                      {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
                     </Flex>
-                    <ChevronDownIcon opacity="0.66" w="5" h="5" />
-                  </Flex>
-                </MenuButton>
+                  </MenuButton>
+                </Flex>
                 <MenuList background="black">
-                  {teleportChains.map((chain) => (
-                    <MenuItem
-                      onClick={() => {
-                        if (from === chain.id) {
-                          const id = teleportChains.find((item) => item.id !== from)?.id;
-                          if (!id) {
-                            return;
-                          }
-                          setFrom(id);
-                        }
-                        setTo(chain.id);
-                      }}
-                      display="flex"
-                      alignItems="center"
-                      key={chain.id}
-                    >
-                      <Image alt={chain.label} width="24px" height="24px" mr={2} src={chain.logo} />
-
-                      <Text fontWeight="600">{chain.label}</Text>
-                    </MenuItem>
-                  ))}
+                  {NETWORKS_ARRAY.filter((chain) => chain.id !== activeNetwork.id)
+                    .filter((chain) =>
+                      activeNetwork.isTestnet ? chain.isTestnet : !chain.isTestnet
+                    )
+                    .map((chain) => {
+                      return (
+                        <MenuItem
+                          onClick={() => {
+                            setTo(chain);
+                          }}
+                          display="flex"
+                          alignItems="center"
+                          key={chain.id}
+                        >
+                          <chain.Icon />
+                          <Text variant="nav" ml={2}>
+                            {chain.label}
+                          </Text>
+                        </MenuItem>
+                      );
+                    })}
                 </MenuList>
-              </Menu>
+              </>
+            )}
+          </Menu>
 
-              <InputGroup size="lg" ml="6">
-                <NumberInput
-                  InputProps={{
-                    isReadOnly: true,
-                    pointerEvents: 'none',
-                    bg: 'whiteAlpha.50',
-                    size: 'lg',
-                    type: 'number',
-                    placeholder: '0.0',
-                    id: 'amount',
-                    min: '0',
-                    textAlign: 'right',
-                    border: 'none',
-                    borderRight: '1px solid #262626',
-                    borderTopRightRadius: 'none',
-                    borderBottomRightRadius: 'none',
-                  }}
-                  value={amount}
-                />
-
-                <InputRightAddon border="none" bg="whiteAlpha.100">
-                  snxUSD
-                </InputRightAddon>
-              </InputGroup>
-            </Stack>
-
-            <Flex alignItems="center">
-              <Text fontSize="xs" textAlign="right" ml="auto" color="gray.300">
-                Fee: $0 {/!*<InfoOutlineIcon ml="1" transform="translateY(-1px)" />*!/}
-              </Text>
-            </Flex>
-          </Box>
-
-          {hasWalletConnected ? (
-            <Button
-              onClick={async () => {
-                toast.closeAll();
-                if (network?.id !== from) {
-                  toast({
-                    title: `Connect to ${fromChain?.label}`,
-                    description: `Please connect to ${fromChain?.label} network`,
-                    status: 'info',
-                    isClosable: true,
-                  });
-                  switchNetwork?.(420);
-                } else {
-                  setIsOpen(true);
-                }
-              }}
-              size="lg"
-              px="8"
-              type="submit"
-              isDisabled={network?.id === from && amount.lte(0)}
+          <Flex px={3}>
+            <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
+              <DollarCircle />
+              snxUSD
+            </Text>
+            <Flex
+              flexDirection="column"
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              flexGrow={1}
             >
-              {network?.id !== from ? 'Switch to ' + fromChain?.label : 'Teleport'}
-            </Button>
-          ) : (
-            <Button onClick={openConnectModal} size="lg" px="8">
-              Connect Wallet
-            </Button>
-          )}
-        </Flex>
-      </Container>
-
-      <TeleporterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} />
-    </>
+              <NumberInput
+                InputProps={{
+                  isRequired: true,
+                  'data-max': balance?.toString(),
+                }}
+                value={amount}
+                onChange={(val) => setAmount(val)}
+                max={toBalance}
+              />
+              <Balance
+                onMax={setAmount}
+                balance={toBalance}
+                symbol="snxUSD"
+                address={USDProxy?.address || ''}
+              />
+            </Flex>
+          </Flex>
+        </BorderBox>
+        <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && to)}>
+          Teleport
+        </Button>
+      </BorderBox>
+      {/* <Tele[porterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+    </Box>
   );
 };
-*/
