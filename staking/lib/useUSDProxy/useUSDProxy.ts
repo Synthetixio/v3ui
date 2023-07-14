@@ -4,6 +4,7 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import type { USDProxy as USDProxyCannon } from '@synthetixio/v3-contracts/build/cannon/USDProxy';
 import type { USDProxy as USDProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/USDProxy';
 import type { USDProxy as USDProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/USDProxy';
+import type { USDProxy as USDProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/USDProxy';
 import type { USDProxy as USDProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy';
 import type { USDProxy as USDProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/USDProxy';
 
@@ -11,6 +12,7 @@ export type USDProxyType =
   | USDProxyCannon
   | USDProxyMainnet
   | USDProxyGoerli
+  | USDProxySepolia
   | USDProxyOptimismMainnet
   | USDProxyOptimismGoerli;
 

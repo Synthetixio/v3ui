@@ -4,6 +4,7 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import type { CoreProxy as CoreProxyCannon } from '@synthetixio/v3-contracts/build/cannon/CoreProxy';
 import type { CoreProxy as CoreProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/CoreProxy';
 import type { CoreProxy as CoreProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/CoreProxy';
+import type { CoreProxy as CoreProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/CoreProxy';
 import type { CoreProxy as CoreProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/CoreProxy';
 import type { CoreProxy as CoreProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/CoreProxy';
 
@@ -11,6 +12,7 @@ export type CoreProxyType =
   | CoreProxyCannon
   | CoreProxyMainnet
   | CoreProxyGoerli
+  | CoreProxySepolia
   | CoreProxyOptimismMainnet
   | CoreProxyOptimismGoerli;
 
