@@ -40,6 +40,8 @@ export function oracleTypeFromTypeId(id: number): OracleNodeTypes {
       return 'priceDeviationCircuitBreaker';
     case 7:
       return 'stalenessCircuitBreaker';
+    case 8:
+      return 'constant';
     default:
       return 'chainLink';
   }

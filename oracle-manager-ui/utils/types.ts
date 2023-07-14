@@ -19,4 +19,5 @@ export type OracleNodeTypes =
   | 'externalNode'
   | 'stalenessCircuitBreaker'
   | 'uniswap'
-  | 'priceDeviationCircuitBreaker';
+  | 'priceDeviationCircuitBreaker'
+  | 'constant';
