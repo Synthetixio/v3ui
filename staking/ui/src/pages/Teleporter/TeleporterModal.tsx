@@ -1,5 +1,3 @@
-export {};
-/*
 import {
   Button,
   Modal,
@@ -11,158 +9,47 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { ethers } from 'ethers';
-import { useCallback, useMemo, useState } from 'react';
-import { useContractWrite, useNetwork } from 'wagmi';
-import { useAccount } from '@snx-v3/useBlockchain';
-import { useContract } from '../../hooks/useContract';
-import { useApprove } from '@snx-v3/useApprove';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { contracts } from '../../utils/constants';
-import { parseUnits } from '@snx-v3/format';
-import testnetIcon from './testnet.png';
+import { Amount } from '@snx-v3/Amount';
+import { ContractError } from '@snx-v3/ContractError';
 import { Multistep } from '@snx-v3/Multistep';
+import { useApprove } from '@snx-v3/useApprove';
+import { CollateralType } from '@snx-v3/useCollateralTypes';
+import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useTeleport } from '@snx-v3/useTeleport';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { Wei } from '@synthetixio/wei';
+import { useMachine } from '@xstate/react';
+import { FC, useCallback, useEffect } from 'react';
+import type { StateFrom } from 'xstate';
+import { TeleportMachine, Events, ServiceNames, State } from './TeleporterMachine';
+import { Contract, ethers } from 'ethers';
+import { useEthBalance } from '@snx-v3/useEthBalance';
 
-const chains = [
-  {
-    id: 5,
-    logo: testnetIcon,
-    label: 'Goerli',
-  },
-  {
-    id: 420,
-    logo: testnetIcon,
-    label: 'Optimism Goerli',
-  },
-];
-
-const encodeAddress = (address: string | undefined) => {
-  return address ? ethers.utils.defaultAbiCoder.encode(['address'], [address]) : undefined;
-};
-
-export function TeleporterModal({
-  amount,
-  isOpen,
-  setIsOpen,
-}: {
+export const TeleporterModalUi: FC<{
   amount: Wei;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}) {
-  const account = useAccount();
-  const toast = useToast();
-
-  const [processing, setProcessing] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [failed, setFailed] = useState(false);
-
-  const { chain: activeChain } = useNetwork();
-
-  const teleportChains = chains.sort((chain) => (chain.id === activeChain?.id ? -1 : 1));
-
-  const CCIP = useContract(contracts.CCIP);
-  const snxUsdProxy = useContract(contracts.SNX_USD_PROXY);
-  const tokenBalance = useTokenBalance(snxUsdProxy?.address, teleportChains[0].id);
-
-  const toChain = useMemo(
-    () => chains.find((chain) => chain.id === teleportChains[1].id),
-    [teleportChains]
-  );
-
-  const { writeAsync: ccipSend, isLoading: teleportingLoading } = useContractWrite({
-    mode: 'recklesslyUnprepared',
-    address: CCIP?.address,
-    abi: CCIP?.abi,
-    functionName: 'ccipSend',
-    args: [
-      teleportChains[1].id,
-      [encodeAddress(account?.address), '0x', [snxUsdProxy!.address], [parseUnits(amount)], 100000],
-    ],
-  });
-
-  const {
-    approve,
-    requireApproval,
-    refetchAllowance,
-    isLoading: approvalLoading,
-  } = useApprove({
-    contractAddress: snxUsdProxy?.address,
-    amount: parseUnits(amount),
-    spender: CCIP!.address,
-  });
-
-  const [step, setStep] = useState<'idle' | 'approve' | 'transfer'>('idle');
-
-  const [infiniteApproval, setInfiniteApproval] = useState(false);
-
-  const onClose = useCallback(() => {
-    setStep('idle');
-    setCompleted(false);
-    setFailed(false);
-    setProcessing(false);
-    setIsOpen(false);
-  }, [setIsOpen]);
-
-  const onSubmit = useCallback(async () => {
-    if (completed) {
-      onClose();
-      return;
-    }
-
-    setFailed(false);
-    setProcessing(true);
-
-    setStep('approve');
-    if (requireApproval) {
-      try {
-        await approve(infiniteApproval);
-        await refetchAllowance();
-      } catch (e) {
-        console.error(e);
-        setFailed(true);
-        setProcessing(false);
-        return;
-      }
-    }
-
-    setStep('transfer');
-    try {
-      if (!ccipSend) throw new Error('CCIP contract not ready');
-      if (amount.lte(0)) throw new Error('Amount must be greater than zero');
-
-      const txReceipt = await ccipSend();
-      toast.closeAll();
-      toast({
-        title: 'Teleportation initiated',
-        description: 'Your balance on the destination chain will be updated in a few minutes.',
-        status: 'info',
-        isClosable: true,
-        duration: 9000,
-      });
-      await txReceipt.wait();
-      await tokenBalance.refetch();
-    } catch (e) {
-      console.error(e);
-      setFailed(true);
-      setProcessing(false);
-      return;
-    }
-
-    setProcessing(false);
-    setCompleted(true);
-  }, [
-    amount,
-    approve,
-    tokenBalance,
-    ccipSend,
-    completed,
-    infiniteApproval,
-    onClose,
-    refetchAllowance,
-    requireApproval,
-    toast,
-  ]);
+  onClose: () => void;
+  collateralType?: CollateralType;
+  state: StateFrom<typeof TeleportMachine>;
+  setInfiniteApproval: (x: boolean) => void;
+  onSubmit: () => void;
+  toNetworkName: string;
+  txnHash: string | null;
+}> = ({
+  amount,
+  isOpen,
+  onClose,
+  setInfiniteApproval,
+  onSubmit,
+  state,
+  toNetworkName,
+  txnHash,
+}) => {
+  const infiniteApproval = state.context.infiniteApproval;
+  const requireApproval = state.context.requireApproval;
+  const error = state.context.error;
+  const isProcessing = state.matches(State.approve) || state.matches(State.teleport);
 
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
@@ -175,13 +62,13 @@ export function TeleporterModal({
 
           <Multistep
             step={1}
-            title="Approve snxUSD transfer"
+            title="Approve snxUSD"
             status={{
-              failed: step === 'approve' && failed,
-              success: !requireApproval,
-              loading: approvalLoading,
+              failed: error?.step === State.approve,
+              success: !requireApproval || state.matches(State.success),
+              loading: state.matches(State.approve) && !error,
             }}
-            checkboxLabel="Approve unlimited snxUSD transfers to Synthetix"
+            checkboxLabel="Approve unlimited"
             checkboxProps={{
               isChecked: infiniteApproval,
               onChange: (e) => setInfiniteApproval(e.target.checked),
@@ -191,23 +78,37 @@ export function TeleporterModal({
           <Multistep
             step={2}
             title="Teleport snxUSD"
-            subtitle={`This will transfer your snxUSD to the ${toChain?.label} network.`}
+            subtitle={
+              <>
+                {state.matches(State.success) ? (
+                  <Text>
+                    Teleport for <Amount value={amount} suffix={` snxUSD`} /> to {toNetworkName}{' '}
+                    executed. Check https://ccip.chain.link/tx/{txnHash} for status.
+                  </Text>
+                ) : (
+                  <Text>
+                    This will teleport <Amount value={amount} suffix={` snxUSD`} /> to{' '}
+                    {toNetworkName}
+                  </Text>
+                )}
+              </>
+            }
             status={{
-              failed: step === 'transfer' && failed,
-              success: completed,
-              loading: teleportingLoading,
-              disabled: requireApproval,
+              failed: error?.step === State.teleport,
+              disabled: state.matches(State.success) && requireApproval,
+              success: state.matches(State.success),
+              loading: state.matches(State.teleport) && !error,
             }}
           />
 
-          <Button isDisabled={processing} onClick={onSubmit} width="100%" my="4">
+          <Button isDisabled={isProcessing} onClick={onSubmit} width="100%" my="4">
             {(() => {
               switch (true) {
-                case failed:
+                case Boolean(error):
                   return 'Retry';
-                case processing:
+                case isProcessing:
                   return 'Processing...';
-                case completed:
+                case state.matches(State.success):
                   return 'Done';
                 default:
                   return 'Start';
@@ -218,5 +119,155 @@ export function TeleporterModal({
       </ModalContent>
     </Modal>
   );
-}
-*/
+};
+
+const ccipErrors = [
+  'error TokenMaxCapacityExceeded(uint256 capacity, uint256 requested, address tokenAddress)',
+  'error TokenRateLimitReached(uint256 minWaitInSeconds, uint256 available, address tokenAddress)',
+  'error AggregateValueMaxCapacityExceeded(uint256 capacity, uint256 requested)',
+  'error AggregateValueRateLimitReached(uint256 minWaitInSeconds, uint256 available)',
+  'error UnsupportedDestinationChain(uint64 destinationChainSelector)',
+  'error SenderNotAllowed(address sender)',
+  'error InsufficientFeeTokenAmount()',
+  'error InvalidMsgValue()',
+];
+export type TeleportModalProps = FC<{
+  amount: Wei;
+  toNetworkName: string;
+  toNetworkId: number;
+  isOpen: boolean;
+  onClose: () => void;
+}>;
+export const TeleporterModal: TeleportModalProps = ({
+  onClose,
+  isOpen,
+  amount,
+  toNetworkName,
+  toNetworkId,
+}) => {
+  const { data: CoreProxy } = useCoreProxy();
+  const { data: USDProxy } = useUSDProxy();
+  const { data: ethBalance } = useEthBalance();
+  const { approve, requireApproval, refetchAllowance } = useApprove({
+    contractAddress: USDProxy?.address,
+    amount: amount.toBN(),
+    spender: CoreProxy?.address,
+  });
+
+  const toast = useToast({ isClosable: true, duration: 9000 });
+
+  const { exec: execTeleport, txnState } = useTeleport({
+    amount,
+    toNetworkId,
+    ethBalance,
+  });
+  const coreProxyAbi = CoreProxy?.interface.format(ethers.utils.FormatTypes.full) || [];
+
+  const errorParsingContract = new Contract(
+    '0x0000000000000000000000000000000000000000',
+    ccipErrors.concat(coreProxyAbi)
+  );
+  const errorParserCoreProxy = useContractErrorParser(errorParsingContract);
+
+  const [state, send] = useMachine(TeleportMachine, {
+    services: {
+      [ServiceNames.approve]: async () => {
+        try {
+          toast({
+            title: 'Approve snxUSD',
+            description: 'The next transaction will teleport.',
+            status: 'info',
+          });
+
+          await approve(Boolean(state.context.infiniteApproval));
+          await refetchAllowance();
+        } catch (error: any) {
+          const contractError = errorParserCoreProxy(error);
+          if (contractError) {
+            console.error(new Error(contractError.name), contractError);
+          }
+          toast.closeAll();
+          toast({
+            title: 'Approval failed',
+            description: contractError ? (
+              <ContractError contractError={contractError} />
+            ) : (
+              'Please try again.'
+            ),
+            status: 'error',
+          });
+          throw Error('Approve failed', { cause: error });
+        }
+      },
+
+      [ServiceNames.teleport]: async () => {
+        try {
+          toast.closeAll();
+          toast({
+            title: 'Teleporting',
+            description: '',
+          });
+          await execTeleport();
+          toast.closeAll();
+          toast({
+            title: 'Success',
+            description: 'Teleportation executed.',
+            status: 'success',
+            duration: 5000,
+          });
+        } catch (error: any) {
+          const contractError = errorParserCoreProxy(error);
+          if (contractError) {
+            console.error(new Error(contractError.name), contractError);
+          }
+          toast({
+            title: 'Teleport failed',
+            description: contractError ? (
+              <ContractError contractError={contractError} />
+            ) : (
+              'Please try again.'
+            ),
+            status: 'error',
+          });
+          throw Error('Teleport failed', { cause: error });
+        }
+      },
+    },
+  });
+
+  useEffect(() => {
+    send(Events.SET_REQUIRE_APPROVAL, { requireApproval });
+  }, [requireApproval, send]);
+
+  const handleClose = useCallback(() => {
+    send(Events.RESET);
+    onClose();
+  }, [send, onClose]);
+
+  const onSubmit = useCallback(async () => {
+    if (state.matches(State.success)) {
+      handleClose();
+      return;
+    }
+    if (state.context.error) {
+      send(Events.RETRY);
+      return;
+    }
+    send(Events.RUN);
+  }, [handleClose, send, state]);
+
+  return (
+    <TeleporterModalUi
+      amount={amount}
+      isOpen={isOpen}
+      onClose={onClose}
+      toNetworkName={toNetworkName}
+      state={state}
+      setInfiniteApproval={(infiniteApproval) => {
+        send(Events.SET_INFINITE_APPROVAL, { infiniteApproval });
+      }}
+      txnHash={txnState.txnHash}
+      onSubmit={onSubmit}
+    />
+  );
+};
