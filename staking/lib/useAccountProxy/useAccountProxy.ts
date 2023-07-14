@@ -22,6 +22,8 @@ export async function importAccountProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/mainnet/AccountProxy');
     case 'goerli':
       return import('@synthetixio/v3-contracts/build/goerli/AccountProxy');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/AccountProxy');
     case 'optimism-mainnet':
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy');
     case 'optimism-goerli':

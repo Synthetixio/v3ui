@@ -14,6 +14,8 @@ function importCoreProxy(chainName) {
       return require('@synthetixio/v3-contracts/build/optimism-mainnet/CoreProxy');
     case 'goerli':
       return require('@synthetixio/v3-contracts/build/goerli/CoreProxy');
+    case 'sepolia':
+      return require('@synthetixio/v3-contracts/build/sepolia/CoreProxy');
     case 'optimism-goerli':
       return require('@synthetixio/v3-contracts/build/optimism-goerli/CoreProxy');
     default:

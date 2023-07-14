@@ -2,6 +2,8 @@ export function etherscanLink({ chain, address }: { chain: string; address: stri
   switch (chain) {
     case 'goerli':
       return `https://goerli.etherscan.io/address/${address}`;
+    case 'sepolia':
+      return `https://sepolia.etherscan.io/address/${address}`;
     case 'optimism-goerli':
       return `https://goerli-optimism.etherscan.io/address/${address}`;
     case 'optimism':

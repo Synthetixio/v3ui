@@ -1,0 +1,147 @@
+{
+  "address": "0xBe2373740Dc83A0A76945A607f2240AD39455ebd",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "PoolNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ValueAlreadyInSet",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ValueNotInSet",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "poolId",
+          "type": "uint256"
+        }
+      ],
+      "name": "PoolApprovedAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "poolId",
+          "type": "uint256"
+        }
+      ],
+      "name": "PoolApprovedRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "poolId",
+          "type": "uint256"
+        }
+      ],
+      "name": "PreferredPoolSet",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "addApprovedPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getApprovedPools",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPreferredPool",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "removeApprovedPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "setPreferredPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "constructorArgs": [],
+  "linkedLibraries": {},
+  "deployTxnHash": "0x0c9a93a3d5b9e2b92809b6c3759abc93a07ab1d8d4be91b09191836def213a94",
+  "sourceName": "contracts/modules/core/PoolConfigurationModule.sol",
+  "contractName": "PoolConfigurationModule",
+  "deployedOn": "contract.PoolConfigurationModule"
+}

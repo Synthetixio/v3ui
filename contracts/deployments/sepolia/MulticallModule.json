@@ -1,0 +1,41 @@
+{
+  "address": "0xA9BF849fEdFcBc681F9121CEB9035045c90D38B2",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "RecursiveMulticall",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "data",
+          "type": "bytes[]"
+        }
+      ],
+      "name": "multicall",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "results",
+          "type": "bytes[]"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "constructorArgs": [],
+  "linkedLibraries": {},
+  "deployTxnHash": "0xea603571d7f2530786e00b95ea27202714616023b0f57ed203d9faa68e1662ed",
+  "sourceName": "contracts/modules/core/MulticallModule.sol",
+  "contractName": "MulticallModule",
+  "deployedOn": "contract.MulticallModule"
+}
