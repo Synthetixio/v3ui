@@ -81,6 +81,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
+    isTestnet: true,
   },
   'optimism-goerli': {
     id: 420,
