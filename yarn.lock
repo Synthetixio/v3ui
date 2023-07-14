@@ -5128,6 +5128,7 @@ __metadata:
     "@snx-v3/DepositModal": "workspace:*"
     "@snx-v3/HomeLink": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
+    "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/PoolBox": "workspace:*"
@@ -5145,6 +5146,7 @@ __metadata:
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useAllowance": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -5158,6 +5160,7 @@ __metadata:
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/useTeleport": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
@@ -5171,6 +5174,7 @@ __metadata:
     "@tanstack/react-query-devtools": ^4.29.12
     "@types/react": ^18.2.7
     "@types/react-helmet": ^6.1.6
+    "@xstate/react": ^3.2.2
     babel-loader: ^9.1.2
     babel-plugin-istanbul: ^6.1.1
     bn.js: ^5.2.1
@@ -5197,6 +5201,7 @@ __metadata:
     webpack-bundle-analyzer: ^4.8.0
     webpack-cli: ^5.1.1
     webpack-dev-server: ^4.15.0
+    xstate: ^4.37.2
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -5540,6 +5545,22 @@ __metadata:
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
+    react: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTeleport@workspace:*, @snx-v3/useTeleport@workspace:staking/lib/useTeleport":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTeleport@workspace:staking/lib/useTeleport"
+  dependencies:
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
