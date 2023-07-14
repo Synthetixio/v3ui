@@ -1,5 +1,5 @@
 {
-  "address": "0xD0CC8e4a6ab9761576c8AdC4D2FB1f7D57e43708",
+  "address": "0xaf476d7817105437aed79a86E802b79D4B1c473F",
   "abi": [
     {
       "inputs": [
@@ -1261,6 +1261,85 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "InvalidMessage",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "NotCcipRouter",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "name": "UnsupportedNetwork",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "messageId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "sourceChainSelector",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes",
+              "name": "sender",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "token",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct CcipClient.EVMTokenAmount[]",
+              "name": "tokenAmounts",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct CcipClient.Any2EVMMessage",
+          "name": "message",
+          "type": "tuple"
+        }
+      ],
+      "name": "ccipReceive",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint128",
@@ -1953,6 +2032,71 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "requiredAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "availableAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficientCcipFee",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "destChainId",
+          "type": "uint64"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "TransferCrossChainInitiated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "destChainId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferCrossChain",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "gasTokenUsed",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -3261,6 +3405,17 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "RecursiveMulticall",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "bytes[]",
           "name": "data",
           "type": "bytes[]"
@@ -3767,6 +3922,24 @@
           "internalType": "uint128",
           "name": "poolId",
           "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "optionalCollateralType",
+          "type": "address"
+        }
+      ],
+      "name": "rebalancePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
         }
       ],
       "name": "renouncePoolNomination",
@@ -4191,6 +4364,37 @@
       "type": "function"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "newChainId",
+          "type": "uint64"
+        }
+      ],
+      "name": "NewSupportedCrossChainNetwork",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ccipRouter",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipTokenPool",
+          "type": "address"
+        }
+      ],
+      "name": "configureChainlinkCrossChain",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -4225,24 +4429,39 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "ccipSend",
-          "type": "address"
-        },
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigAddress",
+      "outputs": [
         {
           "internalType": "address",
-          "name": "ccipReceive",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipTokenPool",
+          "name": "v",
           "type": "address"
         }
       ],
-      "name": "registerCcip",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigUint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "v",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -4261,6 +4480,49 @@
       "name": "setConfig",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64[]",
+          "name": "supportedNetworks",
+          "type": "uint64[]"
+        },
+        {
+          "internalType": "uint64[]",
+          "name": "ccipSelectors",
+          "type": "uint64[]"
+        }
+      ],
+      "name": "setSupportedCrossChainNetworks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "numRegistered",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -4495,7 +4757,7 @@
       "outputs": [
         {
           "internalType": "int256",
-          "name": "",
+          "name": "debt",
           "type": "int256"
         }
       ],
@@ -4581,7 +4843,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0xd3b713e178dcec736aaa9dc111c8af01dca2f984f2017341f2bf9affbbe95d88",
+  "deployTxnHash": "0xe5b0cc9beb362f5e804eb8807dec9d31ebf5845ae4a009da2772e60cee9c58fc",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Heading, Spinner, Button } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -8,8 +8,8 @@ import { ManageAction } from './ManageActions';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from './ManageStats';
 import { HomeLink } from '@snx-v3/HomeLink';
-import { usePoolData } from '@snx-v3/usePoolData';
-import { useNavigate, NavigateFunction, generatePath } from 'react-router-dom';
+import { usePool } from '@snx-v3/usePools';
+import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const ManageUi: FC<{
   collateralType: CollateralType;
@@ -100,7 +100,7 @@ export const Manage = () => {
   const params = useParams();
   const navigate = useNavigate();
   const collateralType = useCollateralType(params.collateralSymbol);
-  const { data: poolData } = usePoolData(params.poolId);
+  const pool = usePool(params.poolId);
 
   if (!collateralType) {
     return <Spinner />; // TODO skeleton
@@ -111,8 +111,8 @@ export const Manage = () => {
       <ManageUi
         collateralType={collateralType}
         navigate={navigate}
-        poolName={poolData?.name}
-        poolId={poolData?.id}
+        poolName={pool?.name}
+        poolId={pool?.id}
       />
     </ManagePositionProvider>
   );

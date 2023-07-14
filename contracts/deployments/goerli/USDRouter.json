@@ -1,5 +1,5 @@
 {
-  "address": "0xf4f2f63caec507aDC9DC83fDA93F96ef2eC88d64",
+  "address": "0xB4383e02F0A5D891832029B5C35A748DE92BD5B2",
   "abi": [
     {
       "inputs": [
@@ -542,6 +542,19 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "burn",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "target",
           "type": "address"
@@ -784,35 +797,6 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "destChainId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferCrossChain",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "feesPaid",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "address",
           "name": "from",
           "type": "address"
@@ -841,7 +825,7 @@
     }
   ],
   "deployedOn": "router.USDRouter",
-  "deployTxnHash": "0x00e29af0b3fcbea2f4c9bc284e9800574540a414029a1f6a8bdb61a9fa74fe13",
+  "deployTxnHash": "0xe39a38fae56f7dbefa49bc9f939899f4e436bc855437faab6ab1e1472940350f",
   "contractName": "USDRouter",
   "sourceName": "USDRouter.sol"
 }

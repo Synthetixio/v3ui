@@ -5,17 +5,13 @@ describe('Pool page / Header', () => {
     cy.viewport(800, 500);
     cy.mount(
       <PoolHeaderUi
-        poolData={{
+        pool={{
           id: 'TEST_ID',
           name: 'TEST_POOL',
-          total_weight: null,
-          configurations: [],
+          isPreferred: true,
         }}
       />
     );
-    cy.get('#app')
-      .should('include.text', 'TEST_POOL')
-      .and('include.text', 'Pool #TEST_ID')
-      .and('include.text', 'Spartan Council Pool');
+    cy.get('#app').should('include.text', 'TEST_POOL');
   });
 });

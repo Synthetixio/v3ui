@@ -1,0 +1,133 @@
+{
+  "address": "0xCFaA1e55E03c2af11BcDc9333f769BBd6F16d589",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "oracleManagerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "configureOracleManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfig",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "v",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "v",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigUint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "v",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ccipSend",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipReceive",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipTokenPool",
+          "type": "address"
+        }
+      ],
+      "name": "registerCcip",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "v",
+          "type": "bytes32"
+        }
+      ],
+      "name": "setConfig",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "constructorArgs": [],
+  "linkedLibraries": {},
+  "deployTxnHash": "0xec50868b1a48768112927f3edae56022d310c58b354bdbbe46af44648c59a8db",
+  "sourceName": "contracts/modules/core/UtilsModule.sol",
+  "contractName": "UtilsModule",
+  "deployedOn": "contract.UtilsModule"
+}

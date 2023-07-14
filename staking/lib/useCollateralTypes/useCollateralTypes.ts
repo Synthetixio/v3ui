@@ -41,7 +41,7 @@ async function loadSymbols({
     callData: ERC20Interface.encodeFunctionData('symbol'),
   }));
   const multicallResult = await Multicall3.callStatic.aggregate(calls);
-  return multicallResult.returnData.map((bytes) =>
+  return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
   );
 }
@@ -59,7 +59,7 @@ async function loadPrices({
     CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
   );
   const multicallResult = await CoreProxy.callStatic.multicall(calls);
-  return multicallResult.map((bytes) => {
+  return multicallResult.map((bytes: string) => {
     const decoded = CoreProxy.interface.decodeFunctionResult('getCollateralPrice', bytes)[0];
     return PriceSchema.parse(decoded);
   });
@@ -106,7 +106,9 @@ export function useCollateralTypes() {
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      return loadCollateralTypes({ CoreProxy, Multicall3 });
+      const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
+
+      return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
     },
     placeholderData: [],
     enabled: Boolean(CoreProxy && Multicall3),

@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React from 'react';
-import { EthereumIcon, FailedIcon, OptimismIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon } from '@snx-v3/icons';
 import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
@@ -41,7 +41,7 @@ export const NETWORKS: Record<string, Network> = {
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     label: 'Ethereum',
     Icon: () => <EthereumIcon />,
-    isSupported: false,
+    isSupported: true,
     publicRpcUrl: 'https://ethereum.publicnode.com',
   },
   'optimism-mainnet': {
@@ -63,8 +63,19 @@ export const NETWORKS: Record<string, Network> = {
     rpcUrl: `https://goerli.infura.io/v3/${INFURA_KEY}`,
     label: 'Goerli Testnet',
     Icon: () => <EthereumIcon />,
-    isSupported: false,
+    isSupported: true,
     publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
+  },
+  sepolia: {
+    id: 11155111,
+    hexId: `0x${Number(11155111).toString(16)}`,
+    token: 'ETH',
+    name: 'sepolia',
+    rpcUrl: `https://sepolia.infura.io/v3/${INFURA_KEY}`,
+    label: 'Sepolia Testnet',
+    Icon: () => <EthereumIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
   },
   'optimism-goerli': {
     id: 420,
@@ -76,6 +87,17 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <OptimismIcon />,
     isSupported: true,
     publicRpcUrl: 'https://goerli.optimism.io',
+  },
+  cannon: {
+    id: 13370,
+    hexId: `0x${Number(13370).toString(16)}`,
+    token: 'ETH',
+    name: 'cannon',
+    rpcUrl: `http://127.0.0.1:8545`,
+    label: 'Cannon',
+    Icon: () => <LogoIcon />,
+    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'cannon',
+    publicRpcUrl: 'http://127.0.0.1:8545',
   },
 };
 

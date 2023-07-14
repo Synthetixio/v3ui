@@ -24,7 +24,7 @@ it('creates new account with first deposit of SNX', () => {
   cy.get('[data-testid="deposit modal"]')
     .should('include.text', 'Approve SNX transfer')
     .and('include.text', 'Delegate SNX')
-    .and('include.text', 'This will deposit and delegate 20 SNX to TEST_POOL.');
+    .and('include.text', 'This will deposit and delegate 20 SNX to Spartan Council Pool.');
 
   cy.get('[data-testid="deposit confirm button"]').should('include.text', 'Start').click();
 

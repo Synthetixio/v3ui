@@ -1,5 +1,5 @@
 {
-  "address": "0x261287459761D6D2211ab1a3eEb082F308B9e5e9",
+  "address": "0xC2a7111A964484Bc6Dcca2e6Cb7F865EC518CbA2",
   "abi": [
     {
       "inputs": [
@@ -482,6 +482,11 @@
           "internalType": "uint128",
           "name": "poolId",
           "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "optionalCollateralType",
+          "type": "address"
         }
       ],
       "name": "rebalancePool",
@@ -584,7 +589,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x4c15e0c925e46cc3bd0eae51c84573ba5608da2b840b33be29209a8063c6a33f",
+  "deployTxnHash": "0x478d008bc8bb5b954022cacc30e70e9481b4cdf69cdc529c93272abbb00db5ba",
   "sourceName": "contracts/modules/core/PoolModule.sol",
   "contractName": "PoolModule",
   "deployedOn": "contract.PoolModule"

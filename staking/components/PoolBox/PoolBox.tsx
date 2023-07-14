@@ -9,6 +9,7 @@ import { useParams } from '@snx-v3/useParams';
 import { InfoIcon } from '@chakra-ui/icons';
 import { TrendText } from '@snx-v3/TrendText';
 import { currency } from '@snx-v3/format';
+import { usePool } from '@snx-v3/usePools';
 
 const PoolBoxUi: FC<{
   poolName?: string;
@@ -37,10 +38,6 @@ const PoolBoxUi: FC<{
           <Skeleton w={16} height={6} />
         </Flex>
       )}
-      <Text display="none" color="gray.400" mt={2} fontSize="sm">
-        The Spartan Council Pool is the primary pool of Synthetix. All collateral will be deposited
-        in this pool by default.
-      </Text>
       {sevenDaysPoolPerformanceGrowth && (
         <BorderBox mt={4} p={4} flexDirection="column">
           <Heading fontSize="md" alignItems="center" display="flex">
@@ -80,10 +77,12 @@ export const PoolBox = () => {
   const { data: poolData } = usePoolData(params.poolId);
   const sevenDaysPoolPerformance = calculatePoolPerformanceSevenDays(poolData);
 
+  const pool = usePool(params.poolId);
+
   return (
     <PoolBoxUi
-      poolName={poolData?.name}
-      poolId={poolData?.id}
+      poolName={pool?.name}
+      poolId={pool?.id}
       navigate={navigate}
       accountId={params.accountId}
       sevenDaysPoolPerformanceGrowth={sevenDaysPoolPerformance?.growthPercentage}
