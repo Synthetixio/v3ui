@@ -43,6 +43,8 @@ export function encodeBytesByNodeType(id: number, parameters: any[]) {
       return utils.defaultAbiCoder.encode(['uint'], parameters);
     case 7:
       return utils.defaultAbiCoder.encode(['uint'], parameters);
+    case 8:
+      return utils.defaultAbiCoder.encode(['int'], parameters);
     default:
       return '';
   }
@@ -77,6 +79,8 @@ export function decodeBytesByNodeType(id: number, parameters: any[]) {
       return utils.defaultAbiCoder.decode(['uint'], parameters);
     case 7:
       return utils.defaultAbiCoder.decode(['uint'], parameters);
+    case 8:
+      return utils.defaultAbiCoder.decode(['int'], parameters);
     default:
       return '';
   }
@@ -98,6 +102,8 @@ export function nodeInformationByNodeIds(id: number) {
       return { label: 'Price Deviation Circuit Breaker', slug: 'priceDeviationCircuitBreaker' };
     case 7:
       return { label: 'Staleness Circuit Breaker', slug: 'stalenessCircuitBreaker' };
+    case 8:
+      return { label: 'Constant', slug: 'constant' };
     default:
       return { label: '', slug: '' };
   }
