@@ -28,6 +28,8 @@ export async function importAccountProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/AccountProxy');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/AccountProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }
