@@ -27,6 +27,7 @@ import { StalenessFallbackReducerForm } from './StalenessFallbackReducerForm';
 import { UniswapForm } from './UniswapForm';
 import { PriceDeviationCircuitBreakerForm } from './PriceDeviationCircuitBreakerForm';
 import { hashId } from '../utils/contracts';
+import { ConstantForm } from './ConstantForm';
 
 export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: Node }> = ({
   isOpen,
@@ -143,6 +144,15 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
               pool,
               secondsAgo,
             ]);
+          }}
+        />
+      );
+    if (type === 'constant')
+      return (
+        <ConstantForm
+          constantValue={node?.parameters[0]}
+          getValuesFromForm={(tolerance) => {
+            setValue('nodeParameters', [tolerance]);
           }}
         />
       );
@@ -334,5 +344,7 @@ function typeToTypeId(type: OracleNodeTypes) {
       return ORACLE_NODE_TYPES[5].nodeType;
     case 'priceDeviationCircuitBreaker':
       return ORACLE_NODE_TYPES[2].nodeType;
+    case 'constant':
+      return ORACLE_NODE_TYPES[7].nodeType;
   }
 }

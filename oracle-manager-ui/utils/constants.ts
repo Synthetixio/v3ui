@@ -119,4 +119,11 @@ export const ORACLE_NODE_TYPES: {
       },
     ],
   },
+  {
+    label: 'Constant',
+    value: 'constant',
+    nodeType: 8,
+    numberOfParents: 0,
+    parameters: [{ type: 'number', name: 'Constant Value' }],
+  },
 ];

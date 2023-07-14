@@ -24,6 +24,7 @@ import { PythNode } from './PythNode';
 import { ReducerNode } from './ReducerNode';
 import { StalenessFallbackReducerNode } from './StalenessFallbackReducerNode';
 import { UniswapNode } from './UniswapNode';
+import { ConstantNode } from './ConstantNode';
 
 const NODE_TYPES = {
   [ORACLE_NODE_TYPES[0].value]: ChainLinkNode,
@@ -33,6 +34,7 @@ const NODE_TYPES = {
   [ORACLE_NODE_TYPES[2].value]: PriceDeviationCircuitBreakerNode,
   [ORACLE_NODE_TYPES[1].value]: ExternalNode,
   [ORACLE_NODE_TYPES[5].value]: StalenessFallbackReducerNode,
+  [ORACLE_NODE_TYPES[7].value]: ConstantNode,
 };
 
 export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }) => {
