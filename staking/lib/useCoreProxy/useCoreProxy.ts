@@ -22,6 +22,8 @@ export async function importCoreProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/mainnet/CoreProxy');
     case 'goerli':
       return import('@synthetixio/v3-contracts/build/goerli/CoreProxy');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/CoreProxy');
     case 'optimism-mainnet':
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/CoreProxy');
     case 'optimism-goerli':

@@ -22,6 +22,8 @@ export async function importUSDProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/mainnet/USDProxy');
     case 'goerli':
       return import('@synthetixio/v3-contracts/build/goerli/USDProxy');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/USDProxy');
     case 'optimism-mainnet':
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy');
     case 'optimism-goerli':

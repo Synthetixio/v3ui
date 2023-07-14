@@ -18,10 +18,11 @@
     "start": "cannon run synthetix-local:0.0.1",
     "start:mainnet": "./start.sh mainnet",
     "start:goerli": "./start.sh goerli",
+    "start:sepolia": "./start.sh sepolia",
     "start:optimism": "./start.sh optimism-mainnet",
     "start:optimism-goerli": "./start.sh optimism-goerli",
     "fetch": "./fetch.sh",
-    "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
+    "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch sepolia && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
     "upgrade-contracts": "yarn fetch-deployments && yarn build",
     "prepublishOnly": "yarn build"
   },

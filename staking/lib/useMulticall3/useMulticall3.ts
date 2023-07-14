@@ -22,6 +22,8 @@ export async function importMulticall3(chainName: string) {
       return import('@synthetixio/v3-contracts/build/mainnet/Multicall3');
     case 'goerli':
       return import('@synthetixio/v3-contracts/build/goerli/Multicall3');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/Multicall3');
     case 'optimism-mainnet':
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3');
     case 'optimism-goerli':

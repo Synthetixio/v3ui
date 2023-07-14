@@ -66,6 +66,17 @@ export const NETWORKS: Record<string, Network> = {
     isSupported: true,
     publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
   },
+  sepolia: {
+    id: 11155111,
+    hexId: `0x${Number(11155111).toString(16)}`,
+    token: 'ETH',
+    name: 'sepolia',
+    rpcUrl: `https://sepolia.infura.io/v3/${INFURA_KEY}`,
+    label: 'Sepolia Testnet',
+    Icon: () => <EthereumIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
+  },
   'optimism-goerli': {
     id: 420,
     hexId: `0x${Number(420).toString(16)}`,
