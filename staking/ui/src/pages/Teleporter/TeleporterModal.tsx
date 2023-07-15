@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   Text,
   useToast,
+  Link,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
@@ -83,7 +84,15 @@ export const TeleporterModalUi: FC<{
                 {state.matches(State.success) ? (
                   <Text>
                     Teleport for <Amount value={amount} suffix={` snxUSD`} /> to {toNetworkName}{' '}
-                    executed. Check https://ccip.chain.link/tx/{txnHash} for status.
+                    executed. Check{' '}
+                    <Link
+                      color="cyan.500"
+                      href={`https://ccip.chain.link/tx/${txnHash}`}
+                      target="_blank"
+                    >
+                      ccip explorer
+                    </Link>{' '}
+                    for status.
                   </Text>
                 ) : (
                   <Text>
