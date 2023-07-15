@@ -15,7 +15,7 @@ import { NumberInput } from '@snx-v3/NumberInput';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { FC, useState } from 'react';
 import Head from 'react-helmet';
-// import { TeleporterModal } from './TeleporterModal';
+import { TeleporterModal } from './TeleporterModal';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ChevronDown, ChevronUp, DollarCircle, CCIP } from '@snx-v3/icons';
 import {
@@ -43,6 +43,7 @@ export const TeleporterUi: FC<{
   toNetworkBalance?: Wei;
   toNetwork?: Network;
   setToNetwork: (network?: Network) => void;
+  onTeleportClick: () => void;
   usdProxyAddress?: string;
 }> = ({
   connectedWallet,
@@ -55,6 +56,7 @@ export const TeleporterUi: FC<{
   toNetwork,
   setToNetwork,
   usdProxyAddress,
+  onTeleportClick,
 }) => {
   return (
     <Box maxW="600px">
@@ -260,12 +262,11 @@ export const TeleporterUi: FC<{
             Connect Wallet
           </Button>
         ) : (
-          <Button type="submit" isDisabled={!Boolean(balance?.gt(0) && toNetwork)}>
+          <Button onClick={onTeleportClick} isDisabled={!Boolean(balance?.gt(0) && toNetwork)}>
             Teleport
           </Button>
         )}
       </BorderBox>
-      {/* <TeleporterModal amount={amount} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
     </Box>
   );
 };
@@ -273,6 +274,8 @@ export const TeleporterUi: FC<{
 export const Teleporter = () => {
   const { data: USDProxy } = useUSDProxy();
   const [amount, setAmount] = useState(wei(0));
+  const [txnModalOpen, setTxnModalOpen] = useState(false);
+
   const connectedWallet = useWallet();
   const activeNetwork = useNetwork();
   const setNetwork = useSetNetwork();
@@ -284,17 +287,32 @@ export const Teleporter = () => {
   );
 
   return (
-    <TeleporterUi
-      connectedWallet={connectedWallet?.address}
-      activeNetwork={activeNetwork}
-      balance={balance}
-      amount={amount}
-      setAmount={setAmount}
-      toNetwork={toNetwork}
-      setToNetwork={setToNetwork}
-      setActiveNetwork={setNetwork}
-      toNetworkBalance={toBalance}
-      usdProxyAddress={USDProxy?.address}
-    />
+    <>
+      <TeleporterUi
+        connectedWallet={connectedWallet?.address}
+        activeNetwork={activeNetwork}
+        balance={balance}
+        amount={amount}
+        setAmount={setAmount}
+        toNetwork={toNetwork}
+        setToNetwork={setToNetwork}
+        setActiveNetwork={setNetwork}
+        toNetworkBalance={toBalance}
+        usdProxyAddress={USDProxy?.address}
+        onTeleportClick={() => setTxnModalOpen(true)}
+      />
+      {toNetwork && (
+        <TeleporterModal
+          isOpen={txnModalOpen}
+          onClose={() => {
+            setTxnModalOpen(false);
+            setAmount(wei(0));
+          }}
+          toNetworkId={toNetwork.id}
+          toNetworkName={toNetwork.name}
+          amount={amount}
+        />
+      )}
+    </>
   );
 };
