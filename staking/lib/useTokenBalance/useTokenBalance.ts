@@ -15,9 +15,14 @@ export const useTokenBalance = (address?: string, networkId?: number) => {
   const network = useNetwork();
 
   const tokenAddress = assertAddressType(address) ? address : undefined;
-
+  const networkIdToUse = networkId ?? network.id;
   return useQuery({
-    queryKey: [network.name, { accountAddress: wallet?.address }, 'TokenBalance', { tokenAddress }],
+    queryKey: [
+      networkIdToUse,
+      { accountAddress: wallet?.address },
+      'TokenBalance',
+      { tokenAddress },
+    ],
     queryFn: async () => {
       if (!tokenAddress || !wallet?.address) throw Error('Query should not be enabled');
       const provider =
@@ -28,7 +33,7 @@ export const useTokenBalance = (address?: string, networkId?: number) => {
 
       return BalanceSchema.parse(await contract.balanceOf(wallet.address));
     },
-    enabled: Boolean((networkId ?? network.id) && wallet?.address && tokenAddress),
+    enabled: Boolean(networkIdToUse && wallet?.address && tokenAddress),
     refetchInterval: 5000,
   });
 };

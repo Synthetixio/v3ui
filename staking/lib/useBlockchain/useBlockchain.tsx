@@ -18,6 +18,7 @@ export type Network = {
   Icon: React.FC;
   isSupported: boolean;
   publicRpcUrl: string;
+  isTestnet: boolean;
 };
 
 export const UNSUPPORTED_NETWORK: Network = {
@@ -30,6 +31,7 @@ export const UNSUPPORTED_NETWORK: Network = {
   label: 'Unsupported',
   Icon: () => <FailedIcon width="24px" height="24px" />,
   isSupported: false,
+  isTestnet: false,
 };
 
 export const NETWORKS: Record<string, Network> = {
@@ -43,6 +45,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum.publicnode.com',
+    isTestnet: false,
   },
   'optimism-mainnet': {
     id: 10,
@@ -54,6 +57,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <OptimismIcon />,
     isSupported: true,
     publicRpcUrl: 'https://mainnet.optimism.io',
+    isTestnet: false,
   },
   goerli: {
     id: 5,
@@ -65,6 +69,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
+    isTestnet: true,
   },
   sepolia: {
     id: 11155111,
@@ -76,6 +81,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
+    isTestnet: true,
   },
   'optimism-goerli': {
     id: 420,
@@ -87,6 +93,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <OptimismIcon />,
     isSupported: true,
     publicRpcUrl: 'https://goerli.optimism.io',
+    isTestnet: true,
   },
   cannon: {
     id: 13370,
@@ -98,6 +105,7 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <LogoIcon />,
     isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'cannon',
     publicRpcUrl: 'http://127.0.0.1:8545',
+    isTestnet: true,
   },
 };
 
