@@ -75,7 +75,7 @@ export const TeleporterUi: FC<{
         <Link
           color="cyan.500"
           target="_blank"
-          src="https://block.syntehtix.io/synthetix-launches-teleporters-with-chainlinks-ccip"
+          href="https://blog.synthetix.io/synthetix-launches-teleporters-with-chainlinks-ccip"
         >
           Read more
         </Link>{' '}
