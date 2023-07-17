@@ -9,7 +9,7 @@ import {
   MenuItem,
   MenuList,
   Text,
-  Link
+  Link,
 } from '@chakra-ui/react';
 import { Balance } from '@snx-v3/Balance';
 import { NumberInput } from '@snx-v3/NumberInput';
@@ -71,7 +71,15 @@ export const TeleporterUi: FC<{
       </Flex>
       <Text mt={2} color="gray.500">
         Teleport your assets between layers using the teleporter. This transaction can take up to 30
-        minutes. <Link color="cyan.500" target="_blank" src="https://block.syntehtix.io/synthetix-launches-teleporters-with-chainlinks-ccip">Read more</Link> about teleporter and CCIP.
+        minutes.{' '}
+        <Link
+          color="cyan.500"
+          target="_blank"
+          src="https://block.syntehtix.io/synthetix-launches-teleporters-with-chainlinks-ccip"
+        >
+          Read more
+        </Link>{' '}
+        about teleporter and CCIP.
       </Text>
       <Divider mt={4} mb={4} />
       <BorderBox flexDirection="column" p="4">
