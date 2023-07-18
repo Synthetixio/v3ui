@@ -39,7 +39,6 @@ const activeIcon = (currentNetwork: number) => {
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
     case 420:
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
-
     default:
       return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
   }
@@ -64,9 +63,6 @@ export const App: FC = () => {
       toggleColorMode();
     }
   }, [colorMode, toggleColorMode]);
-
-  // TODO make link work,
-  // TODO make search for node with infra provider and ask user which network he wants to look for, maybe add it in the URL?
 
   return (
     <Box px="10" py="5">
@@ -143,15 +139,7 @@ export const App: FC = () => {
               w="200px"
               leftIcon={<SearchIcon />}
               onClick={() => {
-                const nodeId = getValues('search').trim();
-                if (nodeId.startsWith('0x')) navigate('node/' + nodeId);
-                else
-                  toast({
-                    title: 'Invalid node id',
-                    status: 'error',
-                    duration: 9000,
-                    isClosable: true,
-                  });
+                navigate('/node/' + currentNetwork.toString() + '/' + getValues('search').trim());
               }}
             >
               Search
@@ -213,6 +201,7 @@ export const App: FC = () => {
                     });
                   })
                 );
+                setNodes(nodes.map((node) => ({ ...node, network: network.id })));
               }
             }}
           >
@@ -240,13 +229,14 @@ export const App: FC = () => {
             variant="outline"
             colorScheme="gray"
             onClick={() => {
+              localStorage.setItem('oracleManagerUI', JSON.stringify(nodes));
+              convertStateToQueryParam(nodes);
               toast({
                 title: 'Generated link copied to your clipboard”',
                 status: 'success',
                 duration: 9000,
                 isClosable: true,
               });
-              convertStateToQueryParam(nodes);
             }}
           >
             Save & Share

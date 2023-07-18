@@ -25,6 +25,7 @@ import { ReducerNode } from './ReducerNode';
 import { StalenessFallbackReducerNode } from './StalenessFallbackReducerNode';
 import { UniswapNode } from './UniswapNode';
 import { ConstantNode } from './ConstantNode';
+import { useLocation } from 'react-router-dom';
 
 const NODE_TYPES = {
   [ORACLE_NODE_TYPES[0].value]: ChainLinkNode,
@@ -40,7 +41,7 @@ const NODE_TYPES = {
 export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }) => {
   const toast = useToast();
   const params = new URLSearchParams(window.location.search);
-
+  const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [nodeToUpdate, setNodeToUpdate] = useState<undefined | Node>(undefined);
@@ -118,12 +119,14 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
         loc: string;
         pam: string;
         par: string;
+        net: string;
       }> = Object.fromEntries(params.entries());
       const typeIds: number[] = JSON.parse(stateObject?.tid || '[]');
       const ids: string[] = JSON.parse(stateObject?.id || '[]');
       const locations: { x: string; y: string }[] = JSON.parse(stateObject?.loc || '[]');
       const parameters: any[][] = JSON.parse(stateObject?.pam || '[]');
       const parents: string[][] = JSON.parse(stateObject?.par || '[]');
+      const networks: number[] = JSON.parse(stateObject?.net || '[]');
 
       setNodes(() => {
         const newState = typeIds.map((id, index) => ({
@@ -137,7 +140,9 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
           target: '',
           type: oracleTypeFromTypeId(id),
           isRegistered: false,
+          networks: networks.length ? networks[0] : undefined,
         }));
+
         newState.forEach((node) => {
           if (node.parents.length) {
             node.parents.forEach((parent) => {
@@ -171,7 +176,7 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
       });
     }
     // eslint-disable-next-line
-  }, [nodes]);
+  }, []);
 
   return (
     <Box
@@ -218,7 +223,17 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
         }}
         node={nodeToUpdate}
       />
-      {!nodes.length && (
+      {!nodes.length && pathname.includes('node') ? (
+        <Text
+          position="absolute"
+          top="50%"
+          right="50%"
+          transform="translate(50%, 50%)"
+          fontSize="2xl"
+        >
+          No node found
+        </Text>
+      ) : !nodes.length ? (
         <Text
           position="absolute"
           top="50%"
@@ -228,6 +243,8 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
         >
           Add your first Node to get started
         </Text>
+      ) : (
+        <></>
       )}
     </Box>
   );
