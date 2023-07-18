@@ -9,17 +9,21 @@ export function Balance({
   symbol,
   address,
   onMax,
+  hideBuyButton,
 }: {
   balance?: Wei;
   symbol: string;
   address: string;
   onMax?: (balance: Wei) => void;
+  hideBuyButton?: boolean;
 }) {
   const network = useNetwork();
   const buyAssetLink = useMemo(() => {
     switch (network.name) {
       case 'goerli':
         return `https://goerli.etherscan.io/address/${address}#writeContract`;
+      case 'sepolia':
+        return `https://sepolia.etherscan.io/address/${address}#writeContract`;
       case 'optimism-goerli':
         return `https://goerli-optimism.etherscan.io/address/${address}#writeContract`;
       case 'optimism':
@@ -33,7 +37,7 @@ export function Balance({
     <Text display="flex" gap={2} alignItems="center" fontSize="xs">
       Balance:
       <Amount value={balance} suffix={` ${symbol}`} />
-      {balance && balance.eq(0) && buyAssetLink && (
+      {balance && balance.eq(0) && buyAssetLink && !hideBuyButton && (
         <Link href={buyAssetLink} isExternal>
           <Badge ml="1" variant="outline" transform="translateY(-1px)">
             Buy {symbol}

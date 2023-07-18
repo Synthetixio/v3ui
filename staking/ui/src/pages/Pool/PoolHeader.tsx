@@ -1,28 +1,19 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
-import { usePoolData, PoolType } from '@snx-v3/usePoolData';
+import { PoolType, usePool } from '@snx-v3/usePools';
 
-export const PoolHeaderUi = ({ poolData }: { poolData: PoolType }) => {
+export const PoolHeaderUi = ({ pool }: { pool?: PoolType }) => {
   return (
-    <Box>
-      <Flex gap={2} alignItems="flex-end">
-        <Heading fontWeight={700} fontSize="3xl">
-          {poolData.name}
-        </Heading>
-        <Text display="none" fontSize="sm" color="gray.400">
-          Pool #{poolData.id}
-        </Text>
-      </Flex>
-      <Text display="none" color="gray.400" fontSize="sm" mt={2}>
-        The Spartan Council Pool is the primary pool of Synthetix. All collateral will be deposited
-        in this pool by default.
-      </Text>
-    </Box>
+    <Flex gap={2} alignItems="flex-end">
+      <Heading fontWeight={700} fontSize="3xl">
+        {pool ? pool.name : ''}
+      </Heading>
+    </Flex>
   );
 };
 
 export const PoolHeader = () => {
   const params = useParams();
-  const { data: poolData } = usePoolData(params.poolId);
-  return poolData ? <PoolHeaderUi poolData={poolData} /> : null;
+  const pool = usePool(params.poolId);
+  return <PoolHeaderUi pool={pool} />;
 };

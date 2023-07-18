@@ -1,5 +1,5 @@
 {
-  "address": "0xbbaA482F08dBD6eC636564EAafE0e48b4c0B4FFe",
+  "address": "0x4c10494dB520c22544Bc24399d5d3b1CC65b236E",
   "abi": [
     {
       "inputs": [
@@ -432,7 +432,7 @@
       "outputs": [
         {
           "internalType": "int256",
-          "name": "",
+          "name": "debt",
           "type": "int256"
         }
       ],
@@ -519,7 +519,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x543132544d4572ca73266ae7994139f29d7839ef41b364611bdfe66a38e3f7dc",
+  "deployTxnHash": "0x28367e095a5d8dd968efed6ef0b1dc4bc82b236b32b7a0da1614c27452485777",
   "sourceName": "contracts/modules/core/VaultModule.sol",
   "contractName": "VaultModule",
   "deployedOn": "contract.VaultModule"

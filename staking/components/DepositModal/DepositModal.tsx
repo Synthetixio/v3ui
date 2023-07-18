@@ -28,9 +28,9 @@ import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { usePoolData } from '@snx-v3/usePoolData';
 import { ContractError } from '@snx-v3/ContractError';
-import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
+import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
+import { usePool } from '@snx-v3/usePools';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -222,7 +222,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   });
 
   const ethBalance = useEthBalance();
-  const transferrable = useV2Synthetix();
+  const transferrable = useTransferableSynthetix();
 
   const accounts = useAccounts();
 
@@ -253,7 +253,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     currentCollateral: currentCollateral,
   });
 
-  const poolData = usePoolData(params.poolId);
+  const pool = usePool(params.poolId);
+
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
   const accountCollateral = accountCollaterals.data?.find(
     (coll) => coll.tokenAddress === collateralType?.tokenAddress
@@ -424,7 +425,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
         send(Events.SET_INFINITE_APPROVAL, { infiniteApproval });
       }}
       onSubmit={onSubmit}
-      poolName={poolData?.data?.name || ''}
+      poolName={pool?.name || ''}
       availableCollateral={accountCollateral?.availableCollateral || wei(0)}
     />
   );
