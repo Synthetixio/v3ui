@@ -3,11 +3,11 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  AlertTitle,
   Button,
+  Collapse,
   Flex,
   Text,
-  AlertTitle,
-  Collapse,
   Tooltip,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
@@ -19,6 +19,7 @@ import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
+import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
@@ -32,6 +33,7 @@ export const UndelegateUi: FC<{
   displaySymbol: string;
   symbol: string;
   setCollateralChange: (val: Wei) => void;
+  isAnyMarketLocked?: boolean;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -41,6 +43,7 @@ export const UndelegateUi: FC<{
   symbol,
   currentCollateral,
   minDelegation,
+  isAnyMarketLocked,
 }) => {
   const onMaxClick = useCallback(() => {
     if (!max) {
@@ -53,6 +56,8 @@ export const UndelegateUi: FC<{
   const leftoverCollateral = currentCollateral?.add(collateralChange.amount) || wei(0);
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
+
+  const isDisabled = isAnyMarketLocked === true;
 
   return (
     <Flex flexDirection="column">
@@ -74,6 +79,7 @@ export const UndelegateUi: FC<{
           <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
             <NumberInput
               InputProps={{
+                isDisabled,
                 isRequired: true,
                 'data-testid': 'undelegate amount input',
                 'data-max': max?.toString(),
@@ -104,6 +110,20 @@ export const UndelegateUi: FC<{
             </Flex>
           </Flex>
         </Flex>
+
+        <Collapse in={isDisabled} animateOpacity>
+          <Alert mt={2} status="warning">
+            <AlertIcon />
+            <Flex direction="column">
+              <AlertTitle>Credit capacity reached</AlertTitle>
+              <AlertDescription>
+                One of the markets has reached its credit capacity and is currently in a locked
+                state. You cannot remove collateral from the pool at this time.
+              </AlertDescription>
+            </Flex>
+          </Alert>
+        </Collapse>
+
         <Collapse in={!isValidLeftover} animateOpacity>
           <Alert mt={2} status="info">
             <AlertIcon />
@@ -112,12 +132,18 @@ export const UndelegateUi: FC<{
                 The minimal delegated amount is{' '}
                 <Amount value={minDelegation} suffix={` ${symbol}`} />
               </AlertTitle>
-              <AlertDescription>You can close your position by undelegating max.</AlertDescription>
+              <AlertDescription>
+                You can close your position by removing all the collateral.
+              </AlertDescription>
             </Flex>
           </Alert>
         </Collapse>
       </BorderBox>
-      <Button data-testid="undelegate submit" type="submit" isDisabled={!max}>
+      <Button
+        data-testid="undelegate submit"
+        type="submit"
+        isDisabled={!max || isAnyMarketLocked === true}
+      >
         Remove {displaySymbol}
       </Button>
     </Flex>
@@ -138,6 +164,8 @@ export const Undelegate = () => {
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
+  const poolConfiguration = usePoolConfiguration(params.poolId);
 
   if (!collateralType) return null;
 
@@ -167,6 +195,7 @@ export const Undelegate = () => {
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
       max={maxCollateral}
+      isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
     />
   );
 };

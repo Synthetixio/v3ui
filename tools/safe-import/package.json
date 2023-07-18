@@ -7,11 +7,12 @@
   "files": [
     "./*.js"
   ],
-  "version": "1.0.0",
+  "version": "3.1.0",
   "author": "Nikita <nikita@cc.snxdao.io>",
   "repository": "github:Synthetixio/v3ui",
   "license": "MIT",
   "dependencies": {
     "react": "^18.2.0"
-  }
+  },
+  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }

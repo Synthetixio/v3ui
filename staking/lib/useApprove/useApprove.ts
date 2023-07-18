@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import { useAllowance } from '@snx-v3/useAllowance';
 import { BigNumber, ethers } from 'ethers';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
@@ -33,7 +33,7 @@ export const useApprove = (
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
-  const { name: networkName, id: networkId } = useNetwork();
+  const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async (infiniteApproval: boolean) => {
@@ -46,7 +46,7 @@ export const useApprove = (
         const contract = new ethers.Contract(contractAddress, approveAbi, signer);
         const amountToAppove = infiniteApproval ? ethers.constants.MaxUint256 : amount;
 
-        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasPricesPromised = getGasPrice({ provider });
         const gasLimitPromised = contract.estimateGas.approve(spender, amountToAppove);
 
         const populatedTxnPromised = contract.populateTransaction.approve(spender, amountToAppove, {

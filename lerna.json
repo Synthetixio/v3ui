@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/@lerna-lite/cli/schemas/lerna-schema.json",
+  "useWorkspaces": true,
+  "version": "3.1.1",
+  "exact": false,
+  "changelog": false,
+  "ignoreChanges": [
+    "**/*.cy.*",
+    "**/*.test.*",
+    "**/*.e2e.*",
+    "**/cypress/**"
+  ],
+  "private": false,
+  "push": true,
+  "command": {
+    "version": {
+      "allowBranch": [
+        "master",
+        "lerna"
+      ]
+    }
+  }
+}

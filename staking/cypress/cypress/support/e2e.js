@@ -33,6 +33,7 @@ beforeEach(() => {
     win.localStorage.setItem('DEFAULT_NETWORK', networkName);
     win.localStorage.setItem('UNSAFE_IMPORT', 'true');
     win.localStorage.setItem('connectedWallets', '["MetaMask"]');
+    win.localStorage.setItem('CONTRACT_ERROR_OPEN', 'true');
   });
 });
 

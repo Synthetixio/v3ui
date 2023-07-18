@@ -4,21 +4,14 @@ node_modules
 dist
 .vscode
 .yarn
-packages/queries/subgraphs
 cache
 artifacts
-.docusaurus
-**/subgraph.yaml
 contracts/src
 contracts/deployments
-spot-markets/contracts/deployments
 **/tmp/
 **/.next/
 **/out/
 **/.nyc_output
 **/junit.xml
-subgraphs/tests/.latest.json
 .yarnrc.yml
-
-# temporary
-spot-markets/ui/prototype
+lerna.json

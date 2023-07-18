@@ -1,5 +1,5 @@
 {
-  "address": "0x09Bb0FDd2f0bB7eFbb97F9D20f8D0b60BE1Ec63a",
+  "address": "0x8c2c26494eAe20A8a22f94ED5Fa4B104FAD6bcca",
   "abi": [
     {
       "inputs": [],
@@ -52,22 +52,6 @@
         }
       ],
       "name": "InvalidParameter",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "expected",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "actual",
-          "type": "bytes32"
-        }
-      ],
-      "name": "MismatchAssociatedSystemKind",
       "type": "error"
     },
     {
@@ -196,6 +180,19 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "burn",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -443,35 +440,6 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "destChainId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferCrossChain",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "feesPaid",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "address",
           "name": "from",
           "type": "address"
@@ -501,7 +469,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x756426ce8457d53e3118673bf90473c41f6bd6dde6b5f286a46d73ebf3557f21",
+  "deployTxnHash": "0xb6d72914ab4124045b4af89332a6db72ea1f84e7b08515bc205e799d1b54a2ae",
   "sourceName": "contracts/modules/usd/USDTokenModule.sol",
   "contractName": "USDTokenModule",
   "deployedOn": "contract.USDTokenModule"

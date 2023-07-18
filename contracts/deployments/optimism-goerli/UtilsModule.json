@@ -1,6 +1,27 @@
 {
-  "address": "0xFB7108c3a069f5235dc55f427226f0c3127f4FcA",
+  "address": "0x94F5F9a11e46531DA557De0Eb3D05Cf0df30A0Bb",
   "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OverflowUint256ToUint64",
+      "type": "error"
+    },
     {
       "inputs": [
         {
@@ -11,6 +32,42 @@
       ],
       "name": "Unauthorized",
       "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ValueAlreadyInSet",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "newChainId",
+          "type": "uint64"
+        }
+      ],
+      "name": "NewSupportedCrossChainNetwork",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ccipRouter",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipTokenPool",
+          "type": "address"
+        }
+      ],
+      "name": "configureChainlinkCrossChain",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "inputs": [
@@ -85,29 +142,6 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "ccipSend",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipReceive",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipTokenPool",
-          "type": "address"
-        }
-      ],
-      "name": "registerCcip",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "bytes32",
           "name": "k",
           "type": "bytes32"
@@ -122,11 +156,54 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64[]",
+          "name": "supportedNetworks",
+          "type": "uint64[]"
+        },
+        {
+          "internalType": "uint64[]",
+          "name": "ccipSelectors",
+          "type": "uint64[]"
+        }
+      ],
+      "name": "setSupportedCrossChainNetworks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "numRegistered",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xd10770962ea4c8afd327e78284d1705b8a348732ee389ae7e5e410a97495487e",
+  "deployTxnHash": "0xc47a3552ec8e2ace5166986466851ca9b9810ed0ffdabef1163b77e032ae8e74",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"

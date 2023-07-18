@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import { BigNumber } from 'ethers';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
@@ -32,7 +32,7 @@ export const useWithdraw = (
   const { data: CoreProxy } = useCoreProxy();
   const { gasSpeed } = useGasSpeed();
   const signer = useSigner();
-  const { name: networkName, id: networkId } = useNetwork();
+  const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -44,7 +44,7 @@ export const useWithdraw = (
       try {
         dispatch({ type: 'prompting' });
 
-        const gasPricesPromised = getGasPrice({ networkName, networkId });
+        const gasPricesPromised = getGasPrice({ provider });
         const gasLimitPromised = CoreProxy.estimateGas.withdraw(
           BigNumber.from(accountId),
           collateralTypeAddress,

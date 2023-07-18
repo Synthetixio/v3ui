@@ -4,7 +4,7 @@
     "access": "public"
   },
   "description": "peripheral smart contracts for frontend",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "main": "./index.js",
   "files": [
     "build",
@@ -15,23 +15,26 @@
   "scripts": {
     "codegen": "node ./codegen.js",
     "build": "yarn codegen && tsc --build --verbose --force",
-    "start": "./start.sh mainnet",
+    "start": "cannon run synthetix-local:0.0.1",
+    "start:mainnet": "./start.sh mainnet",
     "start:goerli": "./start.sh goerli",
+    "start:sepolia": "./start.sh sepolia",
     "start:optimism": "./start.sh optimism-mainnet",
     "start:optimism-goerli": "./start.sh optimism-goerli",
     "fetch": "./fetch.sh",
-    "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
-    "cannon": "cannon",
-    "upgrade-contracts": "yarn fetch-deployments && yarn build"
+    "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch sepolia && yarn fetch optimism-mainnet && yarn fetch optimism-goerli",
+    "upgrade-contracts": "yarn fetch-deployments && yarn build",
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.0.0",
-    "@usecannon/cli": "^2.4.14",
+    "@usecannon/cli": "^2.4.20",
     "ethers": "^5.7.2",
     "prettier": "^2.8.8",
     "typechain": "^8.2.0",
     "typescript": "^5.0.4"
-  }
+  },
+  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }

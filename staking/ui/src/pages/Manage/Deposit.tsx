@@ -11,7 +11,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { Dispatch, FC, useContext, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
+import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -156,7 +156,7 @@ export const Deposit = () => {
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
 
-  const { data: tokenBalance } = useV2Synthetix();
+  const { data: tokenBalance } = useTransferableSynthetix();
   const { data: ethBalance } = useEthBalance();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });

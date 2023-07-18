@@ -53,7 +53,6 @@ module.exports = {
         'staking/lib/**/*',
         'theme/**/*',
         'oracle-manager-ui/**/*',
-        'spot-markets/ui/**/*',
       ],
 
       env: {
@@ -103,23 +102,6 @@ module.exports = {
         expect: true,
       },
       rules: {},
-    },
-
-    {
-      files: ['subgraphs/**/*'],
-      env: {},
-      globals: {
-        changetype: true,
-        i32: true,
-        i64: true,
-        assert: true,
-      },
-      rules: {
-        'prefer-const': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
-        '@typescript-eslint/ban-types': 'off',
-        '@typescript-eslint/no-array-constructor': 'off',
-      },
     },
   ],
 };

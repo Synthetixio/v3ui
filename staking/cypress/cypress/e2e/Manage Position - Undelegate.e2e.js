@@ -6,45 +6,41 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
   });
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
-    cy.task('getSnx', { address, amount: 500 });
+    cy.task('getSnx', { address, amount: 100_500 });
     cy.task('approveCollateral', { privateKey, symbol: 'SNX' });
     cy.task('createAccount', { privateKey }).then((accountId) => {
       cy.wrap(accountId).as('accountId');
-      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 200 });
+      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 100_500 });
       cy.task('delegateCollateral', {
         privateKey,
         symbol: 'SNX',
         accountId,
-        amount: 200,
+        amount: 100_500,
         poolId: 1,
       });
     });
   });
 
-  cy.viewport(800, 800);
-
+  cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    cy.visit(
-      generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-        accountId,
-        collateralSymbol: 'SNX',
-        poolId: 1,
-      })
-    );
+    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
+      accountId,
+      collateralSymbol: 'SNX',
+      poolId: 1,
+    });
+    cy.visit(`${path}?manageAction=undelegate`);
   });
 
-  cy.get('[data-testid="manage action"][data-action="undelegate"]')
-    .should('exist')
-    .click()
-    .should('have.attr', 'data-active', 'true');
-  cy.location().should((loc) => {
-    expect(loc.search).to.include('manageAction=undelegate');
-  });
+  // Need to wait for max undelegate amount to be fetched
+  cy.get('[data-testid="undelegate amount input"]')
+    .should('have.attr', 'data-max')
+    .and('not.match', /^0\.00/); // .and ensures both assertions are waiting for resolution
 
+  // on Undelegate page we still show `-` for yet unfetched data, unlike Borrow/Repay
   cy.get('[data-testid="available to undelegate"]').should('not.have.text', '-');
 
   // undelegate only half of the collateral provided
-  cy.get('[data-testid="undelegate amount input"]').type('5');
+  cy.get('[data-testid="undelegate amount input"]').type('500');
 
   cy.get('[data-testid="undelegate submit"]').should('be.enabled').click();
 
@@ -53,8 +49,8 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
     .and('include.text', 'Complete this action');
 
   cy.get('[data-testid="undelegate modal"]')
-    .should('include.text', `Undelegate`)
-    .and('include.text', `5 SNX will be undelegated`);
+    .should('include.text', `Remove collateral`)
+    .and('include.text', `500 SNX will be removed`);
 
   cy.get('[data-testid="undelegate confirm button"]').should('include.text', 'Start').click();
 
@@ -69,6 +65,6 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
 
   cy.get('[data-testid="undelegate modal"]').should('not.exist');
 
-  cy.get('[data-testid="manage stats collateral"]').should('include.text', `195 SNX`);
-  cy.get('[data-testid="available to undelegate"]').should('have.text', '195');
+  cy.get('[data-testid="manage stats collateral"]').should('include.text', `100,000 SNX`);
+  cy.get('[data-testid="available to undelegate"]').should('have.text', '100,000 SNX');
 });

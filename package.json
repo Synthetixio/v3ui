@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "2.74.1",
+  "version": "3.0.0",
   "workspaces": [
     "**/*"
   ],
@@ -14,7 +14,6 @@
     "test": "jest",
     "build": "yarn workspaces foreach --topological-dev --verbose run build",
     "codegen": "yarn workspaces foreach --topological-dev --verbose run codegen",
-    "publish": "yarn workspaces foreach --topological-dev --verbose publish",
     "typecheck": "tsc --noEmit",
     "deps": "deps",
     "deps:fix": "deps --fix",
@@ -23,12 +22,18 @@
     "deps:version": "deps-version",
     "upgrade-browsers": "yarn up browserslist caniuse-lite --recursive",
     "svg": "svgo  --config ./svgo.json",
-    "download-cci-coverage": "download-cci-coverage"
+    "download-cci-coverage": "download-cci-coverage",
+    "publish:release": "lerna publish",
+    "publish:dev": "lerna publish --force-publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD)",
+    "prepublishOnly": "node ./prepublishOnly.js"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
     "@babel/preset-env": "^7.22.4",
     "@babel/preset-typescript": "^7.21.5",
+    "@lerna-lite/cli": "^2.4.2",
+    "@lerna-lite/publish": "^2.4.2",
+    "@lerna-lite/version": "^2.4.2",
     "@synthetixio/deps": "workspace:*",
     "@synthetixio/download-cci-coverage": "workspace:*",
     "@tanstack/eslint-plugin-query": "^4.29.9",
@@ -79,5 +84,5 @@
       "eslint"
     ]
   },
-  "packageManager": "yarn@3.5.1"
+  "packageManager": "yarn@3.6.0"
 }

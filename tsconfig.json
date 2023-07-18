@@ -17,8 +17,6 @@
   },
 
   "exclude": [
-    "**/docs/**",
-    "**/subgraphs/**",
     "**/node_modules/**",
     "**/coverage/**",
     "**/tests/**",
@@ -26,8 +24,7 @@
     "**/*.test.tsx",
     "**/*.stories.tsx",
     "**/stories/**",
-    "**/cache/**",
-    "spot-markets/ui/prototype/**"
+    "**/cache/**"
   ],
 
   "include": ["**/*.ts", "**/*.tsx"]

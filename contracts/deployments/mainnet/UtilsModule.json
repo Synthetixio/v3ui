@@ -1,6 +1,27 @@
 {
-  "address": "0x84E87C78b6eD40577F6061444F6b84b5A9a37562",
+  "address": "0x7ebCBBD835D17661b26b8AFAe75b5f94BfDC12cA",
   "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OverflowUint256ToUint64",
+      "type": "error"
+    },
     {
       "inputs": [
         {
@@ -11,6 +32,42 @@
       ],
       "name": "Unauthorized",
       "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ValueAlreadyInSet",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "newChainId",
+          "type": "uint64"
+        }
+      ],
+      "name": "NewSupportedCrossChainNetwork",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ccipRouter",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipTokenPool",
+          "type": "address"
+        }
+      ],
+      "name": "configureChainlinkCrossChain",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "inputs": [
@@ -47,24 +104,39 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "ccipSend",
-          "type": "address"
-        },
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigAddress",
+      "outputs": [
         {
           "internalType": "address",
-          "name": "ccipReceive",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipTokenPool",
+          "name": "v",
           "type": "address"
         }
       ],
-      "name": "registerCcip",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "k",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getConfigUint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "v",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -84,11 +156,54 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64[]",
+          "name": "supportedNetworks",
+          "type": "uint64[]"
+        },
+        {
+          "internalType": "uint64[]",
+          "name": "ccipSelectors",
+          "type": "uint64[]"
+        }
+      ],
+      "name": "setSupportedCrossChainNetworks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "numRegistered",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3a0d56197f0c67189cd9fbede79c296988084b2fa4d5b18744300917df93650c",
+  "deployTxnHash": "0x914048882ecbf18cca873d7dfc6dfcbac7c70daa26fbb63705b9bc4c08764a65",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"

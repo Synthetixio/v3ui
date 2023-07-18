@@ -7,7 +7,7 @@ parameters:
 
   cypress-version:
     type: string
-    default: 'cypress-12.13.0-node-18.16.0-chrome-113.0.5672.92-1-ff-113.0-edge-113.0.1774.35-1'
+    default: '12.14.0'
 
 commands:
   yarn-install:
@@ -85,7 +85,7 @@ jobs:
     steps:
       - checkout
       - yarn-install
-      - run: yarn npm audit --recursive --severity=critical
+      - run: yarn npm audit
       - run: yarn dedupe --check
       - run: yarn deps
       - run: yarn deps:mismatched
@@ -105,9 +105,6 @@ jobs:
           path: './junit.xml'
       - store_artifacts:
           path: 'coverage'
-
-      - run: yarn workspace @snx-v3/subgraphs test
-      - run: yarn workspace @snx-v3/subgraphs test --coverage
 
   typecheck:
     working_directory: /tmp/app

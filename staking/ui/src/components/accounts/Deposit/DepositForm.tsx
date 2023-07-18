@@ -7,6 +7,7 @@ import {
   Collapse,
   Flex,
   Text,
+  Link,
 } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
@@ -25,7 +26,7 @@ import { DepositModal, DepositModalProps } from '@snx-v3/DepositModal';
 import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useV2Synthetix } from '@snx-v3/useV2Synthetix';
+import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 
 export function DepositFormUi({
   collateralType,
@@ -167,18 +168,14 @@ export function DepositFormUi({
                 color="whiteAlpha.700"
               >
                 {accountCollateral && accountCollateral?.availableCollateral.gt(0) ? (
-                  <Flex
-                    gap="1"
-                    cursor="pointer"
-                    onClick={() => setInputAmount(accountCollateral?.availableCollateral)}
-                  >
-                    <Text>Available {accountCollateral.symbol} Collateral:</Text>
-                    <Amount value={accountCollateral?.availableCollateral} />
-                  </Flex>
+                  <Link onClick={() => setInputAmount(accountCollateral?.availableCollateral)}>
+                    <Amount
+                      prefix={`Available ${accountCollateral.symbol} Collateral: `}
+                      value={accountCollateral?.availableCollateral}
+                    />
+                  </Link>
                 ) : null}
-                <Flex
-                  gap="1"
-                  cursor="pointer"
+                <Link
                   onClick={() => {
                     if (!tokenBalance) {
                       return;
@@ -186,9 +183,11 @@ export function DepositFormUi({
                     setInputAmount(tokenBalance);
                   }}
                 >
-                  <Text>{collateralType.symbol} Wallet Balance:</Text>
-                  <Amount value={tokenBalance} />
-                </Flex>
+                  <Amount
+                    prefix={`${collateralType.symbol} Wallet Balance: `}
+                    value={tokenBalance}
+                  />
+                </Link>
                 {collateralType?.symbol === 'WETH' ? (
                   <Flex
                     gap="1"
@@ -271,7 +270,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const collateralType = useCollateralType(params.collateralSymbol);
 
   const ethBalance = useEthBalance();
-  const transferrable = useV2Synthetix();
+  const transferrable = useTransferableSynthetix();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
 
