@@ -10,7 +10,7 @@ import { Deposit } from './pages/Deposit';
 // import { Market } from './pages/Markets/Market';
 import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
-import { Teleporter } from './pages/Teleporter';
+// import { Teleporter } from './pages/teleporter/Teleporter';
 import { NotFoundPage } from './pages/404';
 
 export const Router = () => {
@@ -30,7 +30,7 @@ export const Router = () => {
           <Route path="/pools/:poolId" element={<Pool />} />
           {/*<Route path="/markets/create" element={<CreateMarket />} />*/}
           {/*<Route path="/markets/:marketId" element={<Market />} />*/}
-          <Route path="/teleporter" element={<Teleporter />} />
+          {/*<Route path="/teleporter" element={<Teleporter />} />*/}
           <Route path="/playground" element={<Playground />} />
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFoundPage />} />

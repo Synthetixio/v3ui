@@ -12,4 +12,3 @@ export * from './LogoIcon';
 export * from './DollarCircle';
 export * from './BorrowIcon';
 export * from './ArrowLeft';
-export * from './CCIP';

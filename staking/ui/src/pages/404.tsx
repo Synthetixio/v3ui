@@ -19,7 +19,10 @@ export const NotFoundPage = () => {
         justifyContent="center"
         flex="1"
       >
-        <Heading fontSize="5xl">Not found</Heading>
+        <Heading fontSize={140}>{t('not-found.title')}</Heading>
+        <Heading textTransform="uppercase" fontSize={24}>
+          {t('not-found.subtitle')}
+        </Heading>
 
         <NavLink to="/">
           <Link color="cyan.500">Return to Home</Link>
