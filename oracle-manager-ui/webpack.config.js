@@ -4,7 +4,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const dotenv = require('dotenv');
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -165,16 +164,12 @@ module.exports = {
         : []
     )
     .concat(
-      isProd
-        ? []
-        : new webpack.DefinePlugin({
-            'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(
-              dotenv.config().parsed.NEXT_PUBLIC_INFURA_KEY
-            ),
-            'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
-              dotenv.config().parsed.NEXT_PUBLIC_WC_PROJECT_ID
-            ),
-          })
+      new webpack.DefinePlugin({
+        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
+        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
+          process.env.NEXT_PUBLIC_WC_PROJECT_ID
+        ),
+      })
     ),
 
   resolve: {
