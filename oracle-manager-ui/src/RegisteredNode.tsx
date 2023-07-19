@@ -1,6 +1,5 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Link, Text } from '@chakra-ui/react';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -10,8 +9,10 @@ import {
   decodeBytesByNodeType,
   getNodeModuleContract,
   nodeInformationByNodeIds,
+  resolveNetworkIdToInfuraPrefix,
 } from '../utils/contracts';
 import { OracleNodeTypes } from '../utils/types';
+import { providers } from 'ethers';
 
 let x = 0;
 let y = 0;
@@ -20,13 +21,18 @@ export const RegisteredNode: FC = () => {
   const [, setNodes] = useRecoilState(nodesState);
   const param = useParams();
   const nodeID = param?.nodeId;
-  const signer = useSigner();
-  const network = useNetwork();
+  const networkParam = param?.network ? Number(param.network) : undefined;
+  const provider = new providers.JsonRpcProvider(
+    `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
+      process.env.NEXT_PUBLIC_INFURA_KEY
+    }`
+  );
   const fetchNode = async (id: string) => {
-    if (signer && network?.id) {
-      const contract = getNodeModuleContract(signer, network.id);
+    if (networkParam) {
+      const contract = getNodeModuleContract(provider, networkParam);
       const node = await contract.getNode(id);
       const nodeParams = decodeBytesByNodeType(node.nodeType, node.parameters);
+      if (node.nodeType === 0) return;
       setNodes((state) => {
         const exists = state.find((state) => state.id === id);
         if (!exists) {
@@ -45,6 +51,7 @@ export const RegisteredNode: FC = () => {
               position: { x, y },
               typeId: node.nodeType,
               isRegistered: true,
+              network: networkParam,
             },
           ];
         }
