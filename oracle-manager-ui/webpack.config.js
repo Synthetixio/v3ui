@@ -165,14 +165,16 @@ module.exports = {
         : []
     )
     .concat(
-      new webpack.DefinePlugin({
-        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(
-          dotenv.config().parsed.NEXT_PUBLIC_INFURA_KEY
-        ),
-        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
-          dotenv.config().parsed.NEXT_PUBLIC_WC_PROJECT_ID
-        ),
-      })
+      isProd
+        ? []
+        : new webpack.DefinePlugin({
+            'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(
+              dotenv.config().parsed.NEXT_PUBLIC_INFURA_KEY
+            ),
+            'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
+              dotenv.config().parsed.NEXT_PUBLIC_WC_PROJECT_ID
+            ),
+          })
     ),
 
   resolve: {
