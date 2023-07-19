@@ -114,27 +114,29 @@ export const TeleporterUi: FC<{
                   </MenuButton>
                 </Flex>
                 <MenuList background="black">
-                  {NETWORKS_ARRAY.filter((chain) => chain.id !== activeNetwork.id).map((chain) => {
-                    return (
-                      <MenuItem
-                        onClick={() => {
-                          setActiveNetwork(chain);
-                          if (chain.id === toNetwork?.id) {
-                            // If user pick the same network as to, reset toNetwork
-                            setToNetwork(undefined);
-                          }
-                        }}
-                        display="flex"
-                        alignItems="center"
-                        key={chain.id}
-                      >
-                        <chain.Icon />
-                        <Text variant="nav" ml={2}>
-                          {chain.label}
-                        </Text>
-                      </MenuItem>
-                    );
-                  })}
+                  {NETWORKS_ARRAY.filter((item) => item.name !== 'goerli')
+                    .filter((chain) => chain.id !== activeNetwork.id)
+                    .map((chain) => {
+                      return (
+                        <MenuItem
+                          onClick={() => {
+                            setActiveNetwork(chain);
+                            if (chain.id === toNetwork?.id) {
+                              // If user pick the same network as to, reset toNetwork
+                              setToNetwork(undefined);
+                            }
+                          }}
+                          display="flex"
+                          alignItems="center"
+                          key={chain.id}
+                        >
+                          <chain.Icon />
+                          <Text variant="nav" ml={2}>
+                            {chain.label}
+                          </Text>
+                        </MenuItem>
+                      );
+                    })}
                 </MenuList>
               </>
             )}
@@ -210,7 +212,8 @@ export const TeleporterUi: FC<{
                   </MenuButton>
                 </Flex>
                 <MenuList background="black">
-                  {NETWORKS_ARRAY.filter((chain) => chain.id !== activeNetwork.id)
+                  {NETWORKS_ARRAY.filter((item) => item.name !== 'goerli')
+                    .filter((chain) => chain.id !== activeNetwork.id)
                     .filter((chain) =>
                       activeNetwork.isTestnet ? chain.isTestnet : !chain.isTestnet
                     )
