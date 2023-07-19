@@ -4,7 +4,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { DefinePlugin } = require('webpack');
 const dotenv = require('dotenv');
 
 // For depcheck to be happy
@@ -166,7 +165,7 @@ module.exports = {
         : []
     )
     .concat(
-      new DefinePlugin({
+      new webpack.DefinePlugin({
         'process.env': JSON.stringify(dotenv.config().parsed),
       })
     ),
