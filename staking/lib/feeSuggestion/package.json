@@ -1,0 +1,11 @@
+{
+  "name": "@snx-v3/feeSuggestion",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.0",
+  "dependencies": {
+    "@snx-v3/constants": "workspace:*",
+    "@synthetixio/wei": "^2.74.4",
+    "ethers": "^5.7.2"
+  }
+}

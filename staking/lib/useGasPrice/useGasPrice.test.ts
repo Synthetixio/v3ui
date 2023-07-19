@@ -8,12 +8,12 @@ describe('useGasPrice', () => {
   let useNetwork;
   let provider;
   let useProvider;
+  let feeSuggestion;
 
   beforeEach(async () => {
     provider = {
-      getNetwork: jest.fn(),
-      getBlock: jest.fn(),
-      getGasPrice: jest.fn(),
+      getBlock: jest.fn(() => ({})),
+      getGasPrice: jest.fn(() => wei(2, GWEI_DECIMALS).toBN()),
     };
     useNetwork = jest.fn(() => ({ id: 10, name: 'optimism-mainnet' }));
     useProvider = jest.fn(() => provider);
@@ -22,12 +22,13 @@ describe('useGasPrice', () => {
       useQuery: jest.fn(() => 'useQuery'),
     };
 
+    feeSuggestion = jest.fn(() => 'suggested fee');
+
     jest.doMock('react', () => react);
     jest.doMock('@tanstack/react-query', () => reactQuery);
     jest.doMock('@snx-v3/useBlockchain', () => ({ useNetwork, useProvider }));
-
     jest.doMock('@snx-v3/useGasPrice', () => ({ useGasPrice }));
-    jest.doMock('@ethersproject/providers', () => ({}));
+    jest.doMock('@snx-v3/feeSuggestion', () => ({ feeSuggestion }));
 
     ({ useGasPrice } = await import('./useGasPrice'));
   });
@@ -38,7 +39,7 @@ describe('useGasPrice', () => {
 
   test('Returns gas prices for mainnet', async () => {
     useNetwork.mockReturnValue({ id: 1, name: 'mainnet' });
-    provider.getNetwork.mockReturnValue({ chainId: 1 });
+    provider.getBlock.mockReturnValue({ baseFeePerGas: wei(2, GWEI_DECIMALS).toBN() });
 
     const result = useGasPrice();
     const { queryKey, queryFn, enabled } = reactQuery.useQuery.mock.lastCall[0];
@@ -47,36 +48,16 @@ describe('useGasPrice', () => {
     expect(queryKey).toEqual(['mainnet', 'GasPrice']);
     expect(enabled).toEqual(true);
 
-    provider.getBlock.mockReturnValue({ baseFeePerGas: wei(2, GWEI_DECIMALS).toBN() });
     const queryResult = await queryFn();
-    expect(queryResult).toEqual({
-      average: {
-        baseFeePerGas: wei(2, GWEI_DECIMALS).toBN(),
-        maxFeePerGas: wei(6, GWEI_DECIMALS).toBN(),
-        maxPriorityFeePerGas: wei(2, GWEI_DECIMALS).toBN(),
-      },
-      fast: {
-        baseFeePerGas: wei(2, GWEI_DECIMALS).toBN(),
-        maxFeePerGas: wei(8, GWEI_DECIMALS).toBN(),
-        maxPriorityFeePerGas: wei(4, GWEI_DECIMALS).toBN(),
-      },
-      fastest: {
-        baseFeePerGas: wei(2, GWEI_DECIMALS).toBN(),
-        maxFeePerGas: wei(10, GWEI_DECIMALS).toBN(),
-        maxPriorityFeePerGas: wei(6, GWEI_DECIMALS).toBN(),
-      },
-    });
-    expect(provider.getBlock).toBeCalledWith('latest');
+    expect(queryResult).toEqual('suggested fee');
   });
 
   test('Returns gas prices for optimism', async () => {
-    provider.getNetwork.mockReturnValue({ chainId: 1234 });
     const result = useGasPrice();
     const { queryKey, queryFn, enabled } = reactQuery.useQuery.mock.lastCall[0];
     expect(result.data).toEqual(undefined);
     expect(queryKey).toEqual(['optimism-mainnet', 'GasPrice']);
     expect(enabled).toEqual(true);
-    provider.getGasPrice.mockReturnValue(wei(2, GWEI_DECIMALS).toBN());
     const queryResult = await queryFn();
     expect(provider.getGasPrice).toBeCalled();
 
