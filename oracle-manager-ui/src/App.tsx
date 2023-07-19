@@ -87,7 +87,6 @@ export const App: FC = () => {
                       variant="outline"
                       colorScheme="gray"
                       sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
-                      minW="180px"
                       mr="8px"
                     >
                       {icon}
