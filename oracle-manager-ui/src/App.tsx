@@ -75,18 +75,19 @@ export const App: FC = () => {
           <Text fontSize="sm" color="whiteAlpha.600">
             Search for existing Nodes here:
           </Text>
-          <Flex>
-            <Input placeholder="Enter Node ID" minW="340px" {...register('search')} mr="16px" />
+          <Flex w="100%">
+            <Input placeholder="Enter Node ID" maxW="230px" {...register('search')} mr="16px" />
             {!isWalletConnected && (
               <Menu>
                 {({ isOpen }) => (
                   <>
                     <MenuButton
                       as={Button}
-                      ml={2}
+                      pr="6"
                       variant="outline"
                       colorScheme="gray"
                       sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
+                      minW="150px"
                       mr="8px"
                     >
                       {icon}
@@ -135,7 +136,8 @@ export const App: FC = () => {
               variant="outline"
               colorScheme="gray"
               p="2"
-              w="200px"
+              maxW="120px"
+              minW="120px"
               leftIcon={<SearchIcon />}
               onClick={() => {
                 navigate(
