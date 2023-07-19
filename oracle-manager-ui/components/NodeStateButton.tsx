@@ -1,12 +1,18 @@
 import { Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { providers, utils } from 'ethers';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/contracts';
+import {
+  encodeBytesByNodeType,
+  getNodeModuleContract,
+  hashId,
+  resolveNetworkIdToInfuraPrefix,
+} from '../utils/contracts';
 import { Node } from '../utils/types';
 import { useRecoilState } from 'recoil';
 import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
 import { onboard, useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useParams } from 'react-router-dom';
 
 let interval: any;
 
@@ -21,6 +27,13 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const isWalletConnected = useIsConnected();
   const network = useNetwork();
   const toast = useToast();
+  const param = useParams();
+  const networkParam = param?.network ? Number(param.network) : undefined;
+  const provider = new providers.JsonRpcProvider(
+    `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
+      process.env.NEXT_PUBLIC_INFURA_KEY
+    }`
+  );
   const findParentNode = useCallback(
     (parentId: string) => {
       const parentNode = nodes.find((node) => node.id === parentId);
@@ -33,66 +46,52 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   );
 
   useEffect(() => {
-    if (isWalletConnected && signer) {
-      const fetchNodeState = async () => {
-        if (network?.id) {
-          try {
-            const contract = getNodeModuleContract(signer, network.id);
-            const hashedId = hashId(node, node.parents.map(findParentNode));
-            const nodeFromChain = await contract.getNode(hashedId);
-            if (nodeFromChain[0] > 0) {
-              const nodeID = await contract.getNodeId(
-                nodeFromChain[0],
-                nodeFromChain[1],
-                nodeFromChain[2]
-              );
-              setNodeId(nodeID);
-              setNodeState('nodeRegistered');
-              setNodes((state) => {
-                return state.map((n) => {
-                  if (n.id === nodeID) {
-                    return { ...n, isRegistered: true, network: network.id };
-                  }
-                  return n;
-                });
-              });
-              const price = await contract.process(nodeID);
-              setPrice(utils.formatEther(price[0]));
-              setTime(() => {
-                const newDate = new Date(1970, 0, 1);
-                newDate.setSeconds(price[1].toNumber());
-                return newDate;
-              });
-              interval = setInterval(async () => {
-                try {
-                  const price = await contract.process(nodeID);
-                  setTime(() => {
-                    const newDate = new Date(1970, 0, 1);
-                    newDate.setSeconds(price[1].toNumber());
-                    return newDate;
-                  });
-                  setPrice(utils.formatEther(price[0]));
-                } catch (error) {
-                  console.error('interval for price fetching errored ', error);
+    const fetchNodeState = async () => {
+      if (network?.id) {
+        try {
+          const contract = getNodeModuleContract(
+            networkParam ? provider : signer!,
+            networkParam ? networkParam : network.id
+          );
+          const hashedId = hashId(node, node.parents.map(findParentNode));
+          const nodeFromChain = await contract.getNode(hashedId);
+          if (nodeFromChain[0] > 0) {
+            const nodeID = await contract.getNodeId(
+              nodeFromChain[0],
+              nodeFromChain[1],
+              nodeFromChain[2]
+            );
+            setNodeId(nodeID);
+            setNodeState('nodeRegistered');
+            setNodes((state) => {
+              return state.map((n) => {
+                if (n.id === nodeID) {
+                  return { ...n, isRegistered: true, network: network.id };
                 }
-              }, 10000);
-            } else {
-              setNodeState('registerNode');
-              setPrice('');
-              setTime(new Date());
-              setNodeId('');
-              clearInterval(interval);
-              setNodes((state) => {
-                return state.map((n) => {
-                  if (n.id === node.id) {
-                    return { ...n, isRegistered: false };
-                  }
-                  return n;
-                });
+                return n;
               });
-            }
-          } catch (error) {
-            console.error(error);
+            });
+            const price = await contract.process(nodeID);
+            setPrice(utils.formatEther(price[0]));
+            setTime(() => {
+              const newDate = new Date(1970, 0, 1);
+              newDate.setSeconds(price[1].toNumber());
+              return newDate;
+            });
+            interval = setInterval(async () => {
+              try {
+                const price = await contract.process(nodeID);
+                setTime(() => {
+                  const newDate = new Date(1970, 0, 1);
+                  newDate.setSeconds(price[1].toNumber());
+                  return newDate;
+                });
+                setPrice(utils.formatEther(price[0]));
+              } catch (error) {
+                console.error('interval for price fetching errored ', error);
+              }
+            }, 10000);
+          } else {
             setNodeState('registerNode');
             setPrice('');
             setTime(new Date());
@@ -107,10 +106,26 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
               });
             });
           }
+        } catch (error) {
+          console.error(error);
+          setNodeState('registerNode');
+          setPrice('');
+          setTime(new Date());
+          setNodeId('');
+          clearInterval(interval);
+          setNodes((state) => {
+            return state.map((n) => {
+              if (n.id === node.id) {
+                return { ...n, isRegistered: false };
+              }
+              return n;
+            });
+          });
         }
-      };
-      fetchNodeState();
-    }
+      }
+    };
+    fetchNodeState();
+
     // eslint-disable-next-line
   }, [isWalletConnected, network?.id, node.type, node.parameters, node.parents, node.isRegistered]);
 
