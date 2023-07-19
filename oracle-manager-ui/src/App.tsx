@@ -139,7 +139,12 @@ export const App: FC = () => {
               w="200px"
               leftIcon={<SearchIcon />}
               onClick={() => {
-                navigate('/node/' + currentNetwork.toString() + '/' + getValues('search').trim());
+                navigate(
+                  '/node/' +
+                    (isWalletConnected ? network.id.toString() : currentNetwork.toString()) +
+                    '/' +
+                    getValues('search').trim()
+                );
               }}
             >
               Search
