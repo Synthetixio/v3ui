@@ -10,6 +10,7 @@ interface CustomNode {
   position: { x: number; y: number };
   data: { label: string };
   isRegistered: boolean;
+  network?: number;
 }
 
 export type OracleNodeTypes =
@@ -19,4 +20,5 @@ export type OracleNodeTypes =
   | 'externalNode'
   | 'stalenessCircuitBreaker'
   | 'uniswap'
-  | 'priceDeviationCircuitBreaker';
+  | 'priceDeviationCircuitBreaker'
+  | 'constant';

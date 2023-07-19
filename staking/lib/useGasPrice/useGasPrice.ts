@@ -1,24 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { wei } from '@synthetixio/wei';
-import type { JsonRpcProvider } from '@ethersproject/providers';
-import { BigNumber } from '@ethersproject/bignumber';
-import { GWEI_DECIMALS } from '@snx-v3/constants';
+import { ethers } from 'ethers';
 import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
+import { feeSuggestion } from '@snx-v3/feeSuggestion';
 
-const MULTIPLIER = wei(2, GWEI_DECIMALS);
-
-export const computeGasFee = (baseFeePerGas: BigNumber, maxPriorityFeePerGas: number) => {
-  return {
-    maxPriorityFeePerGas: wei(maxPriorityFeePerGas, GWEI_DECIMALS).toBN(),
-    maxFeePerGas: wei(baseFeePerGas, GWEI_DECIMALS)
-      .mul(MULTIPLIER)
-      .add(wei(maxPriorityFeePerGas, GWEI_DECIMALS))
-      .toBN(),
-    baseFeePerGas: baseFeePerGas,
-  };
-};
-
-const getGasPriceFromProvider = async (provider: JsonRpcProvider) => {
+const getGasPriceFromProvider = async (provider: ethers.providers.JsonRpcProvider) => {
   try {
     const gasPrice = await provider.getGasPrice();
     return {
@@ -31,21 +16,13 @@ const getGasPriceFromProvider = async (provider: JsonRpcProvider) => {
   }
 };
 
-export const getGasPrice = async ({ provider }: { provider: JsonRpcProvider }) => {
+export const getGasPrice = async ({ provider }: { provider: ethers.providers.JsonRpcProvider }) => {
   try {
-    const network = await provider.getNetwork();
-    // If network is Mainnet then we use EIP1559
-    if (network.chainId === 1) {
-      const block = await provider.getBlock('latest');
-      if (block.baseFeePerGas) {
-        return {
-          fastest: computeGasFee(block.baseFeePerGas, 6),
-          fast: computeGasFee(block.baseFeePerGas, 4),
-          average: computeGasFee(block.baseFeePerGas, 2),
-        };
-      }
+    const block = await provider.getBlock('latest');
+    if (block.baseFeePerGas) {
+      return feeSuggestion(provider);
     }
-    // When Testnet, Optimism network or missing baseFeePerGas we get the Gas Price through the provider
+    // When missing baseFeePerGas we get the Gas Price through the provider
     return getGasPriceFromProvider(provider);
   } catch (e) {
     throw new Error(`Could not fetch and compute network fee. ${e}`);
@@ -59,11 +36,8 @@ export const useGasPrice = () => {
   const provider = useProvider();
 
   return useQuery({
-    queryKey: [network.name, 'GasPrice'],
-    queryFn: async () => {
-      return getGasPrice({ provider });
-    },
-
     enabled: Boolean(provider),
+    queryKey: [network.name, 'GasPrice'],
+    queryFn: () => getGasPrice({ provider }),
   });
 };

@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
   },
-  { path: 'node/:nodeId', element: <RegisteredNode /> },
+  { path: 'node/:network/:nodeId', element: <RegisteredNode /> },
 ]);
 const container = document.querySelector('#app');
 

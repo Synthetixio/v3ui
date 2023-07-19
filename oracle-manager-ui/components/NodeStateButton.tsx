@@ -51,7 +51,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
               setNodes((state) => {
                 return state.map((n) => {
                   if (n.id === nodeID) {
-                    return { ...n, isRegistered: true };
+                    return { ...n, isRegistered: true, network: network.id };
                   }
                   return n;
                 });
@@ -116,13 +116,14 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
 
   const handleButtonClick = async () => {
     if (!isWalletConnected) {
-      onboard.connectWallet();
+      onboard.connectWallet().then(() => {
+        if (node.network) onboard.setChain({ chainId: node.network });
+      });
     } else if (nodeState === 'registerNode') {
       try {
         setIsLoading(true);
-        const chainId = await signer?.getChainId();
-        if (chainId && signer) {
-          const contract = getNodeModuleContract(signer, chainId);
+        if (network.id && signer) {
+          const contract = getNodeModuleContract(signer, network.id);
           const tx: providers.TransactionResponse = await contract.registerNode(
             node.typeId,
             encodeBytesByNodeType(node.typeId, node.parameters),
@@ -137,6 +138,14 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
           if (nodeID) {
             setNodeId(nodeID);
             setNodeState('nodeRegistered');
+            setNodes((state) => {
+              return state.map((n) => {
+                if (n.id === nodeID) {
+                  return { ...n, isRegistered: true, network: network.id };
+                }
+                return n;
+              });
+            });
           }
         }
         setIsLoading(false);

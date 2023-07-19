@@ -24,6 +24,21 @@ function resolveNetworkIdToProxyAddress(networkId: number) {
   }
 }
 
+export function resolveNetworkIdToInfuraPrefix(networkId?: number) {
+  switch (networkId) {
+    case 1:
+      return 'mainnet';
+    case 5:
+      return 'goerli';
+    case 10:
+      return 'optimism-mainnet';
+    case 420:
+      return 'optimism-goerli';
+    default:
+      return 'mainnet';
+  }
+}
+
 export function encodeBytesByNodeType(id: number, parameters: any[]) {
   switch (id) {
     case 1:
@@ -43,6 +58,8 @@ export function encodeBytesByNodeType(id: number, parameters: any[]) {
       return utils.defaultAbiCoder.encode(['uint'], parameters);
     case 7:
       return utils.defaultAbiCoder.encode(['uint'], parameters);
+    case 8:
+      return utils.defaultAbiCoder.encode(['int'], parameters);
     default:
       return '';
   }
@@ -70,13 +87,28 @@ export function decodeBytesByNodeType(id: number, parameters: any[]) {
           return param;
         });
     case 4:
-      return utils.defaultAbiCoder.decode(['address', 'address', 'address', 'uint'], parameters);
+      return utils.defaultAbiCoder
+        .decode(['address', 'address', 'address', 'uint'], parameters)
+        .map((param, index) => {
+          if (index === 3) {
+            return Number(param.toString());
+          }
+          return param;
+        });
     case 5:
       return utils.defaultAbiCoder.decode(['address', 'bytes32', 'bool'], parameters);
     case 6:
-      return utils.defaultAbiCoder.decode(['uint'], parameters);
+      return utils.defaultAbiCoder.decode(['uint'], parameters).map((param) => {
+        return Number(param.toString());
+      });
     case 7:
-      return utils.defaultAbiCoder.decode(['uint'], parameters);
+      return utils.defaultAbiCoder.decode(['uint'], parameters).map((param) => {
+        return Number(param.toString());
+      });
+    case 8:
+      return utils.defaultAbiCoder.decode(['int'], parameters).map((param) => {
+        return Number(param.toString());
+      });
     default:
       return '';
   }
@@ -98,6 +130,8 @@ export function nodeInformationByNodeIds(id: number) {
       return { label: 'Price Deviation Circuit Breaker', slug: 'priceDeviationCircuitBreaker' };
     case 7:
       return { label: 'Staleness Circuit Breaker', slug: 'stalenessCircuitBreaker' };
+    case 8:
+      return { label: 'Constant', slug: 'constant' };
     default:
       return { label: '', slug: '' };
   }
@@ -113,7 +147,7 @@ export function hashId(node: Node, parents: string[]) {
 }
 
 export const getNodeModuleContract = (
-  signerOrProvider: providers.JsonRpcSigner,
+  signerOrProvider: providers.JsonRpcSigner | providers.JsonRpcProvider,
   networkId: number
 ) => {
   return new Contract(
