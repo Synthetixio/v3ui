@@ -23,9 +23,9 @@ export const RegisteredNode: FC = () => {
   const nodeID = param?.nodeId;
   const networkParam = param?.network ? Number(param.network) : undefined;
   const provider = new providers.JsonRpcProvider(
-    `https://${resolveNetworkIdToInfuraPrefix(
-      networkParam
-    )}.infura.io/v3/8c6bfe963db94518b16b17114e29e628`
+    `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
+      process.env.NEXT_PUBLIC_INFURA_KEY
+    }`
   );
   const fetchNode = async (id: string) => {
     if (networkParam) {
