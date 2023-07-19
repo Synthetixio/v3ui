@@ -7,8 +7,10 @@ export function convertStateToQueryParam(nodes: Node[]) {
   const nodeParents: string[][] = [];
   const nodeParameters: string[][] = [];
   const nodeLocation: { x: string; y: string }[] = [];
+  const networks: number[] = [];
 
   nodes.forEach((node) => {
+    if (node.network && networks.length === 0) networks.push(node.network);
     nodeTypeIds.push(node.typeId);
     nodeIds.push(node.id);
     nodeParents.push(node.parents);
@@ -19,7 +21,9 @@ export function convertStateToQueryParam(nodes: Node[]) {
     queryParam.concat(
       `?tid=${JSON.stringify(nodeTypeIds)}&id=${JSON.stringify(nodeIds)}&par=${JSON.stringify(
         nodeParents
-      )}&pam=${JSON.stringify(nodeParameters)}&loc=${JSON.stringify(nodeLocation)}`
+      )}&net=${JSON.stringify(networks)}&pam=${JSON.stringify(nodeParameters)}&loc=${JSON.stringify(
+        nodeLocation
+      )}`
     )
   );
 }
@@ -40,6 +44,8 @@ export function oracleTypeFromTypeId(id: number): OracleNodeTypes {
       return 'priceDeviationCircuitBreaker';
     case 7:
       return 'stalenessCircuitBreaker';
+    case 8:
+      return 'constant';
     default:
       return 'chainLink';
   }
