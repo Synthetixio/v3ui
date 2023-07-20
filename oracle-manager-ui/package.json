@@ -5,6 +5,7 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
+    "load-env": "source ./load-env.sh",
     "standalone-install": "yarn workspaces focus '@synthetixio/oracle-manager-ui'",
     "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@synthetixio/oracle-manager-ui' run build"
   },
