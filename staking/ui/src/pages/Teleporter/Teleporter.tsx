@@ -30,6 +30,7 @@ import {
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import Wei, { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
+import { providers } from 'ethers';
 
 const NETWORKS_ARRAY = Object.values(NETWORKS).filter((network) => network.isSupported);
 
@@ -285,6 +286,7 @@ export const TeleporterUi: FC<{
 
 export const Teleporter = () => {
   const { data: USDProxy } = useUSDProxy();
+
   const [amount, setAmount] = useState(wei(0));
   const [txnModalOpen, setTxnModalOpen] = useState(false);
 
@@ -292,11 +294,14 @@ export const Teleporter = () => {
   const activeNetwork = useNetwork();
   const setNetwork = useSetNetwork();
   const [toNetwork, setToNetwork] = useState<Network | undefined>();
-  const { data: balance } = useTokenBalance(USDProxy?.address);
-  const { data: toBalance } = useTokenBalance(
-    toNetwork ? USDProxy?.address : undefined, // Only fetch when toNetwork is set
+
+  const { data: USDProxyTNetwork } = useUSDProxy(
     toNetwork?.id
+      ? new providers.InfuraProvider(toNetwork?.id, process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
+      : undefined
   );
+  const { data: balance } = useTokenBalance(USDProxy?.address);
+  const { data: toBalance } = useTokenBalance(USDProxyTNetwork?.address, toNetwork?.id);
 
   return (
     <>
@@ -309,7 +314,7 @@ export const Teleporter = () => {
         toNetwork={toNetwork}
         setToNetwork={setToNetwork}
         setActiveNetwork={setNetwork}
-        toNetworkBalance={toBalance}
+        toNetworkBalance={toNetwork ? toBalance : undefined}
         usdProxyAddress={USDProxy?.address}
         onTeleportClick={() => setTxnModalOpen(true)}
       />
