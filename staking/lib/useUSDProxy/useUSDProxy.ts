@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import type { JsonRpcProvider } from '@ethersproject/providers';
+import { useNetwork, useProvider, useSigner, NETWORKS } from '@snx-v3/useBlockchain';
 import type { USDProxy as USDProxyCannon } from '@synthetixio/v3-contracts/build/cannon/USDProxy';
 import type { USDProxy as USDProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/USDProxy';
 import type { USDProxy as USDProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/USDProxy';
@@ -35,17 +36,26 @@ export async function importUSDProxy(chainName: string) {
   }
 }
 
-export function useUSDProxy() {
+const networks = Object.values(NETWORKS);
+
+export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
   const network = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+
+  const providerToUse = nonConnectedProvider || provider;
+  const signerOrProvider = signer || providerToUse;
   const withSigner = Boolean(signer);
 
+  const nonConnectedNetworkName = networks.find(
+    (n) => n.id === nonConnectedProvider?.network.chainId
+  )?.name;
+  const networkName = nonConnectedNetworkName || network.name;
+
   return useQuery({
-    queryKey: [network.name, 'USDProxy', { withSigner }],
+    queryKey: [networkName, 'USDProxy', { withSigner }],
     queryFn: async function () {
-      const { address, abi } = await importUSDProxy(network.name);
+      const { address, abi } = await importUSDProxy(networkName);
       return new Contract(address, abi, signerOrProvider) as USDProxyType;
     },
     enabled: Boolean(signerOrProvider),

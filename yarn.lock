@@ -5822,6 +5822,7 @@ __metadata:
   resolution: "@snx-v3/useUSDProxy@workspace:staking/lib/useUSDProxy"
   dependencies:
     "@ethersproject/contracts": ^5.7.0
+    "@ethersproject/providers": ^5.7.2
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": ^4.29.12
