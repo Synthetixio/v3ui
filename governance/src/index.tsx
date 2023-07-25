@@ -7,6 +7,7 @@ import { BlockchainProvider } from '@snx-v3/useBlockchain';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Header from '../components/Header';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ root.render(
         <BlockchainProvider>
           <ChakraProvider theme={customTheme}>
             <Fonts />
+            <Header />
             <RouterProvider router={router} />
           </ChakraProvider>
         </BlockchainProvider>
