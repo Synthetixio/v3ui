@@ -25,7 +25,7 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /governance\/ui/,
+    /governance/,
     /theme/,
     /staking\/lib/,
     /staking\/components/,
