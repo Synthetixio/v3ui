@@ -5131,9 +5131,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/governance-ui@workspace:governance/ui":
+"@snx-v3/governance-ui@workspace:governance":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/governance-ui@workspace:governance/ui"
+  resolution: "@snx-v3/governance-ui@workspace:governance"
   dependencies:
     "@babel/core": ^7.22.1
     "@babel/plugin-transform-runtime": ^7.22.4
