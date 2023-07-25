@@ -8,11 +8,46 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Header from '../components/Header';
+import Councils from './Councils';
+import Members from './Members';
+import Profile from './Profile';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <>
+        <Header />
+        <App />
+      </>
+    ),
+  },
+  {
+    path: '/councils',
+    element: (
+      <>
+        <Header />
+        <Councils />
+      </>
+    ),
+  },
+  {
+    path: '/members',
+    element: (
+      <>
+        <Header />
+        <Members />
+      </>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <>
+        <Header />
+        <Profile />
+      </>
+    ),
   },
 ]);
 
@@ -49,7 +84,6 @@ root.render(
         <BlockchainProvider>
           <ChakraProvider theme={customTheme}>
             <Fonts />
-            <Header />
             <RouterProvider router={router} />
           </ChakraProvider>
         </BlockchainProvider>
