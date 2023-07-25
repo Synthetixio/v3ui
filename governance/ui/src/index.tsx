@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { theme, Fonts } from '@synthetixio/v3-theme';
 import { BlockchainProvider } from '@snx-v3/useBlockchain';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -14,6 +14,18 @@ const router = createBrowserRouter([
     element: <App />,
   },
 ]);
+
+const customTheme = extendTheme({
+  ...theme,
+  styles: {
+    global: {
+      body: {
+        bg: 'navy.900',
+      },
+    },
+  },
+});
+
 const container = document.querySelector('#app');
 
 const root = createRoot(container!);
@@ -34,7 +46,7 @@ root.render(
         }
       >
         <BlockchainProvider>
-          <ChakraProvider theme={theme}>
+          <ChakraProvider theme={customTheme}>
             <Fonts />
             <RouterProvider router={router} />
           </ChakraProvider>

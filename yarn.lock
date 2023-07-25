@@ -6266,9 +6266,7 @@ __metadata:
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
-    "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": ^4.29.12
     "@types/react": ^18.2.7
@@ -6281,7 +6279,6 @@ __metadata:
     css-loader: ^6.8.1
     framer-motion: ^10.13.1
     html-webpack-plugin: ^5.5.1
-    process: ^0.11.10
     react: ^18.2.0
     react-dom: ^18.2.0
     react-refresh: ^0.14.0
