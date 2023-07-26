@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.11.0",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/format": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^4.29.12",
     "framer-motion": "^10.12.16",
