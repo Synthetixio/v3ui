@@ -57,10 +57,12 @@ export default function Header() {
   };
   return (
     <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
-      <Image src="/snx-header.svg" pr="10px" />
-      <Heading as="h2" fontFamily="Lustra Text" fontSize="20px" lineHeight="20px" mr="28px">
-        Governance
-      </Heading>
+      <Flex cursor="pointer" onClick={() => navigate('/')}>
+        <Image src="/snx-header.svg" pr="10px" />
+        <Heading as="h2" fontFamily="Lustra Text" fontSize="20px" lineHeight="20px" mr="28px">
+          Governance
+        </Heading>
+      </Flex>
       {routes.map((route, index) => (
         <Text
           cursor="pointer"
