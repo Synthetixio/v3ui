@@ -18,9 +18,8 @@ import {
   useWallet,
 } from '@snx-v3/useBlockchain';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { shortAddress } from '../utils/addresses';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { prettyString } from '@snx-v3/format';
 
 const routes = [
   {
@@ -51,7 +50,7 @@ export default function Header() {
   const isWalletConnected = useIsConnected();
   const wallet = useWallet();
   const currentNetwork = useNetwork();
-  const { name, icon } = activeIcon(currentNetwork);
+  const { icon } = activeIcon(currentNetwork);
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
   };
@@ -79,22 +78,10 @@ export default function Header() {
       ))}
       {isWalletConnected && (
         <Menu>
-          {({ isOpen }) => (
+          {() => (
             <>
-              <MenuButton
-                as={Button}
-                ml={2}
-                variant="outline"
-                colorScheme="gray"
-                sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
-              >
+              <MenuButton as={Button} ml={2} variant="outline" colorScheme="gray" px={2}>
                 {icon}
-                <>
-                  <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                    {name}
-                  </Text>
-                  {isOpen ? <ChevronUpIcon color="cyan" /> : <ChevronDownIcon color="cyan.500" />}
-                </>
               </MenuButton>
               <MenuList>
                 <MenuItem onClick={() => switchNetwork(1)}>
@@ -120,17 +107,49 @@ export default function Header() {
           )}
         </Menu>
       )}
-      {isWalletConnected ? (
-        <Button
-          leftIcon={<WalletIcon />}
-          onClick={disconnect}
-          variant="outline"
-          borderColor="gray.900"
-          color="whiteAlpha.800"
-          ml="8px"
-        >
-          {shortAddress(wallet?.address || '')}
-        </Button>
+      {wallet ? (
+        <Menu>
+          <MenuButton
+            as={Button}
+            variant="outline"
+            colorScheme="gray"
+            ml={2}
+            height={10}
+            py="6px"
+            px="9.5px"
+            whiteSpace="nowrap"
+          >
+            <WalletIcon />
+            <Text
+              as="span"
+              ml={1}
+              color="whiteAlpha.800"
+              fontWeight={700}
+              fontSize="xs"
+              userSelect="none"
+            >
+              {wallet.ens?.name || prettyString(wallet.address)}
+            </Text>
+          </MenuButton>
+          <MenuList>
+            <MenuItem
+              onClick={() => {
+                try {
+                  navigator.clipboard.writeText(wallet?.address);
+                } catch (_e) {}
+              }}
+            >
+              <Text variant="nav" ml={2}>
+                Copy address
+              </Text>
+            </MenuItem>
+            <MenuItem onClick={disconnect}>
+              <Text variant="nav" ml={2}>
+                Disconnect
+              </Text>
+            </MenuItem>
+          </MenuList>
+        </Menu>
       ) : (
         <Button onClick={() => onboard.connectWallet()}>Connect Wallet</Button>
       )}
