@@ -36,7 +36,7 @@ const activeIcon = (currentNetwork: Network) => {
   }
 };
 
-export default function Header() {
+export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isWalletConnected = useIsConnected();

@@ -7,7 +7,7 @@ import { BlockchainProvider } from '@snx-v3/useBlockchain';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Header from '../components/Header';
+import { Header } from '../components/Header/Header';
 import Councils from './Councils';
 import Members from './Members';
 import Profile from './Profile';
