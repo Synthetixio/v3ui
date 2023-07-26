@@ -13,14 +13,14 @@ export const UserCard: FC = () => {
       borderWidth={1}
       borderColor="gray.900"
       color="whiteAlpha.800"
-      bg='navy.700'
+      bg="navy.700"
     >
       <Flex gap={2}>
         <Badge color="green">NOMINEE</Badge>
         <Badge color="cyan">SPARTAN</Badge>
       </Flex>
 
-      <Flex gap={4} mt={4} alignItems='center'>
+      <Flex gap={4} mt={4} alignItems="center">
         <Image src="/img.png" rounded="full" width="56px" height="56px" />
         <Flex flexDirection="column" gap={1}>
           <Heading size="xs">AndΞ | Andy C</Heading>
