@@ -155,6 +155,14 @@ module.exports = {
             }),
           ]
         : []
+    )
+    .concat(
+      new webpack.DefinePlugin({
+        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
+        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
+          process.env.NEXT_PUBLIC_WC_PROJECT_ID
+        ),
+      })
     ),
 
   resolve: {

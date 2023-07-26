@@ -1,14 +1,4 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Text,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-} from '@chakra-ui/react';
+import { Button, Flex, Image, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import {
   Network,
   disconnect,
@@ -36,6 +26,8 @@ const activeIcon = (currentNetwork: Network) => {
       return { icon: <EthereumIcon />, name: 'Ethereum' };
     case 5:
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
+    case 10:
+      return { icon: <OptimismIcon />, name: 'Optimism' };
     case 420:
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
 
@@ -56,11 +48,9 @@ export default function Header() {
   };
   return (
     <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
-      <Flex cursor="pointer" onClick={() => navigate('/')}>
+      <Flex mr={7} cursor="pointer" onClick={() => navigate('/')}>
         <Image src="/snx-header.svg" pr="10px" />
-        <Heading as="h2" fontFamily="Lustra Text" fontSize="20px" lineHeight="20px" mr="28px">
-          Governance
-        </Heading>
+        <Image src="/governance-header.svg" />
       </Flex>
       {routes.map((route, index) => (
         <Text
