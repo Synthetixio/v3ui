@@ -1,14 +1,4 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Text,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-} from '@chakra-ui/react';
+import { Button, Flex, Image, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import {
   Network,
   disconnect,
@@ -56,12 +46,10 @@ export default function Header() {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
   };
   return (
-    <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
-      <Flex cursor="pointer" onClick={() => navigate('/')}>
+    <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px" wrap="wrap">
+      <Flex cursor="pointer" onClick={() => navigate('/')} alignItems="center" mr="28px">
         <Image src="/snx-header.svg" pr="10px" />
-        <Heading as="h2" fontFamily="Lustra Text" fontSize="20px" lineHeight="20px" mr="28px">
-          Governance
-        </Heading>
+        <Image src="/governance-header.svg" />
       </Flex>
       {routes.map((route, index) => (
         <Text
