@@ -1,4 +1,14 @@
-import { Button, Flex, Image, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Image,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Link,
+} from '@chakra-ui/react';
 import {
   Network,
   disconnect,
@@ -54,7 +64,7 @@ export default function Header() {
         <Image src="/governance-header.svg" />
       </Flex>
       {routes.map((route, index) => (
-        <Text
+        <Link
           cursor="pointer"
           key={route.path.concat(route.label)}
           onClick={() => navigate('/' + route.path)}
@@ -65,7 +75,7 @@ export default function Header() {
           mr={index === routes.length - 2 ? 'auto' : index === routes.length - 1 ? '8px' : '32px'}
         >
           {route.label}
-        </Text>
+        </Link>
       ))}
       {isWalletConnected && (
         <Menu>

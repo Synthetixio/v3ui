@@ -68,19 +68,7 @@ const root = createRoot(container!);
 root.render(
   <React.StrictMode>
     <RecoilRoot>
-      <QueryClientProvider
-        client={
-          new QueryClient({
-            defaultOptions: {
-              queries: {
-                refetchInterval: 9999999,
-                refetchOnMount: false,
-                refetchOnWindowFocus: false,
-              },
-            },
-          })
-        }
-      >
+      <QueryClientProvider client={new QueryClient()}>
         <BlockchainProvider>
           <ChakraProvider theme={customTheme}>
             <Fonts />
