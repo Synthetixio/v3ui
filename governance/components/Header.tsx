@@ -27,6 +27,8 @@ const activeIcon = (currentNetwork: Network) => {
       return { icon: <EthereumIcon />, name: 'Ethereum' };
     case 5:
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
+    case 10:
+      return { icon: <OptimismIcon />, name: 'Optimism' };
     case 420:
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
 
