@@ -5146,6 +5146,7 @@ __metadata:
     "@emotion/react": ^11.11.0
     "@emotion/styled": ^11.11.0
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
+    "@snx-v3/format": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
