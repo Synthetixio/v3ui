@@ -5,8 +5,8 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "standalone-install": "yarn workspaces focus '@synthetixio/governance-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@synthetixio/governance-ui' run build"
+    "standalone-install": "yarn workspaces focus '@snx-v3/governance-ui'",
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/governance-ui' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.19",
@@ -48,5 +48,13 @@
     "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
+  },
+  "depcheck": {
+    "ignorePatterns": [
+      "dist"
+    ],
+    "ignoreMatches": [
+      "process"
+    ]
   }
 }
