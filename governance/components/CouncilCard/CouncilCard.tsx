@@ -1,5 +1,5 @@
 import { Badge, Button, Divider, Flex, Heading, Image, Text } from '@chakra-ui/react';
-import { Council } from '../utils/councils';
+import { Council } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 
 interface CouncilCardProps {
@@ -7,7 +7,7 @@ interface CouncilCardProps {
   isLast: boolean;
 }
 
-export default function CouncilCard({ council, isLast }: CouncilCardProps) {
+export function CouncilCard({ council, isLast }: CouncilCardProps) {
   const navigate = useNavigate();
   // TODO @dev implement hook that tells component in which state it is
   // TODO @dev implement hook that tells component how many members are here or do as prop
@@ -16,7 +16,6 @@ export default function CouncilCard({ council, isLast }: CouncilCardProps) {
       p="24px"
       mr={isLast ? '0px' : '24px'}
       mt="30px"
-      key={council.title.concat('landing-page')}
       w="290px"
       h="413px"
       borderWidth="1px"
