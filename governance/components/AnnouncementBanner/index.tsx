@@ -1,1 +1,1 @@
-export * from './AnnouncementBanner.tsx';
+export * from './AnnouncementBanner';
