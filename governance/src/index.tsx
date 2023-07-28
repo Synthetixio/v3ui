@@ -11,6 +11,7 @@ import { Header } from '../components/Header/Header';
 import Councils from './Councils';
 import Members from './Members';
 import Profile from './Profile';
+import { AnnouncementBanner } from '../components/AnnouncementBanner';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
+        <AnnouncementBanner />
         <App />
       </>
     ),
@@ -27,6 +29,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
+        <AnnouncementBanner />
         <Councils />
       </>
     ),
@@ -36,6 +39,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
+        <AnnouncementBanner />
         <Members />
       </>
     ),
@@ -45,6 +49,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
+        <AnnouncementBanner />
         <Profile />
       </>
     ),
