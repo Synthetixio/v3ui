@@ -13,7 +13,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
   // TODO @dev implement hook that tells component how many members are here or do as prop
   return (
     <Flex
-      p="24px"
+      p="6"
       mr={isLast ? '0px' : '24px'}
       mt="30px"
       w="290px"
@@ -25,15 +25,15 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
       flexDir="column"
       alignItems="center"
     >
-      <Image src={council.image} h="80px" mb="16px" />
-      <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="16px">
+      <Image src={council.image} h="80px" mb="4" />
+      <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
         {council.title}
       </Heading>
-      <Badge bg="orange.600" color="white" mb="24px">
+      <Badge bg="orange.600" color="white" mb="6">
         NOMINATION OPEN
       </Badge>
       <Divider />
-      <Flex justifyContent="space-between" w="100%" my="24px">
+      <Flex justifyContent="space-between" w="100%" my="6">
         <Flex flexDir="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             MEMBERS
@@ -52,7 +52,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
         </Flex>
       </Flex>
       <Flex flexDir="column" w="100%">
-        <Button size="md" mb="4px">
+        <Button size="md" mb="1">
           Nominate Self
         </Button>
         <Button

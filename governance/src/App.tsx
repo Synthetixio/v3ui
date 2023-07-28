@@ -6,7 +6,7 @@ function App() {
   return (
     <Box px="102px" pt="57px">
       <Flex flexDir="column">
-        <Heading color="gray.50" fontSize="48px" lineHeight="57px" mb="8px">
+        <Heading color="gray.50" fontSize="48px" lineHeight="57px" mb="2">
           Governing Bodies
         </Heading>
         <Text fontSize="14px" lineHeight="20px" color="gray.500">
