@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import councils from '../utils/councils';
-import { CouncilCard } from '../components/CouncilCard';
+import councils from './utils/councils';
+import { CouncilCard } from './components/CouncilCard';
 
 function App() {
   return (

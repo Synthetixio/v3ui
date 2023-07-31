@@ -1,5 +1,5 @@
-import { PassedElectionAccordion } from '../components/PassedElectionAccordion';
-import councils from '../utils/councils';
+import { PassedElectionAccordion } from './components/PassedElectionAccordion';
+import councils from './utils/councils';
 
 export default function Councils() {
   return (
