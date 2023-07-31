@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { UserCard } from './components/UserCard/UserCard';
+import { UserCard } from '../components/UserCard/UserCard';
 
 export default function Members() {
   return (
