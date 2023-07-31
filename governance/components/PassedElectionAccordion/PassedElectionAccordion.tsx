@@ -23,12 +23,12 @@ export function PassedElectionAccordion({ activeCouncil }: { activeCouncil: Coun
       <AccordionItem mb="6">
         <h2>
           <AccordionButton height="76px">
-            <Heading as="h3" fontSize="18px" lineHeight="28px" fontWeight="700">
+            <Heading as="h3" fontSize="18px" lineHeight="28px" fontWeight="700" mr="3">
               Q1 2023
             </Heading>
-            <Badge bg="purple.700" px="1" ml="3" mr="auto">
-              <Text color="white">01askjdhasjkd</Text>
-            </Badge>
+            <Text color="white" bg="purple.700" px="2" borderRadius="base" mr="auto">
+              01/02/2023 - 06/06/2023
+            </Text>
             <AccordionIcon />
           </AccordionButton>
         </h2>
@@ -44,16 +44,34 @@ export function PassedElectionAccordion({ activeCouncil }: { activeCouncil: Coun
             </Thead>
             <Tbody>
               <Tr>
-                <Td>
+                <Td display="flex" alignItems="center" maxW="350px">
                   <Image w="30px" h="30px" src="/img.png" mr="3" borderRadius="full" />
-                  <Text fontSize="14px" lineHeight="20px" fontWeight={700}>
-                    Andy
+                  <Text
+                    fontSize="14px"
+                    lineHeight="20px"
+                    fontWeight={700}
+                    textOverflow="ellipsis"
+                    overflow="hidden"
+                    whiteSpace="nowrap"
+                  >
+                    {activeCouncil.address}
                   </Text>
                 </Td>
                 <Td>
-                  <Badge colorScheme="cyan" h="14px" fontSize="10px">
-                    Spartan Council
-                  </Badge>
+                  <Badge colorScheme="cyan">Spartan Council</Badge>
+                </Td>
+                <Td>
+                  <Text fontSize="14px" fontWeight={500}>
+                    20
+                  </Text>
+                </Td>
+                <Td>
+                  <Text fontSize="14px" fontWeight={500}>
+                    16.04%
+                  </Text>
+                  <Text size="xs" color="gray.500">
+                    3,45345,3242,22
+                  </Text>
                 </Td>
               </Tr>
             </Tbody>
