@@ -68,8 +68,8 @@ export function Header() {
   return (
     <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
       <Flex mr={7} cursor="pointer" onClick={() => navigate('/')}>
-        <Image src="/snx-header.svg" pr="10px" />
-        <Image src="/governance-header.svg" />
+        <Image src="/public/snx-header.svg" pr="10px" />
+        <Image src="public/governance-header.svg" />
       </Flex>
       {routes.map((route, index) => (
         <Text
