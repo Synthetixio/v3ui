@@ -65,7 +65,6 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
             variant="outline"
             onClick={async () => {
               const file = (getValues('file') as FileList).item(0);
-              console.log(file);
               if (file) {
                 const result = await ipfs.add(file);
                 setValue('pfpUrl', result.path);
@@ -120,7 +119,7 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
       </Flex>
       <div>
         <Text color="gray.500">Governance Pitch</Text>
-        <Textarea placeholder={'I will pump SNX'} />
+        <Textarea placeholder="I will pump SNX" />
       </div>
 
       <Button colorScheme="gray" variant="outline">
