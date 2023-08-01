@@ -64,8 +64,9 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
           <Button
             variant="outline"
             onClick={async () => {
-              const file = (getValues('file') as FileList).item(0);
-              if (file) {
+              let file: any = getValues('file');
+              if (typeof file === 'object') {
+                file = file.item(0);
                 const result = await ipfs.add(file);
                 setValue('pfpUrl', result.path);
                 resetField('file');
@@ -75,7 +76,15 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
             Upload
           </Button>
           <Text color="gray.500">Or paste in the path</Text>
-          <Input {...register('pfpUrl')} placeholder="QmSHZw..." />
+          <Input
+            {...register('pfpUrl', {
+              pattern: {
+                value: /^Qm/,
+                message: 'invalid ipfs link',
+              },
+            })}
+            placeholder="QmSHZw..."
+          />
         </Flex>
       )}
       <div>
