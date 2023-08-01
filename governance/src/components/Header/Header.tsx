@@ -1,4 +1,14 @@
-import { Button, Flex, Image, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Image,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useColorMode,
+} from '@chakra-ui/react';
 import {
   Network,
   disconnect,
@@ -10,6 +20,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
+import { useEffect } from 'react';
 
 const routes = [
   {
@@ -43,9 +54,17 @@ export function Header() {
   const wallet = useWallet();
   const currentNetwork = useNetwork();
   const { icon } = activeIcon(currentNetwork);
+  const { colorMode, toggleColorMode } = useColorMode();
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
   };
+
+  useEffect(() => {
+    if (colorMode === 'light') {
+      toggleColorMode();
+    }
+  }, [colorMode, toggleColorMode]);
+
   return (
     <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
       <Flex mr={7} cursor="pointer" onClick={() => navigate('/')}>

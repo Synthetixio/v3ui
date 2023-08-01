@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -93,10 +94,11 @@ const devServer = {
 };
 
 module.exports = {
-  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  //  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  devtool: isTest ? false : 'source-map',
   devServer,
   mode: isProd ? 'production' : 'development',
-  entry: './src/index.tsx',
+  entry: './src/pages/index.tsx',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -162,6 +164,11 @@ module.exports = {
         'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
           process.env.NEXT_PUBLIC_WC_PROJECT_ID
         ),
+      })
+    )
+    .concat(
+      new CopyWebpackPlugin({
+        patterns: [{ from: 'public', to: '' }],
       })
     ),
 

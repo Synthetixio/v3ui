@@ -58,6 +58,22 @@ const router = createBrowserRouter([
 
 const customTheme = extendTheme({
   ...theme,
+  components: {
+    ...theme.components,
+    Table: {
+      variants: {
+        simple: {
+          th: {
+            borderBottom: 0,
+            color: 'gray.600',
+          },
+          td: {
+            borderBottom: 0,
+          },
+        },
+      },
+    },
+  },
   styles: {
     global: {
       body: {
