@@ -5409,7 +5409,7 @@ __metadata:
     process: ^0.11.10
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-hook-form: ^7.45.2
+    react-hook-form: ^7.44.2
     react-refresh: ^0.14.0
     react-router-dom: ^6.11.2
     recoil: ^0.7.7
@@ -17874,15 +17874,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
   checksum: 0c17f8fc33b52ff3caa9de433e1ff3e79f9b797bddd2e80f1156d8a6324710cc360b700e560562ee822e129b440f730f2990caa1e79a3eb66094d9e235410b46
-  languageName: node
-  linkType: hard
-
-"react-hook-form@npm:^7.45.2":
-  version: 7.45.2
-  resolution: "react-hook-form@npm:7.45.2"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18
-  checksum: 023ca091f2bb1f3117d8a694871874c4a344f02c795c6a08b8f78b09b78444451375fbe921d7db4ba7cd78909b1fa5e92d19efd2bfedc43124fdc44540ac036c
   languageName: node
   linkType: hard
 

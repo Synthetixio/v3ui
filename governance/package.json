@@ -23,7 +23,7 @@
     "ipfs-http-client": "^60.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.45.2",
+    "react-hook-form": "^7.44.2",
     "react-router-dom": "^6.11.2",
     "recoil": "^0.7.7"
   },
