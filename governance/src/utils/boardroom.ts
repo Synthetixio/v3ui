@@ -1,8 +1,6 @@
-const isMainnet = true;
-const TEST_NET_URL = `https://xis287baki.execute-api.us-east-1.amazonaws.com`;
 const MAIN_NET_URL = `https://api.boardroom.info`;
 
-const BASE_URL = isMainnet ? MAIN_NET_URL : TEST_NET_URL;
+const BASE_URL = MAIN_NET_URL;
 
 // POST
 export const BOARDROOM_SIGNIN_API_URL = `${BASE_URL}/v1/siwe/signIn?key=${process.env.NEXT_PUBLIC_BOARDROOM_KEY}`;

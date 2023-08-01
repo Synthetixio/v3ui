@@ -1,7 +1,9 @@
 import { CopyIcon } from '@chakra-ui/icons';
 import { Button, Flex, Image, Input, Text, Textarea } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ipfs } from '../../utils/ipfs';
 
 interface User {
   address: string;
@@ -15,7 +17,8 @@ interface User {
 }
 
 export function UserProfileForm({ user }: { user: Partial<User> }) {
-  const { register } = useForm({
+  const [showImageForm, setShowImageForm] = useState(false);
+  const { register, getValues, resetField, setValue } = useForm({
     defaultValues: {
       address: user.about,
       username: user.username,
@@ -23,16 +26,22 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
       twitter: user.twitter,
       about: user.about,
       github: user.github,
-      pffUrl: user.pfpUrl,
+      pfpUrl: user.pfpUrl,
       delegationPitch: user.delegationPitch,
+      file: '',
     },
   });
+
   return (
     <Flex flexDir="column" gap="4">
       <Flex w="100%">
         <Flex flexDir="column" w="56px" mr="4" justifyContent="center">
           <Image src={user.pfpUrl} w="56px" h="56px" mb="2" />
-          <Button colorScheme="gray" variant="outline">
+          <Button
+            colorScheme="gray"
+            variant="outline"
+            onClick={() => setShowImageForm(!showImageForm)}
+          >
             Edit
           </Button>
         </Flex>
@@ -43,6 +52,33 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
           <Input {...register('about')} placeholder="OG DeFi Member" />
         </Flex>
       </Flex>
+      {showImageForm && (
+        <Flex flexDir="column">
+          <Text color="gray.500">Upload to IPFS</Text>
+          <Input
+            {...register('file')}
+            type="file"
+            accept="image/png, image/gif, image/jpeg"
+            mb="1"
+          />
+          <Button
+            variant="outline"
+            onClick={async () => {
+              const file = (getValues('file') as FileList).item(0);
+              console.log(file);
+              if (file) {
+                const result = await ipfs.add(file);
+                setValue('pfpUrl', result.path);
+                resetField('file');
+              }
+            }}
+          >
+            Upload
+          </Button>
+          <Text color="gray.500">Or paste in the path</Text>
+          <Input {...register('pfpUrl')} placeholder="QmSHZw..." />
+        </Flex>
+      )}
       <div>
         <Text color="gray.500">Discord</Text>
         <Input {...register('discord')} placeholder="John Doe" />

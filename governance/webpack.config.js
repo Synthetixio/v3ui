@@ -160,10 +160,11 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
-        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
-          process.env.NEXT_PUBLIC_WC_PROJECT_ID
-        ),
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
+        'process.env.IPFS_INFURA_SECRET': JSON.stringify(process.env.IPFS_INFURA_SECRET),
+        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
+        'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
       })
     )
     .concat(

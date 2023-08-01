@@ -5,6 +5,7 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
+    "load-env": "source ./load-env.sh",
     "standalone-install": "yarn workspaces focus '@snx-v3/governance-ui'",
     "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/governance-ui' run build"
   },
@@ -19,6 +20,7 @@
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^4.29.12",
     "framer-motion": "^10.12.16",
+    "ipfs-http-client": "^60.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
