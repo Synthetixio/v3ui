@@ -4,17 +4,7 @@ import { prettyString } from '@snx-v3/format';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ipfs } from '../../utils/ipfs';
-
-interface User {
-  address: string;
-  username: string;
-  discord: string;
-  twitter: string;
-  about: string;
-  github: string;
-  pfpUrl: string;
-  delegationPitch: string;
-}
+import { User } from '../../utils/types';
 
 export function UserProfileForm({ user }: { user: Partial<User> }) {
   const [showImageForm, setShowImageForm] = useState(false);
