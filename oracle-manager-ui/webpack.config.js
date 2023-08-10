@@ -54,7 +54,7 @@ const imgRule = {
 
 const cssRule = {
   test: /\.css$/,
-  include: [new RegExp('./src'), new RegExp('@rainbow-me/rainbowkit'), new RegExp('reactflow')],
+  include: [new RegExp('./src'), new RegExp('reactflow')],
   exclude: [],
   use: [
     {
@@ -162,6 +162,14 @@ module.exports = {
             }),
           ]
         : []
+    )
+    .concat(
+      new webpack.DefinePlugin({
+        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
+        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
+          process.env.NEXT_PUBLIC_WC_PROJECT_ID
+        ),
+      })
     ),
 
   resolve: {
