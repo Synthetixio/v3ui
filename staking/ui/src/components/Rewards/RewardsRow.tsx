@@ -54,7 +54,7 @@ export const RewardsRow = ({
           fontSize="12px"
           fontFamily="heading"
           lineHeight="16px"
-        >{`Lifetime ${lifetimeEarned} ${collateralType}`}</Text>
+        >{`Lifetime: ${lifetimeEarned} ${collateralType}`}</Text>
       </Td>
       <Td border="none" px="0px">
         <Button w="100%" disabled={hasClaimed}>
