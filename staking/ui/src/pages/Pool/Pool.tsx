@@ -17,7 +17,6 @@ export const PoolUi: FC<{
     <>
       <HomeLink />
       <PoolHeader />
-
       <Divider my={8} bg="gray.900" />
       <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }}>
         <Box flexGrow={1}>

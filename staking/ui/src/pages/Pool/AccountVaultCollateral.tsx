@@ -11,9 +11,8 @@ const AccountVaultCollateralUi: FC<{
   collateralAmount: number;
   collateralSymbol: string;
   poolId: string;
-  accountId: string;
   isLoading: boolean;
-}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, accountId, poolId }) => {
+}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId }) => {
   const navigate = useNavigate();
   return (
     <>
@@ -37,8 +36,7 @@ const AccountVaultCollateralUi: FC<{
       <Button
         onClick={() => {
           navigate(
-            generatePath('/accounts/:accountId/positions/:collateral/:poolId', {
-              accountId,
+            generatePath('/positions/:collateral/:poolId', {
               collateral: collateralSymbol,
               poolId,
             })
@@ -54,6 +52,7 @@ const AccountVaultCollateralUi: FC<{
 
 export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ collateral }) => {
   const params = useParams();
+
   const { data, isLoading } = useLiquidityPosition({
     accountId: params.accountId,
     poolId: params.poolId,
@@ -61,6 +60,7 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
   });
 
   if (!params.poolId || !params.accountId) return null;
+
   return (
     <AccountVaultCollateralUi
       collateralAmount={data?.collateralAmount.toNumber() || 0}
@@ -68,7 +68,6 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
       collateralSymbol={collateral.symbol}
       isLoading={isLoading}
       poolId={params.poolId}
-      accountId={params.accountId}
     />
   );
 };

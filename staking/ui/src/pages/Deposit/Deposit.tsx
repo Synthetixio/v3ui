@@ -2,7 +2,7 @@ import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
 import { FC, useEffect } from 'react';
 import { createSearchParams, generatePath, useNavigate } from 'react-router-dom';
-import { DepositForm } from '../../components/accounts/Deposit';
+import { DepositForm } from '../../components/Accounts/Deposit';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';

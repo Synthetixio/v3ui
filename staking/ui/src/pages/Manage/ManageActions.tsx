@@ -48,11 +48,12 @@ const ActionButton: FC<
     fontWeight="700"
     fontSize="md"
     color="gray.50"
+    bg="navy.900"
     _hover={{
-      bg: 'whiteAlpha.100',
+      bg: 'unset',
     }}
     _active={{
-      bg: 'whiteAlpha.100',
+      bg: 'unset',
     }}
     cursor="pointer"
     data-testid="manage action"
@@ -114,6 +115,7 @@ const ManageActionUi: FC<{
     </Box>
   );
 };
+
 export const ManageAction = () => {
   const params = useParams();
   const [_, setQueryParam] = useSearchParams();
