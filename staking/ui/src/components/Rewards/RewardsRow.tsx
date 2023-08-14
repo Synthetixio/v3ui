@@ -57,7 +57,19 @@ export const RewardsRow = ({
         >{`Lifetime: ${lifetimeEarned} ${collateralType}`}</Text>
       </Td>
       <Td border="none" px="0px">
-        <Button w="100%" disabled={hasClaimed}>
+        <Button
+          w="100%"
+          size="sm"
+          variant="solid"
+          isDisabled={hasClaimed}
+          _disabled={{
+            bg: 'gray.900',
+            backgroundImage: 'none',
+            color: 'gray.500',
+            opacity: 0.5,
+            cursor: 'not-allowed',
+          }}
+        >
           {hasClaimed ? 'Claimed' : 'Claim'}
         </Button>
       </Td>
