@@ -62,6 +62,7 @@ export function usePools() {
         name: poolNames[i],
       }));
       const pools = PoolsSchema.parse(poolsRaw);
+
       return pools;
     },
   });

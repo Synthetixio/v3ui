@@ -2,7 +2,7 @@ import { Flex, Td, Tr, Text, Button } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 
 interface RewardsRowInterface {
-  collateralType: string;
+  symbol: string;
   amount: number;
   frequency: string;
   earnings: number;
@@ -11,7 +11,7 @@ interface RewardsRowInterface {
 }
 
 export const RewardsRow = ({
-  collateralType,
+  symbol,
   amount,
   frequency,
   earnings,
@@ -20,8 +20,8 @@ export const RewardsRow = ({
 }: RewardsRowInterface) => {
   return (
     <Tr borderBottom="1px solid #2D2D38">
-      <Td as={Flex} alignItems="center" px="14px" border="none" w="100%">
-        <CollateralIcon height="30px" width="30px" symbol={collateralType} />
+      <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
+        <CollateralIcon height="30px" width="30px" symbol={symbol} />
         <Flex flexDirection="column" ml="12px">
           <Text
             color="gray.50"
@@ -31,7 +31,7 @@ export const RewardsRow = ({
             lineHeight="20px"
           >
             {amount}
-            {` ${collateralType}`}
+            {` ${symbol}`}
           </Text>
           <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
             {frequency}
@@ -47,14 +47,14 @@ export const RewardsRow = ({
           lineHeight="20px"
         >
           {earnings}
-          {` ${collateralType}`}
+          {` ${symbol}`}
         </Text>
         <Text
           color="gray.500"
           fontSize="12px"
           fontFamily="heading"
           lineHeight="16px"
-        >{`Lifetime: ${lifetimeEarned} ${collateralType}`}</Text>
+        >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
       </Td>
       <Td border="none" px="0px">
         <Button

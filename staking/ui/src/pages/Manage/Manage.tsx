@@ -1,8 +1,8 @@
-import { Box, Divider, Flex, Heading, Link, Spinner, Text } from '@chakra-ui/react';
+import { FC } from 'react';
+import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
-import { FC } from 'react';
 import { CollateralIcon } from '@snx-v3/icons';
 import { ManageAction } from './ManageActions';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
@@ -11,15 +11,18 @@ import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Rewards } from '../../components/Rewards';
+import { usePoolData } from '@snx-v3/usePoolData';
+import { useRewards } from '@snx-v3/useRewards';
 
 export const ManageUi: FC<{
   collateralType: CollateralType;
   poolName?: string;
   poolId?: string;
   navigate: NavigateFunction;
+  isLoading: boolean;
 }> = ({ collateralType }) => {
   return (
-    <Box mb="20px">
+    <Box mb={12}>
       <Box mb="4">
         <HomeLink />
       </Box>
@@ -82,7 +85,7 @@ export const ManageUi: FC<{
         </BorderBox>
         <Box minW="450px">
           <ManageStats />
-          <Rewards />
+          <Rewards isLoading={false} rewards={[]} />
         </Box>
       </Flex>
     </Box>
@@ -90,14 +93,29 @@ export const ManageUi: FC<{
 };
 
 export const Manage = () => {
-  const params = useParams();
+  const { accountId, collateralSymbol, poolId } = useParams();
   const navigate = useNavigate();
-  const collateralType = useCollateralType(params.collateralSymbol);
-  const pool = usePool(params.poolId);
 
-  if (!collateralType) {
-    return <Spinner />; // TODO skeleton
-  }
+  const collateralType = useCollateralType(collateralSymbol);
+
+  const pool = usePool(poolId);
+
+  const { isLoading: isPoolDataLoading, data: poolData } = usePoolData(poolId);
+
+  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
+    poolData?.registered_distributors,
+    poolId,
+    collateralType?.tokenAddress,
+    accountId
+  );
+
+  console.log('pool data', poolData, collateralType);
+
+  console.log('rewards data', rewardsData);
+
+  const isLoading = isRewardsLoading || isPoolDataLoading;
+
+  if (!collateralType) return;
 
   return (
     <ManagePositionProvider>
@@ -106,6 +124,8 @@ export const Manage = () => {
         navigate={navigate}
         poolName={pool?.name}
         poolId={pool?.id}
+        isLoading={isLoading}
+        // rewards={rewardsData}
       />
     </ManagePositionProvider>
   );

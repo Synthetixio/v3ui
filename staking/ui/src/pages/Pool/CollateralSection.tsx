@@ -198,6 +198,7 @@ export const CollateralSectionUi: FC<{
     </BorderBox>
   );
 };
+
 export const CollateralSection = () => {
   const params = useParams();
 
