@@ -2,15 +2,19 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
 import { utils } from 'ethers';
 import { Wei } from '@synthetixio/wei';
-import { BigNumber } from 'ethers';
+// import { BigNumber } from 'ethers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 
-const RewardsResponseSchema = z.object({
-  address: z.string(),
-  name: z.string(),
-  symbol: z.string(),
-});
+const RewardsResponseSchema = z.array(
+  z.object({
+    address: z.string(),
+    name: z.string(),
+    symbol: z.string(),
+  })
+);
+
+export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 
 type RewardsInterface =
   | {
@@ -45,9 +49,8 @@ export function useRewards(
       },
     ],
     queryFn: async () => {
-      if (addresses.length === 0) return [];
-
       if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) throw 'OMFG';
+      if (addresses.length === 0) return [];
 
       const { abi } = await import(
         '@synthetixio/v3-contracts/build/optimism-mainnet/RewardDistributor'
@@ -103,28 +106,28 @@ export function useRewards(
         };
       });
 
-      // Single call version
-      const response = await CoreProxy.callStatic.claimRewards(
-        BigNumber.from(accountId),
-        BigNumber.from(poolId),
-        collateralAddress,
-        addresses[0]
-      );
+      // // Single call version
+      // const response = await CoreProxy.callStatic.claimRewards(
+      //   BigNumber.from(accountId),
+      //   BigNumber.from(poolId),
+      //   collateralAddress,
+      //   addresses[0]
+      // );
 
-      // Multicall version
-      const calls = distributorResult.map(({ address }) =>
-        CoreProxy.interface.encodeFunctionData('claimRewards', [
-          BigNumber.from(accountId),
-          BigNumber.from(poolId),
-          collateralAddress,
-          address,
-        ])
-      );
+      // // Multicall version
+      // const calls = distributorResult.map(({ address }) =>
+      //   CoreProxy.interface.encodeFunctionData('claimRewards', [
+      //     BigNumber.from(accountId),
+      //     BigNumber.from(poolId),
+      //     collateralAddress,
+      //     address,
+      //   ])
+      // );
 
-      const response2 = await CoreProxy.callStatic.multicall(calls);
+      // const response2 = await CoreProxy.callStatic.multicall(calls);
 
-      console.log('Response', response);
-      console.log('Return data', response2);
+      // console.log('Response', response);
+      // console.log('Return data', response2);
 
       return RewardsResponseSchema.parse(result);
     },

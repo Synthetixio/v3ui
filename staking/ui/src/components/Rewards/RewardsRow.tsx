@@ -1,4 +1,4 @@
-import { Flex, Td, Tr, Text, Button } from '@chakra-ui/react';
+import { Flex, Td, Text, Button, Fade } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 
 interface RewardsRowInterface {
@@ -19,10 +19,31 @@ export const RewardsRow = ({
   hasClaimed,
 }: RewardsRowInterface) => {
   return (
-    <Tr borderBottom="1px solid #2D2D38">
+    <>
       <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
-        <CollateralIcon height="30px" width="30px" symbol={symbol} />
-        <Flex flexDirection="column" ml="12px">
+        <Fade in>
+          <CollateralIcon height="30px" width="30px" symbol={symbol} />
+        </Fade>
+        <Fade in>
+          <Flex flexDirection="column" ml="12px">
+            <Text
+              color="gray.50"
+              fontSize="14px"
+              fontFamily="heading"
+              fontWeight={500}
+              lineHeight="20px"
+            >
+              {amount}
+              {` ${symbol}`}
+            </Text>
+            <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
+              {frequency}
+            </Text>
+          </Flex>
+        </Fade>
+      </Td>
+      <Td alignItems="center" px="14px" border="none">
+        <Fade in>
           <Text
             color="gray.50"
             fontSize="14px"
@@ -30,49 +51,36 @@ export const RewardsRow = ({
             fontWeight={500}
             lineHeight="20px"
           >
-            {amount}
+            {earnings}
             {` ${symbol}`}
           </Text>
-          <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
-            {frequency}
-          </Text>
-        </Flex>
-      </Td>
-      <Td alignItems="center" px="14px" border="none">
-        <Text
-          color="gray.50"
-          fontSize="14px"
-          fontFamily="heading"
-          fontWeight={500}
-          lineHeight="20px"
-        >
-          {earnings}
-          {` ${symbol}`}
-        </Text>
-        <Text
-          color="gray.500"
-          fontSize="12px"
-          fontFamily="heading"
-          lineHeight="16px"
-        >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
+          <Text
+            color="gray.500"
+            fontSize="12px"
+            fontFamily="heading"
+            lineHeight="16px"
+          >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
+        </Fade>
       </Td>
       <Td border="none" px="0px">
-        <Button
-          w="100%"
-          size="sm"
-          variant="solid"
-          isDisabled={hasClaimed}
-          _disabled={{
-            bg: 'gray.900',
-            backgroundImage: 'none',
-            color: 'gray.500',
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          }}
-        >
-          {hasClaimed ? 'Claimed' : 'Claim'}
-        </Button>
+        <Fade in>
+          <Button
+            w="100%"
+            size="sm"
+            variant="solid"
+            isDisabled={hasClaimed}
+            _disabled={{
+              bg: 'gray.900',
+              backgroundImage: 'none',
+              color: 'gray.500',
+              opacity: 0.5,
+              cursor: 'not-allowed',
+            }}
+          >
+            {hasClaimed ? 'Claimed' : 'Claim'}
+          </Button>
+        </Fade>
       </Td>
-    </Tr>
+    </>
   );
 };

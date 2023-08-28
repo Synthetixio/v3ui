@@ -12,7 +12,7 @@ import { usePool } from '@snx-v3/usePools';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Rewards } from '../../components/Rewards';
 import { usePoolData } from '@snx-v3/usePoolData';
-import { useRewards } from '@snx-v3/useRewards';
+import { useRewards, RewardsType } from '@snx-v3/useRewards';
 
 export const ManageUi: FC<{
   collateralType: CollateralType;
@@ -20,7 +20,8 @@ export const ManageUi: FC<{
   poolId?: string;
   navigate: NavigateFunction;
   isLoading: boolean;
-}> = ({ collateralType }) => {
+  rewards?: RewardsType;
+}> = ({ collateralType, isLoading, rewards }) => {
   return (
     <Box mb={12}>
       <Box mb="4">
@@ -85,7 +86,7 @@ export const ManageUi: FC<{
         </BorderBox>
         <Box minW="450px">
           <ManageStats />
-          <Rewards isLoading={false} rewards={[]} />
+          <Rewards isLoading={isLoading} rewards={rewards} />
         </Box>
       </Flex>
     </Box>
@@ -109,10 +110,6 @@ export const Manage = () => {
     accountId
   );
 
-  console.log('pool data', poolData, collateralType);
-
-  console.log('rewards data', rewardsData);
-
   const isLoading = isRewardsLoading || isPoolDataLoading;
 
   if (!collateralType) return;
@@ -125,7 +122,7 @@ export const Manage = () => {
         poolName={pool?.name}
         poolId={pool?.id}
         isLoading={isLoading}
-        // rewards={rewardsData}
+        rewards={rewardsData}
       />
     </ManagePositionProvider>
   );
