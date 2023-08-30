@@ -4,7 +4,6 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
-import React from 'react';
 
 export const PoolIdSchema = ZodBigNumber.transform((x) => x.toString());
 
@@ -27,10 +26,12 @@ export function usePools() {
     queryKey: [network.name, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'OMFG';
+
       const [preferredPoolIdRaw, approvedPoolIdsRaw] = await CoreProxy.callStatic.multicall([
         CoreProxy.interface.encodeFunctionData('getPreferredPool'),
         CoreProxy.interface.encodeFunctionData('getApprovedPools'),
       ]);
+
       const [preferredPoolId] = CoreProxy.interface.decodeFunctionResult(
         'getPreferredPool',
         preferredPoolIdRaw
@@ -39,6 +40,7 @@ export function usePools() {
         'getApprovedPools',
         approvedPoolIdsRaw
       );
+
       const incompletePools = [
         {
           id: preferredPoolId,
@@ -50,17 +52,21 @@ export function usePools() {
           isPreferred: false,
         }))
       );
+
       const poolNamesRaw = await CoreProxy.callStatic.multicall(
         incompletePools.map(({ id }) => CoreProxy.interface.encodeFunctionData('getPoolName', [id]))
       );
+
       const poolNames = poolNamesRaw.map(
         (bytes: string) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
       );
+
       const poolsRaw = incompletePools.map(({ id, isPreferred }, i) => ({
         id,
         isPreferred,
         name: poolNames[i],
       }));
+
       const pools = PoolsSchema.parse(poolsRaw);
 
       return pools;
@@ -69,16 +75,21 @@ export function usePools() {
 }
 
 export function usePool(poolId?: string) {
-  const { data: pools = [] } = usePools();
-  return React.useMemo(() => {
-    if (!poolId) {
-      return undefined;
-    }
-    return pools.find((pool) => pool.id === poolId);
-  }, [poolId, pools]);
+  const { isLoading, error, data } = usePools();
+
+  return {
+    isLoading,
+    error,
+    data: data?.find((item) => item.id === poolId),
+  };
 }
 
 export function usePreferredPool() {
-  const { data: pools = [] } = usePools();
-  return React.useMemo(() => pools.find((pool) => pool.isPreferred), [pools]);
+  const { isLoading, error, data } = usePools();
+
+  return {
+    isLoading,
+    error,
+    data: data?.find((item) => item.isPreferred),
+  };
 }

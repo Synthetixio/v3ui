@@ -93,7 +93,7 @@ export const Repay = () => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { data: USDProxy } = useUSDProxy();
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,

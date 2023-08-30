@@ -15,7 +15,7 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 
 export const ManageUi: FC<{
-  collateralType: CollateralType;
+  collateralType?: CollateralType;
   poolName?: string;
   poolId?: string;
   navigate: NavigateFunction;
@@ -37,7 +37,7 @@ export const ManageUi: FC<{
           borderRadius="100%"
         >
           <CollateralIcon
-            symbol={collateralType.symbol}
+            symbol={collateralType?.symbol}
             width="28px"
             height="28px"
             fill="#0B0B22"
@@ -52,7 +52,7 @@ export const ManageUi: FC<{
           display="flex"
           alignItems="center"
         >
-          {collateralType.symbol} Liquidity Position
+          {collateralType?.symbol} Liquidity Position
         </Heading>
       </Flex>
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
@@ -95,33 +95,36 @@ export const ManageUi: FC<{
 
 export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
+
   const navigate = useNavigate();
 
-  const collateralType = useCollateralType(collateralSymbol);
+  const { isLoading: isCollateralLoading, data: collateralType } =
+    useCollateralType(collateralSymbol);
 
-  const pool = usePool(poolId);
+  const { isLoading: isPoolDataLoading, data: pool } = usePool(poolId);
+  const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const { isLoading: isPoolDataLoading, data: poolData } = usePoolData(poolId);
+  const isInitialQueriesLoading =
+    isCollateralLoading || isPoolDataLoading || isPoolGraphDataLoading;
 
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
-    accountId
+    accountId,
+    !isInitialQueriesLoading
   );
 
-  const isLoading = isRewardsLoading || isPoolDataLoading;
-
-  if (!collateralType) return;
+  const isLoading = isRewardsLoading || isInitialQueriesLoading;
 
   return (
     <ManagePositionProvider>
       <ManageUi
+        isLoading={isLoading}
         collateralType={collateralType}
         navigate={navigate}
         poolName={pool?.name}
         poolId={pool?.id}
-        isLoading={isLoading}
         rewards={rewardsData}
       />
     </ManagePositionProvider>

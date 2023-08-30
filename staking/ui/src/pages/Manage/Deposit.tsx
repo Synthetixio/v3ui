@@ -144,8 +144,8 @@ export const DepositUi: FC<{
 export const Deposit = () => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
 
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: tokenBalance } = useTransferableSynthetix();
   const { data: ethBalance } = useEthBalance();
 
@@ -155,6 +155,7 @@ export const Deposit = () => {
   );
 
   if (!collateralType || !accountCollateral) return null;
+
   return (
     <DepositUi
       accountCollateral={accountCollateral}

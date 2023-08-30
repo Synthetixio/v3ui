@@ -10,6 +10,7 @@ import {
   Td,
   Skeleton,
   SkeletonCircle,
+  Fade,
 } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { RewardsRow } from './RewardsRow';
@@ -30,21 +31,22 @@ interface RewardsDistributorsInterface {
 }
 
 export const Rewards = ({ rewards, isLoading }: RewardsDistributorsInterface) => {
-  const empty = rewards && rewards.length === 0;
+  const empty = (typeof rewards === 'undefined' && !isLoading) || (rewards && rewards.length === 0);
 
   return (
     <BorderBox bg="navy.700" py={4} px={6} flexDir="column">
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
         REWARDS
       </Text>
-      {/* TODO Map Over rewards and  */}
       <TableContainer width="100%" mb="8px">
         {empty ? (
-          <Flex mt="20px" mb="8px" justifyContent="center">
-            <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
-              No Rewards Available
-            </Text>
-          </Flex>
+          <Fade in>
+            <Flex mt="20px" mb="8px" justifyContent="center">
+              <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
+                No Rewards Available
+              </Text>
+            </Flex>
+          </Fade>
         ) : (
           <Table>
             <Thead>
@@ -97,6 +99,8 @@ export const Rewards = ({ rewards, isLoading }: RewardsDistributorsInterface) =>
               <LoadingRewards />
             ) : (
               <Tbody>
+                {/* TODO: Update results with amount/frequency/lifetime/hasClaimed */}
+
                 {rewards?.map((item) => (
                   <RewardsRow
                     key={item.address}

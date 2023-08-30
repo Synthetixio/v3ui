@@ -4,7 +4,7 @@ import { SNXIcon } from '../SNXIcon';
 import { Icon, IconProps } from '@chakra-ui/react';
 
 interface CollateralIconProps extends IconProps {
-  symbol: string;
+  symbol?: string;
   fill?: string;
   color?: string;
 }

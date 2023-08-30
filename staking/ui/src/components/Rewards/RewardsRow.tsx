@@ -1,4 +1,4 @@
-import { Flex, Td, Text, Button, Fade } from '@chakra-ui/react';
+import { Flex, Td, Text, Button, Fade, Tr } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 
 interface RewardsRowInterface {
@@ -19,7 +19,7 @@ export const RewardsRow = ({
   hasClaimed,
 }: RewardsRowInterface) => {
   return (
-    <>
+    <Tr>
       <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
         <Fade in>
           <CollateralIcon height="30px" width="30px" symbol={symbol} />
@@ -81,6 +81,6 @@ export const RewardsRow = ({
           </Button>
         </Fade>
       </Td>
-    </>
+    </Tr>
   );
 };

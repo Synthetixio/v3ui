@@ -143,7 +143,7 @@ export const UndelegateUi: FC<{
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
