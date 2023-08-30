@@ -4,7 +4,7 @@ import { Box, Button, Input, Select, Text, useToast } from '@chakra-ui/react';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useSigner } from '@snx-v3/useBlockchain';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
@@ -120,7 +120,7 @@ export function Playground() {
     (collateral) => collateral.symbol === symbol
   );
 
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   const accountCollateral = useAccountCollateral({ accountId });
   const accountCollateralData = accountCollateral.data?.find(
@@ -139,9 +139,9 @@ export function Playground() {
         : '~',
     [accountCollateralUnlockDate.data]
   );
-  const [timeToUnlock, setTimeToUnlock] = React.useState(formatTimeToUnlock());
+  const [timeToUnlock, setTimeToUnlock] = useState(formatTimeToUnlock());
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => setTimeToUnlock(formatTimeToUnlock()), 1_000);
     return () => clearInterval(interval);
   }, [formatTimeToUnlock]);

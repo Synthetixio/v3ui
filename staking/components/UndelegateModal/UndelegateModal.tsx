@@ -44,7 +44,6 @@ export const UndelegateModalUi: FC<{
         <ModalCloseButton />
         <ModalBody>
           <Text mb="2">Please execute the following transactions:</Text>
-
           <Multistep
             step={1}
             title="Remove collateral"
@@ -93,13 +92,15 @@ export type UndelegateModalProps = FC<{
 }>;
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { collateralChange } = useContext(ManagePositionContext);
+
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
     tokenAddress: collateralType?.tokenAddress,
     poolId: params.poolId,
   });
+
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);

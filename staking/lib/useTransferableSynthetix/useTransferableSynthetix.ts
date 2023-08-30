@@ -8,7 +8,8 @@ export function useTransferableSynthetix() {
   const network = useNetwork();
   const account = useWallet();
   const provider = useProvider();
-  const snxCollateral = useCollateralType('SNX');
+  const { data: snxCollateral } = useCollateralType('SNX');
+
   const accountAddress = account?.address;
   const snxAddress = snxCollateral?.tokenAddress;
 

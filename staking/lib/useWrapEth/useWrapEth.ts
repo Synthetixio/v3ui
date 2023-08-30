@@ -10,7 +10,7 @@ import { useCallback } from 'react';
 const minimalWETHABI = ['function deposit() payable', 'function withdraw(uint256 wad)'];
 
 export const useWrapEth = () => {
-  const ethCollateral = useCollateralType('WETH');
+  const { data: ethCollateral } = useCollateralType('WETH');
   const signer = useSigner();
   const { data: ethBalance, refetch: refetchETHBalance } = useEthBalance();
   const { data: wethBalance, refetch: refetchWETHBalance } = useTokenBalance(
