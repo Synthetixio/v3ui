@@ -4,7 +4,6 @@ import { Button, Fade, Skeleton, Text, useClipboard } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
-// import { useAccounts } from '@snx-v3/useAccounts';
 
 // function AccountMenuItem({ accountId }: { accountId: string }) {
 //   const params = useParams();

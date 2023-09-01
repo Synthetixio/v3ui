@@ -9,7 +9,7 @@ export const PoolHeader = () => {
   return (
     <Flex gap={2} alignItems="flex-end">
       <Heading fontWeight={700} fontSize="3xl">
-        {pool ? pool.name : ''}
+        {pool ? pool.name : 'Unknown Pool'}
       </Heading>
     </Flex>
   );
