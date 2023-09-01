@@ -9,7 +9,6 @@
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
-    "@snx-v3/useAccounts": "workspace:*",
     "@snx-v3/useApprove": "workspace:*",
     "@snx-v3/useCollateralTypes": "workspace:*",
     "@snx-v3/useContractErrorParser": "workspace:*",

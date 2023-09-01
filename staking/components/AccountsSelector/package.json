@@ -6,6 +6,7 @@
   "dependencies": {
     "@chakra-ui/react": "^2.6.1",
     "@snx-v3/format": "workspace:*",
+    "@snx-v3/useAccounts": "workspace:*",
     "@snx-v3/useParams": "workspace:*"
   }
 }

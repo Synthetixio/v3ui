@@ -5031,6 +5031,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": ^2.6.1
     "@snx-v3/format": "workspace:*"
+    "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
   languageName: unknown
   linkType: soft
@@ -5118,7 +5119,6 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
-    "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -5584,6 +5584,7 @@ __metadata:
   dependencies:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
