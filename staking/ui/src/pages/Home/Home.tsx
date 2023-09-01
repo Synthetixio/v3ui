@@ -21,7 +21,7 @@ import { PoolsType, usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { LiquidityPositionType, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { Welcome } from '../../components/shared/Welcome';
+import { Welcome } from '../../components/Shared/Welcome';
 import { Stats, StatsProps } from './Stats';
 import { AvailableCollateral } from './AvailableCollateral';
 
