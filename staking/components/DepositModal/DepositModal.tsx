@@ -204,16 +204,18 @@ export const DepositModalUi: FC<{
     </Modal>
   );
 };
+
 export type DepositModalProps = FC<{
   collateralChange: Wei;
   isOpen: boolean;
   onClose: () => void;
 }>;
+
 export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralChange }) => {
   const navigate = useNavigate();
   const params = useParams();
   const { data: CoreProxy } = useCoreProxy();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: collateralType?.tokenAddress,
@@ -253,7 +255,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     currentCollateral: currentCollateral,
   });
 
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
   const accountCollateral = accountCollaterals.data?.find(

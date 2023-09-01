@@ -15,7 +15,7 @@ export const HomeLink = () => {
       fontWeight={700}
       mb={2}
     >
-      <ArrowBackIcon mr={1} /> Dashboard
+      <ArrowBackIcon mr={1} /> Home
     </Link>
   );
 };

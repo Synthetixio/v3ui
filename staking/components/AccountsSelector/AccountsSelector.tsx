@@ -40,6 +40,7 @@ export function AccountsSelectorUi({ accountId }: { accountId?: string }) {
     <Fade in={true}>
       <Button
         size="sm"
+        borderRadius="4px"
         height="40px"
         as={Button}
         variant="outline"

@@ -140,10 +140,12 @@ export const UndelegateUi: FC<{
     </Flex>
   );
 };
+
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
@@ -153,6 +155,7 @@ export const Undelegate = () => {
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
   if (!collateralType) return null;
+
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,

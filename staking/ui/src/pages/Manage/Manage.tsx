@@ -18,7 +18,7 @@ export const ManageUi: FC<{
   navigate: NavigateFunction;
 }> = ({ collateralType, poolName, poolId, navigate }) => {
   return (
-    <Box>
+    <Box mb={12}>
       <Box mb="4">
         <HomeLink />
       </Box>
@@ -99,8 +99,9 @@ export const ManageUi: FC<{
 export const Manage = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const collateralType = useCollateralType(params.collateralSymbol);
-  const pool = usePool(params.poolId);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: pool } = usePool(params.poolId);
 
   if (!collateralType) {
     return <Spinner />; // TODO skeleton

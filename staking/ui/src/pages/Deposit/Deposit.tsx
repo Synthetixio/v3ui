@@ -78,8 +78,9 @@ function DepositUi({
 
 export function Deposit() {
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
   const navigate = useNavigate();
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: accounts = [] } = useAccounts();
   const [accountId] = accounts;
