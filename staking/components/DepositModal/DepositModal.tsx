@@ -13,7 +13,6 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { useAccounts } from '@snx-v3/useAccounts';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
@@ -226,8 +225,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
 
-  const accounts = useAccounts();
-
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
     tokenAddress: collateralType?.tokenAddress,
@@ -331,7 +328,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           await Promise.all([
             ethBalance.refetch(),
             transferrable.refetch(),
-            accounts.refetch(),
             refetchAllowance(),
             accountCollaterals.refetch(),
             Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),

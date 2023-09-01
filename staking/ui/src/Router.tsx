@@ -12,6 +12,7 @@ import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
+import { AccountRequired } from './components/AccountRequired';
 
 export const Router = () => {
   return (
@@ -20,7 +21,11 @@ export const Router = () => {
         <Route element={<DefaultLayout />}>
           <Route
             path="/accounts/:accountId/positions/:collateralSymbol/:poolId"
-            element={<Manage />}
+            element={
+              <AccountRequired redirectPath="/">
+                <Manage />
+              </AccountRequired>
+            }
           />
           <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
           {/*<Route path="/accounts/:accountId/collateral" element={<Collateral />} />*/}

@@ -54,6 +54,7 @@ const AccountVaultCollateralUi: FC<{
 
 export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ collateral }) => {
   const params = useParams();
+
   const { data, isLoading } = useLiquidityPosition({
     accountId: params.accountId,
     poolId: params.poolId,

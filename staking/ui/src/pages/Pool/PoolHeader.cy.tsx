@@ -1,17 +1,9 @@
-import { PoolHeaderUi } from './PoolHeader';
+import { PoolHeader } from './PoolHeader';
 
 describe('Pool page / Header', () => {
   it('should render Pool Header', () => {
     cy.viewport(800, 500);
-    cy.mount(
-      <PoolHeaderUi
-        pool={{
-          id: 'TEST_ID',
-          name: 'TEST_POOL',
-          isPreferred: true,
-        }}
-      />
-    );
+    cy.mount(<PoolHeader />);
     cy.get('#app').should('include.text', 'TEST_POOL');
   });
 });

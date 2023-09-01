@@ -327,6 +327,7 @@ export const MarketSection = () => {
     marketId: market.id,
     address: market.address,
   }));
+
   const { data: marketNamesById } = useMarketNamesById(marketIdsAndAddresses);
 
   return (
