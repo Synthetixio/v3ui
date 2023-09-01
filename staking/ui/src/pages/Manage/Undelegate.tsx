@@ -19,7 +19,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -144,28 +144,14 @@ export const UndelegateUi: FC<{
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const { search } = useLocation();
-
-  console.log('Params', params, 'Search', search);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-
-  console.log(
-    'Pool id',
-    params.poolId,
-    'Account id',
-    params.accountId,
-    'Collateral address',
-    collateralType?.tokenAddress
-  );
 
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
-
-  console.log('collateralType', collateralType);
 
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
