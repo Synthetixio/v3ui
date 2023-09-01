@@ -317,7 +317,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           throw Error('Approve failed', { cause: error });
         }
       },
-
       [ServiceNames.executeDeposit]: async () => {
         try {
           toast.closeAll();
@@ -384,8 +383,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
       send(Events.RESET);
       onClose();
       navigate(
-        generatePath('/accounts/:accountId/positions/:collateralType/:poolId', {
-          accountId: params.accountId || newAccountId,
+        generatePath('/positions/:collateralType/:poolId', {
           collateralType: collateralType.symbol,
           poolId: params.poolId,
         })
@@ -393,16 +391,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     }
     send(Events.RESET);
     onClose();
-  }, [
-    send,
-    onClose,
-    state,
-    params.poolId,
-    params.accountId,
-    collateralType?.symbol,
-    navigate,
-    newAccountId,
-  ]);
+  }, [send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
 
   const onSubmit = useCallback(async () => {
     if (state.matches(State.success)) {

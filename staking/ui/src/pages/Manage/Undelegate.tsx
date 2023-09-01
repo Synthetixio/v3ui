@@ -19,7 +19,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -47,6 +47,7 @@ export const UndelegateUi: FC<{
     }
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
+
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
@@ -143,13 +144,28 @@ export const UndelegateUi: FC<{
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
+  const { search } = useLocation();
+
+  console.log('Params', params, 'Search', search);
+
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
+  console.log(
+    'Pool id',
+    params.poolId,
+    'Account id',
+    params.accountId,
+    'Collateral address',
+    collateralType?.tokenAddress
+  );
 
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
+  console.log('collateralType', collateralType);
 
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
@@ -170,6 +186,8 @@ export const Undelegate = () => {
     ? liquidityPosition?.collateralAmount
     : newDebt.mul(collateralType.issuanceRatioD18).div(collateralType.price).mul(0.98);
 
+  console.log('Liquidity Position', liquidityPosition);
+  console.log('Max collateral', maxCollateral);
   return (
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}

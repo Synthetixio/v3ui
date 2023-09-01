@@ -44,7 +44,7 @@ export const useWrapEth = () => {
   };
 };
 export const useUnWrapEth = () => {
-  const ethCollateral = useCollateralType('WETH');
+  const { data: ethCollateral } = useCollateralType('WETH');
   const signer = useSigner();
   const { data: ethBalance, refetch: refetchETHBalance } = useEthBalance();
   const { data: wethBalance, refetch: refetchWETHBalance } = useTokenBalance(
