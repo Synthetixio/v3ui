@@ -1,5 +1,5 @@
 {
-  "address": "0x6fb9Ed0082676B2E5b8D54eDC2ef1EEbF1e40346",
+  "address": "0x74B4709D8eFAA93918D78cdC79e92d97B6C7FC7C",
   "abi": [
     {
       "inputs": [],
@@ -317,6 +317,25 @@
           "type": "uint128"
         }
       ],
+      "name": "getMarketAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        }
+      ],
       "name": "getMarketCollateral",
       "outputs": [
         {
@@ -412,6 +431,64 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "getMarketPoolDebtDistribution",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "sharesD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint128",
+          "name": "totalSharesD18",
+          "type": "uint128"
+        },
+        {
+          "internalType": "int128",
+          "name": "valuePerShareD27",
+          "type": "int128"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        }
+      ],
+      "name": "getMarketPools",
+      "outputs": [
+        {
+          "internalType": "uint128[]",
+          "name": "inRangePoolIds",
+          "type": "uint128[]"
+        },
+        {
+          "internalType": "uint128[]",
+          "name": "outRangePoolIds",
+          "type": "uint128[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -622,7 +699,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x4297ac8200953659b1317b6865155e4420b3d25433f28dbffdcb608923bf90c1",
+  "deployTxnHash": "0xb125aedb1116f32c069d8e4119515c48bb218e445f7bb1708c7c3206e3791dae",
   "sourceName": "contracts/modules/core/MarketManagerModule.sol",
   "contractName": "MarketManagerModule",
   "deployedOn": "contract.MarketManagerModule"

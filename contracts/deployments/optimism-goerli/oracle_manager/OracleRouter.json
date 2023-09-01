@@ -1,5 +1,5 @@
 {
-  "address": "0x3410CAB7996887777b2144C0DdE49713574Da5DB",
+  "address": "0x85b3b32d809627C7aD5264f2984Fd294417205DA",
   "abi": [
     {
       "inputs": [
@@ -250,6 +250,22 @@
     {
       "inputs": [
         {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "int256",
           "name": "price",
           "type": "int256"
@@ -461,6 +477,57 @@
     {
       "inputs": [
         {
+          "internalType": "bytes32",
+          "name": "nodeId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeKeys",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeValues",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "processWithRuntime",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int256",
+              "name": "price",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse2",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct NodeOutput.Data",
+          "name": "node",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "enum NodeDefinition.NodeType",
           "name": "nodeType",
           "type": "uint8"
@@ -489,7 +556,7 @@
     }
   ],
   "deployedOn": "router.OracleRouter",
-  "deployTxnHash": "0xfc8006dbd5a4b34a4b5a1d37c7db26d3b6ef4f18130b36d05155e4b1d0a74fe1",
+  "deployTxnHash": "0x00b1fb13e65f1ce4bcecc1f47a23fcea0b31caee6dec7f4327ec124c32f6f3a5",
   "contractName": "OracleRouter",
   "sourceName": "OracleRouter.sol"
 }
