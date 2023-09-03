@@ -10,7 +10,7 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 
 export const RepayUi: FC<{
   debtChange: Wei;

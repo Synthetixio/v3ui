@@ -79,7 +79,13 @@ export const ManageStatsUi: FC<{
             // TODO, need a function to burn to target so dust debt not left over
             value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
             newValue={newDebt}
-            formatFn={(val: Wei) => currency(val, { currency: 'USD', style: 'currency' })}
+            formatFn={(val: Wei) =>
+              currency(val, {
+                currency: 'USD',
+                style: 'currency',
+                maximumFractionDigits: 2,
+              })
+            }
             hasChanges={hasChanges}
           />
         </Flex>
