@@ -70,8 +70,7 @@ function VaultRowUi({
           <Button
             onClick={() =>
               navigate(
-                generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-                  accountId,
+                generatePath('/positions/:collateralSymbol/:poolId', {
                   poolId,
                   collateralSymbol: collateralType.symbol,
                 })

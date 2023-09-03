@@ -18,7 +18,15 @@ export default function Header() {
       <Flex mb="8" py="4" bg="navy.900" borderBottomWidth="1px" borderBottomColor="gray.900">
         <Container maxW="1024px" as={Flex} justifyContent="space-between" alignItems="center">
           <Box display={{ base: 'none', md: 'inline-block' }}>
-            <Link to="/" as={RouterLink} py={4} pr={2}>
+            <Link
+              to={{
+                pathname: '/',
+                search: location.search,
+              }}
+              as={RouterLink}
+              py={4}
+              pr={2}
+            >
               <Logo />
             </Link>
           </Box>

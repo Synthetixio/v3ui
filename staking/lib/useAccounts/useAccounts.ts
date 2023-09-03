@@ -35,7 +35,6 @@ export function useAccounts() {
 }
 
 export function useCreateAccount() {
-  const { refetch, data } = useAccounts();
   const { data: CoreProxy } = useCoreProxy();
 
   return useMutation({
@@ -43,9 +42,22 @@ export function useCreateAccount() {
       try {
         if (!CoreProxy) throw new Error('CoreProxy undefined');
         const tx = await CoreProxy['createAccount()']();
-        await tx.wait();
-        refetch();
-        return data;
+        const res = await tx.wait();
+
+        let newAccountId: string | undefined;
+
+        res.logs.forEach((log) => {
+          if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
+            const accountId = CoreProxy.interface.decodeEventLog(
+              'AccountCreated',
+              log.data,
+              log.topics
+            ).accountId;
+            newAccountId = accountId.toString();
+          }
+        });
+
+        return [newAccountId];
       } catch (error) {
         console.error(error);
         throw error;

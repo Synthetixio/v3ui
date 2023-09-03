@@ -19,7 +19,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -129,7 +129,6 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-
       <Button
         data-testid="undelegate submit"
         type="submit"

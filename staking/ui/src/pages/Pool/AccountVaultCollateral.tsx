@@ -13,7 +13,7 @@ const AccountVaultCollateralUi: FC<{
   poolId: string;
   accountId: string;
   isLoading: boolean;
-}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, accountId, poolId }) => {
+}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId }) => {
   const navigate = useNavigate();
   return (
     <>
@@ -36,13 +36,13 @@ const AccountVaultCollateralUi: FC<{
       )}
       <Button
         onClick={() => {
-          navigate(
-            generatePath('/accounts/:accountId/positions/:collateral/:poolId', {
-              accountId,
+          navigate({
+            pathname: generatePath('/positions/:collateral/:poolId', {
               collateral: collateralSymbol,
               poolId,
-            })
-          );
+            }),
+            search: location.search,
+          });
         }}
         mt={1}
       >

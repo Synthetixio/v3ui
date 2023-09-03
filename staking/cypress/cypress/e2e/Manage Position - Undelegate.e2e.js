@@ -4,6 +4,7 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
+
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 100_500 });
@@ -23,12 +24,12 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
 
   cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
+    const path = generatePath('/positions/:collateralSymbol/:poolId', {
       accountId,
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=undelegate`);
+    cy.visit(`${path}?manageAction=undelegate&accountId=${accountId}`);
   });
 
   // Need to wait for max undelegate amount to be fetched

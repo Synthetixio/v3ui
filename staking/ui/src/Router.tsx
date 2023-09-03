@@ -12,21 +12,13 @@ import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
-import { AccountRequired } from './components/AccountRequired';
 
 export const Router = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route element={<DefaultLayout />}>
-          <Route
-            path="/accounts/:accountId/positions/:collateralSymbol/:poolId"
-            element={
-              <AccountRequired redirectPath="/">
-                <Manage />
-              </AccountRequired>
-            }
-          />
+          <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
           <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
           {/*<Route path="/accounts/:accountId/collateral" element={<Collateral />} />*/}
           {/*<Route path="/accounts/:accountId/accept-nomination" element={<AcceptNomination />} />*/}

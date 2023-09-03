@@ -84,7 +84,6 @@ export function HomeUi({
         <Welcome />
       </Box>
       <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} />
-
       {isLoading ? (
         <BorderBox p={4} mt={8} flexDir="column">
           <Flex

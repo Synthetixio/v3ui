@@ -9,7 +9,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 
@@ -155,6 +155,7 @@ export const Deposit = () => {
   );
 
   if (!collateralType || !accountCollateral) return null;
+
   return (
     <DepositUi
       accountCollateral={accountCollateral}

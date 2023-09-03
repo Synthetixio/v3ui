@@ -379,26 +379,17 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     if (isSuccess && params.poolId && collateralType?.symbol) {
       send(Events.RESET);
       onClose();
-      navigate(
-        generatePath('/accounts/:accountId/positions/:collateralType/:poolId', {
-          accountId: params.accountId || newAccountId,
+      navigate({
+        pathname: generatePath('/positions/:collateralType/:poolId', {
           collateralType: collateralType.symbol,
           poolId: params.poolId,
-        })
-      );
+        }),
+        search: location.search,
+      });
     }
     send(Events.RESET);
     onClose();
-  }, [
-    send,
-    onClose,
-    state,
-    params.poolId,
-    params.accountId,
-    collateralType?.symbol,
-    navigate,
-    newAccountId,
-  ]);
+  }, [send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
 
   const onSubmit = useCallback(async () => {
     if (state.matches(State.success)) {
