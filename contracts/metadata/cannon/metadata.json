@@ -1,4 +1,6 @@
 {
+  "generator": "cannon cli 2.5.4",
+  "timestamp": 1693550065,
   "def": {
     "name": "synthetix-local",
     "version": "0.0.1",
@@ -8,10 +10,10 @@
         "defaultValue": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
       },
       "synthetix": {
-        "defaultValue": "synthetix:latest"
+        "defaultValue": "synthetix:3.2.0"
       },
       "spotMarket": {
-        "defaultValue": "synthetix-spot-market:latest"
+        "defaultValue": "synthetix-spot-market:3.2.0"
       },
       "defaultPoolId": {
         "defaultValue": "1"
@@ -30,7 +32,7 @@
     },
     "provision": {
       "collateralToken": {
-        "source": "mintable-token:latest",
+        "source": "mintable-token:1.1",
         "options": {
           "symbol": "SNX",
           "name": "Snax"
@@ -292,28 +294,12 @@
         "func": "addApprovedPool",
         "args": ["<%= settings.anotherPoolId %>"],
         "depends": ["invoke.createAnotherPool"]
-      },
-      "setAnotherPoolConfiguration": {
-        "target": ["synthetix.CoreProxy"],
-        "from": "<%= settings.user %>",
-        "func": "setPoolConfiguration",
-        "args": [
-          "<%= settings.anotherPoolId %>",
-          [
-            {
-              "marketId": "<%= extras.synthMarketId %>",
-              "weightD18": "1",
-              "maxDebtShareValueD18": "<%= parseEther('2') %>"
-            }
-          ]
-        ],
-        "depends": ["invoke.createAnotherPool", "invoke.updateSynthPriceData"]
       }
     }
   },
   "options": {},
   "status": "complete",
   "meta": {},
-  "miscUrl": "file://7edddf99fd1dba7978abb91c7b73109e.json",
+  "miscUrl": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 13370
 }

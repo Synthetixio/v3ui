@@ -154,6 +154,8 @@ export const abi = [
   'function getMarketFees(uint128, uint256 amount) view returns (uint256 depositFeeAmount, uint256 withdrawFeeAmount)',
   'function getMarketMinDelegateTime(uint128 marketId) view returns (uint32)',
   'function getMarketNetIssuance(uint128 marketId) view returns (int128)',
+  'function getMarketPoolDebtDistribution(uint128 marketId, uint128 poolId) returns (uint256 sharesD18, uint128 totalSharesD18, int128 valuePerShareD27)',
+  'function getMarketPools(uint128 marketId) returns (uint128[] inRangePoolIds, uint128[] outRangePoolIds)',
   'function getMarketReportedDebt(uint128 marketId) view returns (uint256)',
   'function getMarketTotalDebt(uint128 marketId) view returns (int256)',
   'function getMinLiquidityRatio(uint128 marketId) view returns (uint256)',
@@ -433,6 +435,8 @@ export interface CoreProxyInterface extends utils.Interface {
     'getMarketFees(uint128,uint256)': FunctionFragment;
     'getMarketMinDelegateTime(uint128)': FunctionFragment;
     'getMarketNetIssuance(uint128)': FunctionFragment;
+    'getMarketPoolDebtDistribution(uint128,uint128)': FunctionFragment;
+    'getMarketPools(uint128)': FunctionFragment;
     'getMarketReportedDebt(uint128)': FunctionFragment;
     'getMarketTotalDebt(uint128)': FunctionFragment;
     'getMinLiquidityRatio(uint128)': FunctionFragment;
@@ -557,6 +561,8 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'getMarketFees'
       | 'getMarketMinDelegateTime'
       | 'getMarketNetIssuance'
+      | 'getMarketPoolDebtDistribution'
+      | 'getMarketPools'
       | 'getMarketReportedDebt'
       | 'getMarketTotalDebt'
       | 'getMinLiquidityRatio(uint128)'
@@ -793,6 +799,11 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'getMarketMinDelegateTime', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketNetIssuance', values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: 'getMarketPoolDebtDistribution',
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: 'getMarketPools', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketReportedDebt', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketTotalDebt', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -980,6 +991,8 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getMarketFees', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketMinDelegateTime', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketNetIssuance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketPoolDebtDistribution', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketPools', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketReportedDebt', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketTotalDebt', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMinLiquidityRatio(uint128)', data: BytesLike): Result;
@@ -2123,6 +2136,17 @@ export interface CoreProxy extends BaseContract {
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -2750,6 +2774,17 @@ export interface CoreProxy extends BaseContract {
 
   getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+  getMarketPoolDebtDistribution(
+    marketId: BigNumberish,
+    poolId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  getMarketPools(
+    marketId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -3354,6 +3389,25 @@ export interface CoreProxy extends BaseContract {
     getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        sharesD18: BigNumber;
+        totalSharesD18: BigNumber;
+        valuePerShareD27: BigNumber;
+      }
+    >;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber[], BigNumber[]] & { inRangePoolIds: BigNumber[]; outRangePoolIds: BigNumber[] }
+    >;
 
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -4468,6 +4522,17 @@ export interface CoreProxy extends BaseContract {
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketTotalDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -5101,6 +5166,17 @@ export interface CoreProxy extends BaseContract {
     getMarketNetIssuance(
       marketId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketReportedDebt(

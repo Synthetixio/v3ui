@@ -1,5 +1,5 @@
 {
-  "address": "0x7B3083aE8A950b88828C389bef34Efa3CF2a6f32",
+  "address": "0x95caFfA73Ab281AE84729ce74f55c934D74a1F34",
   "abi": [
     {
       "inputs": [
@@ -28,13 +28,13 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x47162ba19e9ad6b751991b48593ca938639757b62a61a613ddbd4b12c6c2eb0b",
+  "deployTxnHash": "0x19f164a2cbb6a63c42c7ab186f0b487d4739f64c5f2313b425c5108ae6b71935",
   "sourceName": "contracts/modules/core/MulticallModule.sol",
   "contractName": "MulticallModule",
   "deployedOn": "contract.MulticallModule"

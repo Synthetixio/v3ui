@@ -1,5 +1,5 @@
 {
-  "address": "0xa0Cb2b24a2d929992c56c8BbcD585967Dbd8DB0C",
+  "address": "0x984c76c9B38D5DBC8D213Df3dabbcfac62Ee7E20",
   "abi": [
     {
       "inputs": [
@@ -680,7 +680,7 @@
     }
   ],
   "deployedOn": "router.SynthRouter",
-  "deployTxnHash": "0x0fe01772f5fd27e3b3915d9b9cdeadcd1b31b1a4cff663f9a8cd447e8a64511d",
+  "deployTxnHash": "0x960fcf66b921a06e211ab279f9313b4f7e91dc607ced92819aa876d161d429ac",
   "contractName": "SynthRouter",
   "sourceName": "SynthRouter.sol"
 }
