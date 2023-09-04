@@ -46,7 +46,8 @@ func = "registerNode"
 args = [
     3, # Type for Chainlink aggregator
     "<%= defaultAbiCoder.encode(['address', 'uint256', 'uint8'], [imports.collateralChainlinkMock.contracts.MockV3Aggregator.address, 0, 18]) %>",
-    [],
+    [
+    ],
 ]
 extra.tkn_oracle_id.event = "NodeRegistered"
 extra.tkn_oracle_id.arg = 0
@@ -58,7 +59,7 @@ target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "configureCollateral"
 args = [
-    { tokenAddress = "<%= imports.collateralToken.contracts.MintableToken.address %>", oracleNodeId = "<%= extras.tkn_oracle_id %>", issuanceRatioD18 = "<%= parseEther('2') %>", liquidationRatioD18 = "<%= parseEther('1.5') %>", liquidationRewardD18 = "<%= parseEther('1') %>", minDelegationD18 = "<%= parseEther('1') %>", depositingEnabled = true }
+    { tokenAddress = "<%= imports.collateralToken.contracts.MintableToken.address %>", oracleNodeId = "<%= extras.tkn_oracle_id %>", issuanceRatioD18 = "<%= parseEther('2') %>", liquidationRatioD18 = "<%= parseEther('1.5') %>", liquidationRewardD18 = "<%= parseEther('1') %>", minDelegationD18 = "<%= parseEther('1') %>", depositingEnabled = true },
 ]
 depends = ["invoke.registerCollateralPriceNode", "provision.collateralToken"]
 
@@ -66,20 +67,14 @@ depends = ["invoke.registerCollateralPriceNode", "provision.collateralToken"]
 target = ["synthetix.CoreProxy"]
 fromCall.func = "owner"
 func = "setFeatureFlagAllowAll"
-args = [
-    "<%= formatBytes32String('registerMarket') %>",
-    true
-]
+args = ["<%= formatBytes32String('registerMarket') %>", true]
 depends = ["provision.synthetix"]
 
 [invoke.allowAllCreatePool]
 target = ["synthetix.CoreProxy"]
 fromCall.func = "owner"
 func = "setFeatureFlagAllowAll"
-args = [
-    "<%= formatBytes32String('createPool') %>",
-    true
-]
+args = ["<%= formatBytes32String('createPool') %>", true]
 depends = ["provision.synthetix"]
 
 # Create pool
@@ -87,20 +82,14 @@ depends = ["provision.synthetix"]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "createPool"
-args = [
-    "<%= settings.defaultPoolId %>",
-    "<%= settings.user %>"
-]
+args = ["<%= settings.defaultPoolId %>", "<%= settings.user %>"]
 depends = ["invoke.allowAllCreatePool"]
 
 [invoke.configure_default_pool_name]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "setPoolName"
-args = [
-    "<%= settings.defaultPoolId %>",
-    "First Local Pool",
-]
+args = ["<%= settings.defaultPoolId %>", "First Local Pool"]
 depends = ["invoke.create_default_pool"]
 
 # Set pool as preferred
@@ -108,19 +97,14 @@ depends = ["invoke.create_default_pool"]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "setPreferredPool"
-args = [
-    "<%= settings.defaultPoolId %>",
-]
+args = ["<%= settings.defaultPoolId %>"]
 depends = ["invoke.create_default_pool"]
 
 # User receives collateral token
 [invoke.mintCollateral]
 target = ["collateralToken.MintableToken"]
 func = "mint"
-args = [
-    "<%= parseEther('10000') %>",
-    "<%= settings.user %>"
-]
+args = ["<%= parseEther('10000') %>", "<%= settings.user %>"]
 depends = ["provision.collateralToken"]
 
 # User creates account
@@ -166,7 +150,7 @@ args = [
     "<%= settings.defaultPoolId %>",
     "<%= imports.collateralToken.contracts.MintableToken.address %>",
     "<%= parseEther('1000') %>",
-    "<%= parseEther('1') %>"
+    "<%= parseEther('1') %>",
 ]
 depends = ["invoke.depositCollateral"]
 
@@ -179,7 +163,7 @@ args = [
     "<%= settings.accountId %>",
     "<%= settings.defaultPoolId %>",
     "<%= imports.collateralToken.contracts.MintableToken.address %>",
-    "<%= parseEther('500') %>"
+    "<%= parseEther('500') %>",
 ]
 depends = ["invoke.delegateCollateral"]
 
@@ -214,7 +198,11 @@ depends = ["provision.spotMarket"]
 target = ["spotMarket.SpotMarketProxy"]
 func = "updatePriceData"
 from = "<%= settings.user %>"
-args = ["<%= extras.synthMarketId %>", "<%= extras.tkn_oracle_id %>", "<%= extras.tkn_oracle_id %>"]
+args = [
+    "<%= extras.synthMarketId %>",
+    "<%= extras.tkn_oracle_id %>",
+    "<%= extras.tkn_oracle_id %>",
+]
 depends = ['invoke.createSynth', 'invoke.registerCollateralPriceNode']
 
 # Add a 1% fixed feed on atomic exchanges
@@ -230,7 +218,11 @@ depends = ['invoke.createSynth']
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "configureMaximumMarketCollateral"
-args = ["<%= extras.synthMarketId %>", "<%= imports.collateralToken.contracts.MintableToken.address %>", "<%= MaxUint256 %>"]
+args = [
+    "<%= extras.synthMarketId %>",
+    "<%= imports.collateralToken.contracts.MintableToken.address %>",
+    "<%= MaxUint256 %>",
+]
 depends = ['invoke.createSynth', 'provision.collateralToken']
 
 # Initialize wrapper functionality on snxTKN market with an unlimited cap
@@ -238,7 +230,11 @@ depends = ['invoke.createSynth', 'provision.collateralToken']
 target = ["spotMarket.SpotMarketProxy"]
 func = "setWrapper"
 from = "<%= settings.user %>"
-args = ["<%= extras.synthMarketId %>", "<%= imports.collateralToken.contracts.MintableToken.address %>", "<%= MaxUint256 %>"]
+args = [
+    "<%= extras.synthMarketId %>",
+    "<%= imports.collateralToken.contracts.MintableToken.address %>",
+    "<%= MaxUint256 %>",
+]
 depends = ['invoke.setMarketCollateralSupplyCap']
 
 # Set Pool Configuration
@@ -250,7 +246,7 @@ args = [
     "<%= settings.defaultPoolId %>",
     [
         { marketId = "<%= extras.synthMarketId %>", weightD18 = "1", maxDebtShareValueD18 = "<%= parseEther('2') %>" },
-    ]
+    ],
 ]
 depends = ["invoke.create_default_pool", "invoke.updateSynthPriceData"]
 
@@ -259,20 +255,14 @@ depends = ["invoke.create_default_pool", "invoke.updateSynthPriceData"]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "createPool"
-args = [
-    "<%= settings.anotherPoolId %>",
-    "<%= settings.user %>"
-]
+args = ["<%= settings.anotherPoolId %>", "<%= settings.user %>"]
 depends = ["invoke.allowAllCreatePool"]
 
 [invoke.setAnotherPoolName]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "setPoolName"
-args = [
-    "<%= settings.anotherPoolId %>",
-    "Another Pool",
-]
+args = ["<%= settings.anotherPoolId %>", "Another Pool"]
 depends = ["invoke.createAnotherPool"]
 
 # Set pool as preferred
@@ -280,7 +270,5 @@ depends = ["invoke.createAnotherPool"]
 target = ["synthetix.CoreProxy"]
 from = "<%= settings.user %>"
 func = "addApprovedPool"
-args = [
-    "<%= settings.anotherPoolId %>",
-]
+args = ["<%= settings.anotherPoolId %>"]
 depends = ["invoke.createAnotherPool"]
