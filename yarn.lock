@@ -5034,7 +5034,6 @@ __metadata:
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     react: ^18.2.0
-    react-router-dom: ^6.11.2
   languageName: unknown
   linkType: soft
 
