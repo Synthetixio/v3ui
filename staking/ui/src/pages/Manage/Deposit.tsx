@@ -12,12 +12,16 @@ import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
+import { CollateralAlert } from '../../components/CollateralAlert';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
   collateralChange: Wei;
   ethBalance?: Wei;
-  tokenBalance?: Wei;
+  tokenBalance?: {
+    transferable: Wei;
+    collateral: Wei;
+  };
   displaySymbol: string;
   symbol: string;
   setCollateralChange: (val: Wei) => void;
@@ -33,12 +37,12 @@ export const DepositUi: FC<{
   const [activeBadge, setActiveBadge] = useState(0);
   const combinedTokenBalance = useMemo(() => {
     if (symbol !== 'WETH') {
-      return tokenBalance;
+      return tokenBalance?.transferable;
     }
     if (!tokenBalance || !ethBalance) {
       return undefined;
     }
-    return tokenBalance.add(ethBalance);
+    return tokenBalance.transferable.add(ethBalance);
   }, [symbol, tokenBalance, ethBalance]);
 
   return (
@@ -92,11 +96,11 @@ export const DepositUi: FC<{
                     if (!tokenBalance) {
                       return;
                     }
-                    setCollateralChange(tokenBalance);
+                    setCollateralChange(tokenBalance.transferable);
                   }}
                 >
                   <Text>{symbol} Balance:</Text>
-                  <Amount value={tokenBalance} />
+                  <Amount value={tokenBalance?.transferable} />
                 </Flex>
                 {symbol === 'WETH' ? (
                   <Flex
@@ -134,6 +138,9 @@ export const DepositUi: FC<{
           activeBadge={activeBadge}
         />
       </BorderBox>
+      {tokenBalance?.collateral.gt(0) && symbol === 'SNX' && (
+        <CollateralAlert mt={2} mb={6} tokenBalance={tokenBalance.collateral} />
+      )}
       <Button data-testid="deposit submit" type="submit">
         Add {displaySymbol}
       </Button>
