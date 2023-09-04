@@ -52,8 +52,8 @@ export function useCreateAccount() {
               'AccountCreated',
               log.data,
               log.topics
-            ).accountId;
-            newAccountId = accountId.toString();
+            )?.accountId;
+            newAccountId = accountId?.toString();
           }
         });
 
