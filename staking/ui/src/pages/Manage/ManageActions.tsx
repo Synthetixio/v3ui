@@ -119,6 +119,7 @@ const ManageActionUi: FC<{
 export const ManageAction = () => {
   const params = useParams();
   const [_, setQueryParam] = useSearchParams();
+
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
     useContext(ManagePositionContext);

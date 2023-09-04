@@ -8,6 +8,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 20 });
     cy.task('approveCollateral', { privateKey, symbol: 'SNX' });
+
     cy.task('createAccount', { privateKey }).then((accountId) => {
       cy.wrap(accountId).as('accountId');
       cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 10 });
@@ -30,12 +31,11 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
 
   cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-      accountId,
+    const path = generatePath('/positions/:collateralSymbol/:poolId', {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=repay`);
+    cy.visit(`${path}?manageAction=repay&accountId=${accountId}`);
   });
 
   // Need to wait for max repay amount to be fetched

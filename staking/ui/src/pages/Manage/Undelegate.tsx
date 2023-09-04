@@ -19,7 +19,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -130,7 +130,6 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-
       <Button
         data-testid="undelegate submit"
         type="submit"
@@ -141,10 +140,10 @@ export const UndelegateUi: FC<{
     </Flex>
   );
 };
+
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: liquidityPosition } = useLiquidityPosition({
@@ -168,12 +167,11 @@ export const Undelegate = () => {
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
-  const maxCollateral = newDebt.eq(0)
+  // TODO: Fix issues with dust here
+  const maxCollateral = newDebt.lte(0.01)
     ? liquidityPosition?.collateralAmount
     : newDebt.mul(collateralType.issuanceRatioD18).div(collateralType.price).mul(0.98);
 
-  console.log('Liquidity Position', liquidityPosition);
-  console.log('Max collateral', maxCollateral);
   return (
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}

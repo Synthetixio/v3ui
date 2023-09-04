@@ -203,8 +203,7 @@ export const CollateralSection = () => {
   const params = useParams();
 
   const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   return <CollateralSectionUi vaultsData={vaultsData} poolName={pool?.name} />;
 };

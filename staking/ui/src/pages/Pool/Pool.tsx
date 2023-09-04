@@ -32,8 +32,10 @@ export const PoolUi: FC<{
 
 export const Pool = () => {
   const params = useParams();
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
+
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
+
   return (
     <>
       <Helmet>

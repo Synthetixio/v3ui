@@ -4,12 +4,14 @@ it('creates new account with first deposit of SNX', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
+
   cy.connectWallet().then(({ address }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 100 });
   });
 
   cy.viewport(1000, 800);
+
   cy.visit(
     generatePath('/deposit/:collateralSymbol/:poolId', {
       poolId: '1',
@@ -39,16 +41,5 @@ it('creates new account with first deposit of SNX', () => {
 
   cy.get('[data-testid="deposit modal"]').should('not.exist');
 
-  cy.location('pathname').should('include', 'accounts').should('include', 'positions');
-
-  cy.get('[data-testid="current account id"]').then((element) => {
-    const accountId = element.attr('data-account-id');
-    cy.wrap(accountId).as('accountId');
-  });
-
-  cy.get('@accountId').then((accountId) => {
-    cy.url().should('include', `/accounts/${accountId}`);
-  });
-
-  cy.get('[data-action="borrow"][data-active="true"]').should('include.text', 'Borrow');
+  cy.location('pathname').should('include', 'positions');
 });

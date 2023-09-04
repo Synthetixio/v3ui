@@ -92,8 +92,9 @@ export type UndelegateModalProps = FC<{
 }>;
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
   const params = useParams();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { collateralChange } = useContext(ManagePositionContext);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,

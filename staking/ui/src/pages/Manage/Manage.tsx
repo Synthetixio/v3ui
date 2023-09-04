@@ -8,17 +8,12 @@ import { ManageAction } from './ManageActions';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from './ManageStats';
 import { HomeLink } from '@snx-v3/HomeLink';
-import { usePool } from '@snx-v3/usePools';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Rewards } from '../../components/Rewards';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 
 export const ManageUi: FC<{
   collateralType?: CollateralType;
-  poolName?: string;
-  poolId?: string;
-  navigate: NavigateFunction;
   isLoading: boolean;
   rewards?: RewardsType;
 }> = ({ collateralType, isLoading, rewards }) => {
@@ -96,16 +91,12 @@ export const ManageUi: FC<{
 export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
-  const navigate = useNavigate();
-
   const { isLoading: isCollateralLoading, data: collateralType } =
     useCollateralType(collateralSymbol);
 
-  const { isLoading: isPoolDataLoading, data: pool } = usePool(poolId);
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const isInitialQueriesLoading =
-    isCollateralLoading || isPoolDataLoading || isPoolGraphDataLoading;
+  const isInitialQueriesLoading = isCollateralLoading || isPoolGraphDataLoading;
 
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
@@ -119,14 +110,7 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
-      <ManageUi
-        isLoading={isLoading}
-        collateralType={collateralType}
-        navigate={navigate}
-        poolName={pool?.name}
-        poolId={pool?.id}
-        rewards={rewardsData}
-      />
+      <ManageUi isLoading={isLoading} collateralType={collateralType} rewards={rewardsData} />
     </ManagePositionProvider>
   );
 };

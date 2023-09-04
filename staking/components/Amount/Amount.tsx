@@ -20,6 +20,7 @@ export function Amount({
     }
     const formattedValue = currency(value);
     const cleanNumber = wei(formattedValue.replaceAll(',', ''));
+
     return {
       formattedValue,
       preciseValue: value.eq(cleanNumber) ? formattedValue : value.toString(),

@@ -4,6 +4,7 @@ it('should deposit additional SNX collateral', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
+
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 100 });
@@ -22,13 +23,13 @@ it('should deposit additional SNX collateral', () => {
   });
 
   cy.viewport(1000, 800);
+
   cy.get('@accountId').then((accountId) => {
-    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-      accountId,
+    const path = generatePath('/positions/:collateralSymbol/:poolId', {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=deposit`);
+    cy.visit(`${path}?manageAction=deposit&accountId=${accountId}`);
   });
 
   cy.get('[data-testid="manage stats collateral"]').should('include.text', '20 SNX');

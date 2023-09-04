@@ -25,7 +25,10 @@ export function PoolItem({ name, value }: { name: string; value: string }) {
           ) : (
             <Link
               as={NavLink}
-              to={generatePath('/pools/:poolId', { poolId: value })}
+              to={{
+                pathname: generatePath('/pools/:poolId', { poolId: value }),
+                search: location.search,
+              }}
               color="cyan.500"
               display="inline-block"
               transform="translateY(-1.5px)"

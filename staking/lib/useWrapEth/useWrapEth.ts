@@ -10,8 +10,9 @@ import { useCallback } from 'react';
 const minimalWETHABI = ['function deposit() payable', 'function withdraw(uint256 wad)'];
 
 export const useWrapEth = () => {
-  const { data: ethCollateral } = useCollateralType('WETH');
   const signer = useSigner();
+
+  const { data: ethCollateral } = useCollateralType('WETH');
   const { data: ethBalance, refetch: refetchETHBalance } = useEthBalance();
   const { data: wethBalance, refetch: refetchWETHBalance } = useTokenBalance(
     ethCollateral?.tokenAddress
@@ -43,13 +44,16 @@ export const useWrapEth = () => {
     ethBalance,
   };
 };
+
 export const useUnWrapEth = () => {
-  const { data: ethCollateral } = useCollateralType('WETH');
   const signer = useSigner();
+
+  const { data: ethCollateral } = useCollateralType('WETH');
   const { data: ethBalance, refetch: refetchETHBalance } = useEthBalance();
   const { data: wethBalance, refetch: refetchWETHBalance } = useTokenBalance(
     ethCollateral?.tokenAddress
   );
+
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: async (amount: Wei) => {
       if (!ethCollateral || !signer) return;
@@ -58,6 +62,7 @@ export const useUnWrapEth = () => {
       await txn.wait();
     },
   });
+
   const exec = useCallback(
     async (amount: Wei) => {
       if (!wethBalance) return;
@@ -67,6 +72,7 @@ export const useUnWrapEth = () => {
     },
     [mutateAsync, refetchETHBalance, refetchWETHBalance, wethBalance]
   );
+
   return {
     exec,
     isLoading,

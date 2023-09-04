@@ -49,6 +49,7 @@ describe('Pool page / Market section', () => {
           name: 'POOL_NAME',
           total_weight: null,
           configurations: [],
+          registered_distributors: [],
         }}
       />
     );
@@ -73,6 +74,7 @@ describe('Pool page / Market section', () => {
           id: 'POOL_ID',
           name: 'POOL_NAME',
           total_weight: null,
+          registered_distributors: [],
           configurations: [
             {
               id: 'MARKET_ID',
@@ -108,6 +110,7 @@ describe('Pool page / Market section', () => {
         poolData={{
           id: 'POOL_ID',
           name: 'POOL_NAME',
+          registered_distributors: [],
           total_weight: wei(10),
           configurations: [
             {

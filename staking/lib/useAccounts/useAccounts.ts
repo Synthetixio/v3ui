@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAccountProxy } from '@snx-v3/useAccountProxy';
 import { useNetwork, useWallet, onboard } from '@snx-v3/useBlockchain';
 import { searchParamsToObject, sortObject } from '@snx-v3/useParams';
 import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
 export function useAccounts() {
   const wallet = useWallet();
@@ -30,6 +31,38 @@ export function useAccounts() {
     },
     enabled: Boolean(AccountProxy?.address && wallet?.address),
     placeholderData: [],
+  });
+}
+
+export function useCreateAccount() {
+  const { data: CoreProxy } = useCoreProxy();
+
+  return useMutation({
+    mutationFn: async function () {
+      try {
+        if (!CoreProxy) throw new Error('CoreProxy undefined');
+        const tx = await CoreProxy['createAccount()']();
+        const res = await tx.wait();
+
+        let newAccountId: string | undefined;
+
+        res.logs.forEach((log) => {
+          if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
+            const accountId = CoreProxy.interface.decodeEventLog(
+              'AccountCreated',
+              log.data,
+              log.topics
+            )?.accountId;
+            newAccountId = accountId?.toString();
+          }
+        });
+
+        return [newAccountId];
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
   });
 }
 

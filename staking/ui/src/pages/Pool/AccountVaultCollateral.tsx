@@ -35,12 +35,13 @@ const AccountVaultCollateralUi: FC<{
       )}
       <Button
         onClick={() => {
-          navigate(
-            generatePath('/positions/:collateral/:poolId', {
+          navigate({
+            pathname: generatePath('/positions/:collateral/:poolId', {
               collateral: collateralSymbol,
               poolId,
-            })
-          );
+            }),
+            search: location.search,
+          });
         }}
         mt={1}
       >
