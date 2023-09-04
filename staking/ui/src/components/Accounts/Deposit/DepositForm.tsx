@@ -47,7 +47,10 @@ export function DepositFormUi({
   openConnectModal: (() => void) | undefined;
   isConnected: boolean;
   collateralType?: CollateralType;
-  tokenBalance?: Wei;
+  tokenBalance?: {
+    transferrable: Wei;
+    collateral: Wei;
+  };
   ethBalance?: Wei;
   poolId?: string;
   accountId?: string;
@@ -62,12 +65,12 @@ export function DepositFormUi({
 
   const combinedTokenBalance = useMemo(() => {
     if (collateralType?.symbol !== 'WETH') {
-      return tokenBalance;
+      return tokenBalance?.transferrable;
     }
     if (!tokenBalance || !ethBalance) {
       return undefined;
     }
-    return tokenBalance.add(ethBalance);
+    return tokenBalance.transferrable.add(ethBalance);
   }, [collateralType?.symbol, tokenBalance, ethBalance]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
@@ -180,12 +183,12 @@ export function DepositFormUi({
                     if (!tokenBalance) {
                       return;
                     }
-                    setInputAmount(tokenBalance);
+                    setInputAmount(tokenBalance.transferrable);
                   }}
                 >
                   <Amount
                     prefix={`${collateralType.symbol} Wallet Balance: `}
-                    value={tokenBalance}
+                    value={tokenBalance?.transferrable}
                   />
                 </Link>
                 {collateralType?.symbol === 'WETH' ? (
@@ -228,7 +231,6 @@ export function DepositFormUi({
             }}
             activeBadge={activeBadge}
           />
-
           <Collapse
             in={inputAmount.gt(0) && inputAmount.lt(collateralType.minDelegationD18)}
             animateOpacity
@@ -251,7 +253,18 @@ export function DepositFormUi({
           Deposit Collateral
         </Button>
       </Box>
-
+      {tokenBalance?.collateral.gt(0) && (
+        <Alert borderLeftColor="cyan.500" borderRadius="6px">
+          <AlertIcon color="cyan.500" />
+          <Text color="white" fontFamily="heading" fontSize="16px" lineHeight="24px">
+            You have a {tokenBalance.collateral.toString(2)} SNX active staking position on V2.
+            You&lsquo;ll need to unstake on V2 before being able to deposit on V3.{' '}
+            <Link textDecor="underline" href="https://staking.synthetix.io/" target="_blank">
+              Go to V2
+            </Link>
+          </Text>
+        </Alert>
+      )}
       {amount.gt(0) ? (
         <DepositModal
           collateralChange={amount}

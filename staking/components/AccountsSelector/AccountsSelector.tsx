@@ -1,11 +1,11 @@
 // import { CheckIcon } from '@chakra-ui/icons';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { Button, Fade, Skeleton, Text, useClipboard } from '@chakra-ui/react';
 // import { createSearchParams, generatePath, Link as RouterLink } from 'react-router-dom';
 import { prettyString } from '@snx-v3/format';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
-import { useSearchParams } from 'react-router-dom';
+import { useAccountUrlSync } from '@snx-v3/useAccounts';
 
 // function AccountMenuItem({ accountId }: { accountId: string }) {
 //   const params = useParams();
@@ -102,7 +102,6 @@ export function AccountsSelectorUi({
 
 export function AccountsSelector() {
   const params = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     data: accounts,
@@ -116,6 +115,8 @@ export function AccountsSelector() {
     data: createAccountData,
   } = useCreateAccount();
 
+  useAccountUrlSync();
+
   const isLoading = isAccountsLoading || isAccountsFetching || isCreateAccountLoading || !accounts;
 
   // If we create an account, use it
@@ -127,13 +128,6 @@ export function AccountsSelector() {
     : accounts?.includes(params?.accountId || '')
     ? params.accountId
     : accounts?.[0];
-
-  useEffect(() => {
-    if (accountId && !params.accountId) {
-      const existingParams = Object.fromEntries(searchParams);
-      setSearchParams({ ...existingParams, accountId });
-    }
-  }, [accountId, params, searchParams, setSearchParams]);
 
   return (
     <AccountsSelectorUi isLoading={isLoading} createAccount={createAccount} accountId={accountId} />
