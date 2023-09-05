@@ -167,7 +167,7 @@ export const Undelegate = () => {
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
   // TODO: Fix issues with dust here
-  const maxCollateral = newDebt.lte(0.01)
+  const maxCollateral = newDebt.lt(0)
     ? liquidityPosition?.collateralAmount
     : newDebt.mul(collateralType.issuanceRatioD18).div(collateralType.price).mul(0.98);
 
