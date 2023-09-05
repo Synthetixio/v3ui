@@ -14,13 +14,19 @@ export type AccountCollateralType = {
   totalLocked: Wei;
 };
 
-export function useAccountCollateral({ accountId }: { accountId?: string }) {
+export function useAccountCollateral({
+  accountId,
+  includeStablecoin,
+}: {
+  accountId?: string;
+  includeStablecoin?: boolean;
+}) {
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
 
   const network = useNetwork();
 
-  const collateralTypes = useCollateralTypes();
+  const collateralTypes = useCollateralTypes(includeStablecoin);
 
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 

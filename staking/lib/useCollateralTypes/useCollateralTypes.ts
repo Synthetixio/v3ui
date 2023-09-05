@@ -96,18 +96,20 @@ async function loadCollateralTypes({
   }));
 }
 
-export function useCollateralTypes() {
+export function useCollateralTypes(includeStablecoin = false) {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
 
   return useQuery({
-    queryKey: [network.name, 'CollateralTypes'],
+    queryKey: [network.name, 'CollateralTypes', { includeStablecoin }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
-
+      if (includeStablecoin) {
+        return collateralTypes;
+      }
       return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
     },
     placeholderData: [],

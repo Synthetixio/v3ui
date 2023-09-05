@@ -31,7 +31,7 @@ export function AvailableCollateralUi({
   timeToUnlock?: string;
   unlockDate?: string;
   AvailableCollateralRow: FC<{
-    accountCollateral: any;
+    accountCollateral: AccountCollateralType;
   }>;
 }) {
   if (accountCollaterals.length === 0) {
@@ -85,7 +85,8 @@ export function AvailableCollateralUi({
 
 export function AvailableCollateral() {
   const { accountId } = useParams();
-  const accountCollaterals = useAccountCollateral({ accountId });
+  const accountCollaterals = useAccountCollateral({ accountId, includeStablecoin: true });
+
   const accountCollateralUnlockDate = useAccountCollateralUnlockDate({ accountId });
 
   const formatTimeToUnlock = React.useCallback(() => {
