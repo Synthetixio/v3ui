@@ -1,5 +1,5 @@
 {
-  "address": "0x38ADA250C264A1472cF232f415DD87623Be9fF16",
+  "address": "0x86cEB5b37Ad87cE90afbe530D27191d914aE0ad9",
   "abi": [
     {
       "inputs": [],
@@ -490,7 +490,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x5129ddea41ae7d1653cdff738189e6a83ecc5118469f6f653971e0b0c84eee24",
+  "deployTxnHash": "0x5219f581782fb68d1973b60d549168a118b813a0661c159b73f3177c6709d156",
   "sourceName": "contracts/modules/token/SynthTokenModule.sol",
   "contractName": "SynthTokenModule",
   "deployedOn": "contract.SynthTokenModule"

@@ -1,5 +1,5 @@
 {
-  "address": "0x391668b820B879fA2C359807e18Fad211F86A059",
+  "address": "0xAB85aF6144706f1F46a662952f44eE813b5e6C05",
   "abi": [
     {
       "inputs": [
@@ -26,6 +26,22 @@
         }
       ],
       "name": "FeatureUnavailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -329,7 +345,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x72045fba680225d1dcd0b86ab0a5af3350c08f2abd3fe19952a0778fcc953fb2",
+  "deployTxnHash": "0xd51d001c690bc9c433907daef508cb0885879df5456f0a8996485278088f1c37",
   "sourceName": "contracts/modules/core/IssueUSDModule.sol",
   "contractName": "IssueUSDModule",
   "deployedOn": "contract.IssueUSDModule"
