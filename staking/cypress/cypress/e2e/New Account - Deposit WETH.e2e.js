@@ -47,5 +47,9 @@ it.skip('creates new account with first deposit of WETH', () => {
     cy.wrap(accountId).as('accountId');
   });
 
+  cy.get('@accountId').then((accountId) => {
+    cy.url().should('include', `?accountId=${accountId}`);
+  });
+
   cy.get('[data-action="borrow"][data-active="true"]').should('include.text', 'Borrow');
 });

@@ -189,7 +189,11 @@ export function DepositFormUi({
                 >
                   <Amount
                     prefix={`${collateralType.symbol} Wallet Balance: `}
-                    value={tokenBalance?.transferable}
+                    value={
+                      collateralType.symbol === 'SNX'
+                        ? tokenBalance?.transferable
+                        : accountCollateral?.availableCollateral
+                    }
                   />
                 </Link>
                 {collateralType?.symbol === 'WETH' ? (

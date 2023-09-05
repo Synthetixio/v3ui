@@ -219,7 +219,7 @@ export function Home() {
   const navigate = useNavigate();
 
   const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
-  const { data: poolsData, isLoading: isPoolsLoading } = usePools();
+  const { data: pools, isLoading: isPoolsLoading } = usePools();
 
   const {
     data: liquidityPositionsById,
@@ -246,7 +246,7 @@ export function Home() {
           liquidityPositionsById ? Object.values(liquidityPositionsById) : undefined
         }
         collateralTypes={collateralTypes}
-        pools={poolsData || []}
+        pools={pools || []}
         navigate={navigate}
         VaultRow={VaultRow}
         AvailableCollateral={AvailableCollateral}

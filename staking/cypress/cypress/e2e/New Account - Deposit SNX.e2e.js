@@ -41,5 +41,14 @@ it('creates new account with first deposit of SNX', () => {
 
   cy.get('[data-testid="deposit modal"]').should('not.exist');
 
-  cy.location('pathname').should('include', 'positions');
+  cy.get('[data-testid="current account id"]').then((element) => {
+    const accountId = element.attr('data-account-id');
+    cy.wrap(accountId).as('accountId');
+  });
+
+  cy.get('@accountId').then((accountId) => {
+    cy.url().should('include', `accountId?=${accountId}`);
+  });
+
+  cy.get('[data-action="borrow"][data-active="true"]').should('include.text', 'Borrow');
 });
