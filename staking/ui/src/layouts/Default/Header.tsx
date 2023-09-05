@@ -21,7 +21,6 @@ export default function Header() {
             <Link
               to={{
                 pathname: '/',
-                search: location.search,
               }}
               as={RouterLink}
               py={4}
