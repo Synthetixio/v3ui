@@ -16,7 +16,7 @@ export function useTransferableSynthetix() {
   return useQuery({
     enabled: Boolean(provider && accountAddress && snxAddress),
     queryKey: [network.name, { address: account?.address }, 'transferableSynthetix'],
-    queryFn: async function (): Promise<{ transferable: Wei; collateral: Wei }> {
+    queryFn: async function (): Promise<{ transferable: Wei; collateral?: Wei }> {
       if (!(provider && accountAddress && snxAddress)) throw 'OMG';
       const contract = new ethers.Contract(
         snxAddress,
@@ -28,6 +28,14 @@ export function useTransferableSynthetix() {
         provider
       );
       try {
+        // Cannon case
+        if (network.name === 'cannon') {
+          const balanceOf = await contract.balanceOf(accountAddress);
+          return {
+            transferable: wei(balanceOf),
+          };
+        }
+
         // Normal case for SNX case
         const [transferableSynthetix, collateral] = await Promise.all([
           contract.transferableSynthetix(accountAddress),
@@ -39,16 +47,8 @@ export function useTransferableSynthetix() {
           collateral: wei(collateral),
         };
       } catch (e) {
-        // For local deployment we are dealing with a standard mintable token
-        const [transferableSynthetix, collateral] = await Promise.all([
-          contract.transferableSynthetix(accountAddress),
-          contract.collateral(accountAddress),
-        ]);
-
-        return {
-          transferable: wei(transferableSynthetix),
-          collateral: wei(collateral),
-        };
+        console.error(e);
+        throw e;
       }
     },
   });

@@ -20,7 +20,7 @@ export const DepositUi: FC<{
   ethBalance?: Wei;
   tokenBalance?: {
     transferable: Wei;
-    collateral: Wei;
+    collateral?: Wei;
   };
   displaySymbol: string;
   symbol: string;
@@ -138,7 +138,7 @@ export const DepositUi: FC<{
           activeBadge={activeBadge}
         />
       </BorderBox>
-      {tokenBalance?.collateral.gt(0) && symbol === 'SNX' && (
+      {tokenBalance?.collateral && tokenBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert mt={2} mb={6} tokenBalance={tokenBalance.collateral} />
       )}
       <Button data-testid="deposit submit" type="submit">

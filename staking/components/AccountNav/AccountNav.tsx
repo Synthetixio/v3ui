@@ -38,7 +38,7 @@ export function AccountNav() {
         <Link
           as={RouterLink}
           to={{
-            pathname: generatePath('/accounts/:accountId/settings', {
+            pathname: generatePath('/settings', {
               accountId: params.accountId,
             }),
             search: location.search,
