@@ -1,5 +1,5 @@
 {
-  "address": "0x01dBba791bf30eE4114a4Df11e06Ef77d9A0078f",
+  "address": "0x3bbC10ec407C5381888A7491826759B04c5d99Cb",
   "abi": [
     {
       "inputs": [
@@ -1261,6 +1261,85 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "InvalidMessage",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "NotCcipRouter",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "name": "UnsupportedNetwork",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "messageId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "sourceChainSelector",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes",
+              "name": "sender",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "token",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct CcipClient.EVMTokenAmount[]",
+              "name": "tokenAmounts",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct CcipClient.Any2EVMMessage",
+          "name": "message",
+          "type": "tuple"
+        }
+      ],
+      "name": "ccipReceive",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint128",
@@ -1316,6 +1395,22 @@
         }
       ],
       "name": "FailedTransfer",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -1877,7 +1972,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -1953,6 +2048,71 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "requiredAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "availableAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficientCcipFee",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "destChainId",
+          "type": "uint64"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "TransferCrossChainInitiated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "destChainId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferCrossChain",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "gasTokenUsed",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -2956,6 +3116,25 @@
           "type": "uint128"
         }
       ],
+      "name": "getMarketAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        }
+      ],
       "name": "getMarketCollateral",
       "outputs": [
         {
@@ -3051,6 +3230,64 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        }
+      ],
+      "name": "getMarketPoolDebtDistribution",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "sharesD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint128",
+          "name": "totalSharesD18",
+          "type": "uint128"
+        },
+        {
+          "internalType": "int128",
+          "name": "valuePerShareD27",
+          "type": "int128"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        }
+      ],
+      "name": "getMarketPools",
+      "outputs": [
+        {
+          "internalType": "uint128[]",
+          "name": "inRangePoolIds",
+          "type": "uint128[]"
+        },
+        {
+          "internalType": "uint128[]",
+          "name": "outRangePoolIds",
+          "type": "uint128[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3266,8 +3503,32 @@
           "type": "address"
         }
       ],
+      "name": "DeniedMulticallTarget",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "name": "RecursiveMulticall",
       "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "getMessageSender",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [
@@ -3285,7 +3546,54 @@
           "type": "bytes[]"
         }
       ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "to",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "data",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "multicallThrough",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "results",
+          "type": "bytes[]"
+        }
+      ],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "allowlisted",
+          "type": "bool"
+        }
+      ],
+      "name": "setAllowlistedMulticallTarget",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3429,6 +3737,62 @@
       ],
       "name": "PoolAlreadyExists",
       "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "config",
+          "type": "tuple"
+        }
+      ],
+      "name": "PoolCollateralConfigurationUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "PoolCollateralDisabledByDefaultSet",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -3686,6 +4050,30 @@
           "internalType": "uint128",
           "name": "poolId",
           "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateral",
+          "type": "address"
+        }
+      ],
+      "name": "getPoolCollateralIssuanceRatio",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
         }
       ],
       "name": "getPoolConfiguration",
@@ -3825,6 +4213,59 @@
         }
       ],
       "name": "setMinLiquidityRatio",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "newConfig",
+          "type": "tuple"
+        }
+      ],
+      "name": "setPoolCollateralConfiguration",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "setPoolCollateralDisabledByDefault",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -4220,6 +4661,37 @@
       "type": "function"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "newChainId",
+          "type": "uint64"
+        }
+      ],
+      "name": "NewSupportedCrossChainNetwork",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ccipRouter",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ccipTokenPool",
+          "type": "address"
+        }
+      ],
+      "name": "configureChainlinkCrossChain",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -4292,29 +4764,6 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "ccipSend",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipReceive",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "ccipTokenPool",
-          "type": "address"
-        }
-      ],
-      "name": "registerCcip",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "bytes32",
           "name": "k",
           "type": "bytes32"
@@ -4328,6 +4777,49 @@
       "name": "setConfig",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64[]",
+          "name": "supportedNetworks",
+          "type": "uint64[]"
+        },
+        {
+          "internalType": "uint64[]",
+          "name": "ccipSelectors",
+          "type": "uint64[]"
+        }
+      ],
+      "name": "setSupportedCrossChainNetworks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "numRegistered",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -4355,6 +4847,32 @@
         }
       ],
       "name": "InvalidLeverage",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentCollateral",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxCollateral",
+          "type": "uint256"
+        }
+      ],
+      "name": "PoolCollateralLimitExceeded",
       "type": "error"
     },
     {
@@ -4648,7 +5166,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0xe1125adbf05639ac8fe1fdd03b18919aa05ae9b35e9351730fac4efc95443866",
+  "deployTxnHash": "0x90495f704ae3b7e937611b2f1a8bd661ba5348c209e815c1724c35ffbe0a6121",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

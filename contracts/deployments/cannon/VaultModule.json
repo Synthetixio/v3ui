@@ -1,5 +1,5 @@
 {
-  "address": "0x1670E1b548A9e108e1f5cc80eEA5b2FCC4F49D8d",
+  "address": "0xc9A699677b665F0037dDA31a946830A56c8C8E7D",
   "abi": [
     {
       "inputs": [
@@ -37,6 +37,22 @@
         }
       ],
       "name": "FeatureUnavailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -194,6 +210,32 @@
         }
       ],
       "name": "PermissionDenied",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentCollateral",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxCollateral",
+          "type": "uint256"
+        }
+      ],
+      "name": "PoolCollateralLimitExceeded",
       "type": "error"
     },
     {
@@ -519,7 +561,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x2aaa45c5e21fb25cfd350a2522fc6c51be9295baa6d5ad913cb34435afcfe906",
+  "deployTxnHash": "0x3eddc680ec4940e394371c22eb997e93641d4cd166366faeeda35a6a07c0e233",
   "sourceName": "contracts/modules/core/VaultModule.sol",
   "contractName": "VaultModule",
   "deployedOn": "contract.VaultModule"

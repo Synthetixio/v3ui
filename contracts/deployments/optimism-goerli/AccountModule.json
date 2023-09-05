@@ -1,5 +1,5 @@
 {
-  "address": "0x7B59205466145146eB234b0Aa7B9c877D017938E",
+  "address": "0x817eac72639DcB4c5B7CEd004c68D59C54266cC3",
   "abi": [
     {
       "inputs": [
@@ -439,7 +439,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x260bc7f1dd53eed37a9bd9a1aff3d9d9560583b1584e3599691cb3f52f23e8c6",
+  "deployTxnHash": "0x0938eae9e2f196e1a7bf82441473f4f379f0dd87ea9559079b882c558322e122",
   "sourceName": "contracts/modules/core/AccountModule.sol",
   "contractName": "AccountModule",
   "deployedOn": "contract.AccountModule"

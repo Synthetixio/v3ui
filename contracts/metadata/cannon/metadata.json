@@ -1,4 +1,6 @@
 {
+  "generator": "cannon cli 2.5.4",
+  "timestamp": 1693900836,
   "def": {
     "name": "synthetix-local",
     "version": "0.0.1",
@@ -30,7 +32,7 @@
     },
     "provision": {
       "collateralToken": {
-        "source": "mintable-token:latest",
+        "source": "mintable-token:1.1",
         "options": {
           "symbol": "SNX",
           "name": "Snax"
@@ -292,22 +294,6 @@
         "func": "addApprovedPool",
         "args": ["<%= settings.anotherPoolId %>"],
         "depends": ["invoke.createAnotherPool"]
-      },
-      "setAnotherPoolConfiguration": {
-        "target": ["synthetix.CoreProxy"],
-        "from": "<%= settings.user %>",
-        "func": "setPoolConfiguration",
-        "args": [
-          "<%= settings.anotherPoolId %>",
-          [
-            {
-              "marketId": "<%= extras.synthMarketId %>",
-              "weightD18": "1",
-              "maxDebtShareValueD18": "<%= parseEther('2') %>"
-            }
-          ]
-        ],
-        "depends": ["invoke.createAnotherPool", "invoke.updateSynthPriceData"]
       }
     }
   },
