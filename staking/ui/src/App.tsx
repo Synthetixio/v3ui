@@ -13,7 +13,7 @@ import { useAccountUrlSync } from '@snx-v3/useAccounts';
 import { Router } from './Router';
 import './i18n';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
