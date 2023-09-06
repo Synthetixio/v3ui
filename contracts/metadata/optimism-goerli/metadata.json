@@ -286,7 +286,7 @@
             "liquidationRatioD18": "<%= parseEther('10') %>",
             "liquidationRewardD18": "0",
             "minDelegationD18": "<%= MaxUint256 %>",
-            "depositingEnabled": false
+            "depositingEnabled": true
           }
         ],
         "depends": ["invoke.register_const_one_oracle", "invoke.init_usd"]
