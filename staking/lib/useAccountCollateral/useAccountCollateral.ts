@@ -76,3 +76,23 @@ export function useAccountCollateral({
     },
   });
 }
+
+export function useAccountSpecificCollateral(accountId?: string, collateralAddress?: string) {
+  const { data: CoreProxy } = useCoreProxy();
+
+  const network = useNetwork();
+  return useQuery({
+    queryKey: [
+      network.name,
+      { accountId },
+      'AccountSpecificCollateral',
+      { token: collateralAddress },
+    ],
+    enabled: Boolean(CoreProxy && accountId && collateralAddress),
+    queryFn: async function () {
+      if (!CoreProxy || !accountId || !collateralAddress) throw 'OMFG';
+      const data = await fetchAccountCollateral(accountId, [collateralAddress], CoreProxy);
+      return data.at(0);
+    },
+  });
+}
