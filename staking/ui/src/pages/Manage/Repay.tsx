@@ -73,7 +73,7 @@ export const RepayUi: FC<{
             >
               <Text>Balance:</Text>
               <Text display="inline">
-                <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> snxUSD
+                <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> sUSD
               </Text>
             </Flex>
           </Flex>
@@ -100,7 +100,7 @@ export const Repay = () => {
     accountId: params.accountId,
     poolId: params.poolId,
   });
-
+  
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0.01);

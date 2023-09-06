@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export type AccountCollateralType = {
@@ -14,6 +13,41 @@ export type AccountCollateralType = {
   totalLocked: Wei;
 };
 
+const fetchAccountCollateral = async (
+  accountId: string,
+  tokenAddresses: string[],
+  CoreProxy: CoreProxyType
+) => {
+  const returnData = await CoreProxy.callStatic.multicall(
+    tokenAddresses.flatMap((tokenAddress) => [
+      CoreProxy.interface.encodeFunctionData('getAccountAvailableCollateral', [
+        accountId,
+        tokenAddress,
+      ]),
+      CoreProxy.interface.encodeFunctionData('getAccountCollateral', [accountId, tokenAddress]),
+    ])
+  );
+
+  return tokenAddresses.map((tokenAddress, i) => {
+    const [availableCollateral] = CoreProxy.interface.decodeFunctionResult(
+      'getAccountAvailableCollateral',
+      returnData[i * 2]
+    );
+    const { totalAssigned, totalDeposited, totalLocked } = CoreProxy.interface.decodeFunctionResult(
+      'getAccountCollateral',
+      returnData[i * 2 + 1]
+    );
+
+    return {
+      tokenAddress,
+      availableCollateral: wei(availableCollateral),
+      totalAssigned: wei(totalAssigned),
+      totalDeposited: wei(totalDeposited),
+      totalLocked: wei(totalLocked),
+    };
+  });
+};
+
 export function useAccountCollateral({
   accountId,
   includeStablecoin,
@@ -22,7 +56,6 @@ export function useAccountCollateral({
   includeStablecoin?: boolean;
 }) {
   const { data: CoreProxy } = useCoreProxy();
-  const { data: Multicall3 } = useMulticall3();
 
   const network = useNetwork();
 
@@ -32,46 +65,14 @@ export function useAccountCollateral({
 
   return useQuery({
     queryKey: [network.name, { accountId }, 'AccountCollateral', { tokens: tokenAddresses }],
-    enabled: Boolean(CoreProxy && Multicall3 && accountId && tokenAddresses.length > 0),
+    enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
     queryFn: async function (): Promise<AccountCollateralType[]> {
-      if (!CoreProxy || !Multicall3 || !accountId || tokenAddresses.length < 1) throw 'OMFG';
-
-      const { returnData } = await Multicall3.callStatic.aggregate(
-        tokenAddresses.flatMap((tokenAddress) => [
-          {
-            target: CoreProxy.address,
-            callData: CoreProxy.interface.encodeFunctionData('getAccountAvailableCollateral', [
-              accountId,
-              tokenAddress,
-            ]),
-          },
-          {
-            target: CoreProxy.address,
-            callData: CoreProxy.interface.encodeFunctionData('getAccountCollateral', [
-              accountId,
-              tokenAddress,
-            ]),
-          },
-        ])
-      );
-
-      return tokenAddresses.map((tokenAddress, i) => {
-        const [availableCollateral] = CoreProxy.interface.decodeFunctionResult(
-          'getAccountAvailableCollateral',
-          returnData[i * 2]
-        );
-        const { totalAssigned, totalDeposited, totalLocked } =
-          CoreProxy.interface.decodeFunctionResult('getAccountCollateral', returnData[i * 2 + 1]);
-
-        return {
-          symbol: collateralTypes.data?.find((c) => c.tokenAddress === tokenAddress)?.symbol ?? '',
-          tokenAddress,
-          availableCollateral: wei(availableCollateral),
-          totalAssigned: wei(totalAssigned),
-          totalDeposited: wei(totalDeposited),
-          totalLocked: wei(totalLocked),
-        };
-      });
+      if (!CoreProxy || !accountId || tokenAddresses.length < 1) throw 'OMFG';
+      const data = await fetchAccountCollateral(accountId, tokenAddresses, CoreProxy);
+      return data.map((x) => ({
+        ...x,
+        symbol: collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.symbol ?? '',
+      }));
     },
   });
 }
