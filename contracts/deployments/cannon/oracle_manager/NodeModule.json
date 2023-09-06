@@ -355,7 +355,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x4c8f70fb2164056dc40039b3521133b39ddffd8b87f848ee2b40cee1731a8a38",
+  "deployTxnHash": "0x81bbf8e09bfe0a31f88c95fc6d9fa95d2c90e1a4208bca28540cdaf52cd1ee17",
   "sourceName": "contracts/modules/NodeModule.sol",
   "contractName": "NodeModule",
   "deployedOn": "contract.NodeModule"

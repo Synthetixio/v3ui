@@ -571,7 +571,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x15ab3c0ba19e37f3450b383261b793e810698484fab9d719e193823174c1e6a2",
+  "deployTxnHash": "0xcbdf21b22d1757d5f2b8f2a666979b369d6f462f5adebc9e7e4730e4a000877f",
   "sourceName": "contracts/modules/MarketConfigurationModule.sol",
   "contractName": "MarketConfigurationModule",
   "deployedOn": "contract.MarketConfigurationModule"

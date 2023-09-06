@@ -1,5 +1,5 @@
 {
-  "address": "0x87b300AFB028f1a65Fa2eC98b027F5B7Bc4c0eec",
+  "address": "0x3bbC10ec407C5381888A7491826759B04c5d99Cb",
   "abi": [
     {
       "inputs": [
@@ -3503,8 +3503,32 @@
           "type": "address"
         }
       ],
+      "name": "DeniedMulticallTarget",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "name": "RecursiveMulticall",
       "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "getMessageSender",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [
@@ -3522,6 +3546,53 @@
           "type": "bytes[]"
         }
       ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "to",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "data",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "multicallThrough",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "results",
+          "type": "bytes[]"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "allowlisted",
+          "type": "bool"
+        }
+      ],
+      "name": "setAllowlistedMulticallTarget",
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -5095,7 +5166,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0x4d0843b396d8022c71008e63a325cf9cb5c27e74be8df149c8da64f962ce8be0",
+  "deployTxnHash": "0x90495f704ae3b7e937611b2f1a8bd661ba5348c209e815c1724c35ffbe0a6121",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

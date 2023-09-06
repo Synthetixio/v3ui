@@ -349,7 +349,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xc1d2025018fabe3c26a892032759d0d03a0f299f502b962ce3e1e4601d747139",
+  "deployTxnHash": "0x62fe75d9bd011c417ee0bc47cfbe742cec8b774d14973385b03c2311e65cae16",
   "sourceName": "contracts/modules/AsyncOrderSettlementModule.sol",
   "contractName": "AsyncOrderSettlementModule",
   "deployedOn": "contract.AsyncOrderSettlementModule"

@@ -345,7 +345,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xeb41d0535eddf2c79269123ff82daa3cf26c5e03312baa5642438242bb196544",
+  "deployTxnHash": "0xd00c511ed088e790a33c18717245cb8ee83f88f9429dfad7ec2e3dfcb7c961bd",
   "sourceName": "contracts/modules/core/IssueUSDModule.sol",
   "contractName": "IssueUSDModule",
   "deployedOn": "contract.IssueUSDModule"

@@ -96,7 +96,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x1d1325c7c718497207e626b1a1e9ac3af2ec53aecea564383fe8a5d6fde94fbf",
+  "deployTxnHash": "0x740ec29a701ae1e666857182dd46b913d12b350efb589e57b3fec0eb80aa3a27",
   "sourceName": "contracts/modules/core/CrossChainUSDModule.sol",
   "contractName": "CrossChainUSDModule",
   "deployedOn": "contract.CrossChainUSDModule"

@@ -169,8 +169,12 @@ export const abi = [
   'function setMarketMinDelegateTime(uint128 marketId, uint32 minDelegateTime)',
   'function setMinLiquidityRatio(uint128 marketId, uint256 minLiquidityRatio)',
   'function withdrawMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
+  'error DeniedMulticallTarget(address)',
   'error RecursiveMulticall(address)',
+  'function getMessageSender() view returns (address)',
   'function multicall(bytes[] data) returns (bytes[] results)',
+  'function multicallThrough(address[] to, bytes[] data, uint256[] values) payable returns (bytes[] results)',
+  'function setAllowlistedMulticallTarget(address target, bool allowlisted)',
   'event PoolApprovedAdded(uint256 poolId)',
   'event PoolApprovedRemoved(uint256 poolId)',
   'event PreferredPoolSet(uint256 poolId)',
@@ -468,7 +472,10 @@ export interface CoreProxyInterface extends utils.Interface {
     'setMinLiquidityRatio(uint128,uint256)': FunctionFragment;
     'setMinLiquidityRatio(uint256)': FunctionFragment;
     'withdrawMarketUsd(uint128,address,uint256)': FunctionFragment;
+    'getMessageSender()': FunctionFragment;
     'multicall(bytes[])': FunctionFragment;
+    'multicallThrough(address[],bytes[],uint256[])': FunctionFragment;
+    'setAllowlistedMulticallTarget(address,bool)': FunctionFragment;
     'addApprovedPool(uint128)': FunctionFragment;
     'getApprovedPools()': FunctionFragment;
     'getPreferredPool()': FunctionFragment;
@@ -598,7 +605,10 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'setMinLiquidityRatio(uint128,uint256)'
       | 'setMinLiquidityRatio(uint256)'
       | 'withdrawMarketUsd'
+      | 'getMessageSender'
       | 'multicall'
+      | 'multicallThrough'
+      | 'setAllowlistedMulticallTarget'
       | 'addApprovedPool'
       | 'getApprovedPools'
       | 'getPreferredPool'
@@ -858,7 +868,16 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'withdrawMarketUsd',
     values: [BigNumberish, string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: 'getMessageSender', values?: undefined): string;
   encodeFunctionData(functionFragment: 'multicall', values: [BytesLike[]]): string;
+  encodeFunctionData(
+    functionFragment: 'multicallThrough',
+    values: [string[], BytesLike[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setAllowlistedMulticallTarget',
+    values: [string, boolean]
+  ): string;
   encodeFunctionData(functionFragment: 'addApprovedPool', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getApprovedPools', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getPreferredPool', values?: undefined): string;
@@ -1048,7 +1067,10 @@ export interface CoreProxyInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: 'setMinLiquidityRatio(uint256)', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'withdrawMarketUsd', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMessageSender', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'multicall', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'multicallThrough', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setAllowlistedMulticallTarget', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'addApprovedPool', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getApprovedPools', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPreferredPool', data: BytesLike): Result;
@@ -2274,8 +2296,23 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    getMessageSender(overrides?: CallOverrides): Promise<[string]>;
+
     multicall(
       data: BytesLike[],
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2930,8 +2967,23 @@ export interface CoreProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  getMessageSender(overrides?: CallOverrides): Promise<string>;
+
   multicall(
     data: BytesLike[],
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  multicallThrough(
+    to: string[],
+    data: BytesLike[],
+    values: BigNumberish[],
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setAllowlistedMulticallTarget(
+    target: string,
+    allowlisted: boolean,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -3572,7 +3624,22 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMessageSender(overrides?: CallOverrides): Promise<string>;
+
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
+
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     addApprovedPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -4737,7 +4804,22 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    getMessageSender(overrides?: CallOverrides): Promise<BigNumber>;
+
     multicall(data: BytesLike[], overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
 
     addApprovedPool(
       poolId: BigNumberish,
@@ -5419,8 +5501,23 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    getMessageSender(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     multicall(
       data: BytesLike[],
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

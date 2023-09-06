@@ -1,5 +1,5 @@
 {
-  "address": "0xbD8a60Ed332a1D08923779a7810FE7780f2d1691",
+  "address": "0x28d10B5840344c7866e970861a2f465e604c3e6c",
   "abi": [
     {
       "inputs": [],
@@ -307,6 +307,25 @@
         }
       ],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "marketId",
+          "type": "uint128"
+        }
+      ],
+      "name": "getMarketAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -680,7 +699,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3bffa8b7d465080c2d8dc08c64826cfe71cb92dbad0796c982b5e859b8e9489f",
+  "deployTxnHash": "0x04e07227597a11807b76e40a21f8aa6d09a11cc7b40af58556a7fe17b40f617e",
   "sourceName": "contracts/modules/core/MarketManagerModule.sol",
   "contractName": "MarketManagerModule",
   "deployedOn": "contract.MarketManagerModule"

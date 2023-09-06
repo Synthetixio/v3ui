@@ -94,7 +94,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3387ef8c7a9cbd2e7cfb85083a9224696ef546650ce8e1c38a0e5e383c42d887",
+  "deployTxnHash": "0x965ee1e782276386a61daf521800ff25dd456e6c7ea423bc4684c19a574ad6d6",
   "sourceName": "contracts/modules/core/CcipReceiverModule.sol",
   "contractName": "CcipReceiverModule",
   "deployedOn": "contract.CcipReceiverModule"
