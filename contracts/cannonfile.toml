@@ -6,10 +6,10 @@ description = "Synthetix V3 Local deployment"
 defaultValue = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 
 [setting.synthetix]
-defaultValue = "synthetix:3.2.0"
+defaultValue = "synthetix:latest"
 
 [setting.spotMarket]
-defaultValue = "synthetix-spot-market:3.2.0"
+defaultValue = "synthetix-spot-market:latest"
 
 [setting.defaultPoolId]
 defaultValue = "1"
