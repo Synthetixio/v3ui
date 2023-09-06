@@ -177,28 +177,7 @@ args = [
     "<%= hexZeroPad(hexlify(0), 32) %>",
 ]
 depends = ["provision.synthetix"]
-# Withdraw some of the minted stablecoins
-[invoke.withdrawStablecoins]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "withdraw"
-args = [
-    "<%= settings.accountId %>",
-    "<%= imports.synthetix.contracts.USDProxy.address %>",
-    "<%= parseEther('100') %>",
-]
-depends = ["invoke.mintStablecoins"]
 
-# Reset withdrawal timeout to default 86400
-[invoke.resetAccountTimeoutWithdraw]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setConfig"
-args = [
-    "<%= formatBytes32String('accountTimeoutWithdraw') %>",
-    "<%= hexZeroPad(hexlify(86400), 32) %>",
-]
-depends = ["invoke.withdrawStablecoins"]
 
 # Set the minimum liquidity ratio
 [invoke.setMinimumLiquidityRatio]
@@ -268,7 +247,10 @@ args = [
     "<%= imports.collateralToken.contracts.MintableToken.address %>",
     "<%= MaxUint256 %>",
 ]
-depends = ['invoke.setMarketCollateralSupplyCap']
+depends = [
+    'invoke.setMarketCollateralSupplyCap',
+    "invoke.mintStablecoins",              # We depend on mintStablecoins to make sure there is two tx in between minting and withdrawing
+]
 
 # Set Pool Configuration
 [invoke.setPoolConfiguration]
@@ -281,7 +263,38 @@ args = [
         { marketId = "<%= extras.synthMarketId %>", weightD18 = "1", maxDebtShareValueD18 = "<%= parseEther('2') %>" },
     ],
 ]
-depends = ["invoke.create_default_pool", "invoke.updateSynthPriceData"]
+depends = [
+    "invoke.create_default_pool",
+    "invoke.updateSynthPriceData",
+    "invoke.mintStablecoins",      # We depend on mintStablecoins to make sure there is two tx in between minting and withdrawing
+]
+# Withdraw some of the minted stablecoins
+[invoke.withdrawStablecoins]
+target = ["synthetix.CoreProxy"]
+from = "<%= settings.user %>"
+func = "withdraw"
+args = [
+    "<%= settings.accountId %>",
+    "<%= imports.synthetix.contracts.USDProxy.address %>",
+    "<%= parseEther('100') %>",
+]
+depends = [
+    "invoke.approveAnotherPool",
+    # "invoke.mintStablecoins", # this is what I'd like to depend on...
+    "invoke.initializeWrapper",    # But we need to make sure at two tx exists in between minting and withdrawing, 
+    "invoke.setPoolConfiguration", # otherwise we run into `AccountActivityTimeoutPending` (with 1sec diff) even though AccountTimeoutWithdraw is set to 0 
+]
+
+# Reset withdrawal timeout to default 86400
+[invoke.resetAccountTimeoutWithdraw]
+target = ["synthetix.CoreProxy"]
+from = "<%= settings.user %>"
+func = "setConfig"
+args = [
+    "<%= formatBytes32String('accountTimeoutWithdraw') %>",
+    "<%= hexZeroPad(hexlify(86400), 32) %>",
+]
+depends = ["invoke.withdrawStablecoins"]
 
 # Create another pool
 [invoke.createAnotherPool]
