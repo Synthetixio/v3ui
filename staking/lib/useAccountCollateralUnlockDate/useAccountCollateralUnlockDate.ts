@@ -15,30 +15,19 @@ export function useAccountCollateralUnlockDate({ accountId }: { accountId?: stri
     queryFn: async function () {
       if (!CoreProxy || !Multicall3 || !accountId) throw 'OMG';
 
-      const {
-        returnData: [getAccountLastInteraction, getConfigUintAccountTimeoutWithdraw],
-      } = await Multicall3.callStatic.aggregate([
-        {
-          target: CoreProxy.address,
-          callData: CoreProxy.interface.encodeFunctionData('getAccountLastInteraction', [
-            accountId,
-          ]),
-        },
-        {
-          target: CoreProxy.address,
-          // @ts-ignore TODO: remove when mainnet and goerli have getConfigUint
-          callData: CoreProxy.interface.encodeFunctionData('getConfigUint', [
+      const [getAccountLastInteraction, getConfigUintAccountTimeoutWithdraw] =
+        await CoreProxy.callStatic.multicall([
+          CoreProxy.interface.encodeFunctionData('getAccountLastInteraction', [accountId]),
+          CoreProxy.interface.encodeFunctionData('getConfigUint', [
             ethers.utils.formatBytes32String('accountTimeoutWithdraw'),
           ]),
-        },
-      ]);
+        ]);
 
       const [lastInteraction] = CoreProxy.interface.decodeFunctionResult(
         'getAccountLastInteraction',
         getAccountLastInteraction
       );
       const [accountTimeoutWithdraw] = CoreProxy.interface.decodeFunctionResult(
-        // @ts-ignore TODO: remove when mainnet and goerli have getConfigUint
         'getConfigUint',
         getConfigUintAccountTimeoutWithdraw
       );

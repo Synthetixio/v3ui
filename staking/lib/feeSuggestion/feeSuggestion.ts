@@ -27,10 +27,36 @@ interface FeeHistoryResponse {
   oldestBlock: number;
   reward: Reward[];
 }
+
+const defaultForLocalProvider = () => {
+  const baseFeePerGas = wei(1, 9).toBN();
+  const maxFeePerGas = wei(5, 9).toBN();
+  const maxPriorityFeePerGas = wei(1, 9).toBN();
+  return {
+    average: {
+      maxPriorityFeePerGas,
+      maxFeePerGas,
+      baseFeePerGas,
+    },
+    fast: {
+      maxPriorityFeePerGas,
+      maxFeePerGas,
+      baseFeePerGas,
+    },
+    fastest: {
+      maxPriorityFeePerGas,
+      maxFeePerGas,
+      baseFeePerGas,
+    },
+  };
+};
 export const feeSuggestion = async (
   provider: ethers.providers.JsonRpcProvider,
   fromBlock = 'latest'
 ) => {
+  if (provider.network.chainId === 13370) {
+    return defaultForLocalProvider();
+  }
   const feeHistory = await provider
     .send('eth_feeHistory', [
       ethers.utils.hexStripZeros(ethers.utils.hexlify(10)),

@@ -54,13 +54,16 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
   cy.get('[data-testid="repay submit"]').should('be.enabled').click();
 
   cy.get('[data-testid="repay modal"]').should('exist').and('include.text', 'Complete this action');
+  cy.get('[data-testid="repay modal"]')
+    .should('exist')
+    .and('include.text', 'Approve sUSD transfer');
 
   cy.get('@debt').then((debt) => {
-    cy.get('[data-testid="repay modal"]').should('include.text', `Repay ${debt} snxUSD`);
+    cy.get('[data-testid="repay modal"]').should('include.text', `Repay ${debt} sUSD`);
   });
 
+  // Repay
   cy.get('[data-testid="repay confirm button"]').should('include.text', 'Start').click();
-
   cy.get('[data-testid="repay confirm button"]')
     .should('include.text', 'Processing...')
     .and('be.disabled');

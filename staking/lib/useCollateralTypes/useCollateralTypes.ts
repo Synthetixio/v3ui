@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
@@ -96,19 +96,23 @@ async function loadCollateralTypes({
   }));
 }
 
-export function useCollateralTypes() {
+export function useCollateralTypes(includeDelegationOff = false) {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
 
   return useQuery({
-    queryKey: [network.name, 'CollateralTypes'],
+    queryKey: [network.name, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
-
-      return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
+      if (includeDelegationOff) {
+        return collateralTypes;
+      }
+      // By default we only return collateral types that have minDelegationD18 < MaxUint256
+      // When minDelegationD18 === MaxUint256, delegation is effectively disabled
+      return collateralTypes.filter((x) => x.minDelegationD18.lt(constants.MaxUint256));
     },
     placeholderData: [],
     enabled: Boolean(CoreProxy && Multicall3),

@@ -1,66 +1,45 @@
 import {
-  Box,
   Button,
-  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   useToast,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
-import { TransactionStatus } from '@snx-v3/txnReducer';
-import { CheckIcon, CloseIcon } from '@snx-v3/Multistep';
-import { PropsWithChildren, useCallback, useContext } from 'react';
+import { Multistep } from '@snx-v3/Multistep';
+import { useCallback, useContext, useEffect } from 'react';
+import { ContractError } from '@snx-v3/ContractError';
 import { useRepay } from '@snx-v3/useRepay';
 import { useParams } from '@snx-v3/useParams';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { ContractError } from '@snx-v3/ContractError';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
+import { useApprove } from '@snx-v3/useApprove';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useMachine } from '@xstate/react';
+import type { StateFrom } from 'xstate';
+import { useQueryClient } from '@tanstack/react-query';
+import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 
-function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
-  switch (txnStatus) {
-    case 'error':
-      return <CloseIcon color="white" />;
-    case 'success':
-      return <CheckIcon color="white" />;
-    case 'prompting':
-    case 'pending':
-      return <Spinner color="white" width={6} height={6} />;
-    default:
-      return (
-        <Box
-          __css={{
-            display: 'inline',
-            fontWeight: 'medium',
-            textAlign: 'center',
-            fontSize: 'md',
-          }}
-        >
-          {children}
-        </Box>
-      );
-  }
-}
-
-const statusColor = (txnStatus: TransactionStatus) => {
-  if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
-  return 'gray.700';
-};
 export const RepayModalUi: React.FC<{
   onClose: () => void;
   debtChange: Wei;
   isOpen: boolean;
-  txnStatus: TransactionStatus;
-  execRepay: () => void;
-}> = ({ onClose, isOpen, debtChange, txnStatus, execRepay }) => {
+  onSubmit: () => void;
+  state: StateFrom<typeof RepayMachine>;
+  setInfiniteApproval: (x: boolean) => void;
+}> = ({ onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
+  const isProcessing = state.matches(State.approve) || state.matches(State.repay);
+  const { infiniteApproval, requireApproval, error } = state.context;
+
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -68,53 +47,49 @@ export const RepayModalUi: React.FC<{
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex
-            gap={2}
-            alignItems="center"
-            rounded="lg"
-            p="4"
-            border="2px solid"
-            transitionProperty="border-color"
-            transitionDuration="normal"
-            borderColor={statusColor(txnStatus)}
-          >
-            <Flex
-              width={10}
-              height={10}
-              justifyContent="center"
-              alignItems="center"
-              bg={statusColor(txnStatus)}
-              rounded="full"
-              transitionProperty="background"
-              transitionDuration="normal"
-            >
-              <StepIcon txnStatus={txnStatus}>1</StepIcon>
-            </Flex>
-            <Text>
-              Repay <Amount value={debtChange.abs()} suffix={` snxUSD`} />
-            </Text>
-          </Flex>
-          <Button
-            isDisabled={txnStatus === 'pending'}
-            onClick={() => {
-              if (txnStatus === 'unsent') {
-                execRepay();
-              }
-              if (txnStatus === 'success') {
-                onClose();
-              }
+          <Multistep
+            step={1}
+            title="Approve sUSD transfer"
+            status={{
+              failed: error?.step === State.approve,
+              success: !requireApproval || state.matches(State.success),
+              loading: state.matches(State.approve) && !error,
             }}
+            checkboxLabel="Approve unlimited sUSD transfers to Synthetix."
+            checkboxProps={{
+              isChecked: infiniteApproval,
+              onChange: (e) => setInfiniteApproval(e.target.checked),
+            }}
+          />
+          <Multistep
+            step={2}
+            title="Repay"
+            subtitle={
+              <Text>
+                Repay <Amount value={debtChange.abs()} suffix={` sUSD`} />
+              </Text>
+            }
+            status={{
+              failed: error?.step === State.repay,
+              success: state.matches(State.success),
+              loading: state.matches(State.repay) && !error,
+            }}
+          />
+
+          <Button
+            isDisabled={isProcessing}
+            onClick={onSubmit}
             width="100%"
             my="4"
             data-testid="repay confirm button"
           >
             {(() => {
-              switch (txnStatus) {
-                case 'error':
+              switch (true) {
+                case Boolean(error):
                   return 'Retry';
-                case 'pending':
+                case isProcessing:
                   return 'Processing...';
-                case 'success':
+                case state.matches(State.success):
                   return 'Done';
                 default:
                   return 'Start';
@@ -133,50 +108,127 @@ export const RepayModal: React.FC<{
 }> = ({ onClose, isOpen }) => {
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
+  const queryClient = useQueryClient();
+
+  const { data: USDProxy } = useUSDProxy();
+  const { data: accountSpecificCollateral, refetch: refetchAccountCollateral } =
+    useAccountSpecificCollateral(params.accountId, USDProxy?.address);
+
   const collateralType = useCollateralType(params.collateralSymbol);
-  const {
-    exec: execRepay,
-    txnState,
-    settle: settleRepay,
-  } = useRepay({
+  const { data: balance, refetch: refetchBalance } = useTokenBalance(USDProxy?.address);
+
+  const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
     debtChange,
+    availableUSDCollateral: accountSpecificCollateral?.availableCollateral,
+    balance,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
-  const execRepayWithErrorParser = useCallback(async () => {
-    try {
-      await execRepay();
-    } catch (error: any) {
-      const contractError = errorParserCoreProxy(error);
-      if (contractError) {
-        console.error(new Error(contractError.name), contractError);
-      }
-      toast.closeAll();
-      toast({
-        title: 'Repay failed',
-        description: contractError ? (
-          <ContractError contractError={contractError} />
-        ) : (
-          'Please try again.'
-        ),
-        status: 'error',
-      });
-      throw Error('Repay failed', { cause: error });
-    }
-  }, [errorParserCoreProxy, execRepay, toast]);
+  const amountToDeposit = debtChange.abs().sub(accountSpecificCollateral?.availableCollateral || 0);
 
-  const { txnStatus } = txnState;
+  const { approve, requireApproval, refetchAllowance } = useApprove({
+    contractAddress: USDProxy?.address,
+    amount: amountToDeposit.toBN(),
+    spender: CoreProxy?.address,
+  });
+  const [state, send] = useMachine(RepayMachine, {
+    services: {
+      [ServiceNames.approveSUSD]: async () => {
+        try {
+          toast({
+            title: 'Approve sUSD for transfer',
+            description: 'The next transaction will repay your debt.',
+            status: 'info',
+          });
+
+          await approve(Boolean(state.context.infiniteApproval));
+          await refetchAllowance();
+        } catch (error: any) {
+          const contractError = errorParserCoreProxy(error);
+          if (contractError) {
+            console.error(new Error(contractError.name), contractError);
+          }
+          toast.closeAll();
+          toast({
+            title: 'Approval failed',
+            description: contractError ? (
+              <ContractError contractError={contractError} />
+            ) : (
+              'Please try again.'
+            ),
+            status: 'error',
+          });
+          throw Error('Approve failed', { cause: error });
+        }
+      },
+
+      [ServiceNames.executeRepay]: async () => {
+        try {
+          toast.closeAll();
+          toast({ title: 'Repaying...' });
+          await execRepay();
+          await Promise.all([
+            refetchBalance(),
+            refetchAccountCollateral(),
+            queryClient.refetchQueries({ queryKey: ['LiquidityPosition'], type: 'active' }),
+          ]);
+          toast.closeAll();
+          toast({
+            title: 'Success',
+            description: 'Your debt has been repaid.',
+            status: 'success',
+            duration: 5000,
+          });
+        } catch (error: any) {
+          const contractError = errorParserCoreProxy(error);
+          if (contractError) {
+            console.error(new Error(contractError.name), contractError);
+          }
+          toast({
+            title: 'Could not complete repaying',
+            description: contractError ? (
+              <ContractError contractError={contractError} />
+            ) : (
+              'Please try again.'
+            ),
+            status: 'error',
+          });
+          throw Error('Repay failed', { cause: error });
+        }
+      },
+    },
+  });
+  const needToDeposit = amountToDeposit.gt(0);
+  useEffect(() => {
+    send(Events.SET_REQUIRE_APPROVAL, { requireApproval: requireApproval && needToDeposit });
+  }, [needToDeposit, requireApproval, send]);
+
+  const onSubmit = useCallback(async () => {
+    if (state.matches(State.success)) {
+      send(Events.RESET);
+      onClose();
+      return;
+    }
+    if (state.context.error) {
+      send(Events.RETRY);
+      return;
+    }
+    send(Events.RUN);
+  }, [onClose, send, state]);
   if (!params.poolId || !params.accountId || !collateralType) return null;
   return (
     <RepayModalUi
-      execRepay={execRepayWithErrorParser}
+      state={state}
+      onSubmit={onSubmit}
       debtChange={debtChange}
-      txnStatus={txnStatus}
+      setInfiniteApproval={(infiniteApproval) => {
+        send(Events.SET_INFINITE_APPROVAL, { infiniteApproval });
+      }}
       onClose={() => {
         settleRepay();
         onClose();

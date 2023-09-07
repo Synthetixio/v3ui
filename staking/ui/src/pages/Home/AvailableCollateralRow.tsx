@@ -19,7 +19,7 @@ function AvailableCollateralRowUi({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <Tr>
+    <Tr data-testid="available collateral row">
       <Td>
         <Flex flexDir="row" py={4}>
           <CollateralIcon width="32px" height="32px" symbol={accountCollateral.symbol} />
