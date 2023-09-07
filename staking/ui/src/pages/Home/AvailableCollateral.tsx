@@ -85,7 +85,7 @@ export function AvailableCollateralUi({
 
 export function AvailableCollateral() {
   const { accountId } = useParams();
-  const accountCollaterals = useAccountCollateral({ accountId, includeStablecoin: true });
+  const accountCollaterals = useAccountCollateral({ accountId, includeDelegationOff: true });
 
   const accountCollateralUnlockDate = useAccountCollateralUnlockDate({ accountId });
 

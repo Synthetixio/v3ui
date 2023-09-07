@@ -50,16 +50,16 @@ const fetchAccountCollateral = async (
 
 export function useAccountCollateral({
   accountId,
-  includeStablecoin,
+  includeDelegationOff,
 }: {
   accountId?: string;
-  includeStablecoin?: boolean;
+  includeDelegationOff?: boolean;
 }) {
   const { data: CoreProxy } = useCoreProxy();
 
   const network = useNetwork();
 
-  const collateralTypes = useCollateralTypes(includeStablecoin);
+  const collateralTypes = useCollateralTypes(includeDelegationOff);
 
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 
