@@ -66,7 +66,7 @@ export const RepayModalUi: React.FC<{
             title="Repay"
             subtitle={
               <Text>
-                Repaying <Amount value={debtChange.abs()} suffix={` sUSD`} />
+                Repay <Amount value={debtChange.abs()} suffix={` sUSD`} />
               </Text>
             }
             status={{
@@ -129,7 +129,7 @@ export const RepayModal: React.FC<{
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
-  const amountToDeposit = debtChange.abs().sub(accountSpecificCollateral?.availableCollateral);
+  const amountToDeposit = debtChange.abs().sub(accountSpecificCollateral?.availableCollateral || 0);
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: USDProxy?.address,

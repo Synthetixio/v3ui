@@ -5237,6 +5237,7 @@ __metadata:
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
     "@xstate/react": ^3.2.2
     react: ^18.2.0
     xstate: ^4.37.2

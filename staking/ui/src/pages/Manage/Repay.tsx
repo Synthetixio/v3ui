@@ -17,11 +17,12 @@ export const RepayUi: FC<{
   debtChange: Wei;
   max?: Wei;
   snxUSDBalance?: Wei;
-  availableUSDCollateral: Wei;
+  availableUSDCollateral?: Wei;
   currentDebt?: Wei;
   setDebtChange: (val: Wei) => void;
 }> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance, availableUSDCollateral }) => {
-  const totalUsdBalance = snxUSDBalance?.add(availableUSDCollateral);
+  const totalUsdBalance =
+    snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
@@ -104,7 +105,7 @@ export const RepayUi: FC<{
       <Button
         data-testid="repay submit"
         type="submit"
-        isDisabled={!(max && snxUSDBalance && currentDebt)}
+        isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >
         Repay snxUSD
       </Button>
@@ -117,7 +118,7 @@ export const Repay = () => {
   const params = useParams();
   const collateralType = useCollateralType(params.collateralSymbol);
   const { data } = useAccountSpecificCollateral(params.accountId, USDProxy?.address);
-  const availableUSDCollateral = data?.availableCollateral || wei(0);
+  const availableUSDCollateral = data?.availableCollateral;
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
@@ -138,7 +139,7 @@ export const Repay = () => {
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
       max={Wei.max(
         liquidityPosition?.debt || wei(0),
-        availableUSDCollateral.add(balance || wei(0))
+        availableUSDCollateral?.add(balance || wei(0)) || wei(0)
       )}
     />
   );
