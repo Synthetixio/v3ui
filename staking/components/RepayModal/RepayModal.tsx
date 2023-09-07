@@ -26,7 +26,7 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
-import { queryClient } from '../../ui/src/App';
+import { useQueryClient } from '@tanstack/react-query';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 
 export const RepayModalUi: React.FC<{
@@ -108,6 +108,7 @@ export const RepayModal: React.FC<{
 }> = ({ onClose, isOpen }) => {
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
+  const queryClient = useQueryClient();
 
   const { data: USDProxy } = useUSDProxy();
   const { data: accountSpecificCollateral, refetch: refetchAccountCollateral } =
