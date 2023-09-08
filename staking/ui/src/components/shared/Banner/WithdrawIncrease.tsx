@@ -1,4 +1,4 @@
-import { Alert, Flex, Text } from '@chakra-ui/react';
+import { Alert, Text } from '@chakra-ui/react';
 
 export default function WithdrawIncrease() {
   return (
