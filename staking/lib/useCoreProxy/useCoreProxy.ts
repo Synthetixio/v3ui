@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-// import type { CoreProxy as CoreProxyCannon } from '@synthetixio/v3-contracts/build/cannon/CoreProxy';
+import type { CoreProxy as CoreProxyCannon } from '@synthetixio/v3-contracts/build/cannon/CoreProxy';
 import type { CoreProxy as CoreProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/CoreProxy';
 import type { CoreProxy as CoreProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/CoreProxy';
 import type { CoreProxy as CoreProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/CoreProxy';
@@ -13,7 +13,8 @@ export type CoreProxyType =
   | CoreProxyGoerli
   | CoreProxySepolia
   | CoreProxyOptimismMainnet
-  | CoreProxyOptimismGoerli;
+  | CoreProxyOptimismGoerli
+  | CoreProxyCannon;
 
 export async function importCoreProxy(chainName: string) {
   switch (chainName) {

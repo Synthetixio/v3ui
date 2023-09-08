@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Button, Flex, Text, Tooltip } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
@@ -11,14 +11,18 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 
 export const RepayUi: FC<{
   debtChange: Wei;
   max?: Wei;
   snxUSDBalance?: Wei;
+  availableUSDCollateral?: Wei;
   currentDebt?: Wei;
   setDebtChange: (val: Wei) => void;
-}> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance }) => {
+}> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance, availableUSDCollateral }) => {
+  const totalUsdBalance =
+    snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
@@ -65,16 +69,35 @@ export const RepayUi: FC<{
               gap="1"
               cursor="pointer"
               onClick={() => {
-                if (!snxUSDBalance) {
+                if (!totalUsdBalance) {
                   return;
                 }
-                setDebtChange(snxUSDBalance.neg());
+                setDebtChange(totalUsdBalance.neg());
               }}
             >
-              <Text>Balance:</Text>
-              <Text display="inline">
-                <Amount value={snxUSDBalance} data-testid="available snxUSD balance" /> snxUSD
-              </Text>
+              <Tooltip
+                label={
+                  <Flex direction="column" alignItems="flex-start">
+                    <Flex justifyContent="space-between" width="full" gap={1}>
+                      Wallet Balance: <Amount value={snxUSDBalance} suffix=" sUSD" />
+                    </Flex>
+                    <Flex justifyContent="space-between" width="full" gap={1}>
+                      Collateral Balance: <Amount value={availableUSDCollateral} suffix=" sUSD" />
+                    </Flex>
+                  </Flex>
+                }
+              >
+                <Flex gap={1}>
+                  <Text>Balance:</Text>
+                  <Text display="inline">
+                    <Amount
+                      value={totalUsdBalance}
+                      data-testid="available snxUSD balance"
+                      suffix=" sUSD"
+                    />
+                  </Text>
+                </Flex>
+              </Tooltip>
             </Flex>
           </Flex>
         </Flex>
@@ -82,7 +105,7 @@ export const RepayUi: FC<{
       <Button
         data-testid="repay submit"
         type="submit"
-        isDisabled={!(max && snxUSDBalance && currentDebt)}
+        isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >
         Repay snxUSD
       </Button>
@@ -95,6 +118,8 @@ export const Repay = () => {
 
   const { data: USDProxy } = useUSDProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data } = useAccountSpecificCollateral(params.accountId, USDProxy?.address);
+  const availableUSDCollateral = data?.availableCollateral;
 
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
@@ -112,8 +137,12 @@ export const Repay = () => {
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       snxUSDBalance={flooredBalance}
+      availableUSDCollateral={availableUSDCollateral}
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
-      max={Wei.max(liquidityPosition?.debt || wei(0), balance || wei(0))}
+      max={Wei.max(
+        liquidityPosition?.debt || wei(0),
+        availableUSDCollateral?.add(balance || wei(0)) || wei(0)
+      )}
     />
   );
 };
