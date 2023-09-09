@@ -1,6 +1,6 @@
 import { Alert, Text } from '@chakra-ui/react';
 
-export default function WithdrawIncrease() {
+export function WithdrawIncrease() {
   return (
     <Alert colorScheme="orange" mb="4">
       <Text fontWeight="bold">

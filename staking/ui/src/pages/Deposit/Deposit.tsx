@@ -9,7 +9,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { PoolBox } from '@snx-v3/PoolBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { HomeLink } from '@snx-v3/HomeLink';
-import WithdrawIncrease from '../../components/shared/Banner/WithdrawIncrease';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 function DepositUi({
   collateralDisplaySymbol,
