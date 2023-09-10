@@ -119,6 +119,18 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
   },
+  'base-goerli': {
+    id: 84531,
+    hexId: `0x${Number(84531).toString(16)}`,
+    token: 'ETH',
+    name: 'base-goerli',
+    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Goerli',
+    Icon: () => <BaseIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://base-goerli.publicnode.com',
+    isTestnet: true,
+  },
 };
 
 const DEFAULT_NETWORK_NAME = window.localStorage.getItem('DEFAULT_NETWORK') || 'optimism-mainnet';
