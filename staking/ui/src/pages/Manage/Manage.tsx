@@ -10,6 +10,7 @@ import { ManageStats } from './ManageStats';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
 import { generatePath, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 export const ManageUi: FC<{
   collateralType: CollateralType;
@@ -21,6 +22,7 @@ export const ManageUi: FC<{
 
   return (
     <Box mb={12}>
+      <WithdrawIncrease />
       <Box mb="4">
         <HomeLink />
       </Box>

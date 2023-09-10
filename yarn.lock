@@ -5290,6 +5290,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/WithdrawIncrease@workspace:*, @snx-v3/WithdrawIncrease@workspace:staking/components/WithdrawIncrease":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/WithdrawIncrease@workspace:staking/components/WithdrawIncrease"
+  dependencies:
+    "@chakra-ui/react": ^2.6.1
+    react: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/WithdrawModal@workspace:*, @snx-v3/WithdrawModal@workspace:staking/components/WithdrawModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/WithdrawModal@workspace:staking/components/WithdrawModal"
@@ -5298,6 +5307,7 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -5472,6 +5482,7 @@ __metadata:
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/TrendText": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
+    "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
