@@ -1,5 +1,5 @@
 {
-  "address": "0x3e85D9AEdbA4a94E23F9A4504f8c280FD0208539",
+  "address": "0x1E011b77D3E4452aE31e9C4054783836f662b82D",
   "abi": [
     {
       "inputs": [
@@ -2037,6 +2037,11 @@
           "internalType": "address",
           "name": "collateralType",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "collateralAmount",
+          "type": "uint256"
         }
       ],
       "name": "getCollateralPrice",
@@ -5166,7 +5171,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0x3a34655e25b97fdb81fde822ccc103a47f21158c9c904eaca37f9c5452d3b6ff",
+  "deployTxnHash": "0x0e0dd68e3e9dc7fa528ce67a1034dd349eeb7e339d430dfd5db74acfaff7e6c5",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

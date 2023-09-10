@@ -376,7 +376,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x17e1f262f51f547cb9838cd7efe7c4b760b770fd2df7d68e8be27c2edb540661",
+  "deployTxnHash": "0x9f07f71fe78ec2371c3743c85b4a5851c7d105a82c99e217fb12fb0467013765",
   "sourceName": "contracts/modules/WrapperModule.sol",
   "contractName": "WrapperModule",
   "deployedOn": "contract.WrapperModule"

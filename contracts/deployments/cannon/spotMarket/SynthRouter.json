@@ -680,7 +680,7 @@
     }
   ],
   "deployedOn": "router.SynthRouter",
-  "deployTxnHash": "0x369ee732a69712b2adc5417d714d6593b7803a5e4d0220eb08a97cdb8b817303",
+  "deployTxnHash": "0xc2e20666cf54c47d45a12e4d791d81cdf4d6eb302e4249472d9e6e5a97ab6837",
   "contractName": "SynthRouter",
   "sourceName": "SynthRouter.sol"
 }
