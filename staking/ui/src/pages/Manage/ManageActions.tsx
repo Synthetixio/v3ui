@@ -19,7 +19,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Borrow } from './Borrow';
 import { Repay } from './Repay';
 import { Undelegate } from './Undelegate';
@@ -117,7 +117,8 @@ const ManageActionUi: FC<{
 
 export const ManageAction = () => {
   const params = useParams();
-  const [_, setQueryParam] = useSearchParams();
+
+  const navigate = useNavigate();
 
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
@@ -157,24 +158,35 @@ export const ManageAction = () => {
 
   useEffect(() => {
     // This is just for initial state, if we have a manage action selected return
-    if (params.manageAction) return;
+    const queryParams = new URLSearchParams(location.search);
+
+    if (queryParams.get('manageAction')) return;
     if (!liquidityPosition.data) return;
     if (!collateralType) return;
+
     const cRatio = liquidityPosition.data.cRatio;
     const canBorrow =
       liquidityPosition.data.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
+
     if (canBorrow) {
-      setQueryParam({ manageAction: 'borrow' });
-      return;
-    }
-    const cRatioIsCloseToLiqRatio = cRatio.mul(0.9).lt(collateralType.liquidationRatioD18);
-    if (cRatioIsCloseToLiqRatio) {
-      setQueryParam({ manageAction: 'repay' });
+      queryParams.set('manageAction', 'borrow');
+      navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+
       return;
     }
 
-    setQueryParam({ manageAction: 'deposit' });
-  }, [collateralType, liquidityPosition.data, params.manageAction, setQueryParam]);
+    const cRatioIsCloseToLiqRatio = cRatio.mul(0.9).lt(collateralType.liquidationRatioD18);
+
+    if (cRatioIsCloseToLiqRatio) {
+      queryParams.set('manageAction', 'repay');
+      navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+
+      return;
+    }
+
+    queryParams.set('manageAction', 'deposit');
+    navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+  }, [collateralType, liquidityPosition.data, navigate]);
 
   return (
     <>
@@ -183,7 +195,9 @@ export const ManageAction = () => {
         setActiveAction={(action) => {
           setCollateralChange(wei(0));
           setDebtChange(wei(0));
-          setQueryParam({ manageAction: action });
+          const queryParams = new URLSearchParams(location.search);
+          queryParams.set('manageAction', action);
+          navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
         }}
         manageAction={parsedAction || undefined}
       />
