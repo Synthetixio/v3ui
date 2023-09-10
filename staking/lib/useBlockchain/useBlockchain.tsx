@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React from 'react';
-import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon, BaseIcon } from '@snx-v3/icons';
 import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
@@ -105,6 +105,18 @@ export const NETWORKS: Record<string, Network> = {
     Icon: () => <LogoIcon />,
     isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'cannon',
     publicRpcUrl: 'http://127.0.0.1:8545',
+    isTestnet: true,
+  },
+  'base-goerli': {
+    id: 84531,
+    hexId: `0x${Number(84531).toString(16)}`,
+    token: 'ETH',
+    name: 'base-goerli',
+    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Goerli',
+    Icon: () => <BaseIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://base-goerli.publicnode.com',
     isTestnet: true,
   },
 };
