@@ -418,7 +418,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xf699a2095a0cd640ce24eeb7fded0f55a68adb65c7e6052d1bcdafecd0c43108",
+  "deployTxnHash": "0x4422c64af54f62a51afa05c2d006a64904344d653c61b66c71a941d562bd2e3e",
   "sourceName": "contracts/modules/AsyncOrderModule.sol",
   "contractName": "AsyncOrderModule",
   "deployedOn": "contract.AsyncOrderModule"

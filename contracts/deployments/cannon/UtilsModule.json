@@ -203,7 +203,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x1b3ac8e094fa47d5ad690da4cd23988107ecf6811f8e33c66ffa69fc4a60defd",
+  "deployTxnHash": "0x49be821c3b4cfcb433a7875f38c9cdbeb6d7a104430faddf108e35eebfe004bf",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"
