@@ -23,6 +23,7 @@ import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountC
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ContractError } from '@snx-v3/ContractError';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
@@ -38,6 +39,7 @@ export const WithdrawModalUi: FC<{
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
       <ModalContent bg="black" color="white" data-testid="withdraw modal">
+        <WithdrawIncrease />
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
