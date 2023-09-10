@@ -27,6 +27,7 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
+import { CollateralAlert } from '../../CollateralAlert';
 
 export function DepositFormUi({
   collateralType,
@@ -47,7 +48,10 @@ export function DepositFormUi({
   openConnectModal: (() => void) | undefined;
   isConnected: boolean;
   collateralType?: CollateralType;
-  tokenBalance?: Wei;
+  tokenBalance?: {
+    transferable: Wei;
+    collateral?: Wei;
+  };
   ethBalance?: Wei;
   poolId?: string;
   accountId?: string;
@@ -62,12 +66,12 @@ export function DepositFormUi({
 
   const combinedTokenBalance = useMemo(() => {
     if (collateralType?.symbol !== 'WETH') {
-      return tokenBalance;
+      return tokenBalance?.transferable;
     }
     if (!tokenBalance || !ethBalance) {
       return undefined;
     }
-    return tokenBalance.add(ethBalance);
+    return tokenBalance.transferable.add(ethBalance);
   }, [collateralType?.symbol, tokenBalance, ethBalance]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
@@ -180,12 +184,16 @@ export function DepositFormUi({
                     if (!tokenBalance) {
                       return;
                     }
-                    setInputAmount(tokenBalance);
+                    setInputAmount(tokenBalance.transferable);
                   }}
                 >
                   <Amount
                     prefix={`${collateralType.symbol} Wallet Balance: `}
-                    value={tokenBalance}
+                    value={
+                      collateralType.symbol === 'SNX'
+                        ? tokenBalance?.transferable
+                        : accountCollateral?.availableCollateral
+                    }
                   />
                 </Link>
                 {collateralType?.symbol === 'WETH' ? (
@@ -228,7 +236,6 @@ export function DepositFormUi({
             }}
             activeBadge={activeBadge}
           />
-
           <Collapse
             in={inputAmount.gt(0) && inputAmount.lt(collateralType.minDelegationD18)}
             animateOpacity
@@ -246,12 +253,15 @@ export function DepositFormUi({
             </Alert>
           </Collapse>
         </Box>
-
         <Button mt={4} size="md" px="8" type="submit" w="full" data-testid="deposit collateral">
           Deposit Collateral
         </Button>
       </Box>
-
+      {tokenBalance?.collateral &&
+        tokenBalance?.collateral.gt(0) &&
+        collateralType.symbol === 'SNX' && (
+          <CollateralAlert tokenBalance={tokenBalance.collateral} />
+        )}
       {amount.gt(0) ? (
         <DepositModal
           collateralChange={amount}
@@ -267,7 +277,8 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const navigate = useNavigate();
   const isConnected = useIsConnected();
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();

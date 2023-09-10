@@ -133,7 +133,8 @@ export const BorrowModal: React.FC<{
 }> = ({ onClose, isOpen }) => {
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
   const {
     exec: execBorrow,
     txnState,

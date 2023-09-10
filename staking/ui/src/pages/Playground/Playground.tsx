@@ -120,7 +120,7 @@ export function Playground() {
     (collateral) => collateral.symbol === symbol
   );
 
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   const accountCollateral = useAccountCollateral({ accountId });
   const accountCollateralData = accountCollateral.data?.find(

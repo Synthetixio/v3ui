@@ -13,7 +13,6 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { useAccounts } from '@snx-v3/useAccounts';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
@@ -31,6 +30,7 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { ContractError } from '@snx-v3/ContractError';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';
+import { useAccounts } from '@snx-v3/useAccounts';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -204,16 +204,20 @@ export const DepositModalUi: FC<{
     </Modal>
   );
 };
+
 export type DepositModalProps = FC<{
   collateralChange: Wei;
   isOpen: boolean;
   onClose: () => void;
 }>;
+
 export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralChange }) => {
   const navigate = useNavigate();
   const params = useParams();
+
   const { data: CoreProxy } = useCoreProxy();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { refetch } = useAccounts();
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: collateralType?.tokenAddress,
@@ -223,8 +227,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
-
-  const accounts = useAccounts();
 
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
@@ -253,7 +255,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     currentCollateral: currentCollateral,
   });
 
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
   const accountCollateral = accountCollaterals.data?.find(
@@ -326,14 +328,16 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             description: '',
           });
           await execDeposit();
+
           await Promise.all([
             ethBalance.refetch(),
             transferrable.refetch(),
-            accounts.refetch(),
             refetchAllowance(),
             accountCollaterals.refetch(),
+            refetch(),
             Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),
           ]);
+
           toast.closeAll();
           toast({
             title: 'Success',
@@ -378,29 +382,20 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const handleClose = useCallback(() => {
     const isSuccess = state.matches(State.success);
+
     if (isSuccess && params.poolId && collateralType?.symbol) {
       send(Events.RESET);
       onClose();
-      navigate(
-        generatePath('/accounts/:accountId/positions/:collateralType/:poolId', {
-          accountId: params.accountId || newAccountId,
+      navigate({
+        pathname: generatePath('/positions/:collateralType/:poolId', {
           collateralType: collateralType.symbol,
           poolId: params.poolId,
-        })
-      );
+        }),
+      });
     }
     send(Events.RESET);
     onClose();
-  }, [
-    send,
-    onClose,
-    state,
-    params.poolId,
-    params.accountId,
-    collateralType?.symbol,
-    navigate,
-    newAccountId,
-  ]);
+  }, [send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
 
   const onSubmit = useCallback(async () => {
     if (state.matches(State.success)) {

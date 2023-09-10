@@ -9,7 +9,7 @@ import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from './ManageStats';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
-import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 export const ManageUi: FC<{
@@ -18,8 +18,10 @@ export const ManageUi: FC<{
   poolId?: string;
   navigate: NavigateFunction;
 }> = ({ collateralType, poolName, poolId, navigate }) => {
+  const location = useLocation();
+
   return (
-    <Box>
+    <Box mb={12}>
       <WithdrawIncrease />
       <Box mb="4">
         <HomeLink />
@@ -35,13 +37,13 @@ export const ManageUi: FC<{
         >
           {poolName} Liquidity Position
         </Heading>
-
         <Button
           ml="auto"
           size="sm"
           onClick={() =>
             navigate({
               pathname: generatePath('/pools/:poolId', { poolId: poolId! }),
+              search: location.search,
             })
           }
           variant="outline"
@@ -84,7 +86,7 @@ export const ManageUi: FC<{
           <Text color="gray.400" fontSize="sm" mb="2">
             The Collateralization Ratio (C-Ratio) is calculated by dividing the value of the
             position’s collateral by the value of the position’s debt.{' '}
-            <Text fontWeight="700" display="inline" color="white">
+            <Text fontWeight="700" display="inline" color="white" as="span">
               This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
             </Text>
           </Text>
@@ -101,8 +103,9 @@ export const ManageUi: FC<{
 export const Manage = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const collateralType = useCollateralType(params.collateralSymbol);
-  const pool = usePool(params.poolId);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: pool } = usePool(params.poolId);
 
   if (!collateralType) {
     return <Spinner />; // TODO skeleton

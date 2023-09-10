@@ -44,6 +44,7 @@ type Context = {
 };
 
 type EventNamesType = typeof Events;
+
 type DepositEvents =
   | { type: EventNamesType['SET_REQUIRE_APPROVAL']; requireApproval: boolean }
   | { type: EventNamesType['SET_WRAP_AMOUNT']; wrapAmount: Wei }

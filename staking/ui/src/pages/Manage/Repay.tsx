@@ -10,7 +10,7 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 
 export const RepayUi: FC<{
@@ -114,11 +114,13 @@ export const RepayUi: FC<{
 };
 export const Repay = () => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
-  const { data: USDProxy } = useUSDProxy();
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+
+  const { data: USDProxy } = useUSDProxy();
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data } = useAccountSpecificCollateral(params.accountId, USDProxy?.address);
   const availableUSDCollateral = data?.availableCollateral;
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,

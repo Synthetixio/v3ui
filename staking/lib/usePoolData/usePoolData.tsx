@@ -49,11 +49,17 @@ const MarketConfigurationSchema = z.object({
   max_debt_share_value: GraphBigDecimalSchema,
 });
 
+const RewardDistributorSchema = z.object({
+  id: z.string(),
+  total_distributed: GraphBigDecimalSchema,
+});
+
 export const PoolSchema = z.object({
   id: z.string(),
   name: z.union([z.string(), z.null()]).transform((name) => (name ? name : 'Unnamed Pool')),
   total_weight: z.union([z.null(), GraphBigIntSchema]),
   configurations: z.array(MarketConfigurationSchema),
+  registered_distributors: z.array(RewardDistributorSchema).default([]),
 });
 
 export type PoolType = z.infer<typeof PoolSchema>;
@@ -71,6 +77,10 @@ const PoolsDataDocument = gql`
     pool(id: $id) {
       id
       name
+      registered_distributors {
+        id
+        total_distributed
+      }
       total_weight
       configurations {
         id
@@ -98,6 +108,7 @@ const PoolsDataDocument = gql`
     }
   }
 `;
+
 export const logMarket = (market: z.infer<typeof MarketSchema>) => {
   console.log('Market:');
   console.table({
@@ -128,7 +139,9 @@ const getPoolData = async (chainName: string, id: string) => {
     method: 'POST',
     body: JSON.stringify({ query: PoolsDataDocument, variables: { id } }),
   });
+
   const json = await res.json();
+
   if (json.errors) {
     const { message } = json.errors[0];
     throw new Error(message);

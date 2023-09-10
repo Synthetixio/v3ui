@@ -124,16 +124,21 @@ export function useCollateralTypes(includeDelegationOff = false) {
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes } = useCollateralTypes();
-  return useMemo(() => {
-    if (!collateralTypes || !collateralTypes?.length) {
-      return;
-    }
-    if (!collateralSymbol) {
-      return collateralTypes[0];
-    }
-    return collateralTypes.find(
-      (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
-    );
-  }, [collateralTypes, collateralSymbol]);
+  const { data: collateralTypes, isLoading, error } = useCollateralTypes();
+
+  return {
+    isLoading,
+    error,
+    data: useMemo(() => {
+      if (!collateralTypes || !collateralTypes?.length) {
+        return;
+      }
+      if (!collateralSymbol) {
+        return collateralTypes[0];
+      }
+      return collateralTypes.find(
+        (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
+      );
+    }, [collateralSymbol, collateralTypes]),
+  };
 }

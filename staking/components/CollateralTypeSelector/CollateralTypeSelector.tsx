@@ -72,7 +72,7 @@ export const CollateralTypeSelector: CollateralTypeSelectorProps = ({
   onChange,
 }) => {
   const { data: collateralTypes = [] } = useCollateralTypes();
-  const collateralType = useCollateralType(collateralSymbol);
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   return (
     <CollateralTypeSelectorUI

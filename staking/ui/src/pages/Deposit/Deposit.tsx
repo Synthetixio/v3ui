@@ -1,9 +1,7 @@
 import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
-import { FC, useEffect } from 'react';
-import { createSearchParams, generatePath, useNavigate } from 'react-router-dom';
-import { DepositForm } from '../../components/accounts/Deposit';
-import { useAccounts } from '@snx-v3/useAccounts';
+import { FC } from 'react';
+import { DepositForm } from '../../components/Accounts/Deposit';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { PoolBox } from '@snx-v3/PoolBox';
@@ -80,23 +78,8 @@ function DepositUi({
 
 export function Deposit() {
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
-  const navigate = useNavigate();
 
-  const { data: accounts = [] } = useAccounts();
-  const [accountId] = accounts;
-
-  useEffect(() => {
-    if (!params.accountId && accountId && params.collateralSymbol && params.poolId) {
-      navigate({
-        pathname: generatePath('/deposit/:collateralSymbol/:poolId', {
-          collateralSymbol: params.collateralSymbol,
-          poolId: params.poolId,
-        }),
-        search: createSearchParams({ accountId }).toString(),
-      });
-    }
-  }, [navigate, accountId, params.accountId, params.collateralSymbol, params.poolId]);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   return (
     <DepositUi

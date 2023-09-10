@@ -68,12 +68,14 @@ const BorrowUi: FC<{
 export const Borrow = () => {
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
     poolId: params.poolId,
   });
+
   const { maxDebt } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
@@ -82,5 +84,6 @@ export const Borrow = () => {
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   return <BorrowUi setDebtChange={setDebtChange} debtChange={debtChange} maxDebt={maxDebt} />;
 };

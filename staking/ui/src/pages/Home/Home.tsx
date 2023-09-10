@@ -15,14 +15,13 @@ import {
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
-import { useAccounts } from '@snx-v3/useAccounts';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { VaultRow } from './VaultRow';
 import { PoolsType, usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { LiquidityPositionType, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { Welcome } from '../../components/shared/Welcome';
+import { Welcome } from '../../components/Shared/Welcome';
 import { Stats, StatsProps } from './Stats';
 import { AvailableCollateral } from './AvailableCollateral';
 
@@ -85,7 +84,6 @@ export function HomeUi({
         <Welcome />
       </Box>
       <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} />
-
       {isLoading ? (
         <BorderBox p={4} mt={8} flexDir="column">
           <Flex
@@ -211,18 +209,17 @@ export function HomeUi({
           ))}
         </>
       )}
-
       <AvailableCollateral />
     </Flex>
   );
 }
 
 export function Home() {
-  const { isLoading: accountsLoading } = useAccounts();
-  const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
-  const pools = usePools();
   const params = useParams();
   const navigate = useNavigate();
+
+  const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
+  const { data: pools, isLoading: isPoolsLoading } = usePools();
 
   const {
     data: liquidityPositionsById,
@@ -232,18 +229,16 @@ export function Home() {
     accountId: params.accountId,
   });
 
-  const title = 'Synthetix V3';
   const isLoading =
-    accountsLoading ||
     collateralTypesLoading ||
-    pools.isLoading ||
+    isPoolsLoading ||
     (liquidityPositionLoading && liquidityInitialLoading);
 
   return (
     <>
       <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={title} />
+        <title>Synthetix V3</title>
+        <meta name="description" content="Synthetix V3" />
       </Helmet>
       <HomeUi
         isLoading={isLoading}
@@ -251,7 +246,7 @@ export function Home() {
           liquidityPositionsById ? Object.values(liquidityPositionsById) : undefined
         }
         collateralTypes={collateralTypes}
-        pools={pools.data || []}
+        pools={pools || []}
         navigate={navigate}
         VaultRow={VaultRow}
         AvailableCollateral={AvailableCollateral}

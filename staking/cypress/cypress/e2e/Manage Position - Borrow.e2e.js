@@ -23,12 +23,11 @@ it('should borrow against already deposited SNX collateral', () => {
 
   cy.viewport(1000, 800);
   cy.get('@accountId').then((accountId) => {
-    const path = generatePath('/accounts/:accountId/positions/:collateralSymbol/:poolId', {
-      accountId,
+    const path = generatePath('/positions/:collateralSymbol/:poolId', {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=borrow`);
+    cy.visit(`${path}?manageAction=borrow&accountId=${accountId}`);
   });
 
   // Need to wait for max debt to be fetched

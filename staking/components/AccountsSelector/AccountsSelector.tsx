@@ -1,9 +1,11 @@
 // import { CheckIcon } from '@chakra-ui/icons';
-import { Button, Fade } from '@chakra-ui/react';
+// import { useEffect } from 'react';
+import { Button, Fade, Skeleton, Text, useClipboard } from '@chakra-ui/react';
 // import { createSearchParams, generatePath, Link as RouterLink } from 'react-router-dom';
 import { prettyString } from '@snx-v3/format';
+import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
-// import { useAccounts } from '@snx-v3/useAccounts';
+import { useAccountUrlSync } from '@snx-v3/useAccounts';
 
 // function AccountMenuItem({ accountId }: { accountId: string }) {
 //   const params = useParams();
@@ -29,29 +31,44 @@ import { useParams } from '@snx-v3/useParams';
 //   );
 // }
 
-export function AccountsSelectorUi({ accountId }: { accountId?: string }) {
-  // const { data: accounts = [] } = useAccounts();
+interface AccountsSelectorUiProps {
+  isLoading: boolean;
+  accountId?: string;
+  createAccount: () => void;
+}
 
-  if (!accountId) {
-    return null;
-  }
+export function AccountsSelectorUi({
+  accountId,
+  isLoading,
+  createAccount,
+}: AccountsSelectorUiProps) {
+  const { onCopy } = useClipboard(accountId || '');
 
   return (
-    <Fade in={true}>
-      <Button
-        size="sm"
-        height="40px"
-        as={Button}
-        variant="outline"
-        w="100%"
-        maxW="180px"
-        h="36px"
-        data-testid="current account id"
-        data-account-id={accountId}
-      >
-        {`Account #${prettyString(accountId, 3, 3)}`}
-      </Button>
-    </Fade>
+    <>
+      {isLoading ? (
+        <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200">
+          <Text>Loading...</Text>
+        </Skeleton>
+      ) : (
+        <Fade in={!isLoading}>
+          <Button
+            size="sm"
+            borderRadius="4px"
+            height="40px"
+            as={Button}
+            variant="outline"
+            w="100%"
+            maxW="180px"
+            data-testid="current account id"
+            data-account-id={accountId}
+            onClick={accountId ? onCopy : () => createAccount()}
+          >
+            {`${accountId ? `Account #${prettyString(accountId, 3, 3)}` : 'Create Account'} `}
+          </Button>
+        </Fade>
+      )}
+    </>
     // Temporarily disable account selector menu
     // <Menu>
     //   <MenuList fontSize="xs" bg="black" h="36px" py={0} border="1px solid rgba(255,255,255,0.33)">
@@ -85,5 +102,34 @@ export function AccountsSelectorUi({ accountId }: { accountId?: string }) {
 
 export function AccountsSelector() {
   const params = useParams();
-  return <AccountsSelectorUi accountId={params.accountId} />;
+
+  const {
+    data: accounts,
+    isLoading: isAccountsLoading,
+    isFetching: isAccountsFetching,
+  } = useAccounts();
+
+  const {
+    mutate: createAccount,
+    isLoading: isCreateAccountLoading,
+    data: createAccountData,
+  } = useCreateAccount();
+
+  useAccountUrlSync();
+
+  const isLoading = isAccountsLoading || isAccountsFetching || isCreateAccountLoading || !accounts;
+
+  // If we create an account, use it
+  // If the account in params exists in the accounts list, use it
+  // If not use the first account in the list
+  // If there are no accounts, use undefined
+  const accountId = createAccountData
+    ? createAccountData[0]
+    : accounts?.includes(params?.accountId || '')
+    ? params.accountId
+    : accounts?.[0];
+
+  return (
+    <AccountsSelectorUi isLoading={isLoading} createAccount={createAccount} accountId={accountId} />
+  );
 }

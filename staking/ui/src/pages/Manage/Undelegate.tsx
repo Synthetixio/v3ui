@@ -19,7 +19,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@snx-v3/useParams';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -100,7 +100,6 @@ export const UndelegateUi: FC<{
             </Flex>
           </Flex>
         </Flex>
-
         <Collapse in={isDisabled} animateOpacity>
           <Alert mt={2} status="warning">
             <AlertIcon />
@@ -129,7 +128,6 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-
       <Button
         data-testid="undelegate submit"
         type="submit"
@@ -140,10 +138,12 @@ export const UndelegateUi: FC<{
     </Flex>
   );
 };
+
 export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
@@ -153,6 +153,7 @@ export const Undelegate = () => {
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
   if (!collateralType) return null;
+
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,

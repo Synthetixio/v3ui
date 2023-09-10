@@ -3,7 +3,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { FC } from 'react';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { calculatePoolPerformanceSevenDays } from '@snx-v3/calculations';
-import { createSearchParams, generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
 import { Wei } from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
 import { InfoIcon } from '@chakra-ui/icons';
@@ -14,10 +14,9 @@ import { usePool } from '@snx-v3/usePools';
 const PoolBoxUi: FC<{
   poolName?: string;
   poolId?: string;
-  accountId?: string;
   navigate: NavigateFunction;
   sevenDaysPoolPerformanceGrowth?: Wei;
-}> = ({ poolName, poolId, accountId, navigate, sevenDaysPoolPerformanceGrowth }) => {
+}> = ({ poolName, poolId, navigate, sevenDaysPoolPerformanceGrowth }) => {
   return (
     <BorderBox h="100%" p={4} flexDirection="column">
       {poolId ? (
@@ -58,7 +57,6 @@ const PoolBoxUi: FC<{
           onClick={() =>
             navigate({
               pathname: generatePath('/pools/:poolId', { poolId: poolId }),
-              search: accountId ? createSearchParams({ accountId }).toString() : '',
             })
           }
           variant="outline"
@@ -77,14 +75,13 @@ export const PoolBox = () => {
   const { data: poolData } = usePoolData(params.poolId);
   const sevenDaysPoolPerformance = calculatePoolPerformanceSevenDays(poolData);
 
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
 
   return (
     <PoolBoxUi
       poolName={pool?.name}
       poolId={pool?.id}
       navigate={navigate}
-      accountId={params.accountId}
       sevenDaysPoolPerformanceGrowth={sevenDaysPoolPerformance?.growthPercentage}
     />
   );

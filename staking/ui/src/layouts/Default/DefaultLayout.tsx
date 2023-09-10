@@ -11,6 +11,7 @@ export const DefaultLayout: FC = () => (
     color="rgba(255,255,255,0.85)"
     display="flex"
     flexDirection="column"
+    bg="navy.900"
   >
     <Flex flex="1" flexDirection="column">
       <Header />

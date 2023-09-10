@@ -17,7 +17,6 @@ export const PoolUi: FC<{
     <>
       <HomeLink />
       <PoolHeader />
-
       <Divider my={8} bg="gray.900" />
       <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }}>
         <Box flexGrow={1}>
@@ -33,8 +32,10 @@ export const PoolUi: FC<{
 
 export const Pool = () => {
   const params = useParams();
-  const pool = usePool(params.poolId);
+  const { data: pool } = usePool(params.poolId);
+
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
+
   return (
     <>
       <Helmet>

@@ -114,7 +114,7 @@ export const RepayModal: React.FC<{
   const { data: accountSpecificCollateral, refetch: refetchAccountCollateral } =
     useAccountSpecificCollateral(params.accountId, USDProxy?.address);
 
-  const collateralType = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: balance, refetch: refetchBalance } = useTokenBalance(USDProxy?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({

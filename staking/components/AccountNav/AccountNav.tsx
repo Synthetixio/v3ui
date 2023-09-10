@@ -1,11 +1,18 @@
 import { ChevronLeftIcon, SettingsIcon } from '@chakra-ui/icons';
 import { Flex, Link } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
-import { createSearchParams, generatePath, Link as RouterLink, useMatch } from 'react-router-dom';
+import {
+  createSearchParams,
+  generatePath,
+  Link as RouterLink,
+  useMatch,
+  useLocation,
+} from 'react-router-dom';
 
 export function AccountNav() {
   const params = useParams();
   const innerPage = !useMatch('/');
+  const location = useLocation();
 
   return (
     <Flex alignItems="center" mb="10">
@@ -30,7 +37,10 @@ export function AccountNav() {
       {!innerPage && params.accountId ? (
         <Link
           as={RouterLink}
-          to={generatePath('/accounts/:accountId/settings', { accountId: params.accountId })}
+          to={{
+            pathname: generatePath('/settings'),
+            search: location.search,
+          }}
           ml="auto"
           fontSize="xs"
           fontWeight="normal"

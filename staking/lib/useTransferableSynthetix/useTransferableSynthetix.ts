@@ -8,31 +8,47 @@ export function useTransferableSynthetix() {
   const network = useNetwork();
   const account = useWallet();
   const provider = useProvider();
-  const snxCollateral = useCollateralType('SNX');
+  const { data: snxCollateral } = useCollateralType('SNX');
+
   const accountAddress = account?.address;
   const snxAddress = snxCollateral?.tokenAddress;
 
   return useQuery({
     enabled: Boolean(provider && accountAddress && snxAddress),
     queryKey: [network.name, { address: account?.address }, 'transferableSynthetix'],
-    queryFn: async function (): Promise<Wei> {
+    queryFn: async function (): Promise<{ transferable: Wei; collateral?: Wei }> {
       if (!(provider && accountAddress && snxAddress)) throw 'OMG';
       const contract = new ethers.Contract(
         snxAddress,
         [
           'function balanceOf(address owner) view returns (uint256)',
           'function transferableSynthetix(address account) view returns (uint256 transferable)',
+          'function collateral(address account) view returns (uint256 collateral)',
         ],
         provider
       );
       try {
+        // Cannon case
+        if (network.name === 'cannon') {
+          const balanceOf = await contract.balanceOf(accountAddress);
+          return {
+            transferable: wei(balanceOf),
+          };
+        }
+
         // Normal case for SNX case
-        const transferableSynthetix = await contract.transferableSynthetix(accountAddress);
-        return wei(transferableSynthetix);
+        const [transferableSynthetix, collateral] = await Promise.all([
+          contract.transferableSynthetix(accountAddress),
+          contract.collateral(accountAddress),
+        ]);
+
+        return {
+          transferable: wei(transferableSynthetix),
+          collateral: wei(collateral),
+        };
       } catch (e) {
-        // For local deployment we are dealing with a standard mintable token
-        const balance = await contract.balanceOf(accountAddress);
-        return wei(balance);
+        console.error(e);
+        throw e;
       }
     },
   });

@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAccountProxy } from '@snx-v3/useAccountProxy';
 import { useNetwork, useWallet, onboard } from '@snx-v3/useBlockchain';
-import { searchParamsToObject, sortObject } from '@snx-v3/useParams';
 import { useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
 export function useAccounts() {
   const wallet = useWallet();
@@ -33,22 +33,54 @@ export function useAccounts() {
   });
 }
 
+export function useCreateAccount() {
+  const { data: CoreProxy } = useCoreProxy();
+
+  return useMutation({
+    mutationFn: async function () {
+      try {
+        if (!CoreProxy) throw new Error('CoreProxy undefined');
+        const tx = await CoreProxy['createAccount()']();
+        const res = await tx.wait();
+
+        let newAccountId: string | undefined;
+
+        res.logs.forEach((log: { topics: any[]; data: any }) => {
+          if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
+            const accountId = CoreProxy.interface.decodeEventLog(
+              'AccountCreated',
+              log.data,
+              log.topics
+            )?.accountId;
+            newAccountId = accountId?.toString();
+          }
+        });
+
+        return [newAccountId];
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+  });
+}
+
 export function useAccountUrlSync() {
   const accounts = useAccounts();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const currentParams = useMemo(
-    () => sortObject(searchParamsToObject(searchParams)),
-    [searchParams]
-  );
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   useEffect(() => {
+    const accountId = queryParams.get('accountId') || undefined;
+
     if (accounts.isFetched && accounts.data && accounts.data.length > 0) {
       // Accounts fetched and we have some, preselect one
-      if (!currentParams.accountId || !accounts.data.includes(currentParams.accountId)) {
-        setSearchParams(
-          new URLSearchParams(sortObject({ ...currentParams, accountId: accounts.data[0] }))
-        );
+      if (!accountId || !accounts.data.includes(accountId)) {
+        queryParams.set('accountId', accounts.data[0]);
+
+        navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
       }
       // when accountId param is present, and it also exists in the accounts list, do nothing
       return;
@@ -61,10 +93,10 @@ export function useAccountUrlSync() {
       (accounts.isFetched && (!accounts.data || accounts.data.length < 1))
     ) {
       // We have fetched accounts but there are none, remove account id from url
-      if (currentParams.accountId) {
-        delete currentParams.accountId;
-        setSearchParams(new URLSearchParams(currentParams));
+      if (accountId) {
+        queryParams.delete('accountId');
+        navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
       }
     }
-  }, [accounts.data, accounts.isFetched, currentParams, setSearchParams]);
+  }, [accounts.data, accounts.isFetched, navigate, location, queryParams]);
 }
