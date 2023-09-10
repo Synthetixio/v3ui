@@ -73,9 +73,11 @@ export function useAccountUrlSync() {
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   useEffect(() => {
+    const accountId = queryParams.get('accountId') || undefined;
+
     if (accounts.isFetched && accounts.data && accounts.data.length > 0) {
       // Accounts fetched and we have some, preselect one
-      if (!queryParams.get('accountId') || !accounts.data.includes(queryParams.get('accountId'))) {
+      if (!accountId || !accounts.data.includes(accountId)) {
         queryParams.set('accountId', accounts.data[0]);
 
         navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
@@ -91,7 +93,7 @@ export function useAccountUrlSync() {
       (accounts.isFetched && (!accounts.data || accounts.data.length < 1))
     ) {
       // We have fetched accounts but there are none, remove account id from url
-      if (queryParams.get('accountId')) {
+      if (accountId) {
         queryParams.delete('accountId');
         navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
       }
