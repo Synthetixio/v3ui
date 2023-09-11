@@ -1,5 +1,5 @@
 {
-  "address": "0xDcd345385678bB8E267e389Ca446c4B69E9A1FAb",
+  "address": "0x91835089DB29F471588512c83c508aa83F57bC1f",
   "abi": [
     {
       "inputs": [
@@ -387,7 +387,7 @@
       ],
       "name": "acceptPoolOwnership",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -405,7 +405,7 @@
       ],
       "name": "createPool",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -553,7 +553,7 @@
       ],
       "name": "nominatePoolOwner",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -571,7 +571,7 @@
       ],
       "name": "rebalancePool",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -584,7 +584,7 @@
       ],
       "name": "renouncePoolNomination",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -597,7 +597,7 @@
       ],
       "name": "revokePoolNomination",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -610,7 +610,7 @@
       ],
       "name": "setMinLiquidityRatio",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -645,7 +645,7 @@
       ],
       "name": "setPoolCollateralConfiguration",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -663,7 +663,7 @@
       ],
       "name": "setPoolCollateralDisabledByDefault",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -698,7 +698,7 @@
       ],
       "name": "setPoolConfiguration",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -716,13 +716,13 @@
       ],
       "name": "setPoolName",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x191ad31330705fd660217fb82de025550fd40f773d01dc4b4776d4966fdabda6",
+  "deployTxnHash": "0x0c64b483bd61ac586b09568caf03bc073ff0bd4c1fd28470f16fd1dd383b223c",
   "sourceName": "contracts/modules/core/PoolModule.sol",
   "contractName": "PoolModule",
   "deployedOn": "contract.PoolModule"

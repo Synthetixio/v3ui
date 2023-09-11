@@ -1,5 +1,5 @@
 {
-  "address": "0x22Fa24808e62D33197d11Ea4F208e9079a9A4073",
+  "address": "0x3F9F9b2CED55aD2B1B11CF2A8F8E134a8e40e842",
   "abi": [
     {
       "inputs": [
@@ -96,7 +96,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x740ec29a701ae1e666857182dd46b913d12b350efb589e57b3fec0eb80aa3a27",
+  "deployTxnHash": "0x0d1ea213ea326769bb451f24f94ee282b4397ecb836e2a051ead8d23882163e7",
   "sourceName": "contracts/modules/core/CrossChainUSDModule.sol",
   "contractName": "CrossChainUSDModule",
   "deployedOn": "contract.CrossChainUSDModule"

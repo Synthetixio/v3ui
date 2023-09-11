@@ -1,5 +1,5 @@
 {
-  "address": "0x138802E6cbE2A32647F864A2Cb6D4D053AD604De",
+  "address": "0xfd45EA1E2f73791d35FbF03aBeFc71010a38f437",
   "abi": [
     {
       "inputs": [
@@ -292,7 +292,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -349,7 +349,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x62fe75d9bd011c417ee0bc47cfbe742cec8b774d14973385b03c2311e65cae16",
+  "deployTxnHash": "0x6423b161e9b9f34eccde13934986a01880f33dd0597170c5acfcc5a59a7dd9c0",
   "sourceName": "contracts/modules/AsyncOrderSettlementModule.sol",
   "contractName": "AsyncOrderSettlementModule",
   "deployedOn": "contract.AsyncOrderSettlementModule"

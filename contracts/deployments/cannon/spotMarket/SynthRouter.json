@@ -1,5 +1,5 @@
 {
-  "address": "0x984c76c9B38D5DBC8D213Df3dabbcfac62Ee7E20",
+  "address": "0x7f3D1ab5cB683c0A0FDFe49A5aFae4a577227fdb",
   "abi": [
     {
       "inputs": [
@@ -321,7 +321,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -406,7 +406,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -503,7 +503,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -534,7 +534,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -570,7 +570,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -583,7 +583,7 @@
       ],
       "name": "setDecayRate",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -680,7 +680,7 @@
     }
   ],
   "deployedOn": "router.SynthRouter",
-  "deployTxnHash": "0xd5601bdb2068933f660d6e5b6f91aeb48d22ca1c94bd22bf5e4054a81debce87",
+  "deployTxnHash": "0x369ee732a69712b2adc5417d714d6593b7803a5e4d0220eb08a97cdb8b817303",
   "contractName": "SynthRouter",
   "sourceName": "SynthRouter.sol"
 }

@@ -1,5 +1,5 @@
 {
-  "address": "0x96d1cd527ec368fb979aa357CADD99593C55a29b",
+  "address": "0x865603890d0F8AA09e4c8ff4e3936Ef176735B68",
   "abi": [
     {
       "inputs": [
@@ -352,7 +352,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -380,7 +380,7 @@
       ],
       "name": "createLock",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -403,7 +403,7 @@
       ],
       "name": "deposit",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -530,13 +530,13 @@
       ],
       "name": "withdraw",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x27560773a07cdcc78a419e1c7279fcb49eaa13941a3113742dd8f9ad164231b9",
+  "deployTxnHash": "0xf6ef3808f757569edcf87810bbbfac4b45ae8a81b4c4ff11dae8f96fcbc7ac66",
   "sourceName": "contracts/modules/core/CollateralModule.sol",
   "contractName": "CollateralModule",
   "deployedOn": "contract.CollateralModule"

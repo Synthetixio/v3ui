@@ -1,5 +1,5 @@
 {
-  "address": "0x43CAa854A88C08016C2267f5D213329ac3191d20",
+  "address": "0xB84366449725a85BDb5ac068b6177fC32107ee69",
   "abi": [
     {
       "inputs": [
@@ -146,7 +146,7 @@
       ],
       "name": "configureCollateral",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -283,7 +283,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x0301c9e1a16a9ef60a7879f29e04d9bf87b3794a210d492cf62638422df5942a",
+  "deployTxnHash": "0x628559e6e9d27178bcbb1da9d7180202aced635915cbcbe5027e50d2f7efc063",
   "sourceName": "contracts/modules/core/CollateralConfigurationModule.sol",
   "contractName": "CollateralConfigurationModule",
   "deployedOn": "contract.CollateralConfigurationModule"

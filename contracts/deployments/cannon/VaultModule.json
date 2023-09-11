@@ -1,5 +1,5 @@
 {
-  "address": "0xc9A699677b665F0037dDA31a946830A56c8C8E7D",
+  "address": "0x5940fc90b9D57936072A8F1EcA8711884cae98E0",
   "abi": [
     {
       "inputs": [
@@ -342,7 +342,7 @@
       ],
       "name": "delegateCollateral",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -386,7 +386,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -449,7 +449,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -478,7 +478,7 @@
           "type": "int256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -531,7 +531,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -555,13 +555,13 @@
           "type": "int256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3eddc680ec4940e394371c22eb997e93641d4cd166366faeeda35a6a07c0e233",
+  "deployTxnHash": "0x40c7570f385b790cd90d0f8a1324ff04d8e807269f86301b7024927499eab978",
   "sourceName": "contracts/modules/core/VaultModule.sol",
   "contractName": "VaultModule",
   "deployedOn": "contract.VaultModule"
