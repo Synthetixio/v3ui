@@ -59,6 +59,7 @@ async function loadPrices({
     CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
   );
   const multicallResult = await CoreProxy.callStatic.multicall(calls);
+
   return multicallResult.map((bytes: string) => {
     const decoded = CoreProxy.interface.decodeFunctionResult('getCollateralPrice', bytes)[0];
     return PriceSchema.parse(decoded);
@@ -72,10 +73,11 @@ async function loadCollateralTypes({
   CoreProxy: CoreProxyType;
   Multicall3: Multicall3Type;
 }): Promise<CollateralType[]> {
-  // TODO, sUSD is misconfigured. When fixed we should be hiding disabled
-  const hideDisabled = false;
-  const tokenConfigsRaw = (await CoreProxy.getCollateralConfigurations(hideDisabled)) as object[];
-  const tokenConfigs = tokenConfigsRaw.map((x) => CollateralConfigurationSchema.parse({ ...x }));
+  const hideDisabled = true;
+  const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+  const tokenConfigs = tokenConfigsRaw
+    .map((x) => CollateralConfigurationSchema.parse({ ...x }))
+    .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
   const [symbols, prices] = await Promise.all([
     loadSymbols({ Multicall3, tokenConfigs }),
@@ -110,11 +112,10 @@ export function useCollateralTypes(includeDelegationOff = false) {
       if (includeDelegationOff) {
         return collateralTypes;
       }
+
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
       return collateralTypes.filter((x) => {
-        // TODO currently sUSD is misconfigured, so we exclude it manually for now.
-        if (x.symbol === 'sUSD' || x.symbol === 'snxUSD') return false;
         return x.minDelegationD18.lt(constants.MaxUint256);
       });
     },
