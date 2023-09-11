@@ -24,9 +24,9 @@ export const abi = [
   'error MissingAssociatedSystem(bytes32 id)',
   'event AssociatedSystemSet(bytes32 indexed kind, bytes32 indexed id, address proxy, address impl)',
   'function getAssociatedSystem(bytes32 id) view returns (address addr, bytes32 kind)',
-  'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl)',
-  'function initOrUpgradeToken(bytes32 id, string name, string symbol, uint8 decimals, address impl)',
-  'function registerUnmanagedSystem(bytes32 id, address endpoint)',
+  'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl) payable',
+  'function initOrUpgradeToken(bytes32 id, string name, string symbol, uint8 decimals, address impl) payable',
+  'function registerUnmanagedSystem(bytes32 id, address endpoint) payable',
   'error AlreadyInitialized()',
   'error InsufficientAllowance(uint256 required, uint256 existing)',
   'error InsufficientBalance(uint256 required, uint256 existing)',
@@ -36,17 +36,17 @@ export const abi = [
   'function allowance(address owner, address spender) view returns (uint256)',
   'function approve(address spender, uint256 amount) returns (bool)',
   'function balanceOf(address owner) view returns (uint256)',
-  'function burn(uint256 amount)',
-  'function burn(address target, uint256 amount)',
-  'function burnWithAllowance(address from, address spender, uint256 amount)',
+  'function burn(uint256 amount) payable',
+  'function burn(address target, uint256 amount) payable',
+  'function burnWithAllowance(address from, address spender, uint256 amount) payable',
   'function decimals() view returns (uint8)',
   'function decreaseAllowance(address spender, uint256 subtractedValue) returns (bool)',
   'function increaseAllowance(address spender, uint256 addedValue) returns (bool)',
-  'function initialize(string tokenName, string tokenSymbol, uint8 tokenDecimals)',
+  'function initialize(string tokenName, string tokenSymbol, uint8 tokenDecimals) payable',
   'function isInitialized() view returns (bool)',
-  'function mint(address target, uint256 amount)',
+  'function mint(address target, uint256 amount) payable',
   'function name() view returns (string)',
-  'function setAllowance(address from, address spender, uint256 amount)',
+  'function setAllowance(address from, address spender, uint256 amount) payable',
   'function symbol() view returns (string)',
   'function totalSupply() view returns (uint256)',
   'function transfer(address to, uint256 amount) returns (bool)',
@@ -63,6 +63,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -357,7 +358,7 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     initOrUpgradeToken(
@@ -366,13 +367,13 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -387,20 +388,20 @@ export interface USDProxy extends BaseContract {
 
     'burn(uint256)'(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'burn(address,uint256)'(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     burnWithAllowance(
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
@@ -421,7 +422,7 @@ export interface USDProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       tokenDecimals: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isInitialized(overrides?: CallOverrides): Promise<[boolean]>;
@@ -429,7 +430,7 @@ export interface USDProxy extends BaseContract {
     mint(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -438,7 +439,7 @@ export interface USDProxy extends BaseContract {
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -495,7 +496,7 @@ export interface USDProxy extends BaseContract {
     symbol: string,
     uri: string,
     impl: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   initOrUpgradeToken(
@@ -504,13 +505,13 @@ export interface USDProxy extends BaseContract {
     symbol: string,
     decimals: BigNumberish,
     impl: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   registerUnmanagedSystem(
     id: BytesLike,
     endpoint: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -525,20 +526,20 @@ export interface USDProxy extends BaseContract {
 
   'burn(uint256)'(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'burn(address,uint256)'(
     target: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   burnWithAllowance(
     from: string,
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
@@ -559,7 +560,7 @@ export interface USDProxy extends BaseContract {
     tokenName: string,
     tokenSymbol: string,
     tokenDecimals: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isInitialized(overrides?: CallOverrides): Promise<boolean>;
@@ -567,7 +568,7 @@ export interface USDProxy extends BaseContract {
   mint(
     target: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
@@ -576,7 +577,7 @@ export interface USDProxy extends BaseContract {
     from: string,
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -783,7 +784,7 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     initOrUpgradeToken(
@@ -792,13 +793,13 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -813,20 +814,20 @@ export interface USDProxy extends BaseContract {
 
     'burn(uint256)'(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     'burn(address,uint256)'(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     burnWithAllowance(
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
@@ -847,7 +848,7 @@ export interface USDProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       tokenDecimals: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     isInitialized(overrides?: CallOverrides): Promise<BigNumber>;
@@ -855,7 +856,7 @@ export interface USDProxy extends BaseContract {
     mint(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -864,7 +865,7 @@ export interface USDProxy extends BaseContract {
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -919,7 +920,7 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     initOrUpgradeToken(
@@ -928,13 +929,13 @@ export interface USDProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     allowance(
@@ -953,20 +954,20 @@ export interface USDProxy extends BaseContract {
 
     'burn(uint256)'(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'burn(address,uint256)'(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     burnWithAllowance(
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -987,7 +988,7 @@ export interface USDProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       tokenDecimals: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isInitialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -995,7 +996,7 @@ export interface USDProxy extends BaseContract {
     mint(
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1004,7 +1005,7 @@ export interface USDProxy extends BaseContract {
       from: string,
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;

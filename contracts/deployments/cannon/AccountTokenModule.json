@@ -1,5 +1,5 @@
 {
-  "address": "0x790F6939f3Cb0b76A1465A340aEF9347d92ceEA0",
+  "address": "0x4d66a0EA06245d8E49A9F223644A6906F282b954",
   "abi": [
     {
       "inputs": [],
@@ -236,7 +236,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -278,7 +278,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -333,7 +333,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -388,7 +388,7 @@
       ],
       "name": "safeMint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -457,7 +457,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -488,7 +488,7 @@
       ],
       "name": "setBaseTokenURI",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -624,7 +624,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xb24343e84e9801f89ea9c1a9424e7da91c57ce6f647eaad9c3b8836fe0f5c598",
+  "deployTxnHash": "0x97bbe6e961a42f05d9e3f733574ff11b80d9c959f5e963a630164f5bc515a104",
   "sourceName": "contracts/modules/account/AccountTokenModule.sol",
   "contractName": "AccountTokenModule",
   "deployedOn": "contract.AccountTokenModule"

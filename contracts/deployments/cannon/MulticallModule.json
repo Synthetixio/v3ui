@@ -1,5 +1,5 @@
 {
-  "address": "0x2153Bd5163ecCE15E42fd5C10A7eA5Df50fE00ff",
+  "address": "0xAAC0942ABC38a069DeD1e99A769e7157c7b1d816",
   "abi": [
     {
       "inputs": [
@@ -79,7 +79,7 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -126,13 +126,13 @@
       ],
       "name": "setAllowlistedMulticallTarget",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xcd574dfae9c99efdec565f8483dd20a17615d04cdb0f5e512ef13940e50ff6c1",
+  "deployTxnHash": "0x0f74d8f82eb2d18ae070dcc3918b0d24a8fac0bc774d5708f1d30d66b8108052",
   "sourceName": "contracts/modules/core/MulticallModule.sol",
   "contractName": "MulticallModule",
   "deployedOn": "contract.MulticallModule"

@@ -1,5 +1,5 @@
 {
-  "address": "0xF27D35753A7c3bFA5AcdAD4F40318Eabd6086c99",
+  "address": "0xDb8649DEae7323033c02b94c2B3038060939245e",
   "abi": [
     {
       "inputs": [
@@ -315,7 +315,7 @@
       ],
       "name": "initOrUpgradeNft",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -348,7 +348,7 @@
       ],
       "name": "initOrUpgradeToken",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -366,7 +366,7 @@
       ],
       "name": "registerUnmanagedSystem",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -549,7 +549,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -567,7 +567,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -590,7 +590,7 @@
       ],
       "name": "burnWithAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -674,7 +674,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -705,7 +705,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -741,7 +741,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -825,7 +825,7 @@
     }
   ],
   "deployedOn": "router.USDRouter",
-  "deployTxnHash": "0x2cd8512f86e2806ef0dd6dd5e03b8a01ec409d257ac5efd93938c6dc0a6c5e3b",
+  "deployTxnHash": "0x68ab3861d1be952293b4ed62a0c210860a2e283f108fecad97a33a9cb29bf1fc",
   "contractName": "USDRouter",
   "sourceName": "USDRouter.sol"
 }

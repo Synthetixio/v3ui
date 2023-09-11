@@ -1,5 +1,5 @@
 {
-  "address": "0x24BfD6A7F7C8c01f4d8a9692Ece939fABc3De0Ca",
+  "address": "0xaB8C3d22669AC648E5d6EFAd8557D3B80D6D7eDA",
   "abi": [
     {
       "inputs": [
@@ -551,12 +551,12 @@
           "type": "bytes32"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "deployedOn": "router.OracleRouter",
-  "deployTxnHash": "0xd4dd0c7417430af8b5fcd8488c667c27b3463adf2a17dfae7193edce6e9f8c1b",
+  "deployTxnHash": "0x9f07303163a901e0d728860994d1cd4eb0781a00da18973675e9de8a32c213b3",
   "contractName": "OracleRouter",
   "sourceName": "OracleRouter.sol"
 }

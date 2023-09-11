@@ -1,6 +1,6 @@
 {
   "generator": "cannon cli 2.5.4",
-  "timestamp": 1693900836,
+  "timestamp": 1694444621,
   "def": {
     "name": "synthetix-local",
     "version": "0.0.1",
@@ -198,6 +198,16 @@
         ],
         "depends": ["invoke.delegateCollateral"]
       },
+      "setAccountTimeoutWithdraw": {
+        "target": ["synthetix.CoreProxy"],
+        "from": "<%= settings.user %>",
+        "func": "setConfig",
+        "args": [
+          "<%= formatBytes32String('accountTimeoutWithdraw') %>",
+          "<%= hexZeroPad(hexlify(0), 32) %>"
+        ],
+        "depends": ["provision.synthetix"]
+      },
       "setMinimumLiquidityRatio": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
@@ -256,7 +266,7 @@
           "<%= imports.collateralToken.contracts.MintableToken.address %>",
           "<%= MaxUint256 %>"
         ],
-        "depends": ["invoke.setMarketCollateralSupplyCap"]
+        "depends": ["invoke.setMarketCollateralSupplyCap", "invoke.mintStablecoins"]
       },
       "setPoolConfiguration": {
         "target": ["synthetix.CoreProxy"],
@@ -272,7 +282,36 @@
             }
           ]
         ],
-        "depends": ["invoke.create_default_pool", "invoke.updateSynthPriceData"]
+        "depends": [
+          "invoke.create_default_pool",
+          "invoke.updateSynthPriceData",
+          "invoke.mintStablecoins"
+        ]
+      },
+      "withdrawStablecoins": {
+        "target": ["synthetix.CoreProxy"],
+        "from": "<%= settings.user %>",
+        "func": "withdraw",
+        "args": [
+          "<%= settings.accountId %>",
+          "<%= imports.synthetix.contracts.USDProxy.address %>",
+          "<%= parseEther('100') %>"
+        ],
+        "depends": [
+          "invoke.approveAnotherPool",
+          "invoke.initializeWrapper",
+          "invoke.setPoolConfiguration"
+        ]
+      },
+      "resetAccountTimeoutWithdraw": {
+        "target": ["synthetix.CoreProxy"],
+        "from": "<%= settings.user %>",
+        "func": "setConfig",
+        "args": [
+          "<%= formatBytes32String('accountTimeoutWithdraw') %>",
+          "<%= hexZeroPad(hexlify(86400), 32) %>"
+        ],
+        "depends": ["invoke.withdrawStablecoins"]
       },
       "createAnotherPool": {
         "target": ["synthetix.CoreProxy"],
@@ -300,6 +339,6 @@
   "options": {},
   "status": "complete",
   "meta": {},
-  "miscUrl": "file://7edddf99fd1dba7978abb91c7b73109e.json",
+  "miscUrl": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 13370
 }

@@ -1,5 +1,5 @@
 {
-  "address": "0x142D17410731241CbDD78898E6d6dF3e93e8f6B5",
+  "address": "0x61bef83d1f059Bf20468c3623997A72fa2a4CEb9",
   "abi": [
     {
       "inputs": [
@@ -311,7 +311,7 @@
       ],
       "name": "burnUsd",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -339,13 +339,13 @@
       ],
       "name": "mintUsd",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xd00c511ed088e790a33c18717245cb8ee83f88f9429dfad7ec2e3dfcb7c961bd",
+  "deployTxnHash": "0x263c64d796788d3a3dd5fa8d28127be017b48d9b76b2c65f1ee2c7e1d044b901",
   "sourceName": "contracts/modules/core/IssueUSDModule.sol",
   "contractName": "IssueUSDModule",
   "deployedOn": "contract.IssueUSDModule"
