@@ -105,6 +105,26 @@ function VaultRowUi({
   );
 }
 
+import { useQuery } from '@tanstack/react-query';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useNetwork } from '@snx-v3/useBlockchain';
+
+function usePoolCollateralIssuanceRatio({ poolId, tokenAddress }) {
+  const { data: CoreProxy } = useCoreProxy();
+  const network = useNetwork();
+  return useQuery({
+    queryKey: [network.name, 'PoolCollateralIssuanceRatio', { poolId }, { tokenAddress }],
+    enabled: Boolean(CoreProxy && poolId && tokenAddress),
+    queryFn: async function () {
+      if (!(CoreProxy && poolId && tokenAddress)) throw 'OMFG';
+      // const data = await CoreProxy.getPoolConfiguration(poolId, tokenAddress);
+      const data = await CoreProxy.getPoolConfiguration(poolId);
+      console.log(`getPoolConfiguration`, data);
+      return null;
+    },
+  });
+}
+
 export type VaultRowProps = {
   collateralType: CollateralType;
   poolId: string;
@@ -116,6 +136,12 @@ export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityP
 
   const navigate = useNavigate();
   const isConnected = useIsConnected();
+
+  const { data: poolCollateralIssuanceRatio } = usePoolCollateralIssuanceRatio({
+    poolId,
+    tokenAddress: collateralType?.tokenAddress,
+  });
+  // console.log(`poolCollateralIssuanceRatio`, poolCollateralIssuanceRatio);
 
   return (
     <VaultRowUi
