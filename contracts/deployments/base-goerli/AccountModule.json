@@ -1,5 +1,5 @@
 {
-  "address": "0x8F5c81b0A6dd27241b6eEF845F359AcB5D16C808",
+  "address": "0xfB1F60Ec81180D101347efE3872255A901e3ee04",
   "abi": [
     {
       "inputs": [
@@ -198,7 +198,7 @@
           "type": "uint128"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -211,7 +211,7 @@
       ],
       "name": "createAccount",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -316,7 +316,7 @@
       ],
       "name": "grantPermission",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -392,7 +392,7 @@
       ],
       "name": "notifyAccountTransfer",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -410,7 +410,7 @@
       ],
       "name": "renouncePermission",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -433,13 +433,13 @@
       ],
       "name": "revokePermission",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xe9ed34cc278ee098636a53b39093efed9a4538ed74a11ba97841918e944d3b0e",
+  "deployTxnHash": "0xcd2b6162957f2dbd3f87c4ca911d5e18d28dbc54ae9a7db63b09be751535240d",
   "sourceName": "contracts/modules/core/AccountModule.sol",
   "contractName": "AccountModule",
   "deployedOn": "contract.AccountModule"

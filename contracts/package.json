@@ -22,9 +22,7 @@
     "start:optimism": "./start.sh optimism-mainnet",
     "start:optimism-goerli": "./start.sh optimism-goerli",
     "start:base-goerli": "./start.sh base-goerli",
-    "fetch": "./fetch.sh",
-    "fetch-deployments": "yarn fetch mainnet && yarn fetch goerli && yarn fetch sepolia && yarn fetch optimism-mainnet && yarn fetch optimism-goerli && yarn fetch base-goerli",
-    "upgrade-contracts": "cannon build && ./cannon.sh && yarn fetch-deployments && yarn build",
+    "upgrade-contracts": "cannon build && ./cannon.sh && ./fetch.sh && yarn build",
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {

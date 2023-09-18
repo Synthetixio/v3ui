@@ -1,5 +1,5 @@
 {
-  "address": "0x37c517BB2e67907537D2162EB22abde7A9B403d3",
+  "address": "0xD927c1Aa8447960676D31Dcf180cdBe15e0A647f",
   "abi": [
     {
       "inputs": [
@@ -349,13 +349,13 @@
           "type": "bytes32"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x943a0918058a8b9fb4ba586a92fb42ebf5c1e559bc2fe9b00f0189e381a11527",
+  "deployTxnHash": "0x346b59ad8a531c4dd7dd74003efa18e3769c69f29de9e0f015679ba08f5919a0",
   "sourceName": "contracts/modules/NodeModule.sol",
   "contractName": "NodeModule",
   "deployedOn": "contract.NodeModule"
