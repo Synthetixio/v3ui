@@ -7,6 +7,7 @@ import type { Multicall3 as Multicall3Goerli } from '@synthetixio/v3-contracts/b
 import type { Multicall3 as Multicall3Sepolia } from '@synthetixio/v3-contracts/build/sepolia/Multicall3';
 import type { Multicall3 as Multicall3OptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3';
 import type { Multicall3 as Multicall3OptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/Multicall3';
+import type { Multicall3 as Multicall3BaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/Multicall3';
 
 export type Multicall3Type =
   | Multicall3Cannon
@@ -14,7 +15,8 @@ export type Multicall3Type =
   | Multicall3Goerli
   | Multicall3Sepolia
   | Multicall3OptimismMainnet
-  | Multicall3OptimismGoerli;
+  | Multicall3OptimismGoerli
+  | Multicall3BaseGoerli;
 
 export async function importMulticall3(chainName: string) {
   switch (chainName) {
@@ -30,6 +32,8 @@ export async function importMulticall3(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/Multicall3');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/Multicall3');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

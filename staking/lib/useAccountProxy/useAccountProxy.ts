@@ -7,6 +7,7 @@ import type { AccountProxy as AccountProxyGoerli } from '@synthetixio/v3-contrac
 import type { AccountProxy as AccountProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/AccountProxy';
 import type { AccountProxy as AccountProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy';
 import type { AccountProxy as AccountProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/AccountProxy';
+import type { AccountProxy as AccountProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/AccountProxy';
 
 export type AccountProxyType =
   | AccountProxyCannon
@@ -14,7 +15,8 @@ export type AccountProxyType =
   | AccountProxyGoerli
   | AccountProxySepolia
   | AccountProxyOptimismMainnet
-  | AccountProxyOptimismGoerli;
+  | AccountProxyOptimismGoerli
+  | AccountProxyBaseGoerli;
 
 export async function importAccountProxy(chainName: string) {
   switch (chainName) {
@@ -30,6 +32,8 @@ export async function importAccountProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/AccountProxy');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/AccountProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }
