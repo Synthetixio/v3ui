@@ -56,6 +56,10 @@ async function loadPrices({
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((x) =>
+    // TODO: getCollateralPrice has new signature
+    //   `function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)`
+    //  This is going to fail for base-goerli-competition / cannon
+    // @ts-ignore
     CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
   );
   const multicallResult = await CoreProxy.callStatic.multicall(calls);
