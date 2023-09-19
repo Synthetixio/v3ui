@@ -31,9 +31,9 @@ fetch() {
   yarn prettier --write ./metadata/$CHAIN_NAME/metadata.json
 }
 
-fetch mainnet synthetix:latest main
-fetch goerli synthetix:latest main
-fetch sepolia synthetix:latest main
-fetch optimism-mainnet synthetix:latest main
-fetch optimism-goerli synthetix:latest main
+fetch mainnet synthetix:3.3.4 main
+fetch goerli synthetix:3.3.4 main
+fetch sepolia synthetix:3.3.4 main
+fetch optimism-mainnet synthetix:3.3.4 main
+fetch optimism-goerli synthetix:3.3.4 main
 fetch base-goerli synthetix:latest competition
