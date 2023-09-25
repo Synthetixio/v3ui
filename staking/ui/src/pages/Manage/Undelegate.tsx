@@ -20,6 +20,7 @@ import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
+import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -143,7 +144,7 @@ export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-
+  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
@@ -169,7 +170,9 @@ export const Undelegate = () => {
   // if debt is negative it's actually credit, which means we can undelegate all collateral
   const maxCollateral = newDebt.lte(0)
     ? liquidityPosition?.collateralAmount
-    : newDebt.mul(collateralType.issuanceRatioD18).div(collateralType.price).mul(0.98);
+    : collateralPrice
+    ? newDebt.mul(collateralType.issuanceRatioD18).div(collateralPrice).mul(0.98)
+    : undefined;
 
   return (
     <UndelegateUi

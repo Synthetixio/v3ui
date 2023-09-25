@@ -1,12 +1,13 @@
 import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
-import { usePool } from '@snx-v3/usePools';
+import { useCollateralPrices } from '../../../../lib/useCollateralPrices';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -23,8 +24,8 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
-  poolName?: string;
-}> = ({ vaultsData }) => {
+  collateralPriceByAddress?: Record<string, Wei | undefined>;
+}> = ({ vaultsData, collateralPriceByAddress }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -88,6 +89,7 @@ export const CollateralSectionUi: FC<{
           <>
             <Divider mt={6} mb={4} />
             {vaultsData.map((vaultCollateral) => {
+              const price = collateralPriceByAddress?.[vaultCollateral.collateralType.tokenAddress];
               return (
                 <React.Fragment key={vaultCollateral.collateralType.tokenAddress}>
                   <Box
@@ -118,9 +120,7 @@ export const CollateralSectionUi: FC<{
                         fontWeight="400"
                         data-testid="collateral price"
                       >
-                        {vaultCollateral.collateralType.price
-                          ? formatNumberToUsd(vaultCollateral.collateralType.price.toNumber())
-                          : '-'}
+                        {price ? formatNumberToUsd(price.toNumber()) : '-'}
                       </Text>
                     </Flex>
                     <Flex gap={2} justifyContent="space-between">
@@ -202,7 +202,15 @@ export const CollateralSection = () => {
   const params = useParams();
 
   const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-  const { data: pool } = usePool(params.poolId);
+  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralPriceByAddress } = useCollateralPrices(
+    collateralTypes?.map(({ tokenAddress }) => tokenAddress)
+  );
 
-  return <CollateralSectionUi vaultsData={vaultsData} poolName={pool?.name} />;
+  return (
+    <CollateralSectionUi
+      vaultsData={vaultsData}
+      collateralPriceByAddress={collateralPriceByAddress}
+    />
+  );
 };

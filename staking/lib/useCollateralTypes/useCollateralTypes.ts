@@ -94,6 +94,8 @@ export function useCollateralTypes(includeDelegationOff = false) {
         return x.minDelegationD18.lt(constants.MaxUint256);
       });
     },
+    // one hour in ms
+    staleTime: 60 * 60 * 1000,
     placeholderData: [],
     enabled: Boolean(CoreProxy && Multicall3),
   });
