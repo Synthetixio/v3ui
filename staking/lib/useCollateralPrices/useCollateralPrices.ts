@@ -4,7 +4,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { BigNumber } from 'ethers';
-import { erc7412Call } from '../withERC7412';
+import { erc7412Call } from '@snx-v3/withERC7412';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 

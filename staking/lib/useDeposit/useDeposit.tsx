@@ -9,29 +9,23 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
+import { withERC7412 } from '@snx-v3/withERC7412';
 
-export const useDeposit = (
-  {
-    accountId,
-    newAccountId,
-    poolId,
-    collateralTypeAddress,
-    collateralChange,
-    currentCollateral,
-  }: {
-    accountId?: string;
-    newAccountId: string;
-    poolId?: string;
-    collateralTypeAddress?: string;
-    currentCollateral: Wei;
-    collateralChange: Wei;
-  },
-  eventHandlers?: {
-    onSuccess?: () => void;
-    onMutate?: () => void;
-    onError?: (e: Error) => void;
-  }
-) => {
+export const useDeposit = ({
+  accountId,
+  newAccountId,
+  poolId,
+  collateralTypeAddress,
+  collateralChange,
+  currentCollateral,
+}: {
+  accountId?: string;
+  newAccountId: string;
+  poolId?: string;
+  collateralTypeAddress?: string;
+  currentCollateral: Wei;
+  collateralChange: Wei;
+}) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
 
@@ -106,7 +100,12 @@ export const useDeposit = (
           gasSpeed,
         });
 
-        const txn = await signer.sendTransaction({ ...populatedTxn, ...gasOptionsForTransaction });
+        const txn = await signer.sendTransaction(
+          await withERC7412(CoreProxy.provider, {
+            ...populatedTxn,
+            ...gasOptionsForTransaction,
+          })
+        );
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
@@ -116,7 +115,6 @@ export const useDeposit = (
         throw error;
       }
     },
-    ...eventHandlers,
   });
   return {
     mutation,

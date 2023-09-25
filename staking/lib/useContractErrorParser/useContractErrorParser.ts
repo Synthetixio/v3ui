@@ -1,6 +1,6 @@
 import { ethers, utils } from 'ethers';
 import { useCallback } from 'react';
-import { ERC7412_ABI } from '../withERC7412';
+import { ERC7412_ABI } from '@snx-v3/withERC7412';
 
 export type ContractErrorType = {
   data: string;

@@ -63,7 +63,7 @@ function makeMulticall(calls: TransactionRequest[], senderAddr: string) {
   };
 }
 
-type TransactionRequest = { to: string; from?: string; value?: ethers.BigNumber; data: string };
+type TransactionRequest = { to?: string; from?: string; value?: ethers.BigNumber; data?: string };
 
 const ERC7412ErrorSchema = z.union([
   z.object({
@@ -83,7 +83,7 @@ const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006'
 /**
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
  */
-const withERC7412 = async (
+export const withERC7412 = async (
   provider: ethers.providers.Provider,
   tx: TransactionRequest,
   isTestnet?: boolean

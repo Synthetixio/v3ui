@@ -1463,6 +1463,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.15.4":
+  version: 7.22.15
+  resolution: "@babel/runtime@npm:7.22.15"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: 793296df1e41599a935a3d77ec01eb6088410d3fd4dbe4e92f06c6b7bb2f8355024e6d78621a3a35f44e0e23b0b59107f23d585384df4f3123256a1e1492040e
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.18.10, @babel/template@npm:^7.20.7, @babel/template@npm:^7.21.9, @babel/template@npm:^7.22.5, @babel/template@npm:^7.3.3":
   version: 7.22.5
   resolution: "@babel/template@npm:7.22.5"
@@ -4830,6 +4839,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pythnetwork/price-service-client@npm:*":
+  version: 1.8.0
+  resolution: "@pythnetwork/price-service-client@npm:1.8.0"
+  dependencies:
+    "@pythnetwork/price-service-sdk": "*"
+    "@types/ws": ^8.5.3
+    axios: =1.1.0
+    axios-retry: ~3.3.0
+    isomorphic-ws: ^4.0.1
+    ts-log: ^2.2.4
+    ws: ^8.6.0
+  checksum: ced0b65030b40610cf5e81d23abe500ecfedf9c4b39b02a1b6017b39b8d9d9fcbf78c0b35e6685c5371afbb6ccbd79030841ea888ca25e5d416f4f3b5479eb89
+  languageName: node
+  linkType: hard
+
+"@pythnetwork/price-service-sdk@npm:*":
+  version: 1.4.0
+  resolution: "@pythnetwork/price-service-sdk@npm:1.4.0"
+  checksum: ff0c09a3b7eec0f59dd5fb3bfa32937309f0806354ac7ca197e09bb665bd18b8c43d772a9a925d8142f75be0460d44acfde03dd11ef14a012841abe476fc7f6b
+  languageName: node
+  linkType: hard
+
+"@pythnetwork/pyth-evm-js@npm:^1.29.0":
+  version: 1.29.0
+  resolution: "@pythnetwork/pyth-evm-js@npm:1.29.0"
+  dependencies:
+    "@pythnetwork/price-service-client": "*"
+    buffer: ^6.0.3
+  checksum: 8367e82612a8b08b365fbae7e11db5883e5c206173ff2fd963011874f0b0147ab6f049f92137b3667f0ebda7a73472fca83a4740499826879584bd799881861e
+  languageName: node
+  linkType: hard
+
 "@reactflow/background@npm:11.2.2":
   version: 11.2.2
   resolution: "@reactflow/background@npm:11.2.2"
@@ -5675,6 +5716,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
@@ -5703,6 +5745,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useContractErrorParser@workspace:staking/lib/useContractErrorParser"
   dependencies:
+    "@snx-v3/withERC7412": "workspace:*"
     ethers: ^5.7.2
     react: ^18.2.0
   languageName: unknown
@@ -5730,6 +5773,7 @@ __metadata:
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
@@ -6024,6 +6068,20 @@ __metadata:
   resolution: "@snx-v3/validatePosition@workspace:staking/lib/validatePosition"
   dependencies:
     "@synthetixio/wei": ^2.74.4
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/withERC7412@workspace:*, @snx-v3/withERC7412@workspace:staking/lib/withERC7412":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/withERC7412@workspace:staking/lib/withERC7412"
+  dependencies:
+    "@ethersproject/contracts": ^5.7.0
+    "@pythnetwork/pyth-evm-js": ^1.29.0
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/zod": "workspace:*"
+    ethers: ^5.7.2
+    zod: ^3.21.4
   languageName: unknown
   linkType: soft
 
@@ -7214,6 +7272,15 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: fefbad20d211929bb996285c4e6f699b12192548afedbe4930ab4384f8a94577c9cd421acaad163cacd36b88649509970a05a0b8f20615b30c501ed5269038d1
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8.5.3":
+  version: 8.5.5
+  resolution: "@types/ws@npm:8.5.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: d00bf8070e6938e3ccf933010921c6ce78ac3606696ce37a393b27a9a603f7bd93ea64f3c5fa295a2f743575ba9c9a9fdb904af0f5fe2229bf2adf0630386e4a
   languageName: node
   linkType: hard
 
@@ -8826,6 +8893,27 @@ __metadata:
   version: 1.11.0
   resolution: "aws4@npm:1.11.0"
   checksum: 5a00d045fd0385926d20ebebcfba5ec79d4482fe706f63c27b324d489a04c68edb0db99ed991e19eda09cb8c97dc2452059a34d97545cebf591d7a2b5a10999f
+  languageName: node
+  linkType: hard
+
+"axios-retry@npm:~3.3.0":
+  version: 3.3.1
+  resolution: "axios-retry@npm:3.3.1"
+  dependencies:
+    "@babel/runtime": ^7.15.4
+    is-retry-allowed: ^2.2.0
+  checksum: 125c75e08048a28de5d0dfa9de9a1924185d863a4323a71472646a1d5a326f727ff59e75e1b557220da1aad7cba01222c47c26194c5940f295378668dd3b9163
+  languageName: node
+  linkType: hard
+
+"axios@npm:=1.1.0":
+  version: 1.1.0
+  resolution: "axios@npm:1.1.0"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: e26df8edaf953640b331638886725335ad57a3b786a13aa93c5ac33f7edfa691026c31d42e88defef5709196978c7a449a4c556937a63037b21216ab7b169b1e
   languageName: node
   linkType: hard
 
@@ -14045,6 +14133,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-retry-allowed@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "is-retry-allowed@npm:2.2.0"
+  checksum: 3d1103a9290b5d03626756a41054844633eac78bc5d3e3a95b13afeae94fa3cfbcf7f0b5520d83f75f48a25ce7b142fdbac4217dc4b0630f3ea55e866ec3a029
+  languageName: node
+  linkType: hard
+
 "is-shared-array-buffer@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-shared-array-buffer@npm:1.0.2"
@@ -14189,6 +14284,15 @@ __metadata:
   version: 3.0.1
   resolution: "isobject@npm:3.0.1"
   checksum: db85c4c970ce30693676487cca0e61da2ca34e8d4967c2e1309143ff910c207133a969f9e4ddb2dc6aba670aabce4e0e307146c310350b298e74a31f7d464703
+  languageName: node
+  linkType: hard
+
+"isomorphic-ws@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "isomorphic-ws@npm:4.0.1"
+  peerDependencies:
+    ws: "*"
+  checksum: d7190eadefdc28bdb93d67b5f0c603385aaf87724fa2974abb382ac1ec9756ed2cfb27065cbe76122879c2d452e2982bc4314317f3d6c737ddda6c047328771a
   languageName: node
   linkType: hard
 
@@ -18294,6 +18398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "regenerator-runtime@npm:0.14.0"
+  checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
+  languageName: node
+  linkType: hard
+
 "regenerator-transform@npm:^0.15.1":
   version: 0.15.1
   resolution: "regenerator-transform@npm:0.15.1"
@@ -20042,6 +20153,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-log@npm:^2.2.4":
+  version: 2.2.5
+  resolution: "ts-log@npm:2.2.5"
+  checksum: 28f78ab15b8555d56c089dbc243327d8ce4331219956242a29fc4cb3bad6bb0cb8234dd17a292381a1b1dba99a7e4849a2181b2e1a303e8247e9f4ca4e284f2d
+  languageName: node
+  linkType: hard
+
 "ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
@@ -21248,6 +21366,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 53e991bbf928faf5dc6efac9b8eb9ab6497c69feeb94f963d648b7a3530a720b19ec2e0ec037344257e05a4f35bd9ad04d9de6f289615ffb133282031b18c61c
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.6.0":
+  version: 8.14.2
+  resolution: "ws@npm:8.14.2"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 3ca0dad26e8cc6515ff392b622a1467430814c463b3368b0258e33696b1d4bed7510bc7030f7b72838b9fdeb8dbd8839cbf808367d6aae2e1d668ce741d4308b
   languageName: node
   linkType: hard
 

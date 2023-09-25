@@ -1,0 +1,15 @@
+{
+  "name": "@snx-v3/withERC7412",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@ethersproject/contracts": "^5.7.0",
+    "@pythnetwork/pyth-evm-js": "^1.29.0",
+    "@snx-v3/constants": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/zod": "workspace:*",
+    "ethers": "^5.7.2",
+    "zod": "^3.21.4"
+  }
+}
