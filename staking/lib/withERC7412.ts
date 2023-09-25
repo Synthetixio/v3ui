@@ -11,7 +11,7 @@ import {
 } from '@snx-v3/constants';
 import { NETWORKS } from '@snx-v3/useBlockchain';
 
-const ERC7412_ABI = [
+export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
   'error FeeRequired(uint feeAmount)',
   'function oracleId() view external returns (bytes32)',
