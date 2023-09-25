@@ -21,7 +21,6 @@ const CollateralConfigurationSchema = z.object({
 const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
-  price: ZodBigNumber.transform((x) => wei(x)),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
@@ -46,30 +45,6 @@ async function loadSymbols({
   );
 }
 
-const PriceSchema = ZodBigNumber.transform((x) => wei(x));
-
-async function loadPrices({
-  CoreProxy,
-  tokenConfigs,
-}: {
-  CoreProxy: CoreProxyType;
-  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
-}) {
-  const calls = tokenConfigs.map((x) =>
-    // TODO: getCollateralPrice has new signature
-    //   `function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)`
-    //  This is going to fail for base-goerli-competition / cannon
-    // @ts-ignore
-    CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
-  );
-  const multicallResult = await CoreProxy.callStatic.multicall(calls);
-
-  return multicallResult.map((bytes: string) => {
-    const decoded = CoreProxy.interface.decodeFunctionResult('getCollateralPrice', bytes)[0];
-    return PriceSchema.parse(decoded);
-  });
-}
-
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
@@ -83,10 +58,7 @@ async function loadCollateralTypes({
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
-  const [symbols, prices] = await Promise.all([
-    loadSymbols({ Multicall3, tokenConfigs }),
-    loadPrices({ CoreProxy, tokenConfigs }),
-  ]);
+  const symbols = await loadSymbols({ Multicall3, tokenConfigs });
 
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
@@ -96,7 +68,6 @@ async function loadCollateralTypes({
     minDelegationD18: config.minDelegationD18,
     oracleNodeId: config.oracleNodeId,
     tokenAddress: config.tokenAddress,
-    price: prices[i],
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
   }));
