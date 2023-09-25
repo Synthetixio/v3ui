@@ -77,7 +77,7 @@ const PoolsDataDocument = gql`
     pool(id: $id) {
       id
       name
-      registered_distributors {
+      registered_distributors(where: { isActive: true }) {
         id
         total_distributed
       }
