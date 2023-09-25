@@ -1,20 +1,8 @@
-import {
-  Table,
-  TableContainer,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  Flex,
-  Td,
-  Skeleton,
-  SkeletonCircle,
-  Fade,
-} from '@chakra-ui/react';
+import { Table, TableContainer, Tbody, Text, Th, Thead, Tr, Flex, Fade } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { RewardsRow } from './RewardsRow';
 import { RewardsType } from '@snx-v3/useRewards';
+import { RewardsLoading } from './RewardsLoading';
 
 // interface RewardsItem {
 //   symbol: string;
@@ -96,11 +84,10 @@ export const Rewards = ({ rewards, isLoading }: RewardsDistributorsInterface) =>
               </Tr>
             </Thead>
             {isLoading ? (
-              <LoadingRewards />
+              <RewardsLoading />
             ) : (
               <Tbody>
                 {/* TODO: Update results with amount/frequency/lifetime/hasClaimed */}
-
                 {rewards?.map((item) => (
                   <RewardsRow
                     key={item.address}
@@ -120,53 +107,3 @@ export const Rewards = ({ rewards, isLoading }: RewardsDistributorsInterface) =>
     </BorderBox>
   );
 };
-
-const LoadingRewards = () => (
-  <Tbody width="100%">
-    <Tr borderBottom="1px solid #2D2D38">
-      <Td pl="16px" border="none">
-        <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" h="30px" w="30px" />
-      </Td>
-      <Td pl="16px" border="none">
-        <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200" height="30px">
-          <Text mr={4}>Loading</Text>
-        </Skeleton>
-      </Td>
-      <Td textAlign="end" pr="0px" border="none">
-        <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200" height="30px">
-          <Text>Loading</Text>
-        </Skeleton>
-      </Td>
-    </Tr>
-    <Tr borderBottom="1px solid #2D2D38">
-      <Td pl="16px" border="none">
-        <SkeletonCircle startColor="whiteAlpha.200" endColor="whiteAlpha.500" h="30px" w="30px" />
-      </Td>
-      <Td pl="16px" border="none">
-        <Skeleton startColor="whiteAlpha.200" endColor="whiteAlpha.500" height="30px">
-          <Text mr={4}>Loading</Text>
-        </Skeleton>
-      </Td>
-      <Td textAlign="end" pr="0px" border="none">
-        <Skeleton startColor="whiteAlpha.200" endColor="whiteAlpha.500" height="30px">
-          <Text>Loading</Text>
-        </Skeleton>
-      </Td>
-    </Tr>
-    <Tr borderBottom="1px solid #2D2D38">
-      <Td pl="16px" border="none">
-        <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" h="30px" w="30px" />
-      </Td>
-      <Td pl="16px" border="none">
-        <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200" height="30px">
-          <Text mr={4}>Loading</Text>
-        </Skeleton>
-      </Td>
-      <Td textAlign="end" pr="0px" border="none">
-        <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200" height="30px">
-          <Text>Loading</Text>
-        </Skeleton>
-      </Td>
-    </Tr>
-  </Tbody>
-);
