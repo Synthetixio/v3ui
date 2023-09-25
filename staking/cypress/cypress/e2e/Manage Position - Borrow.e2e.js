@@ -74,4 +74,8 @@ it('should borrow against already deposited SNX collateral', () => {
   cy.get('@debt').then((debt) => {
     cy.get('[data-testid="manage stats debt"]').should('have.text', `$${debt}`);
   });
+  cy.visit(`/`);
+  cy.get('@debt').then((debt) => {
+    cy.get('[data-testid="available collateral row"]').should('include.text', `${debt} snxUSD`);
+  });
 });

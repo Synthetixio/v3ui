@@ -1,5 +1,5 @@
 {
-  "address": "0xBDf46e4905E79e4728fF15ff7B8C2d1ac9A6Cd0a",
+  "address": "0x948105487EB1E72A36b080783d5Bddc8c0B921cd",
   "abi": [
     {
       "inputs": [
@@ -43,6 +43,22 @@
         }
       ],
       "name": "InvalidNodeDefinition",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
       "type": "error"
     },
     {
@@ -259,6 +275,57 @@
     {
       "inputs": [
         {
+          "internalType": "bytes32",
+          "name": "nodeId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeKeys",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeValues",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "processWithRuntime",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int256",
+              "name": "price",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse2",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct NodeOutput.Data",
+          "name": "node",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "enum NodeDefinition.NodeType",
           "name": "nodeType",
           "type": "uint8"
@@ -288,7 +355,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x8f2506875401311e8691bdac5e476e868aea8c340c55ad9f694444ff9a7bb721",
+  "deployTxnHash": "0xa247a6a250be00f79893b9b917b68706333186ede4687074321cedb6991d6a7b",
   "sourceName": "contracts/modules/NodeModule.sol",
   "contractName": "NodeModule",
   "deployedOn": "contract.NodeModule"

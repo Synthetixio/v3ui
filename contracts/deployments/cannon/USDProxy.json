@@ -315,7 +315,7 @@
       ],
       "name": "initOrUpgradeNft",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -348,7 +348,7 @@
       ],
       "name": "initOrUpgradeToken",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -366,7 +366,7 @@
       ],
       "name": "registerUnmanagedSystem",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -542,6 +542,19 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "burn",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "target",
           "type": "address"
@@ -554,7 +567,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -577,7 +590,7 @@
       ],
       "name": "burnWithAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -661,7 +674,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -692,7 +705,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -728,7 +741,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -776,35 +789,6 @@
           "internalType": "bool",
           "name": "",
           "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "destChainId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferCrossChain",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "feesPaid",
-          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",

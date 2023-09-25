@@ -1,6 +1,33 @@
 {
-  "address": "0x7B3083aE8A950b88828C389bef34Efa3CF2a6f32",
+  "address": "0xAAC0942ABC38a069DeD1e99A769e7157c7b1d816",
   "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "DeniedMulticallTarget",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
+      "type": "error"
+    },
     {
       "inputs": [
         {
@@ -11,6 +38,30 @@
       ],
       "name": "RecursiveMulticall",
       "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "getMessageSender",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [
@@ -30,11 +81,58 @@
       ],
       "stateMutability": "payable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "to",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "data",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "multicallThrough",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "results",
+          "type": "bytes[]"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "allowlisted",
+          "type": "bool"
+        }
+      ],
+      "name": "setAllowlistedMulticallTarget",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x47162ba19e9ad6b751991b48593ca938639757b62a61a613ddbd4b12c6c2eb0b",
+  "deployTxnHash": "0x0f74d8f82eb2d18ae070dcc3918b0d24a8fac0bc774d5708f1d30d66b8108052",
   "sourceName": "contracts/modules/core/MulticallModule.sol",
   "contractName": "MulticallModule",
   "deployedOn": "contract.MulticallModule"

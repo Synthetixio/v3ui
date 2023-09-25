@@ -1,5 +1,5 @@
 {
-  "address": "0xB2b4e358667De4705625ffA21d947a29B55491F9",
+  "address": "0x61bef83d1f059Bf20468c3623997A72fa2a4CEb9",
   "abi": [
     {
       "inputs": [
@@ -26,6 +26,22 @@
         }
       ],
       "name": "FeatureUnavailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -295,7 +311,7 @@
       ],
       "name": "burnUsd",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -323,13 +339,13 @@
       ],
       "name": "mintUsd",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3d2624a06117c3b5a3d70af054ce4c9df1ba161328e9b73fc92cabd0ed82fd18",
+  "deployTxnHash": "0x263c64d796788d3a3dd5fa8d28127be017b48d9b76b2c65f1ee2c7e1d044b901",
   "sourceName": "contracts/modules/core/IssueUSDModule.sol",
   "contractName": "IssueUSDModule",
   "deployedOn": "contract.IssueUSDModule"

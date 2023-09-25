@@ -50,7 +50,7 @@ export function DepositFormUi({
   collateralType?: CollateralType;
   tokenBalance?: {
     transferable: Wei;
-    collateral: Wei;
+    collateral?: Wei;
   };
   ethBalance?: Wei;
   poolId?: string;
@@ -189,7 +189,11 @@ export function DepositFormUi({
                 >
                   <Amount
                     prefix={`${collateralType.symbol} Wallet Balance: `}
-                    value={tokenBalance?.transferable}
+                    value={
+                      collateralType.symbol === 'SNX'
+                        ? tokenBalance?.transferable
+                        : accountCollateral?.availableCollateral
+                    }
                   />
                 </Link>
                 {collateralType?.symbol === 'WETH' ? (
@@ -249,14 +253,15 @@ export function DepositFormUi({
             </Alert>
           </Collapse>
         </Box>
-
         <Button mt={4} size="md" px="8" type="submit" w="full" data-testid="deposit collateral">
           Deposit Collateral
         </Button>
       </Box>
-      {tokenBalance?.collateral.gt(0) && collateralType.symbol === 'SNX' && (
-        <CollateralAlert tokenBalance={tokenBalance.collateral} />
-      )}
+      {tokenBalance?.collateral &&
+        tokenBalance?.collateral.gt(0) &&
+        collateralType.symbol === 'SNX' && (
+          <CollateralAlert tokenBalance={tokenBalance.collateral} />
+        )}
       {amount.gt(0) ? (
         <DepositModal
           collateralChange={amount}

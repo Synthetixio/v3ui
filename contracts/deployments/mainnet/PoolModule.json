@@ -1,5 +1,5 @@
 {
-  "address": "0x0940B0A96C5e1ba33AEE331a9f950Bb2a6F2Fb25",
+  "address": "0x44406De9887af6ffc813D3Cda4aDa6fabd3946C9",
   "abi": [
     {
       "inputs": [
@@ -133,6 +133,62 @@
       "inputs": [],
       "name": "ZeroAddress",
       "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "config",
+          "type": "tuple"
+        }
+      ],
+      "name": "PoolCollateralConfigurationUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "PoolCollateralDisabledByDefaultSet",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -390,6 +446,30 @@
           "internalType": "uint128",
           "name": "poolId",
           "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateral",
+          "type": "address"
+        }
+      ],
+      "name": "getPoolCollateralIssuanceRatio",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
         }
       ],
       "name": "getPoolConfiguration",
@@ -541,6 +621,59 @@
           "type": "uint128"
         },
         {
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "newConfig",
+          "type": "tuple"
+        }
+      ],
+      "name": "setPoolCollateralConfiguration",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "setPoolCollateralDisabledByDefault",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
           "components": [
             {
               "internalType": "uint128",
@@ -589,7 +722,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xa2cdcbb0689e69312f49517aaec7beb31e18b5d5a09fb4a5f25185907a078127",
+  "deployTxnHash": "0x429e43b3dcb9799012da246fb53261a4f9283c0b2e6146ebc117e623d444cd87",
   "sourceName": "contracts/modules/core/PoolModule.sol",
   "contractName": "PoolModule",
   "deployedOn": "contract.PoolModule"

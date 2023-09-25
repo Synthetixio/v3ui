@@ -1,5 +1,5 @@
 {
-  "address": "0xF88fc87D14635d8ADe4A891E4F2D0C3F9EED8986",
+  "address": "0x845e620a05074f44905661d8B3b3Ec29DDe08768",
   "abi": [
     {
       "inputs": [
@@ -79,6 +79,22 @@
         }
       ],
       "name": "FeatureUnavailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -520,7 +536,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x82f5b0a646dc848c553254b3c17562648a4b1f051fc768c947bf14cd9a03a5d7",
+  "deployTxnHash": "0x8bc6f21b40afe98faa632f1ee04ff7bf7c1b3f2594458243a274c366ed5c8f30",
   "sourceName": "contracts/modules/core/CollateralModule.sol",
   "contractName": "CollateralModule",
   "deployedOn": "contract.CollateralModule"

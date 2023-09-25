@@ -27,16 +27,16 @@ export const abi = [
   'event FeatureFlagAllowlistRemoved(bytes32 indexed feature, address account)',
   'event FeatureFlagDeniersReset(bytes32 indexed feature, address[] deniers)',
   'event FeatureFlagDenyAllSet(bytes32 indexed feature, bool denyAll)',
-  'function addToFeatureFlagAllowlist(bytes32 feature, address account)',
+  'function addToFeatureFlagAllowlist(bytes32 feature, address account) payable',
   'function getDeniers(bytes32 feature) view returns (address[])',
   'function getFeatureFlagAllowAll(bytes32 feature) view returns (bool)',
   'function getFeatureFlagAllowlist(bytes32 feature) view returns (address[])',
   'function getFeatureFlagDenyAll(bytes32 feature) view returns (bool)',
   'function isFeatureAllowed(bytes32 feature, address account) view returns (bool)',
-  'function removeFromFeatureFlagAllowlist(bytes32 feature, address account)',
-  'function setDeniers(bytes32 feature, address[] deniers)',
-  'function setFeatureFlagAllowAll(bytes32 feature, bool allowAll)',
-  'function setFeatureFlagDenyAll(bytes32 feature, bool denyAll)',
+  'function removeFromFeatureFlagAllowlist(bytes32 feature, address account) payable',
+  'function setDeniers(bytes32 feature, address[] deniers) payable',
+  'function setFeatureFlagAllowAll(bytes32 feature, bool allowAll) payable',
+  'function setFeatureFlagDenyAll(bytes32 feature, bool denyAll) payable',
   'error FeatureUnavailable(bytes32 which)',
   'error InvalidAccountId(uint128 accountId)',
   'error InvalidPermission(bytes32 permission)',
@@ -47,18 +47,18 @@ export const abi = [
   'event AccountCreated(uint128 indexed accountId, address indexed owner)',
   'event PermissionGranted(uint128 indexed accountId, bytes32 indexed permission, address indexed user, address sender)',
   'event PermissionRevoked(uint128 indexed accountId, bytes32 indexed permission, address indexed user, address sender)',
-  'function createAccount() returns (uint128 accountId)',
-  'function createAccount(uint128 requestedAccountId)',
+  'function createAccount() payable returns (uint128 accountId)',
+  'function createAccount(uint128 requestedAccountId) payable',
   'function getAccountLastInteraction(uint128 accountId) view returns (uint256)',
   'function getAccountOwner(uint128 accountId) view returns (address)',
   'function getAccountPermissions(uint128 accountId) view returns (tuple(address user, bytes32[] permissions)[] accountPerms)',
   'function getAccountTokenAddress() view returns (address)',
-  'function grantPermission(uint128 accountId, bytes32 permission, address user)',
+  'function grantPermission(uint128 accountId, bytes32 permission, address user) payable',
   'function hasPermission(uint128 accountId, bytes32 permission, address user) view returns (bool)',
   'function isAuthorized(uint128 accountId, bytes32 permission, address user) view returns (bool)',
-  'function notifyAccountTransfer(address to, uint128 accountId)',
-  'function renouncePermission(uint128 accountId, bytes32 permission)',
-  'function revokePermission(uint128 accountId, bytes32 permission, address user)',
+  'function notifyAccountTransfer(address to, uint128 accountId) payable',
+  'function renouncePermission(uint128 accountId, bytes32 permission) payable',
+  'function revokePermission(uint128 accountId, bytes32 permission, address user) payable',
   'error AccountNotFound(uint128 accountId)',
   'error EmptyDistribution()',
   'error InsufficientCollateralRatio(uint256 collateralValue, uint256 debt, uint256 ratio, uint256 minRatio)',
@@ -70,18 +70,23 @@ export const abi = [
   'error OverflowUint256ToInt256()',
   'error OverflowUint256ToUint128()',
   'event DebtAssociated(uint128 indexed marketId, uint128 indexed poolId, address indexed collateralType, uint128 accountId, uint256 amount, int256 updatedDebt)',
-  'function associateDebt(uint128 marketId, uint128 poolId, address collateralType, uint128 accountId, uint256 amount) returns (int256)',
+  'function associateDebt(uint128 marketId, uint128 poolId, address collateralType, uint128 accountId, uint256 amount) payable returns (int256)',
   'error MismatchAssociatedSystemKind(bytes32 expected, bytes32 actual)',
   'error MissingAssociatedSystem(bytes32 id)',
   'event AssociatedSystemSet(bytes32 indexed kind, bytes32 indexed id, address proxy, address impl)',
   'function getAssociatedSystem(bytes32 id) view returns (address addr, bytes32 kind)',
-  'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl)',
-  'function initOrUpgradeToken(bytes32 id, string name, string symbol, uint8 decimals, address impl)',
-  'function registerUnmanagedSystem(bytes32 id, address endpoint)',
+  'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl) payable',
+  'function initOrUpgradeToken(bytes32 id, string name, string symbol, uint8 decimals, address impl) payable',
+  'function registerUnmanagedSystem(bytes32 id, address endpoint) payable',
+  'error InvalidMessage()',
+  'error NotCcipRouter(address)',
+  'error UnsupportedNetwork(uint64)',
+  'function ccipReceive(tuple(bytes32 messageId, uint64 sourceChainSelector, bytes sender, bytes data, tuple(address token, uint256 amount)[] tokenAmounts) message)',
   'error AccountActivityTimeoutPending(uint128 accountId, uint256 currentTime, uint256 requiredTime)',
   'error CollateralDepositDisabled(address collateralType)',
   'error CollateralNotFound()',
   'error FailedTransfer(address from, address to, uint256 value)',
+  'error InsufficentAvailableCollateral(uint256 amountAvailableForDelegationD18, uint256 amountD18)',
   'error InsufficientAccountCollateral(uint256 amount)',
   'error InsufficientAllowance(uint256 required, uint256 existing)',
   'error InvalidParameter(string parameter, string reason)',
@@ -91,25 +96,28 @@ export const abi = [
   'event CollateralLockExpired(uint128 indexed accountId, address indexed collateralType, uint256 tokenAmount, uint64 expireTimestamp)',
   'event Deposited(uint128 indexed accountId, address indexed collateralType, uint256 tokenAmount, address indexed sender)',
   'event Withdrawn(uint128 indexed accountId, address indexed collateralType, uint256 tokenAmount, address indexed sender)',
-  'function cleanExpiredLocks(uint128 accountId, address collateralType, uint256 offset, uint256 count) returns (uint256 cleared)',
-  'function createLock(uint128 accountId, address collateralType, uint256 amount, uint64 expireTimestamp)',
-  'function deposit(uint128 accountId, address collateralType, uint256 tokenAmount)',
+  'function cleanExpiredLocks(uint128 accountId, address collateralType, uint256 offset, uint256 count) payable returns (uint256 cleared)',
+  'function createLock(uint128 accountId, address collateralType, uint256 amount, uint64 expireTimestamp) payable',
+  'function deposit(uint128 accountId, address collateralType, uint256 tokenAmount) payable',
   'function getAccountAvailableCollateral(uint128 accountId, address collateralType) view returns (uint256)',
   'function getAccountCollateral(uint128 accountId, address collateralType) view returns (uint256 totalDeposited, uint256 totalAssigned, uint256 totalLocked)',
   'function getLocks(uint128 accountId, address collateralType, uint256 offset, uint256 count) view returns (tuple(uint128 amountD18, uint64 lockExpirationTime)[] locks)',
-  'function withdraw(uint128 accountId, address collateralType, uint256 tokenAmount)',
+  'function withdraw(uint128 accountId, address collateralType, uint256 tokenAmount) payable',
   'event CollateralConfigured(address indexed collateralType, tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18) config)',
-  'function configureCollateral(tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18) config)',
-  'function getCollateralConfiguration(address collateralType) view returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18))',
+  'function configureCollateral(tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18) config) payable',
+  'function getCollateralConfiguration(address collateralType) pure returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18))',
   'function getCollateralConfigurations(bool hideDisabled) view returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18)[])',
   'function getCollateralPrice(address collateralType) view returns (uint256)',
+  'error InsufficientCcipFee(uint256 requiredAmount, uint256 availableAmount)',
+  'event TransferCrossChainInitiated(uint64 indexed destChainId, uint256 indexed amount, address sender)',
+  'function transferCrossChain(uint64 destChainId, uint256 amount) payable returns (uint256 gasTokenUsed)',
   'error InsufficientDebt(int256 currentDebt)',
   'error PoolNotFound(uint128 poolId)',
   'event IssuanceFeePaid(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 feeAmount)',
   'event UsdBurned(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 amount, address indexed sender)',
   'event UsdMinted(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 amount, address indexed sender)',
-  'function burnUsd(uint128 accountId, uint128 poolId, address collateralType, uint256 amount)',
-  'function mintUsd(uint128 accountId, uint128 poolId, address collateralType, uint256 amount)',
+  'function burnUsd(uint128 accountId, uint128 poolId, address collateralType, uint256 amount) payable',
+  'function mintUsd(uint128 accountId, uint128 poolId, address collateralType, uint256 amount) payable',
   'error CannotScaleEmptyMapping()',
   'error IneligibleForLiquidation(uint256 collateralValue, int256 debt, uint256 currentCRatio, uint256 cratio)',
   'error InsufficientMappedAmount()',
@@ -117,21 +125,21 @@ export const abi = [
   'error OverflowInt128ToUint128()',
   'event Liquidation(uint128 indexed accountId, uint128 indexed poolId, address indexed collateralType, tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData, uint128 liquidateAsAccountId, address sender)',
   'event VaultLiquidation(uint128 indexed poolId, address indexed collateralType, tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData, uint128 liquidateAsAccountId, address sender)',
-  'function isPositionLiquidatable(uint128 accountId, uint128 poolId, address collateralType) returns (bool)',
-  'function isVaultLiquidatable(uint128 poolId, address collateralType) returns (bool)',
-  'function liquidate(uint128 accountId, uint128 poolId, address collateralType, uint128 liquidateAsAccountId) returns (tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData)',
-  'function liquidateVault(uint128 poolId, address collateralType, uint128 liquidateAsAccountId, uint256 maxUsd) returns (tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData)',
+  'function isPositionLiquidatable(uint128 accountId, uint128 poolId, address collateralType) payable returns (bool)',
+  'function isVaultLiquidatable(uint128 poolId, address collateralType) payable returns (bool)',
+  'function liquidate(uint128 accountId, uint128 poolId, address collateralType, uint128 liquidateAsAccountId) payable returns (tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData)',
+  'function liquidateVault(uint128 poolId, address collateralType, uint128 liquidateAsAccountId, uint256 maxUsd) payable returns (tuple(uint256 debtLiquidated, uint256 collateralLiquidated, uint256 amountRewarded) liquidationData)',
   'error InsufficientMarketCollateralDepositable(uint128 marketId, address collateralType, uint256 tokenAmountToDeposit)',
   'error InsufficientMarketCollateralWithdrawable(uint128 marketId, address collateralType, uint256 tokenAmountToWithdraw)',
   'event MarketCollateralDeposited(uint128 indexed marketId, address indexed collateralType, uint256 tokenAmount, address indexed sender)',
   'event MarketCollateralWithdrawn(uint128 indexed marketId, address indexed collateralType, uint256 tokenAmount, address indexed sender)',
   'event MaximumMarketCollateralConfigured(uint128 indexed marketId, address indexed collateralType, uint256 systemAmount, address indexed owner)',
-  'function configureMaximumMarketCollateral(uint128 marketId, address collateralType, uint256 amount)',
-  'function depositMarketCollateral(uint128 marketId, address collateralType, uint256 tokenAmount)',
+  'function configureMaximumMarketCollateral(uint128 marketId, address collateralType, uint256 amount) payable',
+  'function depositMarketCollateral(uint128 marketId, address collateralType, uint256 tokenAmount) payable',
   'function getMarketCollateralAmount(uint128 marketId, address collateralType) view returns (uint256 collateralAmountD18)',
   'function getMarketCollateralValue(uint128 marketId) view returns (uint256)',
   'function getMaximumMarketCollateral(uint128 marketId, address collateralType) view returns (uint256)',
-  'function withdrawMarketCollateral(uint128 marketId, address collateralType, uint256 tokenAmount)',
+  'function withdrawMarketCollateral(uint128 marketId, address collateralType, uint256 tokenAmount) payable',
   'error IncorrectMarketInterface(address market)',
   'error NotEnoughLiquidity(uint128 marketId, uint256 amount)',
   'event MarketRegistered(address indexed market, uint128 indexed marketId, address indexed sender)',
@@ -140,13 +148,16 @@ export const abi = [
   'event MarketUsdWithdrawn(uint128 indexed marketId, address indexed target, uint256 amount, address indexed market)',
   'event SetMarketMinLiquidityRatio(uint128 indexed marketId, uint256 minLiquidityRatio)',
   'event SetMinDelegateTime(uint128 indexed marketId, uint32 minDelegateTime)',
-  'function depositMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
-  'function distributeDebtToPools(uint128 marketId, uint256 maxIter) returns (bool)',
+  'function depositMarketUsd(uint128 marketId, address target, uint256 amount) payable returns (uint256 feeAmount)',
+  'function distributeDebtToPools(uint128 marketId, uint256 maxIter) payable returns (bool)',
+  'function getMarketAddress(uint128 marketId) view returns (address)',
   'function getMarketCollateral(uint128 marketId) view returns (uint256)',
-  'function getMarketDebtPerShare(uint128 marketId) returns (int256)',
+  'function getMarketDebtPerShare(uint128 marketId) payable returns (int256)',
   'function getMarketFees(uint128, uint256 amount) view returns (uint256 depositFeeAmount, uint256 withdrawFeeAmount)',
   'function getMarketMinDelegateTime(uint128 marketId) view returns (uint32)',
   'function getMarketNetIssuance(uint128 marketId) view returns (int128)',
+  'function getMarketPoolDebtDistribution(uint128 marketId, uint128 poolId) payable returns (uint256 sharesD18, uint128 totalSharesD18, int128 valuePerShareD27)',
+  'function getMarketPools(uint128 marketId) payable returns (uint128[] inRangePoolIds, uint128[] outRangePoolIds)',
   'function getMarketReportedDebt(uint128 marketId) view returns (uint256)',
   'function getMarketTotalDebt(uint128 marketId) view returns (int256)',
   'function getMinLiquidityRatio(uint128 marketId) view returns (uint256)',
@@ -154,23 +165,29 @@ export const abi = [
   'function getUsdToken() view returns (address)',
   'function getWithdrawableMarketUsd(uint128 marketId) view returns (uint256)',
   'function isMarketCapacityLocked(uint128 marketId) view returns (bool)',
-  'function registerMarket(address market) returns (uint128 marketId)',
-  'function setMarketMinDelegateTime(uint128 marketId, uint32 minDelegateTime)',
-  'function setMinLiquidityRatio(uint128 marketId, uint256 minLiquidityRatio)',
-  'function withdrawMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
+  'function registerMarket(address market) payable returns (uint128 marketId)',
+  'function setMarketMinDelegateTime(uint128 marketId, uint32 minDelegateTime) payable',
+  'function setMinLiquidityRatio(uint128 marketId, uint256 minLiquidityRatio) payable',
+  'function withdrawMarketUsd(uint128 marketId, address target, uint256 amount) payable returns (uint256 feeAmount)',
+  'error DeniedMulticallTarget(address)',
   'error RecursiveMulticall(address)',
+  'function getMessageSender() view returns (address)',
   'function multicall(bytes[] data) payable returns (bytes[] results)',
+  'function multicallThrough(address[] to, bytes[] data, uint256[] values) payable returns (bytes[] results)',
+  'function setAllowlistedMulticallTarget(address target, bool allowlisted) payable',
   'event PoolApprovedAdded(uint256 poolId)',
   'event PoolApprovedRemoved(uint256 poolId)',
   'event PreferredPoolSet(uint256 poolId)',
-  'function addApprovedPool(uint128 poolId)',
+  'function addApprovedPool(uint128 poolId) payable',
   'function getApprovedPools() view returns (uint256[])',
   'function getPreferredPool() view returns (uint128)',
-  'function removeApprovedPool(uint128 poolId)',
-  'function setPreferredPool(uint128 poolId)',
+  'function removeApprovedPool(uint128 poolId) payable',
+  'function setPreferredPool(uint128 poolId) payable',
   'error CapacityLocked(uint256 marketId)',
   'error MinDelegationTimeoutPending(uint128 poolId, uint32 timeRemaining)',
   'error PoolAlreadyExists(uint128 poolId)',
+  'event PoolCollateralConfigurationUpdated(uint128 indexed poolId, address collateralType, tuple(uint256 collateralLimitD18, uint256 issuanceRatioD18) config)',
+  'event PoolCollateralDisabledByDefaultSet(uint128 poolId, bool disabled)',
   'event PoolConfigurationSet(uint128 indexed poolId, tuple(uint128 marketId, uint128 weightD18, int128 maxDebtShareValueD18)[] markets, address indexed sender)',
   'event PoolCreated(uint128 indexed poolId, address indexed owner, address indexed sender)',
   'event PoolNameUpdated(uint128 indexed poolId, string name, address indexed sender)',
@@ -179,20 +196,23 @@ export const abi = [
   'event PoolOwnerNominated(uint128 indexed poolId, address indexed nominatedOwner, address indexed owner)',
   'event PoolOwnershipAccepted(uint128 indexed poolId, address indexed owner)',
   'event SetMinLiquidityRatio(uint256 minLiquidityRatio)',
-  'function acceptPoolOwnership(uint128 poolId)',
-  'function createPool(uint128 requestedPoolId, address owner)',
+  'function acceptPoolOwnership(uint128 poolId) payable',
+  'function createPool(uint128 requestedPoolId, address owner) payable',
   'function getMinLiquidityRatio() view returns (uint256)',
   'function getNominatedPoolOwner(uint128 poolId) view returns (address)',
+  'function getPoolCollateralIssuanceRatio(uint128 poolId, address collateral) view returns (uint256)',
   'function getPoolConfiguration(uint128 poolId) view returns (tuple(uint128 marketId, uint128 weightD18, int128 maxDebtShareValueD18)[])',
   'function getPoolName(uint128 poolId) view returns (string poolName)',
   'function getPoolOwner(uint128 poolId) view returns (address)',
-  'function nominatePoolOwner(address nominatedOwner, uint128 poolId)',
-  'function rebalancePool(uint128 poolId, address optionalCollateralType)',
-  'function renouncePoolNomination(uint128 poolId)',
-  'function revokePoolNomination(uint128 poolId)',
-  'function setMinLiquidityRatio(uint256 minLiquidityRatio)',
-  'function setPoolConfiguration(uint128 poolId, tuple(uint128 marketId, uint128 weightD18, int128 maxDebtShareValueD18)[] newMarketConfigurations)',
-  'function setPoolName(uint128 poolId, string name)',
+  'function nominatePoolOwner(address nominatedOwner, uint128 poolId) payable',
+  'function rebalancePool(uint128 poolId, address optionalCollateralType) payable',
+  'function renouncePoolNomination(uint128 poolId) payable',
+  'function revokePoolNomination(uint128 poolId) payable',
+  'function setMinLiquidityRatio(uint256 minLiquidityRatio) payable',
+  'function setPoolCollateralConfiguration(uint128 poolId, address collateralType, tuple(uint256 collateralLimitD18, uint256 issuanceRatioD18) newConfig) payable',
+  'function setPoolCollateralDisabledByDefault(uint128 poolId, bool disabled) payable',
+  'function setPoolConfiguration(uint128 poolId, tuple(uint128 marketId, uint128 weightD18, int128 maxDebtShareValueD18)[] newMarketConfigurations) payable',
+  'function setPoolName(uint128 poolId, string name) payable',
   'error OverflowUint256ToUint32()',
   'error OverflowUint32ToInt32()',
   'error OverflowUint64ToInt64()',
@@ -202,30 +222,34 @@ export const abi = [
   'event RewardsDistributed(uint128 indexed poolId, address indexed collateralType, address distributor, uint256 amount, uint256 start, uint256 duration)',
   'event RewardsDistributorRegistered(uint128 indexed poolId, address indexed collateralType, address indexed distributor)',
   'event RewardsDistributorRemoved(uint128 indexed poolId, address indexed collateralType, address indexed distributor)',
-  'function claimRewards(uint128 accountId, uint128 poolId, address collateralType, address distributor) returns (uint256)',
-  'function distributeRewards(uint128 poolId, address collateralType, uint256 amount, uint64 start, uint32 duration)',
+  'function claimRewards(uint128 accountId, uint128 poolId, address collateralType, address distributor) payable returns (uint256)',
+  'function distributeRewards(uint128 poolId, address collateralType, uint256 amount, uint64 start, uint32 duration) payable',
   'function getRewardRate(uint128 poolId, address collateralType, address distributor) view returns (uint256)',
-  'function registerRewardsDistributor(uint128 poolId, address collateralType, address distributor)',
-  'function removeRewardsDistributor(uint128 poolId, address collateralType, address distributor)',
-  'function updateRewards(uint128 poolId, address collateralType, uint128 accountId) returns (uint256[], address[])',
-  'function configureOracleManager(address oracleManagerAddress)',
+  'function registerRewardsDistributor(uint128 poolId, address collateralType, address distributor) payable',
+  'function removeRewardsDistributor(uint128 poolId, address collateralType, address distributor) payable',
+  'function updateRewards(uint128 poolId, address collateralType, uint128 accountId) payable returns (uint256[], address[])',
+  'event NewSupportedCrossChainNetwork(uint64 newChainId)',
+  'function configureChainlinkCrossChain(address ccipRouter, address ccipTokenPool) payable',
+  'function configureOracleManager(address oracleManagerAddress) payable',
   'function getConfig(bytes32 k) view returns (bytes32 v)',
   'function getConfigAddress(bytes32 k) view returns (address v)',
   'function getConfigUint(bytes32 k) view returns (uint256 v)',
-  'function registerCcip(address ccipSend, address ccipReceive, address ccipTokenPool)',
-  'function setConfig(bytes32 k, bytes32 v)',
+  'function setConfig(bytes32 k, bytes32 v) payable',
+  'function setSupportedCrossChainNetworks(uint64[] supportedNetworks, uint64[] ccipSelectors) payable returns (uint256 numRegistered)',
+  'function supportsInterface(bytes4 interfaceId) view returns (bool)',
   'error InsufficientDelegation(uint256 minDelegation)',
   'error InvalidCollateralAmount()',
   'error InvalidLeverage(uint256 leverage)',
+  'error PoolCollateralLimitExceeded(uint128 poolId, address collateralType, uint256 currentCollateral, uint256 maxCollateral)',
   'event DelegationUpdated(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 amount, uint256 leverage, address indexed sender)',
-  'function delegateCollateral(uint128 accountId, uint128 poolId, address collateralType, uint256 newCollateralAmountD18, uint256 leverage)',
-  'function getPosition(uint128 accountId, uint128 poolId, address collateralType) returns (uint256 collateralAmount, uint256 collateralValue, int256 debt, uint256 collateralizationRatio)',
+  'function delegateCollateral(uint128 accountId, uint128 poolId, address collateralType, uint256 newCollateralAmountD18, uint256 leverage) payable',
+  'function getPosition(uint128 accountId, uint128 poolId, address collateralType) payable returns (uint256 collateralAmount, uint256 collateralValue, int256 debt, uint256 collateralizationRatio)',
   'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
-  'function getPositionCollateralRatio(uint128 accountId, uint128 poolId, address collateralType) returns (uint256)',
-  'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) returns (int256 debt)',
+  'function getPositionCollateralRatio(uint128 accountId, uint128 poolId, address collateralType) payable returns (uint256)',
+  'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) payable returns (int256 debt)',
   'function getVaultCollateral(uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
-  'function getVaultCollateralRatio(uint128 poolId, address collateralType) returns (uint256)',
-  'function getVaultDebt(uint128 poolId, address collateralType) returns (int256)',
+  'function getVaultCollateralRatio(uint128 poolId, address collateralType) payable returns (uint256)',
+  'function getVaultDebt(uint128 poolId, address collateralType) payable returns (int256)',
 ];
 /* Autogenerated file. Do not edit manually. */
 /* tslint:disable */
@@ -253,6 +277,37 @@ export declare namespace IAccountModule {
   export type AccountPermissionsStructOutput = [string, string[]] & {
     user: string;
     permissions: string[];
+  };
+}
+
+export declare namespace CcipClient {
+  export type EVMTokenAmountStruct = { token: string; amount: BigNumberish };
+
+  export type EVMTokenAmountStructOutput = [string, BigNumber] & {
+    token: string;
+    amount: BigNumber;
+  };
+
+  export type Any2EVMMessageStruct = {
+    messageId: BytesLike;
+    sourceChainSelector: BigNumberish;
+    sender: BytesLike;
+    data: BytesLike;
+    tokenAmounts: CcipClient.EVMTokenAmountStruct[];
+  };
+
+  export type Any2EVMMessageStructOutput = [
+    string,
+    BigNumber,
+    string,
+    string,
+    CcipClient.EVMTokenAmountStructOutput[]
+  ] & {
+    messageId: string;
+    sourceChainSelector: BigNumber;
+    sender: string;
+    data: string;
+    tokenAmounts: CcipClient.EVMTokenAmountStructOutput[];
   };
 }
 
@@ -309,6 +364,15 @@ export declare namespace ILiquidationModule {
   };
 }
 
+export declare namespace PoolCollateralConfiguration {
+  export type DataStruct = { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish };
+
+  export type DataStructOutput = [BigNumber, BigNumber] & {
+    collateralLimitD18: BigNumber;
+    issuanceRatioD18: BigNumber;
+  };
+}
+
 export declare namespace MarketConfiguration {
   export type DataStruct = {
     marketId: BigNumberish;
@@ -360,6 +424,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'initOrUpgradeNft(bytes32,string,string,string,address)': FunctionFragment;
     'initOrUpgradeToken(bytes32,string,string,uint8,address)': FunctionFragment;
     'registerUnmanagedSystem(bytes32,address)': FunctionFragment;
+    'ccipReceive((bytes32,uint64,bytes,bytes,(address,uint256)[]))': FunctionFragment;
     'cleanExpiredLocks(uint128,address,uint256,uint256)': FunctionFragment;
     'createLock(uint128,address,uint256,uint64)': FunctionFragment;
     'deposit(uint128,address,uint256)': FunctionFragment;
@@ -371,6 +436,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'getCollateralConfiguration(address)': FunctionFragment;
     'getCollateralConfigurations(bool)': FunctionFragment;
     'getCollateralPrice(address)': FunctionFragment;
+    'transferCrossChain(uint64,uint256)': FunctionFragment;
     'burnUsd(uint128,uint128,address,uint256)': FunctionFragment;
     'mintUsd(uint128,uint128,address,uint256)': FunctionFragment;
     'isPositionLiquidatable(uint128,uint128,address)': FunctionFragment;
@@ -385,11 +451,14 @@ export interface CoreProxyInterface extends utils.Interface {
     'withdrawMarketCollateral(uint128,address,uint256)': FunctionFragment;
     'depositMarketUsd(uint128,address,uint256)': FunctionFragment;
     'distributeDebtToPools(uint128,uint256)': FunctionFragment;
+    'getMarketAddress(uint128)': FunctionFragment;
     'getMarketCollateral(uint128)': FunctionFragment;
     'getMarketDebtPerShare(uint128)': FunctionFragment;
     'getMarketFees(uint128,uint256)': FunctionFragment;
     'getMarketMinDelegateTime(uint128)': FunctionFragment;
     'getMarketNetIssuance(uint128)': FunctionFragment;
+    'getMarketPoolDebtDistribution(uint128,uint128)': FunctionFragment;
+    'getMarketPools(uint128)': FunctionFragment;
     'getMarketReportedDebt(uint128)': FunctionFragment;
     'getMarketTotalDebt(uint128)': FunctionFragment;
     'getMinLiquidityRatio(uint128)': FunctionFragment;
@@ -403,7 +472,10 @@ export interface CoreProxyInterface extends utils.Interface {
     'setMinLiquidityRatio(uint128,uint256)': FunctionFragment;
     'setMinLiquidityRatio(uint256)': FunctionFragment;
     'withdrawMarketUsd(uint128,address,uint256)': FunctionFragment;
+    'getMessageSender()': FunctionFragment;
     'multicall(bytes[])': FunctionFragment;
+    'multicallThrough(address[],bytes[],uint256[])': FunctionFragment;
+    'setAllowlistedMulticallTarget(address,bool)': FunctionFragment;
     'addApprovedPool(uint128)': FunctionFragment;
     'getApprovedPools()': FunctionFragment;
     'getPreferredPool()': FunctionFragment;
@@ -412,6 +484,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'acceptPoolOwnership(uint128)': FunctionFragment;
     'createPool(uint128,address)': FunctionFragment;
     'getNominatedPoolOwner(uint128)': FunctionFragment;
+    'getPoolCollateralIssuanceRatio(uint128,address)': FunctionFragment;
     'getPoolConfiguration(uint128)': FunctionFragment;
     'getPoolName(uint128)': FunctionFragment;
     'getPoolOwner(uint128)': FunctionFragment;
@@ -419,6 +492,8 @@ export interface CoreProxyInterface extends utils.Interface {
     'rebalancePool(uint128,address)': FunctionFragment;
     'renouncePoolNomination(uint128)': FunctionFragment;
     'revokePoolNomination(uint128)': FunctionFragment;
+    'setPoolCollateralConfiguration(uint128,address,(uint256,uint256))': FunctionFragment;
+    'setPoolCollateralDisabledByDefault(uint128,bool)': FunctionFragment;
     'setPoolConfiguration(uint128,(uint128,uint128,int128)[])': FunctionFragment;
     'setPoolName(uint128,string)': FunctionFragment;
     'claimRewards(uint128,uint128,address,address)': FunctionFragment;
@@ -427,12 +502,14 @@ export interface CoreProxyInterface extends utils.Interface {
     'registerRewardsDistributor(uint128,address,address)': FunctionFragment;
     'removeRewardsDistributor(uint128,address,address)': FunctionFragment;
     'updateRewards(uint128,address,uint128)': FunctionFragment;
+    'configureChainlinkCrossChain(address,address)': FunctionFragment;
     'configureOracleManager(address)': FunctionFragment;
     'getConfig(bytes32)': FunctionFragment;
     'getConfigAddress(bytes32)': FunctionFragment;
     'getConfigUint(bytes32)': FunctionFragment;
-    'registerCcip(address,address,address)': FunctionFragment;
     'setConfig(bytes32,bytes32)': FunctionFragment;
+    'setSupportedCrossChainNetworks(uint64[],uint64[])': FunctionFragment;
+    'supportsInterface(bytes4)': FunctionFragment;
     'delegateCollateral(uint128,uint128,address,uint256,uint256)': FunctionFragment;
     'getPosition(uint128,uint128,address)': FunctionFragment;
     'getPositionCollateral(uint128,uint128,address)': FunctionFragment;
@@ -480,6 +557,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'initOrUpgradeNft'
       | 'initOrUpgradeToken'
       | 'registerUnmanagedSystem'
+      | 'ccipReceive'
       | 'cleanExpiredLocks'
       | 'createLock'
       | 'deposit'
@@ -491,6 +569,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'getCollateralConfiguration'
       | 'getCollateralConfigurations'
       | 'getCollateralPrice'
+      | 'transferCrossChain'
       | 'burnUsd'
       | 'mintUsd'
       | 'isPositionLiquidatable'
@@ -505,11 +584,14 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'withdrawMarketCollateral'
       | 'depositMarketUsd'
       | 'distributeDebtToPools'
+      | 'getMarketAddress'
       | 'getMarketCollateral'
       | 'getMarketDebtPerShare'
       | 'getMarketFees'
       | 'getMarketMinDelegateTime'
       | 'getMarketNetIssuance'
+      | 'getMarketPoolDebtDistribution'
+      | 'getMarketPools'
       | 'getMarketReportedDebt'
       | 'getMarketTotalDebt'
       | 'getMinLiquidityRatio(uint128)'
@@ -523,7 +605,10 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'setMinLiquidityRatio(uint128,uint256)'
       | 'setMinLiquidityRatio(uint256)'
       | 'withdrawMarketUsd'
+      | 'getMessageSender'
       | 'multicall'
+      | 'multicallThrough'
+      | 'setAllowlistedMulticallTarget'
       | 'addApprovedPool'
       | 'getApprovedPools'
       | 'getPreferredPool'
@@ -532,6 +617,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'acceptPoolOwnership'
       | 'createPool'
       | 'getNominatedPoolOwner'
+      | 'getPoolCollateralIssuanceRatio'
       | 'getPoolConfiguration'
       | 'getPoolName'
       | 'getPoolOwner'
@@ -539,6 +625,8 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'rebalancePool'
       | 'renouncePoolNomination'
       | 'revokePoolNomination'
+      | 'setPoolCollateralConfiguration'
+      | 'setPoolCollateralDisabledByDefault'
       | 'setPoolConfiguration'
       | 'setPoolName'
       | 'claimRewards'
@@ -547,12 +635,14 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'registerRewardsDistributor'
       | 'removeRewardsDistributor'
       | 'updateRewards'
+      | 'configureChainlinkCrossChain'
       | 'configureOracleManager'
       | 'getConfig'
       | 'getConfigAddress'
       | 'getConfigUint'
-      | 'registerCcip'
       | 'setConfig'
+      | 'setSupportedCrossChainNetworks'
+      | 'supportsInterface'
       | 'delegateCollateral'
       | 'getPosition'
       | 'getPositionCollateral'
@@ -641,6 +731,10 @@ export interface CoreProxyInterface extends utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
+    functionFragment: 'ccipReceive',
+    values: [CcipClient.Any2EVMMessageStruct]
+  ): string;
+  encodeFunctionData(
     functionFragment: 'cleanExpiredLocks',
     values: [BigNumberish, string, BigNumberish, BigNumberish]
   ): string;
@@ -675,6 +769,10 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'getCollateralConfiguration', values: [string]): string;
   encodeFunctionData(functionFragment: 'getCollateralConfigurations', values: [boolean]): string;
   encodeFunctionData(functionFragment: 'getCollateralPrice', values: [string]): string;
+  encodeFunctionData(
+    functionFragment: 'transferCrossChain',
+    values: [BigNumberish, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: 'burnUsd',
     values: [BigNumberish, BigNumberish, string, BigNumberish]
@@ -728,6 +826,7 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'distributeDebtToPools',
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: 'getMarketAddress', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketCollateral', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketDebtPerShare', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -736,6 +835,11 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'getMarketMinDelegateTime', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketNetIssuance', values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: 'getMarketPoolDebtDistribution',
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: 'getMarketPools', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketReportedDebt', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getMarketTotalDebt', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -764,7 +868,16 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'withdrawMarketUsd',
     values: [BigNumberish, string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: 'getMessageSender', values?: undefined): string;
   encodeFunctionData(functionFragment: 'multicall', values: [BytesLike[]]): string;
+  encodeFunctionData(
+    functionFragment: 'multicallThrough',
+    values: [string[], BytesLike[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setAllowlistedMulticallTarget',
+    values: [string, boolean]
+  ): string;
   encodeFunctionData(functionFragment: 'addApprovedPool', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getApprovedPools', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getPreferredPool', values?: undefined): string;
@@ -773,6 +886,10 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'acceptPoolOwnership', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'createPool', values: [BigNumberish, string]): string;
   encodeFunctionData(functionFragment: 'getNominatedPoolOwner', values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: 'getPoolCollateralIssuanceRatio',
+    values: [BigNumberish, string]
+  ): string;
   encodeFunctionData(functionFragment: 'getPoolConfiguration', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getPoolName', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getPoolOwner', values: [BigNumberish]): string;
@@ -780,6 +897,14 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'rebalancePool', values: [BigNumberish, string]): string;
   encodeFunctionData(functionFragment: 'renouncePoolNomination', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'revokePoolNomination', values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: 'setPoolCollateralConfiguration',
+    values: [BigNumberish, string, PoolCollateralConfiguration.DataStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setPoolCollateralDisabledByDefault',
+    values: [BigNumberish, boolean]
+  ): string;
   encodeFunctionData(
     functionFragment: 'setPoolConfiguration',
     values: [BigNumberish, MarketConfiguration.DataStruct[]]
@@ -809,12 +934,20 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'updateRewards',
     values: [BigNumberish, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: 'configureChainlinkCrossChain',
+    values: [string, string]
+  ): string;
   encodeFunctionData(functionFragment: 'configureOracleManager', values: [string]): string;
   encodeFunctionData(functionFragment: 'getConfig', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigAddress', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigUint', values: [BytesLike]): string;
-  encodeFunctionData(functionFragment: 'registerCcip', values: [string, string, string]): string;
   encodeFunctionData(functionFragment: 'setConfig', values: [BytesLike, BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: 'setSupportedCrossChainNetworks',
+    values: [BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(functionFragment: 'supportsInterface', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'delegateCollateral',
     values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
@@ -880,6 +1013,7 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'initOrUpgradeNft', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'initOrUpgradeToken', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'registerUnmanagedSystem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'ccipReceive', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'cleanExpiredLocks', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'createLock', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
@@ -891,6 +1025,7 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getCollateralConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralConfigurations', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralPrice', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferCrossChain', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'burnUsd', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'mintUsd', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isPositionLiquidatable', data: BytesLike): Result;
@@ -908,11 +1043,14 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'withdrawMarketCollateral', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'depositMarketUsd', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'distributeDebtToPools', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketCollateral', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketDebtPerShare', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketFees', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketMinDelegateTime', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketNetIssuance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketPoolDebtDistribution', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketPools', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketReportedDebt', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketTotalDebt', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMinLiquidityRatio(uint128)', data: BytesLike): Result;
@@ -929,7 +1067,10 @@ export interface CoreProxyInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: 'setMinLiquidityRatio(uint256)', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'withdrawMarketUsd', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMessageSender', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'multicall', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'multicallThrough', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setAllowlistedMulticallTarget', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'addApprovedPool', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getApprovedPools', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPreferredPool', data: BytesLike): Result;
@@ -938,6 +1079,7 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'acceptPoolOwnership', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'createPool', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getNominatedPoolOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPoolCollateralIssuanceRatio', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPoolConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPoolName', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPoolOwner', data: BytesLike): Result;
@@ -945,6 +1087,11 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'rebalancePool', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'renouncePoolNomination', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'revokePoolNomination', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setPoolCollateralConfiguration', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'setPoolCollateralDisabledByDefault',
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: 'setPoolConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setPoolName', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'claimRewards', data: BytesLike): Result;
@@ -953,12 +1100,14 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'registerRewardsDistributor', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'removeRewardsDistributor', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'updateRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'configureChainlinkCrossChain', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'configureOracleManager', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigUint', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'registerCcip', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setConfig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setSupportedCrossChainNetworks', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'supportsInterface', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'delegateCollateral', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPosition', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPositionCollateral', data: BytesLike): Result;
@@ -987,6 +1136,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'Deposited(uint128,address,uint256,address)': EventFragment;
     'Withdrawn(uint128,address,uint256,address)': EventFragment;
     'CollateralConfigured(address,tuple)': EventFragment;
+    'TransferCrossChainInitiated(uint64,uint256,address)': EventFragment;
     'IssuanceFeePaid(uint128,uint128,address,uint256)': EventFragment;
     'UsdBurned(uint128,uint128,address,uint256,address)': EventFragment;
     'UsdMinted(uint128,uint128,address,uint256,address)': EventFragment;
@@ -1004,6 +1154,8 @@ export interface CoreProxyInterface extends utils.Interface {
     'PoolApprovedAdded(uint256)': EventFragment;
     'PoolApprovedRemoved(uint256)': EventFragment;
     'PreferredPoolSet(uint256)': EventFragment;
+    'PoolCollateralConfigurationUpdated(uint128,address,tuple)': EventFragment;
+    'PoolCollateralDisabledByDefaultSet(uint128,bool)': EventFragment;
     'PoolConfigurationSet(uint128,tuple[],address)': EventFragment;
     'PoolCreated(uint128,address,address)': EventFragment;
     'PoolNameUpdated(uint128,string,address)': EventFragment;
@@ -1016,6 +1168,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'RewardsDistributed(uint128,address,address,uint256,uint256,uint256)': EventFragment;
     'RewardsDistributorRegistered(uint128,address,address)': EventFragment;
     'RewardsDistributorRemoved(uint128,address,address)': EventFragment;
+    'NewSupportedCrossChainNetwork(uint64)': EventFragment;
     'DelegationUpdated(uint128,uint128,address,uint256,uint256,address)': EventFragment;
   };
 
@@ -1037,6 +1190,7 @@ export interface CoreProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'CollateralConfigured'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'TransferCrossChainInitiated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'IssuanceFeePaid'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'UsdBurned'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'UsdMinted'): EventFragment;
@@ -1054,6 +1208,8 @@ export interface CoreProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'PoolApprovedAdded'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PoolApprovedRemoved'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PreferredPoolSet'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PoolCollateralConfigurationUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PoolCollateralDisabledByDefaultSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PoolConfigurationSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PoolCreated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PoolNameUpdated'): EventFragment;
@@ -1066,6 +1222,7 @@ export interface CoreProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributed'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributorRegistered'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'RewardsDistributorRemoved'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'NewSupportedCrossChainNetwork'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'DelegationUpdated'): EventFragment;
 }
 
@@ -1273,6 +1430,19 @@ export type CollateralConfiguredEvent = TypedEvent<
 
 export type CollateralConfiguredEventFilter = TypedEventFilter<CollateralConfiguredEvent>;
 
+export interface TransferCrossChainInitiatedEventObject {
+  destChainId: BigNumber;
+  amount: BigNumber;
+  sender: string;
+}
+export type TransferCrossChainInitiatedEvent = TypedEvent<
+  [BigNumber, BigNumber, string],
+  TransferCrossChainInitiatedEventObject
+>;
+
+export type TransferCrossChainInitiatedEventFilter =
+  TypedEventFilter<TransferCrossChainInitiatedEvent>;
+
 export interface IssuanceFeePaidEventObject {
   accountId: BigNumber;
   poolId: BigNumber;
@@ -1476,6 +1646,31 @@ export type PreferredPoolSetEvent = TypedEvent<[BigNumber], PreferredPoolSetEven
 
 export type PreferredPoolSetEventFilter = TypedEventFilter<PreferredPoolSetEvent>;
 
+export interface PoolCollateralConfigurationUpdatedEventObject {
+  poolId: BigNumber;
+  collateralType: string;
+  config: PoolCollateralConfiguration.DataStructOutput;
+}
+export type PoolCollateralConfigurationUpdatedEvent = TypedEvent<
+  [BigNumber, string, PoolCollateralConfiguration.DataStructOutput],
+  PoolCollateralConfigurationUpdatedEventObject
+>;
+
+export type PoolCollateralConfigurationUpdatedEventFilter =
+  TypedEventFilter<PoolCollateralConfigurationUpdatedEvent>;
+
+export interface PoolCollateralDisabledByDefaultSetEventObject {
+  poolId: BigNumber;
+  disabled: boolean;
+}
+export type PoolCollateralDisabledByDefaultSetEvent = TypedEvent<
+  [BigNumber, boolean],
+  PoolCollateralDisabledByDefaultSetEventObject
+>;
+
+export type PoolCollateralDisabledByDefaultSetEventFilter =
+  TypedEventFilter<PoolCollateralDisabledByDefaultSetEvent>;
+
 export interface PoolConfigurationSetEventObject {
   poolId: BigNumber;
   markets: MarketConfiguration.DataStructOutput[];
@@ -1615,6 +1810,17 @@ export type RewardsDistributorRemovedEvent = TypedEvent<
 
 export type RewardsDistributorRemovedEventFilter = TypedEventFilter<RewardsDistributorRemovedEvent>;
 
+export interface NewSupportedCrossChainNetworkEventObject {
+  newChainId: BigNumber;
+}
+export type NewSupportedCrossChainNetworkEvent = TypedEvent<
+  [BigNumber],
+  NewSupportedCrossChainNetworkEventObject
+>;
+
+export type NewSupportedCrossChainNetworkEventFilter =
+  TypedEventFilter<NewSupportedCrossChainNetworkEvent>;
+
 export interface DelegationUpdatedEventObject {
   accountId: BigNumber;
   poolId: BigNumber;
@@ -1683,7 +1889,7 @@ export interface CoreProxy extends BaseContract {
     addToFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<[string[]]>;
@@ -1703,32 +1909,34 @@ export interface CoreProxy extends BaseContract {
     removeFromFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setDeniers(
       feature: BytesLike,
       deniers: string[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagAllowAll(
       feature: BytesLike,
       allowAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeatureFlagDenyAll(
       feature: BytesLike,
       denyAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
+    'createAccount()'(
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     'createAccount(uint128)'(
       requestedAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAccountLastInteraction(
@@ -1753,7 +1961,7 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     hasPermission(
@@ -1773,20 +1981,20 @@ export interface CoreProxy extends BaseContract {
     notifyAccountTransfer(
       to: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     renouncePermission(
       accountId: BigNumberish,
       permission: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     revokePermission(
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     associateDebt(
@@ -1795,7 +2003,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       accountId: BigNumberish,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAssociatedSystem(
@@ -1809,7 +2017,7 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     initOrUpgradeToken(
@@ -1818,12 +2026,17 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -1832,7 +2045,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       offset: BigNumberish,
       count: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     createLock(
@@ -1840,14 +2053,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       amount: BigNumberish,
       expireTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     deposit(
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getAccountAvailableCollateral(
@@ -1880,12 +2093,12 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getCollateralConfiguration(
@@ -1900,12 +2113,18 @@ export interface CoreProxy extends BaseContract {
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     burnUsd(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     mintUsd(
@@ -1913,20 +2132,20 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isPositionLiquidatable(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isVaultLiquidatable(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     liquidate(
@@ -1934,7 +2153,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     liquidateVault(
@@ -1942,21 +2161,21 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
       maxUsd: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureMaximumMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     depositMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getMarketCollateralAmount(
@@ -1980,27 +2199,29 @@ export interface CoreProxy extends BaseContract {
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     depositMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     distributeDebtToPools(
       marketId: BigNumberish,
       maxIter: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    getMarketAddress(marketId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getMarketDebtPerShare(
       marketId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getMarketFees(
@@ -2014,6 +2235,17 @@ export interface CoreProxy extends BaseContract {
     getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<[number]>;
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -2039,41 +2271,56 @@ export interface CoreProxy extends BaseContract {
 
     registerMarket(
       market: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setMarketMinDelegateTime(
       marketId: BigNumberish,
       minDelegateTime: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
       marketId: BigNumberish,
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'setMinLiquidityRatio(uint256)'(
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     withdrawMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    getMessageSender(overrides?: CallOverrides): Promise<[string]>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     addApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<[BigNumber[]]>;
@@ -2082,26 +2329,32 @@ export interface CoreProxy extends BaseContract {
 
     removeApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPreferredPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     acceptPoolOwnership(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     createPool(
       requestedPoolId: BigNumberish,
       owner: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
+    getPoolCollateralIssuanceRatio(
+      poolId: BigNumberish,
+      collateral: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getPoolConfiguration(
       poolId: BigNumberish,
@@ -2118,35 +2371,48 @@ export interface CoreProxy extends BaseContract {
     nominatePoolOwner(
       nominatedOwner: string,
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     rebalancePool(
       poolId: BigNumberish,
       optionalCollateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     renouncePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     revokePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setPoolCollateralConfiguration(
+      poolId: BigNumberish,
+      collateralType: string,
+      newConfig: PoolCollateralConfiguration.DataStruct,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setPoolCollateralDisabledByDefault(
+      poolId: BigNumberish,
+      disabled: boolean,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPoolConfiguration(
       poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setPoolName(
       poolId: BigNumberish,
       name: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     claimRewards(
@@ -2154,7 +2420,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     distributeRewards(
@@ -2163,7 +2429,7 @@ export interface CoreProxy extends BaseContract {
       amount: BigNumberish,
       start: BigNumberish,
       duration: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getRewardRate(
@@ -2177,26 +2443,32 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     removeRewardsDistributor(
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     updateRewards(
       poolId: BigNumberish,
       collateralType: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     configureOracleManager(
       oracleManagerAddress: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getConfig(k: BytesLike, overrides?: CallOverrides): Promise<[string] & { v: string }>;
@@ -2205,18 +2477,19 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<[BigNumber] & { v: BigNumber }>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -2224,14 +2497,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       newCollateralAmountD18: BigNumberish,
       leverage: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPosition(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPositionCollateral(
@@ -2245,14 +2518,14 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getPositionDebt(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getVaultCollateral(
@@ -2264,13 +2537,13 @@ export interface CoreProxy extends BaseContract {
     getVaultCollateralRatio(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getVaultDebt(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
@@ -2302,7 +2575,7 @@ export interface CoreProxy extends BaseContract {
   addToFeatureFlagAllowlist(
     feature: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<string[]>;
@@ -2322,32 +2595,32 @@ export interface CoreProxy extends BaseContract {
   removeFromFeatureFlagAllowlist(
     feature: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setDeniers(
     feature: BytesLike,
     deniers: string[],
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagAllowAll(
     feature: BytesLike,
     allowAll: boolean,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeatureFlagDenyAll(
     feature: BytesLike,
     denyAll: boolean,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  'createAccount()'(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
+  'createAccount()'(overrides?: PayableOverrides & { from?: string }): Promise<ContractTransaction>;
 
   'createAccount(uint128)'(
     requestedAccountId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAccountLastInteraction(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -2365,7 +2638,7 @@ export interface CoreProxy extends BaseContract {
     accountId: BigNumberish,
     permission: BytesLike,
     user: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   hasPermission(
@@ -2385,20 +2658,20 @@ export interface CoreProxy extends BaseContract {
   notifyAccountTransfer(
     to: string,
     accountId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   renouncePermission(
     accountId: BigNumberish,
     permission: BytesLike,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   revokePermission(
     accountId: BigNumberish,
     permission: BytesLike,
     user: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   associateDebt(
@@ -2407,7 +2680,7 @@ export interface CoreProxy extends BaseContract {
     collateralType: string,
     accountId: BigNumberish,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAssociatedSystem(
@@ -2421,7 +2694,7 @@ export interface CoreProxy extends BaseContract {
     symbol: string,
     uri: string,
     impl: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   initOrUpgradeToken(
@@ -2430,12 +2703,17 @@ export interface CoreProxy extends BaseContract {
     symbol: string,
     decimals: BigNumberish,
     impl: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   registerUnmanagedSystem(
     id: BytesLike,
     endpoint: string,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  ccipReceive(
+    message: CcipClient.Any2EVMMessageStruct,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2444,7 +2722,7 @@ export interface CoreProxy extends BaseContract {
     collateralType: string,
     offset: BigNumberish,
     count: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   createLock(
@@ -2452,14 +2730,14 @@ export interface CoreProxy extends BaseContract {
     collateralType: string,
     amount: BigNumberish,
     expireTimestamp: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   deposit(
     accountId: BigNumberish,
     collateralType: string,
     tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getAccountAvailableCollateral(
@@ -2492,12 +2770,12 @@ export interface CoreProxy extends BaseContract {
     accountId: BigNumberish,
     collateralType: string,
     tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureCollateral(
     config: CollateralConfiguration.DataStruct,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getCollateralConfiguration(
@@ -2512,12 +2790,18 @@ export interface CoreProxy extends BaseContract {
 
   getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  transferCrossChain(
+    destChainId: BigNumberish,
+    amount: BigNumberish,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   burnUsd(
     accountId: BigNumberish,
     poolId: BigNumberish,
     collateralType: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   mintUsd(
@@ -2525,20 +2809,20 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isPositionLiquidatable(
     accountId: BigNumberish,
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isVaultLiquidatable(
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   liquidate(
@@ -2546,7 +2830,7 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     liquidateAsAccountId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   liquidateVault(
@@ -2554,21 +2838,21 @@ export interface CoreProxy extends BaseContract {
     collateralType: string,
     liquidateAsAccountId: BigNumberish,
     maxUsd: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureMaximumMarketCollateral(
     marketId: BigNumberish,
     collateralType: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   depositMarketCollateral(
     marketId: BigNumberish,
     collateralType: string,
     tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getMarketCollateralAmount(
@@ -2589,27 +2873,29 @@ export interface CoreProxy extends BaseContract {
     marketId: BigNumberish,
     collateralType: string,
     tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   depositMarketUsd(
     marketId: BigNumberish,
     target: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   distributeDebtToPools(
     marketId: BigNumberish,
     maxIter: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  getMarketAddress(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getMarketDebtPerShare(
     marketId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getMarketFees(
@@ -2623,6 +2909,17 @@ export interface CoreProxy extends BaseContract {
   getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
   getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMarketPoolDebtDistribution(
+    marketId: BigNumberish,
+    poolId: BigNumberish,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  getMarketPools(
+    marketId: BigNumberish,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2645,41 +2942,56 @@ export interface CoreProxy extends BaseContract {
 
   registerMarket(
     market: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setMarketMinDelegateTime(
     marketId: BigNumberish,
     minDelegateTime: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'setMinLiquidityRatio(uint128,uint256)'(
     marketId: BigNumberish,
     minLiquidityRatio: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'setMinLiquidityRatio(uint256)'(
     minLiquidityRatio: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   withdrawMarketUsd(
     marketId: BigNumberish,
     target: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  getMessageSender(overrides?: CallOverrides): Promise<string>;
 
   multicall(
     data: BytesLike[],
     overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  multicallThrough(
+    to: string[],
+    data: BytesLike[],
+    values: BigNumberish[],
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setAllowlistedMulticallTarget(
+    target: string,
+    allowlisted: boolean,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   addApprovedPool(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getApprovedPools(overrides?: CallOverrides): Promise<BigNumber[]>;
@@ -2688,26 +3000,32 @@ export interface CoreProxy extends BaseContract {
 
   removeApprovedPool(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPreferredPool(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   acceptPoolOwnership(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   createPool(
     requestedPoolId: BigNumberish,
     owner: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  getPoolCollateralIssuanceRatio(
+    poolId: BigNumberish,
+    collateral: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getPoolConfiguration(
     poolId: BigNumberish,
@@ -2721,35 +3039,48 @@ export interface CoreProxy extends BaseContract {
   nominatePoolOwner(
     nominatedOwner: string,
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   rebalancePool(
     poolId: BigNumberish,
     optionalCollateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   renouncePoolNomination(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   revokePoolNomination(
     poolId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setPoolCollateralConfiguration(
+    poolId: BigNumberish,
+    collateralType: string,
+    newConfig: PoolCollateralConfiguration.DataStruct,
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setPoolCollateralDisabledByDefault(
+    poolId: BigNumberish,
+    disabled: boolean,
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPoolConfiguration(
     poolId: BigNumberish,
     newMarketConfigurations: MarketConfiguration.DataStruct[],
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setPoolName(
     poolId: BigNumberish,
     name: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   claimRewards(
@@ -2757,7 +3088,7 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     distributor: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   distributeRewards(
@@ -2766,7 +3097,7 @@ export interface CoreProxy extends BaseContract {
     amount: BigNumberish,
     start: BigNumberish,
     duration: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getRewardRate(
@@ -2780,26 +3111,32 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     distributor: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   removeRewardsDistributor(
     poolId: BigNumberish,
     collateralType: string,
     distributor: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   updateRewards(
     poolId: BigNumberish,
     collateralType: string,
     accountId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  configureChainlinkCrossChain(
+    ccipRouter: string,
+    ccipTokenPool: string,
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   configureOracleManager(
     oracleManagerAddress: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getConfig(k: BytesLike, overrides?: CallOverrides): Promise<string>;
@@ -2808,18 +3145,19 @@ export interface CoreProxy extends BaseContract {
 
   getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-  registerCcip(
-    ccipSend: string,
-    ccipReceive: string,
-    ccipTokenPool: string,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
   setConfig(
     k: BytesLike,
     v: BytesLike,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  setSupportedCrossChainNetworks(
+    supportedNetworks: BigNumberish[],
+    ccipSelectors: BigNumberish[],
+    overrides?: PayableOverrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   delegateCollateral(
     accountId: BigNumberish,
@@ -2827,14 +3165,14 @@ export interface CoreProxy extends BaseContract {
     collateralType: string,
     newCollateralAmountD18: BigNumberish,
     leverage: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPosition(
     accountId: BigNumberish,
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPositionCollateral(
@@ -2848,14 +3186,14 @@ export interface CoreProxy extends BaseContract {
     accountId: BigNumberish,
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getPositionDebt(
     accountId: BigNumberish,
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getVaultCollateral(
@@ -2867,13 +3205,13 @@ export interface CoreProxy extends BaseContract {
   getVaultCollateralRatio(
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getVaultDebt(
     poolId: BigNumberish,
     collateralType: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -3032,6 +3370,8 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    ccipReceive(message: CcipClient.Any2EVMMessageStruct, overrides?: CallOverrides): Promise<void>;
+
     cleanExpiredLocks(
       accountId: BigNumberish,
       collateralType: string,
@@ -3104,6 +3444,12 @@ export interface CoreProxy extends BaseContract {
     ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     burnUsd(
       accountId: BigNumberish,
@@ -3198,6 +3544,8 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    getMarketAddress(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
     getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketDebtPerShare(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -3213,6 +3561,25 @@ export interface CoreProxy extends BaseContract {
     getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        sharesD18: BigNumber;
+        totalSharesD18: BigNumber;
+        valuePerShareD27: BigNumber;
+      }
+    >;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber[], BigNumber[]] & { inRangePoolIds: BigNumber[]; outRangePoolIds: BigNumber[] }
+    >;
 
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -3259,7 +3626,22 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMessageSender(overrides?: CallOverrides): Promise<string>;
+
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
+
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     addApprovedPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -3280,6 +3662,12 @@ export interface CoreProxy extends BaseContract {
     ): Promise<void>;
 
     getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    getPoolCollateralIssuanceRatio(
+      poolId: BigNumberish,
+      collateral: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getPoolConfiguration(
       poolId: BigNumberish,
@@ -3305,6 +3693,19 @@ export interface CoreProxy extends BaseContract {
     renouncePoolNomination(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     revokePoolNomination(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    setPoolCollateralConfiguration(
+      poolId: BigNumberish,
+      collateralType: string,
+      newConfig: PoolCollateralConfiguration.DataStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setPoolCollateralDisabledByDefault(
+      poolId: BigNumberish,
+      disabled: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setPoolConfiguration(
       poolId: BigNumberish,
@@ -3359,6 +3760,12 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[], string[]]>;
 
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     configureOracleManager(oracleManagerAddress: string, overrides?: CallOverrides): Promise<void>;
 
     getConfig(k: BytesLike, overrides?: CallOverrides): Promise<string>;
@@ -3367,14 +3774,15 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setConfig(k: BytesLike, v: BytesLike, overrides?: CallOverrides): Promise<void>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -3620,6 +4028,17 @@ export interface CoreProxy extends BaseContract {
       config?: null
     ): CollateralConfiguredEventFilter;
 
+    'TransferCrossChainInitiated(uint64,uint256,address)'(
+      destChainId?: BigNumberish | null,
+      amount?: BigNumberish | null,
+      sender?: null
+    ): TransferCrossChainInitiatedEventFilter;
+    TransferCrossChainInitiated(
+      destChainId?: BigNumberish | null,
+      amount?: BigNumberish | null,
+      sender?: null
+    ): TransferCrossChainInitiatedEventFilter;
+
     'IssuanceFeePaid(uint128,uint128,address,uint256)'(
       accountId?: BigNumberish | null,
       poolId?: BigNumberish | null,
@@ -3807,6 +4226,26 @@ export interface CoreProxy extends BaseContract {
     'PreferredPoolSet(uint256)'(poolId?: null): PreferredPoolSetEventFilter;
     PreferredPoolSet(poolId?: null): PreferredPoolSetEventFilter;
 
+    'PoolCollateralConfigurationUpdated(uint128,address,tuple)'(
+      poolId?: BigNumberish | null,
+      collateralType?: null,
+      config?: null
+    ): PoolCollateralConfigurationUpdatedEventFilter;
+    PoolCollateralConfigurationUpdated(
+      poolId?: BigNumberish | null,
+      collateralType?: null,
+      config?: null
+    ): PoolCollateralConfigurationUpdatedEventFilter;
+
+    'PoolCollateralDisabledByDefaultSet(uint128,bool)'(
+      poolId?: null,
+      disabled?: null
+    ): PoolCollateralDisabledByDefaultSetEventFilter;
+    PoolCollateralDisabledByDefaultSet(
+      poolId?: null,
+      disabled?: null
+    ): PoolCollateralDisabledByDefaultSetEventFilter;
+
     'PoolConfigurationSet(uint128,tuple[],address)'(
       poolId?: BigNumberish | null,
       markets?: null,
@@ -3935,6 +4374,11 @@ export interface CoreProxy extends BaseContract {
       distributor?: string | null
     ): RewardsDistributorRemovedEventFilter;
 
+    'NewSupportedCrossChainNetwork(uint64)'(
+      newChainId?: null
+    ): NewSupportedCrossChainNetworkEventFilter;
+    NewSupportedCrossChainNetwork(newChainId?: null): NewSupportedCrossChainNetworkEventFilter;
+
     'DelegationUpdated(uint128,uint128,address,uint256,uint256,address)'(
       accountId?: BigNumberish | null,
       poolId?: BigNumberish | null,
@@ -3982,7 +4426,7 @@ export interface CoreProxy extends BaseContract {
     addToFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
@@ -4002,32 +4446,32 @@ export interface CoreProxy extends BaseContract {
     removeFromFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setDeniers(
       feature: BytesLike,
       deniers: string[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagAllowAll(
       feature: BytesLike,
       allowAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeatureFlagDenyAll(
       feature: BytesLike,
       denyAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
-    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    'createAccount()'(overrides?: PayableOverrides & { from?: string }): Promise<BigNumber>;
 
     'createAccount(uint128)'(
       requestedAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAccountLastInteraction(
@@ -4045,7 +4489,7 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     hasPermission(
@@ -4065,20 +4509,20 @@ export interface CoreProxy extends BaseContract {
     notifyAccountTransfer(
       to: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     renouncePermission(
       accountId: BigNumberish,
       permission: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     revokePermission(
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     associateDebt(
@@ -4087,7 +4531,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       accountId: BigNumberish,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
@@ -4098,7 +4542,7 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     initOrUpgradeToken(
@@ -4107,12 +4551,17 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4121,7 +4570,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       offset: BigNumberish,
       count: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     createLock(
@@ -4129,14 +4578,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       amount: BigNumberish,
       expireTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     deposit(
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getAccountAvailableCollateral(
@@ -4163,12 +4612,12 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getCollateralConfiguration(
@@ -4183,12 +4632,18 @@ export interface CoreProxy extends BaseContract {
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
     burnUsd(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     mintUsd(
@@ -4196,20 +4651,20 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     isPositionLiquidatable(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     isVaultLiquidatable(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     liquidate(
@@ -4217,7 +4672,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     liquidateVault(
@@ -4225,21 +4680,21 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
       maxUsd: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureMaximumMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     depositMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getMarketCollateralAmount(
@@ -4260,27 +4715,29 @@ export interface CoreProxy extends BaseContract {
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     depositMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     distributeDebtToPools(
       marketId: BigNumberish,
       maxIter: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
+
+    getMarketAddress(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketCollateral(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketDebtPerShare(
       marketId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getMarketFees(
@@ -4292,6 +4749,17 @@ export interface CoreProxy extends BaseContract {
     getMarketMinDelegateTime(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getMarketNetIssuance(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
 
     getMarketReportedDebt(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -4312,40 +4780,58 @@ export interface CoreProxy extends BaseContract {
 
     isMarketCapacityLocked(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerMarket(market: string, overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    registerMarket(
+      market: string,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
 
     setMarketMinDelegateTime(
       marketId: BigNumberish,
       minDelegateTime: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
       marketId: BigNumberish,
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     'setMinLiquidityRatio(uint256)'(
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     withdrawMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
+
+    getMessageSender(overrides?: CallOverrides): Promise<BigNumber>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
     addApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<BigNumber>;
@@ -4354,26 +4840,32 @@ export interface CoreProxy extends BaseContract {
 
     removeApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPreferredPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     acceptPoolOwnership(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     createPool(
       requestedPoolId: BigNumberish,
       owner: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getNominatedPoolOwner(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getPoolCollateralIssuanceRatio(
+      poolId: BigNumberish,
+      collateral: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getPoolConfiguration(poolId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -4384,35 +4876,48 @@ export interface CoreProxy extends BaseContract {
     nominatePoolOwner(
       nominatedOwner: string,
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     rebalancePool(
       poolId: BigNumberish,
       optionalCollateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     renouncePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     revokePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setPoolCollateralConfiguration(
+      poolId: BigNumberish,
+      collateralType: string,
+      newConfig: PoolCollateralConfiguration.DataStruct,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setPoolCollateralDisabledByDefault(
+      poolId: BigNumberish,
+      disabled: boolean,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPoolConfiguration(
       poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setPoolName(
       poolId: BigNumberish,
       name: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     claimRewards(
@@ -4420,7 +4925,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     distributeRewards(
@@ -4429,7 +4934,7 @@ export interface CoreProxy extends BaseContract {
       amount: BigNumberish,
       start: BigNumberish,
       duration: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getRewardRate(
@@ -4443,26 +4948,32 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     removeRewardsDistributor(
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     updateRewards(
       poolId: BigNumberish,
       collateralType: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     configureOracleManager(
       oracleManagerAddress: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getConfig(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
@@ -4471,18 +4982,19 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     delegateCollateral(
       accountId: BigNumberish,
@@ -4490,14 +5002,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       newCollateralAmountD18: BigNumberish,
       leverage: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPosition(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPositionCollateral(
@@ -4511,14 +5023,14 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getPositionDebt(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getVaultCollateral(
@@ -4530,13 +5042,13 @@ export interface CoreProxy extends BaseContract {
     getVaultCollateralRatio(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getVaultDebt(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
@@ -4569,7 +5081,7 @@ export interface CoreProxy extends BaseContract {
     addToFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getDeniers(feature: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -4598,32 +5110,34 @@ export interface CoreProxy extends BaseContract {
     removeFromFeatureFlagAllowlist(
       feature: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setDeniers(
       feature: BytesLike,
       deniers: string[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagAllowAll(
       feature: BytesLike,
       allowAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeatureFlagDenyAll(
       feature: BytesLike,
       denyAll: boolean,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    'createAccount()'(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
+    'createAccount()'(
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
 
     'createAccount(uint128)'(
       requestedAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAccountLastInteraction(
@@ -4647,7 +5161,7 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     hasPermission(
@@ -4667,20 +5181,20 @@ export interface CoreProxy extends BaseContract {
     notifyAccountTransfer(
       to: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     renouncePermission(
       accountId: BigNumberish,
       permission: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     revokePermission(
       accountId: BigNumberish,
       permission: BytesLike,
       user: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     associateDebt(
@@ -4689,7 +5203,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       accountId: BigNumberish,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAssociatedSystem(id: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -4700,7 +5214,7 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       uri: string,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     initOrUpgradeToken(
@@ -4709,12 +5223,17 @@ export interface CoreProxy extends BaseContract {
       symbol: string,
       decimals: BigNumberish,
       impl: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     registerUnmanagedSystem(
       id: BytesLike,
       endpoint: string,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    ccipReceive(
+      message: CcipClient.Any2EVMMessageStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -4723,7 +5242,7 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       offset: BigNumberish,
       count: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     createLock(
@@ -4731,14 +5250,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       amount: BigNumberish,
       expireTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     deposit(
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getAccountAvailableCollateral(
@@ -4765,12 +5284,12 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureCollateral(
       config: CollateralConfiguration.DataStruct,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getCollateralConfiguration(
@@ -4788,12 +5307,18 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    transferCrossChain(
+      destChainId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     burnUsd(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     mintUsd(
@@ -4801,20 +5326,20 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isPositionLiquidatable(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isVaultLiquidatable(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     liquidate(
@@ -4822,7 +5347,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     liquidateVault(
@@ -4830,21 +5355,21 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
       maxUsd: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureMaximumMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     depositMarketCollateral(
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketCollateralAmount(
@@ -4868,20 +5393,25 @@ export interface CoreProxy extends BaseContract {
       marketId: BigNumberish,
       collateralType: string,
       tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     depositMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     distributeDebtToPools(
       marketId: BigNumberish,
       maxIter: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    getMarketAddress(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getMarketCollateral(
@@ -4891,7 +5421,7 @@ export interface CoreProxy extends BaseContract {
 
     getMarketDebtPerShare(
       marketId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketFees(
@@ -4908,6 +5438,17 @@ export interface CoreProxy extends BaseContract {
     getMarketNetIssuance(
       marketId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMarketPoolDebtDistribution(
+      marketId: BigNumberish,
+      poolId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    getMarketPools(
+      marketId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getMarketReportedDebt(
@@ -4943,41 +5484,56 @@ export interface CoreProxy extends BaseContract {
 
     registerMarket(
       market: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setMarketMinDelegateTime(
       marketId: BigNumberish,
       minDelegateTime: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'setMinLiquidityRatio(uint128,uint256)'(
       marketId: BigNumberish,
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'setMinLiquidityRatio(uint256)'(
       minLiquidityRatio: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     withdrawMarketUsd(
       marketId: BigNumberish,
       target: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    getMessageSender(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    multicallThrough(
+      to: string[],
+      data: BytesLike[],
+      values: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setAllowlistedMulticallTarget(
+      target: string,
+      allowlisted: boolean,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     addApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getApprovedPools(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -4986,27 +5542,33 @@ export interface CoreProxy extends BaseContract {
 
     removeApprovedPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPreferredPool(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     acceptPoolOwnership(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     createPool(
       requestedPoolId: BigNumberish,
       owner: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getNominatedPoolOwner(
       poolId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPoolCollateralIssuanceRatio(
+      poolId: BigNumberish,
+      collateral: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -5022,35 +5584,48 @@ export interface CoreProxy extends BaseContract {
     nominatePoolOwner(
       nominatedOwner: string,
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     rebalancePool(
       poolId: BigNumberish,
       optionalCollateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     renouncePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     revokePoolNomination(
       poolId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setPoolCollateralConfiguration(
+      poolId: BigNumberish,
+      collateralType: string,
+      newConfig: PoolCollateralConfiguration.DataStruct,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setPoolCollateralDisabledByDefault(
+      poolId: BigNumberish,
+      disabled: boolean,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPoolConfiguration(
       poolId: BigNumberish,
       newMarketConfigurations: MarketConfiguration.DataStruct[],
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setPoolName(
       poolId: BigNumberish,
       name: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
@@ -5058,7 +5633,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     distributeRewards(
@@ -5067,7 +5642,7 @@ export interface CoreProxy extends BaseContract {
       amount: BigNumberish,
       start: BigNumberish,
       duration: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getRewardRate(
@@ -5081,26 +5656,32 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     removeRewardsDistributor(
       poolId: BigNumberish,
       collateralType: string,
       distributor: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     updateRewards(
       poolId: BigNumberish,
       collateralType: string,
       accountId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    configureChainlinkCrossChain(
+      ccipRouter: string,
+      ccipTokenPool: string,
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     configureOracleManager(
       oracleManagerAddress: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getConfig(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -5109,17 +5690,21 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    registerCcip(
-      ccipSend: string,
-      ccipReceive: string,
-      ccipTokenPool: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
     setConfig(
       k: BytesLike,
       v: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setSupportedCrossChainNetworks(
+      supportedNetworks: BigNumberish[],
+      ccipSelectors: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     delegateCollateral(
@@ -5128,14 +5713,14 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       newCollateralAmountD18: BigNumberish,
       leverage: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPosition(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPositionCollateral(
@@ -5149,14 +5734,14 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getPositionDebt(
       accountId: BigNumberish,
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getVaultCollateral(
@@ -5168,13 +5753,13 @@ export interface CoreProxy extends BaseContract {
     getVaultCollateralRatio(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getVaultDebt(
       poolId: BigNumberish,
       collateralType: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

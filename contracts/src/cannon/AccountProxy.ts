@@ -34,20 +34,20 @@ export const abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
   'function approve(address to, uint256 tokenId)',
   'function balanceOf(address holder) view returns (uint256 balance)',
-  'function burn(uint256 tokenId)',
+  'function burn(uint256 tokenId) payable',
   'function getApproved(uint256 tokenId) view returns (address operator)',
-  'function initialize(string tokenName, string tokenSymbol, string uri)',
+  'function initialize(string tokenName, string tokenSymbol, string uri) payable',
   'function isApprovedForAll(address holder, address operator) view returns (bool)',
   'function isInitialized() view returns (bool)',
-  'function mint(address to, uint256 tokenId)',
+  'function mint(address to, uint256 tokenId) payable',
   'function name() view returns (string)',
   'function ownerOf(uint256 tokenId) view returns (address)',
-  'function safeMint(address to, uint256 tokenId, bytes data)',
+  'function safeMint(address to, uint256 tokenId, bytes data) payable',
   'function safeTransferFrom(address from, address to, uint256 tokenId)',
   'function safeTransferFrom(address from, address to, uint256 tokenId, bytes data)',
-  'function setAllowance(uint256 tokenId, address spender)',
+  'function setAllowance(uint256 tokenId, address spender) payable',
   'function setApprovalForAll(address operator, bool approved)',
-  'function setBaseTokenURI(string uri)',
+  'function setBaseTokenURI(string uri) payable',
   'function supportsInterface(bytes4 interfaceId) view returns (bool)',
   'function symbol() view returns (string)',
   'function tokenByIndex(uint256 index) view returns (uint256)',
@@ -67,6 +67,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -360,7 +361,7 @@ export interface AccountProxy extends BaseContract {
 
     burn(
       tokenId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getApproved(
@@ -372,7 +373,7 @@ export interface AccountProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       uri: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     isApprovedForAll(
@@ -386,7 +387,7 @@ export interface AccountProxy extends BaseContract {
     mint(
       to: string,
       tokenId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -397,7 +398,7 @@ export interface AccountProxy extends BaseContract {
       to: string,
       tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     'safeTransferFrom(address,address,uint256)'(
@@ -418,7 +419,7 @@ export interface AccountProxy extends BaseContract {
     setAllowance(
       tokenId: BigNumberish,
       spender: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setApprovalForAll(
@@ -429,7 +430,7 @@ export interface AccountProxy extends BaseContract {
 
     setBaseTokenURI(
       uri: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
@@ -491,7 +492,7 @@ export interface AccountProxy extends BaseContract {
 
   burn(
     tokenId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getApproved(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -500,7 +501,7 @@ export interface AccountProxy extends BaseContract {
     tokenName: string,
     tokenSymbol: string,
     uri: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   isApprovedForAll(holder: string, operator: string, overrides?: CallOverrides): Promise<boolean>;
@@ -510,7 +511,7 @@ export interface AccountProxy extends BaseContract {
   mint(
     to: string,
     tokenId: BigNumberish,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
@@ -521,7 +522,7 @@ export interface AccountProxy extends BaseContract {
     to: string,
     tokenId: BigNumberish,
     data: BytesLike,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   'safeTransferFrom(address,address,uint256)'(
@@ -542,7 +543,7 @@ export interface AccountProxy extends BaseContract {
   setAllowance(
     tokenId: BigNumberish,
     spender: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setApprovalForAll(
@@ -553,7 +554,7 @@ export interface AccountProxy extends BaseContract {
 
   setBaseTokenURI(
     uri: string,
-    overrides?: Overrides & { from?: string }
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
@@ -755,7 +756,10 @@ export interface AccountProxy extends BaseContract {
 
     balanceOf(holder: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    burn(tokenId: BigNumberish, overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    burn(
+      tokenId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
 
     getApproved(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -763,7 +767,7 @@ export interface AccountProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       uri: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     isApprovedForAll(
@@ -777,7 +781,7 @@ export interface AccountProxy extends BaseContract {
     mint(
       to: string,
       tokenId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -788,7 +792,7 @@ export interface AccountProxy extends BaseContract {
       to: string,
       tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     'safeTransferFrom(address,address,uint256)'(
@@ -809,7 +813,7 @@ export interface AccountProxy extends BaseContract {
     setAllowance(
       tokenId: BigNumberish,
       spender: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     setApprovalForAll(
@@ -818,7 +822,10 @@ export interface AccountProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    setBaseTokenURI(uri: string, overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    setBaseTokenURI(
+      uri: string,
+      overrides?: PayableOverrides & { from?: string }
+    ): Promise<BigNumber>;
 
     supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -880,7 +887,7 @@ export interface AccountProxy extends BaseContract {
 
     burn(
       tokenId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getApproved(tokenId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -889,7 +896,7 @@ export interface AccountProxy extends BaseContract {
       tokenName: string,
       tokenSymbol: string,
       uri: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
@@ -903,7 +910,7 @@ export interface AccountProxy extends BaseContract {
     mint(
       to: string,
       tokenId: BigNumberish,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -914,7 +921,7 @@ export interface AccountProxy extends BaseContract {
       to: string,
       tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     'safeTransferFrom(address,address,uint256)'(
@@ -935,7 +942,7 @@ export interface AccountProxy extends BaseContract {
     setAllowance(
       tokenId: BigNumberish,
       spender: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
@@ -946,7 +953,7 @@ export interface AccountProxy extends BaseContract {
 
     setBaseTokenURI(
       uri: string,
-      overrides?: Overrides & { from?: string }
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(

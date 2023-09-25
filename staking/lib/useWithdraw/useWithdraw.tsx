@@ -23,7 +23,7 @@ export const useWithdraw = (
     onError?: (e: Error) => void;
   }
 ) => {
-  const accountCollateral = useAccountCollateral({ accountId });
+  const accountCollateral = useAccountCollateral({ accountId, includeDelegationOff: true });
   const accountCollateralData = accountCollateral.data?.find(
     (collateral) => collateral.tokenAddress === collateralTypeAddress
   );

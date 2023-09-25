@@ -1,5 +1,5 @@
 {
-  "address": "0xe564e3967C77dc2da6cab4B35eB84713a6C368C9",
+  "address": "0xaAFbcc80e357a448168fe43f07E7D3F1A3BbE92B",
   "abi": [
     {
       "inputs": [
@@ -422,7 +422,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -464,7 +464,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -519,7 +519,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -574,7 +574,7 @@
       ],
       "name": "safeMint",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -643,7 +643,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -674,7 +674,7 @@
       ],
       "name": "setBaseTokenURI",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -809,7 +809,7 @@
     }
   ],
   "deployedOn": "router.AccountRouter",
-  "deployTxnHash": "0xd1e7c274362fb3c524b00b5c4f624ff8767f4806fd935fa57347044ff88314f9",
+  "deployTxnHash": "0x554e22ff24623d05a30965e9c511a1c8904638d53e137247b46e468e7cfd706e",
   "contractName": "AccountRouter",
   "sourceName": "AccountRouter.sol"
 }

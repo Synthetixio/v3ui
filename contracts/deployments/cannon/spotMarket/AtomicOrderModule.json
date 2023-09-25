@@ -1,5 +1,5 @@
 {
-  "address": "0xe238bA296B1Ecf04015461cbb7943133af6a8C9A",
+  "address": "0xEECe3AC0995Cc100E2Fa848e932f144512E28d83",
   "abi": [
     {
       "inputs": [
@@ -263,7 +263,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -324,7 +324,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -385,7 +385,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -650,7 +650,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -711,7 +711,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -772,13 +772,13 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x02b6d337119909b1ff49ea397aeddbb2ce730d172555917be5fc74139331d55f",
+  "deployTxnHash": "0x6e97697fc955a8bbf090ee054438a3a536050101f41b42fed02f7f7dfc703dce",
   "sourceName": "contracts/modules/AtomicOrderModule.sol",
   "contractName": "AtomicOrderModule",
   "deployedOn": "contract.AtomicOrderModule"

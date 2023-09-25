@@ -1,6 +1,7 @@
 import { EthereumIcon } from '../EthereumIcon';
 import { OptimismIcon } from '../OptimismIcon';
 import { SNXIcon } from '../SNXIcon';
+import { DollarCircle } from '../DollarCircle';
 import { Icon, IconProps } from '@chakra-ui/react';
 
 interface CollateralIconProps extends IconProps {
@@ -23,6 +24,9 @@ export const CollateralIcon = ({
       return <SNXIcon fill={fill} color={color} {...props} />;
     case 'OP':
       return <OptimismIcon {...props} />;
+    case 'sUSD':
+    case 'snxUSD':
+      return <DollarCircle {...props} />;
     default:
       return <UnknownIcon {...props} />;
   }

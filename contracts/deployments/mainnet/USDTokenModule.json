@@ -1,5 +1,5 @@
 {
-  "address": "0x8c2c26494eAe20A8a22f94ED5Fa4B104FAD6bcca",
+  "address": "0xF8dBEf33111A37879f35EE15507769CA927cf9C0",
   "abi": [
     {
       "inputs": [],
@@ -469,7 +469,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xb6d72914ab4124045b4af89332a6db72ea1f84e7b08515bc205e799d1b54a2ae",
+  "deployTxnHash": "0x7fb009a1a0ed11348312e405a487de609e79b49fb5813ea5228b92e2a26f6944",
   "sourceName": "contracts/modules/usd/USDTokenModule.sol",
   "contractName": "USDTokenModule",
   "deployedOn": "contract.USDTokenModule"

@@ -1,5 +1,5 @@
 {
-  "address": "0xAE926c8C9f982fCe4DDe29b8209993A6A28D81B0",
+  "address": "0x065267b2CB3685d93677af513187aFa7A5C028bD",
   "abi": [
     {
       "inputs": [
@@ -406,7 +406,7 @@
       ],
       "name": "setAsyncFixedFee",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -424,7 +424,7 @@
       ],
       "name": "setAtomicFixedFee",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -442,7 +442,7 @@
       ],
       "name": "setCollateralLeverage",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -465,7 +465,7 @@
       ],
       "name": "setCustomTransactorFees",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -483,7 +483,7 @@
       ],
       "name": "setFeeCollector",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -501,7 +501,7 @@
       ],
       "name": "setMarketSkewScale",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -519,7 +519,7 @@
       ],
       "name": "setMarketUtilizationFees",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -542,7 +542,7 @@
       ],
       "name": "setWrapperFees",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -565,13 +565,13 @@
       ],
       "name": "updateReferrerShare",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x0d9282a5ac78737817c66f4c8580ce9b4c3fccf8569052e59865bc07dbb84580",
+  "deployTxnHash": "0x207269b3ccc00f5beea6e4e5826b1113b50aa16e82f6178a4e7f7469054028be",
   "sourceName": "contracts/modules/MarketConfigurationModule.sol",
   "contractName": "MarketConfigurationModule",
   "deployedOn": "contract.MarketConfigurationModule"

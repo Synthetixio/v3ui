@@ -5228,14 +5228,20 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
+    "@snx-v3/useTokenBalance": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
+    "@xstate/react": ^3.2.2
     react: ^18.2.0
+    xstate: ^4.37.2
   languageName: unknown
   linkType: soft
 
@@ -5283,6 +5289,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/WithdrawIncrease@workspace:*, @snx-v3/WithdrawIncrease@workspace:staking/components/WithdrawIncrease":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/WithdrawIncrease@workspace:staking/components/WithdrawIncrease"
+  dependencies:
+    "@chakra-ui/react": ^2.6.1
+    react: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/WithdrawModal@workspace:*, @snx-v3/WithdrawModal@workspace:staking/components/WithdrawModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/WithdrawModal@workspace:staking/components/WithdrawModal"
@@ -5291,6 +5306,7 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -5465,6 +5481,7 @@ __metadata:
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/TrendText": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
+    "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
@@ -5549,7 +5566,6 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
@@ -5587,7 +5603,6 @@ __metadata:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
     "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
     react-router-dom: ^6.11.2
@@ -5873,6 +5888,7 @@ __metadata:
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2

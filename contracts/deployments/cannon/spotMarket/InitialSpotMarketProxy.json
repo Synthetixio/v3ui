@@ -1,5 +1,5 @@
 {
-  "address": "0x989B0B56511de4CE09510b319ACE4808b803Efa1",
+  "address": "0x63d7FEf6541Ae03101B11bbC7626a386a2e0e948",
   "abi": [
     {
       "inputs": [
@@ -209,7 +209,7 @@
     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   ],
   "linkedLibraries": {},
-  "deployTxnHash": "0x8e84709b0180a92da2ae3526b510e1715ccf3dfa77368c245a4e1f523f8681c8",
+  "deployTxnHash": "0x222b56485bad121cc21b13d0891d779c818f6dfa27b8843850240b381f693b29",
   "sourceName": "contracts/Proxy.sol",
   "contractName": "Proxy",
   "deployedOn": "contract.InitialSpotMarketProxy"

@@ -11,6 +11,7 @@ import { HomeLink } from '@snx-v3/HomeLink';
 import { Rewards } from '../../components/Rewards';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 export const ManageUi: FC<{
   collateralType?: CollateralType;
@@ -19,6 +20,7 @@ export const ManageUi: FC<{
 }> = ({ collateralType, isLoading, rewards }) => {
   return (
     <Box mb={12}>
+      <WithdrawIncrease />
       <Box mb="4">
         <HomeLink />
       </Box>

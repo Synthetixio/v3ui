@@ -7,6 +7,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { PoolBox } from '@snx-v3/PoolBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { HomeLink } from '@snx-v3/HomeLink';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 function DepositUi({
   collateralDisplaySymbol,
@@ -19,6 +20,7 @@ function DepositUi({
 }) {
   return (
     <Flex height="100%" flexDirection="column">
+      <WithdrawIncrease />
       <HomeLink />
       <Flex alignItems="flex-end" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Box flexGrow={1} mr={12}>

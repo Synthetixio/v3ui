@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
@@ -59,6 +59,7 @@ async function loadPrices({
     CoreProxy.interface.encodeFunctionData('getCollateralPrice', [x.tokenAddress])
   );
   const multicallResult = await CoreProxy.callStatic.multicall(calls);
+
   return multicallResult.map((bytes: string) => {
     const decoded = CoreProxy.interface.decodeFunctionResult('getCollateralPrice', bytes)[0];
     return PriceSchema.parse(decoded);
@@ -72,10 +73,11 @@ async function loadCollateralTypes({
   CoreProxy: CoreProxyType;
   Multicall3: Multicall3Type;
 }): Promise<CollateralType[]> {
-  const tokenConfigsRaw = (await CoreProxy.getCollateralConfigurations(true)) as object[];
+  const hideDisabled = true;
+  const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
-    .filter((x) => x.depositingEnabled);
+    .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
   const [symbols, prices] = await Promise.all([
     loadSymbols({ Multicall3, tokenConfigs }),
@@ -96,19 +98,26 @@ async function loadCollateralTypes({
   }));
 }
 
-export function useCollateralTypes() {
+export function useCollateralTypes(includeDelegationOff = false) {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
 
   return useQuery({
-    queryKey: [network.name, 'CollateralTypes'],
+    queryKey: [network.name, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
+      if (includeDelegationOff) {
+        return collateralTypes;
+      }
 
-      return collateralTypes.filter((x) => x.symbol !== 'snxUSD' && x.symbol !== 'sUSD');
+      // By default we only return collateral types that have minDelegationD18 < MaxUint256
+      // When minDelegationD18 === MaxUint256, delegation is effectively disabled
+      return collateralTypes.filter((x) => {
+        return x.minDelegationD18.lt(constants.MaxUint256);
+      });
     },
     placeholderData: [],
     enabled: Boolean(CoreProxy && Multicall3),

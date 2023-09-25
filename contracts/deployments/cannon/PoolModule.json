@@ -1,5 +1,5 @@
 {
-  "address": "0x6272EC4aDE76F7dEf544222369947C7d63152C00",
+  "address": "0x91835089DB29F471588512c83c508aa83F57bC1f",
   "abi": [
     {
       "inputs": [
@@ -133,6 +133,62 @@
       "inputs": [],
       "name": "ZeroAddress",
       "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "config",
+          "type": "tuple"
+        }
+      ],
+      "name": "PoolCollateralConfigurationUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "PoolCollateralDisabledByDefaultSet",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -331,7 +387,7 @@
       ],
       "name": "acceptPoolOwnership",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -349,7 +405,7 @@
       ],
       "name": "createPool",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -379,6 +435,30 @@
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateral",
+          "type": "address"
+        }
+      ],
+      "name": "getPoolCollateralIssuanceRatio",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -473,7 +553,7 @@
       ],
       "name": "nominatePoolOwner",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -491,7 +571,7 @@
       ],
       "name": "rebalancePool",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -504,7 +584,7 @@
       ],
       "name": "renouncePoolNomination",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -517,7 +597,7 @@
       ],
       "name": "revokePoolNomination",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -530,7 +610,60 @@
       ],
       "name": "setMinLiquidityRatio",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "collateralType",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "collateralLimitD18",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issuanceRatioD18",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct PoolCollateralConfiguration.Data",
+          "name": "newConfig",
+          "type": "tuple"
+        }
+      ],
+      "name": "setPoolCollateralConfiguration",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "poolId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "bool",
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "name": "setPoolCollateralDisabledByDefault",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -565,7 +698,7 @@
       ],
       "name": "setPoolConfiguration",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -583,13 +716,13 @@
       ],
       "name": "setPoolName",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xb99236122d50ed7bbb61946c17249484caeb83350c29905331d69d8f8412cd5c",
+  "deployTxnHash": "0x0c64b483bd61ac586b09568caf03bc073ff0bd4c1fd28470f16fd1dd383b223c",
   "sourceName": "contracts/modules/core/PoolModule.sol",
   "contractName": "PoolModule",
   "deployedOn": "contract.PoolModule"

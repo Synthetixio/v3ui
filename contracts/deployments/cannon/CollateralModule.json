@@ -1,5 +1,5 @@
 {
-  "address": "0x6C08ae82362cccC5644FF28F34b3499EB9C1d479",
+  "address": "0x865603890d0F8AA09e4c8ff4e3936Ef176735B68",
   "abi": [
     {
       "inputs": [
@@ -79,6 +79,22 @@
         }
       ],
       "name": "FeatureUnavailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountAvailableForDelegationD18",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountD18",
+          "type": "uint256"
+        }
+      ],
+      "name": "InsufficentAvailableCollateral",
       "type": "error"
     },
     {
@@ -336,7 +352,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -364,7 +380,7 @@
       ],
       "name": "createLock",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -387,7 +403,7 @@
       ],
       "name": "deposit",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -514,13 +530,13 @@
       ],
       "name": "withdraw",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x39e1dd696b0b6da5966dfebe2f23a518b9af8338bce7c9b420f6a4538402dd1e",
+  "deployTxnHash": "0xf6ef3808f757569edcf87810bbbfac4b45ae8a81b4c4ff11dae8f96fcbc7ac66",
   "sourceName": "contracts/modules/core/CollateralModule.sol",
   "contractName": "CollateralModule",
   "deployedOn": "contract.CollateralModule"

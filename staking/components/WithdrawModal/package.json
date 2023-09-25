@@ -8,6 +8,7 @@
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
+    "@snx-v3/WithdrawIncrease": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useContractErrorParser": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",

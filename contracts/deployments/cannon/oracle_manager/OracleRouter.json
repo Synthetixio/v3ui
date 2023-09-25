@@ -1,5 +1,5 @@
 {
-  "address": "0xc70074Cc1F16249CBdc7c0E4D119f8e86e11c005",
+  "address": "0xaB8C3d22669AC648E5d6EFAd8557D3B80D6D7eDA",
   "abi": [
     {
       "inputs": [
@@ -250,6 +250,22 @@
     {
       "inputs": [
         {
+          "internalType": "string",
+          "name": "parameter",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "InvalidParameter",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "int256",
           "name": "price",
           "type": "int256"
@@ -385,7 +401,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -461,6 +477,57 @@
     {
       "inputs": [
         {
+          "internalType": "bytes32",
+          "name": "nodeId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeKeys",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "runtimeValues",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "processWithRuntime",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int256",
+              "name": "price",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "__slotAvailableForFutureUse2",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct NodeOutput.Data",
+          "name": "node",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "enum NodeDefinition.NodeType",
           "name": "nodeType",
           "type": "uint8"
@@ -484,12 +551,12 @@
           "type": "bytes32"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
   "deployedOn": "router.OracleRouter",
-  "deployTxnHash": "0x3bbd399355a6faf4a7477d39aaa3730c424c2b8f6495dee7e29aad517bc57555",
+  "deployTxnHash": "0x9f07303163a901e0d728860994d1cd4eb0781a00da18973675e9de8a32c213b3",
   "contractName": "OracleRouter",
   "sourceName": "OracleRouter.sol"
 }
