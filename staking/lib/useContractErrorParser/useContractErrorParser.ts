@@ -25,7 +25,18 @@ export function useContractErrorParser(Contract?: ethers.Contract) {
         const contractAbi = Contract.interface.format(utils.FormatTypes.full) as string[];
         const newContract = new ethers.Contract(
           Contract.address,
-          Array.from(new Set(contractAbi.concat(ERC7412_ABI))), // uniq
+          Array.from(
+            new Set(
+              contractAbi.concat(ERC7412_ABI).concat([
+                // ERC721 errors
+                'error CannotSelfApprove(address addr)',
+                'error InvalidTransferRecipient(address addr)',
+                'error InvalidOwner(address addr)',
+                'error TokenDoesNotExist(uint256 id)',
+                'error TokenAlreadyMinted(uint256 id)',
+              ])
+            )
+          ), // uniq
           Contract.signer || Contract.provider
         );
         const errorParsed = newContract.interface.parseError(errorData);
