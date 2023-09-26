@@ -19,7 +19,7 @@ export const offchainTestnetEndpoint =
   process.env.PYTH_TESTNET_ENDPOINT || 'https://xc-testnet.pyth.network/';
 
 //TODO move to external contracts
-export const multiCallAddress = '0xa0266eE94Bff06D8b07e7b672489F21d2E05636e';
+export const multiCallAddress = '0xae788aaf52780741e12bf79ad684b91bb0ef4d92';
 export const multiCallAbi = [
   'function aggregate(tuple(address target, bytes callData)[] calls) payable returns (uint256 blockNumber, bytes[] returnData)',
   'function aggregate3(tuple(address target, bool allowFailure, bytes callData)[] calls) payable returns (tuple(bool success, bytes returnData)[] returnData)',
