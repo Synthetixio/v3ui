@@ -4,12 +4,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
-import { BigNumber, BytesLike } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
+import { notNil } from '../tsHelpers';
 
 export const useDeposit = ({
   accountId,
@@ -60,52 +61,35 @@ export const useDeposit = ({
         // create account only when no account exists
         const createAccount = accountId
           ? undefined
-          : CoreProxy.interface.encodeFunctionData('createAccount(uint128)', [BigNumber.from(id)]);
+          : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
 
         const availableCollateral = accountCollateral?.availableCollateral || wei(0);
-
         // optionally deposit if available collateral not enough
         const deposit = availableCollateral.gte(collateralChange)
           ? undefined
-          : CoreProxy.interface.encodeFunctionData('deposit', [
+          : CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
               collateralTypeAddress,
-              collateralChange.sub(availableCollateral).toBN(), // only deposit what's needed
-            ]);
-
-        const delegate = CoreProxy.interface.encodeFunctionData('delegateCollateral', [
+              collateralChange.sub(availableCollateral).toBN() // only deposit what's needed
+            );
+        const delegate = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(id),
           BigNumber.from(poolId),
           collateralTypeAddress,
           currentCollateral.add(collateralChange).toBN(),
-          wei(1).toBN(),
-        ]);
-
-        const calls = [createAccount, deposit, delegate].filter(Boolean) as BytesLike[];
-
-        const gasPricesPromised = getGasPrice({ provider });
-        const gasLimitPromised = CoreProxy.estimateGas.multicall(calls);
-        const populatedTxnPromised = CoreProxy.populateTransaction.multicall(calls, {
-          gasLimit: gasLimitPromised,
-        });
-        const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
-          gasPricesPromised,
-          gasLimitPromised,
-          populatedTxnPromised,
-        ]);
+          wei(1).toBN()
+        );
+        const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
+        const erc7412Tx = await withERC7412(CoreProxy.provider, calls);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
-          gasLimit,
+          gasLimit: erc7412Tx.gasLimit,
           gasPrices,
           gasSpeed,
         });
 
-        const txn = await signer.sendTransaction(
-          await withERC7412(CoreProxy.provider, {
-            ...populatedTxn,
-            ...gasOptionsForTransaction,
-          })
-        );
+        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
