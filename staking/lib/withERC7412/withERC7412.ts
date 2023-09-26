@@ -129,14 +129,13 @@ export const withERC7412 = async (
         const initialCall = multicallCalls[0];
         // The normal flow would go in here, then if the estimate call fail, we catch the error and handle ERC7412
         const gasLimit = await provider.estimateGas(initialCall);
-        initialCall.gasLimit = gasLimit;
-        return initialCall;
+
+        return { ...initialCall, gasLimit };
       }
       // If we're here it means we now added a tx to do .
       const multicallTxn = makeMulticall(multicallCalls, from);
       const gasLimit = await provider.estimateGas(multicallTxn);
-      multicallTxn.gasLimit = gasLimit;
-      return multicallTxn;
+      return { ...multicallTxn, gasLimit };
     } catch (error: any) {
       const parsedError = parseError(error);
 
