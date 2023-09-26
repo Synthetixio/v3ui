@@ -5595,6 +5595,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/tsHelpers@workspace:*, @snx-v3/tsHelpers@workspace:staking/lib/tsHelpers":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/tsHelpers@workspace:staking/lib/tsHelpers"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:staking/lib/txnReducer":
   version: 0.0.0-use.local
   resolution: "@snx-v3/txnReducer@workspace:staking/lib/txnReducer"
@@ -6075,9 +6081,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/withERC7412@workspace:staking/lib/withERC7412"
   dependencies:
-    "@ethersproject/contracts": ^5.7.0
     "@pythnetwork/pyth-evm-js": ^1.29.0
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     ethers: ^5.7.2

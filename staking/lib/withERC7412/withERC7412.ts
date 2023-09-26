@@ -9,6 +9,7 @@ import {
   offchainTestnetEndpoint,
 } from '@snx-v3/constants';
 import { NETWORKS } from '@snx-v3/useBlockchain';
+import type { Modify } from '@snx-v3/tsHelpers';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -16,6 +17,9 @@ export const ERC7412_ABI = [
   'function oracleId() view external returns (bytes32)',
   'function fulfillOracleQuery(bytes calldata signedOffchainData) payable external',
 ];
+
+type TransactionRequest = ethers.providers.TransactionRequest;
+type TransactionRequestWithGasLimit = Modify<TransactionRequest, { gasLimit: ethers.BigNumber }>;
 
 const fetchOffchainData = async (oracleQuery: string, isTestnet = false) => {
   const priceService = new EvmPriceServiceConnection(
@@ -39,7 +43,7 @@ const fetchOffchainData = async (oracleQuery: string, isTestnet = false) => {
   );
 };
 
-function makeMulticall(calls: TransactionRequest[], senderAddr: string) {
+function makeMulticall(calls: TransactionRequest[], senderAddr: string): TransactionRequest {
   const encodedData = multicallInterface.encodeFunctionData('aggregate3Value', [
     calls.map((call) => ({
       target: call.to,
@@ -61,8 +65,6 @@ function makeMulticall(calls: TransactionRequest[], senderAddr: string) {
     value: totalValue,
   };
 }
-
-type TransactionRequest = { to?: string; from?: string; value?: ethers.BigNumber; data?: string };
 
 const ERC7412ErrorSchema = z.union([
   z.object({
@@ -104,7 +106,7 @@ export const withERC7412 = async (
   provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
   isTestnet?: boolean
-): Promise<TransactionRequest> => {
+): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
   let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
@@ -124,14 +126,16 @@ export const withERC7412 = async (
         isTestnet = Object.values(NETWORKS).find((x) => x.id === network.chainId)?.isTestnet;
       }
       if (multicallCalls.length == 1) {
+        const initialCall = multicallCalls[0];
         // The normal flow would go in here, then if the estimate call fail, we catch the error and handle ERC7412
-        await provider.estimateGas(multicallCalls[0]);
-
-        return multicallCalls[0];
+        const gasLimit = await provider.estimateGas(initialCall);
+        initialCall.gasLimit = gasLimit;
+        return initialCall;
       }
       // If we're here it means we now added a tx to do .
       const multicallTxn = makeMulticall(multicallCalls, from);
-      await provider.estimateGas(multicallTxn);
+      const gasLimit = await provider.estimateGas(multicallTxn);
+      multicallTxn.gasLimit = gasLimit;
       return multicallTxn;
     } catch (error: any) {
       const parsedError = parseError(error);
