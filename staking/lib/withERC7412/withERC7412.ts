@@ -1,5 +1,4 @@
-import { Contract } from '@ethersproject/contracts';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
@@ -75,6 +74,24 @@ const ERC7412ErrorSchema = z.union([
     args: z.tuple([ZodBigNumber]),
   }),
 ]);
+const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
+
+const parseError = (error: any) => {
+  const errorData = error.data || error.error.data.data;
+
+  try {
+    const decodedError = erc7412Interface.parseError(errorData);
+    return ERC7412ErrorSchema.parse(decodedError);
+  } catch (parseError) {
+    console.error(
+      'Error is not a ERC7412 error, re-throwing original error, for better parsing. Parse error reason: ',
+      parseError
+    );
+    // If we cant parse it, throw the original error
+    throw error;
+  }
+};
+
 // simulate w/ wETH contract because it will have eth balance
 // This is useful when we do read/static calls but still need an balance for the price update
 // TODO: this probably need to be network aware, maybe look into a different solution even.
@@ -85,14 +102,21 @@ const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006'
  */
 export const withERC7412 = async (
   provider: ethers.providers.Provider,
-  tx: TransactionRequest,
+  tx: TransactionRequest | TransactionRequest[],
   isTestnet?: boolean
 ): Promise<TransactionRequest> => {
-  tx.from = tx.from || getDefaultFromAddress();
-  if (tx.to === undefined) {
-    throw Error('tx missing to or from');
+  const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
+  // eslint-disable-next-line prefer-const
+  let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
+
+  if (multicallCalls.some((x) => !x.to)) {
+    throw Error(`Make sure all txs have 'to' field set`);
   }
-  let multicallCalls: TransactionRequest[] = [tx];
+  if (multicallCalls.some((x) => !x.from)) {
+    throw Error(`Make sure all txs have 'from' field set`);
+  }
+  const from = multicallCalls[0].from as string;
+
   while (true) {
     try {
       if (isTestnet === undefined) {
@@ -106,42 +130,37 @@ export const withERC7412 = async (
         return multicallCalls[0];
       }
       // If we're here it means we now added a tx to do .
-      const multicallTxn = makeMulticall(multicallCalls, tx.from);
+      const multicallTxn = makeMulticall(multicallCalls, from);
       await provider.estimateGas(multicallTxn);
       return multicallTxn;
     } catch (error: any) {
-      const errorData = error.data || error.error.data.data;
+      const parsedError = parseError(error);
 
-      const contract = new Contract(tx.to, ERC7412_ABI, provider);
-      const parseResult = ERC7412ErrorSchema.safeParse(contract.interface.parseError(errorData));
-      if (!parseResult.success) throw error;
-
-      const parsedError = parseResult.data;
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
 
         const signedRequiredData = await fetchOffchainData(oracleQuery, isTestnet);
-
         const newTransactionRequest = {
-          from: tx.from,
+          from,
           to: oracleAddress,
           data: new ethers.utils.Interface(ERC7412_ABI).encodeFunctionData('fulfillOracleQuery', [
             signedRequiredData,
           ]),
           // If from is set to the default address we can add a value directly, before getting FeeRequired revert.
           // This will be a static call so no money would be withdrawn either way.
-          value: tx.from === getDefaultFromAddress() ? ethers.utils.parseEther('0.1') : undefined,
+          value:
+            from === getDefaultFromAddress() ? ethers.utils.parseEther('0.1') : BigNumber.from(0),
         };
-        const lastElementIndex = multicallCalls.length - 1;
-        const initialElements = multicallCalls.slice(0, lastElementIndex);
-        const lastElement = multicallCalls[lastElementIndex];
+
         // If we get OracleDataRequired, add an extra transaction request just before the last element
-        multicallCalls = [...initialElements, newTransactionRequest, lastElement];
+        multicallCalls.splice(
+          multicallCalls.length - initialMulticallLength,
+          0,
+          newTransactionRequest
+        );
       } else if (parsedError.name === 'FeeRequired') {
         const requiredFee = parsedError.args[0];
-        const secondLastIndex = multicallCalls.length - 2;
-        // If we got a FeeRequired revert we need to add fee to the fulfillOracleQuery call
-        multicallCalls[secondLastIndex].value = requiredFee;
+        multicallCalls[multicallCalls.length - initialMulticallLength - 1].value = requiredFee;
       } else {
         throw error;
       }
@@ -151,13 +170,14 @@ export const withERC7412 = async (
 export const multicallInterface = new ethers.utils.Interface(multiCallAbi);
 
 /**
- * This can be used to to reads plus decoding simple
+ * This can be used to to reads plus decoding simple. The return type will be whatever the type of the decode function is.
  */
 export async function erc7412Call<T>(
   provider: ethers.providers.Provider,
   txRequest: TransactionRequest,
   decode: (x: string) => T
 ) {
+  txRequest.from = txRequest.from || getDefaultFromAddress();
   const newCall = await withERC7412(provider, txRequest);
   const res = await provider.call(newCall);
   const encoded =
