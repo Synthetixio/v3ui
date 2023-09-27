@@ -133,18 +133,15 @@ export function useRewards(
 
       const hydratedResponse = claimResponse.map((amount, index) => {
         const distributor = distributorsToQuery[index];
-        const claimableAmount = wei(amount);
-
         return {
           address: distributor.address,
-          claimableAmount,
+          amount,
         };
       });
 
       const balances = result.map(({ distributorAddress, address, name, symbol }) => {
         const claimableAmount =
-          hydratedResponse.find((x) => x.address === distributorAddress)?.claimableAmount || wei(0);
-
+          hydratedResponse.find((x) => x.address === distributorAddress)?.amount || wei(0);
         return {
           address,
           name,

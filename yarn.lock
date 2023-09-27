@@ -5669,6 +5669,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards"
+  dependencies:
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
+    react: ^18.2.0
+    zod: ^3.21.4
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useCollateralTypes@workspace:*, @snx-v3/useCollateralTypes@workspace:staking/lib/useCollateralTypes":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCollateralTypes@workspace:staking/lib/useCollateralTypes"
