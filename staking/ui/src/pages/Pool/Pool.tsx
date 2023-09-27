@@ -17,8 +17,8 @@ export const PoolUi: FC<{
   CollateralSection: FC;
   MarketSection: FC;
   isLoading: boolean;
-  Rewards?: RewardsType;
-}> = ({ PoolHeader, CollateralSection, MarketSection, isLoading }) => {
+  rewards?: RewardsType;
+}> = ({ PoolHeader, CollateralSection, MarketSection, isLoading, rewards }) => {
   return (
     <>
       <HomeLink />
@@ -30,7 +30,7 @@ export const PoolUi: FC<{
         </Box>
         <Box flexGrow={1}>
           <MarketSection />
-          <Rewards mt={4} isLoading={isLoading} />
+          <Rewards mt={4} isLoading={isLoading} rewards={rewards} />
         </Box>
       </Flex>
     </>
@@ -58,7 +58,7 @@ export const Pool = () => {
     !isInitialQueriesLoading
   );
 
-  console.log('Pool data', poolData, rewardsData);
+  // console.log('Pool data', poolData, rewardsData);
 
   const isLoading = isRewardsLoading || isInitialQueriesLoading;
 
@@ -75,7 +75,7 @@ export const Pool = () => {
         CollateralSection={CollateralSection}
         MarketSection={MarketSection}
         isLoading={isLoading}
-        Rewards={rewardsData}
+        rewards={rewardsData}
       />
     </>
   );

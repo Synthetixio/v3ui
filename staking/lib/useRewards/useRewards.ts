@@ -1,6 +1,6 @@
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
-import { BigNumber, utils } from 'ethers';
+import { utils } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
@@ -109,10 +109,10 @@ export function useRewards(
         };
       });
 
-      console.log('Addresses', addresses, 'Result', result);
+      // console.log('Addresses', addresses, 'Result', result);
 
       try {
-        console.log('Result', result);
+        // console.log('Result', result);
 
         // // Multicall version
         // const calls = distributorResult.map(({ address }) =>

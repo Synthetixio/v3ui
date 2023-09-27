@@ -108,7 +108,7 @@ export const Manage = () => {
     !isInitialQueriesLoading
   );
 
-  console.log('Pool data', poolData);
+  // console.log('Pool data', poolData);
 
   const isLoading = isRewardsLoading || isInitialQueriesLoading;
 
