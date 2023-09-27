@@ -105,8 +105,10 @@ const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006'
 export const withERC7412 = async (
   provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
-  isTestnet?: boolean
+  isTestnet?: boolean,
+  logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
+  console.log('withERC7412');
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
   let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
@@ -120,6 +122,8 @@ export const withERC7412 = async (
   const from = multicallCalls[0].from as string;
 
   while (true) {
+    console.log(logLabel, ': while loop iteration');
+
     try {
       if (isTestnet === undefined) {
         const network = await provider.getNetwork();
@@ -163,7 +167,8 @@ export const withERC7412 = async (
         );
       } else if (parsedError.name === 'FeeRequired') {
         const requiredFee = parsedError.args[0];
-        multicallCalls[multicallCalls.length - initialMulticallLength - 1].value = requiredFee;
+        const txToUpdate = multicallCalls[multicallCalls.length - initialMulticallLength - 1];
+        txToUpdate.value = txToUpdate.value ? requiredFee.add(txToUpdate.value) : requiredFee;
       } else {
         throw error;
       }
@@ -173,20 +178,35 @@ export const withERC7412 = async (
 export const multicallInterface = new ethers.utils.Interface(multiCallAbi);
 
 /**
- * This can be used to to reads plus decoding simple. The return type will be whatever the type of the decode function is.
+ * This can be used to do reads plus decoding. The return type will be whatever the type of the decode function is. And the arguments passed will have the multicall decoded and price updates removed
  */
 export async function erc7412Call<T>(
   provider: ethers.providers.Provider,
-  txRequest: TransactionRequest,
-  decode: (x: string) => T
+  txRequests: TransactionRequest | TransactionRequest[],
+  decode: (x: string[] | string) => T,
+  logLabel?: string
 ) {
-  txRequest.from = txRequest.from || getDefaultFromAddress();
-  const newCall = await withERC7412(provider, txRequest);
-  const res = await provider.call(newCall);
-  const encoded =
-    newCall.to === multiCallAddress
-      ? multicallInterface.decodeFunctionResult('aggregate3Value', res)[0].at(-1).returnData // We only return the last call, no need to return the price update calls
-      : res;
+  const reqs = [txRequests].flat();
+  for (const txRequest of reqs) {
+    txRequest.from = txRequest.from || getDefaultFromAddress();
+  }
 
-  return decode(encoded);
+  const newCall = await withERC7412(provider, reqs, true, logLabel);
+
+  const res = await provider.call(newCall);
+
+  if (newCall.to === multiCallAddress) {
+    // If this was a multicall, deode and remove price updates.
+    // Since nesting multicalls dont work, we can assume that txRequests would have a non multicall call "to", if no price update was needed
+    const decodedMultiCall: { returnData: string }[] = multicallInterface.decodeFunctionResult(
+      'aggregate3Value',
+      res
+    )[0];
+
+    // Now we wanna remove the price updates
+    const startIndex = decodedMultiCall.length - reqs.length;
+    return decode(decodedMultiCall.slice(startIndex).map((x) => x.returnData));
+  }
+
+  return decode(res);
 }
