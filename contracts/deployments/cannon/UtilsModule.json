@@ -1,5 +1,5 @@
 {
-  "address": "0x4d8eB20DE56c61DE95b62D2DD5242EedE0b23039",
+  "address": "0x839A4bF16C09a5Ec7a4aED25058D8a77E1517689",
   "abi": [
     {
       "inputs": [
@@ -66,7 +66,7 @@
       ],
       "name": "configureChainlinkCrossChain",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -79,7 +79,7 @@
       ],
       "name": "configureOracleManager",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -154,7 +154,7 @@
       ],
       "name": "setConfig",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -178,7 +178,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -203,7 +203,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x49be821c3b4cfcb433a7875f38c9cdbeb6d7a104430faddf108e35eebfe004bf",
+  "deployTxnHash": "0x705d619e54be11406fb33b21456f960134dccf5689b0a30e558e7cbaee11c4c7",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"

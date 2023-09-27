@@ -1,5 +1,5 @@
 {
-  "address": "0xf160B3173a14Cd7464E1CBe5fbAEB4c90da3Ad39",
+  "address": "0xC2197e97DF33DFE7edA8FE6b34E433f421AeAdf1",
   "abi": [
     {
       "inputs": [
@@ -825,7 +825,7 @@
     }
   ],
   "deployedOn": "router.USDRouter",
-  "deployTxnHash": "0xcadada407ae96bb504cd0e90fa179391249e4d70ac3d592bab5e01dfbaf903a3",
+  "deployTxnHash": "0xce15cd155e579c43d91cc06bc3e320b40b305f86cbb387b182648e69a591f83c",
   "contractName": "USDRouter",
   "sourceName": "USDRouter.sol"
 }

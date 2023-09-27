@@ -1,5 +1,5 @@
 {
-  "address": "0x821fb3906dce995FCaaA6856C91F0a264122f811",
+  "address": "0x2380fe5d70eb9Ddec504e626A5fE5aE2cf443489",
   "abi": [
     {
       "inputs": [
@@ -267,11 +267,6 @@
           "internalType": "address",
           "name": "collateralType",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "collateralAmount",
-          "type": "uint256"
         }
       ],
       "name": "getCollateralPrice",
@@ -288,7 +283,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xd6808d86158635ac77f936c09b6a21384ecd4a0686f3757b6e0d16677a5dc4d9",
+  "deployTxnHash": "0x6ef3d549079c906fa3631e19e9f4dde2d87b3044822d763d3cc2b16cb114308b",
   "sourceName": "contracts/modules/core/CollateralConfigurationModule.sol",
   "contractName": "CollateralConfigurationModule",
   "deployedOn": "contract.CollateralConfigurationModule"

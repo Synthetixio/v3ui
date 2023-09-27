@@ -1,5 +1,5 @@
 {
-  "address": "0xdABBF694886Aa20d53837c0dc6B978B6D4f14D20",
+  "address": "0x74B4709D8eFAA93918D78cdC79e92d97B6C7FC7C",
   "abi": [
     {
       "inputs": [],
@@ -282,7 +282,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -306,7 +306,7 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -363,7 +363,7 @@
           "type": "int256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -464,7 +464,7 @@
           "type": "int128"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -488,7 +488,7 @@
           "type": "uint128[]"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -628,7 +628,7 @@
           "type": "uint128"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -646,7 +646,7 @@
       ],
       "name": "setMarketMinDelegateTime",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -664,7 +664,7 @@
       ],
       "name": "setMinLiquidityRatio",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -693,13 +693,13 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xe3f18a5a696a289b492b978810516316d61f4863378834e8d7b4176c10e7301d",
+  "deployTxnHash": "0xd0592946724fdeb1d94b1d9fe830a321cce0462019b2b7e5b3a3dc07c392bfb3",
   "sourceName": "contracts/modules/core/MarketManagerModule.sol",
   "contractName": "MarketManagerModule",
   "deployedOn": "contract.MarketManagerModule"

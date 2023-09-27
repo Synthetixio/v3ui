@@ -1,6 +1,6 @@
 {
-  "generator": "cannon cli 2.5.4",
-  "timestamp": 1694492423,
+  "generator": "cannon cli 2.7.1",
+  "timestamp": 1695772388,
   "def": {
     "name": "synthetix-local",
     "version": "0.0.1",
@@ -75,7 +75,24 @@
             "arg": 0
           }
         },
-        "depends": ["provision.synthetix", "provision.collateralChainlinkMock"]
+        "depends": [
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock",
+          "provision.synthetix",
+          "provision.collateralChainlinkMock"
+        ]
       },
       "configureTknCollateral": {
         "target": ["synthetix.CoreProxy"],
@@ -92,7 +109,31 @@
             "depositingEnabled": true
           }
         ],
-        "depends": ["invoke.registerCollateralPriceNode", "provision.collateralToken"]
+        "depends": [
+          "invoke.registerCollateralPriceNode",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "invoke.registerCollateralPriceNode"
+        ]
       },
       "allowAllRegisterMarket": {
         "target": ["synthetix.CoreProxy"],
@@ -101,7 +142,16 @@
         },
         "func": "setFeatureFlagAllowAll",
         "args": ["<%= formatBytes32String('registerMarket') %>", true],
-        "depends": ["provision.synthetix"]
+        "depends": [
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "allowAllCreatePool": {
         "target": ["synthetix.CoreProxy"],
@@ -110,34 +160,74 @@
         },
         "func": "setFeatureFlagAllowAll",
         "args": ["<%= formatBytes32String('createPool') %>", true],
-        "depends": ["provision.synthetix"]
+        "depends": [
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "create_default_pool": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "createPool",
         "args": ["<%= settings.defaultPoolId %>", "<%= settings.user %>"],
-        "depends": ["invoke.allowAllCreatePool"]
+        "depends": [
+          "invoke.allowAllCreatePool",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "configure_default_pool_name": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "setPoolName",
         "args": ["<%= settings.defaultPoolId %>", "First Local Pool"],
-        "depends": ["invoke.create_default_pool"]
+        "depends": [
+          "invoke.create_default_pool",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "configure_default_pool_as_preferred_pool": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "setPreferredPool",
         "args": ["<%= settings.defaultPoolId %>"],
-        "depends": ["invoke.create_default_pool"]
+        "depends": [
+          "invoke.create_default_pool",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "mintCollateral": {
         "target": ["collateralToken.MintableToken"],
         "func": "mint",
         "args": ["<%= parseEther('10000') %>", "<%= settings.user %>"],
-        "depends": ["provision.collateralToken"]
+        "depends": [
+          "provision.collateralToken",
+          "provision.collateralToken",
+          "provision.collateralToken"
+        ]
       },
       "createAccount": {
         "target": ["synthetix.CoreProxy"],
@@ -150,7 +240,16 @@
             "arg": 0
           }
         },
-        "depends": ["provision.synthetix"]
+        "depends": [
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "approveDeposit": {
         "target": ["collateralToken.MintableToken"],
@@ -160,7 +259,24 @@
           "<%= imports.synthetix.contracts.CoreProxy.address %>",
           "<%= parseEther('10000') %>"
         ],
-        "depends": ["provision.synthetix", "invoke.mintCollateral"]
+        "depends": [
+          "provision.synthetix",
+          "invoke.mintCollateral",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix"
+        ]
       },
       "depositCollateral": {
         "target": ["synthetix.CoreProxy"],
@@ -171,7 +287,14 @@
           "<%= imports.collateralToken.contracts.MintableToken.address %>",
           "<%= parseEther('1000') %>"
         ],
-        "depends": ["invoke.createAccount", "invoke.approveDeposit"]
+        "depends": [
+          "invoke.createAccount",
+          "invoke.approveDeposit",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken"
+        ]
       },
       "delegateCollateral": {
         "target": ["synthetix.CoreProxy"],
@@ -184,7 +307,13 @@
           "<%= parseEther('1000') %>",
           "<%= parseEther('1') %>"
         ],
-        "depends": ["invoke.depositCollateral"]
+        "depends": [
+          "invoke.depositCollateral",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken"
+        ]
       },
       "mintStablecoins": {
         "target": ["synthetix.CoreProxy"],
@@ -196,7 +325,13 @@
           "<%= imports.collateralToken.contracts.MintableToken.address %>",
           "<%= parseEther('500') %>"
         ],
-        "depends": ["invoke.delegateCollateral"]
+        "depends": [
+          "invoke.delegateCollateral",
+          "provision.synthetix",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "provision.collateralToken"
+        ]
       },
       "setAccountTimeoutWithdraw": {
         "target": ["synthetix.CoreProxy"],
@@ -206,14 +341,14 @@
           "<%= formatBytes32String('accountTimeoutWithdraw') %>",
           "<%= hexZeroPad(hexlify(0), 32) %>"
         ],
-        "depends": ["provision.synthetix"]
+        "depends": ["provision.synthetix", "provision.synthetix", "provision.synthetix"]
       },
       "setMinimumLiquidityRatio": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "setMinLiquidityRatio(uint256)",
         "args": ["<%= parseEther('2') %>"],
-        "depends": ["provision.synthetix"]
+        "depends": ["provision.synthetix", "provision.synthetix", "provision.synthetix"]
       },
       "createSynth": {
         "target": ["spotMarket.SpotMarketProxy"],
@@ -226,7 +361,16 @@
             "arg": 0
           }
         },
-        "depends": ["provision.spotMarket"]
+        "depends": [
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket",
+          "provision.spotMarket"
+        ]
       },
       "updateSynthPriceData": {
         "target": ["spotMarket.SpotMarketProxy"],
@@ -237,14 +381,41 @@
           "<%= extras.tkn_oracle_id %>",
           "<%= extras.tkn_oracle_id %>"
         ],
-        "depends": ["invoke.createSynth", "invoke.registerCollateralPriceNode"]
+        "depends": [
+          "invoke.createSynth",
+          "invoke.registerCollateralPriceNode",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "invoke.registerCollateralPriceNode",
+          "invoke.registerCollateralPriceNode",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "invoke.registerCollateralPriceNode",
+          "invoke.registerCollateralPriceNode"
+        ]
       },
       "addAtomicFixedFee": {
         "target": ["spotMarket.SpotMarketProxy"],
         "func": "setAtomicFixedFee",
         "from": "<%= settings.user %>",
         "args": ["<%= extras.synthMarketId %>", "<%= parseEther('0.01') %>"],
-        "depends": ["invoke.createSynth"]
+        "depends": [
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.spotMarket",
+          "invoke.createSynth"
+        ]
       },
       "setMarketCollateralSupplyCap": {
         "target": ["synthetix.CoreProxy"],
@@ -255,7 +426,16 @@
           "<%= imports.collateralToken.contracts.MintableToken.address %>",
           "<%= MaxUint256 %>"
         ],
-        "depends": ["invoke.createSynth", "provision.collateralToken"]
+        "depends": [
+          "invoke.createSynth",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "invoke.createSynth",
+          "provision.collateralToken",
+          "provision.synthetix",
+          "invoke.createSynth",
+          "provision.collateralToken"
+        ]
       },
       "initializeWrapper": {
         "target": ["spotMarket.SpotMarketProxy"],
@@ -266,7 +446,16 @@
           "<%= imports.collateralToken.contracts.MintableToken.address %>",
           "<%= MaxUint256 %>"
         ],
-        "depends": ["invoke.setMarketCollateralSupplyCap", "invoke.mintStablecoins"]
+        "depends": [
+          "invoke.setMarketCollateralSupplyCap",
+          "invoke.mintStablecoins",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.collateralToken",
+          "provision.spotMarket",
+          "invoke.createSynth",
+          "provision.collateralToken"
+        ]
       },
       "setPoolConfiguration": {
         "target": ["synthetix.CoreProxy"],
@@ -285,7 +474,11 @@
         "depends": [
           "invoke.create_default_pool",
           "invoke.updateSynthPriceData",
-          "invoke.mintStablecoins"
+          "invoke.mintStablecoins",
+          "provision.synthetix",
+          "invoke.createSynth",
+          "provision.synthetix",
+          "invoke.createSynth"
         ]
       },
       "withdrawStablecoins": {
@@ -300,7 +493,11 @@
         "depends": [
           "invoke.approveAnotherPool",
           "invoke.initializeWrapper",
-          "invoke.setPoolConfiguration"
+          "invoke.setPoolConfiguration",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
         ]
       },
       "resetAccountTimeoutWithdraw": {
@@ -311,28 +508,46 @@
           "<%= formatBytes32String('accountTimeoutWithdraw') %>",
           "<%= hexZeroPad(hexlify(86400), 32) %>"
         ],
-        "depends": ["invoke.withdrawStablecoins"]
+        "depends": ["invoke.withdrawStablecoins", "provision.synthetix", "provision.synthetix"]
       },
       "createAnotherPool": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "createPool",
         "args": ["<%= settings.anotherPoolId %>", "<%= settings.user %>"],
-        "depends": ["invoke.allowAllCreatePool"]
+        "depends": [
+          "invoke.allowAllCreatePool",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       },
       "setAnotherPoolName": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "setPoolName",
         "args": ["<%= settings.anotherPoolId %>", "Another Pool"],
-        "depends": ["invoke.createAnotherPool"]
+        "depends": ["invoke.createAnotherPool", "provision.synthetix", "provision.synthetix"]
       },
       "approveAnotherPool": {
         "target": ["synthetix.CoreProxy"],
         "from": "<%= settings.user %>",
         "func": "addApprovedPool",
         "args": ["<%= settings.anotherPoolId %>"],
-        "depends": ["invoke.createAnotherPool"]
+        "depends": [
+          "invoke.createAnotherPool",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix",
+          "provision.synthetix"
+        ]
       }
     }
   },
