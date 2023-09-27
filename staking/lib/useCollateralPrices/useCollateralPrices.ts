@@ -3,43 +3,42 @@ import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { BigNumber } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
 async function loadPrices({
   CoreProxy,
   collateralAddresses,
-  network,
 }: {
   CoreProxy: CoreProxyType;
   collateralAddresses: string[];
-  network: ReturnType<typeof useNetwork>;
 }) {
-  const calls = collateralAddresses.map((address) => {
-    const args = network.name === 'base-goerli' ? [address, BigNumber.from(1)] : [address];
-    // Remove after release, base should be aligned with other networks
-    // @ts-ignore
-    return CoreProxy.interface.encodeFunctionData('getCollateralPrice', args);
-  });
-  const multicallData = CoreProxy.interface.encodeFunctionData('multicall', [calls]);
+  if (collateralAddresses.length === 0) return {};
+  const calls = await Promise.all(
+    collateralAddresses.map((address) => {
+      return CoreProxy.populateTransaction.getCollateralPrice(address);
+    })
+  );
+
   const prices = await erc7412Call(
     CoreProxy.provider,
-    { data: multicallData, to: CoreProxy.address },
-
+    calls,
     (multicallEncoded) => {
-      const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
-        'multicall',
-        multicallEncoded
-      )[0] as string[];
+      if (Array.isArray(multicallEncoded)) {
+        return multicallEncoded.map((encoded) => {
+          const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+            'getCollateralPrice',
+            encoded
+          )[0];
 
-      return pricesEncoded.map((priceEncoded) =>
-        PriceSchema.parse(
-          CoreProxy.interface.decodeFunctionResult('getCollateralPrice', priceEncoded)[0]
-        )
-      );
-    }
+          return PriceSchema.parse(pricesEncoded);
+        });
+      }
+      throw Error('Expected array got: ' + typeof multicallEncoded);
+    },
+    'collateralPrices' // TODO label for logs, remove me
   );
 
   const collateralPriceByAddress = collateralAddresses.reduce(
