@@ -39,26 +39,35 @@ export const loadPosition = async ({
   poolId: string;
   tokenAddress: string;
 }) => {
-  const calls = [
-    CoreProxy.interface.encodeFunctionData('getPositionCollateral', [
-      accountId,
-      poolId,
-      tokenAddress,
-    ]),
-    CoreProxy.interface.encodeFunctionData('getPositionDebt', [accountId, poolId, tokenAddress]),
-  ];
+  const calls = await Promise.all([
+    CoreProxy.populateTransaction.getPositionCollateral(accountId, poolId, tokenAddress),
+    CoreProxy.populateTransaction.getPositionDebt(accountId, poolId, tokenAddress),
+  ]);
 
-  const [bytesCollateral, bytesDebt] = await CoreProxy.callStatic.multicall(calls);
-  const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
-    'getPositionCollateral',
-    bytesCollateral
+  const x = await erc7412Call(
+    CoreProxy.provider,
+    calls,
+    (multicallEncoded) => {
+      if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
+        const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
+          'getPositionCollateral',
+          multicallEncoded[0]
+        );
+        const decodedDebt = CoreProxy.interface.decodeFunctionResult(
+          'getPositionDebt',
+          multicallEncoded[1]
+        )[0];
+        return {
+          debt: DebtSchema.parse(decodedDebt),
+          collateral: PositionCollateralSchema.parse({ ...decodedCollateral }),
+        };
+      }
+      throw Error('Expected array with two items');
+    },
+    `loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress}`
   );
-  const decodedDebt = CoreProxy.interface.decodeFunctionResult('getPositionDebt', bytesDebt)[0];
-
-  return {
-    debt: DebtSchema.parse(decodedDebt),
-    collateral: PositionCollateralSchema.parse({ ...decodedCollateral }),
-  };
+  console.log(`loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress} done`);
+  return x;
 };
 
 export const useLiquidityPosition = ({
