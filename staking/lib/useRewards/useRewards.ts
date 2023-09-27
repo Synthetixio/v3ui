@@ -1,6 +1,6 @@
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
-import { utils } from 'ethers';
+import { utils, BigNumber } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
@@ -115,26 +115,26 @@ export function useRewards(
         // console.log('Result', result);
 
         // // Multicall version
-        // const calls = distributorResult.map(({ address }) =>
-        //   CoreProxy.interface.encodeFunctionData('claimRewards', [
-        //     BigNumber.from(accountId),
-        //     BigNumber.from(poolId),
-        //     collateralAddress,
-        //     address,
-        //   ])
-        // );
+        const calls = distributorResult.map(({ address }) =>
+          CoreProxy.interface.encodeFunctionData('claimRewards', [
+            BigNumber.from(accountId),
+            BigNumber.from(poolId),
+            collateralAddress,
+            address,
+          ])
+        );
 
-        // const response = await CoreProxy.callStatic.multicall(calls);
+        const response = await CoreProxy.callStatic.multicall(calls);
 
-        // const decoded = response.map(
-        //   (bytes) => CoreProxy.interface.decodeFunctionResult('claimRewards', bytes)[0]
-        // );
+        const decoded = response.map(
+          (bytes) => CoreProxy.interface.decodeFunctionResult('claimRewards', bytes)[0]
+        );
 
-        // console.log('Decoded', decoded);
+        console.log('Decoded', decoded);
 
         return RewardsResponseSchema.parse(result);
       } catch (error) {
-        // console.error(error.message);
+        console.error(error.message);
         return RewardsResponseSchema.parse(result);
       }
     },
