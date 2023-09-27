@@ -53,33 +53,31 @@ async function loadPrices({
   return collateralPriceByAddress;
 }
 
-export const useCollateralPrices = (collateralAddresses?: string[]) => {
+export const useCollateralPrices = () => {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
+  const { data: collateralData } = useCollateralTypes();
+  console.log(
+    '[useCollateralPrices] Getting prices for:',
+    collateralData?.map((x) => x.symbol)
+  );
+  const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
+
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses),
     queryKey: [network.name, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
       if (!CoreProxy || !collateralAddresses) throw 'OMFG';
-      return await loadPrices({ CoreProxy, collateralAddresses, network });
+      return await loadPrices({ CoreProxy, collateralAddresses });
     },
   });
 };
 
 export const useCollateralPrice = (collateralAddress?: string) => {
-  const network = useNetwork();
-  const { data: CoreProxy } = useCoreProxy();
-  return useQuery({
-    enabled: Boolean(CoreProxy && collateralAddress),
-    queryKey: [network.name, 'CollateralPrices', { collateralAddress }],
-    queryFn: async () => {
-      if (!CoreProxy || !collateralAddress) throw 'OMFG';
-      const pricesByAddress = await loadPrices({
-        CoreProxy,
-        collateralAddresses: [collateralAddress],
-        network,
-      });
-      return pricesByAddress[collateralAddress];
-    },
-  });
+  const { data: pricesByAddress, error, isLoading } = useCollateralPrices();
+  return {
+    data: collateralAddress ? pricesByAddress?.[collateralAddress] : undefined,
+    isLoading,
+    error,
+  };
 };
