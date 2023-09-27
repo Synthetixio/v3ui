@@ -7,6 +7,9 @@ import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralIcon } from '@snx-v3/icons';
+import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
+import Wei, { wei } from '@synthetixio/wei';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 function VaultRowUi({
   collateralType,
@@ -16,6 +19,7 @@ function VaultRowUi({
   navigate,
   isConnected,
   openConnectModal,
+  collateralPrice,
 }: {
   collateralType: CollateralType;
   liquidityPosition?: LiquidityPosition;
@@ -24,7 +28,13 @@ function VaultRowUi({
   navigate: NavigateFunction;
   isConnected: boolean;
   openConnectModal?: () => void;
+  collateralPrice?: Wei;
 }) {
+  const collateralValue =
+    collateralPrice && liquidityPosition
+      ? liquidityPosition.collateralAmount.mul(collateralPrice)
+      : wei(0);
+  const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
   const hasLiquidity = accountId && liquidityPosition && liquidityPosition.collateralAmount.gt(0);
 
   return (
@@ -34,14 +44,17 @@ function VaultRowUi({
           <CollateralIcon width="40px" height="40px" symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
             <Text fontSize="sm" lineHeight="20px" fontWeight="500">
-              {liquidityPosition?.collateralValue.gt(0) ? (
-                <Amount value={liquidityPosition.collateralValue} prefix="$" />
+              {liquidityPosition?.collateralAmount.gt(0) && collateralPrice ? (
+                <Amount
+                  value={liquidityPosition.collateralAmount.mul(collateralPrice)}
+                  prefix="$"
+                />
               ) : (
                 '-'
               )}
             </Text>
             <Text fontSize="xs" color="gray.500">
-              {liquidityPosition?.collateralValue.gt(0) && (
+              {liquidityPosition?.collateralAmount.gt(0) && (
                 <Amount value={liquidityPosition.collateralAmount} />
               )}{' '}
               {collateralType.symbol}
@@ -52,13 +65,7 @@ function VaultRowUi({
       <Td>
         {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
       </Td>
-      <Td>
-        {liquidityPosition?.cRatio.gt(0) ? (
-          <Amount value={liquidityPosition.cRatio.mul(100)} suffix="%" />
-        ) : (
-          '-'
-        )}
-      </Td>
+      <Td>{cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}</Td>
       <Td>
         <Amount value={collateralType.issuanceRatioD18.mul(100)} suffix="%" />
       </Td>
@@ -116,6 +123,7 @@ export const VaultRow: FC<{ collateralType: CollateralType; poolId: string }> = 
     poolId,
     tokenAddress: collateralType?.tokenAddress,
   });
+  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
 
   const navigate = useNavigate();
   const isConnected = useIsConnected();
@@ -129,6 +137,7 @@ export const VaultRow: FC<{ collateralType: CollateralType; poolId: string }> = 
       navigate={navigate}
       isConnected={isConnected}
       openConnectModal={() => onboard.connectWallet()}
+      collateralPrice={collateralPrice}
     />
   );
 };

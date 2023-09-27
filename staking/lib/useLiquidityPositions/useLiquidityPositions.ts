@@ -5,7 +5,8 @@ import { usePools } from '@snx-v3/usePools';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useCollateralPrices } from '../useCollateralPrices';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;
@@ -29,9 +30,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
   const { data: CoreProxy } = useCoreProxy();
   const { data: pools } = usePools();
   const { data: collateralTypes } = useCollateralTypes();
-  const { data: collateralPriceByAddress } = useCollateralPrices(
-    collateralTypes?.map(({ tokenAddress }) => tokenAddress)
-  );
+  const { data: collateralPriceByAddress } = useCollateralPrices();
 
   const network = useNetwork();
 
@@ -55,16 +54,24 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         pools.map(async ({ id: poolId, name: poolName }) =>
           Promise.all(
             collateralTypes.map(async (collateralType) => {
+              console.log(`loading position for pool ${poolId} and token ${collateralType.symbol}`);
               const posRaw = await loadPosition({
                 CoreProxy,
                 accountId,
                 poolId,
                 tokenAddress: collateralType.tokenAddress,
               });
-              const { cRatio, collateralAmount, debt } = selectPosition(posRaw);
+              console.log(
+                `loading position for pool ${poolId} and token ${collateralType.symbol} done`
+              );
+
+              const { collateralAmount, debt } = selectPosition(posRaw);
+
               // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
               const price = collateralPriceByAddress?.[collateralType.tokenAddress];
               const collateralValue = price ? collateralAmount.mul(price) : wei(0);
+              const cRatio = calculateCRatio(debt, collateralValue);
+
               return {
                 id: `${poolId}-${collateralType.symbol}` as const,
                 accountId,

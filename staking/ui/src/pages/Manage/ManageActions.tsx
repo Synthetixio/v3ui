@@ -26,6 +26,8 @@ import { Undelegate } from './Undelegate';
 import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
+import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -131,11 +133,12 @@ export const ManageAction = () => {
     poolId: params.poolId,
     tokenAddress: collateralType?.tokenAddress,
   });
+  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
 
   const { isValid } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition.data?.collateralAmount,
-    collateralValue: liquidityPosition.data?.collateralValue,
+    collateralPrice,
     debt: liquidityPosition.data?.debt,
     collateralChange,
     debtChange,
@@ -163,8 +166,12 @@ export const ManageAction = () => {
     if (queryParams.get('manageAction')) return;
     if (!liquidityPosition.data) return;
     if (!collateralType) return;
+    if (!collateralPrice) return;
 
-    const cRatio = liquidityPosition.data.cRatio;
+    const cRatio = calculateCRatio(
+      liquidityPosition.data.debt,
+      liquidityPosition.data.collateralAmount.mul(collateralPrice)
+    );
     const canBorrow =
       liquidityPosition.data.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
 
@@ -186,7 +193,7 @@ export const ManageAction = () => {
 
     queryParams.set('manageAction', 'deposit');
     navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-  }, [collateralType, liquidityPosition.data, navigate]);
+  }, [collateralPrice, collateralType, liquidityPosition.data, navigate]);
 
   return (
     <>

@@ -6,7 +6,7 @@ import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatte
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
-import { useCollateralPrices } from '../../../../lib/useCollateralPrices';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {

@@ -158,7 +158,7 @@ export const Undelegate = () => {
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralValue: liquidityPosition?.collateralValue,
+    collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,

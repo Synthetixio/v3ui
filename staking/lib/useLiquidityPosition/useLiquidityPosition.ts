@@ -4,9 +4,10 @@ import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { erc7412Call } from '@snx-v3/withERC7412';
 
 const PositionCollateralSchema = z.object({
-  value: ZodBigNumber.transform((x) => wei(x)),
+  value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
   amount: ZodBigNumber.transform((x) => wei(x)),
 });
 const DebtSchema = ZodBigNumber.transform((x) => wei(x));
@@ -18,11 +19,8 @@ export const selectPosition = ({
   collateral: z.infer<typeof PositionCollateralSchema>;
   debt: z.infer<typeof DebtSchema>;
 }) => {
-  const cRatio = debt.eq(0) ? wei(0) : collateral.value.div(debt);
   return {
     collateralAmount: collateral.amount,
-    collateralValue: collateral.value,
-    cRatio,
     debt,
   };
 };

@@ -10,6 +10,8 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -35,10 +37,14 @@ export const ManageStatsUi: FC<{
   newCratio: Wei;
   newCollateralAmount: Wei;
   newDebt: Wei;
+  cRatio: Wei;
+  collateralValue: Wei;
   hasChanges: boolean;
 }> = ({
   liquidityPosition,
   collateralType,
+  collateralValue,
+  cRatio,
   newCollateralAmount,
   newCratio,
   newDebt,
@@ -64,7 +70,7 @@ export const ManageStatsUi: FC<{
         </Flex>
         <Text fontWeight="400" color="gray.500" fontSize="xs">
           Current Value:{' '}
-          {currency(liquidityPosition.collateralValue, {
+          {currency(collateralValue, {
             currency: 'USD',
             style: 'currency',
           })}
@@ -97,11 +103,7 @@ export const ManageStatsUi: FC<{
         <Flex justifyContent="space-between" alignItems="center">
           <ChangeStat
             // TODO, need a function to burn to target so dust debt not left over
-            value={
-              liquidityPosition.cRatio.lt(0.01) || liquidityPosition.cRatio.gt(50000)
-                ? wei(0)
-                : liquidityPosition.cRatio
-            }
+            value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
             newValue={newCratio}
             formatFn={(val: Wei) => currency(val, { style: 'percent' })}
             hasChanges={hasChanges}
@@ -126,17 +128,20 @@ export const ManageStats = () => {
     accountId: params.accountId,
     poolId: params.poolId,
   });
-
+  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
+  const collateralValue =
+    liquidityPosition?.collateralAmount.mul(collateralPrice || wei(0)) || wei(0);
+  const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralValue: liquidityPosition?.collateralValue,
+    collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
 
-  if (!liquidityPosition || !collateralType) return null; // TODO skeleton
+  if (!liquidityPosition || !collateralType || !collateralPrice) return null; // TODO skeleton
 
   return (
     <ManageStatsUi
@@ -146,6 +151,8 @@ export const ManageStats = () => {
       newCollateralAmount={newCollateralAmount}
       liquidityPosition={liquidityPosition}
       collateralType={collateralType}
+      cRatio={cRatio}
+      collateralValue={collateralValue}
     />
   );
 };

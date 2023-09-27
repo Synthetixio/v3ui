@@ -5,6 +5,7 @@ import { Button, Skeleton, Text } from '@chakra-ui/react';
 import { useNavigate, generatePath } from 'react-router-dom';
 import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
+import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 
 const AccountVaultCollateralUi: FC<{
   collateralValue: number;
@@ -60,14 +61,17 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
     poolId: params.poolId,
     tokenAddress: collateral?.tokenAddress,
   });
+  const { data: collateralPrice, isLoading: isLoadingCollateralPrice } = useCollateralPrice(
+    collateral?.tokenAddress
+  );
 
   if (!params.poolId || !params.accountId) return null;
   return (
     <AccountVaultCollateralUi
       collateralAmount={data?.collateralAmount.toNumber() || 0}
-      collateralValue={data?.collateralValue.toNumber() || 0}
+      collateralValue={collateralPrice?.toNumber() || 0}
       collateralSymbol={collateral.symbol}
-      isLoading={isLoading}
+      isLoading={isLoading || isLoadingCollateralPrice}
       poolId={params.poolId}
       accountId={params.accountId}
     />
