@@ -7,7 +7,6 @@ import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -201,11 +200,8 @@ export const CollateralSectionUi: FC<{
 export const CollateralSection = () => {
   const params = useParams();
 
-  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-  const { data: collateralTypes } = useCollateralTypes();
-  const { data: collateralPriceByAddress } = useCollateralPrices(
-    collateralTypes?.map(({ tokenAddress }) => tokenAddress)
-  );
+  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined); // TODO this needs ERC7412
+  const { data: collateralPriceByAddress } = useCollateralPrices();
 
   return (
     <CollateralSectionUi
