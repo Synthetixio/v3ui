@@ -107,7 +107,7 @@ export const abi = [
   'function configureCollateral(tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18) config)',
   'function getCollateralConfiguration(address collateralType) pure returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18))',
   'function getCollateralConfigurations(bool hideDisabled) view returns (tuple(bool depositingEnabled, uint256 issuanceRatioD18, uint256 liquidationRatioD18, uint256 liquidationRewardD18, bytes32 oracleNodeId, address tokenAddress, uint256 minDelegationD18)[])',
-  'function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)',
+  'function getCollateralPrice(address collateralType) view returns (uint256)',
   'error InsufficientCcipFee(uint256 requiredAmount, uint256 availableAmount)',
   'event TransferCrossChainInitiated(uint64 indexed destChainId, uint256 indexed amount, address sender)',
   'function transferCrossChain(uint64 destChainId, uint256 amount) payable returns (uint256 gasTokenUsed)',
@@ -243,7 +243,7 @@ export const abi = [
   'event DelegationUpdated(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 amount, uint256 leverage, address indexed sender)',
   'function delegateCollateral(uint128 accountId, uint128 poolId, address collateralType, uint256 newCollateralAmountD18, uint256 leverage)',
   'function getPosition(uint128 accountId, uint128 poolId, address collateralType) returns (uint256 collateralAmount, uint256 collateralValue, int256 debt, uint256 collateralizationRatio)',
-  'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
+  'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount)',
   'function getPositionCollateralRatio(uint128 accountId, uint128 poolId, address collateralType) returns (uint256)',
   'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) returns (int256 debt)',
   'function getVaultCollateral(uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
@@ -434,7 +434,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'configureCollateral((bool,uint256,uint256,uint256,bytes32,address,uint256))': FunctionFragment;
     'getCollateralConfiguration(address)': FunctionFragment;
     'getCollateralConfigurations(bool)': FunctionFragment;
-    'getCollateralPrice(address,uint256)': FunctionFragment;
+    'getCollateralPrice(address)': FunctionFragment;
     'transferCrossChain(uint64,uint256)': FunctionFragment;
     'burnUsd(uint128,uint128,address,uint256)': FunctionFragment;
     'mintUsd(uint128,uint128,address,uint256)': FunctionFragment;
@@ -765,10 +765,7 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'getCollateralConfiguration', values: [string]): string;
   encodeFunctionData(functionFragment: 'getCollateralConfigurations', values: [boolean]): string;
-  encodeFunctionData(
-    functionFragment: 'getCollateralPrice',
-    values: [string, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: 'getCollateralPrice', values: [string]): string;
   encodeFunctionData(
     functionFragment: 'transferCrossChain',
     values: [BigNumberish, BigNumberish]
@@ -2101,11 +2098,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[CollateralConfiguration.DataStructOutput[]]>;
 
-    getCollateralPrice(
-      collateralType: string,
-      collateralAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferCrossChain(
       destChainId: BigNumberish,
@@ -2495,7 +2488,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
     getPositionCollateralRatio(
       accountId: BigNumberish,
@@ -2771,11 +2764,7 @@ export interface CoreProxy extends BaseContract {
     overrides?: CallOverrides
   ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
-  getCollateralPrice(
-    collateralType: string,
-    collateralAmount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   transferCrossChain(
     destChainId: BigNumberish,
@@ -3156,7 +3145,7 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+  ): Promise<BigNumber>;
 
   getPositionCollateralRatio(
     accountId: BigNumberish,
@@ -3419,11 +3408,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<CollateralConfiguration.DataStructOutput[]>;
 
-    getCollateralPrice(
-      collateralType: string,
-      collateralAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     transferCrossChain(
       destChainId: BigNumberish,
@@ -3781,7 +3766,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+    ): Promise<BigNumber>;
 
     getPositionCollateralRatio(
       accountId: BigNumberish,
@@ -4599,11 +4584,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCollateralPrice(
-      collateralType: string,
-      collateralAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     transferCrossChain(
       destChainId: BigNumberish,
@@ -5261,7 +5242,6 @@ export interface CoreProxy extends BaseContract {
 
     getCollateralPrice(
       collateralType: string,
-      collateralAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

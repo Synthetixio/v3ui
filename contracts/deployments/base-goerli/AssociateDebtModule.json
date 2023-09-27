@@ -1,5 +1,5 @@
 {
-  "address": "0x044F57ecccE4408840AAC19a0333a8C10F6593d7",
+  "address": "0x637024617d407F448254e2530e3D1E1A8C110993",
   "abi": [
     {
       "inputs": [
@@ -202,7 +202,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xddef0503953bb06eddfe2d973ed9575bbd20620036656b29a0901bd3d75e4815",
+  "deployTxnHash": "0xda595d58a7d1486d1a75e1c226769833071a585c0b75e80b5baa8234391ddf78",
   "sourceName": "contracts/modules/core/AssociateDebtModule.sol",
   "contractName": "AssociateDebtModule",
   "deployedOn": "contract.AssociateDebtModule"

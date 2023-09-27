@@ -2037,11 +2037,6 @@
           "internalType": "address",
           "name": "collateralType",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "collateralAmount",
-          "type": "uint256"
         }
       ],
       "name": "getCollateralPrice",
@@ -4995,11 +4990,6 @@
         {
           "internalType": "uint256",
           "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "value",
           "type": "uint256"
         }
       ],

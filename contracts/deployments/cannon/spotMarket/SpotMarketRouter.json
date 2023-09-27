@@ -1,5 +1,5 @@
 {
-  "address": "0x3ACA0Df430fCFf863489A59Ce0103c7266B59031",
+  "address": "0xBB23DCCC35D22413F8269bC33bC8d216Ce1523f0",
   "abi": [
     {
       "inputs": [
@@ -79,7 +79,7 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -126,7 +126,7 @@
       ],
       "name": "setAllowlistedMulticallTarget",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -625,7 +625,7 @@
       ],
       "name": "acceptMarketOwnership",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -654,7 +654,7 @@
           "type": "uint128"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -768,7 +768,7 @@
       ],
       "name": "initOrUpgradeNft",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -801,7 +801,7 @@
       ],
       "name": "initOrUpgradeToken",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -857,7 +857,7 @@
       ],
       "name": "nominateMarketOwner",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -875,7 +875,7 @@
       ],
       "name": "registerUnmanagedSystem",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -888,7 +888,7 @@
       ],
       "name": "renounceMarketNomination",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -901,7 +901,7 @@
       ],
       "name": "renounceMarketOwnership",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -938,7 +938,7 @@
       ],
       "name": "setDecayRate",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -951,7 +951,7 @@
       ],
       "name": "setSynthImplementation",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -964,7 +964,7 @@
       ],
       "name": "setSynthetix",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1006,7 +1006,7 @@
       ],
       "name": "updatePriceData",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1019,7 +1019,7 @@
       ],
       "name": "upgradeSynthImpl",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1279,7 +1279,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1340,7 +1340,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1401,7 +1401,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1666,7 +1666,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1727,7 +1727,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1788,7 +1788,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2024,7 +2024,7 @@
       ],
       "name": "cancelOrder",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2115,7 +2115,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2281,22 +2281,6 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "deviation",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tolerance",
-          "type": "uint256"
-        }
-      ],
-      "name": "PriceDeviationToleranceExceeded",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "enum SettlementStrategy.Type",
           "name": "strategyType",
           "type": "uint8"
@@ -2443,7 +2427,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2587,11 +2571,6 @@
             },
             {
               "internalType": "uint256",
-              "name": "priceDeviationTolerance",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
               "name": "minimumUsdExchangeAmount",
               "type": "uint256"
             },
@@ -2619,7 +2598,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2676,11 +2655,6 @@
             },
             {
               "internalType": "uint256",
-              "name": "priceDeviationTolerance",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
               "name": "minimumUsdExchangeAmount",
               "type": "uint256"
             },
@@ -2723,7 +2697,7 @@
       ],
       "name": "setSettlementStrategyEnabled",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2930,7 +2904,7 @@
       ],
       "name": "setWrapper",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2986,7 +2960,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3042,7 +3016,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3434,7 +3408,7 @@
       ],
       "name": "setAsyncFixedFee",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3452,7 +3426,7 @@
       ],
       "name": "setAtomicFixedFee",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3470,7 +3444,7 @@
       ],
       "name": "setCollateralLeverage",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3493,7 +3467,7 @@
       ],
       "name": "setCustomTransactorFees",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3511,7 +3485,7 @@
       ],
       "name": "setFeeCollector",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3529,7 +3503,7 @@
       ],
       "name": "setMarketSkewScale",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3547,7 +3521,7 @@
       ],
       "name": "setMarketUtilizationFees",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3570,7 +3544,7 @@
       ],
       "name": "setWrapperFees",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3593,7 +3567,7 @@
       ],
       "name": "updateReferrerShare",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3716,7 +3690,7 @@
       ],
       "name": "addToFeatureFlagAllowlist",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3834,7 +3808,7 @@
       ],
       "name": "removeFromFeatureFlagAllowlist",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3852,7 +3826,7 @@
       ],
       "name": "setDeniers",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3870,7 +3844,7 @@
       ],
       "name": "setFeatureFlagAllowAll",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -3888,12 +3862,12 @@
       ],
       "name": "setFeatureFlagDenyAll",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "deployedOn": "router.SpotMarketRouter",
-  "deployTxnHash": "0x0f4045e0cbc8d59ef8b68c109ccdea3ec40422441479f91e9720c7b48c032a8b",
+  "deployTxnHash": "0x6af33e09e66f4f03abdd5b78a535dc676025d2666bb83a0ede700e796d3592a6",
   "contractName": "SpotMarketRouter",
   "sourceName": "SpotMarketRouter.sol"
 }

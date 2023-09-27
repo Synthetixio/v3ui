@@ -1,5 +1,5 @@
 {
-  "address": "0x52CeAbbFd52d8D6f7128926fEDAa5d03116fc68b",
+  "address": "0x75962D4e3B14c9aAC8E89aA2b488A1A7Ef18C0b7",
   "abi": [
     {
       "inputs": [],
@@ -230,7 +230,7 @@
       ],
       "name": "configureMaximumMarketCollateral",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -253,7 +253,7 @@
       ],
       "name": "depositMarketCollateral",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -343,13 +343,13 @@
       ],
       "name": "withdrawMarketCollateral",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x39977c2aa75cba2e53f8b44ab90ff8e7ee48dedecb6662e823ae16d75396504f",
+  "deployTxnHash": "0x49a593981be42d74068498bd5c4565a2f01b32d2999181a9041e854febee4d85",
   "sourceName": "contracts/modules/core/MarketCollateralModule.sol",
   "contractName": "MarketCollateralModule",
   "deployedOn": "contract.MarketCollateralModule"

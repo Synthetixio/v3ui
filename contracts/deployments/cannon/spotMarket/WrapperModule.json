@@ -1,5 +1,5 @@
 {
-  "address": "0x458bF8465B9484Dc657668B90c53d2A0Dc07bab5",
+  "address": "0xf34e8EB972a9B16720af0137c435dB04064Ba292",
   "abi": [
     {
       "inputs": [
@@ -258,7 +258,7 @@
       ],
       "name": "setWrapper",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -314,7 +314,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -370,13 +370,13 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x9f07f71fe78ec2371c3743c85b4a5851c7d105a82c99e217fb12fb0467013765",
+  "deployTxnHash": "0x2ec2a63ddc50647265b68b54e99b8bcef5ba8985ea5b7f6f48742f31193f761f",
   "sourceName": "contracts/modules/WrapperModule.sol",
   "contractName": "WrapperModule",
   "deployedOn": "contract.WrapperModule"

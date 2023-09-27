@@ -1,5 +1,5 @@
 {
-  "address": "0xA919fD31F1AC83B8dd69c23e4De0be39580811a2",
+  "address": "0xBD6F2ded928FC07656255A159F2b478cf8D6892D",
   "abi": [
     {
       "inputs": [
@@ -82,7 +82,7 @@
       ],
       "name": "addApprovedPool",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -121,7 +121,7 @@
       ],
       "name": "removeApprovedPool",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -134,13 +134,13 @@
       ],
       "name": "setPreferredPool",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xf8fb2683ec0ce764110d64ca8f16d0d63eb10b34f9109bfa11ba650f646c87d1",
+  "deployTxnHash": "0xb5a3335c44415138ac1608e48fe5278ed513eeee26a55d8860e5b774be1a47fd",
   "sourceName": "contracts/modules/core/PoolConfigurationModule.sol",
   "contractName": "PoolConfigurationModule",
   "deployedOn": "contract.PoolConfigurationModule"

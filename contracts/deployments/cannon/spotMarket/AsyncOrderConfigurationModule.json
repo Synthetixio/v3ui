@@ -1,5 +1,5 @@
 {
-  "address": "0x78a6E6b9fc1d1a8984e3a5A13996f3A11DAfA3a3",
+  "address": "0x18e552302847dec48e38b7D51FEbc55752Ae4820",
   "abi": [
     {
       "inputs": [
@@ -107,11 +107,6 @@
             },
             {
               "internalType": "uint256",
-              "name": "priceDeviationTolerance",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
               "name": "minimumUsdExchangeAmount",
               "type": "uint256"
             },
@@ -139,7 +134,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -196,11 +191,6 @@
             },
             {
               "internalType": "uint256",
-              "name": "priceDeviationTolerance",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
               "name": "minimumUsdExchangeAmount",
               "type": "uint256"
             },
@@ -243,13 +233,13 @@
       ],
       "name": "setSettlementStrategyEnabled",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x90f216d941ba15f3beaf7813ae3aa6524d00c0c8caa30f894a193f5d8316a1b0",
+  "deployTxnHash": "0xfd59973b7635dd450168b807ad44f415e266ae358e43358c3ca10b83ee2b70a0",
   "sourceName": "contracts/modules/AsyncOrderConfigurationModule.sol",
   "contractName": "AsyncOrderConfigurationModule",
   "deployedOn": "contract.AsyncOrderConfigurationModule"

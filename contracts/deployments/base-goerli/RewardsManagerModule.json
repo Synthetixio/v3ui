@@ -1,5 +1,5 @@
 {
-  "address": "0x54d11bC1402ec554567B44affA938BFe7088FD46",
+  "address": "0x9D8B20765867944046bca51e3739C1dB4515f302",
   "abi": [
     {
       "inputs": [
@@ -446,7 +446,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xbcdd636a54df23ede623883354d7113af57aa7f5aefe5080659f4c1c4c9a7c5d",
+  "deployTxnHash": "0x4bcbb9eddd8a06f1b6616712669d17db47861c5626efd7fda6d2219bad258cf0",
   "sourceName": "contracts/modules/core/RewardsManagerModule.sol",
   "contractName": "RewardsManagerModule",
   "deployedOn": "contract.RewardsManagerModule"

@@ -1,5 +1,5 @@
 {
-  "address": "0xA5bF9C124027506E6e6B92532af3042fbb267466",
+  "address": "0x3bD5F2FF9c6bd913559476d18E83c9A9F5cE63aF",
   "abi": [
     {
       "inputs": [
@@ -413,11 +413,6 @@
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -561,7 +556,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3ee27b1434963fd63d832927bb58a6e7ad1856a99bfb610046044170cc73c109",
+  "deployTxnHash": "0xf97a5b83ac01a5e81965a12b89fa5c3ed9dfe2ac3da28faea6e58d4eb479d12d",
   "sourceName": "contracts/modules/core/VaultModule.sol",
   "contractName": "VaultModule",
   "deployedOn": "contract.VaultModule"
