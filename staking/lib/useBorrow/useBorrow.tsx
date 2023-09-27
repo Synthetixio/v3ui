@@ -8,25 +8,19 @@ import { BigNumber } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
+import { withERC7412 } from '@snx-v3/withERC7412';
 
-export const useBorrow = (
-  {
-    accountId,
-    poolId,
-    collateralTypeAddress,
-    debtChange,
-  }: {
-    accountId?: string;
-    poolId?: string;
-    collateralTypeAddress?: string;
-    debtChange: Wei;
-  },
-  eventHandlers?: {
-    onSuccess?: () => void;
-    onMutate?: () => void;
-    onError?: (e: Error) => void;
-  }
-) => {
+export const useBorrow = ({
+  accountId,
+  poolId,
+  collateralTypeAddress,
+  debtChange,
+}: {
+  accountId?: string;
+  poolId?: string;
+  collateralTypeAddress?: string;
+  debtChange: Wei;
+}) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
 
@@ -42,33 +36,27 @@ export const useBorrow = (
       try {
         dispatch({ type: 'prompting' });
 
-        const gasPricesPromised = getGasPrice({ provider });
-        const gasLimitPromised = CoreProxy.estimateGas.mintUsd(
+        const populatedTxnPromised = CoreProxy.populateTransaction.mintUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
           debtChange.toBN()
         );
-        const populatedTxnPromised = CoreProxy.populateTransaction.mintUsd(
-          BigNumber.from(accountId),
-          BigNumber.from(poolId),
-          collateralTypeAddress,
-          debtChange.toBN(),
-          { gasLimit: gasLimitPromised }
-        );
-        const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
-          gasPricesPromised,
-          gasLimitPromised,
+
+        const [calls, gasPrices] = await Promise.all([
           populatedTxnPromised,
+          getGasPrice({ provider }),
         ]);
 
+        const erc7412Tx = await withERC7412(CoreProxy.provider, calls);
+
         const gasOptionsForTransaction = formatGasPriceForTransaction({
-          gasLimit,
+          gasLimit: erc7412Tx.gasLimit,
           gasPrices,
           gasSpeed,
         });
 
-        const txn = await signer.sendTransaction({ ...populatedTxn, ...gasOptionsForTransaction });
+        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
@@ -78,7 +66,6 @@ export const useBorrow = (
         throw error;
       }
     },
-    ...eventHandlers,
   });
   return {
     mutation,
