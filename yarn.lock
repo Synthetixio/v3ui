@@ -5120,6 +5120,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -5901,7 +5902,7 @@ __metadata:
   resolution: "@snx-v3/useRewards@workspace:staking/lib/useRewards"
   dependencies:
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/zod": "workspace:^"
+    "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.33.0
@@ -6036,7 +6037,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/zod@workspace:*, @snx-v3/zod@workspace:^, @snx-v3/zod@workspace:staking/lib/zod":
+"@snx-v3/zod@workspace:*, @snx-v3/zod@workspace:staking/lib/zod":
   version: 0.0.0-use.local
   resolution: "@snx-v3/zod@workspace:staking/lib/zod"
   dependencies:
