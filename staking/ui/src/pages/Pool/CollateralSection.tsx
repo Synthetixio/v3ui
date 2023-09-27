@@ -28,7 +28,7 @@ export const CollateralSectionUi: FC<{
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
-    <BorderBox padding={4} flexDirection="column" data-testid="pool collateral types">
+    <BorderBox padding={4} bg="navy.700" flexDirection="column" data-testid="pool collateral types">
       <Text fontWeight={700} fontSize="xl">
         Pool Collateralization
       </Text>

@@ -122,7 +122,7 @@ export function MarketSectionUi({
     );
   }
   return (
-    <BorderBox padding={4} flexDirection="column" data-testid="pool markets">
+    <BorderBox bg="navy.700" padding={4} flexDirection="column" data-testid="pool markets">
       <Text fontSize="xl" fontWeight={700}>
         Markets
       </Text>

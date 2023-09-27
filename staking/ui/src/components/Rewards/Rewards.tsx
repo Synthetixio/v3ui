@@ -1,4 +1,15 @@
-import { Table, TableContainer, Tbody, Text, Th, Thead, Tr, Flex, Fade } from '@chakra-ui/react';
+import {
+  Table,
+  TableContainer,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  Flex,
+  Fade,
+  FlexProps,
+} from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { RewardsRow } from './RewardsRow';
 import { RewardsType } from '@snx-v3/useRewards';
@@ -13,16 +24,16 @@ import { RewardsLoading } from './RewardsLoading';
 //   hasClaimed: boolean;
 // }
 
-interface RewardsDistributorsInterface {
+interface RewardsDistributorsInterface extends FlexProps {
   rewards?: RewardsType;
   isLoading: boolean;
 }
 
-export const Rewards = ({ rewards, isLoading }: RewardsDistributorsInterface) => {
+export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInterface) => {
   const empty = (typeof rewards === 'undefined' && !isLoading) || (rewards && rewards.length === 0);
 
   return (
-    <BorderBox bg="navy.700" py={4} px={6} flexDir="column">
+    <BorderBox bg="navy.700" py={4} px={6} flexDir="column" {...props}>
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
         REWARDS
       </Text>
