@@ -10,7 +10,7 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
-import { notNil } from '../tsHelpers';
+import { notNil } from '@snx-v3/tsHelpers';
 
 export const useDeposit = ({
   accountId,
@@ -81,7 +81,7 @@ export const useDeposit = ({
         );
         const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
         const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
-        const erc7412Tx = await withERC7412(CoreProxy.provider, calls);
+        const erc7412Tx = await withERC7412(provider, calls);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

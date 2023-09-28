@@ -5773,6 +5773,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useDeposit@workspace:staking/lib/useDeposit"
   dependencies:
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5942,6 +5943,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRepay@workspace:staking/lib/useRepay"
   dependencies:
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"

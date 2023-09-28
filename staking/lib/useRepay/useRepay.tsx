@@ -9,6 +9,8 @@ import { BigNumber } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { notNil } from '@snx-v3/tsHelpers';
+import { withERC7412 } from '@snx-v3/withERC7412';
 
 export const useRepay = ({
   accountId,
@@ -48,38 +50,30 @@ export const useRepay = ({
         // Only deposit if user doesn't have enough sUSD collateral
         const deposit = amountToDeposit.lte(0)
           ? undefined
-          : CoreProxy.interface.encodeFunctionData('deposit', [
+          : CoreProxy.populateTransaction.deposit(
               BigNumber.from(accountId),
               UsdProxy.address,
-              amountToDeposit.toBN(), // only deposit what's needed
-            ]);
+              amountToDeposit.toBN() // only deposit what's needed
+            );
 
-        const burn = CoreProxy.interface.encodeFunctionData('burnUsd', [
+        const burn = CoreProxy.populateTransaction.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
-          debtChangeAbs.toBN(),
-        ]);
-        const calls = [deposit, burn].filter(Boolean) as string[];
+          debtChangeAbs.toBN()
+        );
 
-        const gasPricesPromised = getGasPrice({ provider });
-        const gasLimitPromised = CoreProxy.estimateGas.multicall(calls);
-        const populatedTxnPromised = CoreProxy.populateTransaction.multicall(calls, {
-          gasLimit: gasLimitPromised,
-        });
-        const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
-          gasPricesPromised,
-          gasLimitPromised,
-          populatedTxnPromised,
-        ]);
+        const callsPromise = Promise.all([deposit, burn].filter(notNil));
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
+        const erc7412Tx = await withERC7412(provider, calls);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
-          gasLimit,
+          gasLimit: erc7412Tx.gasLimit,
           gasPrices,
           gasSpeed,
         });
 
-        const txn = await signer.sendTransaction({ ...populatedTxn, ...gasOptionsForTransaction });
+        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
         await txn.wait();
