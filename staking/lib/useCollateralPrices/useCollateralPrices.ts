@@ -8,7 +8,7 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
-async function loadPrices({
+export async function loadPrices({
   CoreProxy,
   collateralAddresses,
 }: {

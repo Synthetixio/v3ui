@@ -5,9 +5,10 @@ import { usePools } from '@snx-v3/usePools';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
+import { keyBy } from '@snx-v3/tsHelpers';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;
@@ -15,6 +16,7 @@ export type LiquidityPositionType = {
   poolId: string;
   poolName: string;
   collateralAmount: Wei;
+  collateralPrice: Wei;
   collateralValue: Wei;
   collateralType: CollateralType;
   cRatio: Wei;
@@ -35,7 +37,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
   const { data: CoreProxy } = useCoreProxy();
   const { data: pools } = usePools();
   const { data: collateralTypes } = useCollateralTypes();
-  const { data: collateralPriceByAddress } = useCollateralPrices();
 
   const network = useNetwork();
 
@@ -47,7 +48,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       {
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
-        pricesFetched: Boolean(collateralPriceByAddress),
       },
     ],
     queryFn: async () => {
@@ -55,7 +55,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         throw Error('Query should not be enabled');
       }
 
-      const callsDecoderAndDataNested = await Promise.all(
+      const positionCallsAndDataNested = await Promise.all(
         pools.map(async ({ id: poolId, name: poolName }) =>
           Promise.all(
             collateralTypes.map(async (collateralType) => {
@@ -70,23 +70,36 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           )
         )
       );
-      const callsDecoderAndData = callsDecoderAndDataNested.flat();
-
-      const allCalls = callsDecoderAndData.map((x) => x.calls).flat();
-      const singlePositionDecoder = callsDecoderAndData.at(0)?.decoder;
+      const positionCallsAndData = positionCallsAndDataNested.flat();
+      const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
+        collateralAddresses: collateralTypes.map((x) => x.tokenAddress),
+        CoreProxy,
+      });
+      const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
+      const allCalls = priceCalls.concat(positionCalls);
+      const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
       return await erc7412Call(
         CoreProxy.provider,
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array ');
           if (!singlePositionDecoder) return {};
-          const positionData = toPairs(encoded).map((x) => singlePositionDecoder(x));
+          const pricesByAddress = keyBy(
+            'address',
+            priceDecoder(encoded.slice(0, priceCalls.length)).map((price, i) => ({
+              price,
+              address: collateralTypes[i].tokenAddress,
+            }))
+          );
+
+          const positionsEncoded = encoded.slice(priceCalls.length);
+          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
 
           const positions = positionData.map(({ debt, collateral }, index) => {
-            const { poolName, collateralType, poolId } = callsDecoderAndData[index];
+            const { poolName, collateralType, poolId } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
             const collateralAmount = collateral.amount;
-            const collateralPrice = collateralPriceByAddress?.[collateralType.tokenAddress];
+            const collateralPrice = pricesByAddress?.[collateralType.tokenAddress].price;
             const collateralValue = collateralPrice
               ? collateralAmount.mul(collateralPrice)
               : wei(0);
@@ -105,18 +118,11 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               debt,
             };
           });
-          return Object.fromEntries(positions.map((position) => [position.id, position]));
+          return keyBy('id', positions);
         },
         'liquidityPositions'
       );
     },
-    // select: selectPositions,
-    enabled: Boolean(
-      CoreProxy &&
-        collateralTypes?.length &&
-        accountId &&
-        pools?.length &&
-        Boolean(collateralPriceByAddress)
-    ),
+    enabled: Boolean(CoreProxy && collateralTypes?.length && accountId && pools?.length),
   });
 };

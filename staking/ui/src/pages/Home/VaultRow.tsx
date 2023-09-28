@@ -1,15 +1,14 @@
 import { Amount } from '@snx-v3/Amount';
 import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
-import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { createSearchParams, generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
 import { FC } from 'react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralIcon } from '@snx-v3/icons';
-import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
-import Wei, { wei } from '@synthetixio/wei';
+import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 
 function VaultRowUi({
   collateralType,
@@ -19,22 +18,19 @@ function VaultRowUi({
   navigate,
   isConnected,
   openConnectModal,
-  collateralPrice,
 }: {
   collateralType: CollateralType;
-  liquidityPosition?: LiquidityPosition;
+  liquidityPosition?: LiquidityPositionType;
   accountId?: string;
   poolId: string;
   navigate: NavigateFunction;
   isConnected: boolean;
   openConnectModal?: () => void;
-  collateralPrice?: Wei;
 }) {
-  const collateralValue =
-    collateralPrice && liquidityPosition
-      ? liquidityPosition.collateralAmount.mul(collateralPrice)
-      : wei(0);
-  const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
+  const cRatio = calculateCRatio(
+    liquidityPosition?.debt || wei(0),
+    liquidityPosition?.collateralValue || wei(0)
+  );
   const hasLiquidity = accountId && liquidityPosition && liquidityPosition.collateralAmount.gt(0);
 
   return (
@@ -44,11 +40,8 @@ function VaultRowUi({
           <CollateralIcon width="40px" height="40px" symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
             <Text fontSize="sm" lineHeight="20px" fontWeight="500">
-              {liquidityPosition?.collateralAmount.gt(0) && collateralPrice ? (
-                <Amount
-                  value={liquidityPosition.collateralAmount.mul(collateralPrice)}
-                  prefix="$"
-                />
+              {liquidityPosition?.collateralValue.gt(0) ? (
+                <Amount value={liquidityPosition.collateralValue} prefix="$" />
               ) : (
                 '-'
               )}
@@ -115,16 +108,11 @@ function VaultRowUi({
 export type VaultRowProps = {
   collateralType: CollateralType;
   poolId: string;
-  liquidityPosition?: {
-    collateralAmount: Wei;
-    debt: Wei;
-  };
+  liquidityPosition?: LiquidityPositionType;
 };
 
 export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
   const { accountId } = useParams();
-
-  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
 
   const navigate = useNavigate();
   const isConnected = useIsConnected();
@@ -138,7 +126,6 @@ export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityP
       navigate={navigate}
       isConnected={isConnected}
       openConnectModal={() => onboard.connectWallet()}
-      collateralPrice={collateralPrice}
     />
   );
 };
