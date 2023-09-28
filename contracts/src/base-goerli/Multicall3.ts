@@ -1,6 +1,6 @@
 // !!! DO NOT EDIT !!! Automatically generated file
 
-export const address = '0xcA11bde05977b3631167028862bE2a173976CA11';
+export const address = '0xae788aaf52780741e12bf79ad684b91bb0ef4d92';
 export const abi = [
   'function aggregate(tuple(address target, bytes callData)[] calls) payable returns (uint256 blockNumber, bytes[] returnData)',
   'function aggregate3(tuple(address target, bool allowFailure, bytes callData)[] calls) payable returns (tuple(bool success, bytes returnData)[] returnData)',
