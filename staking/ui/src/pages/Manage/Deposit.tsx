@@ -13,15 +13,18 @@ import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../components/CollateralAlert';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
   collateralChange: Wei;
   ethBalance?: Wei;
-  tokenBalance?: {
+  snxBalance?: {
     transferable: Wei;
     collateral?: Wei;
   };
+  tokenBalance?: Wei;
+
   displaySymbol: string;
   symbol: string;
   setCollateralChange: (val: Wei) => void;
@@ -33,17 +36,21 @@ export const DepositUi: FC<{
   symbol,
   tokenBalance,
   ethBalance,
+  snxBalance,
 }) => {
   const [activeBadge, setActiveBadge] = useState(0);
   const combinedTokenBalance = useMemo(() => {
+    if (symbol === 'SNX') {
+      return snxBalance?.transferable;
+    }
     if (symbol !== 'WETH') {
-      return tokenBalance?.transferable;
+      return tokenBalance;
     }
     if (!tokenBalance || !ethBalance) {
       return undefined;
     }
-    return tokenBalance.transferable.add(ethBalance);
-  }, [symbol, tokenBalance, ethBalance]);
+    return tokenBalance.add(ethBalance);
+  }, [symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
 
   return (
     <Flex flexDirection="column">
@@ -93,14 +100,16 @@ export const DepositUi: FC<{
                   gap="1"
                   cursor="pointer"
                   onClick={() => {
-                    if (!tokenBalance) {
+                    const amount = symbol === 'SNX' ? snxBalance?.transferable : tokenBalance;
+                    if (!amount) {
                       return;
                     }
-                    setCollateralChange(tokenBalance.transferable);
+
+                    setCollateralChange(amount);
                   }}
                 >
                   <Text>{symbol} Balance:</Text>
-                  <Amount value={tokenBalance?.transferable} />
+                  <Amount value={symbol === 'SNX' ? snxBalance?.transferable : tokenBalance} />
                 </Flex>
                 {symbol === 'WETH' ? (
                   <Flex
@@ -138,8 +147,8 @@ export const DepositUi: FC<{
           activeBadge={activeBadge}
         />
       </BorderBox>
-      {tokenBalance?.collateral && tokenBalance?.collateral.gt(0) && symbol === 'SNX' && (
-        <CollateralAlert mt={2} mb={6} tokenBalance={tokenBalance.collateral} />
+      {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
+        <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
       <Button data-testid="deposit submit" type="submit">
         Add {displaySymbol}
@@ -153,7 +162,9 @@ export const Deposit = () => {
   const params = useParams();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: tokenBalance } = useTransferableSynthetix();
+  const { data: transferrableSnx } = useTransferableSynthetix();
+  const { data: tokenBalance } = useTokenBalance(collateralType?.tokenAddress);
+
   const { data: ethBalance } = useEthBalance();
 
   const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
@@ -168,6 +179,7 @@ export const Deposit = () => {
       accountCollateral={accountCollateral}
       displaySymbol={collateralType.displaySymbol}
       tokenBalance={tokenBalance}
+      snxBalance={transferrableSnx}
       ethBalance={ethBalance}
       symbol={collateralType.symbol}
       setCollateralChange={setCollateralChange}
