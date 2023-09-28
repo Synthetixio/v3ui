@@ -99,17 +99,20 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
             ) : (
               <Tbody>
                 {/* TODO: Update results with amount/frequency/lifetime/hasClaimed */}
-                {rewards?.map((item) => (
-                  <RewardsRow
-                    key={item.address}
-                    symbol={item.symbol}
-                    amount={200}
-                    frequency="Weekly"
-                    earnings={item.claimableAmount.toNumber()}
-                    lifetimeEarned={2000}
-                    hasClaimed={true}
-                  />
-                ))}
+                {rewards
+                  ?.sort((a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber())
+                  .map((item) => (
+                    <RewardsRow
+                      key={item.address}
+                      symbol={item.symbol}
+                      amount={200}
+                      frequency="Weekly"
+                      earnings={item.claimableAmount.toNumber()}
+                      lifetimeEarned={2000}
+                      hasClaimed={item.claimableAmount.lte(0)}
+                      address={item.distributorAddress}
+                    />
+                  ))}
               </Tbody>
             )}
           </Table>
