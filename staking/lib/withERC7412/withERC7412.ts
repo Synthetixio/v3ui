@@ -107,7 +107,6 @@ const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006'
 export const withERC7412 = async (
   provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
-  isTestnet?: boolean,
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   console.log('withERC7412');
@@ -128,6 +127,7 @@ export const withERC7412 = async (
   const { chainId } = await provider.getNetwork();
 
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const isTestnet = network?.isTestnet;
   const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
     network?.name || 'mainnet'
   );
@@ -202,8 +202,7 @@ export async function erc7412Call<T>(
   for (const txRequest of reqs) {
     txRequest.from = txRequest.from || getDefaultFromAddress();
   }
-
-  const newCall = await withERC7412(provider, reqs, true, logLabel);
+  const newCall = await withERC7412(provider, reqs, logLabel);
 
   const res = await provider.call(newCall);
 
