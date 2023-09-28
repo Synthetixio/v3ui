@@ -24,27 +24,32 @@ const fetchAccountCollateral = async (
     CoreProxy.populateTransaction.getAccountCollateral(accountId, tokenAddress),
   ]);
   const calls = await Promise.all(callsP);
-  return erc7412Call(CoreProxy.provider, calls, (multicallEncoded) => {
-    if (!Array.isArray(multicallEncoded)) throw Error('Expected array');
-    return tokenAddresses.map((tokenAddress, i) => {
-      const [availableCollateral] = CoreProxy.interface.decodeFunctionResult(
-        'getAccountAvailableCollateral',
-        multicallEncoded[i * 2]
-      );
-      const { totalAssigned, totalDeposited, totalLocked } =
-        CoreProxy.interface.decodeFunctionResult(
-          'getAccountCollateral',
-          multicallEncoded[i * 2 + 1]
+  return erc7412Call(
+    CoreProxy.provider,
+    calls,
+    (multicallEncoded) => {
+      if (!Array.isArray(multicallEncoded)) throw Error('Expected array');
+      return tokenAddresses.map((tokenAddress, i) => {
+        const [availableCollateral] = CoreProxy.interface.decodeFunctionResult(
+          'getAccountAvailableCollateral',
+          multicallEncoded[i * 2]
         );
-      return {
-        tokenAddress,
-        availableCollateral: wei(availableCollateral),
-        totalAssigned: wei(totalAssigned),
-        totalDeposited: wei(totalDeposited),
-        totalLocked: wei(totalLocked),
-      };
-    });
-  });
+        const { totalAssigned, totalDeposited, totalLocked } =
+          CoreProxy.interface.decodeFunctionResult(
+            'getAccountCollateral',
+            multicallEncoded[i * 2 + 1]
+          );
+        return {
+          tokenAddress,
+          availableCollateral: wei(availableCollateral),
+          totalAssigned: wei(totalAssigned),
+          totalDeposited: wei(totalDeposited),
+          totalLocked: wei(totalLocked),
+        };
+      });
+    },
+    'useAccountCollateral'
+  );
 };
 
 export function useAccountCollateral({
