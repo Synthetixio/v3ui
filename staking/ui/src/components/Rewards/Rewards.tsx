@@ -105,8 +105,9 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                     <RewardsRow
                       key={item.address}
                       symbol={item.symbol}
-                      amount={200}
+                      amount={item.claimableAmount.toNumber()}
                       frequency="Weekly"
+                      // These need to
                       earnings={item.claimableAmount.toNumber()}
                       lifetimeEarned={2000}
                       hasClaimed={item.claimableAmount.lte(0)}

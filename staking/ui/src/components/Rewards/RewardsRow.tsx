@@ -29,16 +29,28 @@ export const RewardsRow = ({
 
   const { data: collateralData } = useCollateralType(collateralSymbol);
 
-  const { exec, isLoading, txnState } = useClaimRewards(
+  const { exec, txnState } = useClaimRewards(
     poolId || '',
     collateralData?.tokenAddress || '',
     accountId,
-    address
+    address,
+    amount
   );
+
+  const onClick = () => {
+    exec();
+  };
+
+  const { txnStatus, txnHash } = txnState;
 
   return (
     <>
-      <RewardsModal amount="400" collateralSymbol="SNX" />
+      <RewardsModal
+        amount={amount}
+        collateralSymbol={collateralSymbol}
+        txnStatus={txnStatus}
+        txnHash={txnHash}
+      />
       <Tr>
         <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
           <Fade in>
@@ -96,7 +108,7 @@ export const RewardsRow = ({
                 opacity: 0.5,
                 cursor: 'not-allowed',
               }}
-              onClick={() => exec()}
+              onClick={onClick}
             >
               {hasClaimed ? 'Claimed' : 'Claim'}
             </Button>

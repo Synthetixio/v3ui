@@ -15,6 +15,8 @@ const RewardsResponseSchema = z.array(
   })
 );
 
+type RewardsResponseArray = typeof RewardsResponseSchema._type;
+
 export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 
 type RewardsInterface =
@@ -104,55 +106,45 @@ export function useRewards(
         ])
       );
 
-      const result = distributorResult.map(({ token, address }, i) => {
+      const result = distributorResult.map((item, i) => {
         const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];
         const symbol = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 2 + 1])[0];
 
         return {
-          distributorAddress: address,
-          address: token,
+          ...item,
           name,
           symbol,
         };
       });
 
-      // Balances
-      // We only want to fetch claimable amount for distributors with total_distributed > 0
-      const distributorsToQuery = distributorResult.filter((item) => item.amount.gt(0));
-
-      const claimResponse = await Promise.all([
-        ...distributorsToQuery.map(({ address }) => {
-          return CoreProxy.callStatic.claimRewards(
+      // TODO: Refactor this to use a view function
+      const balances: RewardsResponseArray = [];
+      for (const item of result) {
+        try {
+          const response = await CoreProxy.callStatic.claimRewards(
             BigNumber.from(accountId),
             BigNumber.from(poolId),
             collateralAddress,
-            address
+            item.address
           );
-        }),
-      ]);
 
-      const hydratedResponse = claimResponse.map((amount, index) => {
-        const distributor = distributorsToQuery[index];
-        const claimableAmount = wei(amount);
-
-        return {
-          address: distributor.address,
-          claimableAmount,
-        };
-      });
-
-      const balances = result.map(({ distributorAddress, address, name, symbol }) => {
-        const claimableAmount =
-          hydratedResponse.find((x) => x.address === distributorAddress)?.claimableAmount || wei(0);
-
-        return {
-          address,
-          name,
-          symbol,
-          distributorAddress,
-          claimableAmount,
-        };
-      });
+          balances.push({
+            name: item.name,
+            symbol: item.symbol,
+            address: item.address,
+            claimableAmount: wei(response),
+            distributorAddress: item.address,
+          });
+        } catch (error) {
+          balances.push({
+            name: item.name,
+            symbol: item.symbol,
+            address: item.address,
+            claimableAmount: wei(0),
+            distributorAddress: item.address,
+          });
+        }
+      }
 
       // TODO: Fix issue with multicall
       // const calls = distributorResult
