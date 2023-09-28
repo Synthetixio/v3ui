@@ -109,6 +109,9 @@ export const withERC7412 = async (
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   console.log('withERC7412');
+  if (!logLabel) {
+    console.trace('who called');
+  }
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
   let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
