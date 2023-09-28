@@ -81,7 +81,7 @@ const ERC7412ErrorSchema = z.union([
 const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
 const parseError = (error: any) => {
-  const errorData = error.data || error.error.data.data;
+  const errorData = error.data || error.error?.data?.data;
 
   try {
     const decodedError = erc7412Interface.parseError(errorData);
