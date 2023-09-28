@@ -64,6 +64,10 @@ describe('Pool page / Collateral section', () => {
 
     cy.mount(
       <CollateralSectionUi
+        collateralPriceByAddress={{
+          COLLATERAL_ADDRESS_SNX: wei(10),
+          COLLATERAL_ADDRESS_OMG: wei(20),
+        }}
         vaultsData={
           [
             {
@@ -76,7 +80,6 @@ describe('Pool page / Collateral section', () => {
                 tokenAddress: 'COLLATERAL_ADDRESS_SNX',
                 symbol: 'SNX',
                 displaySymbol: 'SNAXX',
-                // price: wei(10),
               },
             },
             {
