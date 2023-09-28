@@ -15,41 +15,27 @@ async function loadPrices({
   CoreProxy: CoreProxyType;
   collateralAddresses: string[];
 }) {
-  if (collateralAddresses.length === 0) return {};
   const calls = await Promise.all(
     collateralAddresses.map((address) => {
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
+  if (calls.length === 0) return { calls: [], decoder: () => [] };
 
-  const prices = await erc7412Call(
-    CoreProxy.provider,
-    calls,
-    (multicallEncoded) => {
-      if (Array.isArray(multicallEncoded)) {
-        return multicallEncoded.map((encoded) => {
-          const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
-            'getCollateralPrice',
-            encoded
-          )[0];
+  const decoder = (multicallEncoded: string | string[]) => {
+    if (Array.isArray(multicallEncoded)) {
+      return multicallEncoded.map((encoded) => {
+        const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+          'getCollateralPrice',
+          encoded
+        )[0];
 
-          return PriceSchema.parse(pricesEncoded);
-        });
-      }
-      throw Error('Expected array got: ' + typeof multicallEncoded);
-    },
-    'collateralPrices' // TODO label for logs, remove me
-  );
-
-  const collateralPriceByAddress = collateralAddresses.reduce(
-    (acc: Record<string, Wei | undefined>, address, index) => {
-      acc[address] = prices[index];
-      return acc;
-    },
-    {}
-  );
-
-  return collateralPriceByAddress;
+        return PriceSchema.parse(pricesEncoded);
+      });
+    }
+    throw Error('Expected array got: ' + typeof multicallEncoded);
+  };
+  return { calls, decoder };
 }
 
 export const useCollateralPrices = () => {
@@ -63,11 +49,17 @@ export const useCollateralPrices = () => {
   const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
 
   return useQuery({
-    enabled: Boolean(CoreProxy && collateralAddresses),
+    enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
     queryKey: [network.name, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
-      if (!CoreProxy || !collateralAddresses) throw 'OMFG';
-      return await loadPrices({ CoreProxy, collateralAddresses });
+      if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) throw 'OMFG';
+      const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
+
+      const prices = await erc7412Call(CoreProxy.provider, calls, decoder);
+      return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
+        acc[address] = prices[i];
+        return acc;
+      }, {});
     },
   });
 };
