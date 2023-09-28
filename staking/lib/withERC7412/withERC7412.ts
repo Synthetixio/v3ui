@@ -2,14 +2,10 @@ import { BigNumber, ethers } from 'ethers';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
-import {
-  multiCallAbi,
-  multiCallAddress,
-  offchainMainnetEndpoint,
-  offchainTestnetEndpoint,
-} from '@snx-v3/constants';
+import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { NETWORKS } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
+import { importMulticall3 } from '@snx-v3/useMulticall3';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -43,7 +39,13 @@ const fetchOffchainData = async (oracleQuery: string, isTestnet = false) => {
   );
 };
 
-function makeMulticall(calls: TransactionRequest[], senderAddr: string): TransactionRequest {
+function makeMulticall(
+  calls: TransactionRequest[],
+  senderAddr: string,
+  multicallAddress: string,
+  multiCallAbi: string[]
+): TransactionRequest {
+  const multicallInterface = new ethers.utils.Interface(multiCallAbi);
   const encodedData = multicallInterface.encodeFunctionData('aggregate3Value', [
     calls.map((call) => ({
       target: call.to,
@@ -60,7 +62,7 @@ function makeMulticall(calls: TransactionRequest[], senderAddr: string): Transac
 
   return {
     from: senderAddr,
-    to: multiCallAddress,
+    to: multicallAddress,
     data: encodedData,
     value: totalValue,
   };
@@ -123,15 +125,17 @@ export const withERC7412 = async (
     throw Error(`Make sure all txs have 'from' field set`);
   }
   const from = multicallCalls[0].from as string;
+  const { chainId } = await provider.getNetwork();
+
+  const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
+    network?.name || 'mainnet'
+  );
 
   while (true) {
     console.log(logLabel, ': while loop iteration');
 
     try {
-      if (isTestnet === undefined) {
-        const network = await provider.getNetwork();
-        isTestnet = Object.values(NETWORKS).find((x) => x.id === network.chainId)?.isTestnet;
-      }
       if (multicallCalls.length == 1) {
         const initialCall = multicallCalls[0];
         // The normal flow would go in here, then if the estimate call fail, we catch the error and handle ERC7412
@@ -139,8 +143,9 @@ export const withERC7412 = async (
 
         return { ...initialCall, gasLimit };
       }
+
       // If we're here it means we now added a tx to do .
-      const multicallTxn = makeMulticall(multicallCalls, from);
+      const multicallTxn = makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
       const gasLimit = await provider.estimateGas(multicallTxn);
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
@@ -178,7 +183,6 @@ export const withERC7412 = async (
     }
   }
 };
-export const multicallInterface = new ethers.utils.Interface(multiCallAbi);
 
 /**
  * This can be used to do reads plus decoding. The return type will be whatever the type of the decode function is. And the arguments passed will have the multicall decoded and price updates removed
@@ -189,6 +193,11 @@ export async function erc7412Call<T>(
   decode: (x: string[] | string) => T,
   logLabel?: string
 ) {
+  const { chainId } = await provider.getNetwork();
+  const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
+    network?.name || 'mainnet'
+  );
   const reqs = [txRequests].flat();
   for (const txRequest of reqs) {
     txRequest.from = txRequest.from || getDefaultFromAddress();
@@ -198,13 +207,12 @@ export async function erc7412Call<T>(
 
   const res = await provider.call(newCall);
 
-  if (newCall.to === multiCallAddress) {
-    // If this was a multicall, deode and remove price updates.
+  if (newCall.to === multicallAddress) {
+    // If this was a multicall, decode and remove price updates.
     // Since nesting multicalls dont work, we can assume that txRequests would have a non multicall call "to", if no price update was needed
-    const decodedMultiCall: { returnData: string }[] = multicallInterface.decodeFunctionResult(
-      'aggregate3Value',
-      res
-    )[0];
+    const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
+      multicallAbi
+    ).decodeFunctionResult('aggregate3Value', res)[0];
 
     // Now we wanna remove the price updates
     const startIndex = decodedMultiCall.length - reqs.length;

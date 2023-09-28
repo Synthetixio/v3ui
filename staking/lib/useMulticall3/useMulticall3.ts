@@ -18,7 +18,9 @@ export type Multicall3Type =
   | Multicall3OptimismGoerli
   | Multicall3BaseGoerli;
 
-export async function importMulticall3(chainName: string) {
+export async function importMulticall3(
+  chainName: string
+): Promise<{ address: string; abi: string[] }> {
   switch (chainName) {
     case 'cannon':
       return import('@synthetixio/v3-contracts/build/cannon/Multicall3');
