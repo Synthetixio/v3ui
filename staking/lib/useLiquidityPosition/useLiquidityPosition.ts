@@ -41,31 +41,25 @@ export const loadPosition = async ({
     CoreProxy.populateTransaction.getPositionCollateral(accountId, poolId, tokenAddress),
     CoreProxy.populateTransaction.getPositionDebt(accountId, poolId, tokenAddress),
   ]);
+  const decoder = (multicallEncoded: string | string[]) => {
+    if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
+      const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
+        'getPositionCollateral',
+        multicallEncoded[0]
+      );
+      const decodedDebt = CoreProxy.interface.decodeFunctionResult(
+        'getPositionDebt',
+        multicallEncoded[1]
+      )[0];
+      return {
+        debt: DebtSchema.parse(decodedDebt),
+        collateral: PositionCollateralSchema.parse({ ...decodedCollateral }),
+      };
+    }
+    throw Error('Expected array with two items');
+  };
 
-  const x = await erc7412Call(
-    CoreProxy.provider,
-    calls,
-    (multicallEncoded) => {
-      if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
-        const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
-          'getPositionCollateral',
-          multicallEncoded[0]
-        );
-        const decodedDebt = CoreProxy.interface.decodeFunctionResult(
-          'getPositionDebt',
-          multicallEncoded[1]
-        )[0];
-        return {
-          debt: DebtSchema.parse(decodedDebt),
-          collateral: PositionCollateralSchema.parse({ ...decodedCollateral }),
-        };
-      }
-      throw Error('Expected array with two items');
-    },
-    `loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress}`
-  );
-  console.log(`loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress} done`);
-  return x;
+  return { calls, decoder };
 };
 
 export const useLiquidityPosition = ({
@@ -92,7 +86,13 @@ export const useLiquidityPosition = ({
     queryFn: async () => {
       if (!CoreProxy || !accountId || !poolId || !tokenAddress)
         throw Error('Query should not be enabled');
-      return loadPosition({ CoreProxy, accountId, poolId, tokenAddress });
+      const { calls, decoder } = await loadPosition({ CoreProxy, accountId, poolId, tokenAddress });
+      return await erc7412Call(
+        CoreProxy.provider,
+        calls,
+        decoder,
+        `loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress}`
+      );
     },
     select: selectPosition,
     enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress),
