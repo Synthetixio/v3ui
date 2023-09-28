@@ -1,5 +1,14 @@
 import { CloseIcon } from '@chakra-ui/icons';
-import { ModalContent, ModalBody, ModalHeader, Modal, Text, Flex, Box } from '@chakra-ui/react';
+import {
+  ModalContent,
+  ModalBody,
+  ModalHeader,
+  Modal,
+  Text,
+  Flex,
+  Box,
+  ModalOverlay,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 
 interface RewardsModalInterface {
@@ -12,6 +21,7 @@ export const RewardsModal = ({ collateralSymbol, amount, txStatus }: RewardsModa
 
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <ModalOverlay bg="tomato" />
       <ModalContent bg="navy.700" borderWidth="1px" borderColor="gray.900">
         <ModalBody p={4}>
           <Flex
