@@ -16,11 +16,11 @@ import {
 import React, { FC } from 'react';
 import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { VaultRow } from './VaultRow';
+import { VaultRow, VaultRowProps } from './VaultRow';
 import { PoolsType, usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { LiquidityPositionType, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
+import { LiquidityPositionsById, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { Welcome } from '../../components/Shared/Welcome';
 import { Stats, StatsProps } from './Stats';
 import { AvailableCollateral } from './AvailableCollateral';
@@ -52,7 +52,7 @@ export function HomeUi({
   collateralTypes,
   pools,
   navigate,
-  liquidityPositions,
+  liquidityPositionsById,
   isLoading,
   VaultRow,
   Stats,
@@ -62,14 +62,14 @@ export function HomeUi({
   pools: PoolsType;
   accountId?: string;
   navigate: NavigateFunction;
-  liquidityPositions?: LiquidityPositionType[];
+  liquidityPositionsById?: LiquidityPositionsById;
   isLoading: boolean;
-  VaultRow: FC<{ collateralType: CollateralType; poolId: string }>;
+  VaultRow: FC<VaultRowProps>;
   Stats: FC<StatsProps>;
   AvailableCollateral: FC;
 }) {
   const { totalCollateral, totalDebt } =
-    liquidityPositions?.reduce(
+    Object.values(liquidityPositionsById || []).reduce(
       (acc, val) => {
         acc.totalCollateral = acc.totalCollateral + val.collateralValue.toNumber();
         acc.totalDebt = acc.totalDebt + val.debt.toNumber();
@@ -194,7 +194,12 @@ export function HomeUi({
                   <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
                     {collateralTypes ? (
                       collateralTypes.map((c) => (
-                        <VaultRow key={c.tokenAddress} collateralType={c} poolId={pool.id} />
+                        <VaultRow
+                          key={c.tokenAddress}
+                          collateralType={c}
+                          poolId={pool.id}
+                          liquidityPosition={liquidityPositionsById?.[`${pool.id}-${c.symbol}`]}
+                        />
                       ))
                     ) : (
                       <>
@@ -242,9 +247,7 @@ export function Home() {
       </Helmet>
       <HomeUi
         isLoading={isLoading}
-        liquidityPositions={
-          liquidityPositionsById ? Object.values(liquidityPositionsById) : undefined
-        }
+        liquidityPositionsById={liquidityPositionsById}
         collateralTypes={collateralTypes}
         pools={pools || []}
         navigate={navigate}

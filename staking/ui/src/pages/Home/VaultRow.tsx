@@ -112,17 +112,18 @@ function VaultRowUi({
   );
 }
 
-export const VaultRow: FC<{ collateralType: CollateralType; poolId: string }> = ({
-  collateralType,
-  poolId,
-}) => {
+export type VaultRowProps = {
+  collateralType: CollateralType;
+  poolId: string;
+  liquidityPosition?: {
+    collateralAmount: Wei;
+    debt: Wei;
+  };
+};
+
+export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
   const { accountId } = useParams();
 
-  const { data: liquidityPosition } = useLiquidityPosition({
-    accountId,
-    poolId,
-    tokenAddress: collateralType?.tokenAddress,
-  });
   const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
 
   const navigate = useNavigate();
