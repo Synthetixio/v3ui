@@ -5832,6 +5832,7 @@ __metadata:
   resolution: "@snx-v3/useLiquidityPosition@workspace:staking/lib/useLiquidityPosition"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
@@ -5898,6 +5899,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
