@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { BigNumber, ethers } from 'ethers';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';

@@ -26,7 +26,6 @@ import { Undelegate } from './Undelegate';
 import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
-import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));

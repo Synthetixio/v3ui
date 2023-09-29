@@ -42,10 +42,7 @@ export const useCollateralPrices = () => {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralData } = useCollateralTypes();
-  console.log(
-    '[useCollateralPrices] Getting prices for:',
-    collateralData?.map((x) => x.symbol)
-  );
+
   const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
 
   return useQuery({
