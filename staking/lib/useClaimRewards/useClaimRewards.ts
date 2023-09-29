@@ -31,7 +31,7 @@ export function useClaimRewards(
           distributorAddress
         );
 
-        console.log('tx: ', tx);
+        dispatch({ type: 'pending', payload: { txnHash: tx.hash } });
 
         const res = await tx.wait();
 
@@ -48,7 +48,6 @@ export function useClaimRewards(
           }
         });
 
-        console.log('Claimed Amount: ', claimedAmount?.toString());
         dispatch({ type: 'success' });
 
         return claimedAmount;

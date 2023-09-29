@@ -5361,7 +5361,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/etherscanLink@workspace:staking/lib/etherscanLink":
+"@snx-v3/etherscanLink@workspace:*, @snx-v3/etherscanLink@workspace:staking/lib/etherscanLink":
   version: 0.0.0-use.local
   resolution: "@snx-v3/etherscanLink@workspace:staking/lib/etherscanLink"
   languageName: unknown
@@ -5486,6 +5486,7 @@ __metadata:
     "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/etherscanLink": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
@@ -5495,6 +5496,7 @@ __metadata:
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -5669,7 +5671,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards":
+"@snx-v3/useClaimRewards@workspace:*, @snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards"
   dependencies:

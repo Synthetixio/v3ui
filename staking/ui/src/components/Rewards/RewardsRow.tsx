@@ -3,7 +3,6 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
-import {} from '@snx-v3/usePoolData';
 import { RewardsModal } from './RewardsModal';
 
 interface RewardsRowInterface {
@@ -47,7 +46,7 @@ export const RewardsRow = ({
     <>
       <RewardsModal
         amount={amount}
-        collateralSymbol={collateralSymbol}
+        collateralSymbol={symbol}
         txnStatus={txnStatus}
         txnHash={txnHash}
       />

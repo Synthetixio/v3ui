@@ -1,4 +1,4 @@
-import { CloseIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   ModalContent,
   ModalBody,
@@ -9,9 +9,10 @@ import {
   ModalOverlay,
   CircularProgress,
   Link,
+  Button,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { etherscanLink } from '../../../../lib/etherscanLink';
+import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
 interface RewardsModalInterface {
@@ -53,7 +54,7 @@ export const RewardsModal = ({
         mt="10%"
         borderWidth="1px"
         borderColor="gray.900"
-        maxWidth="384px"
+        minWidth="384px"
       >
         <ModalBody p={4}>
           <Flex
@@ -87,18 +88,27 @@ export const RewardsModal = ({
           >
             Follow the Metamask prompts to execute the following transactions.
           </Text>
-          <Flex px={3} py={3} borderRadius="5px" border="1px solid" borderColor="gray.900">
+          <Flex
+            px={3}
+            py={3}
+            borderRadius="5px"
+            border="1px solid"
+            borderColor={txnStatus === 'success' ? 'green.500' : 'gray.900'}
+          >
             <Flex
               justifyContent="center"
               alignItems="center"
               borderRadius="100px"
-              color="gray.700"
-              bg="gray.900"
+              bg={txnStatus === 'success' ? 'green.600' : 'gray.900'}
               width="40px"
               height="40px"
               p={3}
             >
-              <CircularProgress size="25px" isIndeterminate color="gray.700" />
+              {txnStatus === 'success' ? (
+                <CheckIcon color="white" />
+              ) : (
+                <CircularProgress size="25px" isIndeterminate color="gray.700" />
+              )}
             </Flex>
             <Flex
               flexDirection="column"
@@ -114,10 +124,41 @@ export const RewardsModal = ({
               </Text>
             </Flex>
           </Flex>
+          {txnStatus === 'success' && (
+            <Button
+              mt={5}
+              variant="solid"
+              justifyContent="center"
+              px={3}
+              py={3}
+              width="100%"
+              textAlign="center"
+            >
+              Done
+            </Button>
+          )}
           {txnHash && (
-            <Flex px={3} py={3} borderRadius="5px" border="1px solid" borderColor="gray.900" mt={2}>
-              <Link href={etherscanLink({ chain: currentNetwork.name, address: txnHash })}>
-                View on Etherscan
+            <Flex
+              justifyContent="center"
+              px={3}
+              py={3}
+              mt={6}
+              mb={1}
+              borderTop="1px solid"
+              borderTopColor="gray.900"
+            >
+              <Link
+                variant="outline"
+                href={etherscanLink({ chain: currentNetwork.name, address: txnHash })}
+                fontFamily="heading"
+                color="cyan.500"
+                fontWeight={700}
+                lineHeight="20px"
+                fontSize="14px"
+                target="_blank"
+                mt={3}
+              >
+                View Transaction
               </Link>
             </Flex>
           )}
