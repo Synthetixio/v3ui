@@ -123,7 +123,7 @@ export const Header: FC = () => {
                       </Text>
                     </MenuItem>
                     <MenuItem onClick={() => switchNetwork(84531)}>
-                      <Image src="../assets/base-goerli.webp" rounded="full" />
+                      <BaseIcon />
                       <Text variant="nav" ml={2}>
                         Base Goerli
                       </Text>
