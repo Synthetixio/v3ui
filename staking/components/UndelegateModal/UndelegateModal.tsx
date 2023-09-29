@@ -127,7 +127,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
         try {
           await execUndelegate();
           await refetchLiquidityPosition();
-          await queryClient.refetchQueries(['AccountSpecificCollateral']);
+          await queryClient.refetchQueries({ queryKey: ['AccountSpecificCollateral'] });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
