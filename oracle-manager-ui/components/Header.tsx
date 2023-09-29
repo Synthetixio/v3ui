@@ -10,7 +10,7 @@ import {
   MenuList,
   Text,
 } from '@chakra-ui/react';
-import { EthereumIcon, FailedIcon, OptimismIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
 import {
   disconnect,
   onboard,
@@ -35,7 +35,7 @@ const activeIcon = (currentNetwork: Network) => {
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
     case 84531:
       return {
-        icon: <Image src="../assets/base-goerli.webp" rounded="full" />,
+        icon: <BaseIcon />,
         name: 'Base Goerli',
       };
 

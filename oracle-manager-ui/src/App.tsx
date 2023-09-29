@@ -28,7 +28,7 @@ import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@chakra-ui/icons';
 import { providers } from 'ethers';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { EthereumIcon, FailedIcon, OptimismIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
 
 const activeIcon = (currentNetwork: number) => {
   switch (currentNetwork) {
@@ -42,7 +42,7 @@ const activeIcon = (currentNetwork: number) => {
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
     case 84531:
       return {
-        icon: <Image src="../assets/base-goerli.webp" rounded="full" />,
+        icon: <BaseIcon />,
         name: 'Base Goerli',
       };
     default:
