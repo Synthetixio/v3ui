@@ -6,6 +6,7 @@ import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/consta
 import { NETWORKS } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importMulticall3 } from '@snx-v3/useMulticall3';
+import { withMemoryCache } from './withMemoryCache';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -17,7 +18,8 @@ export const ERC7412_ABI = [
 type TransactionRequest = ethers.providers.TransactionRequest;
 type TransactionRequestWithGasLimit = Modify<TransactionRequest, { gasLimit: ethers.BigNumber }>;
 
-const fetchOffchainData = async (oracleQuery: string, isTestnet = false) => {
+const PRICE_CACHE_LENGTH = 5000;
+const fetchOffchainData = withMemoryCache(async (oracleQuery: string, isTestnet: boolean) => {
   const priceService = new EvmPriceServiceConnection(
     isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
   );
@@ -37,7 +39,7 @@ const fetchOffchainData = async (oracleQuery: string, isTestnet = false) => {
     ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
     [updateType, stalenessTolerance, priceIds, signedOffchainData]
   );
-};
+}, PRICE_CACHE_LENGTH);
 
 function makeMulticall(
   calls: TransactionRequest[],
@@ -127,7 +129,7 @@ export const withERC7412 = async (
   const { chainId } = await provider.getNetwork();
 
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
-  const isTestnet = network?.isTestnet;
+  const isTestnet = network?.isTestnet || false;
   const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
     network?.name || 'mainnet'
   );
@@ -152,9 +154,14 @@ export const withERC7412 = async (
       const parsedError = parseError(error);
 
       if (parsedError.name === 'OracleDataRequired') {
+        const isRead = from === getDefaultFromAddress();
         const [oracleAddress, oracleQuery] = parsedError.args;
-
-        const signedRequiredData = await fetchOffchainData(oracleQuery, isTestnet);
+        const ignoreCache = !isRead;
+        const signedRequiredData = await fetchOffchainData(
+          oracleQuery,
+          isTestnet,
+          ignoreCache ? 'no-cache' : undefined
+        );
         const newTransactionRequest = {
           from,
           to: oracleAddress,
@@ -163,8 +170,7 @@ export const withERC7412 = async (
           ]),
           // If from is set to the default address we can add a value directly, before getting FeeRequired revert.
           // This will be a static call so no money would be withdrawn either way.
-          value:
-            from === getDefaultFromAddress() ? ethers.utils.parseEther('0.1') : BigNumber.from(0),
+          value: isRead ? ethers.utils.parseEther('0.1') : BigNumber.from(0),
         };
 
         // If we get OracleDataRequired, add an extra transaction request just before the last element
