@@ -11,7 +11,6 @@ import { Deposit } from './pages/Deposit';
 import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
-import { ERC7412TesterPage } from './pages/ERC7412TesterPage/ERC7412TesterPage';
 import { NotFoundPage } from './pages/404';
 
 export const Router = () => {
@@ -19,7 +18,6 @@ export const Router = () => {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route element={<DefaultLayout />}>
-          <Route path="/erc7412-tester" element={<ERC7412TesterPage />} />
           <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
           <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
           {/*<Route path="/collateral" element={<Collateral />} />*/}
