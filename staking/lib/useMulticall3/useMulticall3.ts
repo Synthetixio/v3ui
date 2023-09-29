@@ -30,6 +30,8 @@ export async function importMulticall3(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/Multicall3');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/Multicall3');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

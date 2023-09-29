@@ -6,6 +6,7 @@ import {
 import { address as OracleManagerProxyOPAddress } from '@synthetixio/v3-contracts/build/optimism-mainnet/OracleManagerProxy';
 import { address as OracleManagerProxyMainnetAddress } from '@synthetixio/v3-contracts/build/mainnet/OracleManagerProxy';
 import { address as OracleManagerProxyGoerliAddress } from '@synthetixio/v3-contracts/build/goerli/OracleManagerProxy';
+import { address as OracleManagerProxyBaseGoerliAddress } from '@synthetixio/v3-contracts/build/base-goerli/OracleManagerProxy';
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
 
@@ -19,6 +20,8 @@ function resolveNetworkIdToProxyAddress(networkId: number) {
       return OracleManagerProxyOPAddress;
     case 420:
       return OracleManagerProxyOPGoerliAddress;
+    case 84531:
+      return OracleManagerProxyBaseGoerliAddress;
     default:
       return OracleManagerProxyMainnetAddress;
   }
