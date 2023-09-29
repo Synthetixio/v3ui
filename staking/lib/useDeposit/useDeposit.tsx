@@ -81,7 +81,8 @@ export const useDeposit = ({
         );
         const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
         const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
-        const erc7412Tx = await withERC7412(provider, calls);
+        const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
+        const erc7412Tx = await withERC7412(provider, calls, hasTrustedForwarder);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

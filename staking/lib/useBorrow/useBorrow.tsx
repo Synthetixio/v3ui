@@ -47,8 +47,8 @@ export const useBorrow = ({
           populatedTxnPromised,
           getGasPrice({ provider }),
         ]);
-
-        const erc7412Tx = await withERC7412(CoreProxy.provider, calls);
+        const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
+        const erc7412Tx = await withERC7412(CoreProxy.provider, calls, hasTrustedForwarder);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

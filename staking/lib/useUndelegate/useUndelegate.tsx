@@ -50,8 +50,9 @@ export const useUndelegate = ({
           populatedTxnPromised,
           getGasPrice({ provider }),
         ]);
+        const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
 
-        const erc7412Tx = await withERC7412(CoreProxy.provider, calls);
+        const erc7412Tx = await withERC7412(CoreProxy.provider, calls, hasTrustedForwarder);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

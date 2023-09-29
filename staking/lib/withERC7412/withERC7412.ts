@@ -8,6 +8,7 @@ import { NETWORKS } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importMulticall3 } from '@snx-v3/useMulticall3';
 import { withMemoryCache } from './withMemoryCache';
+import { importCoreProxy } from '@snx-v3/useCoreProxy';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -71,6 +72,32 @@ function makeMulticall(
   };
 }
 
+// This should be used for networks that doesn't have a multicall setup as a trusted forwarder
+// TODO remove when all networks have a trusted forwarder
+const makeCoreProxyMulticall = (
+  calls: TransactionRequest[],
+  senderAddr: string,
+  coreProxyAddress: string,
+  coreProxyAbi: string[]
+) => {
+  const CoreProxyInterface = new ethers.utils.Interface(coreProxyAbi);
+  const encodedData = CoreProxyInterface.encodeFunctionData('multicall', [
+    calls.map((call) => call.data),
+  ]);
+
+  let totalValue = ethers.BigNumber.from(0);
+  for (const call of calls) {
+    totalValue = totalValue.add(call.value || ethers.BigNumber.from(0));
+  }
+
+  return {
+    from: senderAddr,
+    to: coreProxyAddress,
+    data: encodedData,
+    value: totalValue,
+  };
+};
+
 const ERC7412ErrorSchema = z.union([
   z.object({
     name: z.literal('OracleDataRequired'),
@@ -102,7 +129,25 @@ const parseError = (error: any) => {
 // simulate w/ wETH contract because it will have eth balance
 // This is useful when we do read/static calls but still need an balance for the price update
 // TODO: this probably need to be network aware, maybe look into a different solution even.
-const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006';
+const getDefaultFromAddress = (chainName: keyof typeof NETWORKS) => {
+  switch (chainName) {
+    case 'cannon':
+      return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here
+    case 'mainnet':
+      return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    case 'goerli':
+      return '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6';
+    case 'sepolia':
+      return '0x7b79995e5f793a07bc00c21412e50ecae098e7f9';
+    case 'optimism-mainnet':
+    case 'optimism-goerli':
+    case 'base-goerli':
+      return '0x4200000000000000000000000000000000000006';
+
+    default:
+      throw new Error(`Unsupported chain ${chainName}`);
+  }
+};
 
 /**
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
@@ -110,6 +155,7 @@ const getDefaultFromAddress = () => '0x4200000000000000000000000000000000000006'
 export const withERC7412 = async (
   provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
+  hasTrustedForwarder: boolean,
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   console.log('withERC7412');
@@ -127,13 +173,19 @@ export const withERC7412 = async (
     throw Error(`Make sure all txs have 'from' field set`);
   }
   const from = multicallCalls[0].from as string;
+
   const { chainId } = await provider.getNetwork();
 
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  // If from is set to the default address (wETH) we can assume it's a read rather than a write
+  const isRead = from === getDefaultFromAddress(network?.name || 'mainnet');
   const isTestnet = network?.isTestnet || false;
-  const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
-    network?.name || 'mainnet'
-  );
+  // const hasTrustedForwarder = networksWithTrustedForwarder.includes(network?.name || '');
+  const useCoreProxy = !hasTrustedForwarder && !isRead;
+
+  const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
+    ? await importCoreProxy(network?.name || 'mainnet')
+    : await importMulticall3(network?.name || 'mainnet');
 
   while (true) {
     console.log(logLabel, ': while loop iteration');
@@ -146,16 +198,17 @@ export const withERC7412 = async (
 
         return { ...initialCall, gasLimit };
       }
-
       // If we're here it means we now added a tx to do .
-      const multicallTxn = makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
+      // Some netowrks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
+      const multicallTxn = useCoreProxy
+        ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
+        : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
       const gasLimit = await provider.estimateGas(multicallTxn);
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
       const parsedError = parseError(error);
 
       if (parsedError.name === 'OracleDataRequired') {
-        const isRead = from === getDefaultFromAddress();
         const [oracleAddress, oracleQuery] = parsedError.args;
         const ignoreCache = !isRead;
         const signedRequiredData = await fetchOffchainData(
@@ -205,11 +258,13 @@ export async function erc7412Call<T>(
   const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
     network?.name || 'mainnet'
   );
+
   const reqs = [txRequests].flat();
   for (const txRequest of reqs) {
-    txRequest.from = txRequest.from || getDefaultFromAddress();
+    txRequest.from = getDefaultFromAddress(network?.name || 'mainnet'); // Reads can always use WETH
   }
-  const newCall = await withERC7412(provider, reqs, logLabel);
+  const hasTrustedForwarder = true; // We can pretend read call has trusted forwarder
+  const newCall = await withERC7412(provider, reqs, hasTrustedForwarder, logLabel);
 
   const res = await provider.call(newCall);
 
