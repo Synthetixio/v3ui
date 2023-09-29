@@ -5,6 +5,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { z } from 'zod';
 import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
+import { erc7412Call } from '@snx-v3/withERC7412';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -18,7 +19,7 @@ export const PoolConfigurationSchema = z.object({
   markets: MarketConfigurationSchema.array(),
   isAnyMarketLocked: z.boolean(),
 });
-
+const isLockedSchema = z.boolean();
 export const usePoolConfiguration = (poolId?: string) => {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
@@ -36,13 +37,21 @@ export const usePoolConfiguration = (poolId?: string) => {
         maxDebtShareValue: weightD18,
       }));
 
-      const calls = markets.map((m) => ({
-        target: CoreProxy.address,
-        callData: CoreProxy.interface.encodeFunctionData('isMarketCapacityLocked', [m.id]),
-      }));
-      const result = await MultiCall3.callStatic.aggregate(calls);
-      const decoded = result.returnData.map(
-        (bytes) => CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', bytes)[0]
+      const calls = await Promise.all(
+        markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
+      );
+      const decoded = await erc7412Call(
+        CoreProxy.provider,
+        calls,
+        (encoded) => {
+          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          return encoded.map((x) =>
+            isLockedSchema.parse(
+              CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', x)[0]
+            )
+          );
+        },
+        'isMarketCapacityLocked'
       );
 
       return PoolConfigurationSchema.parse({
