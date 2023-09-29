@@ -234,6 +234,7 @@ export function useOnboardWallet(): WalletState | undefined {
     return undefined;
   }
   const [wallet] = wallets;
+
   return wallet;
 }
 
@@ -283,9 +284,15 @@ export function useIsConnected(): boolean {
 export function useProvider() {
   const wallet = useOnboardWallet();
   const network = useNetwork();
+
+  if (wallet?.label === 'Frame') {
+    return new ethers.providers.JsonRpcProvider(network.rpcUrl);
+  }
+
   if (wallet) {
     return new ethers.providers.Web3Provider(wallet.provider, 'any');
   }
+
   return new ethers.providers.JsonRpcProvider(network.rpcUrl);
 }
 

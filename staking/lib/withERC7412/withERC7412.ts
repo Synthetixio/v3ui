@@ -111,7 +111,7 @@ const ERC7412ErrorSchema = z.union([
 const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
 const parseError = (error: any) => {
-  const errorData = error.data || error.error?.data?.data;
+  const errorData = error.data || error.error?.data?.data || error.error?.error?.data;
 
   try {
     const decodedError = erc7412Interface.parseError(errorData);
@@ -200,10 +200,13 @@ export const withERC7412 = async (
       }
       // If we're here it means we now added a tx to do .
       // Some netowrks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
+
       const multicallTxn = useCoreProxy
         ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
         : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
+
       const gasLimit = await provider.estimateGas(multicallTxn);
+
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
       const parsedError = parseError(error);
