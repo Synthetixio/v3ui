@@ -133,12 +133,11 @@ export const ManageAction = () => {
     poolId: params.poolId,
     tokenAddress: collateralType?.tokenAddress,
   });
-  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
 
   const { isValid } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition.data?.collateralAmount,
-    collateralPrice,
+    collateralPrice: liquidityPosition.data?.collateralPrice,
     debt: liquidityPosition.data?.debt,
     collateralChange,
     debtChange,
@@ -166,11 +165,10 @@ export const ManageAction = () => {
     if (queryParams.get('manageAction')) return;
     if (!liquidityPosition.data) return;
     if (!collateralType) return;
-    if (!collateralPrice) return;
 
     const cRatio = calculateCRatio(
       liquidityPosition.data.debt,
-      liquidityPosition.data.collateralAmount.mul(collateralPrice)
+      liquidityPosition.data.collateralValue
     );
     const canBorrow =
       liquidityPosition.data.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
@@ -193,7 +191,7 @@ export const ManageAction = () => {
 
     queryParams.set('manageAction', 'deposit');
     navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-  }, [collateralPrice, collateralType, liquidityPosition.data, navigate]);
+  }, [collateralType, liquidityPosition.data, navigate]);
 
   return (
     <>

@@ -20,7 +20,6 @@ import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
-import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -144,7 +143,6 @@ export const Undelegate = () => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
@@ -154,7 +152,7 @@ export const Undelegate = () => {
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
   if (!collateralType) return null;
-
+  const collateralPrice = liquidityPosition?.collateralPrice;
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,

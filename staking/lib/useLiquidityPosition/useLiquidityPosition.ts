@@ -1,30 +1,17 @@
 import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ZodBigNumber } from '@snx-v3/zod';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
+import { loadPrices } from '@snx-v3/useCollateralPrices';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
   amount: ZodBigNumber.transform((x) => wei(x)),
 });
 const DebtSchema = ZodBigNumber.transform((x) => wei(x));
-
-export const selectPosition = ({
-  collateral,
-  debt,
-}: {
-  collateral: z.infer<typeof PositionCollateralSchema>;
-  debt: z.infer<typeof DebtSchema>;
-}) => {
-  return {
-    collateralAmount: collateral.amount,
-    debt,
-  };
-};
-export type LiquidityPosition = ReturnType<typeof selectPosition>;
 
 export const loadPosition = async ({
   CoreProxy,
@@ -61,7 +48,12 @@ export const loadPosition = async ({
 
   return { calls, decoder };
 };
-
+export type LiquidityPosition = {
+  collateralAmount: Wei;
+  collateralPrice: Wei;
+  collateralValue: Wei;
+  debt: Wei;
+};
 export const useLiquidityPosition = ({
   tokenAddress,
   accountId,
@@ -86,15 +78,35 @@ export const useLiquidityPosition = ({
     queryFn: async () => {
       if (!CoreProxy || !accountId || !poolId || !tokenAddress)
         throw Error('Query should not be enabled');
-      const { calls, decoder } = await loadPosition({ CoreProxy, accountId, poolId, tokenAddress });
+      const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
+        CoreProxy,
+        accountId,
+        poolId,
+        tokenAddress,
+      });
+      const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
+        collateralAddresses: [tokenAddress],
+        CoreProxy,
+      });
+      const allCalls = priceCalls.concat(positionCalls);
       return await erc7412Call(
         CoreProxy.provider,
-        calls,
-        decoder,
+        allCalls,
+        (encoded) => {
+          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          const [collateralPrice] = priceDecoder(encoded.slice(0, priceCalls.length));
+          const decodedPosition = positionDecoder(encoded.slice(priceCalls.length));
+          return {
+            collateralPrice,
+            collateralAmount: decodedPosition.collateral.amount,
+            collateralValue: decodedPosition.collateral.amount.mul(collateralPrice),
+            debt: decodedPosition.debt,
+          };
+        },
+
         `loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress}`
       );
     },
-    select: selectPosition,
     enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress),
   });
 };

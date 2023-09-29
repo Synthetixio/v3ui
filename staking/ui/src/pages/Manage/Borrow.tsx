@@ -10,7 +10,6 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
-import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 
 const BorrowUi: FC<{
   debtChange: Wei;
@@ -76,11 +75,11 @@ export const Borrow = () => {
     accountId: params.accountId,
     poolId: params.poolId,
   });
-  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
+
   const { maxDebt } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralPrice,
+    collateralPrice: liquidityPosition?.collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,

@@ -10,7 +10,6 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { useCollateralPrice } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 
 const ChangeStat: FC<{
@@ -128,20 +127,20 @@ export const ManageStats = () => {
     accountId: params.accountId,
     poolId: params.poolId,
   });
-  const { data: collateralPrice } = useCollateralPrice(collateralType?.tokenAddress);
-  const collateralValue =
-    liquidityPosition?.collateralAmount.mul(collateralPrice || wei(0)) || wei(0);
+
+  const collateralValue = liquidityPosition?.collateralValue || wei(0);
+
   const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralPrice,
+    collateralPrice: liquidityPosition?.collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
 
-  if (!liquidityPosition || !collateralType || !collateralPrice) return null; // TODO skeleton
+  if (!liquidityPosition || !collateralType) return null; // TODO skeleton
 
   return (
     <ManageStatsUi
