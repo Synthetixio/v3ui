@@ -22,7 +22,7 @@ test('handles no changes', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(20),
+    collateralPrice: wei(2),
     debt: wei(1),
     collateralChange: wei(0),
     debtChange: wei(0),
@@ -40,7 +40,7 @@ test('handles no debt and no changes', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(20),
+    collateralPrice: wei(2),
     debt: wei(0),
     collateralChange: wei(0),
     debtChange: wei(0),
@@ -58,7 +58,7 @@ test('handles debt increase from no debt', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(20),
+    collateralPrice: wei(2),
     debt: wei(0),
     collateralChange: wei(0),
     debtChange: wei(2),
@@ -76,7 +76,7 @@ test('handles debt increase with existing debt', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(20),
+    collateralPrice: wei(2),
     debt: wei(1),
     collateralChange: wei(0),
     debtChange: wei(1),
@@ -94,7 +94,7 @@ test('handles debt decrease with existing debt', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(20),
+    collateralPrice: wei(2),
     debt: wei(1),
     collateralChange: wei(0),
     debtChange: wei(-1),
@@ -112,7 +112,7 @@ test('handles collateral deposited with no collateral', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(0),
-    collateralValue: wei(0),
+    collateralPrice: wei(0),
     debt: wei(0),
     collateralChange: wei(10),
     debtChange: wei(0),
@@ -130,7 +130,7 @@ test('handles collateral deposit with existing collateral', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(0),
+    collateralPrice: wei(0),
     debt: wei(0),
     collateralChange: wei(10),
     debtChange: wei(0),
@@ -148,7 +148,7 @@ test('handles collateral withdrawal ', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(0),
+    collateralPrice: wei(0),
     debt: wei(0),
     collateralChange: wei(-10),
     debtChange: wei(0),
@@ -166,7 +166,7 @@ test('handles collateral withdrawal for more than we have deposited', () => {
   const result = validatePosition({
     issuanceRatioD18: wei(3),
     collateralAmount: wei(10),
-    collateralValue: wei(0),
+    collateralPrice: wei(0),
     debt: wei(10),
     collateralChange: wei(-30),
     debtChange: wei(0),
