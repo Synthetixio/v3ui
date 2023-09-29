@@ -97,7 +97,9 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
     ],
     enabled: Boolean(CoreProxy && accountId && collateralAddress),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || !collateralAddress) throw 'OMFG';
+      if (!CoreProxy || !accountId || !collateralAddress) {
+        throw 'useAccountSpecificCollateral should not be enabled';
+      }
       const data = await fetchAccountCollateral(accountId, [collateralAddress], CoreProxy);
 
       return data.at(0);
