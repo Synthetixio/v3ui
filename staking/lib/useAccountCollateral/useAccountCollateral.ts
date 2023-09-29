@@ -96,7 +96,13 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
     queryFn: async function () {
       if (!CoreProxy || !accountId || !collateralAddress) throw 'OMFG';
       const data = await fetchAccountCollateral(accountId, [collateralAddress], CoreProxy);
-      return data.at(0);
+
+      const datum = data.at(0);
+      if (!datum) return null;
+      return {
+        ...datum,
+        symbol: collateralAddress,
+      };
     },
   });
 }

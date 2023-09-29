@@ -10,7 +10,7 @@ import { useEthBalance } from '@snx-v3/useEthBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralType, useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../components/CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
@@ -167,9 +167,9 @@ export const Deposit = () => {
 
   const { data: ethBalance } = useEthBalance();
 
-  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralType?.tokenAddress
+  const { data: accountCollateral } = useAccountSpecificCollateral(
+    params.accountId,
+    collateralType?.tokenAddress
   );
 
   if (!collateralType || !accountCollateral) return null;
