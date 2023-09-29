@@ -5,7 +5,7 @@ import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -30,9 +30,9 @@ export const useDeposit = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
 
-  const accountCollaterals = useAccountCollateral({ accountId });
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralTypeAddress
+  const { data: accountCollateral } = useAccountSpecificCollateral(
+    accountId,
+    collateralTypeAddress
   );
 
   const signer = useSigner();

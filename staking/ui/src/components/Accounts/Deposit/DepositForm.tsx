@@ -25,7 +25,7 @@ import { useParams } from '@snx-v3/useParams';
 import { DepositModal, DepositModalProps } from '@snx-v3/DepositModal';
 import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralType, useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
@@ -180,7 +180,7 @@ export function DepositFormUi({
                 {accountCollateral && accountCollateral?.availableCollateral.gt(0) ? (
                   <Link onClick={() => setInputAmount(accountCollateral?.availableCollateral)}>
                     <Amount
-                      prefix={`Available ${accountCollateral.symbol} Collateral: `}
+                      prefix={`Available ${collateralType.symbol} Collateral: `}
                       value={accountCollateral?.availableCollateral}
                     />
                   </Link>
@@ -288,10 +288,9 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
   const { data: tokenBalance } = useTokenBalance(collateralType?.tokenAddress);
-  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
-
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralType?.tokenAddress
+  const { data: accountCollateral } = useAccountSpecificCollateral(
+    params.accountId,
+    collateralType?.tokenAddress
   );
 
   return (

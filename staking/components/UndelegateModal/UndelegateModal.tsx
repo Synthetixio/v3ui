@@ -24,7 +24,7 @@ import type { StateFrom } from 'xstate';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -113,10 +113,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
     collateralChange,
     currentCollateral: currentCollateral,
   });
-
-  const { refetch: refetchAccountCollateral } = useAccountCollateral({
-    accountId: params.accountId,
-  });
+  const queryClient = useQueryClient();
 
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
@@ -130,7 +127,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
         try {
           await execUndelegate();
           await refetchLiquidityPosition();
-          await refetchAccountCollateral();
+          await queryClient.refetchQueries(['AccountSpecificCollateral']);
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

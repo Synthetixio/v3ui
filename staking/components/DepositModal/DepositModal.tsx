@@ -26,7 +26,7 @@ import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { ContractError } from '@snx-v3/ContractError';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';
@@ -257,10 +257,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
   const { data: pool } = usePool(params.poolId);
 
-  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralType?.tokenAddress
-  );
+  const { data: accountCollateral, refetch: refetchAccountCollateral } =
+    useAccountSpecificCollateral(params.accountId, collateralType?.tokenAddress);
 
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
@@ -333,7 +331,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             ethBalance.refetch(),
             collateralType?.symbol === 'SNX' ? transferrable.refetch() : Promise.resolve(),
             refetchAllowance(),
-            accountCollaterals.refetch(),
+            refetchAccountCollateral(),
             refetch(),
             Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),
           ]);

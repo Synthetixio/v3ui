@@ -50,6 +50,8 @@ const fetchAccountCollateral = async (
     'useAccountCollateral'
   );
 };
+
+export type AccountCollateralWithSymbol = AccountCollateralType & { symbol: string };
 // TODO deprecate this, specific should be used
 export function useAccountCollateral({
   accountId,
@@ -69,8 +71,10 @@ export function useAccountCollateral({
   return useQuery({
     queryKey: [network.name, { accountId }, 'AccountCollateral', { tokens: tokenAddresses }],
     enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
-    queryFn: async function (): Promise<AccountCollateralType[]> {
-      if (!CoreProxy || !accountId || tokenAddresses.length < 1) throw 'OMFG';
+    queryFn: async function () {
+      if (!CoreProxy || !accountId || tokenAddresses.length < 1) {
+        throw 'useAccountCollateral should be disabled';
+      }
       const data = await fetchAccountCollateral(accountId, tokenAddresses, CoreProxy);
       return data.map((x) => ({
         ...x,
