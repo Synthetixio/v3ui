@@ -6,7 +6,6 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
 
 export type AccountCollateralType = {
-  symbol: string;
   tokenAddress: string;
   availableCollateral: Wei;
   totalAssigned: Wei;
@@ -51,7 +50,7 @@ const fetchAccountCollateral = async (
     'useAccountCollateral'
   );
 };
-
+// TODO deprecate this, specific should be used
 export function useAccountCollateral({
   accountId,
   includeDelegationOff,
@@ -97,12 +96,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
       if (!CoreProxy || !accountId || !collateralAddress) throw 'OMFG';
       const data = await fetchAccountCollateral(accountId, [collateralAddress], CoreProxy);
 
-      const datum = data.at(0);
-      if (!datum) return null;
-      return {
-        ...datum,
-        symbol: collateralAddress,
-      };
+      return data.at(0);
     },
   });
 }

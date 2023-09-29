@@ -92,7 +92,7 @@ export const DepositUi: FC<{
                     cursor="pointer"
                     onClick={() => setCollateralChange(accountCollateral.availableCollateral)}
                   >
-                    <Text>Available {accountCollateral.symbol} Collateral:</Text>
+                    <Text>Available {symbol} Collateral:</Text>
                     <Amount value={accountCollateral?.availableCollateral} />
                   </Flex>
                 ) : null}
