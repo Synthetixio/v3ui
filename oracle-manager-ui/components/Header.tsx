@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Flex,
+  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -32,6 +33,11 @@ const activeIcon = (currentNetwork: Network) => {
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
     case 420:
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
+    case 84531:
+      return {
+        icon: <Image src="../assets/base-goerli.webp" rounded="full" />,
+        name: 'Base Goerli',
+      };
 
     default:
       return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
@@ -114,6 +120,12 @@ export const Header: FC = () => {
                       <OptimismIcon />
                       <Text variant="nav" ml={2}>
                         Optimism Goerli
+                      </Text>
+                    </MenuItem>
+                    <MenuItem onClick={() => switchNetwork(84531)}>
+                      <Image src="../assets/base-goerli.webp" rounded="full" />
+                      <Text variant="nav" ml={2}>
+                        Base Goerli
                       </Text>
                     </MenuItem>
                   </MenuList>
