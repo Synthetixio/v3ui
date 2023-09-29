@@ -165,13 +165,19 @@ export const Undelegate = () => {
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
 
-  // if debt is negative it's actually credit, which means we can undelegate all collateral
-  const maxCollateral = newDebt.lte(0)
-    ? liquidityPosition?.collateralAmount
-    : collateralPrice
-    ? newDebt.mul(collateralType.issuanceRatioD18).div(collateralPrice).mul(0.98)
-    : undefined;
+  function maxWithdraw() {
+    if (!liquidityPosition || !collateralType) return undefined;
+    const { collateralAmount, collateralValue } = liquidityPosition;
+    // if debt is negative it's actually credit, which means we can undelegate all collateral
+    if (newDebt.lte(0)) return collateralAmount;
 
+    const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
+    // If you're below issuance ratio, you can't withdraw anything
+    if (collateralValue < minCollateralRequired) return wei(0);
+
+    const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
+    return Wei.min(collateralAmount, maxWithdrawable);
+  }
   return (
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}
@@ -181,7 +187,7 @@ export const Undelegate = () => {
       collateralChange={collateralChange}
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
-      max={maxCollateral}
+      max={maxWithdraw()}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
     />
   );
