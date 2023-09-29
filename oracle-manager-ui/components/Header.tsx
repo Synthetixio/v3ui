@@ -3,7 +3,6 @@ import {
   Button,
   Divider,
   Flex,
-  Image,
   Menu,
   MenuButton,
   MenuItem,

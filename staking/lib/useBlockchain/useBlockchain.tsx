@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React from 'react';
-import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon, BaseIcon } from '@snx-v3/icons';
 import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
