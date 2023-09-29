@@ -331,7 +331,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
 
           await Promise.all([
             ethBalance.refetch(),
-            transferrable.refetch(),
+            collateralType?.symbol === 'SNX' ? transferrable.refetch() : Promise.resolve(),
             refetchAllowance(),
             accountCollaterals.refetch(),
             refetch(),

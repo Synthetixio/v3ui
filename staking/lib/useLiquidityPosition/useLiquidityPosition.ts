@@ -77,7 +77,7 @@ export const useLiquidityPosition = ({
     ],
     queryFn: async () => {
       if (!CoreProxy || !accountId || !poolId || !tokenAddress)
-        throw Error('Query should not be enabled');
+        throw Error('useLiquidityPosition should not be enabled');
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
         CoreProxy,
         accountId,
