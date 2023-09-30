@@ -298,9 +298,16 @@ export function useProvider() {
 
 export function useSigner() {
   const wallet = useOnboardWallet();
+  const network = useNetwork();
+
   if (!wallet) {
     return;
   }
+
+  if (wallet?.label === 'Frame') {
+    return new ethers.providers.JsonRpcProvider(network.rpcUrl);
+  }
+
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
   return provider.getSigner();
 }

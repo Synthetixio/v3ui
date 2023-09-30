@@ -48,12 +48,14 @@ export const loadPosition = async ({
 
   return { calls, decoder };
 };
+
 export type LiquidityPosition = {
   collateralAmount: Wei;
   collateralPrice: Wei;
   collateralValue: Wei;
   debt: Wei;
 };
+
 export const useLiquidityPosition = ({
   tokenAddress,
   accountId,
@@ -78,17 +80,21 @@ export const useLiquidityPosition = ({
     queryFn: async () => {
       if (!CoreProxy || !accountId || !poolId || !tokenAddress)
         throw Error('useLiquidityPosition should not be enabled');
+
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
         CoreProxy,
         accountId,
         poolId,
         tokenAddress,
       });
+
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: [tokenAddress],
         CoreProxy,
       });
+
       const allCalls = priceCalls.concat(positionCalls);
+
       return await erc7412Call(
         CoreProxy.provider,
         allCalls,
