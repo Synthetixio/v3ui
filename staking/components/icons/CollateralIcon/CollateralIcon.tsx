@@ -17,10 +17,10 @@ export const CollateralIcon = ({
 }: CollateralIconProps) => {
   switch (symbol) {
     case 'WETH':
-      return <EthereumIcon {...props} />;
     case 'ETH':
       return <EthereumIcon {...props} />;
     case 'SNX':
+    case 'fSNX':
       return <SNXIcon fill={fill} color={color} {...props} />;
     case 'OP':
       return <OptimismIcon {...props} />;
