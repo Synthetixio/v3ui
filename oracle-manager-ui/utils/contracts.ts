@@ -37,6 +37,8 @@ export function resolveNetworkIdToInfuraPrefix(networkId?: number) {
       return 'optimism-mainnet';
     case 420:
       return 'optimism-goerli';
+    case 84531:
+      return 'base-goerli';
     default:
       return 'mainnet';
   }
