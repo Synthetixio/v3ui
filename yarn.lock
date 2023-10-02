@@ -5915,6 +5915,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRewards@workspace:staking/lib/useRewards"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"

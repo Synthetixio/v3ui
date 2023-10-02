@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BigNumber } from 'ethers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { initialState, reducer } from '@snx-v3/txnReducer';
@@ -13,6 +13,7 @@ export function useClaimRewards(
 ) {
   const { data: CoreProxy } = useCoreProxy();
   const [txnState, dispatch] = useReducer(reducer, initialState);
+  const client = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async function () {
@@ -49,7 +50,7 @@ export function useClaimRewards(
         });
 
         dispatch({ type: 'success' });
-
+        client.refetchQueries(['Rewards']);
         return claimedAmount;
       } catch (error) {
         const err = error as Error;

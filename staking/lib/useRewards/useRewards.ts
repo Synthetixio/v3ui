@@ -51,6 +51,25 @@ const RewardsDataDocument = `
   }
 `;
 
+export async function importCoreProxy(chainName: string) {
+  switch (chainName) {
+    case 'cannon':
+      return import('@synthetixio/v3-contracts/build/cannon/RewardDistributor');
+    case 'mainnet':
+      return import('@synthetixio/v3-contracts/build/mainnet/RewardDistributor');
+    case 'goerli':
+      return import('@synthetixio/v3-contracts/build/goerli/RewardDistributor');
+    case 'sepolia':
+      return import('@synthetixio/v3-contracts/build/sepolia/RewardDistributor');
+    case 'optimism-mainnet':
+      return import('@synthetixio/v3-contracts/build/optimism-mainnet/RewardDistributor');
+    case 'optimism-goerli':
+      return import('@synthetixio/v3-contracts/build/optimism-goerli/RewardDistributor');
+    default:
+      throw new Error(`Unsupported chain ${chainName}`);
+  }
+}
+
 export function useRewards(
   distributors: RewardsInterface,
   poolId: string | undefined,
@@ -77,9 +96,7 @@ export function useRewards(
       if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) throw 'OMFG';
       if (!distributors || distributors?.length === 0) return [];
 
-      const { abi } = await import(
-        '@synthetixio/v3-contracts/build/optimism-mainnet/RewardDistributor'
-      );
+      const { abi } = await importCoreProxy(network.name);
 
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);
