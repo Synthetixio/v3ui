@@ -12,6 +12,7 @@ const RewardsResponseSchema = z.array(
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
     distributorAddress: z.string(),
+    rate: z.instanceof(Wei),
   })
 );
 
@@ -40,8 +41,6 @@ export function useRewards(
   accountId: string | undefined,
   enabled: boolean
 ) {
-  // const addresses = distributors?.map((x) => x.id) || [];
-
   const { data: Multicall3 } = useMulticall3();
   const { data: CoreProxy } = useCoreProxy();
 
@@ -106,14 +105,30 @@ export function useRewards(
         ])
       );
 
+      const rewardRates = await Promise.all([
+        ...distributorResult.map(async ({ address }) => {
+          const response = await CoreProxy.callStatic.getRewardRate(
+            BigNumber.from(poolId),
+            collateralAddress,
+            address
+          );
+
+          return response;
+        }),
+      ]);
+
       const result = distributorResult.map((item, i) => {
         const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];
         const symbol = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 2 + 1])[0];
+
+        const rewardRate = convertSecondsToDisplayString(wei(rewardRates).toNumber());
+        console.log('Reward rate', rewardRate);
 
         return {
           ...item,
           name,
           symbol,
+          rewardRate: wei(rewardRates[i]),
         };
       });
 
@@ -134,6 +149,7 @@ export function useRewards(
             address: item.address,
             claimableAmount: wei(response),
             distributorAddress: item.address,
+            rate: item.rewardRate,
           });
         } catch (error) {
           balances.push({
@@ -142,6 +158,7 @@ export function useRewards(
             address: item.address,
             claimableAmount: wei(0),
             distributorAddress: item.address,
+            rate: item.rewardRate,
           });
         }
       }
@@ -166,4 +183,25 @@ export function useRewards(
       return RewardsResponseSchema.parse(balances);
     },
   });
+}
+
+function convertSecondsToDisplayString(seconds: number) {
+  const secondsInHour = 3600;
+  const secondsInDay = 86400;
+  const secondsInWeek = 604800;
+  const secondsInMonth = 2592000;
+
+  if (seconds === 0) {
+    return null;
+  } else if (seconds % secondsInMonth === 0) {
+    return 'every month';
+  } else if (seconds % secondsInWeek === 0) {
+    return 'every week';
+  } else if (seconds % secondsInDay === 0) {
+    return 'every day';
+  } else if (seconds % secondsInHour === 0) {
+    return 'every hour';
+  } else {
+    return `every ${(seconds / 3600).toFixed(1)} hours`;
+  }
 }
