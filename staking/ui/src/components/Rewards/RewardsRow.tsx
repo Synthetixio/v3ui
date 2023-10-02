@@ -7,9 +7,9 @@ import { RewardsModal } from './RewardsModal';
 
 interface RewardsRowInterface {
   symbol: string;
-  amount: number;
-  frequency: string;
-  earnings: number;
+  projectedAmount: number; // The amount per frequency period
+  frequency: number;
+  amount: number; // The immediate amount claimable as read from the contracts
   lifetimeEarned: number;
   hasClaimed: boolean;
   address: string;
@@ -17,9 +17,9 @@ interface RewardsRowInterface {
 
 export const RewardsRow = ({
   symbol,
-  amount,
+  projectedAmount,
   frequency,
-  earnings,
+  amount,
   lifetimeEarned,
   hasClaimed,
   address,
@@ -41,6 +41,8 @@ export const RewardsRow = ({
   };
 
   const { txnStatus, txnHash } = txnState;
+
+  const frequencyString = convertSecondsToDisplayString(frequency);
 
   return (
     <>
@@ -64,12 +66,14 @@ export const RewardsRow = ({
                 fontWeight={500}
                 lineHeight="20px"
               >
-                {amount}
+                {projectedAmount}
                 {` ${symbol}`}
               </Text>
-              <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
-                {frequency}
-              </Text>
+              {frequencyString && (
+                <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
+                  {frequencyString}
+                </Text>
+              )}
             </Flex>
           </Fade>
         </Td>
@@ -82,15 +86,17 @@ export const RewardsRow = ({
               fontWeight={500}
               lineHeight="20px"
             >
-              {earnings}
+              {amount}
               {` ${symbol}`}
             </Text>
-            <Text
-              color="gray.500"
-              fontSize="12px"
-              fontFamily="heading"
-              lineHeight="16px"
-            >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
+            {lifetimeEarned && (
+              <Text
+                color="gray.500"
+                fontSize="12px"
+                fontFamily="heading"
+                lineHeight="16px"
+              >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
+            )}
           </Fade>
         </Td>
         <Td border="none" px="0px">
@@ -117,3 +123,24 @@ export const RewardsRow = ({
     </>
   );
 };
+
+function convertSecondsToDisplayString(seconds: number) {
+  const secondsInHour = 3600;
+  const secondsInDay = 86400;
+  const secondsInWeek = 604800;
+  const secondsInMonth = 2592000;
+
+  if (seconds === 0) {
+    return null;
+  } else if (seconds % secondsInMonth === 0) {
+    return 'every month';
+  } else if (seconds % secondsInWeek === 0) {
+    return 'every week';
+  } else if (seconds % secondsInDay === 0) {
+    return 'every day';
+  } else if (seconds % secondsInHour === 0) {
+    return 'every hour';
+  } else {
+    return `every ${(seconds / 3600).toFixed(1)} hours`;
+  }
+}

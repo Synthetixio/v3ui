@@ -52,6 +52,14 @@ const MarketConfigurationSchema = z.object({
 const RewardDistributorSchema = z.object({
   id: z.string(),
   total_distributed: GraphBigDecimalSchema,
+  rewards_distributions: z
+    .array(
+      z.object({
+        amount: GraphBigDecimalSchema,
+        duration: z.string(),
+      })
+    )
+    .default([]),
 });
 
 export const PoolSchema = z.object({
@@ -80,6 +88,10 @@ const PoolsDataDocument = gql`
       registered_distributors(where: { isActive: true }) {
         id
         total_distributed
+        rewards_distributions(orderBy: duration, orderDirection: desc) {
+          amount
+          duration
+        }
       }
       total_weight
       configurations {

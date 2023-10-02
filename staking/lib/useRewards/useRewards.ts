@@ -12,7 +12,8 @@ const RewardsResponseSchema = z.array(
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
     distributorAddress: z.string(),
-    rate: z.instanceof(Wei),
+    rate: z.number(),
+    duration: z.number(),
   })
 );
 
@@ -24,6 +25,10 @@ type RewardsInterface =
   | {
       id: string;
       total_distributed: Wei;
+      rewards_distributions: {
+        amount: Wei;
+        duration: string;
+      }[];
     }[]
   | undefined;
 
@@ -33,6 +38,16 @@ const erc20Abi = [
   'function balanceOf(address) view returns (uint256)',
   'function deposit() payable',
 ];
+
+const RewardsDataDocument = `
+  query RewardsData($id: String!) {
+    rewardDistributions(where: {rewardPool: $id}) {
+      id
+      amount
+      duration
+    }
+  }
+`;
 
 export function useRewards(
   distributors: RewardsInterface,
@@ -65,6 +80,11 @@ export function useRewards(
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);
 
+      // const res = await fetch(getSubgraphUrl(chainName), {
+      //   method: 'POST',
+      //   body: JSON.stringify({ query: RewardsDataDocument, variables: { accountId } }),
+      // });
+
       const { returnData: distributorReturnData } = await Multicall3.callStatic.aggregate(
         distributors.flatMap(({ id: address }) => [
           {
@@ -79,15 +99,21 @@ export function useRewards(
       );
 
       const distributorResult = distributors.map(
-        ({ id: address, total_distributed: amount }, i) => {
+        ({ id: address, total_distributed: amount, rewards_distributions }, i) => {
           const name = ifaceRD.decodeFunctionResult('name', distributorReturnData[i * 2])[0];
           const token = ifaceRD.decodeFunctionResult('token', distributorReturnData[i * 2 + 1])[0];
+
+          let duration = 0;
+          if (rewards_distributions.length > 0) {
+            duration = parseInt(rewards_distributions[0].duration);
+          }
 
           return {
             amount,
             address,
             name,
             token,
+            duration,
           };
         }
       );
@@ -121,13 +147,11 @@ export function useRewards(
         const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];
         const symbol = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 2 + 1])[0];
 
-        const rewardRate = convertSecondsToDisplayString(wei(rewardRates).toNumber());
-        console.log('Reward rate', rewardRate);
-
         return {
           ...item,
           name,
           symbol,
+          // Reward rate is the amount of rewards per second
           rewardRate: wei(rewardRates[i]),
         };
       });
@@ -149,7 +173,8 @@ export function useRewards(
             address: item.address,
             claimableAmount: wei(response),
             distributorAddress: item.address,
-            rate: item.rewardRate,
+            rate: item.rewardRate.toNumber(),
+            duration: item.duration,
           });
         } catch (error) {
           balances.push({
@@ -158,7 +183,8 @@ export function useRewards(
             address: item.address,
             claimableAmount: wei(0),
             distributorAddress: item.address,
-            rate: item.rewardRate,
+            rate: item.rewardRate.toNumber(),
+            duration: item.duration,
           });
         }
       }
@@ -183,25 +209,4 @@ export function useRewards(
       return RewardsResponseSchema.parse(balances);
     },
   });
-}
-
-function convertSecondsToDisplayString(seconds: number) {
-  const secondsInHour = 3600;
-  const secondsInDay = 86400;
-  const secondsInWeek = 604800;
-  const secondsInMonth = 2592000;
-
-  if (seconds === 0) {
-    return null;
-  } else if (seconds % secondsInMonth === 0) {
-    return 'every month';
-  } else if (seconds % secondsInWeek === 0) {
-    return 'every week';
-  } else if (seconds % secondsInDay === 0) {
-    return 'every day';
-  } else if (seconds % secondsInHour === 0) {
-    return 'every hour';
-  } else {
-    return `every ${(seconds / 3600).toFixed(1)} hours`;
-  }
 }

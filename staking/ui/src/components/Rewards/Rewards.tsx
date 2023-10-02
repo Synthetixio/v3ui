@@ -90,7 +90,7 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                   px={4}
                   py={3}
                 >
-                  Claim{' '}
+                  Claim
                 </Th>
               </Tr>
             </Thead>
@@ -106,9 +106,8 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                       key={item.address}
                       symbol={item.symbol}
                       amount={item.claimableAmount.toNumber()}
-                      frequency="Weekly"
-                      // These need to
-                      earnings={item.claimableAmount.toNumber()}
+                      frequency={item.duration}
+                      projectedAmount={item.rate / item.duration || 0}
                       lifetimeEarned={2000}
                       hasClaimed={item.claimableAmount.lte(0)}
                       address={item.distributorAddress}
