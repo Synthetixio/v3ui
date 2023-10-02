@@ -23,13 +23,6 @@ const Alert: ComponentStyleConfig = {
 const customTheme = extendTheme({
   ...theme,
   components: { ...theme.components, Alert },
-  styles: {
-    global: {
-      body: {
-        bg: 'navy.900',
-      },
-    },
-  },
 });
 
 const router = createBrowserRouter([
