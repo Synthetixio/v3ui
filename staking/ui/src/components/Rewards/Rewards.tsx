@@ -9,20 +9,13 @@ import {
   Flex,
   Fade,
   FlexProps,
+  Tooltip,
 } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { RewardsRow } from './RewardsRow';
 import { RewardsType } from '@snx-v3/useRewards';
 import { RewardsLoading } from './RewardsLoading';
-
-// interface RewardsItem {
-//   symbol: string;
-//   amount: number;
-//   frequency: string;
-//   earnings: number;
-//   lifetimeEarned: number;
-//   hasClaimed: boolean;
-// }
+import { InfoIcon } from '@chakra-ui/icons';
 
 interface RewardsDistributorsInterface extends FlexProps {
   rewards?: RewardsType;
@@ -63,6 +56,9 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                   py={3}
                 >
                   Estimated Rate
+                  <Tooltip label="Estimated rewards based on your position size">
+                    <InfoIcon ml={1} mb="1px" />
+                  </Tooltip>
                 </Th>
                 <Th
                   textTransform="unset"

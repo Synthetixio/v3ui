@@ -1,9 +1,10 @@
-import { Flex, Td, Text, Button, Fade, Tr } from '@chakra-ui/react';
+import { Flex, Td, Text, Button, Fade, Tr, Tooltip } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { RewardsModal } from './RewardsModal';
+import { truncateAddress } from '@snx-v3/formatters';
 
 interface RewardsRowInterface {
   symbol: string;
@@ -59,16 +60,18 @@ export const RewardsRow = ({
           </Fade>
           <Fade in>
             <Flex flexDirection="column" ml="12px">
-              <Text
-                color="gray.50"
-                fontSize="14px"
-                fontFamily="heading"
-                fontWeight={500}
-                lineHeight="20px"
-              >
-                {projectedAmount}
-                {` ${symbol}`}
-              </Text>
+              <Tooltip label={`Distributed by ${truncateAddress(address)}`}>
+                <Text
+                  color="gray.50"
+                  fontSize="14px"
+                  fontFamily="heading"
+                  fontWeight={500}
+                  lineHeight="20px"
+                >
+                  {projectedAmount}
+                  {` ${symbol}`}
+                </Text>
+              </Tooltip>
               {frequencyString && (
                 <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                   {frequencyString}
@@ -90,12 +93,14 @@ export const RewardsRow = ({
               {` ${symbol}`}
             </Text>
             {lifetimeClaimed > 0 ? (
-              <Text
-                color="gray.500"
-                fontSize="12px"
-                fontFamily="heading"
-                lineHeight="16px"
-              >{`Lifetime: ${lifetimeClaimed} ${symbol}`}</Text>
+              <Tooltip label="Total claimed over lifetime">
+                <Text
+                  color="gray.500"
+                  fontSize="12px"
+                  fontFamily="heading"
+                  lineHeight="16px"
+                >{`Lifetime: ${lifetimeClaimed} ${symbol}`}</Text>
+              </Tooltip>
             ) : null}
           </Fade>
         </Td>
