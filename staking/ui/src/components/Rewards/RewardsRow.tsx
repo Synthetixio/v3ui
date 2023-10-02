@@ -10,7 +10,7 @@ interface RewardsRowInterface {
   projectedAmount: number; // The amount per frequency period
   frequency: number;
   amount: number; // The immediate amount claimable as read from the contracts
-  lifetimeEarned: number;
+  lifetimeClaimed: number;
   hasClaimed: boolean;
   address: string;
 }
@@ -20,7 +20,7 @@ export const RewardsRow = ({
   projectedAmount,
   frequency,
   amount,
-  lifetimeEarned,
+  lifetimeClaimed,
   hasClaimed,
   address,
 }: RewardsRowInterface) => {
@@ -89,14 +89,14 @@ export const RewardsRow = ({
               {amount}
               {` ${symbol}`}
             </Text>
-            {lifetimeEarned && (
+            {lifetimeClaimed > 0 ? (
               <Text
                 color="gray.500"
                 fontSize="12px"
                 fontFamily="heading"
                 lineHeight="16px"
-              >{`Lifetime: ${lifetimeEarned} ${symbol}`}</Text>
-            )}
+              >{`Lifetime: ${lifetimeClaimed} ${symbol}`}</Text>
+            ) : null}
           </Fade>
         </Td>
         <Td border="none" px="0px">

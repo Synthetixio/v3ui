@@ -108,7 +108,7 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                       amount={item.claimableAmount.toNumber()}
                       frequency={item.duration}
                       projectedAmount={item.rate / item.duration || 0}
-                      lifetimeEarned={2000}
+                      lifetimeClaimed={item.lifetimeClaimed}
                       hasClaimed={item.claimableAmount.lte(0)}
                       address={item.distributorAddress}
                     />

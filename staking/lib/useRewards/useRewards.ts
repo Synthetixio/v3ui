@@ -4,6 +4,8 @@ import { utils, BigNumber } from 'ethers';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
+import { getSubgraphUrl } from '@snx-v3/constants';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -14,6 +16,7 @@ const RewardsResponseSchema = z.array(
     distributorAddress: z.string(),
     rate: z.number(),
     duration: z.number(),
+    lifetimeClaimed: z.number(),
   })
 );
 
@@ -40,11 +43,10 @@ const erc20Abi = [
 ];
 
 const RewardsDataDocument = `
-  query RewardsData($id: String!) {
-    rewardDistributions(where: {rewardPool: $id}) {
+  query RewardsData($accountId: String!, $distributor: String!) {
+    rewardsClaimeds(where: { distributor: $distributor, account: $accountId }) {
       id
       amount
-      duration
     }
   }
 `;
@@ -56,6 +58,7 @@ export function useRewards(
   accountId: string | undefined,
   enabled: boolean
 ) {
+  const network = useNetwork();
   const { data: Multicall3 } = useMulticall3();
   const { data: CoreProxy } = useCoreProxy();
 
@@ -63,6 +66,7 @@ export function useRewards(
     enabled,
     queryKey: [
       'Rewards',
+      network.name,
       {
         distributors,
         accountId,
@@ -80,23 +84,29 @@ export function useRewards(
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);
 
-      // const res = await fetch(getSubgraphUrl(chainName), {
-      //   method: 'POST',
-      //   body: JSON.stringify({ query: RewardsDataDocument, variables: { accountId } }),
-      // });
-
-      const { returnData: distributorReturnData } = await Multicall3.callStatic.aggregate(
-        distributors.flatMap(({ id: address }) => [
-          {
-            target: address,
-            callData: ifaceRD.encodeFunctionData('name', []),
-          },
-          {
-            target: address,
-            callData: ifaceRD.encodeFunctionData('token', []),
-          },
-        ])
-      );
+      const [{ returnData: distributorReturnData }, ...historicalData] = await Promise.all([
+        await Multicall3.callStatic.aggregate(
+          distributors.flatMap(({ id: address }) => [
+            {
+              target: address,
+              callData: ifaceRD.encodeFunctionData('name', []),
+            },
+            {
+              target: address,
+              callData: ifaceRD.encodeFunctionData('token', []),
+            },
+          ])
+        ),
+        ...distributors.map(async ({ id: address }) => {
+          return await fetch(getSubgraphUrl(network.name), {
+            method: 'POST',
+            body: JSON.stringify({
+              query: RewardsDataDocument,
+              variables: { accountId, distributor: address },
+            }),
+          }).then((res) => res.json());
+        }),
+      ]);
 
       const distributorResult = distributors.map(
         ({ id: address, total_distributed: amount, rewards_distributions }, i) => {
@@ -108,12 +118,20 @@ export function useRewards(
             duration = parseInt(rewards_distributions[0].duration);
           }
 
+          // Get historical data and sum up lifetime claimed for this distributor
+          const lifetimeClaimed = historicalData[i].data.rewardsClaimeds
+            .reduce((acc: Wei, item: { amount: string }) => {
+              return acc.add(wei(BigNumber.from(item.amount)));
+            }, wei(0))
+            .toNumber();
+
           return {
             amount,
             address,
             name,
             token,
             duration,
+            lifetimeClaimed,
           };
         }
       );
@@ -175,6 +193,7 @@ export function useRewards(
             distributorAddress: item.address,
             rate: item.rewardRate.toNumber(),
             duration: item.duration,
+            lifetimeClaimed: item.lifetimeClaimed,
           });
         } catch (error) {
           balances.push({
@@ -185,6 +204,7 @@ export function useRewards(
             distributorAddress: item.address,
             rate: item.rewardRate.toNumber(),
             duration: item.duration,
+            lifetimeClaimed: item.lifetimeClaimed,
           });
         }
       }
