@@ -5556,7 +5556,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:^, @snx-v3/txnReducer@workspace:staking/lib/txnReducer":
+"@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:staking/lib/txnReducer":
   version: 0.0.0-use.local
   resolution: "@snx-v3/txnReducer@workspace:staking/lib/txnReducer"
   languageName: unknown
@@ -5675,7 +5675,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards"
   dependencies:
-    "@snx-v3/txnReducer": "workspace:^"
+    "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@tanstack/react-query": ^4.29.12
     ethers: ^5.7.2
