@@ -5,7 +5,7 @@ import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
-import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
+
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -19,21 +19,18 @@ export const useDeposit = ({
   collateralTypeAddress,
   collateralChange,
   currentCollateral,
+  availableCollateral,
 }: {
   accountId?: string;
   newAccountId: string;
   poolId?: string;
   collateralTypeAddress?: string;
   currentCollateral: Wei;
+  availableCollateral?: Wei;
   collateralChange: Wei;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
-
-  const { data: accountCollateral } = useAccountSpecificCollateral(
-    accountId,
-    collateralTypeAddress
-  );
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
@@ -47,7 +44,8 @@ export const useDeposit = ({
           CoreProxy &&
           poolId &&
           collateralTypeAddress &&
-          (!accountId || accountCollateral?.availableCollateral)
+          availableCollateral &&
+          accountId
         )
       )
         return;
@@ -63,7 +61,6 @@ export const useDeposit = ({
           ? undefined
           : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
 
-        const availableCollateral = accountCollateral?.availableCollateral || wei(0);
         // optionally deposit if available collateral not enough
         const deposit = availableCollateral.gte(collateralChange)
           ? undefined

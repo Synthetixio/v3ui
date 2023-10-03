@@ -246,6 +246,11 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
       : wei(0);
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
 
+  const { data: pool } = usePool(params.poolId);
+
+  const { data: accountCollateral, refetch: refetchAccountCollateral } =
+    useAccountSpecificCollateral(params.accountId, collateralType?.tokenAddress);
+
   const { exec: execDeposit } = useDeposit({
     accountId: params.accountId,
     newAccountId,
@@ -253,13 +258,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     collateralTypeAddress: collateralType?.tokenAddress,
     collateralChange,
     currentCollateral: currentCollateral,
+    availableCollateral: accountCollateral?.availableCollateral || wei(0),
   });
-
-  const { data: pool } = usePool(params.poolId);
-
-  const { data: accountCollateral, refetch: refetchAccountCollateral } =
-    useAccountSpecificCollateral(params.accountId, collateralType?.tokenAddress);
-
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
   const [state, send] = useMachine(DepositMachine, {
