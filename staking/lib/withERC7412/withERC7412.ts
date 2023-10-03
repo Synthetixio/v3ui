@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { BigNumber, Signer, ethers, providers } from 'ethers';
+import { BigNumber, ethers, providers } from 'ethers';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
@@ -217,6 +217,7 @@ export const withERC7412 = async (
       }
       // If we're here it means we now added a tx to do .
       // Some networks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
+      console.log(logLabel, ' :');
       console.table(multicallCalls);
       const multicallTxn = useCoreProxy
         ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
