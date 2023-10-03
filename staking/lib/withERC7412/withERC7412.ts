@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, Signer, ethers, providers } from 'ethers';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
@@ -110,9 +110,23 @@ const ERC7412ErrorSchema = z.union([
 ]);
 const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
-const parseError = (error: any) => {
-  const errorData = error.data || error.error?.data?.data || error.error?.error?.data;
+const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
+  let errorData = error.data || error.error?.data?.data || error.error?.error?.data;
 
+  if (!errorData) {
+    try {
+      console.log('Error is missing revert data, trying provider.call, instead of estimate gas..');
+      // Some wallets swallows the revert reason when calling estimate gas,try to get the error by using provider.call
+      // provider.call wont actually revert, instead the error data is just returned
+      const lookedUpError = await provider.call(error.transaction);
+      errorData = lookedUpError;
+    } catch (newError: any) {
+      console.log('provider.call(error.transaction) failed, trying to extract error');
+      // I dont think we should end up here.. But it hard to know if some combo of wallets and rpc provider would....
+      errorData = error.data || error.error?.data?.data || error.error?.error?.data;
+      console.log('Error data: ', errorData);
+    }
+  }
   try {
     const decodedError = erc7412Interface.parseError(errorData);
     return ERC7412ErrorSchema.parse(decodedError);
@@ -153,7 +167,7 @@ const getDefaultFromAddress = (chainName: keyof typeof NETWORKS) => {
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
  */
 export const withERC7412 = async (
-  provider: ethers.providers.Provider,
+  _provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
   hasTrustedForwarder: boolean,
   logLabel?: string
@@ -172,11 +186,14 @@ export const withERC7412 = async (
   if (multicallCalls.some((x) => !x.from)) {
     throw Error(`Make sure all txs have 'from' field set`);
   }
+
   const from = multicallCalls[0].from as string;
 
-  const { chainId } = await provider.getNetwork();
+  const { chainId } = await _provider.getNetwork();
 
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
+
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(network?.name || 'mainnet');
   const isTestnet = network?.isTestnet || false;
@@ -194,22 +211,28 @@ export const withERC7412 = async (
       if (multicallCalls.length == 1) {
         const initialCall = multicallCalls[0];
         // The normal flow would go in here, then if the estimate call fail, we catch the error and handle ERC7412
-        const gasLimit = await provider.estimateGas(initialCall);
-
+        const gasLimit = await jsonRpcProvider.estimateGas(initialCall);
+        console.log(`Estimated gas succeeded, with no price updates`);
         return { ...initialCall, gasLimit };
       }
       // If we're here it means we now added a tx to do .
-      // Some netowrks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
-
+      // Some networks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
+      console.table(multicallCalls);
       const multicallTxn = useCoreProxy
         ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
         : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
 
-      const gasLimit = await provider.estimateGas(multicallTxn);
+      const gasLimit = await jsonRpcProvider.estimateGas(multicallTxn);
+
+      console.log(
+        `Estimated gas succeeded, with ${
+          multicallCalls.length - initialMulticallLength
+        } price updates`
+      );
 
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
-      const parsedError = parseError(error);
+      const parsedError = await parseError(error, jsonRpcProvider);
 
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
@@ -267,7 +290,8 @@ export async function erc7412Call<T>(
     txRequest.from = getDefaultFromAddress(network?.name || 'mainnet'); // Reads can always use WETH
   }
   const hasTrustedForwarder = true; // We can pretend read call has trusted forwarder
-  const newCall = await withERC7412(provider, reqs, hasTrustedForwarder, logLabel);
+  const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
+  const newCall = await withERC7412(jsonRpcProvider, reqs, hasTrustedForwarder, logLabel);
 
   const res = await provider.call(newCall);
 
