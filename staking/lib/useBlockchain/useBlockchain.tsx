@@ -286,10 +286,6 @@ export function useProvider() {
   const wallet = useOnboardWallet();
   const network = useNetwork();
 
-  if (wallet?.label === 'Frame') {
-    return new ethers.providers.JsonRpcProvider(network.rpcUrl);
-  }
-
   if (wallet) {
     return new ethers.providers.Web3Provider(wallet.provider, 'any');
   }
@@ -303,10 +299,6 @@ export function useSigner() {
   if (!wallet) {
     return;
   }
-
-  // if (wallet.label === 'Frame') {
-  //   return wallet.provider.;
-  // }
 
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
   return provider.getSigner();
