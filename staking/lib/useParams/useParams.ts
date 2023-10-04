@@ -11,7 +11,7 @@ export function sortObject(params: Record<string, string>): Record<string, strin
 
 export function cleanObject(params: Record<string, string | undefined>): Record<string, string> {
   const cleaned = Object.entries(params).filter(([, value]) => value !== undefined) as [
-    [string, string]
+    [string, string],
   ];
   return Object.fromEntries(cleaned);
 }
