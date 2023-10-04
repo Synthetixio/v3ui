@@ -54,6 +54,7 @@ const statusColor = (txnStatus: TransactionStatus) => {
   if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
   return 'gray.700';
 };
+
 export const BorrowModalUi: React.FC<{
   onClose: () => void;
   debtChange: Wei;
