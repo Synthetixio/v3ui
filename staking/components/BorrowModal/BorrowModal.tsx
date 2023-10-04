@@ -63,8 +63,8 @@ export const BorrowModalUi: React.FC<{
 }> = ({ onClose, isOpen, debtChange, txnStatus, execBorrow }) => {
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay bg="blue.500" width="100%" height="100%" />
-      <ModalContent color="white" data-testid="borrow modal">
+      <ModalOverlay width="100%" height="100%" />
+      <ModalContent bg="black" color="white" data-testid="borrow modal">
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
