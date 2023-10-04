@@ -6,10 +6,10 @@ description = "Synthetix V3 Local deployment"
 defaultValue = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 
 [setting.synthetix]
-defaultValue = "synthetix:latest"
+defaultValue = "synthetix:3.3.4"
 
 [setting.spotMarket]
-defaultValue = "synthetix-spot-market:latest"
+defaultValue = "synthetix-spot-market:3.3.4"
 
 [setting.defaultPoolId]
 defaultValue = "1"
@@ -20,8 +20,9 @@ defaultValue = "2"
 [setting.accountId]
 defaultValue = "1"
 
-[import.Multicall]
-source = "multicall:latest"
+# In case we ever want to use generic Multicall
+[provision.Multicall]
+source = "multicall:3.0.0"
 
 # Provision collateral token
 [provision.collateralToken]
@@ -31,7 +32,7 @@ options.name = "Snax"
 
 # Provision Chainlink mock for collateral token ($2)
 [provision.collateralChainlinkMock]
-source = "chainlink-mock-v3-aggregator:latest"
+source = "chainlink-mock-v3-aggregator:1.0"
 options.initialAnswer = "<%= parseEther('2') %>"
 
 # Provision Synthetix core and oracle manager
@@ -281,8 +282,8 @@ args = [
 depends = [
     "invoke.approveAnotherPool",
     # "invoke.mintStablecoins", # this is what I'd like to depend on...
-    "invoke.initializeWrapper",    # But we need to make sure at two tx exists in between minting and withdrawing, 
-    "invoke.setPoolConfiguration", # otherwise we run into `AccountActivityTimeoutPending` (with 1sec diff) even though AccountTimeoutWithdraw is set to 0 
+    "invoke.initializeWrapper",    # But we need to make sure at two tx exists in between minting and withdrawing,
+    "invoke.setPoolConfiguration", # otherwise we run into `AccountActivityTimeoutPending` (with 1sec diff) even though AccountTimeoutWithdraw is set to 0
 ]
 
 # Reset withdrawal timeout to default 86400
