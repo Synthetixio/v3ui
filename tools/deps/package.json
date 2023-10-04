@@ -12,9 +12,9 @@
     "deps-version": "./version.js"
   },
   "devDependencies": {
-    "depcheck": "^1.4.3",
-    "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
+    "depcheck": "^1.4.6",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "depcheck": {
     "ignorePatterns": [],

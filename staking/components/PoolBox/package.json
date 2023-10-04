@@ -4,8 +4,8 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/icons": "^2.0.19",
-    "@chakra-ui/react": "^2.6.1",
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.1",
     "@snx-v3/BorderBox": "workspace:*",
     "@snx-v3/TrendText": "workspace:*",
     "@snx-v3/calculations": "workspace:*",
@@ -15,6 +15,6 @@
     "@snx-v3/usePools": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "react": "^18.2.0",
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.16.0"
   }
 }

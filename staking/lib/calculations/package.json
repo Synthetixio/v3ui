@@ -6,6 +6,6 @@
   "dependencies": {
     "@snx-v3/usePoolData": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "zod": "^3.21.4"
+    "zod": "^3.22.4"
   }
 }

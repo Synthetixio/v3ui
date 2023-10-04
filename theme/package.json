@@ -33,16 +33,16 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@chakra-ui/icons": "^2.0.19",
-    "@chakra-ui/react": "^2.6.1",
-    "@chakra-ui/theme-tools": "^2.0.17",
-    "@emotion/react": "^11.11.0",
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/theme-tools": "^2.1.1",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "eslint": "^8.41.0",
-    "framer-motion": "^10.12.16",
+    "eslint": "^8.50.0",
+    "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.2.2"
   },
   "browserslist": [
     "last 1 Chrome version",
