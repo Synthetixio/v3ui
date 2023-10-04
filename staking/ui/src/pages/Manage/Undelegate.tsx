@@ -14,7 +14,7 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
@@ -139,15 +139,10 @@ export const UndelegateUi: FC<{
   );
 };
 
-export const Undelegate = () => {
+export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
 
   const poolConfiguration = usePoolConfiguration(params.poolId);
 

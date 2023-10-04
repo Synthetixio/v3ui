@@ -69,16 +69,19 @@ const ActionButton: FC<
   </BorderBox>
 );
 
-const Action: FC<{ manageAction: ManageAction }> = ({ manageAction }) => {
+const Action: FC<{ manageAction: ManageAction; liquidityPosition?: LiquidityPosition }> = ({
+  manageAction,
+  liquidityPosition,
+}) => {
   switch (manageAction) {
     case 'borrow':
-      return <Borrow />;
+      return <Borrow liquidityPosition={liquidityPosition} />;
     case 'deposit':
       return <Deposit />;
     case 'repay':
-      return <Repay />;
+      return <Repay liquidityPosition={liquidityPosition} />;
     case 'undelegate':
-      return <Undelegate />;
+      return <Undelegate liquidityPosition={liquidityPosition} />;
 
     default:
       return null;
@@ -89,7 +92,8 @@ const ManageActionUi: FC<{
   setActiveAction: (action: ManageAction) => void;
   manageAction?: ManageAction;
   onSubmit: (e: FormEvent) => void;
-}> = ({ setActiveAction, manageAction, onSubmit }) => {
+  liquidityPosition?: LiquidityPosition;
+}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition }) => {
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
@@ -110,7 +114,7 @@ const ManageActionUi: FC<{
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
-          <Action manageAction={manageAction} />
+          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
         </Flex>
       ) : null}
     </Box>
@@ -186,6 +190,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   return (
     <>
       <ManageActionUi
+        liquidityPosition={liquidityPosition}
         onSubmit={onSubmit}
         setActiveAction={(action) => {
           setCollateralChange(wei(0));

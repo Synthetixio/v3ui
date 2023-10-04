@@ -4,9 +4,8 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
@@ -112,20 +111,12 @@ export const RepayUi: FC<{
     </Flex>
   );
 };
-export const Repay = () => {
+export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const params = useParams();
-
   const { data: USDProxy } = useUSDProxy();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data } = useAccountSpecificCollateral(params.accountId, USDProxy?.address);
   const availableUSDCollateral = data?.availableCollateral;
-
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
 
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
