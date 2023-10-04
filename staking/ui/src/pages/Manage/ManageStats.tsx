@@ -116,17 +116,11 @@ export const ManageStatsUi: FC<{
   );
 };
 
-export const ManageStats = () => {
+export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
 
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 

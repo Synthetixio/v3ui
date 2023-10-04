@@ -12,7 +12,7 @@ import {
 import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
@@ -207,11 +207,17 @@ export const DepositModalUi: FC<{
 
 export type DepositModalProps = FC<{
   collateralChange: Wei;
+  currentCollateral: Wei;
   isOpen: boolean;
   onClose: () => void;
 }>;
 
-export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralChange }) => {
+export const DepositModal: DepositModalProps = ({
+  onClose,
+  isOpen,
+  collateralChange,
+  currentCollateral,
+}) => {
   const navigate = useNavigate();
   const params = useParams();
 
@@ -228,12 +234,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
 
-  const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
-    accountId: params.accountId,
-    tokenAddress: collateralType?.tokenAddress,
-    poolId: params.poolId,
-  });
-
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   // TODO: Update logic on new account id
@@ -244,7 +244,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
       ? collateralChange.sub(wethBalance || 0)
       : wei(0);
-  const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
 
   const { data: pool } = usePool(params.poolId);
 
@@ -257,7 +256,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
     collateralChange,
-    currentCollateral: currentCollateral,
+    currentCollateral,
     availableCollateral: accountCollateral?.availableCollateral || wei(0),
   });
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
@@ -333,7 +332,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
             refetchAllowance(),
             refetchAccountCollateral(),
             refetch(),
-            Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),
           ]);
 
           toast.closeAll();

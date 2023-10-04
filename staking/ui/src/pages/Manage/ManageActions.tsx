@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { BorrowIcon, DollarCircle } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { wei } from '@synthetixio/wei';
@@ -27,6 +27,7 @@ import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { useQueryClient } from '@tanstack/react-query';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -116,7 +117,7 @@ const ManageActionUi: FC<{
   );
 };
 
-export const ManageAction = () => {
+export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
 
   const navigate = useNavigate();
@@ -124,20 +125,14 @@ export const ManageAction = () => {
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
     useContext(ManagePositionContext);
-
+  const queryClient = useQueryClient();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-
-  const liquidityPosition = useLiquidityPosition({
-    accountId: params.accountId,
-    poolId: params.poolId,
-    tokenAddress: collateralType?.tokenAddress,
-  });
 
   const { isValid } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
-    collateralAmount: liquidityPosition.data?.collateralAmount,
-    collateralPrice: liquidityPosition.data?.collateralPrice,
-    debt: liquidityPosition.data?.debt,
+    collateralAmount: liquidityPosition?.collateralAmount,
+    collateralPrice: liquidityPosition?.collateralPrice,
+    debt: liquidityPosition?.debt,
     collateralChange,
     debtChange,
   });
@@ -162,15 +157,11 @@ export const ManageAction = () => {
     const queryParams = new URLSearchParams(location.search);
 
     if (queryParams.get('manageAction')) return;
-    if (!liquidityPosition.data) return;
+    if (!liquidityPosition) return;
     if (!collateralType) return;
 
-    const cRatio = calculateCRatio(
-      liquidityPosition.data.debt,
-      liquidityPosition.data.collateralValue
-    );
-    const canBorrow =
-      liquidityPosition.data.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
+    const cRatio = calculateCRatio(liquidityPosition.debt, liquidityPosition.collateralValue);
+    const canBorrow = liquidityPosition.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
 
     if (canBorrow) {
       queryParams.set('manageAction', 'borrow');
@@ -190,7 +181,7 @@ export const ManageAction = () => {
 
     queryParams.set('manageAction', 'deposit');
     navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-  }, [collateralType, liquidityPosition.data, navigate]);
+  }, [collateralType, liquidityPosition, navigate]);
 
   return (
     <>
@@ -209,7 +200,7 @@ export const ManageAction = () => {
         {txnModalOpen === 'repay' ? (
           <RepayModal
             onClose={() => {
-              liquidityPosition.refetch();
+              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -220,7 +211,7 @@ export const ManageAction = () => {
         {txnModalOpen === 'borrow' ? (
           <BorrowModal
             onClose={() => {
-              liquidityPosition.refetch();
+              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -230,9 +221,10 @@ export const ManageAction = () => {
         ) : null}
         {txnModalOpen === 'deposit' ? (
           <DepositModal
+            currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
             collateralChange={collateralChange}
             onClose={() => {
-              liquidityPosition.refetch();
+              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -243,7 +235,7 @@ export const ManageAction = () => {
         {txnModalOpen === 'undelegate' ? (
           <UndelegateModal
             onClose={() => {
-              liquidityPosition.refetch();
+              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);

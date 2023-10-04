@@ -11,13 +11,15 @@ import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
 import { generatePath, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export const ManageUi: FC<{
   collateralType: CollateralType;
   poolName?: string;
   poolId?: string;
   navigate: NavigateFunction;
-}> = ({ collateralType, poolName, poolId, navigate }) => {
+  liquidityPosition?: LiquidityPosition;
+}> = ({ collateralType, poolName, poolId, navigate, liquidityPosition }) => {
   const location = useLocation();
 
   return (
@@ -90,10 +92,10 @@ export const ManageUi: FC<{
               This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
             </Text>
           </Text>
-          <ManageAction />
+          <ManageAction liquidityPosition={liquidityPosition} />
         </BorderBox>
         <Box minW="450px">
-          <ManageStats />
+          <ManageStats liquidityPosition={liquidityPosition} />
         </Box>
       </Flex>
     </Box>
@@ -106,7 +108,11 @@ export const Manage = () => {
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: pool } = usePool(params.poolId);
-
+  const { data: liquidityPosition } = useLiquidityPosition({
+    tokenAddress: collateralType?.tokenAddress,
+    accountId: params.accountId,
+    poolId: params.poolId,
+  });
   if (!collateralType) {
     return <Spinner />; // TODO skeleton
   }
@@ -114,6 +120,7 @@ export const Manage = () => {
   return (
     <ManagePositionProvider>
       <ManageUi
+        liquidityPosition={liquidityPosition}
         collateralType={collateralType}
         navigate={navigate}
         poolName={pool?.name}
