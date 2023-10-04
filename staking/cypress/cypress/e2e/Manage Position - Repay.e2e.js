@@ -30,6 +30,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
   });
 
   cy.viewport(1000, 800);
+
   cy.get('@accountId').then((accountId) => {
     const path = generatePath('/positions/:collateralSymbol/:poolId', {
       collateralSymbol: 'SNX',
