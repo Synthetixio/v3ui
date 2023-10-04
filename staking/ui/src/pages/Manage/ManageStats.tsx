@@ -115,19 +115,21 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <ChangeStat
-            // TODO, need a function to burn to target so dust debt not left over
-            value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
-            newValue={newDebt}
-            formatFn={(val: Wei) =>
-              currency(val, {
-                currency: 'USD',
-                style: 'currency',
-                maximumFractionDigits: 2,
-              })
-            }
-            hasChanges={hasChanges}
-          />
+          <Flex data-testid="manage stats debt">
+            <ChangeStat
+              // TODO, need a function to burn to target so dust debt not left over
+              value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
+              newValue={newDebt}
+              formatFn={(val: Wei) =>
+                currency(val, {
+                  currency: 'USD',
+                  style: 'currency',
+                  maximumFractionDigits: 2,
+                })
+              }
+              hasChanges={hasChanges}
+            />
+          </Flex>
         </Flex>
         <Flex flexDirection="column" alignItems="flex-end" data-testid="manage stats collateral">
           <Text fontFamily="heading" color="gray.50" fontSize="16px" fontWeight={700}>
