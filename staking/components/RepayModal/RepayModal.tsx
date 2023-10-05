@@ -143,7 +143,6 @@ export const RepayModal: React.FC<{
           });
 
           await approve(Boolean(state.context.infiniteApproval));
-          await refetchAllowance();
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
@@ -168,7 +167,8 @@ export const RepayModal: React.FC<{
           toast.closeAll();
           toast({ title: 'Repaying...' });
           await execRepay();
-          await refetchBalance();
+          await Promise.all([refetchBalance(), refetchAllowance()]);
+
           toast.closeAll();
           toast({
             title: 'Success',
