@@ -301,7 +301,7 @@ export declare namespace CcipClient {
     BigNumber,
     string,
     string,
-    CcipClient.EVMTokenAmountStructOutput[]
+    CcipClient.EVMTokenAmountStructOutput[],
   ] & {
     messageId: string;
     sourceChainSelector: BigNumber;
@@ -338,7 +338,7 @@ export declare namespace CollateralConfiguration {
     BigNumber,
     string,
     string,
-    BigNumber
+    BigNumber,
   ] & {
     depositingEnabled: boolean;
     issuanceRatioD18: BigNumber;
@@ -1135,13 +1135,13 @@ export interface CoreProxyInterface extends utils.Interface {
     'CollateralLockExpired(uint128,address,uint256,uint64)': EventFragment;
     'Deposited(uint128,address,uint256,address)': EventFragment;
     'Withdrawn(uint128,address,uint256,address)': EventFragment;
-    'CollateralConfigured(address,tuple)': EventFragment;
+    'CollateralConfigured(address,(bool,uint256,uint256,uint256,bytes32,address,uint256))': EventFragment;
     'TransferCrossChainInitiated(uint64,uint256,address)': EventFragment;
     'IssuanceFeePaid(uint128,uint128,address,uint256)': EventFragment;
     'UsdBurned(uint128,uint128,address,uint256,address)': EventFragment;
     'UsdMinted(uint128,uint128,address,uint256,address)': EventFragment;
-    'Liquidation(uint128,uint128,address,tuple,uint128,address)': EventFragment;
-    'VaultLiquidation(uint128,address,tuple,uint128,address)': EventFragment;
+    'Liquidation(uint128,uint128,address,(uint256,uint256,uint256),uint128,address)': EventFragment;
+    'VaultLiquidation(uint128,address,(uint256,uint256,uint256),uint128,address)': EventFragment;
     'MarketCollateralDeposited(uint128,address,uint256,address)': EventFragment;
     'MarketCollateralWithdrawn(uint128,address,uint256,address)': EventFragment;
     'MaximumMarketCollateralConfigured(uint128,address,uint256,address)': EventFragment;
@@ -1154,9 +1154,9 @@ export interface CoreProxyInterface extends utils.Interface {
     'PoolApprovedAdded(uint256)': EventFragment;
     'PoolApprovedRemoved(uint256)': EventFragment;
     'PreferredPoolSet(uint256)': EventFragment;
-    'PoolCollateralConfigurationUpdated(uint128,address,tuple)': EventFragment;
+    'PoolCollateralConfigurationUpdated(uint128,address,(uint256,uint256))': EventFragment;
     'PoolCollateralDisabledByDefaultSet(uint128,bool)': EventFragment;
-    'PoolConfigurationSet(uint128,tuple[],address)': EventFragment;
+    'PoolConfigurationSet(uint128,(uint128,uint128,int128)[],address)': EventFragment;
     'PoolCreated(uint128,address,address)': EventFragment;
     'PoolNameUpdated(uint128,string,address)': EventFragment;
     'PoolNominationRenounced(uint128,address)': EventFragment;
@@ -4019,7 +4019,7 @@ export interface CoreProxy extends BaseContract {
       sender?: string | null
     ): WithdrawnEventFilter;
 
-    'CollateralConfigured(address,tuple)'(
+    'CollateralConfigured(address,(bool,uint256,uint256,uint256,bytes32,address,uint256))'(
       collateralType?: string | null,
       config?: null
     ): CollateralConfiguredEventFilter;
@@ -4082,7 +4082,7 @@ export interface CoreProxy extends BaseContract {
       sender?: string | null
     ): UsdMintedEventFilter;
 
-    'Liquidation(uint128,uint128,address,tuple,uint128,address)'(
+    'Liquidation(uint128,uint128,address,(uint256,uint256,uint256),uint128,address)'(
       accountId?: BigNumberish | null,
       poolId?: BigNumberish | null,
       collateralType?: string | null,
@@ -4099,7 +4099,7 @@ export interface CoreProxy extends BaseContract {
       sender?: null
     ): LiquidationEventFilter;
 
-    'VaultLiquidation(uint128,address,tuple,uint128,address)'(
+    'VaultLiquidation(uint128,address,(uint256,uint256,uint256),uint128,address)'(
       poolId?: BigNumberish | null,
       collateralType?: string | null,
       liquidationData?: null,
@@ -4226,7 +4226,7 @@ export interface CoreProxy extends BaseContract {
     'PreferredPoolSet(uint256)'(poolId?: null): PreferredPoolSetEventFilter;
     PreferredPoolSet(poolId?: null): PreferredPoolSetEventFilter;
 
-    'PoolCollateralConfigurationUpdated(uint128,address,tuple)'(
+    'PoolCollateralConfigurationUpdated(uint128,address,(uint256,uint256))'(
       poolId?: BigNumberish | null,
       collateralType?: null,
       config?: null
@@ -4246,7 +4246,7 @@ export interface CoreProxy extends BaseContract {
       disabled?: null
     ): PoolCollateralDisabledByDefaultSetEventFilter;
 
-    'PoolConfigurationSet(uint128,tuple[],address)'(
+    'PoolConfigurationSet(uint128,(uint128,uint128,int128)[],address)'(
       poolId?: BigNumberish | null,
       markets?: null,
       sender?: string | null

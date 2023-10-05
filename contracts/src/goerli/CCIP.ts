@@ -37,7 +37,7 @@ export declare namespace IEVM2AnySubscriptionOnRampRouterInterface {
     string,
     string[],
     BigNumber[],
-    BigNumber
+    BigNumber,
   ] & {
     receiver: string;
     data: string;
@@ -58,7 +58,7 @@ export interface CCIPInterface extends utils.Interface {
     functionFragment: 'ccipSend',
     values: [
       BigNumberish,
-      IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct
+      IEVM2AnySubscriptionOnRampRouterInterface.EVM2AnySubscriptionMessageStruct,
     ]
   ): string;
 
