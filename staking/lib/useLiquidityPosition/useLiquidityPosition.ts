@@ -81,11 +81,13 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
+        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
       },
     ],
     queryFn: async () => {
-      if (!CoreProxy || !accountId || !poolId || !tokenAddress || !collateralPriceUpdates)
+      if (!CoreProxy || !accountId || !poolId || !tokenAddress || !collateralPriceUpdates) {
         throw Error('useLiquidityPosition should not be enabled');
+      }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: [tokenAddress],
         CoreProxy,
