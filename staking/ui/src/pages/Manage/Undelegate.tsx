@@ -31,6 +31,7 @@ export const UndelegateUi: FC<{
   symbol: string;
   setCollateralChange: (val: Wei) => void;
   isAnyMarketLocked?: boolean;
+  isLoadingRequiredData: boolean;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -39,6 +40,7 @@ export const UndelegateUi: FC<{
   symbol,
   currentCollateral,
   minDelegation,
+  isLoadingRequiredData,
   isAnyMarketLocked,
 }) => {
   const onMaxClick = React.useCallback(() => {
@@ -131,7 +133,7 @@ export const UndelegateUi: FC<{
       <Button
         data-testid="undelegate submit"
         type="submit"
-        isDisabled={!max || isAnyMarketLocked === true}
+        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
       >
         Remove {displaySymbol}
       </Button>
@@ -160,7 +162,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
 
-  function maxWithdraw() {
+  function maxUndelegate() {
     if (!liquidityPosition || !collateralType) return undefined;
     const { collateralAmount, collateralValue } = liquidityPosition;
     // if debt is negative it's actually credit, which means we can undelegate all collateral
@@ -173,6 +175,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
     return Wei.min(collateralAmount, maxWithdrawable);
   }
+  const max = maxUndelegate();
+
   return (
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}
@@ -182,7 +186,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
       collateralChange={collateralChange}
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
-      max={maxWithdraw()}
+      max={max}
+      isLoadingRequiredData={poolConfiguration.isLoading || !max}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
     />
   );

@@ -269,6 +269,7 @@ export function DepositFormUi({
         collateralType.symbol === 'SNX' && <CollateralAlert tokenBalance={snxBalance.collateral} />}
       {amount.gt(0) ? (
         <DepositModal
+          availableCollateral={accountCollateral?.availableCollateral || wei(0)}
           currentCollateral={wei(0)}
           collateralChange={amount}
           isOpen={isOpenDeposit}

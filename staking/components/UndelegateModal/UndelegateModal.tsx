@@ -12,7 +12,7 @@ import {
 import { FC, useCallback, useContext, useEffect } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Multistep } from '@snx-v3/Multistep';
 import { Wei, wei } from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
@@ -24,7 +24,6 @@ import type { StateFrom } from 'xstate';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { useQueryClient } from '@tanstack/react-query';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -90,18 +89,13 @@ export const UndelegateModalUi: FC<{
 export type UndelegateModalProps = FC<{
   isOpen: boolean;
   onClose: () => void;
+  liquidityPosition?: LiquidityPosition;
 }>;
-export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
+export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
   const { collateralChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-
-  const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
-    accountId: params.accountId,
-    tokenAddress: collateralType?.tokenAddress,
-    poolId: params.poolId,
-  });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
 
@@ -109,11 +103,10 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
   const { exec: execUndelegate } = useUndelegate({
     accountId: params.accountId,
     poolId: params.poolId,
-    collateralTypeAddress: collateralType?.tokenAddress,
+    collateralTypeAddress: liquidityPosition?.tokenAddress,
     collateralChange,
     currentCollateral: currentCollateral,
   });
-  const queryClient = useQueryClient();
 
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
@@ -126,8 +119,6 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen }) => {
       [ServiceNames.undelegate]: async () => {
         try {
           await execUndelegate();
-          await refetchLiquidityPosition();
-          await queryClient.refetchQueries({ queryKey: ['AccountSpecificCollateral'] });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

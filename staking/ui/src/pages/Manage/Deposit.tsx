@@ -10,10 +10,11 @@ import { useEthBalance } from '@snx-v3/useEthBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
-import { AccountCollateralType, useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../components/CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -157,7 +158,7 @@ export const DepositUi: FC<{
   );
 };
 
-export const Deposit = () => {
+export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
 
@@ -167,16 +168,11 @@ export const Deposit = () => {
 
   const { data: ethBalance } = useEthBalance();
 
-  const { data: accountCollateral } = useAccountSpecificCollateral(
-    params.accountId,
-    collateralType?.tokenAddress
-  );
-
-  if (!collateralType || !accountCollateral) return null;
+  if (!collateralType || !liquidityPosition?.accountCollateral) return null;
 
   return (
     <DepositUi
-      accountCollateral={accountCollateral}
+      accountCollateral={liquidityPosition.accountCollateral}
       displaySymbol={collateralType.displaySymbol}
       tokenBalance={tokenBalance}
       snxBalance={transferrableSnx}

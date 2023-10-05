@@ -208,6 +208,7 @@ export const DepositModalUi: FC<{
 export type DepositModalProps = FC<{
   collateralChange: Wei;
   currentCollateral: Wei;
+  availableCollateral: Wei;
   isOpen: boolean;
   onClose: () => void;
 }>;
@@ -217,13 +218,14 @@ export const DepositModal: DepositModalProps = ({
   isOpen,
   collateralChange,
   currentCollateral,
+  availableCollateral,
 }) => {
   const navigate = useNavigate();
   const params = useParams();
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { refetch } = useAccounts();
+  const { refetch: refetchAccounts } = useAccounts();
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: collateralType?.tokenAddress,
@@ -247,9 +249,6 @@ export const DepositModal: DepositModalProps = ({
 
   const { data: pool } = usePool(params.poolId);
 
-  const { data: accountCollateral, refetch: refetchAccountCollateral } =
-    useAccountSpecificCollateral(params.accountId, collateralType?.tokenAddress);
-
   const { exec: execDeposit } = useDeposit({
     accountId: params.accountId,
     newAccountId,
@@ -257,7 +256,7 @@ export const DepositModal: DepositModalProps = ({
     collateralTypeAddress: collateralType?.tokenAddress,
     collateralChange,
     currentCollateral,
-    availableCollateral: accountCollateral?.availableCollateral || wei(0),
+    availableCollateral: availableCollateral || wei(0),
   });
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
@@ -330,8 +329,7 @@ export const DepositModal: DepositModalProps = ({
             ethBalance.refetch(),
             collateralType?.symbol === 'SNX' ? transferrable.refetch() : Promise.resolve(),
             refetchAllowance(),
-            refetchAccountCollateral(),
-            refetch(),
+            !params.accountId ? refetchAccounts() : Promise.resolve(),
           ]);
 
           toast.closeAll();
@@ -417,7 +415,7 @@ export const DepositModal: DepositModalProps = ({
       }}
       onSubmit={onSubmit}
       poolName={pool?.name || ''}
-      availableCollateral={accountCollateral?.availableCollateral || wei(0)}
+      availableCollateral={availableCollateral || wei(0)}
     />
   );
 };

@@ -77,7 +77,7 @@ const Action: FC<{ manageAction: ManageAction; liquidityPosition?: LiquidityPosi
     case 'borrow':
       return <Borrow liquidityPosition={liquidityPosition} />;
     case 'deposit':
-      return <Deposit />;
+      return <Deposit liquidityPosition={liquidityPosition} />;
     case 'repay':
       return <Repay liquidityPosition={liquidityPosition} />;
     case 'undelegate':
