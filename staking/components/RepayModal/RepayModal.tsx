@@ -20,13 +20,11 @@ import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useApprove } from '@snx-v3/useApprove';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
-import { useQueryClient } from '@tanstack/react-query';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 
 export const RepayModalUi: React.FC<{
@@ -105,14 +103,12 @@ export const RepayModalUi: React.FC<{
 export const RepayModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
-}> = ({ onClose, isOpen }) => {
+  availableCollateral?: Wei;
+}> = ({ onClose, isOpen, availableCollateral }) => {
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
-  const queryClient = useQueryClient();
 
   const { data: USDProxy } = useUSDProxy();
-  const { data: accountSpecificCollateral, refetch: refetchAccountCollateral } =
-    useAccountSpecificCollateral(params.accountId, USDProxy?.address);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: balance, refetch: refetchBalance } = useTokenBalance(USDProxy?.address);
@@ -122,14 +118,14 @@ export const RepayModal: React.FC<{
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
     debtChange,
-    availableUSDCollateral: accountSpecificCollateral?.availableCollateral,
+    availableUSDCollateral: availableCollateral,
     balance,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
-  const amountToDeposit = debtChange.abs().sub(accountSpecificCollateral?.availableCollateral || 0);
+  const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: USDProxy?.address,
@@ -172,11 +168,7 @@ export const RepayModal: React.FC<{
           toast.closeAll();
           toast({ title: 'Repaying...' });
           await execRepay();
-          await Promise.all([
-            refetchBalance(),
-            refetchAccountCollateral(),
-            queryClient.refetchQueries({ queryKey: ['LiquidityPosition'], type: 'active' }),
-          ]);
+          await refetchBalance();
           toast.closeAll();
           toast({
             title: 'Success',
