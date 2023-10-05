@@ -200,7 +200,7 @@ export const CollateralSectionUi: FC<{
 export const CollateralSection = () => {
   const params = useParams();
 
-  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined); // TODO this needs ERC7412
+  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
   const { data: collateralPriceByAddress } = useCollateralPrices();
 
   return (
