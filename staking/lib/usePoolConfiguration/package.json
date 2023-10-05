@@ -4,9 +4,10 @@
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
+    "@snx-v3/fetchPythPrices": "workspace:*",
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
-    "@snx-v3/useMulticall3": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
     "@snx-v3/zod": "workspace:*",
     "@tanstack/react-query": "^4.29.12",
