@@ -21,27 +21,31 @@ type TransactionRequest = ethers.providers.TransactionRequest;
 type TransactionRequestWithGasLimit = Modify<TransactionRequest, { gasLimit: ethers.BigNumber }>;
 
 const PRICE_CACHE_LENGTH = 5000;
-const fetchOffchainData = withMemoryCache(async (oracleQuery: string, isTestnet: boolean) => {
-  const priceService = new EvmPriceServiceConnection(
-    isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
-  );
-  const OracleQuerySchema = z.tuple([z.number(), ZodBigNumber, z.array(z.string())]);
-  const decoded = ethers.utils.defaultAbiCoder.decode(
-    ['uint8', 'uint64', 'bytes32[]'],
-    oracleQuery
-  );
-  const [updateType, stalenessTolerance, priceIds] = OracleQuerySchema.parse(decoded);
 
-  if (updateType !== 1) {
-    throw new Error(`update type ${updateType} not supported`);
-  }
-  const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
+const fetchOffchainData = withMemoryCache(
+  async (oracleQuery: string, isTestnet: boolean, logLabel: string) => {
+    const priceService = new EvmPriceServiceConnection(
+      isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
+    );
+    const OracleQuerySchema = z.tuple([z.number(), ZodBigNumber, z.array(z.string())]);
+    const decoded = ethers.utils.defaultAbiCoder.decode(
+      ['uint8', 'uint64', 'bytes32[]'],
+      oracleQuery
+    );
+    const [updateType, stalenessTolerance, priceIds] = OracleQuerySchema.parse(decoded);
+    console.log(`[${logLabel}] stale price for priceFeedId: ${priceIds[0]}`);
+    if (updateType !== 1) {
+      throw new Error(`update type ${updateType} not supported`);
+    }
+    const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
 
-  return ethers.utils.defaultAbiCoder.encode(
-    ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
-    [updateType, stalenessTolerance, priceIds, signedOffchainData]
-  );
-}, PRICE_CACHE_LENGTH);
+    return ethers.utils.defaultAbiCoder.encode(
+      ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
+      [updateType, stalenessTolerance, priceIds, signedOffchainData]
+    );
+  },
+  PRICE_CACHE_LENGTH
+);
 
 function makeMulticall(
   calls: TransactionRequest[],
@@ -172,10 +176,6 @@ export const withERC7412 = async (
   hasTrustedForwarder: boolean,
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
-  console.log('withERC7412');
-  if (!logLabel) {
-    console.trace('who called');
-  }
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
   let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
@@ -197,7 +197,6 @@ export const withERC7412 = async (
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(network?.name || 'mainnet');
   const isTestnet = network?.isTestnet || false;
-  // const hasTrustedForwarder = networksWithTrustedForwarder.includes(network?.name || '');
   const useCoreProxy = !hasTrustedForwarder && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
@@ -205,8 +204,6 @@ export const withERC7412 = async (
     : await importMulticall3(network?.name || 'mainnet');
 
   while (true) {
-    console.log(logLabel, ': while loop iteration');
-
     try {
       if (multicallCalls.length == 1) {
         const initialCall = multicallCalls[0];
@@ -217,8 +214,6 @@ export const withERC7412 = async (
       }
       // If we're here it means we now added a tx to do .
       // Some networks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
-      console.log(logLabel, ' :');
-      console.table(multicallCalls);
       const multicallTxn = useCoreProxy
         ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
         : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
@@ -226,7 +221,7 @@ export const withERC7412 = async (
       const gasLimit = await jsonRpcProvider.estimateGas(multicallTxn);
 
       console.log(
-        `Estimated gas succeeded, with ${
+        `[${logLabel}] Estimated gas succeeded, with ${
           multicallCalls.length - initialMulticallLength
         } price updates`
       );
@@ -241,6 +236,7 @@ export const withERC7412 = async (
         const signedRequiredData = await fetchOffchainData(
           oracleQuery,
           isTestnet,
+          logLabel || '',
           ignoreCache ? 'no-cache' : undefined
         );
         const newTransactionRequest = {
@@ -262,8 +258,14 @@ export const withERC7412 = async (
         );
       } else if (parsedError.name === 'FeeRequired') {
         const requiredFee = parsedError.args[0];
-        const txToUpdate = multicallCalls[multicallCalls.length - initialMulticallLength - 1];
-        txToUpdate.value = txToUpdate.value ? requiredFee.add(txToUpdate.value) : requiredFee;
+
+        const txToUpdate = multicallCalls.find(({ value }) => requiredFee.gt(value || 0)); // The first tx with value less than the required fee, is the one we need to update
+        if (txToUpdate === undefined) {
+          throw Error(
+            `Didn't find any tx with a value less than the required fee ${multicallCalls}`
+          );
+        }
+        txToUpdate.value = requiredFee;
       } else {
         throw error;
       }
@@ -298,14 +300,15 @@ export async function erc7412Call<T>(
 
   if (newCall.to === multicallAddress) {
     // If this was a multicall, decode and remove price updates.
-    // Since nesting multicalls dont work, we can assume that txRequests would have a non multicall call "to", if no price update was needed
     const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
       multicallAbi
     ).decodeFunctionResult('aggregate3Value', res)[0];
 
-    // Now we wanna remove the price updates
-    const startIndex = decodedMultiCall.length - reqs.length;
-    return decode(decodedMultiCall.slice(startIndex).map((x) => x.returnData));
+    // Remove the price updates
+    const responseWithoutPriceUpdates = decodedMultiCall.filter(
+      ({ returnData }) => returnData !== '0x' // price updates have 0x as return data
+    );
+    return decode(responseWithoutPriceUpdates.map(({ returnData }) => returnData));
   }
 
   return decode(res);
