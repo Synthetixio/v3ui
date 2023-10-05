@@ -15,7 +15,7 @@ import './i18n';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
+      refetchInterval: false, // TODO if queries needs refetching we should be explicit about it, given erc7412
       staleTime: DEFAULT_QUERY_STALE_TIME,
       refetchOnWindowFocus: false,
     },
