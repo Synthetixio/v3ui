@@ -27,6 +27,18 @@ const loadConfigs = async ({ CoreProxy }: { CoreProxy: CoreProxyType }) => {
   const hideDisabled = false;
   return await CoreProxy.getCollateralConfigurations(hideDisabled);
 };
+function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
+  const seen = new Set<T[K]>();
+  return arr.filter((item) => {
+    const value = item[prop];
+    if (seen.has(value)) {
+      return false;
+    } else {
+      seen.add(value);
+      return true;
+    }
+  });
+}
 
 export const useAllCollateralPriceIds = () => {
   const { data: Multicall3 } = useMulticall3();
@@ -34,7 +46,7 @@ export const useAllCollateralPriceIds = () => {
   const { data: CoreProxy } = useCoreProxy();
   const network = useNetwork();
   return useQuery({
-    enabled: Boolean(Multicall3 && OracleProxy),
+    enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
     cacheTime: Infinity,
 
@@ -85,7 +97,7 @@ export const useAllCollateralPriceIds = () => {
         })
         .filter(notNil);
 
-      return decoded;
+      return removeDuplicatesByProp(decoded, 'priceFeedId');
     },
   });
 };
