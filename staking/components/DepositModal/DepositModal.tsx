@@ -26,7 +26,6 @@ import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { ContractError } from '@snx-v3/ContractError';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';

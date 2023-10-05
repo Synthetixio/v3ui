@@ -3,7 +3,7 @@ import { Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 
 import { currency } from '@snx-v3/format';
-import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';

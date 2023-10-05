@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { Fonts, theme } from '@synthetixio/v3-theme';
-import { DEFAULT_QUERY_REFRESH_INTERVAL, DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
+import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { GasSpeedProvider } from '@snx-v3/useGasSpeed';
@@ -15,7 +15,7 @@ import './i18n';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchInterval: false, // TODO if queries needs refetching we should be explicit about it, given erc7412
+      refetchInterval: false, //  if queries needs refetching we should be explicit about it, given erc7412
       staleTime: DEFAULT_QUERY_STALE_TIME,
       refetchOnWindowFocus: false,
     },
