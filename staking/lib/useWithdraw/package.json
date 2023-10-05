@@ -11,7 +11,7 @@
     "@snx-v3/useGasOptions": "workspace:*",
     "@snx-v3/useGasPrice": "workspace:*",
     "@snx-v3/useGasSpeed": "workspace:*",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^4.35.7",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
   }

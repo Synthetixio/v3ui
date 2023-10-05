@@ -11,7 +11,7 @@
     "@snx-v3/useGasPrice": "workspace:*",
     "@snx-v3/useGasSpeed": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^4.35.7",
     "react": "^18.2.0"
   }
 }
