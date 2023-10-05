@@ -204,6 +204,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
       <Suspense fallback={null}>
         {txnModalOpen === 'repay' ? (
           <RepayModal
+            availableCollateral={liquidityPosition?.accountCollateral.availableCollateral}
             onClose={() => {
               queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));

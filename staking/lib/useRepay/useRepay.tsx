@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useMutation } from '@tanstack/react-query';
-import { useProvider, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
@@ -11,6 +11,8 @@ import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
+import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
+import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 export const useRepay = ({
   accountId,
@@ -30,15 +32,28 @@ export const useRepay = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
+  const { data: collateralPriceIds } = useAllCollateralPriceIds();
 
   const signer = useSigner();
+  const network = useNetwork();
   const { gasSpeed } = useGasSpeed();
   const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async () => {
       if (!signer) return;
-      if (!(CoreProxy && poolId && accountId && collateralTypeAddress && UsdProxy)) return;
+      if (
+        !(
+          CoreProxy &&
+          poolId &&
+          accountId &&
+          collateralTypeAddress &&
+          UsdProxy &&
+          collateralPriceIds
+        )
+      ) {
+        return;
+      }
       if (!balance) return;
       if (!availableUSDCollateral) return;
       if (debtChange.eq(0)) return;
@@ -64,9 +79,23 @@ export const useRepay = ({
         );
 
         const callsPromise = Promise.all([deposit, burn].filter(notNil));
-        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
+        const walletAddress = await signer.getAddress();
+        const collateralPriceCallsPromise = fetchPriceUpdates(
+          collateralPriceIds,
+          network.isTestnet
+        ).then((signedData) =>
+          priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
+        );
+
+        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
+          callsPromise,
+          getGasPrice({ provider }),
+          collateralPriceCallsPromise,
+        ]);
+        const allCalls = collateralPriceCalls.concat(calls);
+
         const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
-        const erc7412Tx = await withERC7412(provider, calls, hasTrustedForwarder);
+        const erc7412Tx = await withERC7412(provider, allCalls, hasTrustedForwarder);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
