@@ -5,9 +5,13 @@ it('creates new account with first deposit of SNX', () => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
 
-  cy.connectWallet().then(({ address }) => {
+  cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('getSnx', { address, amount: 100 });
+
+    cy.task('createAccount', { privateKey }).then((accountId) => {
+      cy.wrap(accountId).as('accountId');
+    });
   });
 
   cy.viewport(1000, 800);
