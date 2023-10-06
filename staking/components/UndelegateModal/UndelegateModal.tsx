@@ -24,6 +24,8 @@ import type { StateFrom } from 'xstate';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -94,6 +96,8 @@ export type UndelegateModalProps = FC<{
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
   const { collateralChange } = useContext(ManagePositionContext);
+  const network = useNetwork();
+  const queryClient = useQueryClient();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
@@ -119,6 +123,10 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
       [ServiceNames.undelegate]: async () => {
         try {
           await execUndelegate();
+          await queryClient.refetchQueries({
+            queryKey: [network.name, 'LiquidityPosition'],
+            exact: false,
+          });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

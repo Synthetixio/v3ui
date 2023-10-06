@@ -99,7 +99,6 @@ export const useLiquidityPosition = ({
         !collateralPriceUpdates ||
         !UsdProxy
       ) {
-        debugger;
         throw Error('useLiquidityPosition should not be enabled');
       }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({

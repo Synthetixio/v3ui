@@ -27,7 +27,6 @@ import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
-import { useQueryClient } from '@tanstack/react-query';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -129,7 +128,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
     useContext(ManagePositionContext);
-  const queryClient = useQueryClient();
+
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { isValid } = validatePosition({
@@ -237,8 +236,8 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
         ) : null}
         {txnModalOpen === 'undelegate' ? (
           <UndelegateModal
+            liquidityPosition={liquidityPosition}
             onClose={() => {
-              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
