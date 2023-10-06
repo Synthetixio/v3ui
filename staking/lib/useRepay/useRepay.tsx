@@ -62,6 +62,7 @@ export const useRepay = ({
 
       try {
         dispatch({ type: 'prompting' });
+
         // Only deposit if user doesn't have enough sUSD collateral
         const deposit = amountToDeposit.lte(0)
           ? undefined
@@ -95,7 +96,7 @@ export const useRepay = ({
         const allCalls = collateralPriceCalls.concat(calls);
 
         const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
-        const erc7412Tx = await withERC7412(provider, allCalls, hasTrustedForwarder);
+        const erc7412Tx = await withERC7412(provider, allCalls, hasTrustedForwarder, 'useRepay');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

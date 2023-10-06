@@ -9,6 +9,7 @@ import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -58,6 +59,7 @@ export type LiquidityPosition = {
   collateralValue: Wei;
   debt: Wei;
   accountCollateral: AccountCollateralType;
+  usdCollateral: AccountCollateralType;
   tokenAddress: string;
 };
 
@@ -72,6 +74,7 @@ export const useLiquidityPosition = ({
 }) => {
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
+  const { data: UsdProxy } = useUSDProxy();
   const network = useNetwork();
   return useQuery({
     queryKey: [
@@ -84,9 +87,18 @@ export const useLiquidityPosition = ({
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
       },
     ],
-    enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress && collateralPriceUpdates),
+    enabled: Boolean(
+      CoreProxy && UsdProxy && poolId && accountId && tokenAddress && collateralPriceUpdates
+    ),
     queryFn: async () => {
-      if (!CoreProxy || !accountId || !poolId || !tokenAddress || !collateralPriceUpdates) {
+      if (
+        !CoreProxy ||
+        !accountId ||
+        !poolId ||
+        !tokenAddress ||
+        !collateralPriceUpdates ||
+        !UsdProxy
+      ) {
         debugger;
         throw Error('useLiquidityPosition should not be enabled');
       }
@@ -102,7 +114,11 @@ export const useLiquidityPosition = ({
       });
 
       const { calls: accountCollateralCalls, decoder: accountCollateralDecoder } =
-        await loadAccountCollateral({ accountId, tokenAddresses: [tokenAddress], CoreProxy });
+        await loadAccountCollateral({
+          accountId,
+          tokenAddresses: [tokenAddress, UsdProxy.address],
+          CoreProxy,
+        });
       const collateralPriceCalls = await fetchPriceUpdates(
         collateralPriceUpdates,
         network.isTestnet
@@ -124,7 +140,7 @@ export const useLiquidityPosition = ({
           const startOfAccountCollateral = endOfPosition;
           const [collateralPrice] = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
           const decodedPosition = positionDecoder(encoded.slice(startOfPosition, endOfPosition));
-          const [accountCollateral] = accountCollateralDecoder(
+          const [accountCollateral, usdCollateral] = accountCollateralDecoder(
             encoded.slice(startOfAccountCollateral)
           );
           return {
@@ -134,6 +150,7 @@ export const useLiquidityPosition = ({
             debt: decodedPosition.debt,
             tokenAddress,
             accountCollateral,
+            usdCollateral,
           };
         },
 
