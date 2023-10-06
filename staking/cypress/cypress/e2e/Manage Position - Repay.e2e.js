@@ -46,7 +46,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
   // Unfortunatrly on Borrow and Repay we default to 0 and no longer show `-` for unfetched data
   //  cy.get('[data-testid="current debt"]').should('not.have.text', '-');
   //  cy.get('[data-testid="available snxUSD balance"]').should('not.have.text', '-');
-
+  cy.wait(2000);
   cy.get('@debt').then((debt) => {
     cy.get('[data-testid="repay amount input"]').type(`${debt}`);
   });
