@@ -70,22 +70,24 @@ export const useLiquidityPosition = ({
   accountId?: string;
   poolId?: string;
 }) => {
-  const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: CoreProxy } = useCoreProxy();
   const network = useNetwork();
   return useQuery({
     queryKey: [
       network.name,
-      { accountId },
       'LiquidityPosition',
+      { accountId },
       {
         pool: poolId,
         token: tokenAddress,
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
       },
     ],
+    enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress && collateralPriceUpdates),
     queryFn: async () => {
       if (!CoreProxy || !accountId || !poolId || !tokenAddress || !collateralPriceUpdates) {
+        debugger;
         throw Error('useLiquidityPosition should not be enabled');
       }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
@@ -138,6 +140,5 @@ export const useLiquidityPosition = ({
         `useLiquidityPosition`
       );
     },
-    enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress && collateralPriceUpdates),
   });
 };

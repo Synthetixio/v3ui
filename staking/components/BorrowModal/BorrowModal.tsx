@@ -24,6 +24,8 @@ import { useBorrow } from '@snx-v3/useBorrow';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -132,6 +134,7 @@ export const BorrowModal: React.FC<{
   isOpen: boolean;
 }> = ({ onClose, isOpen }) => {
   const { debtChange } = useContext(ManagePositionContext);
+  const queryClient = useQueryClient();
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
@@ -148,10 +151,15 @@ export const BorrowModal: React.FC<{
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
+  const network = useNetwork();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();
+      await queryClient.refetchQueries({
+        queryKey: [network.name, 'LiquidityPosition'],
+        exact: false,
+      });
     } catch (error: any) {
       const contractError = errorParserCoreProxy(error);
       if (contractError) {
@@ -169,7 +177,7 @@ export const BorrowModal: React.FC<{
       });
       throw Error('Borrow failed', { cause: error });
     }
-  }, [errorParserCoreProxy, execBorrow, toast]);
+  }, [errorParserCoreProxy, execBorrow, queryClient, toast]);
 
   const { txnStatus } = txnState;
   if (!params.poolId || !params.accountId || !collateralType) return null;

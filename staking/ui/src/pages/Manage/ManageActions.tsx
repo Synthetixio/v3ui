@@ -217,7 +217,6 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
         {txnModalOpen === 'borrow' ? (
           <BorrowModal
             onClose={() => {
-              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -230,7 +229,6 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
             currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
             collateralChange={collateralChange}
             onClose={() => {
-              queryClient.refetchQueries(['LiquidityPosition'], { type: 'active' });
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
