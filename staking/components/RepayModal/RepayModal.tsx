@@ -26,6 +26,8 @@ import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -108,6 +110,8 @@ export const RepayModal: React.FC<{
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
 
+  const network = useNetwork();
+  const queryClient = useQueryClient();
   const { data: USDProxy } = useUSDProxy();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -167,7 +171,15 @@ export const RepayModal: React.FC<{
           toast.closeAll();
           toast({ title: 'Repaying...' });
           await execRepay();
-          await Promise.all([refetchBalance(), refetchAllowance()]);
+
+          await Promise.all([
+            refetchBalance(),
+            refetchAllowance(),
+            queryClient.refetchQueries({
+              queryKey: [network.name, 'LiquidityPosition'],
+              exact: false,
+            }),
+          ]);
 
           toast.closeAll();
           toast({
