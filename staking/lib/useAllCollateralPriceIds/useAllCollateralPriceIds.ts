@@ -56,6 +56,8 @@ export const useAllCollateralPriceIds = () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
+      const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
+      if (!hasTrustedForwarder) return [];
       const configs = await loadConfigs({ CoreProxy });
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
       const calls = oracleNodeIds.map((oracleNodeId) => ({

@@ -7,6 +7,7 @@ export const fetchPriceUpdates = async (
   requestedPriceUpdates: { priceFeedId: string; stalenessTolerance: Wei }[],
   isTestnet: boolean
 ) => {
+  if (requestedPriceUpdates.length === 0) return [];
   const priceService = new EvmPriceServiceConnection(
     isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
   );
