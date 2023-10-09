@@ -22,4 +22,4 @@ export const SESSION_STORAGE_KEYS = {
 export const offchainMainnetEndpoint =
   process.env.PYTH_MAINNET_ENDPOINT || 'https://xc-mainnet.pyth.network';
 export const offchainTestnetEndpoint =
-  process.env.PYTH_TESTNET_ENDPOINT || 'https://xc-testnet.pyth.network/';
+  process.env.PYTH_TESTNET_ENDPOINT || 'https://xc-testnet.pyth.network';
