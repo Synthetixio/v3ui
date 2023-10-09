@@ -9,7 +9,7 @@ import {
   MenuList,
   Text,
 } from '@chakra-ui/react';
-import { EthereumIcon, FailedIcon, OptimismIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
 import {
   disconnect,
   onboard,
@@ -32,6 +32,11 @@ const activeIcon = (currentNetwork: Network) => {
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
     case 420:
       return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
+    case 84531:
+      return {
+        icon: <BaseIcon />,
+        name: 'Base Goerli',
+      };
 
     default:
       return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
@@ -114,6 +119,12 @@ export const Header: FC = () => {
                       <OptimismIcon />
                       <Text variant="nav" ml={2}>
                         Optimism Goerli
+                      </Text>
+                    </MenuItem>
+                    <MenuItem onClick={() => switchNetwork(84531)}>
+                      <BaseIcon />
+                      <Text variant="nav" ml={2}>
+                        Base Goerli
                       </Text>
                     </MenuItem>
                   </MenuList>

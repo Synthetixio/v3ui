@@ -95,6 +95,18 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://goerli.optimism.io',
     isTestnet: true,
   },
+  'base-goerli': {
+    id: 84531,
+    hexId: `0x${Number(84531).toString(16)}`,
+    token: 'ETH',
+    name: 'base-goerli',
+    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Goerli',
+    Icon: () => <BaseIcon />,
+    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'base-goerli',
+    publicRpcUrl: 'https://base-goerli.publicnode.com',
+    isTestnet: true,
+  },
   cannon: {
     id: 13370,
     hexId: `0x${Number(13370).toString(16)}`,

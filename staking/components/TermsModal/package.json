@@ -1,13 +1,13 @@
 {
   "name": "@snx-v3/TermsModal",
   "private": true,
-  "main": "index.tsx",
+  "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/react": "^2.6.1",
+    "@chakra-ui/react": "^2.8.1",
     "@snx-v3/constants": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "react": "^18.2.0",
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.16.0"
   }
 }

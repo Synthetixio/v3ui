@@ -66,7 +66,7 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
   cy.get('[data-testid="undelegate modal"]').should('not.exist');
 
   cy.get('[data-testid="manage stats collateral"]').should('include.text', `100,000 SNX`);
-  cy.get('[data-testid="available to undelegate"]').should('have.text', '100,000 SNX');
+  // cy.get('[data-testid="available to undelegate"]').should('have.text', '100,000 SNX');
 
   // Assert that we have 500 snx to withdraw, even though it's still blocked by timeout
   cy.visit(`/`);

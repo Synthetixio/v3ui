@@ -77,7 +77,7 @@ async function generateContracts({ network, contracts, prettierOptions }) {
         .map(([name, value]) => `export const ${name} = ${JSON.stringify(value, null, 2)};`)
         .concat([types])
         .join('\n');
-    const pretty = prettier.format(content, { parser: 'typescript', ...prettierOptions });
+    const pretty = await prettier.format(content, { parser: 'typescript', ...prettierOptions });
     await fs.writeFile(`src/${network}/${contract.fileName}.ts`, pretty, 'utf8');
   }
 }

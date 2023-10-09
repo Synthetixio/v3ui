@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/react": "^2.6.1",
+    "@chakra-ui/react": "^2.8.1",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/ManagePositionContext": "workspace:*",
@@ -19,9 +19,9 @@
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useUSDProxy": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^4.35.7",
     "@xstate/react": "^3.2.2",
     "react": "^18.2.0",
-    "xstate": "^4.37.2"
+    "xstate": "^4.38.2"
   }
 }
