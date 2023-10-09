@@ -12,6 +12,9 @@ echo CHAIN_NAME=$CHAIN_NAME
 export SYNTHETIX_VERSION=${2:-latest}
 echo SYNTHETIX_VERSION=$SYNTHETIX_VERSION
 
+export CANNON_PRESET=${3:-main}
+echo CANNON_PRESET=$CANNON_PRESET
+
 export DEBUG="cannon:*"
 
 export CHAIN_ID_HEX=$(curl -s -X POST  -H "Content-Type: application/json" --data '{"jsonrpc": "2.0", "id": 1, "method": "eth_chainId"}' "https://$CHAIN_NAME.infura.io/v3/$INFURA_KEY" | jq -r '.result')
@@ -21,11 +24,11 @@ export CHAIN_ID=$(node -e "process.stdout.write(parseInt('$CHAIN_ID_HEX', 16).to
 echo CHAIN_ID=$CHAIN_ID
 
 rm -rf ./deployments/$CHAIN_NAME
-echo yarn cannon inspect synthetix:$SYNTHETIX_VERSION --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
-yarn cannon inspect synthetix:$SYNTHETIX_VERSION --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
+echo yarn cannon inspect synthetix:$SYNTHETIX_VERSION --preset $CANNON_PRESET --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
+yarn cannon inspect synthetix:$SYNTHETIX_VERSION --preset $CANNON_PRESET --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
 
 rm -rf ./metadata/$CHAIN_NAME
 mkdir -p ./metadata/$CHAIN_NAME
-echo yarn cannon inspect synthetix:$SYNTHETIX_VERSION --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
-yarn cannon inspect synthetix:$SYNTHETIX_VERSION --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
+echo yarn cannon inspect synthetix:$SYNTHETIX_VERSION --preset $CANNON_PRESET --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
+yarn cannon inspect synthetix:$SYNTHETIX_VERSION --preset $CANNON_PRESET --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
 yarn prettier --write ./metadata/$CHAIN_NAME/metadata.json
