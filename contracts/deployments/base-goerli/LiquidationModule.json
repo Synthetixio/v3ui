@@ -1,5 +1,5 @@
 {
-  "address": "0x6D425723d3F136d9890EAD00f48b9aA9622b934B",
+  "address": "0xCfBfd595D4b3F714d5140acD7528B89A741c03Cd",
   "abi": [
     {
       "inputs": [
@@ -282,7 +282,7 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -306,7 +306,7 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -357,7 +357,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -408,13 +408,13 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x6abf1865dcb2c9661c56d6274cc9ce9f8087040a78bb14366bbff09e49cc18bb",
+  "deployTxnHash": "0xe8ebe628e3dff15b4618de2e7dbd6d5b00b0fb8108239d1c168f5e8be2b7550a",
   "sourceName": "contracts/modules/core/LiquidationModule.sol",
   "contractName": "LiquidationModule",
   "deployedOn": "contract.LiquidationModule"

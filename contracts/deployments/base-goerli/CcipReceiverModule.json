@@ -1,5 +1,5 @@
 {
-  "address": "0x7DE7e4a646a5169a54B02c331E7DB3916E711308",
+  "address": "0x45B8DfE5Ba620713597Ea44698C91cE515b650c3",
   "abi": [
     {
       "inputs": [],
@@ -94,7 +94,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x3000ed20ddf49898c4218ca69aa8c30305a622a3a3736186c389093f95c5ded5",
+  "deployTxnHash": "0x219de31a6d2a7628c01d110c86656c6dcdb83a59796602bdd09d82437091d228",
   "sourceName": "contracts/modules/core/CcipReceiverModule.sol",
   "contractName": "CcipReceiverModule",
   "deployedOn": "contract.CcipReceiverModule"
