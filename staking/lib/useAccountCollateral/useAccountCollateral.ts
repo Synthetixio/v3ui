@@ -52,7 +52,7 @@ export const loadAccountCollateral = async ({
 };
 
 export type AccountCollateralWithSymbol = AccountCollateralType & { symbol: string };
-// TODO deprecate this, specific should be used
+
 export function useAccountCollateral({
   accountId,
   includeDelegationOff,
