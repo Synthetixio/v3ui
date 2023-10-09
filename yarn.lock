@@ -5128,7 +5128,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5164,20 +5164,17 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useDeposit": "workspace:*"
-    "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
-    "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     "@xstate/react": ^3.2.2
     react: ^18.2.0
     react-router-dom: ^6.16.0
@@ -5329,7 +5326,7 @@ __metadata:
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useUndelegate": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     "@xstate/react": ^3.2.2
     react: ^18.2.0
     xstate: ^4.38.2
@@ -5361,7 +5358,7 @@ __metadata:
     "@snx-v3/useWithdraw": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     "@xstate/react": ^3.2.2
     react: ^18.2.0
     xstate: ^4.38.2
@@ -5686,9 +5683,9 @@ __metadata:
     "@snx-v3/useOracleManagerProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     ethers: ^5.7.2
-    zod: ^3.21.4
+    zod: ^3.22.4
   languageName: unknown
   linkType: soft
 
@@ -5764,7 +5761,7 @@ __metadata:
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5942,7 +5939,7 @@ __metadata:
     "@ethersproject/contracts": ^5.7.0
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": ^4.29.12
+    "@tanstack/react-query": ^4.35.7
   languageName: unknown
   linkType: soft
 
@@ -6165,7 +6162,7 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     ethers: ^5.7.2
-    zod: ^3.21.4
+    zod: ^3.22.4
   languageName: unknown
   linkType: soft
 
@@ -6538,25 +6535,6 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 319eb9b643ba5179382cee2dda8ecae4afcdf740a17b435540e7c3bd1e573a52782c119effa11139fef496e3087a30227243b07d18684e8d447a8d9eeec0d38c
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-query@npm:^4.29.12":
-  version: 4.36.1
-  resolution: "@tanstack/react-query@npm:4.36.1"
-  dependencies:
-    "@tanstack/query-core": 4.36.1
-    use-sync-external-store: ^1.2.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-native: "*"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 1aff0a476859386f8d32253fa0d0bde7b81769a6d4d4d9cbd78778f0f955459a3bdb7ee27a0d2ee7373090f12998b45df80db0b5b313bd0a7a39d36c6e8e51c5
   languageName: node
   linkType: hard
 

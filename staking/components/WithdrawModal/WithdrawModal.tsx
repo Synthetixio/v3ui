@@ -131,7 +131,7 @@ export function WithdrawModal({
       [ServiceNames.withdraw]: async () => {
         try {
           await execWithdraw();
-          await queryClient.refetchQueries({ queryKey: ['AccountSpecificCollateral'] });
+          await queryClient.invalidateQueries({ queryKey: ['AccountSpecificCollateral'] });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

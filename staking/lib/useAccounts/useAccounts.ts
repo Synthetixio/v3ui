@@ -11,7 +11,7 @@ export function useAccounts() {
   const network = useNetwork();
 
   return useQuery({
-    queryKey: [network.name, { accountAddress: wallet?.address }, 'Accounts'],
+    queryKey: [network.name, 'Accounts', { accountAddress: wallet?.address }],
     queryFn: async function () {
       if (!AccountProxy || !wallet?.address) throw new Error('Should be disabled');
       const numberOfAccountTokens = await AccountProxy.balanceOf(wallet.address);

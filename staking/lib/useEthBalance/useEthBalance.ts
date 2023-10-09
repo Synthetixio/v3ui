@@ -12,7 +12,7 @@ export function useEthBalance(networkId?: number) {
   const network = useNetwork();
 
   return useQuery({
-    queryKey: [network.name, { accountAddress: wallet?.address }, 'EthBalance'],
+    queryKey: [network.name, 'EthBalance', { accountAddress: wallet?.address }],
     queryFn: async () => {
       if (!wallet?.address) throw Error('useEthBalance should not be enabled');
       const provider =

@@ -115,7 +115,7 @@ export const RepayModal: React.FC<{
   const { data: USDProxy } = useUSDProxy();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: balance, refetch: refetchBalance } = useTokenBalance(USDProxy?.address);
+  const { data: balance } = useTokenBalance(USDProxy?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,
@@ -131,7 +131,7 @@ export const RepayModal: React.FC<{
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
-  const { approve, requireApproval, refetchAllowance } = useApprove({
+  const { approve, requireApproval } = useApprove({
     contractAddress: USDProxy?.address,
     amount: amountToDeposit.toBN(),
     spender: CoreProxy?.address,
@@ -173,11 +173,14 @@ export const RepayModal: React.FC<{
           await execRepay();
 
           await Promise.all([
-            refetchBalance(),
-            refetchAllowance(),
-            queryClient.refetchQueries({
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'TokenBalance'],
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'Allowance'],
+            }),
+            queryClient.invalidateQueries({
               queryKey: [network.name, 'LiquidityPosition'],
-              exact: false,
             }),
           ]);
 

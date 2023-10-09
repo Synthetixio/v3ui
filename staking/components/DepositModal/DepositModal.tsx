@@ -17,7 +17,6 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Multistep } from '@snx-v3/Multistep';
-import { useEthBalance } from '@snx-v3/useEthBalance';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
@@ -27,9 +26,7 @@ import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';
-import { useAccounts } from '@snx-v3/useAccounts';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
@@ -227,16 +224,12 @@ export const DepositModal: DepositModalProps = ({
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { refetch: refetchAccounts } = useAccounts();
 
-  const { approve, requireApproval, refetchAllowance } = useApprove({
+  const { approve, requireApproval } = useApprove({
     contractAddress: collateralType?.tokenAddress,
     amount: collateralChange.toBN(),
     spender: CoreProxy?.address,
   });
-
-  const ethBalance = useEthBalance();
-  const transferrable = useTransferableSynthetix();
 
   const toast = useToast({ isClosable: true, duration: 9000 });
 
@@ -327,14 +320,21 @@ export const DepositModal: DepositModalProps = ({
           await execDeposit();
 
           await Promise.all([
-            ethBalance.refetch(),
-            queryClient.refetchQueries({
-              queryKey: [network.name, 'LiquidityPosition'],
-              exact: false,
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'EthBalance'],
             }),
-            collateralType?.symbol === 'SNX' ? transferrable.refetch() : Promise.resolve(),
-            refetchAllowance(),
-            !params.accountId ? refetchAccounts() : Promise.resolve(),
+            queryClient.invalidateQueries({ queryKey: [network.name, 'LiquidityPosition'] }),
+            collateralType?.symbol === 'SNX'
+              ? queryClient.invalidateQueries({ queryKey: [network.name, 'TransferableSynthetix'] })
+              : Promise.resolve(),
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'Allowance'],
+            }),
+            !params.accountId
+              ? queryClient.invalidateQueries({
+                  queryKey: [network.name, 'Accounts'],
+                })
+              : Promise.resolve(),
           ]);
 
           toast.closeAll();
