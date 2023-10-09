@@ -48,11 +48,11 @@ export const useDeposit = ({
           poolId &&
           collateralTypeAddress &&
           availableCollateral &&
-          accountId &&
           collateralPriceUpdates
         )
-      )
+      ) {
         return;
+      }
       if (collateralChange.eq(0)) return;
 
       try {
