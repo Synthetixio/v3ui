@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-
+if [ -z "${INFURA_KEY:-}" ]; then
+  echo "Error: INFURA_KEY is missing"
+  exit 1
+fi
 set -u
 
 export CHAIN_NAME=$1
