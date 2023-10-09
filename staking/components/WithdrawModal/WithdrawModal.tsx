@@ -25,6 +25,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ContractError } from '@snx-v3/ContractError';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
@@ -112,7 +113,7 @@ export function WithdrawModal({
 }) {
   const params = useParams();
   const toast = useToast({ isClosable: true, duration: 9000 });
-
+  const network = useNetwork();
   const { exec: unwrap } = useUnWrapEth();
   const { exec: execWithdraw } = useWithdraw({
     accountId: params.accountId,
@@ -131,7 +132,9 @@ export function WithdrawModal({
       [ServiceNames.withdraw]: async () => {
         try {
           await execWithdraw();
-          await queryClient.invalidateQueries({ queryKey: ['AccountSpecificCollateral'] });
+          await queryClient.invalidateQueries({
+            queryKey: [network.name, 'AccountSpecificCollateral'],
+          });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

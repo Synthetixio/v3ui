@@ -97,8 +97,8 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
   return useQuery({
     queryKey: [
       network.name,
-      { accountId },
       'AccountSpecificCollateral',
+      { accountId },
       { token: collateralAddress },
     ],
     enabled: Boolean(CoreProxy && accountId && collateralAddress),
