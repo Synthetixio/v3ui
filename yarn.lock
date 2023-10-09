@@ -5110,12 +5110,14 @@ __metadata:
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useBorrow": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5151,20 +5153,20 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useDeposit": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
-    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
     "@xstate/react": ^3.2.2
     react: ^18.2.0
     react-router-dom: ^6.11.2
@@ -5261,8 +5263,8 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -5308,6 +5310,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -5404,6 +5407,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/feeSuggestion@workspace:staking/lib/feeSuggestion"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    ethers: ^5.7.2
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/fetchPythPrices@workspace:*, @snx-v3/fetchPythPrices@workspace:staking/lib/fetchPythPrices":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/fetchPythPrices@workspace:staking/lib/fetchPythPrices"
+  dependencies:
+    "@pythnetwork/pyth-evm-js": ^1.29.0
     "@snx-v3/constants": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     ethers: ^5.7.2
@@ -5650,6 +5664,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useAllCollateralPriceIds@workspace:*, @snx-v3/useAllCollateralPriceIds@workspace:staking/lib/useAllCollateralPriceIds":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useAllCollateralPriceIds@workspace:staking/lib/useAllCollateralPriceIds"
+  dependencies:
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useOracleManagerProxy": "workspace:*"
+    "@snx-v3/zod": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.29.12
+    ethers: ^5.7.2
+    zod: ^3.21.4
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useAllowance@workspace:*, @snx-v3/useAllowance@workspace:staking/lib/useAllowance":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAllowance@workspace:staking/lib/useAllowance"
@@ -5696,7 +5727,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBorrow@workspace:staking/lib/useBorrow"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
@@ -5766,9 +5799,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useDeposit@workspace:staking/lib/useDeposit"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
@@ -5832,9 +5866,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:staking/lib/useLiquidityPosition"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
@@ -5848,7 +5886,9 @@ __metadata:
   resolution: "@snx-v3/useLiquidityPositions@workspace:staking/lib/useLiquidityPositions"
   dependencies:
     "@snx-v3/calculations": "workspace:*"
+    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -5884,6 +5924,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useOracleManagerProxy@workspace:*, @snx-v3/useOracleManagerProxy@workspace:staking/lib/useOracleManagerProxy":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useOracleManagerProxy@workspace:staking/lib/useOracleManagerProxy"
+  dependencies:
+    "@ethersproject/contracts": ^5.7.0
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@tanstack/react-query": ^4.29.12
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useParams@workspace:*, @snx-v3/useParams@workspace:staking/lib/useParams":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useParams@workspace:staking/lib/useParams"
@@ -5897,9 +5948,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePoolConfiguration@workspace:staking/lib/usePoolConfiguration"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": ^4.29.12
@@ -5940,8 +5992,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRepay@workspace:staking/lib/useRepay"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
@@ -6014,7 +6068,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useUndelegate@workspace:staking/lib/useUndelegate"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
@@ -6032,9 +6088,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useVaultsData@workspace:staking/lib/useVaultsData"
   dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.29.12

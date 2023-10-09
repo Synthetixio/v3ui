@@ -6,6 +6,10 @@ import { z } from 'zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
+import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
+import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
+import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -54,6 +58,9 @@ export type LiquidityPosition = {
   collateralPrice: Wei;
   collateralValue: Wei;
   debt: Wei;
+  accountCollateral: AccountCollateralType;
+  usdCollateral: AccountCollateralType;
+  tokenAddress: string;
 };
 
 export const useLiquidityPosition = ({
@@ -65,22 +72,39 @@ export const useLiquidityPosition = ({
   accountId?: string;
   poolId?: string;
 }) => {
+  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
+  const { data: UsdProxy } = useUSDProxy();
   const network = useNetwork();
   return useQuery({
     queryKey: [
       network.name,
-      { accountId },
       'LiquidityPosition',
+      { accountId },
       {
         pool: poolId,
         token: tokenAddress,
+        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
       },
     ],
+    enabled: Boolean(
+      CoreProxy && UsdProxy && poolId && accountId && tokenAddress && collateralPriceUpdates
+    ),
     queryFn: async () => {
-      if (!CoreProxy || !accountId || !poolId || !tokenAddress)
+      if (
+        !CoreProxy ||
+        !accountId ||
+        !poolId ||
+        !tokenAddress ||
+        !collateralPriceUpdates ||
+        !UsdProxy
+      ) {
         throw Error('useLiquidityPosition should not be enabled');
-
+      }
+      const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
+        collateralAddresses: [tokenAddress],
+        CoreProxy,
+      });
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
         CoreProxy,
         accountId,
@@ -88,31 +112,49 @@ export const useLiquidityPosition = ({
         tokenAddress,
       });
 
-      const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
-        collateralAddresses: [tokenAddress],
-        CoreProxy,
-      });
-
-      const allCalls = priceCalls.concat(positionCalls);
+      const { calls: accountCollateralCalls, decoder: accountCollateralDecoder } =
+        await loadAccountCollateral({
+          accountId,
+          tokenAddresses: [tokenAddress, UsdProxy.address],
+          CoreProxy,
+        });
+      const collateralPriceCalls = await fetchPriceUpdates(
+        collateralPriceUpdates,
+        network.isTestnet
+      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
+      const allCalls = collateralPriceCalls.concat(
+        priceCalls.concat(positionCalls).concat(accountCollateralCalls)
+      );
 
       return await erc7412Call(
         CoreProxy.provider,
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array ');
-          const [collateralPrice] = priceDecoder(encoded.slice(0, priceCalls.length));
-          const decodedPosition = positionDecoder(encoded.slice(priceCalls.length));
+          const startOfPrice = 0;
+          const endOfPrice = priceCalls.length;
+          const startOfPosition = endOfPrice;
+          const endOfPosition = startOfPosition + positionCalls.length;
+
+          const startOfAccountCollateral = endOfPosition;
+          const [collateralPrice] = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
+          const decodedPosition = positionDecoder(encoded.slice(startOfPosition, endOfPosition));
+          const [accountCollateral, usdCollateral] = accountCollateralDecoder(
+            encoded.slice(startOfAccountCollateral)
+          );
           return {
             collateralPrice,
             collateralAmount: decodedPosition.collateral.amount,
             collateralValue: decodedPosition.collateral.amount.mul(collateralPrice),
             debt: decodedPosition.debt,
+            tokenAddress,
+            accountCollateral,
+            usdCollateral,
           };
         },
 
-        `loadPosition poolId: ${poolId} tokenAddress: ${tokenAddress}`
+        `useLiquidityPosition`
       );
     },
-    enabled: Boolean(CoreProxy && poolId && accountId && tokenAddress),
   });
 };

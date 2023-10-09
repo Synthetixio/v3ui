@@ -112,7 +112,7 @@ export const RepayUi: FC<{
 export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { data: USDProxy } = useUSDProxy();
-  const availableUSDCollateral = liquidityPosition?.accountCollateral.availableCollateral;
+  const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
 
   const { data: balance } = useTokenBalance(USDProxy?.address);
 

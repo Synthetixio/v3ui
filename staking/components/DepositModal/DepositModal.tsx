@@ -26,11 +26,12 @@ import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { ContractError } from '@snx-v3/ContractError';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';
 import { useAccounts } from '@snx-v3/useAccounts';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -222,7 +223,8 @@ export const DepositModal: DepositModalProps = ({
 }) => {
   const navigate = useNavigate();
   const params = useParams();
-
+  const queryClient = useQueryClient();
+  const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { refetch: refetchAccounts } = useAccounts();
@@ -294,7 +296,6 @@ export const DepositModal: DepositModalProps = ({
           });
 
           await approve(Boolean(state.context.infiniteApproval));
-          await refetchAllowance();
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
@@ -327,6 +328,10 @@ export const DepositModal: DepositModalProps = ({
 
           await Promise.all([
             ethBalance.refetch(),
+            queryClient.refetchQueries({
+              queryKey: [network.name, 'LiquidityPosition'],
+              exact: false,
+            }),
             collateralType?.symbol === 'SNX' ? transferrable.refetch() : Promise.resolve(),
             refetchAllowance(),
             !params.accountId ? refetchAccounts() : Promise.resolve(),
