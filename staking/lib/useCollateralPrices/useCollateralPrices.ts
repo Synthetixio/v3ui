@@ -60,12 +60,3 @@ export const useCollateralPrices = () => {
     },
   });
 };
-
-export const useCollateralPrice = (collateralAddress?: string) => {
-  const { data: pricesByAddress, error, isLoading } = useCollateralPrices();
-  return {
-    data: collateralAddress ? pricesByAddress?.[collateralAddress] : undefined,
-    isLoading,
-    error,
-  };
-};
