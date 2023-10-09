@@ -1,5 +1,5 @@
 {
-  "address": "0xEc130FC48D6e5F5e068921Ca994C462E19f1501F",
+  "address": "0x637024617d407F448254e2530e3D1E1A8C110993",
   "abi": [
     {
       "inputs": [
@@ -196,13 +196,13 @@
           "type": "int256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xb9a483cc6be501f30cb9e998fcc723ea550a312439445302984f30062d52f2b6",
+  "deployTxnHash": "0xda595d58a7d1486d1a75e1c226769833071a585c0b75e80b5baa8234391ddf78",
   "sourceName": "contracts/modules/core/AssociateDebtModule.sol",
   "contractName": "AssociateDebtModule",
   "deployedOn": "contract.AssociateDebtModule"

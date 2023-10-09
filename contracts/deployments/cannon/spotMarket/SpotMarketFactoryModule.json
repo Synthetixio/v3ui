@@ -1,5 +1,5 @@
 {
-  "address": "0xC489DeA16aC1b1399b30C1C542d35aD17f32C1bB",
+  "address": "0xd8E17757575d585b7eEd1254f17E6FE2E863a8d9",
   "abi": [
     {
       "inputs": [
@@ -333,7 +333,7 @@
       ],
       "name": "acceptMarketOwnership",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -362,7 +362,7 @@
           "type": "uint128"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -476,7 +476,7 @@
       ],
       "name": "initOrUpgradeNft",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -509,7 +509,7 @@
       ],
       "name": "initOrUpgradeToken",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -565,7 +565,7 @@
       ],
       "name": "nominateMarketOwner",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -583,7 +583,7 @@
       ],
       "name": "registerUnmanagedSystem",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -596,7 +596,7 @@
       ],
       "name": "renounceMarketNomination",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -609,7 +609,7 @@
       ],
       "name": "renounceMarketOwnership",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -646,7 +646,7 @@
       ],
       "name": "setDecayRate",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -659,7 +659,7 @@
       ],
       "name": "setSynthImplementation",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -672,7 +672,7 @@
       ],
       "name": "setSynthetix",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -714,7 +714,7 @@
       ],
       "name": "updatePriceData",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -727,13 +727,13 @@
       ],
       "name": "upgradeSynthImpl",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xef60392da647e64ea036abd82b243154e62ffe9cfd35dbce4716e75058b3980b",
+  "deployTxnHash": "0xc0b062d9fff63e257977bdb87b9f2ef86d7296fc4ef03c589c3fc804b00f1bb7",
   "sourceName": "contracts/modules/SpotMarketFactoryModule.sol",
   "contractName": "SpotMarketFactoryModule",
   "deployedOn": "contract.SpotMarketFactoryModule"

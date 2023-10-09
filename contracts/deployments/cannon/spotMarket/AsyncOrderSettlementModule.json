@@ -1,5 +1,5 @@
 {
-  "address": "0xfd45EA1E2f73791d35FbF03aBeFc71010a38f437",
+  "address": "0x26A79071fA11be12398DdF72B3A3C57292C22505",
   "abi": [
     {
       "inputs": [
@@ -125,22 +125,6 @@
     {
       "inputs": [],
       "name": "OverflowUint256ToUint64",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "deviation",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tolerance",
-          "type": "uint256"
-        }
-      ],
-      "name": "PriceDeviationToleranceExceeded",
       "type": "error"
     },
     {
@@ -292,7 +276,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -349,7 +333,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x6423b161e9b9f34eccde13934986a01880f33dd0597170c5acfcc5a59a7dd9c0",
+  "deployTxnHash": "0x1e73b1d9ac2153042fb4503b4a78be195e043c1083e0461c6c87c4fe90403438",
   "sourceName": "contracts/modules/AsyncOrderSettlementModule.sol",
   "contractName": "AsyncOrderSettlementModule",
   "deployedOn": "contract.AsyncOrderSettlementModule"

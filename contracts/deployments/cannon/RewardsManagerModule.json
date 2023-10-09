@@ -1,5 +1,5 @@
 {
-  "address": "0x3ED72E561d9B2bF39a20739dc00a991937c97748",
+  "address": "0x242A01e7438B8bC70557ce5acC8730f8A6f404D2",
   "abi": [
     {
       "inputs": [
@@ -298,7 +298,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -331,7 +331,7 @@
       ],
       "name": "distributeRewards",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -383,7 +383,7 @@
       ],
       "name": "registerRewardsDistributor",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -406,7 +406,7 @@
       ],
       "name": "removeRewardsDistributor",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -440,13 +440,13 @@
           "type": "address[]"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x2ebd6cb26be802aecb3672201659f94176a23f53fc0ad6ef59bff302829dba41",
+  "deployTxnHash": "0x6999a1afc0d88bacf7cbbbc447aaefa655780468f9fb28a422eee81831dbbcb0",
   "sourceName": "contracts/modules/core/RewardsManagerModule.sol",
   "contractName": "RewardsManagerModule",
   "deployedOn": "contract.RewardsManagerModule"

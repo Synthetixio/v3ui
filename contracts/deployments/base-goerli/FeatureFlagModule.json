@@ -1,5 +1,5 @@
 {
-  "address": "0x1c0D0313e5389c2Cf0CbE2993a20f06751d16ff7",
+  "address": "0x1088dEEFBedC9BDE65ea339995FA56c1d3F1fEe9",
   "abi": [
     {
       "inputs": [
@@ -132,7 +132,7 @@
       ],
       "name": "addToFeatureFlagAllowlist",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -250,7 +250,7 @@
       ],
       "name": "removeFromFeatureFlagAllowlist",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -268,7 +268,7 @@
       ],
       "name": "setDeniers",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -286,7 +286,7 @@
       ],
       "name": "setFeatureFlagAllowAll",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -304,13 +304,13 @@
       ],
       "name": "setFeatureFlagDenyAll",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x165995a34641cbe7d57521d172be9baca358efcc66f0e515f03d2bc022e4279e",
+  "deployTxnHash": "0x9bf658d2afb1dcd02eefdbaac02df2b7899ba60dd52472cc5130a4e51cac9f56",
   "sourceName": "contracts/modules/core/FeatureFlagModule.sol",
   "contractName": "FeatureFlagModule",
   "deployedOn": "contract.FeatureFlagModule"

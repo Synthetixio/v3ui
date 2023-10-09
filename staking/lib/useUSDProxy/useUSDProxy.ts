@@ -8,6 +8,7 @@ import type { USDProxy as USDProxyGoerli } from '@synthetixio/v3-contracts/build
 import type { USDProxy as USDProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/USDProxy';
 import type { USDProxy as USDProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy';
 import type { USDProxy as USDProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/USDProxy';
+import type { USDProxy as USDProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/USDProxy';
 
 export type USDProxyType =
   | USDProxyCannon
@@ -15,7 +16,8 @@ export type USDProxyType =
   | USDProxyGoerli
   | USDProxySepolia
   | USDProxyOptimismMainnet
-  | USDProxyOptimismGoerli;
+  | USDProxyOptimismGoerli
+  | USDProxyBaseGoerli;
 
 export async function importUSDProxy(chainName: string) {
   switch (chainName) {
@@ -31,6 +33,8 @@ export async function importUSDProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/USDProxy');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/USDProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

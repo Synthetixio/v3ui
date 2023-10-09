@@ -103,7 +103,7 @@ export const NETWORKS: Record<string, Network> = {
     rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
     label: 'Base Goerli',
     Icon: () => <BaseIcon />,
-    isSupported: true,
+    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'base-goerli',
     publicRpcUrl: 'https://base-goerli.publicnode.com',
     isTestnet: true,
   },
