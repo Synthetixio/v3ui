@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   node-version:
     type: string
-    default: '18.16.0'
+    default: '18.18.0'
 
   cypress-version:
     type: string
@@ -238,30 +238,70 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
+  release-lp:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    environment:
+      - GIT_PAGER: cat
+    steps:
+      #      - add_ssh_keys:
+      #          fingerprints: '59:59:b6:85:8d:31:3b:b4:bc:12:c3:7a:02:1a:a8:fc'
+      #      - run: mkdir -p ~/.ssh
+      #      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - checkout
+      - run: git config --global user.email engineering@snxdao.io
+      - run: git config --global user.name synthetix-team
+      - run: git branch "release/lp"
+      - run: git checkout "release/lp"
+      - run: git push --set-upstream --force origin "release/lp"
+
 workflows:
   version: 2.1
 
-  ui:
+  #  ui:
+  #    jobs:
+  #      - checks
+  #      - typecheck
+  #      - tests
+  #
+  #      - staking-cy
+  #      - staking-e2e:
+  #          chain: optimism-mainnet
+  #          name: staking-e2e-optimism-mainnet
+  #      - staking-e2e:
+  #          chain: optimism-goerli
+  #          name: staking-e2e-optimism-goerli
+  #      - staking-ipfs:
+  #          requires: [tests, typecheck, staking-cy, staking-e2e-optimism-mainnet]
+  #          filters:
+  #            branches:
+  #              only:
+  #                - release
+  #                - master
+  #                - ipfs-deploy
+  #
+  #      - combine-coverage:
+  #          requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
+
+  release:
     jobs:
-      - checks
-      - typecheck
-      - tests
-
-      - staking-cy
-      - staking-e2e:
-          chain: optimism-mainnet
-          name: staking-e2e-optimism-mainnet
-      - staking-e2e:
-          chain: optimism-goerli
-          name: staking-e2e-optimism-goerli
-      - staking-ipfs:
-          requires: [tests, typecheck, staking-cy, staking-e2e-optimism-mainnet]
-          filters:
-            branches:
-              only:
-                - release
-                - master
-                - ipfs-deploy
-
-      - combine-coverage:
-          requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
+      - release-lp
+# TODO: enable before merge
+#      - checks
+#      - typecheck
+#      - tests
+#      - staking-cy
+#      - staking-e2e:
+#          chain: optimism-mainnet
+#          name: staking-e2e-optimism-mainnet
+#      - staking-e2e:
+#          chain: optimism-goerli
+#          name: staking-e2e-optimism-goerli
+#      - release-lp:
+#          requires: [checks, typecheck, tests, staking-cy, staking-e2e-optimism-mainnet, staking-e2e-optimism-goerli]
+#          filters:
+#            tags:
+#              only: /^release-lp-.*/
+#            branches:
+#              ignore: /.*/
