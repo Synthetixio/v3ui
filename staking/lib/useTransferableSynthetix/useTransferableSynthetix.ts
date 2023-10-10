@@ -15,9 +15,11 @@ export function useTransferableSynthetix() {
 
   return useQuery({
     enabled: Boolean(provider && accountAddress && snxAddress),
-    queryKey: [network.name, { address: account?.address }, 'transferableSynthetix'],
+    queryKey: [network.name, 'TransferableSynthetix', { address: account?.address }],
     queryFn: async function (): Promise<{ transferable: Wei; collateral?: Wei }> {
-      if (!(provider && accountAddress && snxAddress)) throw 'OMG';
+      if (!(provider && accountAddress && snxAddress)) {
+        throw 'useTransferableSynthetix should not be enabled';
+      }
       const contract = new ethers.Contract(
         snxAddress,
         [

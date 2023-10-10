@@ -1,16 +1,17 @@
+import { calculateCRatio } from '@snx-v3/calculations';
 import { Wei, wei } from '@synthetixio/wei';
 
 export const validatePosition = ({
   issuanceRatioD18,
   collateralAmount,
-  collateralValue,
+  collateralPrice,
   debt,
   collateralChange,
   debtChange,
 }: {
   issuanceRatioD18?: Wei;
   collateralAmount?: Wei;
-  collateralValue?: Wei;
+  collateralPrice?: Wei;
   debt?: Wei;
   collateralChange: Wei;
   debtChange: Wei;
@@ -18,13 +19,11 @@ export const validatePosition = ({
   const targetCRatio = issuanceRatioD18 ? issuanceRatioD18 : wei(1);
   const newDebt = wei(debt || 0).add(debtChange);
   const newCollateralAmount = wei(collateralAmount || 0).add(collateralChange);
+  const newCollateralValue = newCollateralAmount.mul(collateralPrice || 0);
 
-  const collateralPrice = wei(collateralValue || 0).div(
-    collateralAmount?.gt(0) ? collateralAmount : wei(1)
-  );
-  const newCRatio = newDebt.gt(0) ? collateralPrice.mul(newCollateralAmount).div(newDebt) : wei(0);
+  const newCRatio = calculateCRatio(newDebt, newCollateralValue);
   const maybeMaxDebt = wei(newCollateralAmount)
-    .mul(collateralPrice)
+    .mul(collateralPrice || 0)
     .div(targetCRatio)
     .sub(debt || 0);
 

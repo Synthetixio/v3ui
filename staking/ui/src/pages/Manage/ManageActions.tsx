@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { BorrowIcon, DollarCircle } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { wei } from '@synthetixio/wei';
@@ -26,6 +26,7 @@ import { Undelegate } from './Undelegate';
 import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -67,16 +68,19 @@ const ActionButton: FC<
   </BorderBox>
 );
 
-const Action: FC<{ manageAction: ManageAction }> = ({ manageAction }) => {
+const Action: FC<{ manageAction: ManageAction; liquidityPosition?: LiquidityPosition }> = ({
+  manageAction,
+  liquidityPosition,
+}) => {
   switch (manageAction) {
     case 'borrow':
-      return <Borrow />;
+      return <Borrow liquidityPosition={liquidityPosition} />;
     case 'deposit':
-      return <Deposit />;
+      return <Deposit liquidityPosition={liquidityPosition} />;
     case 'repay':
-      return <Repay />;
+      return <Repay liquidityPosition={liquidityPosition} />;
     case 'undelegate':
-      return <Undelegate />;
+      return <Undelegate liquidityPosition={liquidityPosition} />;
 
     default:
       return null;
@@ -87,7 +91,8 @@ const ManageActionUi: FC<{
   setActiveAction: (action: ManageAction) => void;
   manageAction?: ManageAction;
   onSubmit: (e: FormEvent) => void;
-}> = ({ setActiveAction, manageAction, onSubmit }) => {
+  liquidityPosition?: LiquidityPosition;
+}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition }) => {
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
@@ -108,14 +113,14 @@ const ManageActionUi: FC<{
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
-          <Action manageAction={manageAction} />
+          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
         </Flex>
       ) : null}
     </Box>
   );
 };
 
-export const ManageAction = () => {
+export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
 
   const navigate = useNavigate();
@@ -126,17 +131,11 @@ export const ManageAction = () => {
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const liquidityPosition = useLiquidityPosition({
-    accountId: params.accountId,
-    poolId: params.poolId,
-    tokenAddress: collateralType?.tokenAddress,
-  });
-
   const { isValid } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
-    collateralAmount: liquidityPosition.data?.collateralAmount,
-    collateralValue: liquidityPosition.data?.collateralValue,
-    debt: liquidityPosition.data?.debt,
+    collateralAmount: liquidityPosition?.collateralAmount,
+    collateralPrice: liquidityPosition?.collateralPrice,
+    debt: liquidityPosition?.debt,
     collateralChange,
     debtChange,
   });
@@ -161,12 +160,11 @@ export const ManageAction = () => {
     const queryParams = new URLSearchParams(location.search);
 
     if (queryParams.get('manageAction')) return;
-    if (!liquidityPosition.data) return;
+    if (!liquidityPosition) return;
     if (!collateralType) return;
 
-    const cRatio = liquidityPosition.data.cRatio;
-    const canBorrow =
-      liquidityPosition.data.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
+    const cRatio = calculateCRatio(liquidityPosition.debt, liquidityPosition.collateralValue);
+    const canBorrow = liquidityPosition.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
 
     if (canBorrow) {
       queryParams.set('manageAction', 'borrow');
@@ -186,11 +184,12 @@ export const ManageAction = () => {
 
     queryParams.set('manageAction', 'deposit');
     navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-  }, [collateralType, liquidityPosition.data, navigate]);
+  }, [collateralType, liquidityPosition, navigate]);
 
   return (
     <>
       <ManageActionUi
+        liquidityPosition={liquidityPosition}
         onSubmit={onSubmit}
         setActiveAction={(action) => {
           setCollateralChange(wei(0));
@@ -204,8 +203,8 @@ export const ManageAction = () => {
       <Suspense fallback={null}>
         {txnModalOpen === 'repay' ? (
           <RepayModal
+            availableCollateral={liquidityPosition?.usdCollateral.availableCollateral}
             onClose={() => {
-              liquidityPosition.refetch();
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -216,7 +215,6 @@ export const ManageAction = () => {
         {txnModalOpen === 'borrow' ? (
           <BorrowModal
             onClose={() => {
-              liquidityPosition.refetch();
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -226,9 +224,9 @@ export const ManageAction = () => {
         ) : null}
         {txnModalOpen === 'deposit' ? (
           <DepositModal
+            currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
             collateralChange={collateralChange}
             onClose={() => {
-              liquidityPosition.refetch();
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);
@@ -238,8 +236,8 @@ export const ManageAction = () => {
         ) : null}
         {txnModalOpen === 'undelegate' ? (
           <UndelegateModal
+            liquidityPosition={liquidityPosition}
             onClose={() => {
-              liquidityPosition.refetch();
               setCollateralChange(wei(0));
               setDebtChange(wei(0));
               setTxnModalOpen(null);

@@ -6,7 +6,7 @@ describe('Pool page / Collateral section', () => {
   it('should render when no vaults data available', () => {
     cy.viewport(800, 500);
 
-    cy.mount(<CollateralSectionUi vaultsData={[] as VaultsDataType} poolName="POOL_NAME" />);
+    cy.mount(<CollateralSectionUi vaultsData={[] as VaultsDataType} />);
     cy.get('[data-testid="pool collateral types"]').should(
       'include.text',
       'Pool Collateralization'
@@ -38,7 +38,6 @@ describe('Pool page / Collateral section', () => {
             },
           ] as VaultsDataType
         }
-        poolName="POOL_NAME"
       />
     );
     cy.get('[data-testid="pool collateral types"]').should(
@@ -65,6 +64,10 @@ describe('Pool page / Collateral section', () => {
 
     cy.mount(
       <CollateralSectionUi
+        collateralPriceByAddress={{
+          COLLATERAL_ADDRESS_SNX: wei(10),
+          COLLATERAL_ADDRESS_OMG: wei(20),
+        }}
         vaultsData={
           [
             {
@@ -77,7 +80,6 @@ describe('Pool page / Collateral section', () => {
                 tokenAddress: 'COLLATERAL_ADDRESS_SNX',
                 symbol: 'SNX',
                 displaySymbol: 'SNAXX',
-                price: wei(10),
               },
             },
             {
@@ -90,12 +92,10 @@ describe('Pool page / Collateral section', () => {
                 tokenAddress: 'COLLATERAL_ADDRESS_OMG',
                 symbol: 'OMG',
                 displaySymbol: 'OMGWAT',
-                price: wei(20),
               },
             },
           ] as VaultsDataType
         }
-        poolName="POOL_NAME"
       />
     );
     cy.get('[data-testid="pool collateral types"]').should(

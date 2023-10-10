@@ -12,9 +12,9 @@ export function useEthBalance(networkId?: number) {
   const network = useNetwork();
 
   return useQuery({
-    queryKey: [network.name, { accountAddress: wallet?.address }, 'EthBalance'],
+    queryKey: [network.name, 'EthBalance', { accountAddress: wallet?.address }],
     queryFn: async () => {
-      if (!wallet?.address) throw Error('Query should not be enabled');
+      if (!wallet?.address) throw Error('useEthBalance should not be enabled');
       const provider =
         networkId && networkId !== network.id
           ? new InfuraProvider(networkId, process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
