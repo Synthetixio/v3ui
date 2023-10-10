@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   node-version:
     type: string
-    default: '18.16.0'
+    default: '18.18.0'
 
   cypress-version:
     type: string
@@ -238,15 +238,43 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
+  release:
+    parameters:
+      release-branch:
+        type: string
+    working_directory: ~/app
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    environment:
+      - GIT_PAGER: cat
+    steps:
+      - run: git config --global user.email engineering@snxdao.io
+      - run: git config --global user.name synthetix-team
+      - run: mkdir -p ~/.ssh
+      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - run:
+          working_directory: ~/
+          command: git clone git@github.com:synthetixio/v3ui.git --verbose --no-tags app
+      - run: git checkout $CIRCLE_SHA1
+      - run: git branch << parameters.release-branch >>
+      - run: git checkout << parameters.release-branch >>
+      - run: git push --set-upstream --force origin << parameters.release-branch >>
+
 workflows:
   version: 2.1
 
   ui:
+    when:
+      and:
+        - not: << pipeline.git.tag >>
+        - << pipeline.git.branch >>
+        - not:
+            equal: ['tagged-releases', << pipeline.git.branch >>]
+
     jobs:
       - checks
       - typecheck
       - tests
-
       - staking-cy
       - staking-e2e:
           chain: optimism-mainnet
@@ -255,13 +283,48 @@ workflows:
           chain: optimism-goerli
           name: staking-e2e-optimism-goerli
       - staking-ipfs:
-          requires: [tests, typecheck, staking-cy, staking-e2e-optimism-mainnet]
+          requires: [checks, typecheck, tests, staking-cy, staking-e2e-optimism-mainnet]
           filters:
             branches:
               only:
                 - release
                 - master
                 - ipfs-deploy
-
       - combine-coverage:
           requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
+
+  release-lp:
+    when:
+      and:
+        - matches:
+            pattern: '^release-lp-\d{8}.*$'
+            value: << pipeline.git.tag >>
+        - equal: ['tagged-releases', << pipeline.git.branch >>]
+    jobs:
+      - checks
+      - typecheck
+      - tests
+      - staking-cy
+      - staking-e2e:
+          chain: optimism-mainnet
+          name: staking-e2e-optimism-mainnet
+      - staking-e2e:
+          chain: optimism-goerli
+          name: staking-e2e-optimism-goerli
+      - release:
+          release-branch: 'release/lp'
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - staking-cy
+            - staking-e2e-optimism-mainnet
+            - staking-e2e-optimism-goerli
+
+  test-release-lp:
+    when:
+      and:
+        - equal: ['tagged-releases', << pipeline.git.branch >>]
+    jobs:
+      - release:
+          release-branch: 'test-release/lp'
