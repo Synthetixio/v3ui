@@ -51,7 +51,7 @@ export const usePoolConfiguration = (poolId?: string) => {
         CoreProxy.provider,
         collateralPriceCalls.concat(calls),
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          if (!Array.isArray(encoded)) throw Error('Expected array');
           return encoded.map((x) =>
             isLockedSchema.parse(
               CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', x)[0]
