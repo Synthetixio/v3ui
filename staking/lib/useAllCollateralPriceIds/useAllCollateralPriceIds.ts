@@ -50,7 +50,7 @@ export const useAllCollateralPriceIds = () => {
     staleTime: Infinity,
     cacheTime: Infinity,
 
-    queryKey: ['useAllCollateralPriceIds', { network }],
+    queryKey: [network.name, 'Collateral Price IDs'],
 
     queryFn: async () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy) {
