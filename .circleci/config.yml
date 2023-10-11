@@ -239,60 +239,11 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
-  release:
-    parameters:
-      release-branch:
-        type: string
-    working_directory: ~/app
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    environment:
-      - GIT_PAGER: cat
-    steps:
-      - run: git config --global user.email engineering@snxdao.io
-      - run: git config --global user.name synthetix-team
-      - run: mkdir -p ~/.ssh
-      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
-      - run:
-          working_directory: ~/
-          command: git clone git@github.com:synthetixio/v3ui.git --verbose --no-tags app
-      - run: git checkout $CIRCLE_SHA1
-      - run: git branch << parameters.release-branch >>
-      - run: git checkout << parameters.release-branch >>
-      - run: git push --set-upstream --force origin << parameters.release-branch >>
-
-  debug:
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    steps:
-      - run: echo "pipeline.git.branch = << pipeline.git.branch >>"
-      - run: echo "pipeline.git.tag = << pipeline.git.tag >>"
-      - run: echo "pipeline.git.revision = << pipeline.git.revision >>"
-      - run: echo "pipeline.git.base_revision = << pipeline.git.base_revision >>"
-      - run: echo "pipeline.project.git_url = << pipeline.project.git_url >>"
-
 workflows:
-  debug:
-    when:
-      and:
-        - not:
-            or:
-              - equal: ['tagged-releases', << pipeline.git.branch >>]
-              - equal: ['release/lp', << pipeline.git.branch >>]
-              - equal: ['test-release/lp', << pipeline.git.branch >>]
-    jobs:
-      - debug
-
   ui:
-    when:
-      and:
-        - not: << pipeline.git.tag >>
-        - << pipeline.git.branch >>
-        - not:
-            or:
-              - equal: ['tagged-releases', << pipeline.git.branch >>]
-              - equal: ['release/lp', << pipeline.git.branch >>]
-              - equal: ['test-release/lp', << pipeline.git.branch >>]
+    unless:
+      or:
+        - equal: ['tagged-releases', << pipeline.git.branch >>]
 
     jobs:
       - checks
@@ -305,38 +256,9 @@ workflows:
       - staking-e2e:
           chain: optimism-goerli
           name: staking-e2e-optimism-goerli
-      - staking-ipfs:
-          requires: [checks, typecheck, tests, staking-cy, staking-e2e-optimism-mainnet]
-          filters:
-            branches:
-              only:
-                - release
-                - master
-                - ipfs-deploy
       - combine-coverage:
           requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
-
-  release-lp:
-    when:
-      and:
-        - matches:
-            pattern: '^release-lp.*'
-            value: << pipeline.git.tag >>
-        # - not: << pipeline.git.branch >> # tags pushed have no branch
-        # - equal: ['tagged-releases', << pipeline.git.branch >>]
-    jobs:
-      - checks
-      - typecheck
-      - tests
-      - staking-cy
-      - staking-e2e:
-          chain: optimism-mainnet
-          name: staking-e2e-optimism-mainnet
-      - staking-e2e:
-          chain: optimism-goerli
-          name: staking-e2e-optimism-goerli
-      - release:
-          release-branch: 'release/lp'
+      - staking-ipfs:
           requires:
             - checks
             - typecheck
@@ -344,11 +266,9 @@ workflows:
             - staking-cy
             - staking-e2e-optimism-mainnet
             - staking-e2e-optimism-goerli
-
-  test-release-lp:
-    when:
-      and:
-        - equal: ['tagged-releases', << pipeline.git.branch >>]
-    jobs:
-      - release:
-          release-branch: 'test-release/lp'
+          filters:
+            branches:
+              only:
+                - release
+                - master
+                - ipfs-deploy

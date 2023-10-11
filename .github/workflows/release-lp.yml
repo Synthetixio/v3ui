@@ -1,0 +1,31 @@
+name: release-lp
+
+on:
+  push:
+    tags:
+      - 'release-lp*'
+    branches:
+      - 'tagged-releases'
+
+jobs:
+  release-lp:
+    runs-on: ubuntu-latest
+    steps:
+      #      # Setup SSH Deploy key fpr current repo
+      #      - run: mkdir -p ~/.ssh
+      #      - run: echo "${{secrets.SSH_PRIVATE_KEY}}" > "$HOME/.ssh/id_rsa"
+      #      - run: chmod 600 "$HOME/.ssh/id_rsa"
+      #      - run: ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ssh-key: '${{secrets.SSH_PRIVATE_KEY}}'
+      # Update git URL to use ssh instead of http
+      #- run: git remote set-url origin "git@github.com:${{github.repository}}.git"
+      - run: git config user.email engineering@snxdao.io
+      - run: git config user.name synthetix-team
+      - run: git checkout "${{ github.sha }}"
+      - run: git branch release/lp1
+      - run: git checkout release/lp1
+      - run: git push --set-upstream --force origin release/lp1
