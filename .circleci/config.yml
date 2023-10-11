@@ -261,8 +261,27 @@ jobs:
       - run: git checkout << parameters.release-branch >>
       - run: git push --set-upstream --force origin << parameters.release-branch >>
 
+  debug:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    steps:
+      - run: echo "pipeline.git.branch = << pipeline.git.branch >>"
+      - run: echo "pipeline.git.tag = << pipeline.git.tag >>"
+      - run: echo "pipeline.git.revision = << pipeline.git.revision >>"
+      - run: echo "pipeline.git.base_revision = << pipeline.git.base_revision >>"
+      - run: echo "pipeline.project.git_url = << pipeline.project.git_url >>"
+
 workflows:
-  version: 2.1
+  debug:
+    when:
+      and:
+        - not:
+            or:
+              - equal: ['tagged-releases', << pipeline.git.branch >>]
+              - equal: ['release/lp', << pipeline.git.branch >>]
+              - equal: ['test-release/lp', << pipeline.git.branch >>]
+    jobs:
+      - debug
 
   ui:
     when:
@@ -270,7 +289,10 @@ workflows:
         - not: << pipeline.git.tag >>
         - << pipeline.git.branch >>
         - not:
-            equal: ['tagged-releases', << pipeline.git.branch >>]
+            or:
+              - equal: ['tagged-releases', << pipeline.git.branch >>]
+              - equal: ['release/lp', << pipeline.git.branch >>]
+              - equal: ['test-release/lp', << pipeline.git.branch >>]
 
     jobs:
       - checks
@@ -298,9 +320,10 @@ workflows:
     when:
       and:
         - matches:
-            pattern: '^release-lp-\d{8}.*$'
+            pattern: '^release-lp.*'
             value: << pipeline.git.tag >>
-        - equal: ['tagged-releases', << pipeline.git.branch >>]
+        # - not: << pipeline.git.branch >> # tags pushed have no branch
+        # - equal: ['tagged-releases', << pipeline.git.branch >>]
     jobs:
       - checks
       - typecheck
