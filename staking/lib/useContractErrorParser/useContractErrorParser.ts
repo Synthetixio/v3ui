@@ -1,5 +1,6 @@
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { useCallback } from 'react';
+import { ERC7412_ABI } from '@snx-v3/withERC7412';
 
 export type ContractErrorType = {
   data: string;
@@ -20,7 +21,25 @@ export function useContractErrorParser(Contract?: ethers.Contract) {
           console.error({ error }); // intentional logging as object so we can inspect all properties
           return undefined;
         }
-        const errorParsed = Contract.interface.parseError(errorData);
+
+        const contractAbi = Contract.interface.format(utils.FormatTypes.full) as string[];
+        const newContract = new ethers.Contract(
+          Contract.address,
+          Array.from(
+            new Set(
+              contractAbi.concat(ERC7412_ABI).concat([
+                // ERC721 errors
+                'error CannotSelfApprove(address addr)',
+                'error InvalidTransferRecipient(address addr)',
+                'error InvalidOwner(address addr)',
+                'error TokenDoesNotExist(uint256 id)',
+                'error TokenAlreadyMinted(uint256 id)',
+              ])
+            )
+          ), // uniq
+          Contract.signer || Contract.provider
+        );
+        const errorParsed = newContract.interface.parseError(errorData);
         const errorArgs = Object.fromEntries(
           Object.entries(errorParsed.args)
             .filter(([key]) => `${parseInt(key)}` !== key)

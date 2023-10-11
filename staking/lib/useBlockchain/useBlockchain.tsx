@@ -103,7 +103,7 @@ export const NETWORKS: Record<string, Network> = {
     rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
     label: 'Base Goerli',
     Icon: () => <BaseIcon />,
-    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'base-goerli',
+    isSupported: true,
     publicRpcUrl: 'https://base-goerli.publicnode.com',
     isTestnet: true,
   },
@@ -154,6 +154,7 @@ const appMetadata = {
   gettingStartedGuide: 'https://synthetix.io',
   explore: 'https://blog.synthetix.io',
 };
+
 export const onboard = onboardInit({
   theme: 'dark',
   wallets,
@@ -234,6 +235,7 @@ export function useOnboardWallet(): WalletState | undefined {
     return undefined;
   }
   const [wallet] = wallets;
+
   return wallet;
 }
 
@@ -283,17 +285,21 @@ export function useIsConnected(): boolean {
 export function useProvider() {
   const wallet = useOnboardWallet();
   const network = useNetwork();
+
   if (wallet) {
     return new ethers.providers.Web3Provider(wallet.provider, 'any');
   }
+
   return new ethers.providers.JsonRpcProvider(network.rpcUrl);
 }
 
 export function useSigner() {
   const wallet = useOnboardWallet();
+
   if (!wallet) {
     return;
   }
+
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
   return provider.getSigner();
 }

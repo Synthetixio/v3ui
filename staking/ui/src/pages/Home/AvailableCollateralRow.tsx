@@ -1,10 +1,8 @@
 import { Amount } from '@snx-v3/Amount';
 import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
-import { useParams } from '@snx-v3/useParams';
-import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 import React from 'react';
-import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { safeImport } from '@synthetixio/safe-import';
 
 const WithdrawModal = React.lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
@@ -13,7 +11,7 @@ function AvailableCollateralRowUi({
   accountCollateral,
   isDisabled,
 }: {
-  accountCollateral: AccountCollateralType;
+  accountCollateral: AccountCollateralWithSymbol;
   isDisabled: boolean;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -48,20 +46,20 @@ function AvailableCollateralRowUi({
   );
 }
 
+export type AvailableCollateralRowProps = {
+  accountCollateralUnlockDate?: Date;
+  accountCollateral: AccountCollateralWithSymbol;
+};
 export function AvailableCollateralRow({
   accountCollateral,
-}: {
-  accountCollateral: AccountCollateralType;
-}) {
-  const { accountId } = useParams();
-  const accountCollateralUnlockDate = useAccountCollateralUnlockDate({ accountId });
-
+  accountCollateralUnlockDate,
+}: AvailableCollateralRowProps) {
   return (
     <AvailableCollateralRowUi
       accountCollateral={accountCollateral}
       isDisabled={
-        !accountCollateralUnlockDate.data ||
-        accountCollateralUnlockDate.data.getTime() > Date.now() ||
+        !accountCollateralUnlockDate ||
+        accountCollateralUnlockDate.getTime() > Date.now() ||
         accountCollateral.availableCollateral.eq(0)
       }
     />

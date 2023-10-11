@@ -65,7 +65,7 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
   return (
     <AccountVaultCollateralUi
       collateralAmount={data?.collateralAmount.toNumber() || 0}
-      collateralValue={data?.collateralValue.toNumber() || 0}
+      collateralValue={data?.collateralPrice?.toNumber() || 0}
       collateralSymbol={collateral.symbol}
       isLoading={isLoading}
       poolId={params.poolId}

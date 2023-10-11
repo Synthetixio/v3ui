@@ -12,12 +12,11 @@ import {
 import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Multistep } from '@snx-v3/Multistep';
-import { useEthBalance } from '@snx-v3/useEthBalance';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
@@ -26,11 +25,10 @@ import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { ContractError } from '@snx-v3/ContractError';
-import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { usePool } from '@snx-v3/usePools';
-import { useAccounts } from '@snx-v3/useAccounts';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -207,31 +205,30 @@ export const DepositModalUi: FC<{
 
 export type DepositModalProps = FC<{
   collateralChange: Wei;
+  currentCollateral: Wei;
+  availableCollateral: Wei;
   isOpen: boolean;
   onClose: () => void;
 }>;
 
-export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralChange }) => {
+export const DepositModal: DepositModalProps = ({
+  onClose,
+  isOpen,
+  collateralChange,
+  currentCollateral,
+  availableCollateral,
+}) => {
   const navigate = useNavigate();
   const params = useParams();
-
+  const queryClient = useQueryClient();
+  const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { refetch } = useAccounts();
 
-  const { approve, requireApproval, refetchAllowance } = useApprove({
+  const { approve, requireApproval } = useApprove({
     contractAddress: collateralType?.tokenAddress,
     amount: collateralChange.toBN(),
     spender: CoreProxy?.address,
-  });
-
-  const ethBalance = useEthBalance();
-  const transferrable = useTransferableSynthetix();
-
-  const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({
-    accountId: params.accountId,
-    tokenAddress: collateralType?.tokenAddress,
-    poolId: params.poolId,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -244,7 +241,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
       ? collateralChange.sub(wethBalance || 0)
       : wei(0);
-  const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
+
+  const { data: pool } = usePool(params.poolId);
 
   const { exec: execDeposit } = useDeposit({
     accountId: params.accountId,
@@ -252,16 +250,9 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
     poolId: params.poolId,
     collateralTypeAddress: collateralType?.tokenAddress,
     collateralChange,
-    currentCollateral: currentCollateral,
+    currentCollateral,
+    availableCollateral: availableCollateral || wei(0),
   });
-
-  const { data: pool } = usePool(params.poolId);
-
-  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralType?.tokenAddress
-  );
-
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
   const [state, send] = useMachine(DepositMachine, {
@@ -298,7 +289,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           });
 
           await approve(Boolean(state.context.infiniteApproval));
-          await refetchAllowance();
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
@@ -330,12 +320,21 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
           await execDeposit();
 
           await Promise.all([
-            ethBalance.refetch(),
-            transferrable.refetch(),
-            refetchAllowance(),
-            accountCollaterals.refetch(),
-            refetch(),
-            Boolean(params.accountId) ? refetchLiquidityPosition() : Promise.resolve(),
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'EthBalance'],
+            }),
+            queryClient.invalidateQueries({ queryKey: [network.name, 'LiquidityPosition'] }),
+            collateralType?.symbol === 'SNX'
+              ? queryClient.invalidateQueries({ queryKey: [network.name, 'TransferableSynthetix'] })
+              : Promise.resolve(),
+            queryClient.invalidateQueries({
+              queryKey: [network.name, 'Allowance'],
+            }),
+            !params.accountId
+              ? queryClient.invalidateQueries({
+                  queryKey: [network.name, 'Accounts'],
+                })
+              : Promise.resolve(),
           ]);
 
           toast.closeAll();
@@ -421,7 +420,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, collateralCha
       }}
       onSubmit={onSubmit}
       poolName={pool?.name || ''}
-      availableCollateral={accountCollateral?.availableCollateral || wei(0)}
+      availableCollateral={availableCollateral || wei(0)}
     />
   );
 };

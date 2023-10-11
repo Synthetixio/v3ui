@@ -14,9 +14,9 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { AvailableCollateralRow } from './AvailableCollateralRow';
+import { AvailableCollateralRow, AvailableCollateralRowProps } from './AvailableCollateralRow';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import intlFormat from 'date-fns/intlFormat';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -24,15 +24,15 @@ import { BorderBox } from '@snx-v3/BorderBox';
 export function AvailableCollateralUi({
   accountCollaterals,
   timeToUnlock,
+  unlockDateString,
   unlockDate,
   AvailableCollateralRow,
 }: {
-  accountCollaterals: AccountCollateralType[];
+  accountCollaterals: AccountCollateralWithSymbol[];
   timeToUnlock?: string;
-  unlockDate?: string;
-  AvailableCollateralRow: FC<{
-    accountCollateral: AccountCollateralType;
-  }>;
+  unlockDateString?: string;
+  unlockDate?: Date;
+  AvailableCollateralRow: FC<AvailableCollateralRowProps>;
 }) {
   if (accountCollaterals.length === 0) {
     return null;
@@ -53,7 +53,7 @@ export function AvailableCollateralUi({
           ml="auto"
           status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
           width="540px"
-          title={unlockDate}
+          title={unlockDateString}
         >
           <AlertIcon />
           <Box width="100%">
@@ -73,6 +73,7 @@ export function AvailableCollateralUi({
             {accountCollaterals.map((accountCollateral) => (
               <AvailableCollateralRow
                 key={accountCollateral.tokenAddress}
+                accountCollateralUnlockDate={unlockDate}
                 accountCollateral={accountCollateral}
               />
             ))}
@@ -108,7 +109,7 @@ export function AvailableCollateral() {
     return () => clearInterval(interval);
   }, [formatTimeToUnlock]);
 
-  const unlockDate = React.useMemo(() => {
+  const unlockDateString = React.useMemo(() => {
     if (accountCollateralUnlockDate.isLoading) {
       return '—';
     }
@@ -131,7 +132,8 @@ export function AvailableCollateral() {
     <AvailableCollateralUi
       accountCollaterals={accountCollaterals.data || []}
       timeToUnlock={timeToUnlock}
-      unlockDate={unlockDate}
+      unlockDateString={unlockDateString}
+      unlockDate={accountCollateralUnlockDate.data}
       AvailableCollateralRow={AvailableCollateralRow}
     />
   );

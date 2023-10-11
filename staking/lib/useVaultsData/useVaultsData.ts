@@ -5,6 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { erc7412Call } from '@snx-v3/withERC7412';
+import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
+import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -15,6 +18,7 @@ export const useVaultsData = (poolId?: number) => {
   const network = useNetwork();
   const { data: collateralTypes } = useCollateralTypes();
   const { data: CoreProxyContract } = useCoreProxy();
+  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
     queryKey: [
@@ -26,50 +30,66 @@ export const useVaultsData = (poolId?: number) => {
       },
     ],
     queryFn: async () => {
-      if (!CoreProxyContract || !collateralTypes || !poolId) {
-        throw Error('Query should not be enabled when missing contract or collateral types');
+      if (!CoreProxyContract || !collateralTypes || !poolId || !collateralPriceUpdates) {
+        throw Error('useVaultsData should not be enabled when missing data');
       }
 
-      const collateralCalls = collateralTypes.map((collateralType) =>
-        CoreProxyContract.interface.encodeFunctionData('getVaultCollateral', [
-          poolId,
-          collateralType.tokenAddress,
-        ])
+      const collateralCallsP = Promise.all(
+        collateralTypes.map((collateralType) =>
+          CoreProxyContract.populateTransaction.getVaultCollateral(
+            poolId,
+            collateralType.tokenAddress
+          )
+        )
       );
-      const debtCalls = collateralTypes.map((collateralType) =>
-        CoreProxyContract.interface.encodeFunctionData('getVaultDebt', [
-          poolId,
-          collateralType.tokenAddress,
-        ])
+      const debtCallsP = Promise.all(
+        collateralTypes.map((collateralType) =>
+          CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
+        )
       );
-      const calls = collateralCalls.concat(debtCalls);
-      // `getVaultCollateral` is not a normal view function, it updates some state too
-      // We can make it behave like a view function by using callStatic
-      const multicallResult = await CoreProxyContract.callStatic.multicall(calls);
-      const collateralResult = multicallResult.slice(0, collateralCalls.length);
-      const debtResult = multicallResult.slice(collateralCalls.length);
 
-      return collateralResult.map((bytes: string, i: number) => {
-        const debtBytes = debtResult[i];
-        const decodedDebt = CoreProxyContract.interface.decodeFunctionResult(
-          'getVaultDebt',
-          debtBytes
-        );
+      const collateralPriceUpdateCallsP = fetchPriceUpdates(
+        collateralPriceUpdates,
+        network.isTestnet
+      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
 
-        const decodedCollateral = CoreProxyContract.interface.decodeFunctionResult(
-          'getVaultCollateral',
-          bytes
-        );
-        const collateral = VaultCollateralSchema.parse({ ...decodedCollateral });
-        const debt = VaultDebtSchema.parse(decodedDebt[0]);
-        return {
-          debt,
-          collateral,
-          collateralType: collateralTypes[i],
-        };
-      });
+      const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
+
+      return await erc7412Call(
+        CoreProxyContract.provider,
+        calls.flat(),
+        (multicallResult) => {
+          if (!Array.isArray(multicallResult)) throw Error('Expected array');
+
+          const collateralResult = multicallResult.slice(0, collateralTypes.length);
+          const debtResult = multicallResult.slice(collateralTypes.length);
+
+          return collateralResult.map((bytes: string, i: number) => {
+            const debtBytes = debtResult[i];
+            const decodedDebt = CoreProxyContract.interface.decodeFunctionResult(
+              'getVaultDebt',
+              debtBytes
+            );
+
+            const decodedCollateral = CoreProxyContract.interface.decodeFunctionResult(
+              'getVaultCollateral',
+              bytes
+            );
+            const collateral = VaultCollateralSchema.parse({ ...decodedCollateral });
+            const debt = VaultDebtSchema.parse(decodedDebt[0]);
+            return {
+              debt,
+              collateral,
+              collateralType: collateralTypes[i],
+            };
+          });
+        },
+        'useVaultsData'
+      );
     },
-    enabled: Boolean(collateralTypes?.length && CoreProxyContract && poolId),
+    enabled: Boolean(
+      collateralTypes?.length && CoreProxyContract && poolId && collateralPriceUpdates
+    ),
   });
 };
 

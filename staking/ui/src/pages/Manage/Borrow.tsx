@@ -8,7 +8,7 @@ import { FC, useContext } from 'react';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 
 const BorrowUi: FC<{
@@ -65,21 +65,16 @@ const BorrowUi: FC<{
   );
 };
 
-export const Borrow = () => {
+export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
   const params = useParams();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
 
   const { maxDebt } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralValue: liquidityPosition?.collateralValue,
+    collateralPrice: liquidityPosition?.collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,

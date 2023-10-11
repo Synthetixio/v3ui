@@ -18,7 +18,9 @@ export type CoreProxyType =
   | CoreProxyOptimismGoerli
   | CoreProxyBaseGoerli;
 
-export async function importCoreProxy(chainName: string) {
+export async function importCoreProxy(
+  chainName: string
+): Promise<{ address: string; abi: string[] }> {
   switch (chainName) {
     case 'cannon':
       return import('@synthetixio/v3-contracts/build/cannon/CoreProxy');
