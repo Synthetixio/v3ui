@@ -68,14 +68,15 @@ commands:
           name: 'Pin to the remote IPFS node'
           command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/pin/add?recursive=true&progress=true&arg=$IPFS_CID"
       - run:
-          name: 'List remote IPNS keys'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/key/list" | jq
-      - run:
           name: 'Publish IPFS_CID to IPNS key << parameters.ipns-key >>'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/name/publish?key=<< parameters.ipns-key >>&arg=$IPFS_CID" | jq
+          command: |
+            curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/name/publish?key=<< parameters.ipns-key >>&arg=$IPFS_CID" | tee /tmp/name-publish-$IPFS_CID.log
+            cat /tmp/name-publish-$IPFS_CID.log | jq
       - run:
           name: 'Pin to Synthetix IPFS cluster'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | jq
+          command: |
+            curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | tee /tmp/pin-add-$IPFS_CID.log
+            cat /tmp/pin-add-$IPFS_CID.log | jq
 
 jobs:
   checks:
