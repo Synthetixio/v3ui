@@ -2,13 +2,14 @@ import { FC, useContext } from 'react';
 import { Flex, Text, Tooltip } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
-import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -41,10 +42,14 @@ export const ManageStatsUi: FC<{
   newCratio: Wei;
   newCollateralAmount: Wei;
   newDebt: Wei;
+  cRatio: Wei;
+  collateralValue: Wei;
   hasChanges: boolean;
 }> = ({
   liquidityPosition,
   collateralType,
+  collateralValue,
+  cRatio,
   newCollateralAmount,
   newCratio,
   newDebt,
@@ -95,6 +100,13 @@ export const ManageStatsUi: FC<{
             })}
           </Text>
         </Flex>
+        <Text fontWeight="400" color="gray.500" fontSize="xs">
+          Current Value:{' '}
+          {currency(collateralValue, {
+            currency: 'USD',
+            style: 'currency',
+          })}
+        </Text>
       </BorderBox>
       <BorderBox
         py={4}
@@ -179,11 +191,7 @@ export const ManageStatsUi: FC<{
         >
           <ChangeStat
             // TODO, need a function to burn to target so dust debt not left over
-            value={
-              liquidityPosition.cRatio.lt(0.01) || liquidityPosition.cRatio.gt(50000)
-                ? wei(0)
-                : liquidityPosition.cRatio
-            }
+            value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
             newValue={newCratio}
             formatFn={(val: Wei) =>
               currency(val, {
@@ -214,22 +222,19 @@ export const ManageStatsUi: FC<{
   );
 };
 
-export const ManageStats = () => {
+export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
+  const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
+  const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralValue: liquidityPosition?.collateralValue,
+    collateralPrice: liquidityPosition?.collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,
@@ -245,6 +250,8 @@ export const ManageStats = () => {
       newCollateralAmount={newCollateralAmount}
       liquidityPosition={liquidityPosition}
       collateralType={collateralType}
+      cRatio={cRatio}
+      collateralValue={collateralValue}
     />
   );
 };

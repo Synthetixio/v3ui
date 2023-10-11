@@ -3,6 +3,7 @@ import { OptimismIcon } from '../OptimismIcon';
 import { SNXIcon } from '../SNXIcon';
 import { DollarCircle } from '../DollarCircle';
 import { Icon, IconProps } from '@chakra-ui/react';
+import { BitcoinIcon } from '../BitcoinIcon';
 
 interface CollateralIconProps extends IconProps {
   symbol?: string;
@@ -17,16 +18,18 @@ export const CollateralIcon = ({
 }: CollateralIconProps) => {
   switch (symbol) {
     case 'WETH':
-      return <EthereumIcon {...props} />;
     case 'ETH':
       return <EthereumIcon {...props} />;
     case 'SNX':
+    case 'fSNX':
       return <SNXIcon fill={fill} color={color} {...props} />;
     case 'OP':
       return <OptimismIcon {...props} />;
     case 'sUSD':
     case 'snxUSD':
       return <DollarCircle {...props} />;
+    case 'WBTC':
+      return <BitcoinIcon {...props} />;
     default:
       return <UnknownIcon {...props} />;
   }

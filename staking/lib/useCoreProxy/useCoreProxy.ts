@@ -7,16 +7,20 @@ import type { CoreProxy as CoreProxyGoerli } from '@synthetixio/v3-contracts/bui
 import type { CoreProxy as CoreProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/CoreProxy';
 import type { CoreProxy as CoreProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/CoreProxy';
 import type { CoreProxy as CoreProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/CoreProxy';
+import type { CoreProxy as CoreProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/CoreProxy';
 
 export type CoreProxyType =
+  | CoreProxyCannon
   | CoreProxyMainnet
   | CoreProxyGoerli
   | CoreProxySepolia
   | CoreProxyOptimismMainnet
   | CoreProxyOptimismGoerli
-  | CoreProxyCannon;
+  | CoreProxyBaseGoerli;
 
-export async function importCoreProxy(chainName: string) {
+export async function importCoreProxy(
+  chainName: string
+): Promise<{ address: string; abi: string[] }> {
   switch (chainName) {
     case 'cannon':
       return import('@synthetixio/v3-contracts/build/cannon/CoreProxy');
@@ -30,6 +34,8 @@ export async function importCoreProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/CoreProxy');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/CoreProxy');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/CoreProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

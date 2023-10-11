@@ -19,17 +19,19 @@ import { Events, ServiceNames, State, WithdrawMachine } from './WithdrawMachine'
 import { useMachine } from '@xstate/react';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import type { StateFrom } from 'xstate';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ContractError } from '@snx-v3/ContractError';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
   isOpen: boolean;
   onClose: () => void;
-  accountCollateral?: AccountCollateralType;
+  accountCollateral?: AccountCollateralWithSymbol;
   state: StateFrom<typeof WithdrawMachine>;
   error: { error: Error; step: string } | null;
   onSubmit: () => void;
@@ -105,22 +107,19 @@ export function WithdrawModal({
   onClose,
   isOpen,
 }: {
-  accountCollateral: AccountCollateralType;
+  accountCollateral: AccountCollateralWithSymbol;
   isOpen: boolean;
   onClose: () => void;
 }) {
   const params = useParams();
   const toast = useToast({ isClosable: true, duration: 9000 });
-
+  const network = useNetwork();
   const { exec: unwrap } = useUnWrapEth();
   const { exec: execWithdraw } = useWithdraw({
     accountId: params.accountId,
     collateralTypeAddress: accountCollateral?.tokenAddress,
   });
-
-  const { refetch: refetchAccountCollateral } = useAccountCollateral({
-    accountId: params.accountId,
-  });
+  const queryClient = useQueryClient();
 
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
@@ -133,7 +132,9 @@ export function WithdrawModal({
       [ServiceNames.withdraw]: async () => {
         try {
           await execWithdraw();
-          await refetchAccountCollateral();
+          await queryClient.invalidateQueries({
+            queryKey: [network.name, 'AccountSpecificCollateral'],
+          });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

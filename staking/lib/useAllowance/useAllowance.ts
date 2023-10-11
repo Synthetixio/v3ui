@@ -20,8 +20,8 @@ export const useAllowance = ({
   return useQuery({
     queryKey: [
       network.name,
-      { accountAddress: wallet?.address },
       'Allowance',
+      { accountAddress: wallet?.address },
       { contractAddress, spender },
     ],
     queryFn: async () => {

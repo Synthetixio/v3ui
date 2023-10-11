@@ -1,5 +1,5 @@
 {
-  "address": "0x7cB424791B229E3C0e3757eB8F9f29fe18846cb8",
+  "address": "0x4A6CE122433d890b2520A970453B18Ff976Bd064",
   "abi": [
     {
       "inputs": [],
@@ -130,7 +130,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -215,7 +215,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -312,7 +312,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -343,7 +343,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -379,7 +379,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -392,7 +392,7 @@
       ],
       "name": "setDecayRate",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -490,7 +490,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x730f40f675fd5466703d909763bd4d30b47e5b248bd62deaf9c741a34e55b18e",
+  "deployTxnHash": "0x1c59955bd8462d1b56d26d7d5c7b0651fb0634cc5e879ac0e35bf28340cc680c",
   "sourceName": "contracts/modules/token/SynthTokenModule.sol",
   "contractName": "SynthTokenModule",
   "deployedOn": "contract.SynthTokenModule"

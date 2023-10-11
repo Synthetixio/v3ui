@@ -1,5 +1,5 @@
 {
-  "address": "0x6230E6A1991B32B8d7952019939c73b8c7499599",
+  "address": "0x893C7AefF7d53B0162560F6B7B5DA5dB7cBF45Ca",
   "abi": [
     {
       "inputs": [
@@ -66,7 +66,7 @@
       ],
       "name": "configureChainlinkCrossChain",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -79,7 +79,7 @@
       ],
       "name": "configureOracleManager",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -140,6 +140,38 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "forwarder",
+          "type": "address"
+        }
+      ],
+      "name": "isTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "bytes32",
@@ -154,7 +186,7 @@
       ],
       "name": "setConfig",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -178,7 +210,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -203,7 +235,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x15957a2872ca66c7c490d6769953f276cb1a5dbff2f79b50a96e4fded40b90b1",
+  "deployTxnHash": "0xe054c7f5ee5ad4995b70cbc78204c1de2945490e17e853e8dcdf28fe3384b469",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"

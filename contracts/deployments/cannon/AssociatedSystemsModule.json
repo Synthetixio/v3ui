@@ -1,5 +1,5 @@
 {
-  "address": "0x9b531CbaE504e2b7775587B04bB324ead67ec8d8",
+  "address": "0xc02C5b2A15Ae9A36caD858EF6DC64356ea82491A",
   "abi": [
     {
       "inputs": [
@@ -124,7 +124,7 @@
       ],
       "name": "initOrUpgradeNft",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -157,7 +157,7 @@
       ],
       "name": "initOrUpgradeToken",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -175,13 +175,13 @@
       ],
       "name": "registerUnmanagedSystem",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xc4a03e749fb05d4ae449a4e288809b436b79ce684661a2f49d1bb4442b94a116",
+  "deployTxnHash": "0x6b27485b9570b39f5ad7d32bb8887872b3cf84db981878d42c04a9a4856d8f0e",
   "sourceName": "contracts/modules/associated-systems/AssociatedSystemsModule.sol",
   "contractName": "AssociatedSystemsModule",
   "deployedOn": "contract.AssociatedSystemsModule"

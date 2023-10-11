@@ -117,7 +117,7 @@ export function MarketSectionUi({
   if (poolDataFetched && !poolData) {
     return (
       <BorderBox padding={4}>
-        <Text>Pool with id: {poolId} does not exists</Text>
+        <Text>Pool with id: {poolId} does not exist</Text>
       </BorderBox>
     );
   }

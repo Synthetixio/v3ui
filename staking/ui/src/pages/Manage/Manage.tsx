@@ -12,12 +12,14 @@ import { Rewards } from '../../components/Rewards';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export const ManageUi: FC<{
   collateralType?: CollateralType;
   isLoading: boolean;
   rewards?: RewardsType;
-}> = ({ collateralType, isLoading, rewards }) => {
+  liquidityPosition?: LiquidityPosition;
+}> = ({ collateralType, isLoading, rewards, liquidityPosition }) => {
   return (
     <Box mb={12}>
       <WithdrawIncrease />
@@ -79,10 +81,10 @@ export const ManageUi: FC<{
               This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
             </Text>
           </Text>
-          <ManageAction />
+          <ManageAction liquidityPosition={liquidityPosition} />
         </BorderBox>
         <Box minW="450px">
-          <ManageStats />
+          <ManageStats liquidityPosition={liquidityPosition} />
           <Rewards isLoading={isLoading} rewards={rewards} />
         </Box>
       </Flex>
@@ -108,11 +110,22 @@ export const Manage = () => {
     !isInitialQueriesLoading
   );
 
+  const { data: liquidityPosition } = useLiquidityPosition({
+    tokenAddress: collateralType?.tokenAddress,
+    accountId,
+    poolId,
+  });
+
   const isLoading = isRewardsLoading || isInitialQueriesLoading;
 
   return (
     <ManagePositionProvider>
-      <ManageUi isLoading={isLoading} collateralType={collateralType} rewards={rewardsData} />
+      <ManageUi
+        isLoading={isLoading}
+        collateralType={collateralType}
+        rewards={rewardsData}
+        liquidityPosition={liquidityPosition}
+      />
     </ManagePositionProvider>
   );
 };

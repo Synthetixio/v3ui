@@ -9,9 +9,9 @@
     "@snx-v3/useMulticall3": "workspace:*",
     "@snx-v3/zod": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^4.35.7",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
-    "zod": "^3.21.4"
+    "zod": "^3.22.4"
   }
 }

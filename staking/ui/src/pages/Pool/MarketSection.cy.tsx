@@ -61,7 +61,7 @@ describe('Pool page / Market section', () => {
   it('should render when pool does not exist', () => {
     cy.viewport(800, 500);
     cy.mount(<MarketSectionUi poolId="POOL_ID" poolDataFetched={true} />);
-    cy.get('#app').and('include.text', 'Pool with id: POOL_ID does not exists');
+    cy.get('#app').and('include.text', 'Pool with id: POOL_ID does not exist');
   });
 
   it('should render when pool has incomplete data', () => {

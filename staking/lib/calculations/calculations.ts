@@ -1,6 +1,6 @@
 import type { MarketSnapshotByWeekSchema, PoolType } from '@snx-v3/usePoolData';
 import { z } from 'zod';
-import { wei } from '@synthetixio/wei';
+import { wei, Wei } from '@synthetixio/wei';
 
 type MarketSnapshotByWeek = z.infer<typeof MarketSnapshotByWeekSchema>;
 export const calculateSevenDaysPnlGrowth = (marketSnapshots?: MarketSnapshotByWeek[]) => {
@@ -35,3 +35,6 @@ export const calculatePoolPerformanceSevenDays = (poolData?: PoolType) => {
       : total.sub(totalSevenDaysAgo).div(totalSevenDaysAgo.abs()),
   };
 };
+
+export const calculateCRatio = (debt: Wei, collateralValue: Wei) =>
+  debt.eq(0) || collateralValue.eq(0) ? wei(0) : collateralValue.div(debt);

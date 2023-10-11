@@ -14,7 +14,7 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
@@ -31,6 +31,7 @@ export const UndelegateUi: FC<{
   symbol: string;
   setCollateralChange: (val: Wei) => void;
   isAnyMarketLocked?: boolean;
+  isLoadingRequiredData: boolean;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -39,6 +40,7 @@ export const UndelegateUi: FC<{
   symbol,
   currentCollateral,
   minDelegation,
+  isLoadingRequiredData,
   isAnyMarketLocked,
 }) => {
   const onMaxClick = React.useCallback(() => {
@@ -132,7 +134,7 @@ export const UndelegateUi: FC<{
       <Button
         data-testid="undelegate submit"
         type="submit"
-        isDisabled={!max || isAnyMarketLocked === true}
+        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
       >
         Remove {displaySymbol}
       </Button>
@@ -140,25 +142,19 @@ export const UndelegateUi: FC<{
   );
 };
 
-export const Undelegate = () => {
+export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
-    accountId: params.accountId,
-    poolId: params.poolId,
-  });
-
   const poolConfiguration = usePoolConfiguration(params.poolId);
 
   if (!collateralType) return null;
-
+  const collateralPrice = liquidityPosition?.collateralPrice;
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
-    collateralValue: liquidityPosition?.collateralValue,
+    collateralPrice,
     debt: liquidityPosition?.debt,
     collateralChange: collateralChange,
     debtChange: debtChange,
@@ -167,10 +163,20 @@ export const Undelegate = () => {
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
 
-  // if debt is negative it's actually credit, which means we can undelegate all collateral
-  const maxCollateral = newDebt.lte(0)
-    ? liquidityPosition?.collateralAmount
-    : newDebt.mul(collateralType.issuanceRatioD18).div(collateralType.price).mul(0.98);
+  function maxUndelegate() {
+    if (!liquidityPosition || !collateralType) return undefined;
+    const { collateralAmount, collateralValue } = liquidityPosition;
+    // if debt is negative it's actually credit, which means we can undelegate all collateral
+    if (newDebt.lte(0)) return collateralAmount;
+
+    const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
+    // If you're below issuance ratio, you can't withdraw anything
+    if (collateralValue < minCollateralRequired) return wei(0);
+
+    const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
+    return Wei.min(collateralAmount, maxWithdrawable);
+  }
+  const max = maxUndelegate();
 
   return (
     <UndelegateUi
@@ -181,7 +187,8 @@ export const Undelegate = () => {
       collateralChange={collateralChange}
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
-      max={maxCollateral}
+      max={max}
+      isLoadingRequiredData={poolConfiguration.isLoading || !max}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
     />
   );

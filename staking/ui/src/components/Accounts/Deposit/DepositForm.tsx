@@ -25,15 +25,16 @@ import { useParams } from '@snx-v3/useParams';
 import { DepositModal, DepositModalProps } from '@snx-v3/DepositModal';
 import { CollateralIcon } from '@snx-v3/icons';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralType, useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../CollateralAlert';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
 
 export function DepositFormUi({
   collateralType,
   accountCollateral,
   ethBalance,
-  tokenBalance,
+  snxBalance,
   isConnected,
   openConnectModal,
   staticCollateral,
@@ -42,13 +43,14 @@ export function DepositFormUi({
   navigate,
   DepositModal,
   CollateralTypeSelector,
+  tokenBalance,
 }: {
   accountCollateral?: AccountCollateralType;
   staticCollateral?: boolean;
   openConnectModal: (() => void) | undefined;
   isConnected: boolean;
   collateralType?: CollateralType;
-  tokenBalance?: {
+  snxBalance?: {
     transferable: Wei;
     collateral?: Wei;
   };
@@ -58,6 +60,7 @@ export function DepositFormUi({
   navigate: NavigateFunction;
   DepositModal: DepositModalProps;
   CollateralTypeSelector: CollateralTypeSelectorProps;
+  tokenBalance?: Wei;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputAmount, setInputAmount] = useState(wei(0));
@@ -65,14 +68,17 @@ export function DepositFormUi({
   const [activeBadge, setActiveBadge] = useState(0);
 
   const combinedTokenBalance = useMemo(() => {
+    if (collateralType?.symbol === 'SNX') {
+      return snxBalance?.transferable;
+    }
     if (collateralType?.symbol !== 'WETH') {
-      return tokenBalance?.transferable;
+      return tokenBalance;
     }
     if (!tokenBalance || !ethBalance) {
       return undefined;
     }
-    return tokenBalance.transferable.add(ethBalance);
-  }, [collateralType?.symbol, tokenBalance, ethBalance]);
+    return tokenBalance.add(ethBalance);
+  }, [collateralType?.symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
 
@@ -174,25 +180,26 @@ export function DepositFormUi({
                 {accountCollateral && accountCollateral?.availableCollateral.gt(0) ? (
                   <Link onClick={() => setInputAmount(accountCollateral?.availableCollateral)}>
                     <Amount
-                      prefix={`Available ${accountCollateral.symbol} Collateral: `}
+                      prefix={`Available ${collateralType.symbol} Collateral: `}
                       value={accountCollateral?.availableCollateral}
                     />
                   </Link>
                 ) : null}
                 <Link
                   onClick={() => {
-                    if (!tokenBalance) {
+                    if (!tokenBalance || !snxBalance) {
                       return;
                     }
-                    setInputAmount(tokenBalance.transferable);
+                    const max =
+                      collateralType.symbol === 'SNX' ? snxBalance.transferable : tokenBalance;
+
+                    setInputAmount(max);
                   }}
                 >
                   <Amount
                     prefix={`${collateralType.symbol} Wallet Balance: `}
                     value={
-                      collateralType.symbol === 'SNX'
-                        ? tokenBalance?.transferable
-                        : accountCollateral?.availableCollateral
+                      collateralType.symbol === 'SNX' ? snxBalance?.transferable : tokenBalance
                     }
                   />
                 </Link>
@@ -257,13 +264,13 @@ export function DepositFormUi({
           Deposit Collateral
         </Button>
       </Box>
-      {tokenBalance?.collateral &&
-        tokenBalance?.collateral.gt(0) &&
-        collateralType.symbol === 'SNX' && (
-          <CollateralAlert tokenBalance={tokenBalance.collateral} />
-        )}
+      {snxBalance?.collateral &&
+        snxBalance?.collateral.gt(0) &&
+        collateralType.symbol === 'SNX' && <CollateralAlert tokenBalance={snxBalance.collateral} />}
       {amount.gt(0) ? (
         <DepositModal
+          availableCollateral={accountCollateral?.availableCollateral || wei(0)}
+          currentCollateral={wei(0)}
           collateralChange={amount}
           isOpen={isOpenDeposit}
           onClose={() => setIsOpenDeposit(false)}
@@ -281,11 +288,10 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
 
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
-
-  const accountCollaterals = useAccountCollateral({ accountId: params.accountId });
-
-  const accountCollateral = accountCollaterals.data?.find(
-    (coll) => coll.tokenAddress === collateralType?.tokenAddress
+  const { data: tokenBalance } = useTokenBalance(collateralType?.tokenAddress);
+  const { data: accountCollateral } = useAccountSpecificCollateral(
+    params.accountId,
+    collateralType?.tokenAddress
   );
 
   return (
@@ -295,7 +301,8 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
       openConnectModal={() => onboard.connectWallet()}
       collateralType={collateralType}
       accountCollateral={accountCollateral}
-      tokenBalance={transferrable.data}
+      tokenBalance={tokenBalance}
+      snxBalance={transferrable.data}
       ethBalance={ethBalance.data}
       poolId={params.poolId}
       accountId={params.accountId}

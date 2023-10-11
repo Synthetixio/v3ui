@@ -14,3 +14,4 @@ export * from './BorrowIcon';
 export * from './ArrowLeft';
 export * from './CCIP';
 export * from './BaseIcon';
+export * from './BitcoinIcon';

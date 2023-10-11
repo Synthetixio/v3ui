@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { z } from 'zod';
 import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
+import { erc7412Call } from '@snx-v3/withERC7412';
+import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -18,31 +20,45 @@ export const PoolConfigurationSchema = z.object({
   markets: MarketConfigurationSchema.array(),
   isAnyMarketLocked: z.boolean(),
 });
-
+const isLockedSchema = z.boolean();
 export const usePoolConfiguration = (poolId?: string) => {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: MultiCall3 } = useMulticall3();
+  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
-    enabled: Boolean(CoreProxy && MultiCall3 && poolId),
+    enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),
     queryKey: [network.name, 'PoolConfiguration', { poolId }],
     queryFn: async () => {
-      if (!CoreProxy || !MultiCall3 || !poolId) throw 'OMG';
+      if (!CoreProxy || !poolId || !collateralPriceUpdates) {
+        throw Error('usePoolConfiguration should not be enabled');
+      }
       const marketsData = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));
       const markets = marketsData.map(({ marketId, maxDebtShareValueD18, weightD18 }) => ({
         id: marketId,
         weight: maxDebtShareValueD18,
         maxDebtShareValue: weightD18,
       }));
+      const collateralPriceCalls = await fetchPriceUpdates(
+        collateralPriceUpdates,
+        network.isTestnet
+      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
 
-      const calls = markets.map((m) => ({
-        target: CoreProxy.address,
-        callData: CoreProxy.interface.encodeFunctionData('isMarketCapacityLocked', [m.id]),
-      }));
-      const result = await MultiCall3.callStatic.aggregate(calls);
-      const decoded = result.returnData.map(
-        (bytes) => CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', bytes)[0]
+      const calls = await Promise.all(
+        markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
+      );
+      const decoded = await erc7412Call(
+        CoreProxy.provider,
+        collateralPriceCalls.concat(calls),
+        (encoded) => {
+          if (!Array.isArray(encoded)) throw Error('Expected array');
+          return encoded.map((x) =>
+            isLockedSchema.parse(
+              CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', x)[0]
+            )
+          );
+        },
+        'isMarketCapacityLocked'
       );
 
       return PoolConfigurationSchema.parse({

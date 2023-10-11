@@ -1,5 +1,5 @@
 {
-  "address": "0x65fD4e0da4dC5A97bfae806A45e62e1363D9Da92",
+  "address": "0x4d1E7bA05F7855Eb55C05DEe1ab0fa01dc39EC09",
   "abi": [
     {
       "inputs": [],
@@ -192,7 +192,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -210,7 +210,7 @@
       ],
       "name": "burn",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -233,7 +233,7 @@
       ],
       "name": "burnWithAllowance",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -317,7 +317,7 @@
       ],
       "name": "initialize",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -348,7 +348,7 @@
       ],
       "name": "mint",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -384,7 +384,7 @@
       ],
       "name": "setAllowance",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -469,7 +469,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x064d3da3370ea1cc0e5051d2ecc4d0630e04dc344a9d42619aa3b69286212a2c",
+  "deployTxnHash": "0x02eb66853e506b79eadbfc86216586639a268470814af0d4b1844f3dfaba0efd",
   "sourceName": "contracts/modules/usd/USDTokenModule.sol",
   "contractName": "USDTokenModule",
   "deployedOn": "contract.USDTokenModule"

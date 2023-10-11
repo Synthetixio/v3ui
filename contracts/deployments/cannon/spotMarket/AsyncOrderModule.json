@@ -1,5 +1,5 @@
 {
-  "address": "0x1A2a5Ac242F240361e3087103BdBEE1D7103A5a4",
+  "address": "0x589C1524a6164e4A11FF37Cc75081eEe2C65627B",
   "abi": [
     {
       "inputs": [
@@ -250,7 +250,7 @@
       ],
       "name": "cancelOrder",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -341,7 +341,7 @@
           "type": "tuple"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -418,7 +418,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xf699a2095a0cd640ce24eeb7fded0f55a68adb65c7e6052d1bcdafecd0c43108",
+  "deployTxnHash": "0xaab29303b8d6d4c771f331e8418db1fce73a5996dc1b6294182a5b9bbbc9e968",
   "sourceName": "contracts/modules/AsyncOrderModule.sol",
   "contractName": "AsyncOrderModule",
   "deployedOn": "contract.AsyncOrderModule"
