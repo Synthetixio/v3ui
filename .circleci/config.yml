@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   node-version:
     type: string
-    default: '18.16.0'
+    default: '18.18.0'
 
   cypress-version:
     type: string
@@ -68,14 +68,15 @@ commands:
           name: 'Pin to the remote IPFS node'
           command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/pin/add?recursive=true&progress=true&arg=$IPFS_CID"
       - run:
-          name: 'List remote IPNS keys'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/key/list" | jq
-      - run:
           name: 'Publish IPFS_CID to IPNS key << parameters.ipns-key >>'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/name/publish?key=<< parameters.ipns-key >>&arg=$IPFS_CID" | jq
+          command: |
+            curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-api >>/name/publish?key=<< parameters.ipns-key >>&arg=$IPFS_CID" | tee /tmp/name-publish-$IPFS_CID.log
+            cat /tmp/name-publish-$IPFS_CID.log | jq
       - run:
           name: 'Pin to Synthetix IPFS cluster'
-          command: curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | jq
+          command: |
+            curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | tee /tmp/pin-add-$IPFS_CID.log
+            cat /tmp/pin-add-$IPFS_CID.log | jq
 
 jobs:
   checks:
@@ -239,14 +240,15 @@ jobs:
           ipns-key: 'v3.synthetix.eth'
 
 workflows:
-  version: 2.1
-
   ui:
+    unless:
+      or:
+        - equal: ['skip-tests', << pipeline.git.branch >>]
+
     jobs:
       - checks
       - typecheck
       - tests
-
       - staking-cy
       - staking-e2e:
           chain: optimism-mainnet
@@ -254,14 +256,19 @@ workflows:
       - staking-e2e:
           chain: optimism-goerli
           name: staking-e2e-optimism-goerli
+      - combine-coverage:
+          requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
       - staking-ipfs:
-          requires: [tests, typecheck, staking-cy, staking-e2e-optimism-mainnet]
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - staking-cy
+            - staking-e2e-optimism-mainnet
+            - staking-e2e-optimism-goerli
           filters:
             branches:
               only:
                 - release
                 - master
                 - ipfs-deploy
-
-      - combine-coverage:
-          requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
