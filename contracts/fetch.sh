@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 set -u
+# Check if INFURA_KEY is set
+if [[ -z "${INFURA_KEY}" ]]; then
+  echo "Error: INFURA_KEY is not set."
+  exit 1
+fi
 
 fetch() {
   export CHAIN_NAME=$1
