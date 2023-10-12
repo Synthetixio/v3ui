@@ -1,6 +1,6 @@
 {
   "generator": "cannon provision",
-  "timestamp": 1695749489,
+  "timestamp": 1697051109,
   "def": {
     "name": "synthetix",
     "version": "<%= package.version %>",
@@ -281,7 +281,7 @@
       }
     }
   },
-  "miscUrl": "ipfs://QmcdsXJd5Wqh3HeSV3HcWVy6oezdHBoymQEc4RHkx9ubXG",
+  "miscUrl": "ipfs://QmRByRQQ18oHVJjrbh1NQjtXLckAVmdDzjFE8zhPdKg5tQ",
   "options": {
     "owner": "0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9",
     "salt": "competition",
@@ -289,7 +289,7 @@
   },
   "meta": {
     "name": "@synthetixio/main",
-    "version": "3.3.3-dev.ff24fd0b",
+    "version": "3.3.3-dev.a31b56e8",
     "description": "Core Synthetix Protocol Contracts",
     "publishConfig": {
       "access": "public"
@@ -313,21 +313,21 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
-      "@synthetixio/common-config": "3.3.3-dev.ff24fd0b",
-      "@synthetixio/core-contracts": "3.3.3-dev.ff24fd0b",
-      "@synthetixio/core-modules": "3.3.3-dev.ff24fd0b",
-      "@synthetixio/core-utils": "3.3.3-dev.ff24fd0b",
+      "@synthetixio/common-config": "3.3.3-dev.a31b56e8",
+      "@synthetixio/core-contracts": "3.3.3-dev.a31b56e8",
+      "@synthetixio/core-modules": "3.3.3-dev.a31b56e8",
+      "@synthetixio/core-utils": "3.3.3-dev.a31b56e8",
       "@synthetixio/docgen": "1.0.0",
-      "@synthetixio/oracle-manager": "3.3.3-dev.ff24fd0b",
+      "@synthetixio/oracle-manager": "3.3.3-dev.a31b56e8",
       "@synthetixio/router": "^3.3.0",
       "@synthetixio/wei": "^2.74.4",
       "ethers": "^5.7.2",
-      "hardhat": "^2.17.3",
+      "hardhat": "^2.17.4",
       "solidity-ast": "^0.4.52",
       "solidity-docgen": "^0.6.0-beta.36",
       "ts-node": "^10.9.1"
     },
-    "gitHead": "ff24fd0bcc0e74d377f276410299af10a9dbb512"
+    "gitHead": "a31b56e802988f79d3dbd324c9e9be63dfdde617"
   },
   "status": "complete",
   "chainId": 13370

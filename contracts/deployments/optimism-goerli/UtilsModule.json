@@ -1,5 +1,5 @@
 {
-  "address": "0x94F5F9a11e46531DA557De0Eb3D05Cf0df30A0Bb",
+  "address": "0xbe3F37f5152C05d19Fa30478dCd83135989EF2F8",
   "abi": [
     {
       "inputs": [
@@ -140,6 +140,38 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "forwarder",
+          "type": "address"
+        }
+      ],
+      "name": "isTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "bytes32",
@@ -203,7 +235,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0xc47a3552ec8e2ace5166986466851ca9b9810ed0ffdabef1163b77e032ae8e74",
+  "deployTxnHash": "0x551afb2779d09d11e50d14a5620f7daa1bbcf6ccdaf84360656f923c9f6be611",
   "sourceName": "contracts/modules/core/UtilsModule.sol",
   "contractName": "UtilsModule",
   "deployedOn": "contract.UtilsModule"

@@ -171,10 +171,7 @@ export const abi = [
   'function withdrawMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
   'error DeniedMulticallTarget(address)',
   'error RecursiveMulticall(address)',
-  'function getMessageSender() view returns (address)',
   'function multicall(bytes[] data) returns (bytes[] results)',
-  'function multicallThrough(address[] to, bytes[] data, uint256[] values) payable returns (bytes[] results)',
-  'function setAllowlistedMulticallTarget(address target, bool allowlisted)',
   'event PoolApprovedAdded(uint256 poolId)',
   'event PoolApprovedRemoved(uint256 poolId)',
   'event PreferredPoolSet(uint256 poolId)',
@@ -234,6 +231,8 @@ export const abi = [
   'function getConfig(bytes32 k) view returns (bytes32 v)',
   'function getConfigAddress(bytes32 k) view returns (address v)',
   'function getConfigUint(bytes32 k) view returns (uint256 v)',
+  'function getTrustedForwarder() pure returns (address)',
+  'function isTrustedForwarder(address forwarder) pure returns (bool)',
   'function setConfig(bytes32 k, bytes32 v)',
   'function setSupportedCrossChainNetworks(uint64[] supportedNetworks, uint64[] ccipSelectors) returns (uint256 numRegistered)',
   'function supportsInterface(bytes4 interfaceId) view returns (bool)',
@@ -244,7 +243,7 @@ export const abi = [
   'event DelegationUpdated(uint128 indexed accountId, uint128 indexed poolId, address collateralType, uint256 amount, uint256 leverage, address indexed sender)',
   'function delegateCollateral(uint128 accountId, uint128 poolId, address collateralType, uint256 newCollateralAmountD18, uint256 leverage)',
   'function getPosition(uint128 accountId, uint128 poolId, address collateralType) returns (uint256 collateralAmount, uint256 collateralValue, int256 debt, uint256 collateralizationRatio)',
-  'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
+  'function getPositionCollateral(uint128 accountId, uint128 poolId, address collateralType) view returns (uint256 amount)',
   'function getPositionCollateralRatio(uint128 accountId, uint128 poolId, address collateralType) returns (uint256)',
   'function getPositionDebt(uint128 accountId, uint128 poolId, address collateralType) returns (int256 debt)',
   'function getVaultCollateral(uint128 poolId, address collateralType) view returns (uint256 amount, uint256 value)',
@@ -472,10 +471,7 @@ export interface CoreProxyInterface extends utils.Interface {
     'setMinLiquidityRatio(uint128,uint256)': FunctionFragment;
     'setMinLiquidityRatio(uint256)': FunctionFragment;
     'withdrawMarketUsd(uint128,address,uint256)': FunctionFragment;
-    'getMessageSender()': FunctionFragment;
     'multicall(bytes[])': FunctionFragment;
-    'multicallThrough(address[],bytes[],uint256[])': FunctionFragment;
-    'setAllowlistedMulticallTarget(address,bool)': FunctionFragment;
     'addApprovedPool(uint128)': FunctionFragment;
     'getApprovedPools()': FunctionFragment;
     'getPreferredPool()': FunctionFragment;
@@ -507,6 +503,8 @@ export interface CoreProxyInterface extends utils.Interface {
     'getConfig(bytes32)': FunctionFragment;
     'getConfigAddress(bytes32)': FunctionFragment;
     'getConfigUint(bytes32)': FunctionFragment;
+    'getTrustedForwarder()': FunctionFragment;
+    'isTrustedForwarder(address)': FunctionFragment;
     'setConfig(bytes32,bytes32)': FunctionFragment;
     'setSupportedCrossChainNetworks(uint64[],uint64[])': FunctionFragment;
     'supportsInterface(bytes4)': FunctionFragment;
@@ -605,10 +603,7 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'setMinLiquidityRatio(uint128,uint256)'
       | 'setMinLiquidityRatio(uint256)'
       | 'withdrawMarketUsd'
-      | 'getMessageSender'
       | 'multicall'
-      | 'multicallThrough'
-      | 'setAllowlistedMulticallTarget'
       | 'addApprovedPool'
       | 'getApprovedPools'
       | 'getPreferredPool'
@@ -640,6 +635,8 @@ export interface CoreProxyInterface extends utils.Interface {
       | 'getConfig'
       | 'getConfigAddress'
       | 'getConfigUint'
+      | 'getTrustedForwarder'
+      | 'isTrustedForwarder'
       | 'setConfig'
       | 'setSupportedCrossChainNetworks'
       | 'supportsInterface'
@@ -868,16 +865,7 @@ export interface CoreProxyInterface extends utils.Interface {
     functionFragment: 'withdrawMarketUsd',
     values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: 'getMessageSender', values?: undefined): string;
   encodeFunctionData(functionFragment: 'multicall', values: [BytesLike[]]): string;
-  encodeFunctionData(
-    functionFragment: 'multicallThrough',
-    values: [string[], BytesLike[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setAllowlistedMulticallTarget',
-    values: [string, boolean]
-  ): string;
   encodeFunctionData(functionFragment: 'addApprovedPool', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getApprovedPools', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getPreferredPool', values?: undefined): string;
@@ -942,6 +930,8 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'getConfig', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigAddress', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getConfigUint', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getTrustedForwarder', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'isTrustedForwarder', values: [string]): string;
   encodeFunctionData(functionFragment: 'setConfig', values: [BytesLike, BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'setSupportedCrossChainNetworks',
@@ -1067,10 +1057,7 @@ export interface CoreProxyInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: 'setMinLiquidityRatio(uint256)', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'withdrawMarketUsd', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getMessageSender', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'multicall', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'multicallThrough', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setAllowlistedMulticallTarget', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'addApprovedPool', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getApprovedPools', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPreferredPool', data: BytesLike): Result;
@@ -1105,6 +1092,8 @@ export interface CoreProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getConfig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getConfigUint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getTrustedForwarder', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isTrustedForwarder', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setConfig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSupportedCrossChainNetworks', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'supportsInterface', data: BytesLike): Result;
@@ -2296,23 +2285,8 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    getMessageSender(overrides?: CallOverrides): Promise<[string]>;
-
     multicall(
       data: BytesLike[],
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    multicallThrough(
-      to: string[],
-      data: BytesLike[],
-      values: BigNumberish[],
-      overrides?: PayableOverrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    setAllowlistedMulticallTarget(
-      target: string,
-      allowlisted: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2475,6 +2449,10 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<[BigNumber] & { v: BigNumber }>;
 
+    getTrustedForwarder(overrides?: CallOverrides): Promise<[string]>;
+
+    isTrustedForwarder(forwarder: string, overrides?: CallOverrides): Promise<[boolean]>;
+
     setConfig(
       k: BytesLike,
       v: BytesLike,
@@ -2510,7 +2488,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
     getPositionCollateralRatio(
       accountId: BigNumberish,
@@ -2967,23 +2945,8 @@ export interface CoreProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getMessageSender(overrides?: CallOverrides): Promise<string>;
-
   multicall(
     data: BytesLike[],
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  multicallThrough(
-    to: string[],
-    data: BytesLike[],
-    values: BigNumberish[],
-    overrides?: PayableOverrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  setAllowlistedMulticallTarget(
-    target: string,
-    allowlisted: boolean,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -3143,6 +3106,10 @@ export interface CoreProxy extends BaseContract {
 
   getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
+  getTrustedForwarder(overrides?: CallOverrides): Promise<string>;
+
+  isTrustedForwarder(forwarder: string, overrides?: CallOverrides): Promise<boolean>;
+
   setConfig(
     k: BytesLike,
     v: BytesLike,
@@ -3178,7 +3145,7 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+  ): Promise<BigNumber>;
 
   getPositionCollateralRatio(
     accountId: BigNumberish,
@@ -3624,22 +3591,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMessageSender(overrides?: CallOverrides): Promise<string>;
-
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
-
-    multicallThrough(
-      to: string[],
-      data: BytesLike[],
-      values: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
-    setAllowlistedMulticallTarget(
-      target: string,
-      allowlisted: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     addApprovedPool(poolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -3772,6 +3724,10 @@ export interface CoreProxy extends BaseContract {
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getTrustedForwarder(overrides?: CallOverrides): Promise<string>;
+
+    isTrustedForwarder(forwarder: string, overrides?: CallOverrides): Promise<boolean>;
+
     setConfig(k: BytesLike, v: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     setSupportedCrossChainNetworks(
@@ -3810,7 +3766,7 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; value: BigNumber }>;
+    ): Promise<BigNumber>;
 
     getPositionCollateralRatio(
       accountId: BigNumberish,
@@ -4804,22 +4760,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    getMessageSender(overrides?: CallOverrides): Promise<BigNumber>;
-
     multicall(data: BytesLike[], overrides?: Overrides & { from?: string }): Promise<BigNumber>;
-
-    multicallThrough(
-      to: string[],
-      data: BytesLike[],
-      values: BigNumberish[],
-      overrides?: PayableOverrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    setAllowlistedMulticallTarget(
-      target: string,
-      allowlisted: boolean,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
 
     addApprovedPool(
       poolId: BigNumberish,
@@ -4973,6 +4914,10 @@ export interface CoreProxy extends BaseContract {
     getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTrustedForwarder(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isTrustedForwarder(forwarder: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     setConfig(
       k: BytesLike,
@@ -5501,23 +5446,8 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    getMessageSender(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     multicall(
       data: BytesLike[],
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    multicallThrough(
-      to: string[],
-      data: BytesLike[],
-      values: BigNumberish[],
-      overrides?: PayableOverrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    setAllowlistedMulticallTarget(
-      target: string,
-      allowlisted: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -5679,6 +5609,10 @@ export interface CoreProxy extends BaseContract {
     getConfigAddress(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getConfigUint(k: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTrustedForwarder(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isTrustedForwarder(forwarder: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setConfig(
       k: BytesLike,

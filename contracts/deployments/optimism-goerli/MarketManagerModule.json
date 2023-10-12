@@ -1,5 +1,5 @@
 {
-  "address": "0x28d10B5840344c7866e970861a2f465e604c3e6c",
+  "address": "0xB92774456db6086dc0baecacDD25461BCb2Ce415",
   "abi": [
     {
       "inputs": [],
@@ -699,7 +699,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x04e07227597a11807b76e40a21f8aa6d09a11cc7b40af58556a7fe17b40f617e",
+  "deployTxnHash": "0xc2b09452886113681988d571d4d10fad02a60ce8404bae6bfafc78a4c990211f",
   "sourceName": "contracts/modules/core/MarketManagerModule.sol",
   "contractName": "MarketManagerModule",
   "deployedOn": "contract.MarketManagerModule"
