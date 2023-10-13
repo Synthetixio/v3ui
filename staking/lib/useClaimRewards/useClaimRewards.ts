@@ -50,7 +50,7 @@ export function useClaimRewards(
         });
 
         dispatch({ type: 'success' });
-        client.refetchQueries(['Rewards']);
+        client.invalidateQueries(['Rewards']);
         return claimedAmount;
       } catch (error) {
         const err = error as Error;
