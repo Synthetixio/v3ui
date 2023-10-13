@@ -228,7 +228,7 @@ export function useRewards(
         }
       }
 
-      const sortedBalances = balances.sort(
+      const sortedBalances = [...balances].sort(
         (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
       );
 
