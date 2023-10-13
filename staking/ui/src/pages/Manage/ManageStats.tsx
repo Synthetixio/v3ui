@@ -143,7 +143,8 @@ export const ManageStatsUi: FC<{
             />
           </Flex>
         </Flex>
-        <Flex flexDirection="column" alignItems="flex-end" data-testid="manage stats collateral">
+        {/* TODO: Historical Debt Performance */}
+        {/* <Flex flexDirection="column" alignItems="flex-end" data-testid="manage stats collateral">
           <Text fontFamily="heading" color="gray.50" fontSize="16px" fontWeight={700}>
             Performance Last 24h
           </Text>
@@ -177,7 +178,7 @@ export const ManageStatsUi: FC<{
               })}
             </Text>
           </Flex>
-        </Flex>
+        </Flex> */}
       </BorderBox>
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>
         <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
@@ -231,6 +232,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
   const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
+
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
