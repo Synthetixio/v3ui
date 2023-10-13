@@ -228,6 +228,10 @@ export function useRewards(
         }
       }
 
+      const sortedBalances = balances.sort(
+        (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
+      );
+
       // TODO: Fix issue with multicall
       // const calls = distributorResult
       //   .filter((item) => item.amount.gt(0))
@@ -245,7 +249,7 @@ export function useRewards(
       //   (bytes: BytesLike) => CoreProxy.interface.decodeFunctionResult('claimRewards', bytes)[0]
       // );
 
-      return RewardsResponseSchema.parse(balances);
+      return RewardsResponseSchema.parse(sortedBalances);
     },
   });
 }
