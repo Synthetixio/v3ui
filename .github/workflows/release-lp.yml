@@ -1,0 +1,23 @@
+name: release-lp
+
+on:
+  push:
+    tags:
+      - 'release-lp*'
+#    branches:
+#      - 'tagged-releases'
+
+jobs:
+  release-lp:
+    if: ${{ github.event.check_suite.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ssh-key: '${{secrets.SSH_PRIVATE_KEY}}'
+      - run: git config user.email engineering@snxdao.io
+      - run: git config user.name synthetix-team
+      - run: git branch release/lp
+      - run: git checkout release/lp
+      - run: git push --set-upstream --force origin release/lp

@@ -1,5 +1,5 @@
 {
-  "address": "0x81091810F85c96b07E9FE64c63Bf8C8bab0b7Ae2",
+  "address": "0xeD8627893DC66f00Ee90Da53Ab06395106d4b60D",
   "abi": [
     {
       "inputs": [
@@ -3533,7 +3533,7 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -5133,7 +5133,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0x0d4e67ba89b4b4ab1a3c7adf345ee2e44153000a71142de2b5b075247abde3d7",
+  "deployTxnHash": "0xd4e4d98e038019785ebb783e63a789948453d584c1c23ca53984c18879ad4485",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

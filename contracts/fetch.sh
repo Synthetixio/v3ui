@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 set -u
+# Check if INFURA_KEY is set
+if [[ -z "${INFURA_KEY}" ]]; then
+  echo "Error: INFURA_KEY is not set."
+  exit 1
+fi
 
 fetch() {
   export CHAIN_NAME=$1
@@ -31,9 +36,9 @@ fetch() {
   yarn prettier --write ./metadata/$CHAIN_NAME/metadata.json
 }
 
-fetch mainnet synthetix:3.3.4 main
-fetch goerli synthetix:3.3.4 main
-fetch sepolia synthetix:3.3.4 main
-fetch optimism-mainnet synthetix:3.3.4 main
-fetch optimism-goerli synthetix:3.3.4 main
+fetch mainnet synthetix:latest main
+fetch goerli synthetix:latest main
+fetch sepolia synthetix:latest main
+fetch optimism-mainnet synthetix:latest main
+fetch optimism-goerli synthetix:latest main
 fetch base-goerli synthetix:latest competition
