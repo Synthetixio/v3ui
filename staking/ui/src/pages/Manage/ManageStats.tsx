@@ -55,8 +55,8 @@ export const ManageStatsUi: FC<{
   newDebt,
   hasChanges,
 }) => {
-  const performanceLast24h = wei(0.25);
-  const isPositive = performanceLast24h.gte(0);
+  // const performanceLast24h = wei(0.25);
+  // const isPositive = performanceLast24h.gte(0);
   return (
     <Flex direction="column">
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
