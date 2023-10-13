@@ -167,13 +167,16 @@ const getDefaultFromAddress = (chainName: keyof typeof NETWORKS) => {
   }
 };
 
+const networkWithERC7412: Record<string, boolean | undefined> = {
+  'base-goerli': true,
+};
+
 /**
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
  */
 export const withERC7412 = async (
   _provider: ethers.providers.Provider,
   tx: TransactionRequest | TransactionRequest[],
-  hasTrustedForwarder: boolean,
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
@@ -192,12 +195,14 @@ export const withERC7412 = async (
   const { chainId } = await _provider.getNetwork();
 
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const networkName = network?.name || 'mainnet';
   const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
 
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
-  const isRead = from === getDefaultFromAddress(network?.name || 'mainnet');
+  const isRead = from === getDefaultFromAddress(networkName);
   const isTestnet = network?.isTestnet || false;
-  const useCoreProxy = !hasTrustedForwarder && !isRead;
+  const networkHaveERC7412 = networkWithERC7412[networkName] || false;
+  const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
     ? await importCoreProxy(network?.name || 'mainnet')
@@ -292,9 +297,8 @@ export async function erc7412Call<T>(
   for (const txRequest of reqs) {
     txRequest.from = getDefaultFromAddress(network?.name || 'mainnet'); // Reads can always use WETH
   }
-  const hasTrustedForwarder = true; // We can pretend read call has trusted forwarder
   const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
-  const newCall = await withERC7412(jsonRpcProvider, reqs, hasTrustedForwarder, logLabel);
+  const newCall = await withERC7412(jsonRpcProvider, reqs, logLabel);
 
   const res = await provider.call(newCall);
 

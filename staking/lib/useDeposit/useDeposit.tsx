@@ -93,8 +93,7 @@ export const useDeposit = ({
           collateralPriceCallsPromise,
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
-        const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
-        const erc7412Tx = await withERC7412(provider, allCalls, hasTrustedForwarder, 'useDeposit');
+        const erc7412Tx = await withERC7412(provider, allCalls, 'useDeposit');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
