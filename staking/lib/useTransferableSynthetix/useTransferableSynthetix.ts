@@ -49,16 +49,8 @@ export function useTransferableSynthetix() {
           collateral: wei(collateral),
         };
       } catch (e) {
-        // For local deployment we are dealing with a standard mintable token
-        const [transferableSynthetix, collateral] = await Promise.all([
-          contract.transferableSynthetix(accountAddress),
-          contract.collateral(accountAddress),
-        ]);
-
-        return {
-          transferable: wei(transferableSynthetix),
-          collateral: wei(collateral),
-        };
+        console.error(e);
+        throw e;
       }
     },
   });
