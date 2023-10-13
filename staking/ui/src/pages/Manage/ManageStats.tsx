@@ -155,7 +155,7 @@ export const ManageStatsUi: FC<{
               fontFamily="heading"
               lineHeight="32px"
             >
-              {isPositive ? '+' : '-'}
+              {isPositive ? '+' : ''}
               {currency(wei(0.23), {
                 currency: 'USD',
                 style: 'currency',
