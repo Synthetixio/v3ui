@@ -11,28 +11,13 @@ export async function borrowUsd({ privateKey, accountId, symbol, amount, poolId 
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
 
-  const position = await coreProxy.getPositionCollateral(
-    ethers.BigNumber.from(accountId),
-    ethers.BigNumber.from(poolId),
-    config.tokenAddress
-  );
-  const maxDebt = position.value.div(config.issuanceRatioD18).toNumber();
-  const debt = Math.floor(maxDebt);
-
-  console.log('borrowUsd', {
-    symbol,
-    issuanceRatio: parseFloat(ethers.utils.formatUnits(config.issuanceRatioD18)),
-    positionValue: parseFloat(ethers.utils.formatUnits(position.value)),
-    maxDebt,
-    debt,
-  });
   const tx = await coreProxy.mintUsd(
     ethers.BigNumber.from(accountId),
     ethers.BigNumber.from(poolId),
     config.tokenAddress,
-    ethers.utils.parseEther(`${debt}`),
+    ethers.utils.parseEther(`${amount}`),
     { gasLimit: 10_000_000 }
   );
   await tx.wait();
-  return debt;
+  return amount;
 }

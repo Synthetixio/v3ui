@@ -1,5 +1,5 @@
 {
-  "address": "0x4fFFd90AD0a371bcB45Eac5C917817cFC5AD5521",
+  "address": "0x3fc51212978F0ff16F43A1B4296Fa12316BBFFc7",
   "abi": [
     {
       "inputs": [
@@ -181,7 +181,7 @@
   ],
   "constructorArgs": [],
   "linkedLibraries": {},
-  "deployTxnHash": "0x7a5d7ed8496864b935d84541be778188af446078875f30cbff146b1119c58e5c",
+  "deployTxnHash": "0x090f0733c52cd9d82f1605a1a1193aed1026ba265e47c4fdb96ff5950e42493f",
   "sourceName": "contracts/modules/associated-systems/AssociatedSystemsModule.sol",
   "contractName": "AssociatedSystemsModule",
   "deployedOn": "contract.AssociatedSystemsModule"

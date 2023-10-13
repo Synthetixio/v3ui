@@ -1,6 +1,6 @@
 {
   "generator": "cannon provision",
-  "timestamp": 1694031101,
+  "timestamp": 1697030036,
   "def": {
     "name": "synthetix",
     "version": "<%= package.version %>",
@@ -29,6 +29,9 @@
           "owner": "<%= settings.owner %>",
           "salt": "<%= settings.salt %>-oracle"
         }
+      },
+      "trusted_multicall_forwarder": {
+        "source": "trusted-multicall-forwarder"
       }
     },
     "contract": {
@@ -102,13 +105,7 @@
         "args": ["<%= contracts.InitialModuleBundle.address %>", "<%= settings.owner %>"],
         "abiOf": ["InitialModuleBundle"],
         "salt": "<%= settings.salt %>",
-        "create2": true,
-        "depends": [
-          "contract.InitialModuleBundle",
-          "contract.InitialModuleBundle",
-          "contract.InitialModuleBundle",
-          "contract.InitialModuleBundle"
-        ]
+        "create2": true
       }
     },
     "router": {
@@ -133,67 +130,13 @@
           "RewardsManagerModule",
           "UtilsModule",
           "VaultModule"
-        ],
-        "depends": [
-          "contract.InitialModuleBundle",
-          "contract.FeatureFlagModule",
-          "contract.AccountModule",
-          "contract.AssociateDebtModule",
-          "contract.AssociatedSystemsModule",
-          "contract.CcipReceiverModule",
-          "contract.CollateralModule",
-          "contract.CollateralConfigurationModule",
-          "contract.CrossChainUSDModule",
-          "contract.IssueUSDModule",
-          "contract.LiquidationModule",
-          "contract.MarketCollateralModule",
-          "contract.MarketManagerModule",
-          "contract.MulticallModule",
-          "contract.PoolConfigurationModule",
-          "contract.PoolModule",
-          "contract.RewardsManagerModule",
-          "contract.UtilsModule",
-          "contract.VaultModule",
-          "contract.InitialModuleBundle",
-          "contract.FeatureFlagModule",
-          "contract.AccountModule",
-          "contract.AssociateDebtModule",
-          "contract.AssociatedSystemsModule",
-          "contract.CcipReceiverModule",
-          "contract.CollateralModule",
-          "contract.CollateralConfigurationModule",
-          "contract.CrossChainUSDModule",
-          "contract.IssueUSDModule",
-          "contract.LiquidationModule",
-          "contract.MarketCollateralModule",
-          "contract.MarketManagerModule",
-          "contract.MulticallModule",
-          "contract.PoolConfigurationModule",
-          "contract.PoolModule",
-          "contract.RewardsManagerModule",
-          "contract.UtilsModule",
-          "contract.VaultModule"
         ]
       },
       "AccountRouter": {
-        "contracts": ["InitialModuleBundle", "AccountTokenModule"],
-        "depends": [
-          "contract.InitialModuleBundle",
-          "contract.AccountTokenModule",
-          "contract.InitialModuleBundle",
-          "contract.AccountTokenModule"
-        ]
+        "contracts": ["InitialModuleBundle", "AccountTokenModule"]
       },
       "USDRouter": {
-        "contracts": ["InitialModuleBundle", "AssociatedSystemsModule", "USDTokenModule"],
-        "depends": [
-          "contract.InitialModuleBundle",
-          "contract.AssociatedSystemsModule",
-          "contract.USDTokenModule",
-          "contract.InitialModuleBundle",
-          "contract.AssociatedSystemsModule",
-          "contract.USDTokenModule"
-        ]
+        "contracts": ["InitialModuleBundle", "AssociatedSystemsModule", "USDTokenModule"]
       }
     },
     "invoke": {
@@ -211,13 +154,7 @@
             "event": "Upgraded",
             "arg": 0
           }
-        },
-        "depends": [
-          "contract.InitialCoreProxy",
-          "router.CoreRouter",
-          "contract.InitialCoreProxy",
-          "router.CoreRouter"
-        ]
+        }
       },
       "init_account": {
         "target": ["CoreProxy"],
@@ -233,6 +170,10 @@
           "<%= contracts.AccountRouter.address %>"
         ],
         "depends": [
+          "invoke.upgrade_core_proxy",
+          "router.AccountRouter",
+          "invoke.upgrade_core_proxy",
+          "router.AccountRouter",
           "invoke.upgrade_core_proxy",
           "router.AccountRouter",
           "invoke.upgrade_core_proxy",
@@ -263,6 +204,10 @@
           "invoke.upgrade_core_proxy",
           "router.USDRouter",
           "invoke.upgrade_core_proxy",
+          "router.USDRouter",
+          "invoke.upgrade_core_proxy",
+          "router.USDRouter",
+          "invoke.upgrade_core_proxy",
           "router.USDRouter"
         ],
         "factory": {
@@ -279,13 +224,7 @@
           "func": "owner"
         },
         "func": "configureOracleManager",
-        "args": ["<%= imports.oracle_manager.contracts.Proxy.address %>"],
-        "depends": [
-          "invoke.upgrade_core_proxy",
-          "provision.oracle_manager",
-          "invoke.upgrade_core_proxy",
-          "provision.oracle_manager"
-        ]
+        "args": ["<%= imports.oracle_manager.contracts.Proxy.address %>"]
       },
       "enable_basic_features": {
         "target": ["CoreProxy"],
@@ -309,8 +248,7 @@
             "0x7d632bd2<%= defaultAbiCoder.encode(['bytes32', 'bool'], [formatBytes32String('claimRewards'), true]).slice(2) %>",
             "0x7d632bd2<%= defaultAbiCoder.encode(['bytes32', 'bool'], [formatBytes32String('delegateCollateral'), true]).slice(2) %>"
           ]
-        ],
-        "depends": ["invoke.upgrade_core_proxy", "invoke.upgrade_core_proxy"]
+        ]
       },
       "register_const_one_oracle": {
         "target": ["oracle_manager.Proxy"],
@@ -321,8 +259,7 @@
             "event": "NodeRegistered",
             "arg": 0
           }
-        },
-        "depends": ["provision.oracle_manager", "provision.oracle_manager"]
+        }
       },
       "configure_usd_collateral": {
         "target": ["CoreProxy"],
@@ -340,18 +277,11 @@
             "minDelegationD18": "<%= MaxUint256 %>",
             "depositingEnabled": true
           }
-        ],
-        "depends": [
-          "invoke.register_const_one_oracle",
-          "invoke.init_usd",
-          "invoke.upgrade_core_proxy",
-          "invoke.init_usd",
-          "invoke.register_const_one_oracle"
         ]
       }
     }
   },
-  "miscUrl": "ipfs://QmeTNvCvRQHywFmbCUdPpk2BFLFuyie8cEg8N2oVnpDQV9",
+  "miscUrl": "ipfs://QmRDGLWQv5gvKPzDsLqXj2AyjQzCiF3ZhV3m1M8ZtMXnax",
   "options": {
     "owner": "0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9",
     "salt": "snax",
@@ -359,7 +289,7 @@
   },
   "meta": {
     "name": "@synthetixio/main",
-    "version": "3.3.4",
+    "version": "3.3.3-dev.9b6781de",
     "description": "Core Synthetix Protocol Contracts",
     "publishConfig": {
       "access": "public"
@@ -375,30 +305,29 @@
       "coverage": "hardhat coverage --network hardhat",
       "compile-contracts": "hardhat compile",
       "size-contracts": "hardhat compile && hardhat size-contracts",
-      "publish-contracts": "yarn build && cannon publish synthetix:$(node -p 'require(`./package.json`).version') --chain-id 13370 --quiet",
-      "postpack": "yarn publish-contracts",
+      "publish-contracts": "cannon publish synthetix:$(node -p 'require(`./package.json`).version') --chain-id 13370 --quiet --tags $(node -p '/^\\d+\\.\\d+\\.\\d+$/.test(require(`./package.json`).version) ? `latest` : `dev`')",
+      "postpack": "yarn build && yarn publish-contracts",
       "docgen": "hardhat docgen"
     },
     "keywords": [],
     "author": "",
     "license": "MIT",
     "devDependencies": {
-      "@synthetixio/common-config": "3.3.4",
-      "@synthetixio/core-contracts": "3.3.4",
-      "@synthetixio/core-modules": "3.3.4",
-      "@synthetixio/core-utils": "3.3.4",
+      "@synthetixio/common-config": "3.3.3-dev.9b6781de",
+      "@synthetixio/core-contracts": "3.3.3-dev.9b6781de",
+      "@synthetixio/core-modules": "3.3.3-dev.9b6781de",
+      "@synthetixio/core-utils": "3.3.3-dev.9b6781de",
       "@synthetixio/docgen": "1.0.0",
-      "@synthetixio/oracle-manager": "3.3.4",
-      "@synthetixio/router": "^3.1.3",
-      "@synthetixio/wei": "2.74.4",
-      "@usecannon/builder": "^2.5.4",
+      "@synthetixio/oracle-manager": "3.3.3-dev.9b6781de",
+      "@synthetixio/router": "^3.3.0",
+      "@synthetixio/wei": "^2.74.4",
       "ethers": "^5.7.2",
-      "hardhat": "2.17.2",
-      "solidity-ast": "0.4.46",
-      "solidity-docgen": "0.6.0-beta.35",
-      "ts-node": "10.9.1"
+      "hardhat": "^2.17.4",
+      "solidity-ast": "^0.4.52",
+      "solidity-docgen": "^0.6.0-beta.36",
+      "ts-node": "^10.9.1"
     },
-    "gitHead": "ba5a9730df248cd1999b5a6fd1bf67b307b95eec"
+    "gitHead": "9b6781de293b7939f72f5d1f3607f5da12ab7fa4"
   },
   "status": "complete",
   "chainId": 13370
