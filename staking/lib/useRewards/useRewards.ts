@@ -168,8 +168,8 @@ export function useRewards(
         ])
       );
 
-      const rewardRates = await Promise.all([
-        ...distributorResult.map(async ({ address }) => {
+      const rewardRates = await Promise.all(
+        distributorResult.map(async ({ address }) => {
           const response = await CoreProxy.callStatic.getRewardRate(
             BigNumber.from(poolId),
             collateralAddress,
@@ -177,8 +177,8 @@ export function useRewards(
           );
 
           return response;
-        }),
-      ]);
+        })
+      );
 
       const result = distributorResult.map((item, i) => {
         const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];
