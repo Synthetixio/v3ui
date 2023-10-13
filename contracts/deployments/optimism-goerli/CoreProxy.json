@@ -3518,19 +3518,6 @@
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "getMessageSender",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "bytes[]",
@@ -3546,53 +3533,6 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "to",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes[]",
-          "name": "data",
-          "type": "bytes[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "values",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "multicallThrough",
-      "outputs": [
-        {
-          "internalType": "bytes[]",
-          "name": "results",
-          "type": "bytes[]"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "target",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "allowlisted",
-          "type": "bool"
-        }
-      ],
-      "name": "setAllowlistedMulticallTarget",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -4762,6 +4702,38 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "forwarder",
+          "type": "address"
+        }
+      ],
+      "name": "isTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "bytes32",
@@ -5018,11 +4990,6 @@
         {
           "internalType": "uint256",
           "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "value",
           "type": "uint256"
         }
       ],

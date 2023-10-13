@@ -6,17 +6,17 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
   });
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
-    cy.task('getSnx', { address, amount: 20 });
+    cy.task('getSnx', { address, amount: 200 });
     cy.task('approveCollateral', { privateKey, symbol: 'SNX' });
 
     cy.task('createAccount', { privateKey }).then((accountId) => {
       cy.wrap(accountId).as('accountId');
-      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 10 });
+      cy.task('depositCollateral', { privateKey, symbol: 'SNX', accountId, amount: 100 });
       cy.task('delegateCollateral', {
         privateKey,
         symbol: 'SNX',
         accountId,
-        amount: 10,
+        amount: 100,
         poolId: 1,
       });
       cy.task('borrowUsd', {
@@ -47,7 +47,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
   // Unfortunatrly on Borrow and Repay we default to 0 and no longer show `-` for unfetched data
   //  cy.get('[data-testid="current debt"]').should('not.have.text', '-');
   //  cy.get('[data-testid="available snxUSD balance"]').should('not.have.text', '-');
-  cy.wait(2000);
+
   cy.get('@debt').then((debt) => {
     cy.get('[data-testid="repay amount input"]').type(`${debt}`);
   });

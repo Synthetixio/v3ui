@@ -58,8 +58,6 @@ export const Pool = () => {
     !isInitialQueriesLoading
   );
 
-  // console.log('Pool data', poolData, rewardsData);
-
   const isLoading = isRewardsLoading || isInitialQueriesLoading;
 
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';

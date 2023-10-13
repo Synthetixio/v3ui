@@ -1,5 +1,5 @@
 {
-  "address": "0x5C3dF65acE4688d2730d3349d6e3527d14A06331",
+  "address": "0xC0B2d5461d9e3Ee7E6C20bCa14B3dbCbBbb2cf9D",
   "abi": [
     {
       "inputs": [
@@ -3518,19 +3518,6 @@
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "getMessageSender",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "bytes[]",
@@ -3546,53 +3533,6 @@
           "type": "bytes[]"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "to",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes[]",
-          "name": "data",
-          "type": "bytes[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "values",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "multicallThrough",
-      "outputs": [
-        {
-          "internalType": "bytes[]",
-          "name": "results",
-          "type": "bytes[]"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "target",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "allowlisted",
-          "type": "bool"
-        }
-      ],
-      "name": "setAllowlistedMulticallTarget",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -4762,6 +4702,38 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "forwarder",
+          "type": "address"
+        }
+      ],
+      "name": "isTrustedForwarder",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "bytes32",
@@ -5019,11 +4991,6 @@
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -5166,7 +5133,7 @@
     }
   ],
   "deployedOn": "router.CoreRouter",
-  "deployTxnHash": "0x61ae038e12fc74c85e5d6fbf335ef9fa11f8477f9971d3670aa6d6b77a0126ae",
+  "deployTxnHash": "0x99d33c5ffc410aa711b0313ade0d47f173b4fcb6e8089f324ca42da8e8da6ef8",
   "contractName": "CoreRouter",
   "sourceName": "CoreRouter.sol"
 }

@@ -151,7 +151,11 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      <Button data-testid="deposit submit" type="submit">
+      <Button
+        disabled={combinedTokenBalance === undefined}
+        data-testid="deposit submit"
+        type="submit"
+      >
         Add {displaySymbol}
       </Button>
     </Flex>

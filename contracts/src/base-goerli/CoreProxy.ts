@@ -171,7 +171,7 @@ export const abi = [
   'function withdrawMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
   'error DeniedMulticallTarget(address)',
   'error RecursiveMulticall(address)',
-  'function multicall(bytes[] data) payable returns (bytes[] results)',
+  'function multicall(bytes[] data) returns (bytes[] results)',
   'event PoolApprovedAdded(uint256 poolId)',
   'event PoolApprovedRemoved(uint256 poolId)',
   'event PreferredPoolSet(uint256 poolId)',
@@ -2287,7 +2287,7 @@ export interface CoreProxy extends BaseContract {
 
     multicall(
       data: BytesLike[],
-      overrides?: PayableOverrides & { from?: string }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     addApprovedPool(
@@ -2947,7 +2947,7 @@ export interface CoreProxy extends BaseContract {
 
   multicall(
     data: BytesLike[],
-    overrides?: PayableOverrides & { from?: string }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   addApprovedPool(
@@ -4760,10 +4760,7 @@ export interface CoreProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    multicall(
-      data: BytesLike[],
-      overrides?: PayableOverrides & { from?: string }
-    ): Promise<BigNumber>;
+    multicall(data: BytesLike[], overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     addApprovedPool(
       poolId: BigNumberish,
@@ -5451,7 +5448,7 @@ export interface CoreProxy extends BaseContract {
 
     multicall(
       data: BytesLike[],
-      overrides?: PayableOverrides & { from?: string }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     addApprovedPool(

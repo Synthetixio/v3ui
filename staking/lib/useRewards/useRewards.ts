@@ -51,7 +51,7 @@ const RewardsDataDocument = `
   }
 `;
 
-export async function importCoreProxy(chainName: string) {
+export async function importRewardDistributor(chainName: string) {
   switch (chainName) {
     case 'cannon':
       return import('@synthetixio/v3-contracts/build/cannon/RewardDistributor');
@@ -65,6 +65,8 @@ export async function importCoreProxy(chainName: string) {
       return import('@synthetixio/v3-contracts/build/optimism-mainnet/RewardDistributor');
     case 'optimism-goerli':
       return import('@synthetixio/v3-contracts/build/optimism-goerli/RewardDistributor');
+    case 'base-goerli':
+      return import('@synthetixio/v3-contracts/build/base-goerli/RewardsDistributor');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }
@@ -96,7 +98,7 @@ export function useRewards(
       if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) throw 'OMFG';
       if (!distributors || distributors?.length === 0) return [];
 
-      const { abi } = await importCoreProxy(network.name);
+      const { abi } = await importRewardDistributor(network.name);
 
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);
@@ -166,8 +168,8 @@ export function useRewards(
         ])
       );
 
-      const rewardRates = await Promise.all([
-        ...distributorResult.map(async ({ address }) => {
+      const rewardRates = await Promise.all(
+        distributorResult.map(async ({ address }) => {
           const response = await CoreProxy.callStatic.getRewardRate(
             BigNumber.from(poolId),
             collateralAddress,
@@ -175,8 +177,8 @@ export function useRewards(
           );
 
           return response;
-        }),
-      ]);
+        })
+      );
 
       const result = distributorResult.map((item, i) => {
         const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];

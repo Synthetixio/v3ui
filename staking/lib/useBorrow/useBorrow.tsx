@@ -64,8 +64,7 @@ export const useBorrow = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
-        const erc7412Tx = await withERC7412(provider, allCalls, hasTrustedForwarder, 'borrow');
+        const erc7412Tx = await withERC7412(provider, allCalls, 'borrow');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
