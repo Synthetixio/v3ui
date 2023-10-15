@@ -248,8 +248,6 @@ export function useRewards(
         (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
       );
 
-      console.log(sortedBalances);
-
       // TODO: Fix issue with multicall
       // const calls = distributorResult
       //   .filter((item) => item.amount.gt(0))
