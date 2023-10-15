@@ -17,6 +17,8 @@ const RewardsResponseSchema = z.array(
     rate: z.number(),
     duration: z.number(),
     lifetimeClaimed: z.number(),
+    total: z.number(),
+    decimals: z.number(),
   })
 );
 
@@ -27,9 +29,9 @@ export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 type RewardsInterface =
   | {
       id: string;
-      total_distributed: Wei;
+      total_distributed: string;
       rewards_distributions: {
-        amount: Wei;
+        amount: string;
         duration: string;
       }[];
     }[]
@@ -40,6 +42,7 @@ const erc20Abi = [
   'function symbol() view returns (string)',
   'function balanceOf(address) view returns (uint256)',
   'function deposit() payable',
+  'function decimals() view returns (uint8)',
 ];
 
 const RewardsDataDocument = `
@@ -128,28 +131,34 @@ export function useRewards(
       ]);
 
       const distributorResult = distributors.map(
-        ({ id: address, total_distributed: amount, rewards_distributions }, i) => {
-          const name = ifaceRD.decodeFunctionResult('name', distributorReturnData[i * 2])[0];
-          const token = ifaceRD.decodeFunctionResult('token', distributorReturnData[i * 2 + 1])[0];
+        ({ id: address, total_distributed, rewards_distributions }, i) => {
+          const name = ifaceRD.decodeFunctionResult(
+            'name',
+            distributorReturnData[i * 2]
+          )[0] as string;
+          const token = ifaceRD.decodeFunctionResult(
+            'token',
+            distributorReturnData[i * 2 + 1]
+          )[0] as string;
 
           let duration = 0;
           if (rewards_distributions.length > 0) {
             duration = parseInt(rewards_distributions[0].duration);
           }
 
-          // Get historical data and sum up lifetime claimed for this distributor
-          const lifetimeClaimed = historicalData[i].data.rewardsClaimeds
-            .reduce((acc: Wei, item: { amount: string }) => {
-              return acc.add(wei(BigNumber.from(item.amount)));
-            }, wei(0))
-            .toNumber();
+          const lifetimeClaimed = historicalData[i].data.rewardsClaimeds.reduce(
+            (acc: number, item: { amount: string; id: string }) => {
+              return (acc += parseInt(item.amount));
+            },
+            0
+          );
 
           return {
-            amount,
             address,
-            name,
-            token,
+            name: name,
+            token: token,
             duration,
+            total: total_distributed,
             lifetimeClaimed,
           };
         }
@@ -164,6 +173,10 @@ export function useRewards(
           {
             target: token,
             callData: ifaceERC20.encodeFunctionData('symbol', []),
+          },
+          {
+            target: token,
+            callData: ifaceERC20.encodeFunctionData('decimals', []),
           },
         ])
       );
@@ -181,15 +194,26 @@ export function useRewards(
       );
 
       const result = distributorResult.map((item, i) => {
-        const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 2])[0];
-        const symbol = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 2 + 1])[0];
+        const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 3])[0] as string;
+        const symbol = ifaceERC20.decodeFunctionResult(
+          'symbol',
+          ercReturnData[i * 3 + 1]
+        )[0] as string;
+        const decimals = ifaceERC20.decodeFunctionResult(
+          'decimals',
+          ercReturnData[i * 3 + 2]
+        )[0] as number;
+
+        const total = parseInt(item.total);
 
         return {
           ...item,
           name,
           symbol,
+          decimals,
           // Reward rate is the amount of rewards per second
           rewardRate: wei(rewardRates[i]),
+          total,
         };
       });
 
@@ -205,25 +229,17 @@ export function useRewards(
           );
 
           balances.push({
-            name: item.name,
-            symbol: item.symbol,
-            address: item.address,
+            ...item,
             claimableAmount: wei(response),
             distributorAddress: item.address,
             rate: item.rewardRate.toNumber(),
-            duration: item.duration,
-            lifetimeClaimed: item.lifetimeClaimed,
           });
         } catch (error) {
           balances.push({
-            name: item.name,
-            symbol: item.symbol,
-            address: item.address,
+            ...item,
             claimableAmount: wei(0),
             distributorAddress: item.address,
             rate: item.rewardRate.toNumber(),
-            duration: item.duration,
-            lifetimeClaimed: item.lifetimeClaimed,
           });
         }
       }
@@ -231,6 +247,8 @@ export function useRewards(
       const sortedBalances = [...balances].sort(
         (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
       );
+
+      console.log(sortedBalances);
 
       // TODO: Fix issue with multicall
       // const calls = distributorResult

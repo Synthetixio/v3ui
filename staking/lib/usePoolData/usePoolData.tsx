@@ -51,11 +51,11 @@ const MarketConfigurationSchema = z.object({
 
 const RewardDistributorSchema = z.object({
   id: z.string(),
-  total_distributed: GraphBigDecimalSchema,
+  total_distributed: z.string(),
   rewards_distributions: z
     .array(
       z.object({
-        amount: GraphBigDecimalSchema,
+        amount: z.string(),
         duration: z.string(),
       })
     )

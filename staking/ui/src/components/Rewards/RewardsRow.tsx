@@ -15,6 +15,7 @@ interface RewardsRowInterface {
   hasClaimed: boolean;
   address: string;
   readOnly: boolean;
+  total: number;
 }
 
 export const RewardsRow = ({
@@ -26,6 +27,7 @@ export const RewardsRow = ({
   hasClaimed,
   address,
   readOnly,
+  total,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
@@ -70,7 +72,7 @@ export const RewardsRow = ({
                   fontWeight={500}
                   lineHeight="20px"
                 >
-                  {projectedAmount}
+                  {readOnly ? total : projectedAmount}
                   {` ${symbol}`}
                 </Text>
               </Tooltip>

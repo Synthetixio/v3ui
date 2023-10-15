@@ -30,7 +30,6 @@ export const Rewards = ({
   ...props
 }: RewardsDistributorsInterface) => {
   const empty = rewards && rewards.length === 0;
-  console.log('Rewards', rewards);
 
   return (
     <BorderBox bg="navy.700" py={4} px={6} flexDir="column" {...props}>
@@ -112,6 +111,7 @@ export const Rewards = ({
                     hasClaimed={item.claimableAmount.lte(0)}
                     address={item.distributorAddress}
                     readOnly={readOnly}
+                    total={item.total}
                   />
                 ))}
               </Tbody>
