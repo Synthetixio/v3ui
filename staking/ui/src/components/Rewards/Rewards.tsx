@@ -20,10 +20,17 @@ import { InfoIcon } from '@chakra-ui/icons';
 interface RewardsDistributorsInterface extends FlexProps {
   rewards?: RewardsType;
   isLoading: boolean;
+  readOnly?: boolean;
 }
 
-export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInterface) => {
+export const Rewards = ({
+  rewards,
+  isLoading,
+  readOnly = false,
+  ...props
+}: RewardsDistributorsInterface) => {
   const empty = rewards && rewards.length === 0;
+  console.log('Rewards', rewards);
 
   return (
     <BorderBox bg="navy.700" py={4} px={6} flexDir="column" {...props}>
@@ -104,6 +111,7 @@ export const Rewards = ({ rewards, isLoading, ...props }: RewardsDistributorsInt
                     lifetimeClaimed={item.lifetimeClaimed}
                     hasClaimed={item.claimableAmount.lte(0)}
                     address={item.distributorAddress}
+                    readOnly={readOnly}
                   />
                 ))}
               </Tbody>

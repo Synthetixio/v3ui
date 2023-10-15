@@ -14,6 +14,7 @@ interface RewardsRowInterface {
   lifetimeClaimed: number;
   hasClaimed: boolean;
   address: string;
+  readOnly: boolean;
 }
 
 export const RewardsRow = ({
@@ -24,6 +25,7 @@ export const RewardsRow = ({
   lifetimeClaimed,
   hasClaimed,
   address,
+  readOnly,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
@@ -104,26 +106,28 @@ export const RewardsRow = ({
             ) : null}
           </Fade>
         </Td>
-        <Td border="none" px="0px">
-          <Fade in>
-            <Button
-              w="100%"
-              size="sm"
-              variant="solid"
-              isDisabled={hasClaimed}
-              _disabled={{
-                bg: 'gray.900',
-                backgroundImage: 'none',
-                color: 'gray.500',
-                opacity: 0.5,
-                cursor: 'not-allowed',
-              }}
-              onClick={onClick}
-            >
-              {hasClaimed ? 'Claimed' : 'Claim'}
-            </Button>
-          </Fade>
-        </Td>
+        {!readOnly && (
+          <Td border="none" px="0px">
+            <Fade in>
+              <Button
+                w="100%"
+                size="sm"
+                variant="solid"
+                isDisabled={hasClaimed}
+                _disabled={{
+                  bg: 'gray.900',
+                  backgroundImage: 'none',
+                  color: 'gray.500',
+                  opacity: 0.5,
+                  cursor: 'not-allowed',
+                }}
+                onClick={onClick}
+              >
+                {hasClaimed ? 'Claimed' : 'Claim'}
+              </Button>
+            </Fade>
+          </Td>
+        )}
       </Tr>
     </>
   );

@@ -30,7 +30,7 @@ export const PoolUi: FC<{
         </Box>
         <Box flexGrow={1}>
           <MarketSection />
-          <Rewards mt={4} isLoading={isLoading} rewards={rewards} />
+          <Rewards mt={4} isLoading={isLoading} rewards={rewards} readOnly={true} />
         </Box>
       </Flex>
     </>
