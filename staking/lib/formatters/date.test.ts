@@ -1,4 +1,4 @@
-import { convertSecondsToDisplayString } from './';
+import { convertSecondsToDisplayString } from './date';
 
 describe('convertSecondsToDisplayString', () => {
   it('should return null when seconds is 0', () => {
