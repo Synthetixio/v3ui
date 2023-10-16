@@ -45,7 +45,7 @@ export function useCreateAccount() {
 
         let newAccountId: string | undefined;
 
-        res.logs.forEach((log: { topics: any[]; data: any }) => {
+        res.logs.forEach((log: any) => {
           if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
             const accountId = CoreProxy.interface.decodeEventLog(
               'AccountCreated',

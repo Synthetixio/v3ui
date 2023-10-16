@@ -11,7 +11,6 @@ const AccountVaultCollateralUi: FC<{
   collateralAmount: number;
   collateralSymbol: string;
   poolId: string;
-  accountId: string;
   isLoading: boolean;
 }> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId }) => {
   const navigate = useNavigate();
@@ -62,6 +61,7 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
   });
 
   if (!params.poolId || !params.accountId) return null;
+
   return (
     <AccountVaultCollateralUi
       collateralAmount={data?.collateralAmount.toNumber() || 0}
@@ -69,7 +69,6 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
       collateralSymbol={collateral.symbol}
       isLoading={isLoading}
       poolId={params.poolId}
-      accountId={params.accountId}
     />
   );
 };

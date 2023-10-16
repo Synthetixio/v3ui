@@ -307,7 +307,6 @@ export const DepositModal: DepositModalProps = ({
           throw Error('Approve failed', { cause: error });
         }
       },
-
       [ServiceNames.executeDeposit]: async () => {
         try {
           toast.closeAll();

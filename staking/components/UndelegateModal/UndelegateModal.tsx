@@ -45,7 +45,6 @@ export const UndelegateModalUi: FC<{
         <ModalCloseButton />
         <ModalBody>
           <Text mb="2">Please execute the following transactions:</Text>
-
           <Multistep
             step={1}
             title="Remove collateral"

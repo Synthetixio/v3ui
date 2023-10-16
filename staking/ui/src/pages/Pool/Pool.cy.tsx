@@ -8,6 +8,7 @@ describe('Pool Page', () => {
         PoolHeader={() => <div>PoolHeader</div>}
         CollateralSection={() => <div>CollateralSection</div>}
         MarketSection={() => <div>MarketSection</div>}
+        isLoading={false}
       />
     );
     cy.contains('a', 'Home').should('exist');

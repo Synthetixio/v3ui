@@ -284,7 +284,6 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const navigate = useNavigate();
   const isConnected = useIsConnected();
   const params = useParams();
-
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const ethBalance = useEthBalance();

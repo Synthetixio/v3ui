@@ -25,7 +25,7 @@ export function usePools() {
     enabled: Boolean(CoreProxy),
     queryKey: [network.name, 'Pools'],
     queryFn: async () => {
-      if (!CoreProxy) throw 'OMFG';
+      if (!CoreProxy) throw 'usePools is missing required data';
 
       const [preferredPoolIdRaw, approvedPoolIdsRaw] = await CoreProxy.callStatic.multicall([
         CoreProxy.interface.encodeFunctionData('getPreferredPool'),

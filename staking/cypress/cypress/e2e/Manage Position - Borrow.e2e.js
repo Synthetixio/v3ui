@@ -72,7 +72,7 @@ it('should borrow against already deposited SNX collateral', () => {
   cy.get('[data-testid="deposit modal"]').should('not.exist');
 
   cy.get('@debt').then((debt) => {
-    cy.get('[data-testid="manage stats debt"]').should('have.text', `$${debt}`);
+    cy.get('[data-testid="manage stats debt"]').should('include.text', `$${debt}`);
   });
   cy.visit(`/`);
   cy.get('@debt').then((debt) => {

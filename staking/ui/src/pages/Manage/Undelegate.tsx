@@ -49,6 +49,7 @@ export const UndelegateUi: FC<{
     }
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
+
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);

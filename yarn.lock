@@ -5397,7 +5397,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/etherscanLink@workspace:staking/lib/etherscanLink":
+"@snx-v3/etherscanLink@workspace:*, @snx-v3/etherscanLink@workspace:staking/lib/etherscanLink":
   version: 0.0.0-use.local
   resolution: "@snx-v3/etherscanLink@workspace:staking/lib/etherscanLink"
   languageName: unknown
@@ -5533,6 +5533,7 @@ __metadata:
     "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/etherscanLink": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
@@ -5542,6 +5543,7 @@ __metadata:
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -5555,6 +5557,7 @@ __metadata:
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useTeleport": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
@@ -5737,6 +5740,18 @@ __metadata:
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.35.7
+    ethers: ^5.7.2
+    react: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useClaimRewards@workspace:*, @snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useClaimRewards@workspace:staking/lib/useClaimRewards"
+  dependencies:
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
     "@tanstack/react-query": ^4.35.7
     ethers: ^5.7.2
     react: ^18.2.0
@@ -6007,6 +6022,23 @@ __metadata:
     "@tanstack/react-query": ^4.35.7
     ethers: ^5.7.2
     react: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useRewards@workspace:^, @snx-v3/useRewards@workspace:staking/lib/useRewards":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewards@workspace:staking/lib/useRewards"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    "@tanstack/react-query": ^4.35.7
+    ethers: ^5.7.2
+    react: ^18.2.0
+    zod: ^3.22.4
   languageName: unknown
   linkType: soft
 
@@ -6508,10 +6540,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.35.7":
-  version: 4.35.7
-  resolution: "@tanstack/query-core@npm:4.35.7"
-  checksum: b82600ee0b2cea085eb6065d36bf944f4fff72b3fa575b5aa55590498fa431f951c5557a4e7ee36ae5b5de5fd5856cb841b974ff6f78cf773199f0f8c860b6c8
+"@tanstack/query-core@npm:4.36.1":
+  version: 4.36.1
+  resolution: "@tanstack/query-core@npm:4.36.1"
+  checksum: 47672094da20d89402d9fe03bb7b0462be73a76ff9ca715169738bc600a719d064d106d083a8eedae22a2c22de22f87d5eb5d31ef447aba771d9190f2117ed10
   languageName: node
   linkType: hard
 
@@ -6531,10 +6563,10 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-query@npm:^4.35.7":
-  version: 4.35.7
-  resolution: "@tanstack/react-query@npm:4.35.7"
+  version: 4.36.1
+  resolution: "@tanstack/react-query@npm:4.36.1"
   dependencies:
-    "@tanstack/query-core": 4.35.7
+    "@tanstack/query-core": 4.36.1
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -6545,7 +6577,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: ba4e1aa883a42424085c81d44816fb7ee8efdc8c8d1c190320e78818ce8a45cfcafd2a9c0e217d19ff25b0ec58592c98f5286b5a9b738a799c3ee016a02f9447
+  checksum: 1aff0a476859386f8d32253fa0d0bde7b81769a6d4d4d9cbd78778f0f955459a3bdb7ee27a0d2ee7373090f12998b45df80db0b5b313bd0a7a39d36c6e8e51c5
   languageName: node
   linkType: hard
 

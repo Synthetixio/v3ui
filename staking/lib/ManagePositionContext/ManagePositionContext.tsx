@@ -18,6 +18,7 @@ export const ManagePositionContext = createContext<{
 export const ManagePositionProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [debtChange, setDebtChange] = useState(wei(0));
   const [collateralChange, setCollateralChange] = useState(wei(0));
+
   return (
     <ManagePositionContext.Provider
       value={{ debtChange, setDebtChange, collateralChange, setCollateralChange }}
