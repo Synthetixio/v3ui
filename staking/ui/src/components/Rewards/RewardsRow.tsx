@@ -10,7 +10,7 @@ interface RewardsRowInterface {
   symbol: string;
   projectedAmount: number; // The amount per frequency period
   frequency: number;
-  amount: number; // The immediate amount claimable as read from the contracts
+  claimableAmount: number; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
   hasClaimed: boolean;
   address: string;
@@ -22,7 +22,7 @@ export const RewardsRow = ({
   symbol,
   projectedAmount,
   frequency,
-  amount,
+  claimableAmount,
   lifetimeClaimed,
   hasClaimed,
   address,
@@ -38,7 +38,7 @@ export const RewardsRow = ({
     collateralData?.tokenAddress || '',
     accountId,
     address,
-    amount
+    claimableAmount
   );
 
   const onClick = () => {
@@ -48,11 +48,19 @@ export const RewardsRow = ({
   const { txnStatus, txnHash } = txnState;
 
   const frequencyString = convertSecondsToDisplayString(frequency);
-
+  const claimButtonLabel = () => {
+    if (claimableAmount > 0) {
+      return 'Claim';
+    }
+    if (!hasClaimed) {
+      return 'Claim';
+    }
+    return 'Claimed';
+  };
   return (
     <>
       <RewardsModal
-        amount={amount}
+        amount={claimableAmount}
         collateralSymbol={symbol}
         txnStatus={txnStatus}
         txnHash={txnHash}
@@ -93,7 +101,7 @@ export const RewardsRow = ({
               fontWeight={500}
               lineHeight="20px"
             >
-              {amount}
+              {claimableAmount}
               {` ${symbol}`}
             </Text>
             {lifetimeClaimed > 0 ? (
@@ -115,7 +123,7 @@ export const RewardsRow = ({
                 w="100%"
                 size="sm"
                 variant="solid"
-                isDisabled={hasClaimed}
+                isDisabled={claimableAmount === 0}
                 _disabled={{
                   bg: 'gray.900',
                   backgroundImage: 'none',
@@ -125,7 +133,7 @@ export const RewardsRow = ({
                 }}
                 onClick={onClick}
               >
-                {hasClaimed ? 'Claimed' : 'Claim'}
+                {claimButtonLabel()}
               </Button>
             </Fade>
           </Td>

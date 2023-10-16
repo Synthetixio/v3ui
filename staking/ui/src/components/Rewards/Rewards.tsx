@@ -104,11 +104,11 @@ export const Rewards = ({
                   <RewardsRow
                     key={item.address}
                     symbol={item.symbol}
-                    amount={item.claimableAmount.toNumber()}
+                    claimableAmount={item.claimableAmount.toNumber()}
                     frequency={item.duration}
                     projectedAmount={item.rate / item.duration || 0}
                     lifetimeClaimed={item.lifetimeClaimed}
-                    hasClaimed={item.claimableAmount.lte(0)}
+                    hasClaimed={item.lifetimeClaimed > 0}
                     address={item.distributorAddress}
                     readOnly={readOnly}
                     total={item.total}
