@@ -26,16 +26,14 @@ type RewardsResponseArray = typeof RewardsResponseSchema._type;
 
 export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 
-type RewardsInterface =
-  | {
-      id: string;
-      total_distributed: string;
-      rewards_distributions: {
-        amount: string;
-        duration: string;
-      }[];
-    }[]
-  | undefined;
+type RewardsInterface = {
+  id: string;
+  total_distributed: string;
+  rewards_distributions: {
+    amount: string;
+    duration: string;
+  }[];
+}[];
 
 const erc20Abi = [
   'function name() view returns (string)',
@@ -76,18 +74,19 @@ export async function importRewardDistributor(chainName: string) {
 }
 
 export function useRewards(
-  distributors: RewardsInterface,
-  poolId: string | undefined,
-  collateralAddress: string | undefined,
-  accountId: string | undefined,
-  enabled: boolean
+  distributors?: RewardsInterface,
+  poolId?: string,
+  collateralAddress?: string,
+  accountId?: string
 ) {
   const network = useNetwork();
   const { data: Multicall3 } = useMulticall3();
   const { data: CoreProxy } = useCoreProxy();
 
   return useQuery({
-    enabled,
+    enabled: Boolean(
+      Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
+    ),
     queryKey: [
       'Rewards',
       network.name,
@@ -98,10 +97,17 @@ export function useRewards(
       },
     ],
     queryFn: async () => {
-      if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) {
+      if (
+        !Multicall3 ||
+        !CoreProxy ||
+        !poolId ||
+        !collateralAddress ||
+        !accountId ||
+        !distributors
+      ) {
         throw 'useRewards is missing required data';
       }
-      if (!distributors || distributors?.length === 0) return [];
+      if (distributors.length === 0) return [];
 
       const { abi } = await importRewardDistributor(network.name);
 

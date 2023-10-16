@@ -100,14 +100,11 @@ export const Manage = () => {
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const isInitialQueriesLoading = isCollateralLoading || isPoolGraphDataLoading;
-
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
-    accountId,
-    !isInitialQueriesLoading
+    accountId
   );
 
   const { data: liquidityPosition } = useLiquidityPosition({
@@ -116,7 +113,7 @@ export const Manage = () => {
     poolId,
   });
 
-  const isLoading = isRewardsLoading || isInitialQueriesLoading;
+  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   return (
     <ManagePositionProvider>

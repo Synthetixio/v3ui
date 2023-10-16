@@ -48,17 +48,14 @@ export const Pool = () => {
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const isInitialQueriesLoading = isCollateralLoading || isPoolGraphDataLoading;
-
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
-    accountId,
-    !isInitialQueriesLoading
+    accountId
   );
 
-  const isLoading = isRewardsLoading || isInitialQueriesLoading;
+  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
 
