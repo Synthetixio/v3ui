@@ -15,7 +15,7 @@ describe('AccountsSelectorUi', () => {
     cy.get(`[data-testid="current account id"]`).should('include.text', 'omg...ing');
   });
 
-  it('should not shorten short but still does ¯\\_(ツ)_/¯', () => {
+  it('should not shorten short', () => {
     cy.viewport(200, 50);
     cy.mount(
       <AccountsSelectorUi
@@ -26,6 +26,6 @@ describe('AccountsSelectorUi', () => {
         accountId="short"
       />
     );
-    cy.get(`[data-testid="current account id"]`).should('include.text', 'sho...ort');
+    cy.get(`[data-testid="current account id"]`).should('include.text', 'short');
   });
 });
