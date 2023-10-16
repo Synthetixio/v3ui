@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { Flex, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -37,8 +37,8 @@ const ChangeStat: FC<{
 };
 
 export const ManageStatsUi: FC<{
-  liquidityPosition: LiquidityPosition;
-  collateralType: CollateralType;
+  liquidityPosition?: LiquidityPosition;
+  collateralType?: CollateralType;
   newCratio: Wei;
   newCollateralAmount: Wei;
   newDebt: Wei;
@@ -60,7 +60,7 @@ export const ManageStatsUi: FC<{
   return (
     <Flex direction="column">
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
-        <Flex alignItems="center">
+        <Flex alignItems="center" mb="4px">
           <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
             COLLATERAL
           </Text>
@@ -75,38 +75,43 @@ export const ManageStatsUi: FC<{
             </Flex>
           </Tooltip>
         </Flex>
-        <Flex
-          mt="4px"
-          justifyContent="space-between"
-          alignItems="center"
-          data-testid="manage stats collateral"
-        >
-          <ChangeStat
-            value={liquidityPosition.collateralAmount}
-            newValue={newCollateralAmount}
-            formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
-            hasChanges={hasChanges}
-          />
-          <Text
-            fontWeight="400"
-            color="gray.500"
-            fontSize="md"
-            fontFamily="heading"
-            lineHeight="24px"
-          >
-            {currency(liquidityPosition.collateralValue, {
-              currency: 'USD',
-              style: 'currency',
-            })}
-          </Text>
-        </Flex>
-        <Text fontWeight="400" color="gray.500" fontSize="xs">
-          Current Value:{' '}
-          {currency(collateralValue, {
-            currency: 'USD',
-            style: 'currency',
-          })}
-        </Text>
+        {liquidityPosition && collateralType ? (
+          <>
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              data-testid="manage stats collateral"
+            >
+              <ChangeStat
+                value={liquidityPosition.collateralAmount}
+                newValue={newCollateralAmount}
+                formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
+                hasChanges={hasChanges}
+              />
+              <Text
+                fontWeight="400"
+                color="gray.500"
+                fontSize="md"
+                fontFamily="heading"
+                lineHeight="24px"
+              >
+                {currency(liquidityPosition.collateralValue, {
+                  currency: 'USD',
+                  style: 'currency',
+                })}
+              </Text>
+            </Flex>
+            <Text fontWeight="400" color="gray.500" fontSize="xs">
+              Current Value:{' '}
+              {currency(collateralValue, {
+                currency: 'USD',
+                style: 'currency',
+              })}
+            </Text>
+          </>
+        ) : (
+          <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
+        )}
       </BorderBox>
       <BorderBox
         py={4}
@@ -116,8 +121,8 @@ export const ManageStatsUi: FC<{
         justifyContent="space-between"
         mb={4}
       >
-        <Flex flexDirection="column" justifyContent="space-between">
-          <Flex alignItems="center">
+        <Flex flexDirection="column" justifyContent="space-between" width="100%">
+          <Flex alignItems="center" mb="4px">
             <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
               DEBT
             </Text>
@@ -127,20 +132,24 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <Flex data-testid="manage stats debt">
-            <ChangeStat
-              // TODO, need a function to burn to target so dust debt not left over
-              value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
-              newValue={newDebt}
-              formatFn={(val: Wei) =>
-                currency(val, {
-                  currency: 'USD',
-                  style: 'currency',
-                  maximumFractionDigits: 2,
-                })
-              }
-              hasChanges={hasChanges}
-            />
+          <Flex width="100%" data-testid="manage stats debt">
+            {liquidityPosition && collateralType ? (
+              <ChangeStat
+                // TODO, need a function to burn to target so dust debt not left over
+                value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
+                newValue={newDebt}
+                formatFn={(val: Wei) =>
+                  currency(val, {
+                    currency: 'USD',
+                    style: 'currency',
+                    maximumFractionDigits: 2,
+                  })
+                }
+                hasChanges={hasChanges}
+              />
+            ) : (
+              <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
+            )}
           </Flex>
         </Flex>
         {/* TODO: Historical Debt Performance */}
@@ -181,42 +190,47 @@ export const ManageStatsUi: FC<{
         </Flex> */}
       </BorderBox>
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>
-        <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
+        <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
           C-RATIO
         </Text>
         <Flex
-          mt="4px"
           justifyContent="space-between"
           alignItems="center"
           data-testid="manage stats collateral"
         >
-          <ChangeStat
-            // TODO, need a function to burn to target so dust debt not left over
-            value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
-            newValue={newCratio}
-            formatFn={(val: Wei) =>
-              currency(val, {
-                style: 'percent',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })
-            }
-            hasChanges={hasChanges}
-          />
-          <Text
-            fontWeight="400"
-            color="gray.500"
-            fontSize="md"
-            fontFamily="heading"
-            lineHeight="24px"
-          >
-            Minimum{' '}
-            {currency(collateralType.liquidationRatioD18, {
-              style: 'percent',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </Text>
+          {liquidityPosition && collateralType ? (
+            <>
+              <ChangeStat
+                // TODO, need a function to burn to target so dust debt not left over
+                value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
+                newValue={newCratio}
+                formatFn={(val: Wei) =>
+                  currency(val, {
+                    style: 'percent',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                }
+                hasChanges={hasChanges}
+              />
+              <Text
+                fontWeight="400"
+                color="gray.500"
+                fontSize="md"
+                fontFamily="heading"
+                lineHeight="24px"
+              >
+                Minimum{' '}
+                {currency(collateralType.liquidationRatioD18, {
+                  style: 'percent',
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </Text>
+            </>
+          ) : (
+            <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
+          )}
         </Flex>
       </BorderBox>
     </Flex>
@@ -241,8 +255,6 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
-
-  if (!liquidityPosition || !collateralType) return null; // TODO skeleton
 
   return (
     <ManageStatsUi
