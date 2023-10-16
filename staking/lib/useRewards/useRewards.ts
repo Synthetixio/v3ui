@@ -98,7 +98,9 @@ export function useRewards(
       },
     ],
     queryFn: async () => {
-      if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) throw 'OMFG';
+      if (!Multicall3 || !CoreProxy || !poolId || !collateralAddress || !accountId) {
+        throw 'useRewards is missing required data';
+      }
       if (!distributors || distributors?.length === 0) return [];
 
       const { abi } = await importRewardDistributor(network.name);

@@ -49,7 +49,9 @@ export const useCollateralPrices = () => {
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
     queryKey: [network.name, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
-      if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) throw 'OMFG';
+      if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) {
+        throw 'useCollateralPrices missing required data';
+      }
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
 
       const prices = await erc7412Call(CoreProxy.provider, calls, decoder, 'useCollateralPrices');
