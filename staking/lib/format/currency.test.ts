@@ -18,12 +18,12 @@ describe('currency', () => {
   });
 
   it('should format negative Wei value with custom minimumDigitsToShowAfterZeros', () => {
-    const value = wei('-123456789000000000', 18, true); // '-0.123456789' ETH
+    const value = wei('-123456789000000000', 18, true);
     expect(currency(value, undefined, 4)).toBe('-0.1235');
   });
 
   it('should format zero Wei value with default options', () => {
-    const value = wei('0'); // '0' ETH
+    const value = wei('0');
     expect(currency(value)).toBe('0');
   });
 
