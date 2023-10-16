@@ -1,4 +1,4 @@
-import { truncateAddress, parseFloatWithCommas } from './';
+import { truncateAddress, parseFloatWithCommas } from './string';
 
 describe('truncateAddress', () => {
   it('should truncate the address with default parameters', () => {
