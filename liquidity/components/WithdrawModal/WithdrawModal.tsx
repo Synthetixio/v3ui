@@ -118,6 +118,7 @@ export function WithdrawModal({
   const { exec: execWithdraw } = useWithdraw({
     accountId: params.accountId,
     collateralTypeAddress: accountCollateral?.tokenAddress,
+    accountCollateral,
   });
   const queryClient = useQueryClient();
 
