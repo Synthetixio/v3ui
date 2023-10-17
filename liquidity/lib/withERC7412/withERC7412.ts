@@ -4,7 +4,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
-import { NETWORKS } from '@snx-v3/useBlockchain';
+import { NETWORKS, networksWithERC7412 } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importMulticall3 } from '@snx-v3/useMulticall3';
 import { withMemoryCache } from './withMemoryCache';
@@ -167,10 +167,6 @@ const getDefaultFromAddress = (chainName: keyof typeof NETWORKS) => {
   }
 };
 
-const networkWithERC7412: Record<string, boolean | undefined> = {
-  'base-goerli': true,
-};
-
 /**
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
  */
@@ -201,7 +197,7 @@ export const withERC7412 = async (
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(networkName);
   const isTestnet = network?.isTestnet || false;
-  const networkHaveERC7412 = networkWithERC7412[networkName] || false;
+  const networkHaveERC7412 = networksWithERC7412[networkName] || false;
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
