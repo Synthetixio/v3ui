@@ -1,8 +1,57 @@
-# V3 UI
+# Accessing Synthetix V3 through Decentralized Frontends
 
-```
-npx cannon synthetix-periphery:1.0.0 --fund-addresses 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-yarn start
-```
+Explore various methods to access the Synthetix V3 UI via decentralized frontends. The method you choose may depend on
+your technical proficiency and preferences:
 
-_You may need to "reset account" in MetaMask in subsequent development sessions._
+## 1. Brave Browser
+
+- Navigate to [liquidity.synthetix.eth](http://liquidity.synthetix.eth/) using Brave Browser.
+- Brave will automatically route you via their public gateway.
+- For additional details, check out [Brave's IPFS Support page](https://brave.com/ipfs-support/).
+
+## 2. Run the Synthetix IPFS Node
+
+- Download and run the [Synthetix IPFS Node](https://github.com/Synthetixio/synthetix-node?ref=blog.synthetix.io) to
+  connect to the IPFS cluster.
+- Once the IPFS node is running, you'll be able to access the V3 UI along with various ecosystem frontends.
+- Running a Synthetix IPFS Node allows you to directly contribute to the decentralization, reliability, performance, and
+  censorship-resistance of the frontends within the Synthetix Ecosystem.
+- Download the node and learn more on [GitHub](https://github.com/Synthetixio/synthetix-node?ref=blog.synthetix.io).
+
+## 3. Locally (Recommended for Technical Users)
+
+- Make sure you have NodeJS available
+
+  ```sh
+  node -v
+  v18.18.0
+  yarn -v
+  ```
+
+- Clone the V3 UI repository
+
+  ```sh
+  git clone git@github.com:Synthetixio/v3ui.git
+  cd v3ui
+  ```
+
+- Check you have `yarn` installed
+
+  ```sh
+  yarn -v
+  3.6.0
+
+  # if not available, install it globally with npm:
+  npm install -g yarn
+  ```
+
+- Install dependencies
+
+  ```sh
+  yarn install
+  ```
+
+- Run local dev server
+  ```sh
+  yarn workspace "@snx-v3/staking-ui" start
+  ```
