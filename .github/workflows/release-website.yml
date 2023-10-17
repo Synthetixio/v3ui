@@ -1,14 +1,14 @@
-name: release-lp
+name: release-website
 
 on:
   push:
     tags:
-      - 'release-lp-*'
+      - 'release-website-*'
     branches:
-      - 'liquidity-synthetix-eth'
+      - 'v3-synthetix-eth'
 
 jobs:
-  release-lp:
+  release-website:
     # Should be good without checks, we wouldn't release smth that's broken
     # if: ${{ github.event.check_suite.conclusion == 'success' }}
     runs-on: ubuntu-latest
@@ -18,10 +18,10 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          path: lp
-          repository: 'Synthetixio/liquidity.synthetix.eth'
+          path: website
+          repository: 'Synthetixio/v3.synthetix.eth'
           ref: 'master'
-          ssh-key: '${{ secrets.LIQUIDITY_UI_DEPLOYER_SSH_PRIVATE_KEY }}'
+          ssh-key: '${{ secrets.V3_WEBSITE_DEPLOYER_SSH_PRIVATE_KEY }}'
 
       - uses: actions/checkout@v4
         with:
@@ -29,24 +29,27 @@ jobs:
           ref: '${{ github.sha }}'
           ssh-key: '${{ secrets.SSH_PRIVATE_KEY }}'
 
-      - run: yarn workspaces focus @snx-v3/staking-ui
+      - run: yarn workspaces focus @snx-v3/website
         working-directory: v3ui
 
-      - run: yarn workspace @snx-v3/staking-ui build
+      - run: yarn workspace @snx-v3/website build
         working-directory: v3ui
 
-      - run: rm -rf ./lp/*
-      - run: cp -r ./v3ui/staking/ui/dist/* ./lp/
+      - run: rm -rf ./website/*
+      - run: cp ./v3ui/website/ui/_redirects ./website/_redirects
+      - run: cp ./v3ui/website/ui/favicon.ico ./website/favicon.ico
+      - run: cp ./v3ui/website/ui/index.html ./website/index.html
+      - run: cp -r ./v3ui/website/ui/dist ./website/
 
       - run: git add .
-        working-directory: lp
+        working-directory: website
 
       - run: |
           git commit -m "Release ${{ github.event.release.name }}" \
             --allow-empty \
             -m "Source: ${{ github.server_url}}/${{ github.repository }}" \
             -m "Commit: ${{ github.sha }}"
-        working-directory: lp
+        working-directory: website
 
       - run: git push origin master
-        working-directory: lp
+        working-directory: website
