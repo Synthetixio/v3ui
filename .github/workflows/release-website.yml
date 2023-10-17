@@ -36,7 +36,7 @@ jobs:
         working-directory: v3ui
 
       - run: rm -rf ./website/*
-      - run: cp -r ./v3ui/website/ui/src ./website/
+      - run: cp ./v3ui/website/ui/index.html ./website/index.html
       - run: cp -r ./v3ui/website/ui/dist ./website/
 
       - run: git add .
