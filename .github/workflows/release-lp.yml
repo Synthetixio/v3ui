@@ -4,20 +4,49 @@ on:
   push:
     tags:
       - 'release-lp*'
-#    branches:
-#      - 'tagged-releases'
+    branches:
+      - 'liquidity-synthetix-eth'
 
 jobs:
   release-lp:
-    if: ${{ github.event.check_suite.conclusion == 'success' }}
+    # Should be good without checks, we wouldn't release smth that's broken
+    # if: ${{ github.event.check_suite.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - run: git config --global user.email engineering@snxdao.io
+      - run: git config --global user.name synthetix-team
+
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          ssh-key: '${{secrets.SSH_PRIVATE_KEY}}'
-      - run: git config user.email engineering@snxdao.io
-      - run: git config user.name synthetix-team
-      - run: git branch release/lp
-      - run: git checkout release/lp
-      - run: git push --set-upstream --force origin release/lp
+          path: lp
+          repository: 'Synthetixio/liquidity.synthetix.eth'
+          ref: 'master'
+          ssh-key: '${{ secrets.LIQUIDITY_UI_DEPLOYER_SSH_PRIVATE_KEY }}'
+
+      - uses: actions/checkout@v4
+        with:
+          path: v3ui
+          ref: '${{ github.sha }}'
+          ssh-key: '${{ secrets.SSH_PRIVATE_KEY }}'
+
+      - run: yarn workspaces focus @snx-v3/staking-ui
+        working-directory: v3ui
+
+      - run: yarn workspace @snx-v3/staking-ui build
+        working-directory: v3ui
+
+      - run: rm -rf ./lp/*
+      - run: cp -r ./v3ui/staking/ui/dist/* ./lp/
+
+      - run: git add .
+        working-directory: lp
+
+      - run: |
+          git commit -m "Release ${{ github.event.release.name }}" \
+            --allow-empty \
+            -m "Source: ${{ github.server_url}}/${{ github.repository }}" \
+            -m "Commit: ${{ github.sha }}"
+        working-directory: lp
+
+      - run: git push origin master
+        working-directory: lp
