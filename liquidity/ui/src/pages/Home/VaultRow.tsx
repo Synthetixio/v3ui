@@ -4,7 +4,6 @@ import { generatePath, Link, useLocation } from 'react-router-dom';
 import { FC } from 'react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
-import { useParams } from '@snx-v3/useParams';
 import { CollateralIcon } from '@snx-v3/icons';
 import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
@@ -13,14 +12,12 @@ import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 function VaultRowUi({
   collateralType,
   liquidityPosition,
-  accountId,
   poolId,
   isConnected,
   openConnectModal,
 }: {
   collateralType: CollateralType;
   liquidityPosition?: LiquidityPositionType;
-  accountId?: string;
   poolId: string;
   isConnected: boolean;
   openConnectModal?: () => void;
@@ -30,7 +27,7 @@ function VaultRowUi({
     liquidityPosition?.debt || wei(0),
     liquidityPosition?.collateralValue || wei(0)
   );
-  const hasLiquidity = accountId && liquidityPosition && liquidityPosition.collateralAmount.gt(0);
+  const hasLiquidity = liquidityPosition && liquidityPosition.collateralAmount.gt(0);
 
   return (
     <Tr>
@@ -110,14 +107,12 @@ export type VaultRowProps = {
 };
 
 export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
-  const { accountId } = useParams();
   const isConnected = useIsConnected();
 
   return (
     <VaultRowUi
       collateralType={collateralType}
       liquidityPosition={liquidityPosition}
-      accountId={accountId}
       poolId={poolId}
       isConnected={isConnected}
       openConnectModal={() => onboard.connectWallet()}
