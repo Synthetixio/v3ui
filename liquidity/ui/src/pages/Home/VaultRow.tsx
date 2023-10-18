@@ -1,10 +1,9 @@
 import { Amount } from '@snx-v3/Amount';
 import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
-import { createSearchParams, generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, Link, useLocation } from 'react-router-dom';
 import { FC } from 'react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
-import { useParams } from '@snx-v3/useParams';
 import { CollateralIcon } from '@snx-v3/icons';
 import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
@@ -13,25 +12,22 @@ import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 function VaultRowUi({
   collateralType,
   liquidityPosition,
-  accountId,
   poolId,
-  navigate,
   isConnected,
   openConnectModal,
 }: {
   collateralType: CollateralType;
   liquidityPosition?: LiquidityPositionType;
-  accountId?: string;
   poolId: string;
-  navigate: NavigateFunction;
   isConnected: boolean;
   openConnectModal?: () => void;
 }) {
+  const location = useLocation();
   const cRatio = calculateCRatio(
     liquidityPosition?.debt || wei(0),
     liquidityPosition?.collateralValue || wei(0)
   );
-  const hasLiquidity = accountId && liquidityPosition && liquidityPosition.collateralAmount.gt(0);
+  const hasLiquidity = liquidityPosition && liquidityPosition.collateralAmount.gt(0);
 
   return (
     <Tr>
@@ -68,14 +64,14 @@ function VaultRowUi({
       <Td textAlign="end">
         {isConnected && hasLiquidity ? (
           <Button
-            onClick={() =>
-              navigate(
-                generatePath('/positions/:collateralSymbol/:poolId', {
-                  poolId,
-                  collateralSymbol: collateralType.symbol,
-                })
-              )
-            }
+            as={Link}
+            to={{
+              pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                poolId: poolId,
+                collateralSymbol: collateralType.symbol,
+              }),
+              search: location.search,
+            }}
           >
             Manage
           </Button>
@@ -83,15 +79,14 @@ function VaultRowUi({
 
         {isConnected && !hasLiquidity ? (
           <Button
-            onClick={() =>
-              navigate({
-                pathname: generatePath('/deposit/:collateralSymbol/:poolId', {
-                  poolId: poolId,
-                  collateralSymbol: collateralType.symbol,
-                }),
-                search: accountId ? createSearchParams({ accountId }).toString() : '',
-              })
-            }
+            as={Link}
+            to={{
+              pathname: generatePath('/deposit/:collateralSymbol/:poolId', {
+                poolId: poolId,
+                collateralSymbol: collateralType.symbol,
+              }),
+              search: location.search,
+            }}
           >
             Deposit
           </Button>
@@ -112,18 +107,13 @@ export type VaultRowProps = {
 };
 
 export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
-  const { accountId } = useParams();
-
-  const navigate = useNavigate();
   const isConnected = useIsConnected();
 
   return (
     <VaultRowUi
       collateralType={collateralType}
       liquidityPosition={liquidityPosition}
-      accountId={accountId}
       poolId={poolId}
-      navigate={navigate}
       isConnected={isConnected}
       openConnectModal={() => onboard.connectWallet()}
     />

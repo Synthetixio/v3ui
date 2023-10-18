@@ -12,12 +12,11 @@ it('creates new account with first deposit of SNX', () => {
 
   cy.viewport(1000, 800);
 
-  cy.visit(
-    generatePath('/deposit/:collateralSymbol/:poolId', {
-      poolId: '1',
-      collateralSymbol: 'SNX',
-    })
-  );
+  const path = generatePath('/deposit/:collateralSymbol/:poolId', {
+    poolId: '1',
+    collateralSymbol: 'SNX',
+  });
+  cy.visit(`/#${path}`);
 
   cy.get('[data-testid="deposit amount input"]').type(`20`);
 
@@ -52,5 +51,5 @@ it('creates new account with first deposit of SNX', () => {
 
   cy.get('[data-action="borrow"][data-active="true"]').should('include.text', 'Borrow');
 
-  cy.location('pathname').should('include', 'positions');
+  cy.location('hash').should('include', 'positions');
 });

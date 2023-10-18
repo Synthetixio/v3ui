@@ -2,7 +2,7 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { FC } from 'react';
 import { Button, Skeleton, Text } from '@chakra-ui/react';
-import { useNavigate, generatePath } from 'react-router-dom';
+import { generatePath, Link, useLocation } from 'react-router-dom';
 import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 
@@ -13,7 +13,7 @@ const AccountVaultCollateralUi: FC<{
   poolId: string;
   isLoading: boolean;
 }> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId }) => {
-  const navigate = useNavigate();
+  const location = useLocation();
   return (
     <>
       <Text mt={2} fontSize="sm" fontWeight="700" color="gray.500">
@@ -34,14 +34,13 @@ const AccountVaultCollateralUi: FC<{
         </Text>
       )}
       <Button
-        onClick={() => {
-          navigate({
-            pathname: generatePath('/positions/:collateral/:poolId', {
-              collateral: collateralSymbol,
-              poolId,
-            }),
-            search: location.search,
-          });
+        as={Link}
+        to={{
+          pathname: generatePath('/positions/:collateral/:poolId', {
+            collateral: collateralSymbol,
+            poolId,
+          }),
+          search: location.search,
         }}
         mt={1}
       >

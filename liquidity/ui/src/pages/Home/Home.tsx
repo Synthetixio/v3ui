@@ -14,7 +14,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, Link, useLocation } from 'react-router-dom';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { VaultRow, VaultRowProps } from './VaultRow';
 import { PoolsType, usePools } from '@snx-v3/usePools';
@@ -51,7 +51,6 @@ const LoadingRow = () => (
 export function HomeUi({
   collateralTypes,
   pools,
-  navigate,
   liquidityPositionsById,
   isLoading,
   VaultRow,
@@ -60,8 +59,6 @@ export function HomeUi({
 }: {
   collateralTypes?: CollateralType[];
   pools: PoolsType;
-  accountId?: string;
-  navigate: NavigateFunction;
   liquidityPositionsById?: LiquidityPositionsById;
   isLoading: boolean;
   VaultRow: FC<VaultRowProps>;
@@ -77,6 +74,7 @@ export function HomeUi({
       },
       { totalCollateral: 0, totalDebt: 0 }
     ) || {};
+  const location = useLocation();
 
   return (
     <Flex height="100%" flexDirection="column">
@@ -121,11 +119,13 @@ export function HomeUi({
                 {pool.id && (
                   <Fade in>
                     <Button
+                      as={Link}
                       mt={{ base: 2, md: 0 }}
                       size="sm"
-                      onClick={() =>
-                        navigate({ pathname: generatePath('/pools/:poolId', { poolId: pool.id }) })
-                      }
+                      to={{
+                        pathname: generatePath('/pools/:poolId', { poolId: pool.id }),
+                        search: location.search,
+                      }}
                       variant="outline"
                     >
                       Pool Info
@@ -220,8 +220,7 @@ export function HomeUi({
 }
 
 export function Home() {
-  const params = useParams();
-  const navigate = useNavigate();
+  const { accountId } = useParams();
 
   const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
   const { data: pools, isLoading: isPoolsLoading } = usePools();
@@ -230,9 +229,7 @@ export function Home() {
     data: liquidityPositionsById,
     isLoading: liquidityPositionLoading,
     isInitialLoading: liquidityInitialLoading,
-  } = useLiquidityPositions({
-    accountId: params.accountId,
-  });
+  } = useLiquidityPositions({ accountId });
 
   const isLoading =
     collateralTypesLoading ||
@@ -250,7 +247,6 @@ export function Home() {
         liquidityPositionsById={liquidityPositionsById}
         collateralTypes={collateralTypes}
         pools={pools || []}
-        navigate={navigate}
         VaultRow={VaultRow}
         AvailableCollateral={AvailableCollateral}
         Stats={Stats}

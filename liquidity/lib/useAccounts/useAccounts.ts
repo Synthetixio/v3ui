@@ -80,7 +80,13 @@ export function useAccountUrlSync() {
       if (!accountId || !accounts.data.includes(accountId)) {
         queryParams.set('accountId', accounts.data[0]);
 
-        navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+        navigate(
+          {
+            pathname: location.pathname,
+            search: queryParams.toString(),
+          },
+          { replace: true }
+        );
       }
       // when accountId param is present, and it also exists in the accounts list, do nothing
       return;
@@ -95,8 +101,14 @@ export function useAccountUrlSync() {
       // We have fetched accounts but there are none, remove account id from url
       if (accountId) {
         queryParams.delete('accountId');
-        navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+        navigate(
+          {
+            pathname: location.pathname,
+            search: queryParams.toString(),
+          },
+          { replace: true }
+        );
       }
     }
-  }, [accounts.data, accounts.isFetched, navigate, location, queryParams]);
+  }, [accounts.data, accounts.isFetched, navigate, location.pathname, queryParams]);
 }

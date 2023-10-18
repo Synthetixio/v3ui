@@ -4,7 +4,7 @@ export const GAS_LIMIT_MULTIPLIER = 1.5;
 export const DEFAULT_QUERY_REFRESH_INTERVAL = 600_000; // 10min
 export const DEFAULT_QUERY_STALE_TIME = 300_000; // 5min
 
-export const INFURA_KEY = '23087ce9f88c44d1b1c54fd7c07c65fb';
+export const INFURA_KEY = '3fed4f20a42a4302b7e9f15a2288f6a4';
 export const ONBOARD_KEY = 'sec_jykTuCK0ZuqXWf3wNYqizxs2';
 
 export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {

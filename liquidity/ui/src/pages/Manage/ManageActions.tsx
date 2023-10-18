@@ -19,7 +19,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Borrow } from './Borrow';
 import { Repay } from './Repay';
 import { Undelegate } from './Undelegate';
@@ -125,6 +125,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   const params = useParams();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
@@ -169,8 +170,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
 
     if (canBorrow) {
       queryParams.set('manageAction', 'borrow');
-      navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-
+      navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
       return;
     }
 
@@ -178,14 +178,13 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
 
     if (cRatioIsCloseToLiqRatio) {
       queryParams.set('manageAction', 'repay');
-      navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-
+      navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
       return;
     }
 
     queryParams.set('manageAction', 'deposit');
-    navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
-  }, [collateralType, liquidityPosition, navigate]);
+    navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
+  }, [collateralType, liquidityPosition, location.pathname, location.search, navigate]);
 
   return (
     <>
@@ -197,7 +196,10 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
           setDebtChange(wei(0));
           const queryParams = new URLSearchParams(location.search);
           queryParams.set('manageAction', action);
-          navigate(`${location.pathname}?${queryParams.toString()}`, { replace: true });
+          navigate(
+            { pathname: location.pathname, search: queryParams.toString() },
+            { replace: true }
+          );
         }}
         manageAction={parsedAction || undefined}
       />

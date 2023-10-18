@@ -3,7 +3,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { FC } from 'react';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { calculatePoolPerformanceSevenDays } from '@snx-v3/calculations';
-import { generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, Link, useLocation } from 'react-router-dom';
 import { Wei } from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
 import { InfoIcon } from '@chakra-ui/icons';
@@ -14,9 +14,9 @@ import { usePool } from '@snx-v3/usePools';
 const PoolBoxUi: FC<{
   poolName?: string;
   poolId?: string;
-  navigate: NavigateFunction;
   sevenDaysPoolPerformanceGrowth?: Wei;
-}> = ({ poolName, poolId, navigate, sevenDaysPoolPerformanceGrowth }) => {
+}> = ({ poolName, poolId, sevenDaysPoolPerformanceGrowth }) => {
+  const location = useLocation();
   return (
     <BorderBox h="100%" p={4} flexDirection="column">
       {poolId ? (
@@ -52,13 +52,13 @@ const PoolBoxUi: FC<{
       )}
       {poolId && (
         <Button
+          as={Link}
           mt={4}
           size="md"
-          onClick={() =>
-            navigate({
-              pathname: generatePath('/pools/:poolId', { poolId: poolId }),
-            })
-          }
+          to={{
+            pathname: generatePath('/pools/:poolId', { poolId: poolId }),
+            search: location.search,
+          }}
           variant="outline"
         >
           See Pool
@@ -69,19 +69,17 @@ const PoolBoxUi: FC<{
 };
 
 export const PoolBox = () => {
-  const params = useParams();
+  const { poolId } = useParams();
 
-  const navigate = useNavigate();
-  const { data: poolData } = usePoolData(params.poolId);
+  const { data: poolData } = usePoolData(poolId);
   const sevenDaysPoolPerformance = calculatePoolPerformanceSevenDays(poolData);
 
-  const { data: pool } = usePool(params.poolId);
+  const { data: pool } = usePool(poolId);
 
   return (
     <PoolBoxUi
       poolName={pool?.name}
       poolId={pool?.id}
-      navigate={navigate}
       sevenDaysPoolPerformanceGrowth={sevenDaysPoolPerformance?.growthPercentage}
     />
   );

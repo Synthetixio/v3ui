@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { Fonts, theme } from '@synthetixio/v3-theme';
 import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
@@ -44,10 +44,10 @@ export const App = () => {
         <Fonts />
         <BlockchainProvider>
           <GasSpeedProvider>
-            <BrowserRouter>
+            <HashRouter>
               <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
               <Router />
-            </BrowserRouter>
+            </HashRouter>
           </GasSpeedProvider>
           <ReactQueryDevtools />
         </BlockchainProvider>
