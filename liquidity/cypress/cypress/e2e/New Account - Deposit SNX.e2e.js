@@ -51,5 +51,5 @@ it('creates new account with first deposit of SNX', () => {
 
   cy.get('[data-action="borrow"][data-active="true"]').should('include.text', 'Borrow');
 
-  cy.location('pathname').should('include', 'positions');
+  cy.location('hash').should('include', 'positions');
 });

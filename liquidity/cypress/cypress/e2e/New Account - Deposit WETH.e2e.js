@@ -40,7 +40,7 @@ it.skip('creates new account with first deposit of WETH', () => {
 
   cy.get('[data-testid="deposit modal"]').should('not.exist');
 
-  cy.location('pathname').should('include', 'accounts').should('include', 'positions');
+  cy.location('hash').should('include', 'accounts').and('include', 'positions');
 
   cy.get('[data-testid="current account id"]').then((element) => {
     const accountId = element.attr('data-account-id');
