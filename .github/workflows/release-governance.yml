@@ -35,7 +35,7 @@ jobs:
         working-directory: v3ui
 
       - run: rm -rf ./governance/*
-      - run: cp -r ./v3ui/governance/ui/dist ./governance/
+      - run: cp -r ./v3ui/governance/ui/dist/* ./governance/
 
       - run: git add .
         working-directory: governance
