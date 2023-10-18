@@ -1,4 +1,4 @@
-it('shows homepage to not connected wallet', () => {
+it('shows Spartan Pool page to not connected wallet', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
