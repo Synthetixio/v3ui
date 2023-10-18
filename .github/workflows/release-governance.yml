@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: governance
-          repository: 'Synthetixio/v3.synthetix.eth'
+          repository: 'Synthetixio/governance.synthetix.eth'
           ref: 'master'
           ssh-key: '${{ secrets.GOVERNANCE_SSH_KEY }}'
 
