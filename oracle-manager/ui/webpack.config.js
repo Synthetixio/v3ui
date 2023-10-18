@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -13,7 +14,6 @@ const isTest = process.env.NODE_ENV === 'test';
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './index.html',
-  favicon: path.join(__dirname, 'favicon.ico'),
   scriptLoading: 'defer',
   minify: false,
   hash: false,
@@ -76,7 +76,7 @@ const devServer = {
 
   devMiddleware: {
     writeToDisk: !isTest,
-    publicPath: '/',
+    publicPath: '',
   },
 
   client: {
@@ -101,7 +101,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '',
     filename: '[name].js',
     chunkFilename: isProd ? 'chunk/[name].[contenthash:8].js' : '[name].js',
     assetModuleFilename: '[name].[contenthash:8][ext]',
@@ -127,6 +127,8 @@ module.exports = {
   },
 
   plugins: [htmlPlugin]
+    .concat(isProd ? [new CopyWebpackPlugin({ patterns: [{ from: 'public', to: '' }] })] : [])
+
     .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
 
     .concat([
