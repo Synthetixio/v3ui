@@ -54,7 +54,9 @@ export const feeSuggestion = async (
   provider: ethers.providers.JsonRpcProvider,
   fromBlock = 'latest'
 ) => {
-  if (provider.network.chainId === 13370) {
+  // If local or base-goerli, use defaults
+  // Base goerli sometimes doesn't have enough tx we can use to estimate the priority fee, when this happens the tx will get "tx underprices"
+  if (provider.network.chainId === 13370 || provider.network.chainId === 84531) {
     return defaultForLocalProvider();
   }
   const feeHistory = await provider

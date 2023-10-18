@@ -120,6 +120,9 @@ export const NETWORKS: Record<string, Network> = {
     isTestnet: true,
   },
 };
+export const networksWithERC7412: Record<string, boolean | undefined> = {
+  'base-goerli': true,
+};
 
 const DEFAULT_NETWORK_NAME = window.localStorage.getItem('DEFAULT_NETWORK') || 'optimism-mainnet';
 export const DEFAULT_NETWORK =

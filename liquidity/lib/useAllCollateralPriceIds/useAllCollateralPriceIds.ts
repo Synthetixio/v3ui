@@ -5,7 +5,7 @@ import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { networksWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -56,8 +56,8 @@ export const useAllCollateralPriceIds = () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
-      const hasTrustedForwarder = 'getTrustedForwarder' in CoreProxy.functions;
-      if (!hasTrustedForwarder) return [];
+
+      if (!networksWithERC7412[network.name]) return [];
       const configs = await loadConfigs({ CoreProxy });
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
       const calls = oracleNodeIds.map((oracleNodeId) => ({
