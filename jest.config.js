@@ -12,7 +12,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/theme/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/libs/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/staking/ui/**/*.{js,jsx,ts,tsx}',
+    '<rootDir>/liquidity/ui/**/*.{js,jsx,ts,tsx}',
     '!<rootDir>/**/*.d.ts',
     '!<rootDir>/**/*.test.{js,jsx,ts,tsx}',
   ],

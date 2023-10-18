@@ -29,10 +29,10 @@ const babelRule = {
     /contracts/,
     /theme/,
 
-    /staking\/lib/,
-    /staking\/components/,
-    /staking\/cypress/,
-    /staking\/ui/,
+    /liquidity\/lib/,
+    /liquidity\/components/,
+    /liquidity\/cypress/,
+    /liquidity\/ui/,
   ],
   resolve: {
     fullySpecified: false,

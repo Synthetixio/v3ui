@@ -122,7 +122,7 @@ jobs:
             git diff --name-only --exit-code
       - run: yarn typecheck
 
-  staking-e2e:
+  liquidity-e2e:
     parameters:
       chain:
         type: string
@@ -139,7 +139,7 @@ jobs:
 
       - run:
           name: Run server localhost:3000
-          working_directory: /tmp/app/staking/ui
+          working_directory: /tmp/app/liquidity/ui
           command: yarn start
           background: true
 
@@ -157,25 +157,25 @@ jobs:
           command: wget -q -O - --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 --post-data='{"method":"eth_chainId","params":[],"id":1,"jsonrpc":"2.0"}' --header='Content-Type:application/json' http://localhost:8545
 
       - run:
-          working_directory: /tmp/app/staking/cypress
+          working_directory: /tmp/app/liquidity/cypress
           command: cypress run --e2e --browser chrome
 
       - store_test_results:
-          path: 'staking/cypress/cypress/reports'
+          path: 'liquidity/cypress/cypress/reports'
 
       - store_artifacts:
-          path: 'staking/cypress/.nyc_output'
+          path: 'liquidity/cypress/.nyc_output'
           destination: 'coverage'
 
       - store_artifacts:
-          path: 'staking/cypress/cypress/screenshots'
+          path: 'liquidity/cypress/cypress/screenshots'
           destination: 'screenshots'
 
       - store_artifacts:
-          path: 'staking/cypress/cypress/videos'
+          path: 'liquidity/cypress/cypress/videos'
           destination: 'videos'
 
-  staking-cy:
+  liquidity-cy:
     working_directory: /tmp/app
     docker:
       - image: cypress/included:<< pipeline.parameters.cypress-version >>
@@ -186,22 +186,22 @@ jobs:
       - yarn-install
 
       - run:
-          working_directory: /tmp/app/staking/cypress
+          working_directory: /tmp/app/liquidity/cypress
           command: cypress run --component --browser chrome
 
       - store_test_results:
-          path: 'staking/cypress/cypress/reports'
+          path: 'liquidity/cypress/cypress/reports'
 
       - store_artifacts:
-          path: 'staking/cypress/.nyc_output'
+          path: 'liquidity/cypress/.nyc_output'
           destination: 'coverage'
 
       - store_artifacts:
-          path: 'staking/cypress/cypress/screenshots'
+          path: 'liquidity/cypress/cypress/screenshots'
           destination: 'screenshots'
 
       - store_artifacts:
-          path: 'staking/cypress/cypress/videos'
+          path: 'liquidity/cypress/cypress/videos'
           destination: 'videos'
 
   combine-coverage:
@@ -213,8 +213,8 @@ jobs:
       - yarn-install
       - run: rm -rf /tmp/cov
       - run: yarn download-cci-coverage tests /tmp/cov || true
-      - run: yarn download-cci-coverage staking-cy /tmp/cov || true
-      - run: yarn download-cci-coverage staking-e2e-optimism-mainnet /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-cy /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-optimism-mainnet /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
       - run: mkdir -p /tmp/cov/combined
@@ -224,7 +224,7 @@ jobs:
           chmod +x codecov
           ./codecov -t ${CODECOV_TOKEN} --file /tmp/cov/combined/coverage.json
 
-  staking-ipfs:
+  liquidity-ipfs:
     working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
@@ -232,9 +232,9 @@ jobs:
     steps:
       - checkout
       - yarn-install
-      - run: yarn workspace @snx-v3/staking-ui build
+      - run: yarn workspace @snx-v3/liquidity build
       - ipfs-deploy:
-          source-dir: './staking/ui/dist'
+          source-dir: './liquidity/ui/dist'
           ipfs-api: 'https://ipfs.synthetix.io:5001/api/v0'
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
@@ -249,23 +249,23 @@ workflows:
       - checks
       - typecheck
       - tests
-      - staking-cy
-      - staking-e2e:
+      - liquidity-cy
+      - liquidity-e2e:
           chain: optimism-mainnet
-          name: staking-e2e-optimism-mainnet
-      - staking-e2e:
+          name: liquidity-e2e-optimism-mainnet
+      - liquidity-e2e:
           chain: optimism-goerli
-          name: staking-e2e-optimism-goerli
+          name: liquidity-e2e-optimism-goerli
       - combine-coverage:
-          requires: [tests, staking-cy, staking-e2e-optimism-mainnet]
-      - staking-ipfs:
+          requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      - liquidity-ipfs:
           requires:
             - checks
             - typecheck
             - tests
-            - staking-cy
-            - staking-e2e-optimism-mainnet
-            - staking-e2e-optimism-goerli
+            - liquidity-cy
+            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-optimism-goerli
           filters:
             branches:
               only:

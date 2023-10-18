@@ -53,5 +53,5 @@ your technical proficiency and preferences:
 
 - Run local dev server
   ```sh
-  yarn workspace "@snx-v3/staking-ui" start
+  yarn workspace "@snx-v3/liquidity" start
   ```

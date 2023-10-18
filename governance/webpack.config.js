@@ -28,8 +28,8 @@ const babelRule = {
     // Need to list all the folders in v3 and outside (if used)
     /governance/,
     /theme/,
-    /staking\/lib/,
-    /staking\/components/,
+    /liquidity\/lib/,
+    /liquidity\/components/,
   ],
   resolve: {
     fullySpecified: false,

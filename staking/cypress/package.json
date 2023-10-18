@@ -1,5 +1,5 @@
 {
-  "name": "@snx-v3/cypress",
+  "name": "@snx-v3/liquidity-cypress",
   "private": true,
   "main": "index.ts",
   "version": "0.0.9",
@@ -15,7 +15,7 @@
     "@cypress/code-coverage": "^3.12.1",
     "@snx-cy/onLogAdded": "workspace:*",
     "@snx-cy/printBrowserLogs": "workspace:*",
-    "@snx-v3/staking-ui": "workspace:*",
+    "@snx-v3/liquidity": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "cypress": "^13.3.0",

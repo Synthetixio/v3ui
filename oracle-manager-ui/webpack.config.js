@@ -28,8 +28,8 @@ const babelRule = {
     /oracle-manager-ui/,
     /theme/,
     /contracts/,
-    /staking\/lib/,
-    /staking\/components/,
+    /liquidity\/lib/,
+    /liquidity\/components/,
   ],
   resolve: {
     fullySpecified: false,
