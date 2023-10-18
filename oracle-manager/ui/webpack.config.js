@@ -4,7 +4,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -26,10 +25,11 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /governance/,
+    /oracle-manager\/ui/,
     /theme/,
-    /staking\/lib/,
-    /staking\/components/,
+    /contracts/,
+    /liquidity\/lib/,
+    /liquidity\/components/,
   ],
   resolve: {
     fullySpecified: false,
@@ -54,7 +54,7 @@ const imgRule = {
 
 const cssRule = {
   test: /\.css$/,
-  include: [new RegExp('./src')],
+  include: [new RegExp('./src'), new RegExp('reactflow')],
   exclude: [],
   use: [
     {
@@ -94,11 +94,10 @@ const devServer = {
 };
 
 module.exports = {
-  //  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
-  devtool: isTest ? false : 'source-map',
+  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
   devServer,
   mode: isProd ? 'production' : 'development',
-  entry: './src/pages/index.tsx',
+  entry: './src/index.tsx',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -144,6 +143,12 @@ module.exports = {
         process: 'process/browser.js',
       }),
     ])
+    .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        new RegExp(`^@synthetixio/v3-contracts$`),
+        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
+      ),
+    ])
 
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
@@ -160,20 +165,17 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
-        'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
-        'process.env.IPFS_INFURA_SECRET': JSON.stringify(process.env.IPFS_INFURA_SECRET),
-        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
-        'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
-      })
-    )
-    .concat(
-      new CopyWebpackPlugin({
-        patterns: [{ from: 'public', to: '' }],
+        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
+        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
+          process.env.NEXT_PUBLIC_WC_PROJECT_ID
+        ),
       })
     ),
 
   resolve: {
+    alias: {
+      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
+    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

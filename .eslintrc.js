@@ -48,11 +48,11 @@ module.exports = {
   overrides: [
     {
       files: [
-        'staking/ui/**/*',
-        'staking/components/**/*',
-        'staking/lib/**/*',
+        'liquidity/ui/**/*',
+        'liquidity/components/**/*',
+        'liquidity/lib/**/*',
         'theme/**/*',
-        'oracle-manager-ui/**/*',
+        'oracle-manager/ui/**/*',
         'governance/**/*',
       ],
 

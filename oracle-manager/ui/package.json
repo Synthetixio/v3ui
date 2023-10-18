@@ -1,13 +1,13 @@
 {
-  "name": "@synthetixio/oracle-manager-ui",
+  "name": "@snx-v3/oracle-manager",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "load-env": "source ./load-env.sh",
-    "standalone-install": "yarn workspaces focus '@synthetixio/oracle-manager-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@synthetixio/oracle-manager-ui' run build"
+    "load-env": "source load-env.sh",
+    "standalone-install": "yarn workspaces focus '@snx-v3/oracle-manager'",
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/oracle-manager' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

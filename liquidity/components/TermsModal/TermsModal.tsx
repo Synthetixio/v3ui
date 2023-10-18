@@ -109,7 +109,7 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
                 <ListItem mt={2}>
                   Synthetix DAO does not unilaterally offer, maintain, operate, administer, or
                   control any trading interfaces. The only user interfaces maintained by Synthetix
-                  DAO are the governance and staking interfaces herein.
+                  DAO are the governance and liquidity interfaces herein.
                 </ListItem>
                 <ListItem mt={2}>
                   You can participate in the governance process by staking SNX tokens in accordance

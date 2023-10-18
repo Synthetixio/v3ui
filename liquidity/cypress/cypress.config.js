@@ -13,7 +13,7 @@ module.exports = defineConfig({
     devServer: {
       framework: 'react',
       bundler: 'webpack',
-      webpackConfig: require('@snx-v3/staking-ui/webpack.config'),
+      webpackConfig: require('@snx-v3/liquidity/webpack.config'),
     },
     setupNodeEvents(on, config) {
       require('@cypress/code-coverage/task')(on, config);

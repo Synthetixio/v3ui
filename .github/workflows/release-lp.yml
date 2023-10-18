@@ -29,14 +29,14 @@ jobs:
           ref: '${{ github.sha }}'
           ssh-key: '${{ secrets.SSH_PRIVATE_KEY }}'
 
-      - run: yarn workspaces focus @snx-v3/staking-ui
+      - run: yarn workspaces focus @snx-v3/liquidity
         working-directory: v3ui
 
-      - run: yarn workspace @snx-v3/staking-ui build
+      - run: yarn workspace @snx-v3/liquidity build
         working-directory: v3ui
 
       - run: rm -rf ./lp/*
-      - run: cp -r ./v3ui/staking/ui/dist/* ./lp/
+      - run: cp -r ./v3ui/liquidity/ui/dist/* ./lp/
 
       - run: git add .
         working-directory: lp

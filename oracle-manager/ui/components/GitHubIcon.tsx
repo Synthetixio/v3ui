@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 export const GitHubIcon: FC = () => (
   <Link
-    href="https://github.com/Synthetixio/v3ui/tree/master/oracle-manager-ui"
+    href="https://github.com/Synthetixio/v3ui/tree/master/oracle-manager/ui"
     target="_blank"
     rel="noopener"
   >

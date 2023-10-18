@@ -1,12 +1,12 @@
 {
-  "name": "@snx-v3/staking-ui",
+  "name": "@snx-v3/liquidity",
   "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "standalone-install": "yarn workspaces focus '@synthetixio/v3-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/staking-ui' run build"
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/liquidity' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

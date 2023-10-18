@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -25,11 +26,13 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /oracle-manager-ui/,
-    /theme/,
     /contracts/,
-    /staking\/lib/,
-    /staking\/components/,
+    /theme/,
+
+    /liquidity\/lib/,
+    /liquidity\/components/,
+    /liquidity\/cypress/,
+    /liquidity\/ui/,
   ],
   resolve: {
     fullySpecified: false,
@@ -54,7 +57,7 @@ const imgRule = {
 
 const cssRule = {
   test: /\.css$/,
-  include: [new RegExp('./src'), new RegExp('reactflow')],
+  include: [new RegExp('./src'), new RegExp('@rainbow-me/rainbowkit')],
   exclude: [],
   use: [
     {
@@ -94,7 +97,8 @@ const devServer = {
 };
 
 module.exports = {
-  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  //  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  devtool: isTest ? false : 'source-map',
   devServer,
   mode: isProd ? 'production' : 'development',
   entry: './src/index.tsx',
@@ -127,27 +131,31 @@ module.exports = {
   },
 
   plugins: [htmlPlugin]
-    .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
+    .concat(isProd ? [new CopyWebpackPlugin({ patterns: ['_redirects'] })] : [])
+    .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        /^@tanstack\/react-query$/,
+        require.resolve('@tanstack/react-query')
+      ),
+      new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js')),
+    ])
 
     .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        new RegExp(`^@synthetixio/v3-contracts$`),
+        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
+      ),
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
         path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
       ),
     ])
-    .concat([])
 
     .concat([
       new webpack.ProvidePlugin({
         Buffer: ['buffer', 'Buffer'],
         process: 'process/browser.js',
       }),
-    ])
-    .concat([
-      new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-contracts$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
-      ),
     ])
 
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
@@ -162,14 +170,6 @@ module.exports = {
             }),
           ]
         : []
-    )
-    .concat(
-      new webpack.DefinePlugin({
-        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
-        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
-          process.env.NEXT_PUBLIC_WC_PROJECT_ID
-        ),
-      })
     ),
 
   resolve: {
