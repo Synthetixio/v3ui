@@ -28,7 +28,7 @@ it('should withdraw borrowed snxUSD and get back SNX collateral', () => {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=undelegate&accountId=${accountId}`);
+    cy.visit(`/#${path}?manageAction=undelegate&accountId=${accountId}`);
   });
 
   // Need to wait for max undelegate amount to be fetched

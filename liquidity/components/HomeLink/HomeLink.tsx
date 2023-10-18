@@ -1,8 +1,9 @@
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 import { Link } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export const HomeLink = () => {
+  const location = useLocation();
   return (
     <Link
       width="fit-content"
@@ -10,7 +11,10 @@ export const HomeLink = () => {
       alignItems="center"
       color="cyan.500"
       as={ReactRouterLink}
-      to="/"
+      to={{
+        pathname: '/',
+        search: location.search,
+      }}
       fontSize="sm"
       fontWeight={700}
       mb={2}

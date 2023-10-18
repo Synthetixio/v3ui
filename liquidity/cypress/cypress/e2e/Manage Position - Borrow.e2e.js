@@ -27,7 +27,7 @@ it('should borrow against already deposited SNX collateral', () => {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=borrow&accountId=${accountId}`);
+    cy.visit(`/#${path}?manageAction=borrow&accountId=${accountId}`);
   });
 
   // Need to wait for max debt to be fetched

@@ -29,7 +29,7 @@ it('should deposit additional SNX collateral', () => {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=deposit&accountId=${accountId}`);
+    cy.visit(`/#${path}?manageAction=deposit&accountId=${accountId}`);
   });
 
   cy.get('[data-testid="manage stats collateral"]').should('include.text', '20 SNX');

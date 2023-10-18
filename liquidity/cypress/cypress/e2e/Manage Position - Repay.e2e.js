@@ -36,7 +36,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
       collateralSymbol: 'SNX',
       poolId: 1,
     });
-    cy.visit(`${path}?manageAction=repay&accountId=${accountId}`);
+    cy.visit(`/#${path}?manageAction=repay&accountId=${accountId}`);
   });
 
   // Need to wait for max repay amount to be fetched

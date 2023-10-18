@@ -14,7 +14,6 @@ const isTest = process.env.NODE_ENV === 'test';
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './index.html',
-  favicon: path.join(__dirname, 'favicon.ico'),
   scriptLoading: 'defer',
   minify: false,
   hash: false,
@@ -76,7 +75,7 @@ const devServer = {
 
   devMiddleware: {
     writeToDisk: !isTest,
-    publicPath: '/',
+    publicPath: '',
   },
 
   client: {
@@ -102,7 +101,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '',
     filename: '[name].js',
     chunkFilename: isProd ? 'chunk/[name].[contenthash:8].js' : '[name].js',
     assetModuleFilename: '[name].[contenthash:8][ext]',
@@ -128,6 +127,8 @@ module.exports = {
   },
 
   plugins: [htmlPlugin]
+    .concat(isProd ? [new CopyWebpackPlugin({ patterns: [{ from: 'public', to: '' }] })] : [])
+
     .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
 
     .concat([
@@ -166,13 +167,7 @@ module.exports = {
         'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
         'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
       })
-    )
-    .concat(
-      new CopyWebpackPlugin({
-        patterns: [{ from: 'public', to: '' }],
-      })
     ),
-
   resolve: {
     fallback: {
       buffer: require.resolve('buffer'),

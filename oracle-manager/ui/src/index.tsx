@@ -3,7 +3,7 @@ import { ChakraProvider, ComponentStyleConfig, extendTheme } from '@chakra-ui/re
 import { theme, Fonts } from '@synthetixio/v3-theme';
 import { RecoilRoot } from 'recoil';
 import { App } from './App';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { RegisteredNode } from './RegisteredNode';
 import { BlockchainProvider } from '@snx-v3/useBlockchain';
@@ -25,7 +25,7 @@ const customTheme = extendTheme({
   components: { ...theme.components, Alert },
 });
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <App />,

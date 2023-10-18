@@ -13,7 +13,7 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
 
-import { generatePath, useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Multistep } from '@snx-v3/Multistep';
@@ -378,6 +378,8 @@ export const DepositModal: DepositModalProps = ({
     send(Events.SET_REQUIRE_APPROVAL, { requireApproval });
   }, [requireApproval, send]);
 
+  const location = useLocation();
+
   const handleClose = useCallback(() => {
     const isSuccess = state.matches(State.success);
 
@@ -389,11 +391,12 @@ export const DepositModal: DepositModalProps = ({
           collateralType: collateralType.symbol,
           poolId: params.poolId,
         }),
+        search: location.search,
       });
     }
     send(Events.RESET);
     onClose();
-  }, [send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
+  }, [location.search, send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
 
   const onSubmit = useCallback(async () => {
     if (state.matches(State.success)) {
