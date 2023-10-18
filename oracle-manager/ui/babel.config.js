@@ -20,7 +20,7 @@ module.exports = {
             corejs: { version: 3, proposals: true },
             modules: false,
             targets: {
-              browsers: require('./package.json').browserslist,
+              browsers: require('oracle-manager/ui/package.json').browserslist,
             },
           },
         ],

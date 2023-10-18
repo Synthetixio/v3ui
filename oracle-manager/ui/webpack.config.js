@@ -25,7 +25,7 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /oracle-manager-ui/,
+    /oracle-manager\/ui/,
     /theme/,
     /contracts/,
     /liquidity\/lib/,
