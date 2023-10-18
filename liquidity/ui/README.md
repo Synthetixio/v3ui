@@ -10,7 +10,7 @@ your technical proficiency and preferences:
 - For additional details, check out [Brave's IPFS Support page](https://brave.com/ipfs-support/).
 
 ## 2. Eth Limo
-- Access via [liquidity.synthetix.eth.limo](http://liquidity.synthetix.eth.limo/) using any browser.
+- Access via [liquidity.synthetix.eth.limo](https://liquidity.synthetix.eth.limo/) using any browser.
 - Eth Limo acts as a privacy-centric ENS gateway, resolving Ethereum Name Service (ENS) records and the corresponding IPFS/IPNS/Skynet content (Web 3.0). This gateway simplifies access and hosting of static sites built with a mix of IPFS/IPNS/Arweave and ENS for both users and dApp developers. 
 - Learn more about Eth Limo at [https://eth.limo/](https://eth.limo/).
 
