@@ -6,8 +6,8 @@ import {
   Button,
   Collapse,
   Flex,
-  Text,
   Link,
+  Text,
 } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
@@ -17,7 +17,7 @@ import {
   CollateralTypeSelectorProps,
 } from '@snx-v3/CollateralTypeSelector';
 import { FormEvent, useCallback, useMemo, useRef, useState } from 'react';
-import { createSearchParams, generatePath, NavigateFunction, useNavigate } from 'react-router-dom';
+import { generatePath, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { Wei, wei } from '@synthetixio/wei';
 import { PercentBadges } from '@snx-v3/PercentBadges';
 import { Amount } from '@snx-v3/Amount';
@@ -39,7 +39,6 @@ export function DepositFormUi({
   openConnectModal,
   staticCollateral,
   poolId,
-  accountId,
   navigate,
   DepositModal,
   CollateralTypeSelector,
@@ -56,7 +55,6 @@ export function DepositFormUi({
   };
   ethBalance?: Wei;
   poolId?: string;
-  accountId?: string;
   navigate: NavigateFunction;
   DepositModal: DepositModalProps;
   CollateralTypeSelector: CollateralTypeSelectorProps;
@@ -66,6 +64,7 @@ export function DepositFormUi({
   const [inputAmount, setInputAmount] = useState(wei(0));
   const [amount, setAmount] = useState(wei(0));
   const [activeBadge, setActiveBadge] = useState(0);
+  const location = useLocation();
 
   const combinedTokenBalance = useMemo(() => {
     if (collateralType?.symbol === 'SNX') {
@@ -112,10 +111,10 @@ export function DepositFormUi({
           poolId: poolId,
           collateralSymbol,
         }),
-        search: accountId ? createSearchParams({ accountId }).toString() : '',
+        search: location.search,
       });
     },
-    [navigate, accountId, collateralType?.symbol, poolId]
+    [location.search, navigate, collateralType?.symbol, poolId]
   );
 
   if (!isConnected && openConnectModal) {
@@ -305,7 +304,6 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
       snxBalance={transferrable.data}
       ethBalance={ethBalance.data}
       poolId={params.poolId}
-      accountId={params.accountId}
       navigate={navigate}
       DepositModal={DepositModal}
       CollateralTypeSelector={CollateralTypeSelector}
