@@ -35,6 +35,10 @@ jobs:
         working-directory: v3ui
 
       - run: rm -rf ./website/*
+
+      - run: git checkout HEAD -- CNAME || true
+        working-directory: website
+
       - run: cp ./v3ui/website/ui/_redirects ./website/_redirects
       - run: cp ./v3ui/website/ui/favicon.ico ./website/favicon.ico
       - run: cp ./v3ui/website/ui/index.html ./website/index.html
