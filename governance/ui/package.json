@@ -1,13 +1,13 @@
 {
-  "name": "@snx-v3/governance-ui",
+  "name": "@snx-v3/governance",
   "private": true,
   "version": "1.0.0",
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "load-env": "source ./load-env.sh",
-    "standalone-install": "yarn workspaces focus '@snx-v3/governance-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/governance-ui' run build"
+    "standalone-install": "yarn workspaces focus '@snx-v3/governance'",
+    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/governance' run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
