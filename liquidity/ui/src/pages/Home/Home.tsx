@@ -57,7 +57,6 @@ export function HomeUi({
   Stats,
   AvailableCollateral,
 }: {
-  accountId?: string;
   collateralTypes?: CollateralType[];
   pools: PoolsType;
   liquidityPositionsById?: LiquidityPositionsById;
@@ -244,7 +243,6 @@ export function Home() {
         <meta name="description" content="Synthetix V3" />
       </Helmet>
       <HomeUi
-        accountId={accountId}
         isLoading={isLoading}
         liquidityPositionsById={liquidityPositionsById}
         collateralTypes={collateralTypes}
