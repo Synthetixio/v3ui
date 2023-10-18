@@ -35,6 +35,10 @@ jobs:
         working-directory: v3ui
 
       - run: rm -rf ./liquidity/*
+
+      - run: git checkout HEAD -- CNAME || true
+        working-directory: liquidity
+
       - run: cp -r ./v3ui/liquidity/ui/dist/* ./liquidity/
 
       - run: git add .

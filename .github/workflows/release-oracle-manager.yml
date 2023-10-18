@@ -35,6 +35,10 @@ jobs:
         working-directory: v3ui
 
       - run: rm -rf ./oracle-manager/*
+
+      - run: git checkout HEAD -- CNAME || true
+        working-directory: oracle-manager
+
       - run: cp -r ./v3ui/oracle-manager/ui/dist/* ./oracle-manager/
 
       - run: git add .
