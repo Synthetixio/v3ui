@@ -5,8 +5,7 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "standalone-install": "yarn workspaces focus '@synthetixio/v3-ui'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/liquidity' run build"
+    "focus": "yarn workspaces focus '@synthetixio/v3-ui'"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

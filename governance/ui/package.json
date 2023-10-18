@@ -6,8 +6,7 @@
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "load-env": "source ./load-env.sh",
-    "standalone-install": "yarn workspaces focus '@snx-v3/governance'",
-    "standalone-build": "yarn workspaces foreach --topological-dev --recursive --verbose --from '@snx-v3/governance' run build"
+    "focus": "yarn workspaces focus '@snx-v3/governance'"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
