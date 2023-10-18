@@ -8,7 +8,7 @@ it('shows homepage to a connected wallet', () => {
   });
   cy.viewport(1100, 900);
 
-  cy.visit('http://localhost:3000');
+  cy.visit('/');
 
   cy.get('#app').should('contain', 'Spartan Council Pool');
 });

@@ -10,12 +10,12 @@ it.skip('creates new account with first deposit of WETH', () => {
   });
 
   cy.viewport(800, 800);
-  cy.visit(
-    generatePath('/deposit/:collateralSymbol/:poolId', {
-      poolId: 1,
-      collateralSymbol: 'WETH',
-    })
-  );
+
+  const path = generatePath('/deposit/:collateralSymbol/:poolId', {
+    poolId: '1',
+    collateralSymbol: 'WETH',
+  });
+  cy.visit(`/#${path}`);
 
   // Use more collateral than we have weth to invoke wrapping
   cy.get('[data-testid="deposit amount input"]').type(`0.2`);
