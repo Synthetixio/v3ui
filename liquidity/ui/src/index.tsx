@@ -3,7 +3,7 @@ import { App } from './App';
 import { preserveConnectedWallets, autoConnect } from '@snx-v3/useBlockchain';
 
 const container = document.querySelector('#app');
-async function run() {
+export async function bootstrap() {
   if (!container) {
     throw new Error('Container #app does not exist');
   }
@@ -48,4 +48,3 @@ async function run() {
   const root = ReactDOM.createRoot(container);
   root.render(<App />);
 }
-run();

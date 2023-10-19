@@ -221,7 +221,7 @@ export const ManageStatsUi: FC<{
                 lineHeight="24px"
               >
                 Minimum{' '}
-                {currency(collateralType.liquidationRatioD18, {
+                {currency(collateralType.issuanceRatioD18, {
                   style: 'percent',
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
