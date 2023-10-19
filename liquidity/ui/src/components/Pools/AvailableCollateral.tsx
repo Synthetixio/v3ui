@@ -1,14 +1,19 @@
-import React, { FC } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
   Box,
+  Button,
+  Fade,
   Flex,
   Heading,
+  Skeleton,
+  SkeletonCircle,
   Table,
   Tbody,
+  Td,
   Text,
   Thead,
   Tr,
@@ -16,125 +21,144 @@ import {
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { AvailableCollateralRow, AvailableCollateralRowProps } from './AvailableCollateralRow';
+import { AvailableCollateralRow } from './';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import intlFormat from 'date-fns/intlFormat';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { CollateralIcon } from '@snx-v3/icons';
 
 export function AvailableCollateralUi({
   accountCollaterals,
   timeToUnlock,
   unlockDateString,
   unlockDate,
-  AvailableCollateralRow,
+  isLoading,
 }: {
   accountCollaterals: AccountCollateralWithSymbol[];
   timeToUnlock?: string;
   unlockDateString?: string;
   unlockDate?: Date;
-  AvailableCollateralRow: FC<AvailableCollateralRowProps>;
+  isLoading: boolean;
 }) {
-  if (accountCollaterals.length === 0) {
-    return null;
-  }
-
   return (
     <BorderBox p={4} mt={8} flexDir="column">
-      {/* only render if there's any 'available collateral' */}
       <Heading fontSize="2xl" mb="2">
-        Available Collateral
+        {isLoading ? 'Loading Collateral...' : 'Available Collateral'}
       </Heading>
-      <Flex alignItems="center" mb="0">
-        <Text color="gray.500">
-          This collateral can be deposited to pools. As a security precaution, this collateral
-          cannot be withdrawn until at least 1 day has elapsed since previous account activity.
-        </Text>
-        <Alert
-          ml="auto"
-          status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
-          width="540px"
-          title={unlockDateString}
-        >
-          <AlertIcon />
-          <Box width="100%">
-            <AlertTitle>Withdrawals available</AlertTitle>
-            {timeToUnlock ? (
-              <AlertDescription display="block">{timeToUnlock}</AlertDescription>
-            ) : null}
-          </Box>
-        </Alert>
-      </Flex>
-      <Box overflowX="auto">
-        <Table mt={8} size="sm" variant="unstyled" mb="9">
-          <Thead sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-            <Tr />
-          </Thead>
-          <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-            {accountCollaterals.map((accountCollateral) => (
-              <AvailableCollateralRow
-                key={accountCollateral.tokenAddress}
-                accountCollateralUnlockDate={unlockDate}
-                accountCollateral={accountCollateral}
-              />
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+      <Fade in>
+        <Flex alignItems="center" mb="0">
+          <Text color="gray.500">
+            This collateral can be deposited to pools. As a security precaution, this collateral
+            cannot be withdrawn until at least 1 day has elapsed since previous account activity.
+          </Text>
+          <Alert
+            ml="auto"
+            status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
+            width="540px"
+            title={unlockDateString}
+          >
+            <AlertIcon />
+            <Box width="100%">
+              <AlertTitle>Withdrawals available</AlertTitle>
+              {timeToUnlock && <AlertDescription display="block">{timeToUnlock}</AlertDescription>}
+            </Box>
+          </Alert>
+        </Flex>
+      </Fade>
+      <Fade in>
+        <Box overflowX="auto">
+          <Table mt={8} size="sm" variant="unstyled" mb="9">
+            <Thead sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
+              <Tr />
+            </Thead>
+            <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
+              {isLoading ? (
+                // Loading State
+                <Tr data-testid="available collateral row" alignItems="center">
+                  <Td>
+                    <Flex flexDir="row" py={4}>
+                      <SkeletonCircle isLoaded={!isLoading} height="28px">
+                        <CollateralIcon width="32px" height="32px" symbol="SNX" />
+                      </SkeletonCircle>
+                    </Flex>
+                  </Td>
+                  <Td textAlign="end">
+                    <Flex height="100%" justifyContent="flex-end">
+                      <Skeleton isLoaded={!isLoading} height="28px" width="200px" alignSelf="end">
+                        <Button>Withdraw</Button>
+                      </Skeleton>
+                    </Flex>
+                  </Td>
+                </Tr>
+              ) : (
+                <>
+                  {accountCollaterals?.map((accountCollateral) => (
+                    <AvailableCollateralRow
+                      key={accountCollateral.tokenAddress}
+                      accountCollateralUnlockDate={unlockDate}
+                      accountCollateral={accountCollateral}
+                    />
+                  ))}
+                </>
+              )}
+            </Tbody>
+          </Table>
+        </Box>
+      </Fade>
     </BorderBox>
   );
 }
 
 export function AvailableCollateral() {
   const { accountId } = useParams();
-  const accountCollaterals = useAccountCollateral({ accountId, includeDelegationOff: true });
+  const { data: accountCollateralsData, isLoading: isAccountCollateralsLoading } =
+    useAccountCollateral({ accountId, includeDelegationOff: true });
 
-  const accountCollateralUnlockDate = useAccountCollateralUnlockDate({ accountId });
-
-  const formatTimeToUnlock = React.useCallback(() => {
-    if (accountCollateralUnlockDate.isLoading) {
-      return '—';
-    }
-    if (
-      !accountCollateralUnlockDate.data ||
-      accountCollateralUnlockDate.data.getTime() <= Date.now()
-    ) {
-      return undefined;
-    }
-    return formatDistanceToNow(accountCollateralUnlockDate.data, { addSuffix: true });
-  }, [accountCollateralUnlockDate.data, accountCollateralUnlockDate.isLoading]);
-
-  const [timeToUnlock, setTimeToUnlock] = React.useState(formatTimeToUnlock());
-  React.useEffect(() => {
-    const interval = setInterval(() => setTimeToUnlock(formatTimeToUnlock()), 1_000);
-    return () => clearInterval(interval);
-  }, [formatTimeToUnlock]);
-
-  const unlockDateString = React.useMemo(() => {
-    if (accountCollateralUnlockDate.isLoading) {
-      return '—';
-    }
-    if (
-      !accountCollateralUnlockDate.data ||
-      accountCollateralUnlockDate.data.getTime() <= Date.now()
-    ) {
-      return undefined;
-    }
-    return intlFormat(accountCollateralUnlockDate.data, {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
+  const { data: accountCollateralUnlockDate, isLoading: isAccountCollateralDateLoading } =
+    useAccountCollateralUnlockDate({
+      accountId,
     });
-  }, [accountCollateralUnlockDate.data, accountCollateralUnlockDate.isLoading]);
+
+  const [timeToUnlock, setTimeToUnlock] = useState(formatTimeToUnlock(accountCollateralUnlockDate));
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => setTimeToUnlock(formatTimeToUnlock(accountCollateralUnlockDate)),
+      1_000
+    );
+    return () => clearInterval(interval);
+  }, [accountCollateralUnlockDate]);
+
+  const isLoading = isAccountCollateralsLoading || isAccountCollateralDateLoading;
 
   return (
     <AvailableCollateralUi
-      accountCollaterals={accountCollaterals.data || []}
+      accountCollaterals={accountCollateralsData || []}
       timeToUnlock={timeToUnlock}
-      unlockDateString={unlockDateString}
-      unlockDate={accountCollateralUnlockDate.data}
-      AvailableCollateralRow={AvailableCollateralRow}
+      unlockDateString={unlockDateString?.toString() || ''}
+      unlockDate={accountCollateralUnlockDate}
+      isLoading={isLoading}
     />
   );
 }
+
+const formatTimeToUnlock = (accountCollateralUnlockDate: Date | undefined) => {
+  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
+    return undefined;
+  }
+  return formatDistanceToNow(accountCollateralUnlockDate, { addSuffix: true });
+};
+
+const unlockDateString = (accountCollateralUnlockDate: Date | undefined) => {
+  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
+    return undefined;
+  }
+
+  return intlFormat(accountCollateralUnlockDate, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+};

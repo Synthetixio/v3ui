@@ -18,15 +18,20 @@ export const PoolsList = ({
 }: PoolsListProps) => {
   return (
     <>
-      {isLoading && <PoolsLoading />}
-      {pools?.map((pool) => (
-        <PoolCard
-          key={pool.id}
-          pool={pool}
-          collateralTypes={collateralTypes}
-          liquidityPositionsById={liquidityPositionsById}
-        />
-      ))}
+      {isLoading ? (
+        <PoolsLoading />
+      ) : (
+        <>
+          {pools?.map((pool) => (
+            <PoolCard
+              key={pool.id}
+              pool={pool}
+              collateralTypes={collateralTypes}
+              liquidityPositionsById={liquidityPositionsById}
+            />
+          ))}
+        </>
+      )}
     </>
   );
 };

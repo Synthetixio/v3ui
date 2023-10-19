@@ -1,8 +1,8 @@
+import React from 'react';
 import { Amount } from '@snx-v3/Amount';
-import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
-import React from 'react';
 import { safeImport } from '@synthetixio/safe-import';
 
 const WithdrawModal = React.lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
@@ -20,18 +20,24 @@ function AvailableCollateralRowUi({
     <Tr data-testid="available collateral row">
       <Td>
         <Flex flexDir="row" py={4}>
-          <CollateralIcon width="32px" height="32px" symbol={accountCollateral.symbol} />
+          <Fade in>
+            <CollateralIcon width="32px" height="32px" symbol={accountCollateral.symbol} />
+          </Fade>
           <Flex flexDirection="column" justifyContent="center" ml={2}>
-            <Text fontSize="lg" color="gray.500">
-              <Amount value={accountCollateral.availableCollateral} /> {accountCollateral.symbol}
-            </Text>
+            <Fade in>
+              <Text fontSize="lg" color="gray.500">
+                <Amount value={accountCollateral.availableCollateral} /> {accountCollateral.symbol}
+              </Text>
+            </Fade>
           </Flex>
         </Flex>
       </Td>
       <Td textAlign="end">
-        <Button isDisabled={isDisabled} onClick={() => setIsOpen(true)}>
-          Withdraw
-        </Button>
+        <Fade in>
+          <Button isDisabled={isDisabled} onClick={() => setIsOpen(true)}>
+            Withdraw
+          </Button>
+        </Fade>
         <React.Suspense fallback={null}>
           {isOpen ? (
             <WithdrawModal
@@ -50,6 +56,7 @@ export type AvailableCollateralRowProps = {
   accountCollateralUnlockDate?: Date;
   accountCollateral: AccountCollateralWithSymbol;
 };
+
 export function AvailableCollateralRow({
   accountCollateral,
   accountCollateralUnlockDate,
