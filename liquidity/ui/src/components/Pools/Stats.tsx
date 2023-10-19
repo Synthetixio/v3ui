@@ -24,7 +24,12 @@ export const Stats = ({ totalDebt, totalCollateral, isLoading }: StatsProps) => 
         </Text>
         <Flex justifyContent="center">
           {isLoading ? (
-            <Skeleton width="fit-content" mt="0.25rem">
+            <Skeleton
+              width="fit-content"
+              mt="0.25rem"
+              startColor="whiteAlpha.500"
+              endColor="whiteAlpha.200"
+            >
               <Text fontFamily="heading" fontWeight="800" textAlign="center" fontSize="xl">
                 100,000
               </Text>
@@ -52,7 +57,12 @@ export const Stats = ({ totalDebt, totalCollateral, isLoading }: StatsProps) => 
 
         <Flex justifyContent="center">
           {isLoading ? (
-            <Skeleton width="fit-content" mt="0.25rem">
+            <Skeleton
+              width="fit-content"
+              mt="0.25rem"
+              startColor="whiteAlpha.500"
+              endColor="whiteAlpha.200"
+            >
               <Text fontFamily="heading" fontWeight="800" textAlign="center" fontSize="xl">
                 100,000
               </Text>
@@ -79,7 +89,12 @@ export const Stats = ({ totalDebt, totalCollateral, isLoading }: StatsProps) => 
         </Text>
         <Flex justifyContent="center">
           {isLoading ? (
-            <Skeleton width="fit-content" mt="0.25rem">
+            <Skeleton
+              width="fit-content"
+              mt="0.25rem"
+              startColor="whiteAlpha.500"
+              endColor="whiteAlpha.200"
+            >
               <Text fontFamily="heading" fontWeight="800" textAlign="center" fontSize="xl">
                 100,000
               </Text>
