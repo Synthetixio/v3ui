@@ -1,4 +1,4 @@
-import { Box, Fade, Flex, Heading, Skeleton, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Fade, Flex, Heading, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { VaultRowLoading } from './VaultRowLoading';
 
