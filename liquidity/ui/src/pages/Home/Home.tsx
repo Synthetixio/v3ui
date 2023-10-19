@@ -6,8 +6,7 @@ import { PoolsType, usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { LiquidityPositionsById, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { Welcome } from '../../components/Shared/Welcome';
-import { AvailableCollateral } from './AvailableCollateral';
-import { PoolsList, Stats } from '../../components/Pools';
+import { PoolsList, Stats, AvailableCollateral } from '../../components/Pools';
 
 export function HomeUi({
   collateralTypes,
