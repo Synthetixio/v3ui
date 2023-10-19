@@ -100,7 +100,7 @@ module.exports = {
   devtool: isTest ? false : 'source-map',
   devServer,
   mode: isProd ? 'production' : 'development',
-  entry: './src/index.tsx',
+  entry: './index.js',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
