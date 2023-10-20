@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const { readFileSync } = require('fs');
 const fs = require('fs/promises');
 const debug = require('debug');
 const ethers = require('ethers');
@@ -22,13 +23,7 @@ const DEPLOYMENTS = [
   { chainId: 84531, preset: 'competition' },
 ];
 
-const prettierOptions = {
-  printWidth: 100,
-  semi: true,
-  singleQuote: true,
-  bracketSpacing: true,
-  trailingComma: 'es5',
-};
+const prettierOptions = JSON.parse(readFileSync('../.prettierrc', 'utf8'));
 
 async function prettyJson(obj) {
   return await prettier.format(JSON.stringify(obj, null, 2), {
@@ -77,15 +72,12 @@ async function codegen({ chainId, preset, registry, loader }) {
   const log = debug(`codegen:${getDir({ chainId, preset })}`);
 
   const tsDir = `${__dirname}/src/${getDir({ chainId, preset })}`;
-  await fs.rm(tsDir, { force: true, recursive: true });
   await fs.mkdir(tsDir, { recursive: true });
 
   const deploymentsDir = `${__dirname}/deployments/${getDir({ chainId, preset })}`;
-  await fs.rm(deploymentsDir, { force: true, recursive: true });
   await fs.mkdir(deploymentsDir, { recursive: true });
 
   const tmpDir = `${__dirname}/cache/${getDir({ chainId, preset })}`;
-  await fs.rm(tmpDir, { force: true, recursive: true });
   await fs.mkdir(tmpDir, { recursive: true });
 
   const contracts = {};
@@ -270,6 +262,10 @@ async function generateImporters(contracts) {
 }
 
 async function run() {
+  await fs.rm(`${__dirname}/src`, { force: true, recursive: true });
+  await fs.rm(`${__dirname}/deployments`, { force: true, recursive: true });
+  await fs.rm(`${__dirname}/cache`, { force: true, recursive: true });
+
   const registry = new OnChainRegistry({
     signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
     address: CANNON_REGISTRY_ADDRESS,
