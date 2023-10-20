@@ -26,14 +26,8 @@ fetch() {
   echo CHAIN_ID=$CHAIN_ID
 
   rm -rf ./deployments/$CHAIN_NAME
-  echo yarn cannon inspect $CANNON_PACKAGE --preset $CANNON_PRESET --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
+  echo "yarn cannon inspect $CANNON_PACKAGE --preset $CANNON_PRESET --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME"
   yarn cannon inspect $CANNON_PACKAGE --preset $CANNON_PRESET --chain-id $CHAIN_ID --write-deployments ./deployments/$CHAIN_NAME
-
-  rm -rf ./metadata/$CHAIN_NAME
-  mkdir -p ./metadata/$CHAIN_NAME
-  echo yarn cannon inspect $CANNON_PACKAGE --preset $CANNON_PRESET --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
-  yarn cannon inspect $CANNON_PACKAGE --preset $CANNON_PRESET --chain-id $CHAIN_ID --json | jq '. | del(.state)' > ./metadata/$CHAIN_NAME/metadata.json
-  yarn prettier --write ./metadata/$CHAIN_NAME/metadata.json
 }
 
 fetch mainnet synthetix:latest main
