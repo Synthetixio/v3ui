@@ -10,6 +10,7 @@ import SynthetixLogo from './SynthetixLogo.svg';
 
 export type Network = {
   id: number;
+  preset?: string;
   hexId: string;
   token: string;
   name: string;
@@ -97,6 +98,7 @@ export const NETWORKS: Record<string, Network> = {
   },
   'base-goerli': {
     id: 84531,
+    preset: 'competition',
     hexId: `0x${Number(84531).toString(16)}`,
     token: 'ETH',
     name: 'base-goerli',

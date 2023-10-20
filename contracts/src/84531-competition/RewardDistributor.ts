@@ -265,3 +265,4 @@ export interface RewardDistributor extends BaseContract {
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
+

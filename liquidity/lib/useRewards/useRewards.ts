@@ -6,44 +6,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { useNetwork } from '@snx-v3/useBlockchain';
-
-import type { RewardDistributor as RewardDistributor1 } from '@synthetixio/v3-contracts/build/1/RewardDistributor';
-import type { RewardDistributor as RewardDistributor5 } from '@synthetixio/v3-contracts/build/5/RewardDistributor';
-import type { RewardDistributor as RewardDistributor10 } from '@synthetixio/v3-contracts/build/10/RewardDistributor';
-import type { RewardDistributor as RewardDistributor420 } from '@synthetixio/v3-contracts/build/420/RewardDistributor';
-import type { RewardDistributor as RewardDistributor11155111 } from '@synthetixio/v3-contracts/build/11155111/RewardDistributor';
-import type { RewardDistributor as RewardDistributor84531Competition } from '@synthetixio/v3-contracts/build/84531-competition/RewardDistributor';
-import type { RewardDistributor as RewardDistributor13370 } from '@synthetixio/v3-contracts/build/420/RewardDistributor';
-
-export type RewardDistributorType =
-  | RewardDistributor1
-  | RewardDistributor5
-  | RewardDistributor10
-  | RewardDistributor420
-  | RewardDistributor11155111
-  | RewardDistributor84531Competition
-  | RewardDistributor13370;
-
-export async function importRewardDistributor(chainName: string) {
-  switch (chainName) {
-    case 'cannon':
-      return import('@synthetixio/v3-contracts/build/420/RewardDistributor'); // TODO: Make local cannon 13370 work
-    case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/1/RewardDistributor');
-    case 'goerli':
-      return import('@synthetixio/v3-contracts/build/5/RewardDistributor');
-    case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/11155111/RewardDistributor');
-    case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/10/RewardDistributor');
-    case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/420/RewardDistributor');
-    case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/84531-competition/RewardDistributor');
-    default:
-      throw new Error(`Unsupported chain ${chainName}`);
-  }
-}
+import { importRewardDistributor } from '@synthetixio/v3-contracts';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -126,7 +89,7 @@ export function useRewards(
       }
       if (distributors.length === 0) return [];
 
-      const { abi } = await importRewardDistributor(network.name);
+      const { abi } = await importRewardDistributor(network.id, network.preset);
 
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);

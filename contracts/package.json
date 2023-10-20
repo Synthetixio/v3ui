@@ -5,7 +5,7 @@
   },
   "description": "peripheral smart contracts for frontend",
   "version": "3.1.0",
-  "main": "./index.js",
+  "main": "./build/index.js",
   "files": [
     "build",
     "deployments",

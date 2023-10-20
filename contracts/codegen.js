@@ -13,6 +13,15 @@ const CANNON_REGISTRY_ADDRESS = '0x8E5C7EFC9636A6A0408A46BB7F617094B81e5dba';
 const PACKAGE_NAME = 'synthetix-omnibus';
 const PACKAGE_VERSION = 'latest';
 
+const DEPLOYMENTS = [
+  { chainId: 1, preset: 'main' },
+  { chainId: 5, preset: 'main' },
+  { chainId: 10, preset: 'main' },
+  { chainId: 420, preset: 'main' },
+  { chainId: 11155111, preset: 'main' },
+  { chainId: 84531, preset: 'competition' },
+];
+
 const prettierOptions = {
   printWidth: 100,
   semi: true,
@@ -169,20 +178,95 @@ async function codegen({ chainId, preset, registry, loader }) {
   //
   //
   //
-  await fs.writeFile(
-    `${deploymentsDir}/index.json`,
-    await prettyJson({
-      name: PACKAGE_NAME,
-      version: PACKAGE_VERSION,
-      preset,
-      ipfs,
-      chainId,
-      addresses: Object.fromEntries(
-        Object.entries(contracts).map(([name, { address }]) => [name, address])
-      ),
+  const index = {
+    name: PACKAGE_NAME,
+    version: PACKAGE_VERSION,
+    preset,
+    ipfs,
+    chainId,
+    addresses: Object.fromEntries(
+      Object.entries(contracts).map(([name, { address }]) => [name, address])
+    ),
+  };
+  await fs.writeFile(`${deploymentsDir}/index.json`, await prettyJson(index));
+  log('->', path.relative(__dirname, `${deploymentsDir}/index.json`));
+
+  return {
+    ...index,
+    contracts,
+  };
+}
+
+async function generateImporters(contracts) {
+  await Promise.all(
+    Array.from(contracts).map(async (name) => {
+      const makeTypeName = ({ chainId, preset }) =>
+        `${name}${chainId}${preset[0].toUpperCase()}${preset.slice(1)}`;
+
+      const deployments = (
+        await Promise.all(
+          DEPLOYMENTS.map(async ({ chainId, preset }) => {
+            try {
+              await fs.access(`${__dirname}/src/${getDir({ chainId, preset })}/${name}.ts`);
+              return { chainId, preset };
+            } catch (_e) {
+              return null;
+            }
+          })
+        )
+      ).filter(Boolean);
+
+      const imports = deployments.map(({ chainId, preset }) => {
+        const typeName = makeTypeName({ chainId, preset });
+        const importPath = `./${getDir({ chainId, preset })}/${name}`;
+        return `import type { ${name} as ${typeName} } from '${importPath}';`;
+      });
+
+      const exportType = [
+        `export type ${name}Type = ${deployments
+          .map(({ chainId, preset }) => makeTypeName({ chainId, preset }))
+          .join(' | ')};`,
+      ];
+
+      const importer = [
+        `export async function import${name}(chainId: number, preset: string = 'main') {`,
+        '  switch (`${chainId}-${preset}`) {',
+        ...deployments.flatMap(({ chainId, preset }) => [
+          `  case '${chainId}-${preset}':`,
+          `     return import('./${getDir({ chainId, preset })}/${name}')`,
+        ]),
+        '    default:',
+        `      throw new Error(\`Unsupported chain $\{chainId} for ${name}\`)`,
+        '  }',
+        '}',
+      ];
+
+      await fs.writeFile(
+        `${__dirname}/src/import${name}.ts`,
+        await prettyTs(
+          [
+            '// !!! DO NOT EDIT !!! Automatically generated file',
+            '',
+            ...imports,
+            '',
+            ...exportType,
+            '',
+            ...importer,
+            '',
+          ].join('\n')
+        )
+      );
     })
   );
-  log('->', path.relative(__dirname, `${deploymentsDir}/index.json`));
+
+  await fs.writeFile(
+    `${__dirname}/src/index.ts`,
+    await prettyTs(
+      Array.from(contracts)
+        .map((name) => `export * from './import${name}'`)
+        .join('\n')
+    )
+  );
 }
 
 async function run() {
@@ -191,16 +275,15 @@ async function run() {
     address: CANNON_REGISTRY_ADDRESS,
   });
   const loader = new IPFSLoader(IPFS_GATEWAY);
+  const deployments = await Promise.all(
+    DEPLOYMENTS.map(({ chainId, preset }) => codegen({ chainId, preset, registry, loader }))
+  );
 
-  await Promise.all([
-    codegen({ chainId: 1, preset: 'main', registry, loader }),
-    codegen({ chainId: 5, preset: 'main', registry, loader }),
-    codegen({ chainId: 10, preset: 'main', registry, loader }),
-    codegen({ chainId: 420, preset: 'main', registry, loader }),
-    codegen({ chainId: 11155111, preset: 'main', registry, loader }),
-    codegen({ chainId: 84531, preset: 'competition', registry, loader }),
-    // codegen({ chainId: 13370, preset: 'main', registry, loader }),
-  ]);
+  const contracts = new Set();
+  deployments.forEach((deployment) =>
+    Object.keys(deployment.addresses).forEach((name) => contracts.add(name))
+  );
+  await generateImporters(contracts);
 }
 
 run();
