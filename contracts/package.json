@@ -9,12 +9,11 @@
   "files": [
     "build",
     "deployments",
-    "src",
-    "index.js"
+    "src"
   ],
   "scripts": {
-    "codegen": "node ./codegen.js",
-    "build": "yarn codegen && tsc --build --verbose --force",
+    "upgrade-contracts": "node ./codegen.js",
+    "build": "tsc --build --verbose --force",
     "start": "cannon run synthetix-local:0.0.1",
     "start:mainnet": "./start.sh mainnet",
     "start:goerli": "./start.sh goerli",
