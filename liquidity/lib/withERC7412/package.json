@@ -8,9 +8,8 @@
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/useCoreProxy": "workspace:*",
-    "@snx-v3/useMulticall3": "workspace:*",
     "@snx-v3/zod": "workspace:*",
+    "@synthetixio/v3-contracts": "workspace:*",
     "ethers": "^5.7.2",
     "zod": "^3.22.4"
   }

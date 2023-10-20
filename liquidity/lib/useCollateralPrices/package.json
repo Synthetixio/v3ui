@@ -9,6 +9,7 @@
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
     "@snx-v3/zod": "workspace:*",
+    "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^4.35.7",
     "react": "^18.2.0"
