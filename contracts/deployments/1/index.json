@@ -1,0 +1,17 @@
+{
+  "name": "synthetix-omnibus",
+  "version": "latest",
+  "preset": "main",
+  "ipfs": "ipfs://QmZgfumxm1yt3nteVeUqF42Gi2GzcKNwe1cz1DMtMrSQnb",
+  "chainId": 1,
+  "addresses": {
+    "CoreProxy": "0xffffffaEff0B96Ea8e4f94b2253f31abdD875847",
+    "AccountProxy": "0x0E429603D3Cb1DFae4E6F52Add5fE82d96d77Dac",
+    "USDProxy": "0xb2F30A7C980f052f02563fb518dcc39e6bf38175",
+    "OracleManagerProxy": "0x0aaF300E148378489a8A471DD3e9E53E30cb42e3",
+    "CCIP": "0x0000000000000000000000000000000000000000",
+    "ChainlinkAggregator": null,
+    "Multicall3": "0xca11bde05977b3631167028862be2a173976ca11",
+    "RewardDistributor": null
+  }
+}

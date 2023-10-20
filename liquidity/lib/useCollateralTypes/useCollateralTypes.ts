@@ -1,12 +1,13 @@
 import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
+import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
 import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
-import { Multicall3Type, useMulticall3 } from '@snx-v3/useMulticall3';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),

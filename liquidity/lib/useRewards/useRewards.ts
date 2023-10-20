@@ -6,6 +6,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { importRewardDistributor } from '@synthetixio/v3-contracts';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -52,27 +53,6 @@ const RewardsDataDocument = `
   }
 `;
 
-export async function importRewardDistributor(chainName: string) {
-  switch (chainName) {
-    case 'cannon':
-      return import('@synthetixio/v3-contracts/build/cannon/RewardDistributor');
-    case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/mainnet/RewardDistributor');
-    case 'goerli':
-      return import('@synthetixio/v3-contracts/build/goerli/RewardDistributor');
-    case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/sepolia/RewardDistributor');
-    case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/optimism-mainnet/RewardDistributor');
-    case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/optimism-goerli/RewardDistributor');
-    case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/base-goerli/RewardsDistributor');
-    default:
-      throw new Error(`Unsupported chain ${chainName}`);
-  }
-}
-
 export function useRewards(
   distributors?: RewardsInterface,
   poolId?: string,
@@ -109,7 +89,7 @@ export function useRewards(
       }
       if (distributors.length === 0) return [];
 
-      const { abi } = await importRewardDistributor(network.name);
+      const { abi } = await importRewardDistributor(network.id, network.preset);
 
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);

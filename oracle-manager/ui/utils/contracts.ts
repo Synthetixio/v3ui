@@ -1,31 +1,14 @@
 import { Contract, providers, utils } from 'ethers';
-import {
-  address as OracleManagerProxyOPGoerliAddress,
-  abi as OracleManagerProxyOPGoerliAbi,
-} from '@synthetixio/v3-contracts/build/optimism-goerli/OracleManagerProxy';
-import { address as OracleManagerProxyOPAddress } from '@synthetixio/v3-contracts/build/optimism-mainnet/OracleManagerProxy';
-import { address as OracleManagerProxyMainnetAddress } from '@synthetixio/v3-contracts/build/mainnet/OracleManagerProxy';
-import { address as OracleManagerProxyGoerliAddress } from '@synthetixio/v3-contracts/build/goerli/OracleManagerProxy';
-import { address as OracleManagerProxyBaseGoerliAddress } from '@synthetixio/v3-contracts/build/base-goerli/OracleManagerProxy';
+
+import * as OracleManagerProxy1 from '@synthetixio/v3-contracts/build/1/OracleManagerProxy';
+import * as OracleManagerProxy5 from '@synthetixio/v3-contracts/build/5/OracleManagerProxy';
+import * as OracleManagerProxy10 from '@synthetixio/v3-contracts/build/10/OracleManagerProxy';
+import * as OracleManagerProxy420 from '@synthetixio/v3-contracts/build/420/OracleManagerProxy';
+import * as OracleManagerProxy11155111 from '@synthetixio/v3-contracts/build/11155111/OracleManagerProxy';
+import * as OracleManagerProxy84531Competition from '@synthetixio/v3-contracts/build/84531-competition/OracleManagerProxy';
+
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
-
-function resolveNetworkIdToProxyAddress(networkId: number) {
-  switch (networkId) {
-    case 1:
-      return OracleManagerProxyMainnetAddress;
-    case 5:
-      return OracleManagerProxyGoerliAddress;
-    case 10:
-      return OracleManagerProxyOPAddress;
-    case 420:
-      return OracleManagerProxyOPGoerliAddress;
-    case 84531:
-      return OracleManagerProxyBaseGoerliAddress;
-    default:
-      return OracleManagerProxyMainnetAddress;
-  }
-}
 
 export function resolveNetworkIdToInfuraPrefix(networkId?: number) {
   switch (networkId) {
@@ -39,6 +22,8 @@ export function resolveNetworkIdToInfuraPrefix(networkId?: number) {
       return 'optimism-goerli';
     case 84531:
       return 'base-goerli';
+    case 11155111:
+      return 'sepolia';
     default:
       return 'mainnet';
   }
@@ -155,9 +140,32 @@ export const getNodeModuleContract = (
   signerOrProvider: providers.JsonRpcSigner | providers.JsonRpcProvider,
   networkId: number
 ) => {
-  return new Contract(
-    resolveNetworkIdToProxyAddress(networkId),
-    OracleManagerProxyOPGoerliAbi,
-    signerOrProvider
-  );
+  switch (networkId) {
+    case 1:
+      return new Contract(OracleManagerProxy1.address, OracleManagerProxy1.abi, signerOrProvider);
+    case 5:
+      return new Contract(OracleManagerProxy5.address, OracleManagerProxy5.abi, signerOrProvider);
+    case 10:
+      return new Contract(OracleManagerProxy10.address, OracleManagerProxy10.abi, signerOrProvider);
+    case 420:
+      return new Contract(
+        OracleManagerProxy420.address,
+        OracleManagerProxy420.abi,
+        signerOrProvider
+      );
+    case 84531:
+      return new Contract(
+        OracleManagerProxy84531Competition.address,
+        OracleManagerProxy84531Competition.abi,
+        signerOrProvider
+      );
+    case 11155111:
+      return new Contract(
+        OracleManagerProxy11155111.address,
+        OracleManagerProxy11155111.abi,
+        signerOrProvider
+      );
+    default:
+      return new Contract(OracleManagerProxy1.address, OracleManagerProxy1.abi, signerOrProvider);
+  }
 };

@@ -5,16 +5,15 @@
   },
   "description": "peripheral smart contracts for frontend",
   "version": "3.1.0",
-  "main": "./index.js",
+  "main": "./build/index.js",
   "files": [
     "build",
     "deployments",
-    "src",
-    "index.js"
+    "src"
   ],
   "scripts": {
-    "codegen": "node ./codegen.js",
-    "build": "yarn codegen && tsc --build --verbose --force",
+    "upgrade-contracts": "node ./codegen.js",
+    "build": "tsc --build --verbose --force",
     "start": "cannon run synthetix-local:0.0.1",
     "start:mainnet": "./start.sh mainnet",
     "start:goerli": "./start.sh goerli",
@@ -22,15 +21,16 @@
     "start:optimism": "./start.sh optimism-mainnet",
     "start:optimism-goerli": "./start.sh optimism-goerli",
     "start:base-goerli": "./start.sh base-goerli",
-    "upgrade-contracts": "cannon build && ./cannon.sh && ./fetch.sh && yarn build",
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.1.1",
-    "@usecannon/cli": "^2.8.1",
+    "@usecannon/builder": "^2.8.2",
+    "@usecannon/cli": "^2.8.2",
     "cannon-plugin-router": "^1.0.16",
+    "debug": "^4.3.4",
     "ethers": "^5.7.2",
     "prettier": "^3.0.3",
     "solc": "0.8.17",
