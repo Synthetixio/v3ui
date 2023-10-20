@@ -5,13 +5,13 @@ export async function importCoreProxy() {
   const network = await provider.getNetwork();
   switch (network.chainId) {
     case 1:
-      return import('@synthetixio/v3-contracts/src/mainnet/CoreProxy');
+      return import('@synthetixio/v3-contracts/src/1/CoreProxy');
     case 5:
-      return import('@synthetixio/v3-contracts/src/goerli/CoreProxy');
+      return import('@synthetixio/v3-contracts/src/5/CoreProxy');
     case 10:
-      return import('@synthetixio/v3-contracts/src/optimism-mainnet/CoreProxy');
+      return import('@synthetixio/v3-contracts/src/10/CoreProxy');
     case 420:
-      return import('@synthetixio/v3-contracts/src/optimism-goerli/CoreProxy');
+      return import('@synthetixio/v3-contracts/src/420/CoreProxy');
     default:
       throw new Error(`Unsupported chain ${network.chainId}`);
   }

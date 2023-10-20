@@ -2,44 +2,43 @@ import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import type { JsonRpcProvider } from '@ethersproject/providers';
 import { useNetwork, useProvider, useSigner, NETWORKS } from '@snx-v3/useBlockchain';
-import type { USDProxy as USDProxyCannon } from '@synthetixio/v3-contracts/build/cannon/USDProxy';
-import type { USDProxy as USDProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/USDProxy';
-import type { USDProxy as USDProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/USDProxy';
-import type { USDProxy as USDProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/USDProxy';
-import type { USDProxy as USDProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy';
-import type { USDProxy as USDProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/USDProxy';
-import type { USDProxy as USDProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/USDProxy';
+import type { USDProxy as USDProxy1 } from '@synthetixio/v3-contracts/build/1/USDProxy';
+import type { USDProxy as USDProxy5 } from '@synthetixio/v3-contracts/build/5/USDProxy';
+import type { USDProxy as USDProxy10 } from '@synthetixio/v3-contracts/build/10/USDProxy';
+import type { USDProxy as USDProxy420 } from '@synthetixio/v3-contracts/build/420/USDProxy';
+import type { USDProxy as USDProxy11155111 } from '@synthetixio/v3-contracts/build/11155111/USDProxy';
+import type { USDProxy as USDProxy84531Competition } from '@synthetixio/v3-contracts/build/84531-competition/USDProxy';
+import type { USDProxy as USDProxy13370 } from '@synthetixio/v3-contracts/build/420/USDProxy';
 
 export type USDProxyType =
-  | USDProxyCannon
-  | USDProxyMainnet
-  | USDProxyGoerli
-  | USDProxySepolia
-  | USDProxyOptimismMainnet
-  | USDProxyOptimismGoerli
-  | USDProxyBaseGoerli;
+  | USDProxy1
+  | USDProxy5
+  | USDProxy10
+  | USDProxy420
+  | USDProxy11155111
+  | USDProxy84531Competition
+  | USDProxy13370;
 
 export async function importUSDProxy(chainName: string) {
   switch (chainName) {
     case 'cannon':
-      return import('@synthetixio/v3-contracts/build/cannon/USDProxy');
+      return import('@synthetixio/v3-contracts/build/420/USDProxy'); // TODO: Make local cannon 13370 work
     case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/mainnet/USDProxy');
+      return import('@synthetixio/v3-contracts/build/1/USDProxy');
     case 'goerli':
-      return import('@synthetixio/v3-contracts/build/goerli/USDProxy');
+      return import('@synthetixio/v3-contracts/build/5/USDProxy');
     case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/sepolia/USDProxy');
+      return import('@synthetixio/v3-contracts/build/11155111/USDProxy');
     case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/optimism-mainnet/USDProxy');
+      return import('@synthetixio/v3-contracts/build/10/USDProxy');
     case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/optimism-goerli/USDProxy');
+      return import('@synthetixio/v3-contracts/build/420/USDProxy');
     case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/base-goerli/USDProxy');
+      return import('@synthetixio/v3-contracts/build/84531-competition/USDProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }
 }
-
 const networks = Object.values(NETWORKS);
 
 export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {

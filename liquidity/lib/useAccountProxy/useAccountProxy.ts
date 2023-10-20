@@ -1,39 +1,39 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import type { AccountProxy as AccountProxyCannon } from '@synthetixio/v3-contracts/build/cannon/AccountProxy';
-import type { AccountProxy as AccountProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/AccountProxy';
-import type { AccountProxy as AccountProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/AccountProxy';
-import type { AccountProxy as AccountProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/AccountProxy';
-import type { AccountProxy as AccountProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy';
-import type { AccountProxy as AccountProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/AccountProxy';
-import type { AccountProxy as AccountProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/AccountProxy';
+import type { AccountProxy as AccountProxy1 } from '@synthetixio/v3-contracts/build/1/AccountProxy';
+import type { AccountProxy as AccountProxy5 } from '@synthetixio/v3-contracts/build/5/AccountProxy';
+import type { AccountProxy as AccountProxy10 } from '@synthetixio/v3-contracts/build/10/AccountProxy';
+import type { AccountProxy as AccountProxy420 } from '@synthetixio/v3-contracts/build/420/AccountProxy';
+import type { AccountProxy as AccountProxy11155111 } from '@synthetixio/v3-contracts/build/11155111/AccountProxy';
+import type { AccountProxy as AccountProxy84531Competition } from '@synthetixio/v3-contracts/build/84531-competition/AccountProxy';
+import type { AccountProxy as AccountProxy13370 } from '@synthetixio/v3-contracts/build/420/AccountProxy';
 
 export type AccountProxyType =
-  | AccountProxyCannon
-  | AccountProxyMainnet
-  | AccountProxyGoerli
-  | AccountProxySepolia
-  | AccountProxyOptimismMainnet
-  | AccountProxyOptimismGoerli
-  | AccountProxyBaseGoerli;
+  | AccountProxy1
+  | AccountProxy5
+  | AccountProxy10
+  | AccountProxy420
+  | AccountProxy11155111
+  | AccountProxy84531Competition
+  | AccountProxy13370;
 
 export async function importAccountProxy(chainName: string) {
   switch (chainName) {
     case 'cannon':
-      return import('@synthetixio/v3-contracts/build/cannon/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/420/AccountProxy'); // TODO: Make local cannon 13370 work
     case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/mainnet/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/1/AccountProxy');
     case 'goerli':
-      return import('@synthetixio/v3-contracts/build/goerli/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/5/AccountProxy');
     case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/sepolia/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/11155111/AccountProxy');
     case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/optimism-mainnet/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/10/AccountProxy');
     case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/optimism-goerli/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/420/AccountProxy');
     case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/base-goerli/AccountProxy');
+      return import('@synthetixio/v3-contracts/build/84531-competition/AccountProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

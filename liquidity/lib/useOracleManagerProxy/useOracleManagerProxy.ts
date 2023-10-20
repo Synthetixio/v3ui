@@ -1,41 +1,39 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import type { OracleManagerProxy as OracleManagerProxyCannon } from '@synthetixio/v3-contracts/build/cannon/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxyMainnet } from '@synthetixio/v3-contracts/build/mainnet/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxyGoerli } from '@synthetixio/v3-contracts/build/goerli/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxySepolia } from '@synthetixio/v3-contracts/build/sepolia/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxyOptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxyOptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxyBaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy1 } from '@synthetixio/v3-contracts/build/1/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy5 } from '@synthetixio/v3-contracts/build/5/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy10 } from '@synthetixio/v3-contracts/build/10/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy420 } from '@synthetixio/v3-contracts/build/420/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy11155111 } from '@synthetixio/v3-contracts/build/11155111/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy84531Competition } from '@synthetixio/v3-contracts/build/84531-competition/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy13370 } from '@synthetixio/v3-contracts/build/420/OracleManagerProxy';
 
 export type OracleManagerProxyType =
-  | OracleManagerProxyCannon
-  | OracleManagerProxyMainnet
-  | OracleManagerProxyGoerli
-  | OracleManagerProxySepolia
-  | OracleManagerProxyOptimismMainnet
-  | OracleManagerProxyOptimismGoerli
-  | OracleManagerProxyBaseGoerli;
+  | OracleManagerProxy1
+  | OracleManagerProxy5
+  | OracleManagerProxy10
+  | OracleManagerProxy420
+  | OracleManagerProxy11155111
+  | OracleManagerProxy84531Competition
+  | OracleManagerProxy13370;
 
-export async function getOracleManagerProxy(
-  chainName: string
-): Promise<{ address: string; abi: string[] }> {
+export async function importOracleManagerProxy(chainName: string) {
   switch (chainName) {
     case 'cannon':
-      return import('@synthetixio/v3-contracts/build/cannon/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/420/OracleManagerProxy'); // TODO: Make local cannon 13370 work
     case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/mainnet/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/1/OracleManagerProxy');
     case 'goerli':
-      return import('@synthetixio/v3-contracts/build/goerli/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/5/OracleManagerProxy');
     case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/sepolia/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/11155111/OracleManagerProxy');
     case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/optimism-mainnet/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/10/OracleManagerProxy');
     case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/optimism-goerli/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/420/OracleManagerProxy');
     case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/base-goerli/OracleManagerProxy');
+      return import('@synthetixio/v3-contracts/build/84531-competition/OracleManagerProxy');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }

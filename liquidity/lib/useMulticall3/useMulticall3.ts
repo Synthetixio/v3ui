@@ -1,41 +1,39 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import type { Multicall3 as Multicall3Cannon } from '@synthetixio/v3-contracts/build/cannon/Multicall3';
-import type { Multicall3 as Multicall3Mainnet } from '@synthetixio/v3-contracts/build/mainnet/Multicall3';
-import type { Multicall3 as Multicall3Goerli } from '@synthetixio/v3-contracts/build/goerli/Multicall3';
-import type { Multicall3 as Multicall3Sepolia } from '@synthetixio/v3-contracts/build/sepolia/Multicall3';
-import type { Multicall3 as Multicall3OptimismMainnet } from '@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3';
-import type { Multicall3 as Multicall3OptimismGoerli } from '@synthetixio/v3-contracts/build/optimism-goerli/Multicall3';
-import type { Multicall3 as Multicall3BaseGoerli } from '@synthetixio/v3-contracts/build/base-goerli/Multicall3';
+import type { Multicall3 as Multicall31 } from '@synthetixio/v3-contracts/build/1/Multicall3';
+import type { Multicall3 as Multicall35 } from '@synthetixio/v3-contracts/build/5/Multicall3';
+import type { Multicall3 as Multicall310 } from '@synthetixio/v3-contracts/build/10/Multicall3';
+import type { Multicall3 as Multicall3420 } from '@synthetixio/v3-contracts/build/420/Multicall3';
+import type { Multicall3 as Multicall311155111 } from '@synthetixio/v3-contracts/build/11155111/Multicall3';
+import type { Multicall3 as Multicall384531Competition } from '@synthetixio/v3-contracts/build/84531-competition/Multicall3';
+import type { Multicall3 as Multicall313370 } from '@synthetixio/v3-contracts/build/420/Multicall3';
 
 export type Multicall3Type =
-  | Multicall3Cannon
-  | Multicall3Mainnet
-  | Multicall3Goerli
-  | Multicall3Sepolia
-  | Multicall3OptimismMainnet
-  | Multicall3OptimismGoerli
-  | Multicall3BaseGoerli;
+  | Multicall31
+  | Multicall35
+  | Multicall310
+  | Multicall3420
+  | Multicall311155111
+  | Multicall384531Competition
+  | Multicall313370;
 
-export async function importMulticall3(
-  chainName: string
-): Promise<{ address: string; abi: string[] }> {
+export async function importMulticall3(chainName: string) {
   switch (chainName) {
     case 'cannon':
-      return import('@synthetixio/v3-contracts/build/cannon/Multicall3');
+      return import('@synthetixio/v3-contracts/build/420/Multicall3'); // TODO: Make local cannon 13370 work
     case 'mainnet':
-      return import('@synthetixio/v3-contracts/build/mainnet/Multicall3');
+      return import('@synthetixio/v3-contracts/build/1/Multicall3');
     case 'goerli':
-      return import('@synthetixio/v3-contracts/build/goerli/Multicall3');
+      return import('@synthetixio/v3-contracts/build/5/Multicall3');
     case 'sepolia':
-      return import('@synthetixio/v3-contracts/build/sepolia/Multicall3');
+      return import('@synthetixio/v3-contracts/build/11155111/Multicall3');
     case 'optimism-mainnet':
-      return import('@synthetixio/v3-contracts/build/optimism-mainnet/Multicall3');
+      return import('@synthetixio/v3-contracts/build/10/Multicall3');
     case 'optimism-goerli':
-      return import('@synthetixio/v3-contracts/build/optimism-goerli/Multicall3');
+      return import('@synthetixio/v3-contracts/build/420/Multicall3');
     case 'base-goerli':
-      return import('@synthetixio/v3-contracts/build/base-goerli/Multicall3');
+      return import('@synthetixio/v3-contracts/build/84531-competition/Multicall3');
     default:
       throw new Error(`Unsupported chain ${chainName}`);
   }
