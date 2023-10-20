@@ -5572,7 +5572,6 @@ __metadata:
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
-    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
@@ -5682,6 +5681,7 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     react: ^18.2.0
@@ -5734,6 +5734,7 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/useOracleManagerProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     ethers: ^5.7.2
@@ -5824,6 +5825,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     react: ^18.2.0
@@ -5838,6 +5840,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     ethers: ^5.7.2
@@ -5947,6 +5950,7 @@ __metadata:
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     zod: ^3.22.4
@@ -6109,6 +6113,7 @@ __metadata:
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": ^2.74.4
     "@tanstack/react-query": ^4.35.7
     react: ^18.2.0
@@ -6253,9 +6258,8 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     ethers: ^5.7.2
     zod: ^3.22.4
   languageName: unknown
@@ -6497,8 +6501,10 @@ __metadata:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/providers": ^5.7.2
     "@typechain/ethers-v5": ^11.1.1
-    "@usecannon/cli": ^2.8.1
+    "@usecannon/builder": ^2.8.2
+    "@usecannon/cli": ^2.8.2
     cannon-plugin-router: ^1.0.16
+    debug: ^4.3.4
     ethers: ^5.7.2
     prettier: ^3.0.3
     solc: 0.8.17
@@ -7543,9 +7549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@usecannon/builder@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "@usecannon/builder@npm:2.8.1"
+"@usecannon/builder@npm:^2.8.2":
+  version: 2.8.2
+  resolution: "@usecannon/builder@npm:2.8.2"
   dependencies:
     "@synthetixio/router": ^3.3.0
     axios: ^1.2.2
@@ -7559,17 +7565,17 @@ __metadata:
     zod: ^3.21.4
   peerDependencies:
     ethers: ">=5.6.0 < 6.0.0"
-  checksum: 226ccb3d53396e68d3d562b46d35e0af00e2a4c6cbbf3d34f6c941924bb37ec590aad0faf1ba2c7e8b687503e531753b380b26760e1b9aadc3f8693accf80bec
+  checksum: fb4a84ad6e294e37e2e72f35ac884b63c3912ceaf2cfbc269bb466559428c61505ad568d0d759f6be801a3a4737495e63e7b02cd2f35478ba3f386c0657220d8
   languageName: node
   linkType: hard
 
-"@usecannon/cli@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "@usecannon/cli@npm:2.8.1"
+"@usecannon/cli@npm:^2.8.2":
+  version: 2.8.2
+  resolution: "@usecannon/cli@npm:2.8.2"
   dependencies:
     "@iarna/toml": ^3.0.0
     "@synthetixio/wei": ^2.74.1
-    "@usecannon/builder": ^2.8.1
+    "@usecannon/builder": ^2.8.2
     chalk: ^4.1.2
     commander: ^9.5.0
     debug: ^4.3.4
@@ -7585,7 +7591,7 @@ __metadata:
     untildify: ^4.0.0
   bin:
     cannon: dist/bin/cannon.js
-  checksum: 6c727b57d8547bc45a627a41cfb3e7aa3a6ff1d42afee7494774d9db2f8eea98ebd0b14391efc70b4d21260c6b00b4b743d541de2a1b13f7013afcf5e533f668
+  checksum: bac120c41158cbf7ed2141ed70c3e8e097a3b375015b9b395006925846cb4f531199ce4421a185f07361ecb9ffa5af9ca0dac7191d787ff6e510c767ad47ce7f
   languageName: node
   linkType: hard
 
