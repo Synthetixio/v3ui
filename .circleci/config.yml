@@ -256,6 +256,9 @@ workflows:
       - liquidity-e2e:
           chain: optimism-goerli
           name: liquidity-e2e-optimism-goerli
+      - liquidity-e2e:
+          chain: goerli
+          name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-ipfs:
@@ -266,6 +269,7 @@ workflows:
             - liquidity-cy
             - liquidity-e2e-optimism-mainnet
             - liquidity-e2e-optimism-goerli
+            - liquidity-e2e-goerli
           filters:
             branches:
               only:
