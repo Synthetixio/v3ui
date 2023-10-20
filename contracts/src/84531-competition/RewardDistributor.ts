@@ -30,7 +30,7 @@ import type { FunctionFragment, Result } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export interface RewardsDistributorInterface extends utils.Interface {
+export interface RewardDistributorInterface extends utils.Interface {
   functions: {
     'distributeRewards(uint128,address,uint256,uint256,uint256)': FunctionFragment;
     'initialize(address,address,string)': FunctionFragment;
@@ -73,12 +73,12 @@ export interface RewardsDistributorInterface extends utils.Interface {
   events: {};
 }
 
-export interface RewardsDistributor extends BaseContract {
+export interface RewardDistributor extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: RewardsDistributorInterface;
+  interface: RewardDistributorInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -265,4 +265,3 @@ export interface RewardsDistributor extends BaseContract {
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
-

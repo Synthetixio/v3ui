@@ -15,6 +15,6 @@
     "CCIP": "0xa189971a2c5aca0dfc5ee7a2c44a2ae27b3cf389",
     "ChainlinkAggregator": null,
     "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
-    "RewardsDistributor": null
+    "RewardDistributor": null
   }
 }
