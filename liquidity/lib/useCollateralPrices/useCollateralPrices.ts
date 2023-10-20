@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';

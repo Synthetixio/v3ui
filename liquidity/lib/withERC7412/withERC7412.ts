@@ -6,9 +6,8 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { NETWORKS, networksWithERC7412 } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importMulticall3 } from '@snx-v3/useMulticall3';
+import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';
-import { importCoreProxy } from '@snx-v3/useCoreProxy';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -201,8 +200,8 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network?.name || 'mainnet')
-    : await importMulticall3(network?.name || 'mainnet');
+    ? await importCoreProxy(network?.id || 1, network?.preset)
+    : await importMulticall3(network?.id || 1, network?.preset);
 
   while (true) {
     try {
@@ -286,7 +285,8 @@ export async function erc7412Call<T>(
   const { chainId } = await provider.getNetwork();
   const network = Object.values(NETWORKS).find((x) => x.id === chainId);
   const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
-    network?.name || 'mainnet'
+    network?.id || 1,
+    network?.preset
   );
 
   const reqs = [txRequests].flat();

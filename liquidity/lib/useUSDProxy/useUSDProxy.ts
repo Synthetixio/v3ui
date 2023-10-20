@@ -20,7 +20,7 @@ export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
   return useQuery({
     queryKey: [net.name, 'USDProxy', { withSigner }],
     queryFn: async function () {
-      const { address, abi } = await importUSDProxy(net.chainId, net.preset);
+      const { address, abi } = await importUSDProxy(net.id, net.preset);
       return new Contract(address, abi, signerOrProvider) as USDProxyType;
     },
     enabled: Boolean(signerOrProvider),
