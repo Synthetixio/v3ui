@@ -2,163 +2,205 @@
 
 const path = require('path');
 const fs = require('fs/promises');
+const debug = require('debug');
 const ethers = require('ethers');
 const prettier = require('prettier');
 const { runTypeChain } = require('typechain');
+const { OnChainRegistry, IPFSLoader } = require('@usecannon/builder');
 
-/*
-async function normaliseAbi(source, fileName) {
-  const json = await fs.readFile(path.join(source, `${fileName}.json`), 'utf8');
-  json.abi.forEach((item) => {
-    item.outputs?.forEach((output) => {
-      if (!('name' in output)) {
-        output.name = '';
-      }
-    });
+const IPFS_GATEWAY = 'https://ipfs.synthetix.io';
+const CANNON_REGISTRY_ADDRESS = '0x8E5C7EFC9636A6A0408A46BB7F617094B81e5dba';
+const PACKAGE_NAME = 'synthetix-omnibus';
+const PACKAGE_VERSION = 'latest';
+
+const prettierOptions = {
+  printWidth: 100,
+  semi: true,
+  singleQuote: true,
+  bracketSpacing: true,
+  trailingComma: 'es5',
+};
+
+async function prettyJson(obj) {
+  return await prettier.format(JSON.stringify(obj, null, 2), {
+    parser: 'json',
+    ...prettierOptions,
   });
-  await fs.writeFile(path.join(source, `${fileName}.json`), JSON.stringify(json, null, 2), 'utf8');
 }
-*/
 
-function mapFileName(source, fileName) {
-  if (source.includes('oracle_manager')) {
-    if (fileName === 'Proxy') {
-      return 'OracleManagerProxy';
-    }
+async function prettyTs(content) {
+  return await prettier.format(content, {
+    parser: 'typescript',
+    ...prettierOptions,
+  });
+}
+
+function readableAbi(abi) {
+  const iface = new ethers.utils.Interface(abi);
+  return iface.format(ethers.utils.FormatTypes.full);
+}
+
+function getDir({ chainId, preset }) {
+  if (preset === 'main') {
+    return `${chainId}`;
   }
-  return fileName;
+  return `${chainId}-${preset}`;
 }
 
-async function readContracts({ source, target }) {
-  const files = await fs.readdir(source, { withFileTypes: true });
-  return await Promise.all(
-    files
-      .filter((dirent) => dirent.isFile())
-      .map((dirent) => path.basename(dirent.name, '.json'))
-      .map(async (sourceFileName) => {
-        const { address, abi, deployTxnHash } = JSON.parse(
-          await fs.readFile(path.join(source, `${sourceFileName}.json`), 'utf8')
-        );
-        const fileName = mapFileName(source, sourceFileName);
-        // Looks like outputs[].name exists by default, so no longer necessary
-        // await normaliseAbi(source, fileName);
-        return {
-          filePath: path.join(target, `${fileName}.json`),
-          fileName,
-          address,
-          abi,
-          deployTxnHash,
-        };
-      })
+async function manual({ chainId, preset }) {
+  const manualDir = `${__dirname}/manual/${getDir({ chainId, preset })}`;
+
+  const files = await fs.readdir(manualDir, { withFileTypes: true });
+  return Object.fromEntries(
+    await Promise.all(
+      files
+        .filter((dirent) => dirent.isFile())
+        .map((dirent) => path.basename(dirent.name, '.json'))
+        .map(async (name) => {
+          const { address, abi } = JSON.parse(await fs.readFile(`${manualDir}/${name}.json`));
+          return [name, { address, abi }];
+        })
+    )
   );
 }
 
-function prepareContract({ filePath, fileName, address, abi }) {
-  const iface = new ethers.utils.Interface(abi);
-  return {
-    filePath,
-    fileName,
-    address,
-    abi: iface.format(ethers.utils.FormatTypes.full),
-    jsonAbi: abi,
-  };
-}
+async function codegen({ chainId, preset, registry, loader }) {
+  const log = debug(`codegen:${getDir({ chainId, preset })}`);
 
-async function generateContracts({ network, contracts, prettierOptions }) {
-  await fs.cp(`cache/${network}/types/common.ts`, `src/${network}/common.ts`).catch(() => null);
-  for await (const contract of contracts) {
-    const types = await fs
-      .readFile(`cache/${network}/types/${contract.fileName}.ts`, 'utf8')
-      .catch(() => ''); // for empty abi or skipped types for any other reason
-    const content =
-      '// !!! DO NOT EDIT !!! Automatically generated file\n\n' +
-      Object.entries(contract)
-        .filter(([name]) => ['address', 'abi'].includes(name))
-        .map(([name, value]) => `export const ${name} = ${JSON.stringify(value, null, 2)};`)
-        .concat([types])
-        .join('\n');
-    const pretty = await prettier.format(content, { parser: 'typescript', ...prettierOptions });
-    await fs.writeFile(`src/${network}/${contract.fileName}.ts`, pretty, 'utf8');
-  }
-}
+  const tsDir = `${__dirname}/src/${getDir({ chainId, preset })}`;
+  await fs.rm(tsDir, { force: true, recursive: true });
+  await fs.mkdir(tsDir, { recursive: true });
 
-async function generateTypes({ network, contracts, prettierOptions }) {
-  const files = [];
-  for await (const contract of contracts) {
-    const json = path.resolve(`cache/${network}/types/${contract.fileName}.json`);
-    await fs.writeFile(json, JSON.stringify(contract.jsonAbi));
-    files.push(json);
+  const deploymentsDir = `${__dirname}/deployments/${getDir({ chainId, preset })}`;
+  await fs.rm(deploymentsDir, { force: true, recursive: true });
+  await fs.mkdir(deploymentsDir, { recursive: true });
+
+  const tmpDir = `${__dirname}/cache/${getDir({ chainId, preset })}`;
+  await fs.rm(tmpDir, { force: true, recursive: true });
+  await fs.mkdir(tmpDir, { recursive: true });
+
+  const contracts = {};
+
+  log('Resolving IPFS', `${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
+  const ipfs = await registry.getUrl(`${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
+  log('Fetching deployment state', ipfs);
+  const deployments = await loader.read(ipfs);
+
+  const system = deployments.state['provision.system'].artifacts.imports.system;
+
+  contracts.CoreProxy = system.contracts.CoreProxy;
+  contracts.AccountProxy = system.contracts.AccountProxy;
+  contracts.USDProxy = system.contracts.USDProxy;
+  contracts.OracleManagerProxy = system.imports.oracle_manager.contracts.Proxy;
+
+  const spotFactory =
+    deployments?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
+  if (spotFactory) {
+    contracts.SpotMarketProxy = spotFactory.contracts.SpotMarketProxy;
   }
 
-  if (files.length > 0) {
-    // This will create a ts file with types named <targetName>.ts (ie. Synthetix.ts)
-    await runTypeChain({
-      cwd: process.cwd(),
-      filesToProcess: files,
-      allFiles: files,
-      prettier: prettierOptions,
-      outDir: `cache/${network}/types`,
-      target: require.resolve('@typechain/ethers-v5'),
-    });
+  const perpsFactory =
+    deployments?.state?.['provision.perpsFactory']?.artifacts?.imports?.perpsFactory;
+  if (perpsFactory) {
+    contracts.PerpsMarketProxy = perpsFactory.contracts.PerpsMarketProxy;
+    contracts.PerpsAccountProxy =
+      perpsFactory.contracts.PerpsAccountProxy ?? perpsFactory.contracts.AccountProxy;
   }
+
+  Object.assign(contracts, await manual({ chainId, preset }));
+
+  //
+  //
+  //
+  // Generate TS
+  //
+  //
+  //
+  const files = await Promise.all(
+    Object.entries(contracts).map(async ([name, { abi }]) => {
+      const target = `${deploymentsDir}/${name}.json`;
+      await fs.writeFile(target, await prettyJson(abi));
+      return target;
+    })
+  );
+  files.forEach((file) => log('->', path.relative(__dirname, file)));
+
+  await runTypeChain({
+    cwd: process.cwd(),
+    filesToProcess: files,
+    allFiles: files,
+    prettier: prettierOptions,
+    outDir: tmpDir,
+    target: require.resolve('@typechain/ethers-v5'),
+  });
+  await fs.copyFile(`${tmpDir}/common.ts`, `${tsDir}/common.ts`);
+  log('->', path.relative(__dirname, `${tsDir}/common.ts`));
+  const generated = await Promise.all(
+    Object.entries(contracts).map(async ([name, { address, abi }]) => {
+      const contract = await prettyTs(
+        [
+          `export const address = ${JSON.stringify(address)}`,
+          `export const abi = ${JSON.stringify(readableAbi(abi))}`,
+        ].join('\n')
+      );
+      const types = await fs.readFile(`${tmpDir}/${name}.ts`);
+      const target = `${tsDir}/${name}.ts`;
+      await fs.writeFile(
+        target,
+        [
+          // Combine contract info and types.
+          // Types already prittyfied so we avoid unnecessary work and just concat
+          '// !!! DO NOT EDIT !!! Automatically generated file',
+          '',
+          contract,
+          types,
+          '',
+        ].join('\n')
+      );
+      return path.relative(__dirname, target);
+    })
+  );
+  generated.forEach((file) => log('->', file));
+
+  //
+  //
+  //
+  // index
+  //
+  //
+  //
+  await fs.writeFile(
+    `${deploymentsDir}/index.json`,
+    await prettyJson({
+      name: PACKAGE_NAME,
+      version: PACKAGE_VERSION,
+      preset,
+      ipfs,
+      chainId,
+      addresses: Object.fromEntries(
+        Object.entries(contracts).map(([name, { address }]) => [name, address])
+      ),
+    })
+  );
+  log('->', path.relative(__dirname, `${deploymentsDir}/index.json`));
 }
 
 async function run() {
-  const deployed = path.join(__dirname, 'deployments');
-  const networks = (await fs.readdir(deployed, { withFileTypes: true }))
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
+  const registry = new OnChainRegistry({
+    signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+    address: CANNON_REGISTRY_ADDRESS,
+  });
+  const loader = new IPFSLoader(IPFS_GATEWAY);
 
-  const prettierOptions = JSON.parse(await fs.readFile('../.prettierrc', 'utf8'));
-
-  for await (const network of networks) {
-    await fs.rm(path.join(__dirname, 'cache', network), { recursive: true, force: true });
-    await fs.rm(path.join(__dirname, 'build', network), { recursive: true, force: true });
-    await fs.rm(path.join(__dirname, 'src', network), { recursive: true, force: true });
-
-    await fs.mkdir(path.join(__dirname, 'tmp', network), { recursive: true });
-    const v3Jsons = (
-      await readContracts({
-        source: path.join(__dirname, 'deployments', network),
-        target: path.join(__dirname, 'tmp', network),
-      })
-    ).filter((json) =>
-      [
-        // Exported contracts only
-        'AccountProxy',
-        'CoreProxy',
-        'USDProxy',
-      ].includes(json.fileName)
-    );
-
-    await fs.mkdir(path.join(__dirname, 'tmp', network, 'manual'), { recursive: true });
-    const manualJsons = await readContracts({
-      source: path.join(__dirname, 'manual', network),
-      target: path.join(__dirname, 'tmp', network, 'manual'),
-    });
-
-    await fs.mkdir(path.join(__dirname, 'tmp', network, 'oracle_manager'), { recursive: true });
-    const omJsons = (
-      await readContracts({
-        source: path.join(__dirname, 'deployments', network, 'oracle_manager'),
-        target: path.join(__dirname, 'tmp', network, 'oracle_manager'),
-      })
-    ).filter((json) =>
-      [
-        // Exported contracts only
-        'OracleManagerProxy',
-      ].includes(json.fileName)
-    );
-
-    const jsons = [...v3Jsons, ...manualJsons, ...omJsons];
-    const contracts = jsons.map(prepareContract);
-
-    await fs.mkdir(`cache/${network}/types`, { recursive: true });
-    await generateTypes({ network, contracts, prettierOptions });
-
-    await fs.mkdir(`src/${network}`, { recursive: true });
-    await generateContracts({ network, contracts, prettierOptions });
-  }
+  await Promise.all([
+    codegen({ chainId: 1, preset: 'main', registry, loader }),
+    codegen({ chainId: 5, preset: 'main', registry, loader }),
+    codegen({ chainId: 10, preset: 'main', registry, loader }),
+    codegen({ chainId: 420, preset: 'main', registry, loader }),
+    codegen({ chainId: 11155111, preset: 'main', registry, loader }),
+    codegen({ chainId: 84531, preset: 'competition', registry, loader }),
+    // codegen({ chainId: 13370, preset: 'main', registry, loader }),
+  ]);
 }
 
 run();
