@@ -5425,6 +5425,8 @@ __metadata:
 "@snx-v3/formatters@workspace:*, @snx-v3/formatters@workspace:liquidity/lib/formatters":
   version: 0.0.0-use.local
   resolution: "@snx-v3/formatters@workspace:liquidity/lib/formatters"
+  dependencies:
+    date-fns: ^2.30.0
   languageName: unknown
   linkType: soft
 

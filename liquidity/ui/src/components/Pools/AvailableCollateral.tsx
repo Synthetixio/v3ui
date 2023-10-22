@@ -22,10 +22,9 @@ import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { AvailableCollateralRow } from './';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import intlFormat from 'date-fns/intlFormat';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
+import { formatTimeToUnlock, unlockDateString } from '@snx-v3/formatters';
 
 export function AvailableCollateralUi({
   accountCollaterals,
@@ -45,26 +44,30 @@ export function AvailableCollateralUi({
       <Heading fontSize="2xl" mb="2">
         {isLoading ? 'Loading Collateral...' : 'Available Collateral'}
       </Heading>
-      <Fade in>
-        <Flex alignItems="center" mb="0">
-          <Text color="gray.500">
-            This collateral can be deposited to pools. As a security precaution, this collateral
-            cannot be withdrawn until at least 1 day has elapsed since previous account activity.
-          </Text>
-          <Alert
-            ml="auto"
-            status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
-            width="540px"
-            title={unlockDateString}
-          >
-            <AlertIcon />
-            <Box width="100%">
-              <AlertTitle>Withdrawals available</AlertTitle>
-              {timeToUnlock && <AlertDescription display="block">{timeToUnlock}</AlertDescription>}
-            </Box>
-          </Alert>
-        </Flex>
-      </Fade>
+      {!isLoading && (
+        <Fade in>
+          <Flex alignItems="center" mb="0">
+            <Text color="gray.500">
+              This collateral can be deposited to pools. As a security precaution, this collateral
+              cannot be withdrawn until at least 1 day has elapsed since previous account activity.
+            </Text>
+            <Alert
+              ml="auto"
+              status={timeToUnlock === '—' ? 'loading' : timeToUnlock ? 'error' : 'success'}
+              width="540px"
+              title={unlockDateString}
+            >
+              <AlertIcon />
+              <Box width="100%">
+                <AlertTitle>Withdrawals available</AlertTitle>
+                {timeToUnlock && (
+                  <AlertDescription display="block">{timeToUnlock}</AlertDescription>
+                )}
+              </Box>
+            </Alert>
+          </Flex>
+        </Fade>
+      )}
       <Fade in>
         <Box overflowX="auto">
           <Table mt={8} size="sm" variant="unstyled" mb="9">
@@ -141,24 +144,3 @@ export function AvailableCollateral() {
     />
   );
 }
-
-const formatTimeToUnlock = (accountCollateralUnlockDate: Date | undefined) => {
-  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
-    return undefined;
-  }
-  return formatDistanceToNow(accountCollateralUnlockDate, { addSuffix: true });
-};
-
-const unlockDateString = (accountCollateralUnlockDate: Date | undefined) => {
-  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
-    return undefined;
-  }
-
-  return intlFormat(accountCollateralUnlockDate, {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-  });
-};

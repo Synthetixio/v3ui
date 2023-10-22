@@ -1,3 +1,5 @@
+import { formatDistanceToNow, intlFormat } from 'date-fns';
+
 export function convertSecondsToDisplayString(seconds: number) {
   const secondsInHour = 3600;
   const secondsInDay = 86400;
@@ -23,3 +25,24 @@ export function convertSecondsToDisplayString(seconds: number) {
     return `every ${hours.toFixed(1)} hours`;
   }
 }
+
+export const formatTimeToUnlock = (accountCollateralUnlockDate: Date | undefined) => {
+  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
+    return undefined;
+  }
+  return formatDistanceToNow(accountCollateralUnlockDate, { addSuffix: true });
+};
+
+export const unlockDateString = (accountCollateralUnlockDate: Date | undefined) => {
+  if (!accountCollateralUnlockDate || accountCollateralUnlockDate.getTime() <= Date.now()) {
+    return undefined;
+  }
+
+  return intlFormat(accountCollateralUnlockDate, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+};
