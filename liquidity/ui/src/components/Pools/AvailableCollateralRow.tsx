@@ -25,7 +25,7 @@ function AvailableCollateralRowUi({
           </Fade>
           <Flex flexDirection="column" justifyContent="center" ml={2}>
             <Fade in>
-              <Text fontSize="lg" color="gray.500">
+              <Text fontSize="lg" color="gray.500" data-testid="available-collateral">
                 <Amount value={accountCollateral.availableCollateral} /> {accountCollateral.symbol}
               </Text>
             </Fade>
@@ -34,7 +34,11 @@ function AvailableCollateralRowUi({
       </Td>
       <Td textAlign="end">
         <Fade in>
-          <Button isDisabled={isDisabled} onClick={() => setIsOpen(true)}>
+          <Button
+            data-testid="withdraw-button"
+            isDisabled={isDisabled}
+            onClick={() => setIsOpen(true)}
+          >
             Withdraw
           </Button>
         </Fade>

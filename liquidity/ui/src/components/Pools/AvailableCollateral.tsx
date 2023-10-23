@@ -61,7 +61,9 @@ export function AvailableCollateralUi({
               <Box width="100%">
                 <AlertTitle>Withdrawals available</AlertTitle>
                 {timeToUnlock && (
-                  <AlertDescription display="block">{timeToUnlock}</AlertDescription>
+                  <AlertDescription data-testid="time-to-unlock" display="block">
+                    {timeToUnlock}
+                  </AlertDescription>
                 )}
               </Box>
             </Alert>

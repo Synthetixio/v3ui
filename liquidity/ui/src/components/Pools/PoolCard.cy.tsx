@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { PoolCard } from './PoolCard'; // Import your PoolCard component
 import { wei } from '@synthetixio/wei';
 
