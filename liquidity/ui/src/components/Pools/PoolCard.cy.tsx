@@ -51,7 +51,7 @@ describe('PoolCard Component', () => {
         collateralValue: wei(100),
         debt: wei(100),
         poolName: 'Spartan Council Pool',
-        cRatio: wei(100),
+        cRatio: wei(300),
         collateralPrice: wei(1),
       },
     };
@@ -65,5 +65,11 @@ describe('PoolCard Component', () => {
     );
 
     cy.get('table').should('exist');
+    cy.get('[data-testid="liquidation-ratio"]').should('exist').should('contain', '150%');
+    cy.get('[data-testid="issuance-ratio"]').should('exist').should('contain', '400%');
+    cy.get('[data-testid="collateral-amount"]').should('exist').should('contain', '100 SNX');
+    cy.get('[data-testid="collateral-value"]').should('exist').should('contain', '$100');
+    cy.get('[data-testid="debt"]').should('exist').should('contain', '$100');
+    cy.get('[data-testid="c-ratio"]').should('exist').should('contain', '100%');
   });
 });

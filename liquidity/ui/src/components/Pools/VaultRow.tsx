@@ -35,38 +35,27 @@ function VaultRowUi({
         <Flex flexDir="row" py={4}>
           <CollateralIcon width="40px" height="40px" symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
-            <Text fontSize="sm" lineHeight="20px" fontWeight="500">
+            <Text fontSize="sm" lineHeight="20px" fontWeight="500" data-testid="collateral-value">
               {liquidityPosition?.collateralValue.gt(0) ? (
-                <Amount
-                  data-testid="collateral-value"
-                  value={liquidityPosition.collateralValue}
-                  prefix="$"
-                />
+                <Amount value={liquidityPosition.collateralValue} prefix="$" />
               ) : (
                 '-'
               )}
             </Text>
-            <Text fontSize="xs" color="gray.500">
+            <Text fontSize="xs" color="gray.500" data-testid="collateral-amount">
               {liquidityPosition?.collateralAmount.gt(0) && (
-                <Amount
-                  data-testid="collateral-amount"
-                  value={liquidityPosition.collateralAmount}
-                />
+                <Amount value={liquidityPosition.collateralAmount} />
               )}{' '}
               {collateralType.symbol}
             </Text>
           </Flex>
         </Flex>
       </Td>
-      <Td>
-        {liquidityPosition?.debt.gt(0) ? (
-          <Amount data-testid="debt" value={liquidityPosition.debt} prefix="$" />
-        ) : (
-          '-'
-        )}
+      <Td data-testid="debt">
+        {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
       </Td>
-      <Td>
-        {cRatio.gt(0) ? <Amount data-testid="c-ratio" value={cRatio.mul(100)} suffix="%" /> : '-'}
+      <Td data-testid="c-ratio">
+        {cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}
       </Td>
       <Td>
         <Amount
