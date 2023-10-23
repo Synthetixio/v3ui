@@ -4,7 +4,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
-import { Network, NETWORKS, deploymentsWithERC7412 } from '@snx-v3/useBlockchain';
+import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';

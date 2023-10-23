@@ -178,7 +178,7 @@ export const BorrowModal: React.FC<{
       });
       throw Error('Borrow failed', { cause: error });
     }
-  }, [errorParserCoreProxy, execBorrow, queryClient, toast, network.name]);
+  }, [execBorrow, queryClient, network.id, network.preset, errorParserCoreProxy, toast]);
 
   const { txnStatus } = txnState;
   if (!params.poolId || !params.accountId || !collateralType) return null;

@@ -246,7 +246,10 @@ export const BlockchainProvider: React.FC<React.PropsWithChildren> = ({ children
           const selectedNetwork = NETWORKS.find((network) => network.hexId === chain.id);
           if (selectedNetwork) {
             setNetwork(selectedNetwork);
-            window.localStorage.setItem('DEFAULT_NETWORK', `${network.id}-${network.preset}`);
+            window.localStorage.setItem(
+              'DEFAULT_NETWORK',
+              `${selectedNetwork.id}-${selectedNetwork.preset}`
+            );
           }
         }
       }
