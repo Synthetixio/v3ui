@@ -37,14 +37,21 @@ function VaultRowUi({
           <Flex flexDirection="column" justifyContent="center" ml={2}>
             <Text fontSize="sm" lineHeight="20px" fontWeight="500">
               {liquidityPosition?.collateralValue.gt(0) ? (
-                <Amount value={liquidityPosition.collateralValue} prefix="$" />
+                <Amount
+                  data-testid="collateral-value"
+                  value={liquidityPosition.collateralValue}
+                  prefix="$"
+                />
               ) : (
                 '-'
               )}
             </Text>
             <Text fontSize="xs" color="gray.500">
               {liquidityPosition?.collateralAmount.gt(0) && (
-                <Amount value={liquidityPosition.collateralAmount} />
+                <Amount
+                  data-testid="collateral-amount"
+                  value={liquidityPosition.collateralAmount}
+                />
               )}{' '}
               {collateralType.symbol}
             </Text>
@@ -52,14 +59,28 @@ function VaultRowUi({
         </Flex>
       </Td>
       <Td>
-        {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
+        {liquidityPosition?.debt.gt(0) ? (
+          <Amount data-testid="debt" value={liquidityPosition.debt} prefix="$" />
+        ) : (
+          '-'
+        )}
       </Td>
-      <Td>{cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}</Td>
       <Td>
-        <Amount value={collateralType.issuanceRatioD18.mul(100)} suffix="%" />
+        {cRatio.gt(0) ? <Amount data-testid="c-ratio" value={cRatio.mul(100)} suffix="%" /> : '-'}
       </Td>
       <Td>
-        <Amount value={collateralType.liquidationRatioD18.mul(100)} suffix="%" />
+        <Amount
+          data-testid="issuance-ratio"
+          value={collateralType.issuanceRatioD18.mul(100)}
+          suffix="%"
+        />
+      </Td>
+      <Td>
+        <Amount
+          value={collateralType.liquidationRatioD18.mul(100)}
+          data-testid="liquidation-ratio"
+          suffix="%"
+        />
       </Td>
       <Td textAlign="end">
         {isConnected && hasLiquidity ? (
