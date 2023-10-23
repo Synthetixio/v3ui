@@ -17,7 +17,12 @@ export const useTokenBalance = (address?: string, networkId?: number) => {
   const tokenAddress = assertAddressType(address) ? address : undefined;
   const networkIdToUse = networkId ?? network.id;
   return useQuery({
-    queryKey: [network.name, 'TokenBalance', { accountAddress: wallet?.address }, { tokenAddress }],
+    queryKey: [
+      `${network.id}-${network.preset}`,
+      'TokenBalance',
+      { accountAddress: wallet?.address },
+      { tokenAddress },
+    ],
     queryFn: async () => {
       if (!tokenAddress || !wallet?.address) throw Error('Query should not be enabled');
       const provider =

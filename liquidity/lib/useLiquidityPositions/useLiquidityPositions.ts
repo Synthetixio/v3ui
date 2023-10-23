@@ -45,9 +45,9 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
   return useQuery({
     queryKey: [
-      network.name,
-      { accountId },
+      `${network.id}-${network.preset}`,
       'LiquidityPositions',
+      { accountId },
       {
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],

@@ -146,7 +146,7 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
 // simulate w/ wETH contract because it will have eth balance
 // This is useful when we do read/static calls but still need an balance for the price update
 // TODO: this probably need to be network aware, maybe look into a different solution even.
-const getDefaultFromAddress = (chainName: keyof typeof NETWORKS) => {
+const getDefaultFromAddress = (chainName: string) => {
   switch (chainName) {
     case 'cannon':
       return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here
@@ -189,7 +189,7 @@ export const withERC7412 = async (
 
   const { chainId } = await _provider.getNetwork();
 
-  const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const network = NETWORKS.find((x) => x.id === chainId);
   const networkName = network?.name || 'mainnet';
   const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
 
@@ -283,7 +283,7 @@ export async function erc7412Call<T>(
   logLabel?: string
 ) {
   const { chainId } = await provider.getNetwork();
-  const network = Object.values(NETWORKS).find((x) => x.id === chainId);
+  const network = NETWORKS.find((x) => x.id === chainId);
   const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
     network?.id || 1,
     network?.preset

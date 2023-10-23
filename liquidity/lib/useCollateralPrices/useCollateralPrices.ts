@@ -48,7 +48,7 @@ export const useCollateralPrices = () => {
 
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
-    queryKey: [network.name, 'CollateralPrices', { collateralAddresses }],
+    queryKey: [`${network.id}-${network.preset}`, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
       if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) {
         throw 'useCollateralPrices missing required data';

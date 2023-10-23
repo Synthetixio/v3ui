@@ -70,7 +70,12 @@ export function useAccountCollateral({
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 
   return useQuery({
-    queryKey: [network.name, { accountId }, 'AccountCollateral', { tokens: tokenAddresses }],
+    queryKey: [
+      `${network.id}-${network.preset}`,
+      'AccountCollateral',
+      { accountId },
+      { tokens: tokenAddresses },
+    ],
     enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
     queryFn: async function () {
       if (!CoreProxy || !accountId || tokenAddresses.length < 1) {
@@ -97,7 +102,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
   const network = useNetwork();
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'AccountSpecificCollateral',
       { accountId },
       { token: collateralAddress },

@@ -37,7 +37,7 @@ export const useGasPrice = () => {
 
   return useQuery({
     enabled: Boolean(provider),
-    queryKey: [network.name, 'GasPrice'],
+    queryKey: [`${network.id}-${network.preset}`, 'GasPrice'],
     queryFn: () => getGasPrice({ provider }),
   });
 };

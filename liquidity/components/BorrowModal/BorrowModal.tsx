@@ -158,7 +158,7 @@ export const BorrowModal: React.FC<{
     try {
       await execBorrow();
       await queryClient.invalidateQueries({
-        queryKey: [network.name, 'LiquidityPosition'],
+        queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
         exact: false,
       });
     } catch (error: any) {

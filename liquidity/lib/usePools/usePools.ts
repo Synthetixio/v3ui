@@ -23,7 +23,7 @@ export function usePools() {
 
   return useQuery({
     enabled: Boolean(CoreProxy),
-    queryKey: [network.name, 'Pools'],
+    queryKey: [`${network.id}-${network.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
 

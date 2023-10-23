@@ -21,6 +21,7 @@ export const useRewards = ({
 
   return useQuery({
     queryKey: [
+      `${network.id}-${network.preset}`,
       'Rewards',
       {
         accountId,

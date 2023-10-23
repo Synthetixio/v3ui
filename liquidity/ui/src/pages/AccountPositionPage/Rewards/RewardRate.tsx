@@ -25,6 +25,7 @@ export function RewardRate({
   const { data: CoreProxy } = useCoreProxy();
   const { data: rewardRate, isLoading } = useQuery({
     queryKey: [
+      `${network.id}-${network.preset}`,
       'RewardRate',
       {
         poolId,

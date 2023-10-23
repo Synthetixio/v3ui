@@ -4,10 +4,8 @@ import type { JsonRpcProvider } from '@ethersproject/providers';
 import { useNetwork, useProvider, useSigner, NETWORKS } from '@snx-v3/useBlockchain';
 import { USDProxyType, importUSDProxy } from '@synthetixio/v3-contracts';
 
-const networks = Object.values(NETWORKS);
-
 export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
-  const network = useNetwork();
+  const connectedNetwork = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
 
@@ -15,12 +13,13 @@ export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
   const signerOrProvider = signer || providerToUse;
   const withSigner = Boolean(signer);
 
-  const net = networks.find((n) => n.id === nonConnectedProvider?.network.chainId) ?? network;
+  const network =
+    NETWORKS.find((n) => n.id === nonConnectedProvider?.network.chainId) ?? connectedNetwork;
 
   return useQuery({
-    queryKey: [net.name, 'USDProxy', { withSigner }],
+    queryKey: [`${network.id}-${network.preset}`, 'USDProxy', { withSigner }],
     queryFn: async function () {
-      const { address, abi } = await importUSDProxy(net.id, net.preset);
+      const { address, abi } = await importUSDProxy(network.id, network.preset);
       return new Contract(address, abi, signerOrProvider) as USDProxyType;
     },
     enabled: Boolean(signerOrProvider),

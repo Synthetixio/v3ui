@@ -174,13 +174,13 @@ export const RepayModal: React.FC<{
 
           await Promise.all([
             queryClient.invalidateQueries({
-              queryKey: [network.name, 'TokenBalance'],
+              queryKey: [`${network.id}-${network.preset}`, 'TokenBalance'],
             }),
             queryClient.invalidateQueries({
-              queryKey: [network.name, 'Allowance'],
+              queryKey: [`${network.id}-${network.preset}`, 'Allowance'],
             }),
             queryClient.invalidateQueries({
-              queryKey: [network.name, 'LiquidityPosition'],
+              queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
             }),
           ]);
 

@@ -320,18 +320,22 @@ export const DepositModal: DepositModalProps = ({
 
           await Promise.all([
             queryClient.invalidateQueries({
-              queryKey: [network.name, 'EthBalance'],
+              queryKey: [`${network.id}-${network.preset}`, 'EthBalance'],
             }),
-            queryClient.invalidateQueries({ queryKey: [network.name, 'LiquidityPosition'] }),
+            queryClient.invalidateQueries({
+              queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
+            }),
             collateralType?.symbol === 'SNX'
-              ? queryClient.invalidateQueries({ queryKey: [network.name, 'TransferableSynthetix'] })
+              ? queryClient.invalidateQueries({
+                  queryKey: [`${network.id}-${network.preset}`, 'TransferableSynthetix'],
+                })
               : Promise.resolve(),
             queryClient.invalidateQueries({
-              queryKey: [network.name, 'Allowance'],
+              queryKey: [`${network.id}-${network.preset}`, 'Allowance'],
             }),
             !params.accountId
               ? queryClient.invalidateQueries({
-                  queryKey: [network.name, 'Accounts'],
+                  queryKey: [`${network.id}-${network.preset}`, 'Accounts'],
                 })
               : Promise.resolve(),
           ]);

@@ -16,7 +16,7 @@ export const useMarketNamesById = (
   const network = useNetwork();
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'MarketNamesById',
       {
         markets: marketIdsAndAddresses

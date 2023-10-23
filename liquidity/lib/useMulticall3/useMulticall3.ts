@@ -11,7 +11,7 @@ export function useMulticall3() {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [network.name, 'Multicall3', { withSigner }],
+    queryKey: [`${network.id}-${network.preset}`, 'Multicall3', { withSigner }],
     queryFn: async function () {
       const { address, abi } = await importMulticall3(network.id, network.preset);
       return new Contract(address, abi, signerOrProvider) as Multicall3Type;

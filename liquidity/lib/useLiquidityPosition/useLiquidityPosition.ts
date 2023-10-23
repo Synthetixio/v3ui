@@ -79,7 +79,7 @@ export const useLiquidityPosition = ({
   const network = useNetwork();
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'LiquidityPosition',
       { accountId },
       {

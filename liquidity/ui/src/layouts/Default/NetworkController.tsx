@@ -42,20 +42,17 @@ export function NetworkController() {
               </Flex>
             </MenuButton>
             <MenuList>
-              {Object.values(NETWORKS)
-                .filter((network) => network.isSupported)
-                .map((network) => (
-                  <MenuItem
-                    key={network.name}
-                    disabled={!network.isSupported}
-                    onClick={() => setNetwork(network)}
-                  >
-                    <network.Icon />
-                    <Text variant="nav" ml={2}>
-                      {network.label}
-                    </Text>
-                  </MenuItem>
-                ))}
+              {NETWORKS.filter((network) => network.isSupported).map((network) => (
+                <MenuItem
+                  key={`${network.id}-${network.preset}`}
+                  onClick={() => setNetwork(network)}
+                >
+                  <network.Icon />
+                  <Text variant="nav" ml={2}>
+                    {network.label}
+                  </Text>
+                </MenuItem>
+              ))}
             </MenuList>
           </>
         )}

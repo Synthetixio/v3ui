@@ -19,7 +19,7 @@ export const useAllowance = ({
 
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'Allowance',
       { accountAddress: wallet?.address },
       { contractAddress, spender },

@@ -22,7 +22,7 @@ export const useVaultsData = (poolId?: number) => {
 
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'VaultCollaterals',
       {
         pool: poolId,
