@@ -55,7 +55,13 @@ export const useCollateralPrices = () => {
       }
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
 
-      const prices = await erc7412Call(CoreProxy.provider, calls, decoder, 'useCollateralPrices');
+      const prices = await erc7412Call(
+        network,
+        CoreProxy.provider,
+        calls,
+        decoder,
+        'useCollateralPrices'
+      );
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         acc[address] = prices[i];
         return acc;

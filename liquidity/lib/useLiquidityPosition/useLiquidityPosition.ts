@@ -128,6 +128,7 @@ export const useLiquidityPosition = ({
       );
 
       return await erc7412Call(
+        network,
         CoreProxy.provider,
         allCalls,
         (encoded) => {

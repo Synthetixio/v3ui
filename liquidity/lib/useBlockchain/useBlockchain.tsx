@@ -145,9 +145,7 @@ export const NETWORKS: Network[] = [
   },
 ];
 
-export const networksWithERC7412: Record<string, boolean | undefined> = {
-  'base-goerli': true,
-};
+export const deploymentsWithERC7412: string[] = ['84531-competition'];
 
 export const DEFAULT_NETWORK =
   NETWORKS.find(

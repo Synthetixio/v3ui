@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { networksWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
+import { deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -58,7 +58,7 @@ export const useAllCollateralPriceIds = () => {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!networksWithERC7412[network.name]) return [];
+      if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
       const configs = await loadConfigs({ CoreProxy });
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
       const calls = oracleNodeIds.map((oracleNodeId) => ({

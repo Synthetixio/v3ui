@@ -86,7 +86,13 @@ export function useAccountCollateral({
         tokenAddresses,
         CoreProxy,
       });
-      const data = await erc7412Call(CoreProxy.provider, calls, decoder, 'useAccountCollateral');
+      const data = await erc7412Call(
+        network,
+        CoreProxy.provider,
+        calls,
+        decoder,
+        'useAccountCollateral'
+      );
 
       return data.map((x) => ({
         ...x,
@@ -118,6 +124,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
         CoreProxy,
       });
       const data = await erc7412Call(
+        network,
         CoreProxy.provider,
         calls,
         decoder,

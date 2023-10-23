@@ -48,6 +48,7 @@ export const usePoolConfiguration = (poolId?: string) => {
         markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
       );
       const decoded = await erc7412Call(
+        network,
         CoreProxy.provider,
         collateralPriceCalls.concat(calls),
         (encoded) => {

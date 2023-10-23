@@ -4,7 +4,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
-import { NETWORKS, networksWithERC7412 } from '@snx-v3/useBlockchain';
+import { Network, NETWORKS, deploymentsWithERC7412 } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';
@@ -170,7 +170,7 @@ const getDefaultFromAddress = (chainName: string) => {
  * If a tx requires ERC7412 pattern, wrap your tx with this function.
  */
 export const withERC7412 = async (
-  _provider: ethers.providers.Provider,
+  network: Network,
   tx: TransactionRequest | TransactionRequest[],
   logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
@@ -187,21 +187,16 @@ export const withERC7412 = async (
 
   const from = multicallCalls[0].from as string;
 
-  const { chainId } = await _provider.getNetwork();
-
-  const network = NETWORKS.find((x) => x.id === chainId);
-  const networkName = network?.name || 'mainnet';
   const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
 
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
-  const isRead = from === getDefaultFromAddress(networkName);
-  const isTestnet = network?.isTestnet || false;
-  const networkHaveERC7412 = networksWithERC7412[networkName] || false;
+  const isRead = from === getDefaultFromAddress(network.name);
+  const networkHaveERC7412 = deploymentsWithERC7412.includes(`${network.id}-${network.preset}`);
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network?.id || 1, network?.preset)
-    : await importMulticall3(network?.id || 1, network?.preset);
+    ? await importCoreProxy(network.id, network.preset)
+    : await importMulticall3(network.id, network.preset);
 
   while (true) {
     try {
@@ -235,7 +230,7 @@ export const withERC7412 = async (
         const ignoreCache = !isRead;
         const signedRequiredData = await fetchOffchainData(
           oracleQuery,
-          isTestnet,
+          network.isTestnet,
           logLabel || '',
           ignoreCache ? 'no-cache' : undefined
         );
@@ -277,24 +272,22 @@ export const withERC7412 = async (
  * This can be used to do reads plus decoding. The return type will be whatever the type of the decode function is. And the arguments passed will have the multicall decoded and price updates removed
  */
 export async function erc7412Call<T>(
+  network: Network,
   provider: ethers.providers.Provider,
   txRequests: TransactionRequest | TransactionRequest[],
   decode: (x: string[] | string) => T,
   logLabel?: string
 ) {
-  const { chainId } = await provider.getNetwork();
-  const network = NETWORKS.find((x) => x.id === chainId);
   const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
-    network?.id || 1,
-    network?.preset
+    network.id,
+    network.preset
   );
 
   const reqs = [txRequests].flat();
   for (const txRequest of reqs) {
-    txRequest.from = getDefaultFromAddress(network?.name || 'mainnet'); // Reads can always use WETH
+    txRequest.from = getDefaultFromAddress(network.name); // Reads can always use WETH
   }
-  const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
-  const newCall = await withERC7412(jsonRpcProvider, reqs, logLabel);
+  const newCall = await withERC7412(network, reqs, logLabel);
 
   const res = await provider.call(newCall);
 

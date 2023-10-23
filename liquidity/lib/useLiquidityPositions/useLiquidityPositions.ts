@@ -87,6 +87,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       const allCalls = collateralPriceCalls.concat(priceCalls.concat(positionCalls));
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
       return await erc7412Call(
+        network,
         CoreProxy.provider,
         allCalls,
         (encoded) => {

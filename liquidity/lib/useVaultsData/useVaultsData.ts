@@ -56,6 +56,7 @@ export const useVaultsData = (poolId?: number) => {
       const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
 
       return await erc7412Call(
+        network,
         CoreProxyContract.provider,
         calls.flat(),
         (multicallResult) => {
