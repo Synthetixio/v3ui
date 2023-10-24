@@ -134,7 +134,7 @@ export function WithdrawModal({
         try {
           await execWithdraw();
           await queryClient.invalidateQueries({
-            queryKey: [network.name, 'AccountSpecificCollateral'],
+            queryKey: [`${network.id}-${network.preset}`, 'AccountSpecificCollateral'],
           });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);

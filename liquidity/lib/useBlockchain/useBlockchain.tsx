@@ -10,7 +10,7 @@ import SynthetixLogo from './SynthetixLogo.svg';
 
 export type Network = {
   id: number;
-  preset?: string;
+  preset: string;
   hexId: string;
   token: string;
   name: string;
@@ -24,6 +24,7 @@ export type Network = {
 
 export const UNSUPPORTED_NETWORK: Network = {
   id: 0,
+  preset: 'main',
   hexId: `0x${Number(0).toString(16)}`,
   token: 'ETH',
   name: 'unsupported',
@@ -35,9 +36,24 @@ export const UNSUPPORTED_NETWORK: Network = {
   isTestnet: false,
 };
 
-export const NETWORKS: Record<string, Network> = {
-  mainnet: {
+const NETWORK_OPTIMISM: Network = {
+  id: 10,
+  preset: 'main',
+  hexId: `0x${Number(10).toString(16)}`,
+  token: 'ETH',
+  name: 'optimism-mainnet',
+  rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
+  label: 'Optimism',
+  Icon: () => <OptimismIcon />,
+  isSupported: true,
+  publicRpcUrl: 'https://mainnet.optimism.io',
+  isTestnet: false,
+};
+
+export const NETWORKS: Network[] = [
+  {
     id: 1,
+    preset: 'main',
     hexId: `0x${Number(1).toString(16)}`,
     token: 'ETH',
     name: 'mainnet',
@@ -48,20 +64,10 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://ethereum.publicnode.com',
     isTestnet: false,
   },
-  'optimism-mainnet': {
-    id: 10,
-    hexId: `0x${Number(10).toString(16)}`,
-    token: 'ETH',
-    name: 'optimism-mainnet',
-    rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-    label: 'Optimism',
-    Icon: () => <OptimismIcon />,
-    isSupported: true,
-    publicRpcUrl: 'https://mainnet.optimism.io',
-    isTestnet: false,
-  },
-  goerli: {
+  NETWORK_OPTIMISM,
+  {
     id: 5,
+    preset: 'main',
     hexId: `0x${Number(5).toString(16)}`,
     token: 'ETH',
     name: 'goerli',
@@ -72,8 +78,9 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
     isTestnet: true,
   },
-  sepolia: {
+  {
     id: 11155111,
+    preset: 'main',
     hexId: `0x${Number(11155111).toString(16)}`,
     token: 'ETH',
     name: 'sepolia',
@@ -84,8 +91,9 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
     isTestnet: true,
   },
-  'optimism-goerli': {
+  {
     id: 420,
+    preset: 'main',
     hexId: `0x${Number(420).toString(16)}`,
     token: 'ETH',
     name: 'optimism-goerli',
@@ -96,9 +104,9 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://goerli.optimism.io',
     isTestnet: true,
   },
-  'base-goerli': {
+  {
     id: 84531,
-    preset: 'competition',
+    preset: 'main',
     hexId: `0x${Number(84531).toString(16)}`,
     token: 'ETH',
     name: 'base-goerli',
@@ -109,37 +117,63 @@ export const NETWORKS: Record<string, Network> = {
     publicRpcUrl: 'https://base-goerli.publicnode.com',
     isTestnet: true,
   },
-  cannon: {
+  {
+    id: 84531,
+    preset: 'competition',
+    hexId: `0x${Number(84531).toString(16)}`,
+    token: 'ETH',
+    name: 'base-goerli',
+    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Goerli (competition)',
+    Icon: () => <BaseIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://base-goerli.publicnode.com',
+    isTestnet: true,
+  },
+  {
     id: 13370,
+    preset: 'main',
     hexId: `0x${Number(13370).toString(16)}`,
     token: 'ETH',
     name: 'cannon',
     rpcUrl: `http://127.0.0.1:8545`,
     label: 'Cannon',
     Icon: () => <LogoIcon />,
-    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === 'cannon',
+    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === '13370-main',
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
   },
-};
-export const networksWithERC7412: Record<string, boolean | undefined> = {
-  'base-goerli': true,
-};
+];
 
-const DEFAULT_NETWORK_NAME = window.localStorage.getItem('DEFAULT_NETWORK') || 'optimism-mainnet';
+export const deploymentsWithERC7412: string[] = ['84531-competition'];
+
 export const DEFAULT_NETWORK =
-  DEFAULT_NETWORK_NAME in NETWORKS ? NETWORKS[DEFAULT_NETWORK_NAME] : NETWORKS['optimism-mainnet'];
+  NETWORKS.find(
+    (network) =>
+      `${network.id}-${network.preset}` === window.localStorage.getItem('DEFAULT_NETWORK')
+  ) ?? NETWORK_OPTIMISM;
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule({
   version: 2,
   projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
-  requiredChains: [NETWORKS['mainnet'].id, NETWORKS['optimism-mainnet'].id],
+  requiredChains: [1, 10],
 });
 
 const wallets = [injected, walletConnect];
 
-const chains = Object.values(NETWORKS).map((network) => ({
+const uniqueChains: Network[] = Object.values(
+  NETWORKS.reduce((result, network) => {
+    if (network.id in result) {
+      return result;
+    }
+    Object.assign(result, {
+      [network.id]: network,
+    });
+    return result;
+  }, {})
+);
+const chains = uniqueChains.map((network) => ({
   id: network.hexId,
   token: network.token,
   label: network.label,
@@ -209,12 +243,13 @@ export const BlockchainProvider: React.FC<React.PropsWithChildren> = ({ children
       if (currentWallet) {
         const [chain] = currentWallet.chains;
         if (chain) {
-          const selectedNetwork = Object.values(NETWORKS).find(
-            (network) => network.hexId === chain.id
-          );
+          const selectedNetwork = NETWORKS.find((network) => network.hexId === chain.id);
           if (selectedNetwork) {
             setNetwork(selectedNetwork);
-            window.localStorage.setItem('DEFAULT_NETWORK', selectedNetwork.name);
+            window.localStorage.setItem(
+              'DEFAULT_NETWORK',
+              `${selectedNetwork.id}-${selectedNetwork.preset}`
+            );
           }
         }
       }
@@ -256,9 +291,7 @@ export function useNetwork() {
   ) {
     return network;
   }
-  const connectedChain = Object.values(NETWORKS).find(
-    (network) => network.hexId === wallet.chains[0].id
-  );
+  const connectedChain = NETWORKS.find((network) => network.hexId === wallet.chains[0].id);
   if (connectedChain) {
     return connectedChain;
   }
@@ -271,11 +304,10 @@ export function useSetNetwork() {
   const hasWallet = Boolean(wallet);
   return React.useCallback(
     async (network: Network) => {
+      setNetwork(network);
+      window.localStorage.setItem('DEFAULT_NETWORK', `${network.id}-${network.preset}`);
       if (hasWallet) {
         await onboard.setChain({ chainId: network.hexId });
-      } else {
-        setNetwork(network);
-        window.localStorage.setItem('DEFAULT_NETWORK', network.name);
       }
     },
     [setNetwork, hasWallet]

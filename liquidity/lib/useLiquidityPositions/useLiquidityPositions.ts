@@ -45,9 +45,9 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
   return useQuery({
     queryKey: [
-      network.name,
-      { accountId },
+      `${network.id}-${network.preset}`,
       'LiquidityPositions',
+      { accountId },
       {
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
@@ -87,6 +87,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       const allCalls = collateralPriceCalls.concat(priceCalls.concat(positionCalls));
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
       return await erc7412Call(
+        network,
         CoreProxy.provider,
         allCalls,
         (encoded) => {

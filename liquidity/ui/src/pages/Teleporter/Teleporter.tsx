@@ -32,7 +32,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { providers } from 'ethers';
 
-const NETWORKS_ARRAY = Object.values(NETWORKS).filter((network) => network.isSupported);
+const SUPPORTED_NETWORKS = NETWORKS.filter((network) => network.isSupported);
 
 export const TeleporterUi: FC<{
   connectedWallet?: string;
@@ -115,7 +115,7 @@ export const TeleporterUi: FC<{
                   </MenuButton>
                 </Flex>
                 <MenuList background="black">
-                  {NETWORKS_ARRAY.filter((item) => item.name !== 'goerli')
+                  {SUPPORTED_NETWORKS.filter((item) => item.name !== 'goerli')
                     .filter((chain) => chain.id !== activeNetwork.id)
                     .map((chain) => {
                       return (
@@ -213,7 +213,7 @@ export const TeleporterUi: FC<{
                   </MenuButton>
                 </Flex>
                 <MenuList background="black">
-                  {NETWORKS_ARRAY.filter((item) => item.name !== 'goerli')
+                  {SUPPORTED_NETWORKS.filter((item) => item.name !== 'goerli')
                     .filter((chain) => chain.id !== activeNetwork.id)
                     .filter((chain) =>
                       activeNetwork.isTestnet ? chain.isTestnet : !chain.isTestnet

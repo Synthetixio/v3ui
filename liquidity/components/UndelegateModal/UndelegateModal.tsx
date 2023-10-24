@@ -123,7 +123,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
         try {
           await execUndelegate();
           await queryClient.invalidateQueries({
-            queryKey: [network.name, 'LiquidityPosition'],
+            queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
             exact: false,
           });
         } catch (error: any) {

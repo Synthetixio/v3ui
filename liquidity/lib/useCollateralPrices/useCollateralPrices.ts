@@ -48,14 +48,20 @@ export const useCollateralPrices = () => {
 
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
-    queryKey: [network.name, 'CollateralPrices', { collateralAddresses }],
+    queryKey: [`${network.id}-${network.preset}`, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
       if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) {
         throw 'useCollateralPrices missing required data';
       }
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
 
-      const prices = await erc7412Call(CoreProxy.provider, calls, decoder, 'useCollateralPrices');
+      const prices = await erc7412Call(
+        network,
+        CoreProxy.provider,
+        calls,
+        decoder,
+        'useCollateralPrices'
+      );
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         acc[address] = prices[i];
         return acc;

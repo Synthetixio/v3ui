@@ -158,7 +158,7 @@ export const BorrowModal: React.FC<{
     try {
       await execBorrow();
       await queryClient.invalidateQueries({
-        queryKey: [network.name, 'LiquidityPosition'],
+        queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
         exact: false,
       });
     } catch (error: any) {
@@ -178,7 +178,7 @@ export const BorrowModal: React.FC<{
       });
       throw Error('Borrow failed', { cause: error });
     }
-  }, [errorParserCoreProxy, execBorrow, queryClient, toast, network.name]);
+  }, [execBorrow, queryClient, network.id, network.preset, errorParserCoreProxy, toast]);
 
   const { txnStatus } = txnState;
   if (!params.poolId || !params.accountId || !collateralType) return null;
