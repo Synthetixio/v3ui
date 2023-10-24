@@ -5,6 +5,7 @@ import type { RewardDistributor as RewardDistributor5Main } from './5/RewardDist
 import type { RewardDistributor as RewardDistributor10Main } from './10/RewardDistributor';
 import type { RewardDistributor as RewardDistributor420Main } from './420/RewardDistributor';
 import type { RewardDistributor as RewardDistributor11155111Main } from './11155111/RewardDistributor';
+import type { RewardDistributor as RewardDistributor84531Main } from './84531/RewardDistributor';
 import type { RewardDistributor as RewardDistributor84531Competition } from './84531-competition/RewardDistributor';
 
 export type RewardDistributorType =
@@ -13,6 +14,7 @@ export type RewardDistributorType =
   | RewardDistributor10Main
   | RewardDistributor420Main
   | RewardDistributor11155111Main
+  | RewardDistributor84531Main
   | RewardDistributor84531Competition;
 
 export async function importRewardDistributor(chainId: number, preset: string = 'main') {
@@ -27,6 +29,8 @@ export async function importRewardDistributor(chainId: number, preset: string = 
       return import('./420/RewardDistributor');
     case '11155111-main':
       return import('./11155111/RewardDistributor');
+    case '84531-main':
+      return import('./84531/RewardDistributor');
     case '84531-competition':
       return import('./84531-competition/RewardDistributor');
     default:

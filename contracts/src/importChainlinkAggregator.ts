@@ -5,6 +5,7 @@ import type { ChainlinkAggregator as ChainlinkAggregator5Main } from './5/Chainl
 import type { ChainlinkAggregator as ChainlinkAggregator10Main } from './10/ChainlinkAggregator';
 import type { ChainlinkAggregator as ChainlinkAggregator420Main } from './420/ChainlinkAggregator';
 import type { ChainlinkAggregator as ChainlinkAggregator11155111Main } from './11155111/ChainlinkAggregator';
+import type { ChainlinkAggregator as ChainlinkAggregator84531Main } from './84531/ChainlinkAggregator';
 import type { ChainlinkAggregator as ChainlinkAggregator84531Competition } from './84531-competition/ChainlinkAggregator';
 
 export type ChainlinkAggregatorType =
@@ -13,6 +14,7 @@ export type ChainlinkAggregatorType =
   | ChainlinkAggregator10Main
   | ChainlinkAggregator420Main
   | ChainlinkAggregator11155111Main
+  | ChainlinkAggregator84531Main
   | ChainlinkAggregator84531Competition;
 
 export async function importChainlinkAggregator(chainId: number, preset: string = 'main') {
@@ -27,6 +29,8 @@ export async function importChainlinkAggregator(chainId: number, preset: string 
       return import('./420/ChainlinkAggregator');
     case '11155111-main':
       return import('./11155111/ChainlinkAggregator');
+    case '84531-main':
+      return import('./84531/ChainlinkAggregator');
     case '84531-competition':
       return import('./84531-competition/ChainlinkAggregator');
     default:

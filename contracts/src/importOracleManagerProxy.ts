@@ -5,6 +5,7 @@ import type { OracleManagerProxy as OracleManagerProxy5Main } from './5/OracleMa
 import type { OracleManagerProxy as OracleManagerProxy10Main } from './10/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy420Main } from './420/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy11155111Main } from './11155111/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy84531Main } from './84531/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy84531Competition } from './84531-competition/OracleManagerProxy';
 
 export type OracleManagerProxyType =
@@ -13,6 +14,7 @@ export type OracleManagerProxyType =
   | OracleManagerProxy10Main
   | OracleManagerProxy420Main
   | OracleManagerProxy11155111Main
+  | OracleManagerProxy84531Main
   | OracleManagerProxy84531Competition;
 
 export async function importOracleManagerProxy(chainId: number, preset: string = 'main') {
@@ -27,6 +29,8 @@ export async function importOracleManagerProxy(chainId: number, preset: string =
       return import('./420/OracleManagerProxy');
     case '11155111-main':
       return import('./11155111/OracleManagerProxy');
+    case '84531-main':
+      return import('./84531/OracleManagerProxy');
     case '84531-competition':
       return import('./84531-competition/OracleManagerProxy');
     default:
