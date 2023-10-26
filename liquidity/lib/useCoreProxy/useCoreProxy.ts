@@ -18,6 +18,5 @@ export function useCoreProxy() {
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }

@@ -111,7 +111,7 @@ export function AccountsSelector() {
 
   const {
     mutate: createAccount,
-    isLoading: isCreateAccountLoading,
+    isPending: isCreateAccountLoading,
     data: createAccountData,
   } = useCreateAccount();
 

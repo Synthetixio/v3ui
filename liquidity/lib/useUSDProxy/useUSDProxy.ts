@@ -1,8 +1,8 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import type { JsonRpcProvider } from '@ethersproject/providers';
-import { useNetwork, useProvider, useSigner, NETWORKS } from '@snx-v3/useBlockchain';
-import { USDProxyType, importUSDProxy } from '@synthetixio/v3-contracts';
+import { NETWORKS, useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import { importUSDProxy, USDProxyType } from '@synthetixio/v3-contracts';
 
 export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
   const connectedNetwork = useNetwork();
@@ -24,6 +24,5 @@ export function useUSDProxy(nonConnectedProvider?: JsonRpcProvider) {
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }

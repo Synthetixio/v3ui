@@ -28,6 +28,7 @@ const loadConfigs = async ({ CoreProxy }: { CoreProxy: CoreProxyType }) => {
   const hideDisabled = false;
   return await CoreProxy.getCollateralConfigurations(hideDisabled);
 };
+
 function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
   const seen = new Set<T[K]>();
   return arr.filter((item) => {
@@ -49,7 +50,6 @@ export const useAllCollateralPriceIds = () => {
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
-    cacheTime: Infinity,
 
     queryKey: [`${network.id}-${network.preset}`, 'Collateral Price IDs'],
 

@@ -78,7 +78,7 @@ export const useApprove = (
   return {
     mutation,
     txnState,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     approve: mutation.mutateAsync,
     refetchAllowance,
     requireApproval: !sufficientAllowance,
