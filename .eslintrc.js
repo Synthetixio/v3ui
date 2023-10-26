@@ -53,14 +53,14 @@ module.exports = {
         'liquidity/lib/**/*',
         'theme/**/*',
         'oracle-manager/ui/**/*',
-        'governance/**/*',
+        'governance/ui/**/*',
       ],
 
       env: {
         browser: true,
       },
 
-      extends: ['plugin:react/recommended'],
+      extends: ['plugin:react/recommended', 'plugin:@tanstack/eslint-plugin-query/recommended'],
       plugins: ['react', 'react-hooks', '@tanstack/query'],
 
       settings: {
@@ -80,7 +80,6 @@ module.exports = {
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'error',
         '@tanstack/query/exhaustive-deps': 'off', // not smart enough, does not take into account `enabled` and global imports
-        '@tanstack/query/prefer-query-object-syntax': 'error',
       },
     },
 
