@@ -87,7 +87,7 @@ export const useUndelegate = ({
     mutation,
     txnState,
     settle: () => dispatch({ type: 'settled' }),
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     exec: mutation.mutateAsync,
   };
 };

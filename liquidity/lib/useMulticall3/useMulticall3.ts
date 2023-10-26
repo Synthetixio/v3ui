@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { Multicall3Type, importMulticall3 } from '@synthetixio/v3-contracts';
+import { importMulticall3, Multicall3Type } from '@synthetixio/v3-contracts';
 
 export function useMulticall3() {
   const network = useNetwork();
@@ -18,6 +18,5 @@ export function useMulticall3() {
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }

@@ -5751,6 +5751,7 @@ __metadata:
   resolution: "@snx-v3/useClaimRewards@workspace:liquidity/lib/useClaimRewards"
   dependencies:
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@tanstack/react-query": ^5.0.5
     ethers: ^5.7.2
