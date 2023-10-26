@@ -1,29 +1,24 @@
 import { assertAddressType } from '@snx-v3/assertAddressType';
-import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider, useWallet } from '@snx-v3/useBlockchain';
-import { ethers } from 'ethers';
-import { ZodBigNumber } from '@snx-v3/zod';
+import { Network, useProviderForChain, useWallet } from '@snx-v3/useBlockchain';
+import { Contract } from 'ethers';
 
-export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
-export const abi = ['function balanceOf(address) view returns (uint256)'];
+import { abi, BalanceSchema } from './useTokenBalance';
 
-export const useTokenBalance = (address?: string) => {
+export const useTokenBalanceForChain = (address?: string, network?: Network) => {
   const wallet = useWallet();
-  const provider = useProvider();
-  const network = useNetwork();
-
+  const provider = useProviderForChain(network);
   const tokenAddress = assertAddressType(address) ? address : undefined;
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'TokenBalance',
       { accountAddress: wallet?.address },
       { tokenAddress },
     ],
     queryFn: async () => {
       if (wallet?.address && tokenAddress && provider) {
-        const contract = new ethers.Contract(tokenAddress, abi, provider);
+        const contract = new Contract(tokenAddress, abi, provider);
         return BalanceSchema.parse(await contract.balanceOf(wallet?.address));
       }
     },

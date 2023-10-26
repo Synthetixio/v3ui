@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React from 'react';
-import { EthereumIcon, FailedIcon, OptimismIcon, LogoIcon, BaseIcon } from '@snx-v3/icons';
+import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx-v3/icons';
 import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
@@ -328,6 +328,10 @@ export function useProvider() {
   }
 
   return new ethers.providers.JsonRpcProvider(network.rpcUrl);
+}
+
+export function useProviderForChain(network?: Network) {
+  return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl) : undefined;
 }
 
 export function useSigner() {

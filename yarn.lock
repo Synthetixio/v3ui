@@ -6094,7 +6094,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTokenBalance@workspace:liquidity/lib/useTokenBalance"
   dependencies:
-    "@ethersproject/providers": ^5.7.2
     "@snx-v3/assertAddressType": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
@@ -6121,7 +6120,6 @@ __metadata:
   resolution: "@snx-v3/useUSDProxy@workspace:liquidity/lib/useUSDProxy"
   dependencies:
     "@ethersproject/contracts": ^5.7.0
-    "@ethersproject/providers": ^5.7.2
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": ^5.0.5

@@ -4,33 +4,32 @@ import {
   Divider,
   Flex,
   Heading,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
-  Link,
 } from '@chakra-ui/react';
 import { Balance } from '@snx-v3/Balance';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useTokenBalance, useTokenBalanceForChain } from '@snx-v3/useTokenBalance';
 import { FC, useState } from 'react';
 import Head from 'react-helmet';
 import { TeleporterModal } from './TeleporterModal';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { ChevronDown, ChevronUp, DollarCircle, CCIP } from '@snx-v3/icons';
+import { CCIP, ChevronDown, ChevronUp, DollarCircle } from '@snx-v3/icons';
 import {
-  NETWORKS,
   Network,
+  NETWORKS,
   onboard,
   useNetwork,
   useSetNetwork,
   useWallet,
 } from '@snx-v3/useBlockchain';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useUSDProxy, useUSDProxyForChain } from '@snx-v3/useUSDProxy';
 import Wei, { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
-import { providers } from 'ethers';
 
 const SUPPORTED_NETWORKS = NETWORKS.filter((network) => network.isSupported);
 
@@ -285,8 +284,6 @@ export const TeleporterUi: FC<{
 };
 
 export const Teleporter = () => {
-  const { data: USDProxy } = useUSDProxy();
-
   const [amount, setAmount] = useState(wei(0));
   const [txnModalOpen, setTxnModalOpen] = useState(false);
 
@@ -295,13 +292,11 @@ export const Teleporter = () => {
   const setNetwork = useSetNetwork();
   const [toNetwork, setToNetwork] = useState<Network | undefined>();
 
-  const { data: USDProxyTNetwork } = useUSDProxy(
-    toNetwork?.id
-      ? new providers.InfuraProvider(toNetwork?.id, process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
-      : undefined
-  );
+  const { data: USDProxy } = useUSDProxy();
   const { data: balance } = useTokenBalance(USDProxy?.address);
-  const { data: toBalance } = useTokenBalance(USDProxyTNetwork?.address, toNetwork?.id);
+
+  const { data: USDProxyForChain } = useUSDProxyForChain(toNetwork);
+  const { data: toBalance } = useTokenBalanceForChain(USDProxyForChain?.address, toNetwork);
 
   return (
     <>
