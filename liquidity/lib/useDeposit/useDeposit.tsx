@@ -93,7 +93,8 @@ export const useDeposit = ({
           collateralPriceCallsPromise,
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
-        const erc7412Tx = await withERC7412(provider, allCalls, 'useDeposit');
+
+        const erc7412Tx = await withERC7412(network, allCalls, 'useDeposit');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
@@ -116,7 +117,7 @@ export const useDeposit = ({
     mutation,
     txnState,
     settle: () => dispatch({ type: 'settled' }),
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     exec: mutation.mutateAsync,
   };
 };

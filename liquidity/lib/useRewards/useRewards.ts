@@ -68,13 +68,11 @@ export function useRewards(
       Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
     ),
     queryKey: [
+      `${network.id}-${network.preset}`,
       'Rewards',
-      network.name,
-      {
-        distributors,
-        accountId,
-        collateralAddress,
-      },
+      { accountId },
+      { collateralAddress },
+      { distributors },
     ],
     queryFn: async () => {
       if (

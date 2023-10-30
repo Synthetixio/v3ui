@@ -79,7 +79,7 @@ export const useLiquidityPosition = ({
   const network = useNetwork();
   return useQuery({
     queryKey: [
-      network.name,
+      `${network.id}-${network.preset}`,
       'LiquidityPosition',
       { accountId },
       {
@@ -128,6 +128,7 @@ export const useLiquidityPosition = ({
       );
 
       return await erc7412Call(
+        network,
         CoreProxy.provider,
         allCalls,
         (encoded) => {

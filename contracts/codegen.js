@@ -20,6 +20,7 @@ const DEPLOYMENTS = [
   { chainId: 10, preset: 'main' },
   { chainId: 420, preset: 'main' },
   { chainId: 11155111, preset: 'main' },
+  { chainId: 84531, preset: 'main' },
   { chainId: 84531, preset: 'competition' },
 ];
 

@@ -5,6 +5,7 @@ import type { CoreProxy as CoreProxy5Main } from './5/CoreProxy';
 import type { CoreProxy as CoreProxy10Main } from './10/CoreProxy';
 import type { CoreProxy as CoreProxy420Main } from './420/CoreProxy';
 import type { CoreProxy as CoreProxy11155111Main } from './11155111/CoreProxy';
+import type { CoreProxy as CoreProxy84531Main } from './84531/CoreProxy';
 import type { CoreProxy as CoreProxy84531Competition } from './84531-competition/CoreProxy';
 
 export type CoreProxyType =
@@ -13,6 +14,7 @@ export type CoreProxyType =
   | CoreProxy10Main
   | CoreProxy420Main
   | CoreProxy11155111Main
+  | CoreProxy84531Main
   | CoreProxy84531Competition;
 
 export async function importCoreProxy(chainId: number, preset: string = 'main') {
@@ -27,6 +29,8 @@ export async function importCoreProxy(chainId: number, preset: string = 'main') 
       return import('./420/CoreProxy');
     case '11155111-main':
       return import('./11155111/CoreProxy');
+    case '84531-main':
+      return import('./84531/CoreProxy');
     case '84531-competition':
       return import('./84531-competition/CoreProxy');
     default:

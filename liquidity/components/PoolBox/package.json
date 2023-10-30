@@ -15,6 +15,6 @@
     "@snx-v3/usePools": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "react": "^18.2.0",
-    "react-router-dom": "^6.16.0"
+    "react-router-dom": "^6.17.0"
   }
 }

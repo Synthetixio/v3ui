@@ -5,6 +5,7 @@ import type { CCIP as CCIP5Main } from './5/CCIP';
 import type { CCIP as CCIP10Main } from './10/CCIP';
 import type { CCIP as CCIP420Main } from './420/CCIP';
 import type { CCIP as CCIP11155111Main } from './11155111/CCIP';
+import type { CCIP as CCIP84531Main } from './84531/CCIP';
 import type { CCIP as CCIP84531Competition } from './84531-competition/CCIP';
 
 export type CCIPType =
@@ -13,6 +14,7 @@ export type CCIPType =
   | CCIP10Main
   | CCIP420Main
   | CCIP11155111Main
+  | CCIP84531Main
   | CCIP84531Competition;
 
 export async function importCCIP(chainId: number, preset: string = 'main') {
@@ -27,6 +29,8 @@ export async function importCCIP(chainId: number, preset: string = 'main') {
       return import('./420/CCIP');
     case '11155111-main':
       return import('./11155111/CCIP');
+    case '84531-main':
+      return import('./84531/CCIP');
     case '84531-competition':
       return import('./84531-competition/CCIP');
     default:

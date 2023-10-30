@@ -11,13 +11,12 @@ export function useCoreProxy() {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [network.name, 'CoreProxy', { withSigner }],
+    queryKey: [`${network.id}-${network.preset}`, 'CoreProxy', { withSigner }],
     queryFn: async function () {
       const { address, abi } = await importCoreProxy(network.id, network.preset);
       return new Contract(address, abi, signerOrProvider) as CoreProxyType;
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }

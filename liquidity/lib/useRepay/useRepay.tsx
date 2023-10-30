@@ -95,7 +95,7 @@ export const useRepay = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(provider, allCalls, 'useRepay');
+        const erc7412Tx = await withERC7412(network, allCalls, 'useRepay');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
@@ -118,7 +118,7 @@ export const useRepay = ({
     mutation,
     txnState,
     settle: () => dispatch({ type: 'settled' }),
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     exec: mutation.mutateAsync,
   };
 };

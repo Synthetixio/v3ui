@@ -8,7 +8,7 @@ export function useAccountCollateralUnlockDate({ accountId }: { accountId?: stri
   const network = useNetwork();
 
   return useQuery({
-    queryKey: [network.name, { accountId }, 'AccountCollateralUnlockDate'],
+    queryKey: [`${network.id}-${network.preset}`, 'AccountCollateralUnlockDate', { accountId }],
     enabled: Boolean(CoreProxy && accountId),
     queryFn: async function () {
       if (!CoreProxy || !accountId) throw 'OMG';

@@ -28,7 +28,7 @@ export const usePoolConfiguration = (poolId?: string) => {
 
   return useQuery({
     enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),
-    queryKey: [network.name, 'PoolConfiguration', { poolId }],
+    queryKey: [`${network.id}-${network.preset}`, 'PoolConfiguration', { poolId }],
     queryFn: async () => {
       if (!CoreProxy || !poolId || !collateralPriceUpdates) {
         throw Error('usePoolConfiguration should not be enabled');
@@ -48,6 +48,7 @@ export const usePoolConfiguration = (poolId?: string) => {
         markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
       );
       const decoded = await erc7412Call(
+        network,
         CoreProxy.provider,
         collateralPriceCalls.concat(calls),
         (encoded) => {
