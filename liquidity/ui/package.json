@@ -26,6 +26,7 @@
     "@snx-v3/NumberInput": "workspace:*",
     "@snx-v3/PercentBadges": "workspace:*",
     "@snx-v3/PoolBox": "workspace:*",
+    "@snx-v3/Pools": "workspace:*",
     "@snx-v3/RepayModal": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
     "@snx-v3/TrendText": "workspace:*",
