@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BigNumber } from 'ethers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { initialState, reducer } from '@snx-v3/txnReducer';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export function useClaimRewards(
   poolId?: string,
@@ -11,6 +12,7 @@ export function useClaimRewards(
   distributorAddress?: string,
   amount?: number
 ) {
+  const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const client = useQueryClient();
@@ -50,7 +52,7 @@ export function useClaimRewards(
         });
 
         dispatch({ type: 'success' });
-        client.invalidateQueries(['Rewards']);
+        client.invalidateQueries({ queryKey: [`${network.id}-${network.preset}`, 'Rewards'] });
         return claimedAmount;
       } catch (error) {
         const err = error as Error;
@@ -65,7 +67,7 @@ export function useClaimRewards(
     mutation,
     txnState,
     settle: () => dispatch({ type: 'settled' }),
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     exec: mutation.mutateAsync,
   };
 }

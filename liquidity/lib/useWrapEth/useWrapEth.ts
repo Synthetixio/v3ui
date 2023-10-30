@@ -18,7 +18,7 @@ export const useWrapEth = () => {
     ethCollateral?.tokenAddress
   );
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (amount: Wei) => {
       if (!ethCollateral || !signer) return;
       const contract = new Contract(ethCollateral?.tokenAddress, minimalWETHABI, signer);
@@ -39,7 +39,7 @@ export const useWrapEth = () => {
   );
   return {
     exec,
-    isLoading,
+    isLoading: isPending,
     wethBalance,
     ethBalance,
   };
@@ -54,7 +54,7 @@ export const useUnWrapEth = () => {
     ethCollateral?.tokenAddress
   );
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (amount: Wei) => {
       if (!ethCollateral || !signer) return;
       const contract = new Contract(ethCollateral?.tokenAddress, minimalWETHABI, signer);
@@ -75,7 +75,7 @@ export const useUnWrapEth = () => {
 
   return {
     exec,
-    isLoading,
+    isLoading: isPending,
     wethBalance,
     ethBalance,
   };

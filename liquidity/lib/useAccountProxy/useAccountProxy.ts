@@ -18,6 +18,5 @@ export function useAccountProxy() {
     },
     enabled: Boolean(network.isSupported && signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }

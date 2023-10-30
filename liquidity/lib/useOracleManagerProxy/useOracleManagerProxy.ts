@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { OracleManagerProxyType, importOracleManagerProxy } from '@synthetixio/v3-contracts';
+import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 
 export function useOracleManagerProxy() {
   const network = useNetwork();
@@ -18,6 +18,5 @@ export function useOracleManagerProxy() {
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
-    cacheTime: Infinity,
   });
 }
