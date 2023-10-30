@@ -5078,7 +5078,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Amount@workspace:*, @snx-v3/Amount@workspace:liquidity/components/Amount":
+"@snx-v3/Amount@workspace:*, @snx-v3/Amount@workspace:^, @snx-v3/Amount@workspace:liquidity/components/Amount":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Amount@workspace:liquidity/components/Amount"
   dependencies:
@@ -5101,7 +5101,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/BorderBox@workspace:*, @snx-v3/BorderBox@workspace:liquidity/components/BorderBox":
+"@snx-v3/BorderBox@workspace:*, @snx-v3/BorderBox@workspace:^, @snx-v3/BorderBox@workspace:liquidity/components/BorderBox":
   version: 0.0.0-use.local
   resolution: "@snx-v3/BorderBox@workspace:liquidity/components/BorderBox"
   dependencies:
@@ -5255,6 +5255,31 @@ __metadata:
     "@chakra-ui/icons": ^2.1.1
     "@chakra-ui/react": ^2.8.1
     "@snx-v3/usePools": "workspace:*"
+    react: ^18.2.0
+    react-router-dom: ^6.16.0
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/Pools@workspace:liquidity/components/Pools":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/Pools@workspace:liquidity/components/Pools"
+  dependencies:
+    "@chakra-ui/react": ^2.8.1
+    "@snx-v3/Amount": "workspace:^"
+    "@snx-v3/BorderBox": "workspace:^"
+    "@snx-v3/WithdrawModal": "workspace:*"
+    "@snx-v3/calculations": "workspace:*"
+    "@snx-v3/formatters": "workspace:^"
+    "@snx-v3/icons": "workspace:^"
+    "@snx-v3/useAccountCollateral": "workspace:^"
+    "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useLiquidityPositions": "workspace:*"
+    "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/usePools": "workspace:*"
+    "@synthetixio/safe-import": "workspace:^"
+    "@synthetixio/wei": ^2.74.4
     react: ^18.2.0
     react-router-dom: ^6.16.0
   languageName: unknown
@@ -5422,7 +5447,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/formatters@workspace:*, @snx-v3/formatters@workspace:liquidity/lib/formatters":
+"@snx-v3/formatters@workspace:*, @snx-v3/formatters@workspace:^, @snx-v3/formatters@workspace:liquidity/lib/formatters":
   version: 0.0.0-use.local
   resolution: "@snx-v3/formatters@workspace:liquidity/lib/formatters"
   dependencies:
@@ -5479,7 +5504,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/icons@workspace:*, @snx-v3/icons@workspace:liquidity/components/icons":
+"@snx-v3/icons@workspace:*, @snx-v3/icons@workspace:^, @snx-v3/icons@workspace:liquidity/components/icons":
   version: 0.0.0-use.local
   resolution: "@snx-v3/icons@workspace:liquidity/components/icons"
   dependencies:
@@ -5539,7 +5564,6 @@ __metadata:
     "@snx-v3/TrendText": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
-    "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/etherscanLink": "workspace:*"
@@ -5675,7 +5699,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useAccountCollateral@workspace:*, @snx-v3/useAccountCollateral@workspace:liquidity/lib/useAccountCollateral":
+"@snx-v3/useAccountCollateral@workspace:*, @snx-v3/useAccountCollateral@workspace:^, @snx-v3/useAccountCollateral@workspace:liquidity/lib/useAccountCollateral":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAccountCollateral@workspace:liquidity/lib/useAccountCollateral"
   dependencies:
@@ -6488,7 +6512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@synthetixio/safe-import@workspace:*, @synthetixio/safe-import@workspace:tools/safe-import":
+"@synthetixio/safe-import@workspace:*, @synthetixio/safe-import@workspace:^, @synthetixio/safe-import@workspace:tools/safe-import":
   version: 0.0.0-use.local
   resolution: "@synthetixio/safe-import@workspace:tools/safe-import"
   dependencies:

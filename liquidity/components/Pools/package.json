@@ -1,0 +1,26 @@
+{
+  "name": "@snx-v3/Pools",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.1",
+    "@snx-v3/Amount": "workspace:^",
+    "@snx-v3/BorderBox": "workspace:^",
+    "@snx-v3/WithdrawModal": "workspace:*",
+    "@snx-v3/calculations": "workspace:*",
+    "@snx-v3/formatters": "workspace:^",
+    "@snx-v3/icons": "workspace:^",
+    "@snx-v3/useAccountCollateral": "workspace:^",
+    "@snx-v3/useAccountCollateralUnlockDate": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useCollateralTypes": "workspace:*",
+    "@snx-v3/useLiquidityPositions": "workspace:*",
+    "@snx-v3/useParams": "workspace:*",
+    "@snx-v3/usePools": "workspace:*",
+    "@synthetixio/safe-import": "workspace:^",
+    "@synthetixio/wei": "^2.74.4",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.16.0"
+  }
+}

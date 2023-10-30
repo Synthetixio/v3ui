@@ -1,6 +1,5 @@
 import { Box, Divider, Flex } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { FC } from 'react';
 import { PoolHeader } from './PoolHeader';
 import { MarketSection } from './MarketSection';
 import { CollateralSection } from './CollateralSection';
@@ -8,34 +7,9 @@ import { useParams } from '@snx-v3/useParams';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
 import { Rewards } from '../../components/Rewards';
-import { RewardsType, useRewards } from '@snx-v3/useRewards';
+import { useRewards } from '@snx-v3/useRewards';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-
-export const PoolUi: FC<{
-  PoolHeader: FC;
-  CollateralSection: FC;
-  MarketSection: FC;
-  isLoading: boolean;
-  rewards?: RewardsType;
-}> = ({ PoolHeader, CollateralSection, MarketSection, isLoading, rewards }) => {
-  return (
-    <>
-      <HomeLink />
-      <PoolHeader />
-      <Divider my={8} bg="gray.900" />
-      <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }}>
-        <Box flexGrow={1}>
-          <CollateralSection />
-        </Box>
-        <Box flexGrow={1}>
-          <MarketSection />
-          <Rewards mt={4} isLoading={isLoading} rewards={rewards} readOnly={true} />
-        </Box>
-      </Flex>
-    </>
-  );
-};
 
 export const Pool = () => {
   const params = useParams();
@@ -65,13 +39,20 @@ export const Pool = () => {
         <title>{title}</title>
         <meta name="description" content={title} />
       </Helmet>
-      <PoolUi
-        PoolHeader={PoolHeader}
-        CollateralSection={CollateralSection}
-        MarketSection={MarketSection}
-        isLoading={isLoading}
-        rewards={rewardsData}
-      />
+      <>
+        <HomeLink />
+        <PoolHeader />
+        <Divider my={8} bg="gray.900" />
+        <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }}>
+          <Box flexGrow={1}>
+            <CollateralSection />
+          </Box>
+          <Box flexGrow={1}>
+            <MarketSection />
+            <Rewards mt={4} isLoading={isLoading} rewards={rewardsData} readOnly={true} />
+          </Box>
+        </Flex>
+      </>
     </>
   );
 };
