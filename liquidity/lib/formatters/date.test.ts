@@ -93,4 +93,10 @@ describe('formatTimeToUnlock function', () => {
     expect(result).toBeDefined();
     expect(typeof result).toBe('string');
   });
+
+  // Test case 4: Exception on a invalid date
+  it('should throw an exception when the date is invalid', () => {
+    const invalidDate = new Date('invalid');
+    expect(() => formatTimeToUnlock(invalidDate)).toThrow();
+  });
 });
