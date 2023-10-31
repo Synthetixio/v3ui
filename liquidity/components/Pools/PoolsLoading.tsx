@@ -16,7 +16,7 @@ export const PoolsLoading = () => {
           flexDirection={{ base: 'column', md: 'row' }}
         >
           <Fade in>
-            <Heading fontSize="2xl">Loading Pools ...</Heading>
+            <Heading fontSize="2xl">Loading Pools...</Heading>
           </Fade>
         </Flex>
       </Flex>

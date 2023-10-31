@@ -15,7 +15,7 @@ export const VaultRowLoading = ({
     <Tr>
       <Td>
         <Flex flexDir="row" py={4}>
-          <SkeletonCircle startColor={startColor} endColor={endColor}>
+          <SkeletonCircle startColor={startColor} endColor={endColor} height="40px" width="40px">
             <CollateralIcon width="40px" height="40px" symbol="SNX" />
           </SkeletonCircle>
         </Flex>
