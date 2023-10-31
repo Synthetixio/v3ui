@@ -1,6 +1,7 @@
 import React from 'react';
 import { AvailableCollateralUi } from './AvailableCollateral';
 import { wei } from '@synthetixio/wei';
+import { AvailableCollateralRow } from './AvailableCollateralRow';
 
 describe('AvailableCollateral Component', () => {
   const accountCollaterals = [
@@ -15,12 +16,24 @@ describe('AvailableCollateral Component', () => {
   ];
 
   it('renders loading state initially', () => {
-    cy.mount(<AvailableCollateralUi isLoading={true} accountCollaterals={[]} />);
+    cy.mount(
+      <AvailableCollateralUi
+        isLoading={true}
+        accountCollaterals={[]}
+        AvailableCollateralRow={AvailableCollateralRow}
+      />
+    );
     cy.get('h2').should('contain', 'Loading Collateral...');
   });
 
   it('renders available collateral when not in loading state', () => {
-    cy.mount(<AvailableCollateralUi isLoading={false} accountCollaterals={accountCollaterals} />);
+    cy.mount(
+      <AvailableCollateralUi
+        isLoading={false}
+        accountCollaterals={accountCollaterals}
+        AvailableCollateralRow={AvailableCollateralRow}
+      />
+    );
 
     cy.get('h2').should('contain', 'Available Collateral');
     cy.get('[data-testid="available-collateral"]').should('exist').should('contain', '100 SNX');
@@ -38,6 +51,7 @@ describe('AvailableCollateral Component', () => {
         unlockDate={unlockDate}
         unlockDateString="3 days"
         timeToUnlock="in about 3 days"
+        AvailableCollateralRow={AvailableCollateralRow}
       />
     );
 

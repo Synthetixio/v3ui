@@ -38,6 +38,7 @@ export function AvailableCollateralUi({
   unlockDateString?: string;
   unlockDate?: Date;
   isLoading: boolean;
+  AvailableCollateralRow: typeof AvailableCollateralRow;
 }) {
   return (
     <BorderBox p={4} mt={8} flexDir="column">
@@ -143,6 +144,7 @@ export function AvailableCollateral() {
       unlockDateString={unlockDateString?.toString() || ''}
       unlockDate={accountCollateralUnlockDate}
       isLoading={isLoading}
+      AvailableCollateralRow={AvailableCollateralRow}
     />
   );
 }
