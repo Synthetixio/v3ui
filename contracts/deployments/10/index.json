@@ -12,7 +12,6 @@
     "SpotMarketProxy": "0x38908Ee087D7db73A1Bd1ecab9AAb8E8c9C74595",
     "CCIP": "0x0000000000000000000000000000000000000000",
     "ChainlinkAggregator": null,
-    "Multicall3": "0xca11bde05977b3631167028862be2a173976ca11",
     "RewardDistributor": null
   }
 }

@@ -11,7 +11,6 @@
     "OracleManagerProxy": "0x21a642c7b2B511f934DDD1250E2335899696ED0e",
     "CCIP": "0xa189971a2c5aca0dfc5ee7a2c44a2ae27b3cf389",
     "ChainlinkAggregator": null,
-    "Multicall3": "0xDfBb25c54a2bbe605BFD452f9846ae152486dae9",
     "RewardDistributor": null
   }
 }

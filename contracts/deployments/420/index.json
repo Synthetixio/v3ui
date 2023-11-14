@@ -15,7 +15,6 @@
     "PerpsAccountProxy": "0x01C2f64ABd46AF20950736f3C3e1a9cfc5c36c82",
     "CCIP": "0xE591bf0A0CF924A0674d7792db046B23CEbF5f34",
     "ChainlinkAggregator": null,
-    "Multicall3": "0x75Da8363571DBe775D75817857a06384577C9DD6",
     "RewardDistributor": null
   }
 }
