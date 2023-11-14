@@ -2,7 +2,7 @@
   "name": "synthetix-omnibus",
   "version": "latest",
   "preset": "main",
-  "ipfs": "ipfs://QmYwpPkt9i3u2oEgSJVPpNLozPx95s2VNSkaioRzAQ77Bb",
+  "ipfs": "ipfs://QmXeiEfxt2PPPbhSMY1AqxVbmeJPiZ14VmNyS8utJKby68",
   "chainId": 84531,
   "addresses": {
     "CoreProxy": "0x3a0B49f5B93a95453BdaCfc3653E15F982A0187A",

@@ -7,5 +7,6 @@ export * from './importChainlinkAggregator';
 export * from './importMulticall3';
 export * from './importRewardDistributor';
 export * from './importSpotMarketProxy';
+export * from './importTrustedMulticallForwarder';
 export * from './importPerpsMarketProxy';
 export * from './importPerpsAccountProxy';
