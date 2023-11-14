@@ -94,7 +94,12 @@ async function codegen({ chainId, preset, registry, loader }) {
   contracts.AccountProxy = system.contracts.AccountProxy;
   contracts.USDProxy = system.contracts.USDProxy;
   contracts.OracleManagerProxy = system.imports.oracle_manager.contracts.Proxy;
-
+  const TrustedMulticallForwarder =
+    system.imports.trusted_multicall_forwarder?.contracts.TrustedMulticallForwarder;
+  if (TrustedMulticallForwarder) {
+    // TODO remove if when trusted multicall_forwarder is live on all network
+    contracts.TrustedMulticallForwarder = TrustedMulticallForwarder;
+  }
   const spotFactory =
     deployments?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
   if (spotFactory) {
@@ -271,6 +276,7 @@ async function run() {
     signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
     address: CANNON_REGISTRY_ADDRESS,
   });
+
   const loader = new IPFSLoader(IPFS_GATEWAY);
   const deployments = await Promise.all(
     DEPLOYMENTS.map(({ chainId, preset }) => codegen({ chainId, preset, registry, loader }))
