@@ -5202,6 +5202,31 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/Pools@workspace:*, @snx-v3/Pools@workspace:liquidity/components/Pools":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/Pools@workspace:liquidity/components/Pools"
+  dependencies:
+    "@chakra-ui/react": ^2.8.1
+    "@snx-v3/Amount": "workspace:*"
+    "@snx-v3/BorderBox": "workspace:*"
+    "@snx-v3/WithdrawModal": "workspace:*"
+    "@snx-v3/calculations": "workspace:*"
+    "@snx-v3/formatters": "workspace:*"
+    "@snx-v3/icons": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useLiquidityPositions": "workspace:*"
+    "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/usePools": "workspace:*"
+    "@synthetixio/safe-import": "workspace:*"
+    "@synthetixio/wei": ^2.74.4
+    react: ^18.2.0
+    react-router-dom: ^6.17.0
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/RepayModal@workspace:*, @snx-v3/RepayModal@workspace:liquidity/components/RepayModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/RepayModal@workspace:liquidity/components/RepayModal"
@@ -5367,6 +5392,8 @@ __metadata:
 "@snx-v3/formatters@workspace:*, @snx-v3/formatters@workspace:liquidity/lib/formatters":
   version: 0.0.0-use.local
   resolution: "@snx-v3/formatters@workspace:liquidity/lib/formatters"
+  dependencies:
+    date-fns: ^2.30.0
   languageName: unknown
   linkType: soft
 
@@ -5474,12 +5501,12 @@ __metadata:
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/PoolBox": "workspace:*"
+    "@snx-v3/Pools": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/TrendText": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
-    "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/etherscanLink": "workspace:*"

@@ -1,70 +1,24 @@
+import React from 'react';
 import { Helmet } from 'react-helmet';
-import {
-  Box,
-  Button,
-  Fade,
-  Flex,
-  Heading,
-  Skeleton,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
-import React, { FC } from 'react';
-import { generatePath, Link, useLocation } from 'react-router-dom';
-import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { VaultRow, VaultRowProps } from './VaultRow';
-import { PoolsType, usePools } from '@snx-v3/usePools';
+import { Flex } from '@chakra-ui/react';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
-import { BorderBox } from '@snx-v3/BorderBox';
-import { LiquidityPositionsById, useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
+import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { Welcome } from '../../components/Shared/Welcome';
-import { Stats, StatsProps } from './Stats';
-import { AvailableCollateral } from './AvailableCollateral';
+import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
 
-const LoadingRow = () => (
-  <Tr>
-    <Td>
-      <Skeleton w="full" height={8} />
-    </Td>
-    <Td>
-      <Skeleton w="full" height={8} />
-    </Td>
-    <Td>
-      <Skeleton w="full" height={8} />
-    </Td>
-    <Td>
-      <Skeleton w="full" height={8} />
-    </Td>
-    <Td>
-      <Skeleton w="full" height={8} />
-    </Td>
-    <Td>
-      <Skeleton minWidth={16} height={8} />
-    </Td>
-  </Tr>
-);
+export function Home() {
+  const { accountId } = useParams();
 
-export function HomeUi({
-  collateralTypes,
-  pools,
-  liquidityPositionsById,
-  isLoading,
-  VaultRow,
-  Stats,
-  AvailableCollateral,
-}: {
-  collateralTypes?: CollateralType[];
-  pools: PoolsType;
-  liquidityPositionsById?: LiquidityPositionsById;
-  isLoading: boolean;
-  VaultRow: FC<VaultRowProps>;
-  Stats: FC<StatsProps>;
-  AvailableCollateral: FC;
-}) {
+  const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
+  const { data: pools, isLoading: isPoolsLoading } = usePools();
+
+  const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
+    useLiquidityPositions({ accountId });
+
+  const isLoading = collateralTypesLoading || isPoolsLoading || liquidityPositionLoading;
+
   const { totalCollateral, totalDebt } =
     Object.values(liquidityPositionsById || []).reduce(
       (acc, val) => {
@@ -74,167 +28,6 @@ export function HomeUi({
       },
       { totalCollateral: 0, totalDebt: 0 }
     ) || {};
-  const location = useLocation();
-
-  return (
-    <Flex height="100%" flexDirection="column">
-      <Box mb="8">
-        <Welcome />
-      </Box>
-      <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} />
-      {isLoading ? (
-        <BorderBox p={4} mt={8} flexDir="column">
-          <Flex
-            justifyContent="space-between"
-            flexWrap={{ base: 'wrap', md: 'nowrap' }}
-            alignItems="center"
-          >
-            <Flex
-              alignItems="baseline"
-              justifyContent="flex-start"
-              flexDirection={{ base: 'column', md: 'row' }}
-            >
-              <Skeleton />
-            </Flex>
-          </Flex>
-        </BorderBox>
-      ) : (
-        <>
-          {pools.map((pool) => (
-            <BorderBox key={pool.id} p={4} mt={8} flexDir="column">
-              <Flex
-                justifyContent="space-between"
-                flexWrap={{ base: 'wrap', md: 'nowrap' }}
-                alignItems="center"
-              >
-                <Flex
-                  alignItems="baseline"
-                  justifyContent="flex-start"
-                  flexDirection={{ base: 'column', md: 'row' }}
-                >
-                  <Fade in>
-                    <Heading fontSize="2xl">{pool.name}</Heading>
-                  </Fade>
-                </Flex>
-                {pool.id && (
-                  <Fade in>
-                    <Button
-                      as={Link}
-                      mt={{ base: 2, md: 0 }}
-                      size="sm"
-                      to={{
-                        pathname: generatePath('/pools/:poolId', { poolId: pool.id }),
-                        search: location.search,
-                      }}
-                      variant="outline"
-                    >
-                      Pool Info
-                    </Button>
-                  </Fade>
-                )}
-              </Flex>
-              <Box overflowX="auto">
-                <Table mt={8} size="sm" variant="unstyled" mb="9">
-                  <Thead sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-                    <Tr>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="3"
-                        textTransform="initial"
-                      >
-                        Collateral
-                      </Th>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="3"
-                        textTransform="initial"
-                      >
-                        Debt
-                      </Th>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="3"
-                        textTransform="initial"
-                      >
-                        C-Ratio
-                      </Th>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="3"
-                        textTransform="initial"
-                      >
-                        Issuance Ratio
-                      </Th>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="3"
-                        textTransform="initial"
-                      >
-                        Liquidation Ratio
-                      </Th>
-                      <Th
-                        color="gray.500"
-                        fontSize="xs"
-                        lineHeight="4"
-                        pb="2"
-                        textTransform="initial"
-                      ></Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody sx={{ tr: { borderBottomColor: 'gray.900', borderBottomWidth: '1px' } }}>
-                    {collateralTypes ? (
-                      collateralTypes.map((c) => (
-                        <VaultRow
-                          key={c.tokenAddress}
-                          collateralType={c}
-                          poolId={pool.id}
-                          liquidityPosition={liquidityPositionsById?.[`${pool.id}-${c.symbol}`]}
-                        />
-                      ))
-                    ) : (
-                      <>
-                        <LoadingRow />
-                        <LoadingRow />
-                      </>
-                    )}
-                  </Tbody>
-                </Table>
-              </Box>
-            </BorderBox>
-          ))}
-        </>
-      )}
-      <AvailableCollateral />
-    </Flex>
-  );
-}
-
-export function Home() {
-  const { accountId } = useParams();
-
-  const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
-  const { data: pools, isLoading: isPoolsLoading } = usePools();
-
-  const {
-    data: liquidityPositionsById,
-    isLoading: liquidityPositionLoading,
-    isInitialLoading: liquidityInitialLoading,
-  } = useLiquidityPositions({ accountId });
-
-  const isLoading =
-    collateralTypesLoading ||
-    isPoolsLoading ||
-    (liquidityPositionLoading && liquidityInitialLoading);
 
   return (
     <>
@@ -242,15 +35,17 @@ export function Home() {
         <title>Synthetix V3</title>
         <meta name="description" content="Synthetix V3" />
       </Helmet>
-      <HomeUi
-        isLoading={isLoading}
-        liquidityPositionsById={liquidityPositionsById}
-        collateralTypes={collateralTypes}
-        pools={pools || []}
-        VaultRow={VaultRow}
-        AvailableCollateral={AvailableCollateral}
-        Stats={Stats}
-      />
+      <Flex height="100%" flexDirection="column">
+        <Welcome />
+        <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} isLoading={isLoading} />
+        <PoolsList
+          pools={pools}
+          isLoading={isLoading}
+          collateralTypes={collateralTypes}
+          liquidityPositionsById={liquidityPositionsById}
+        />
+        <AvailableCollateral />
+      </Flex>
     </>
   );
 }

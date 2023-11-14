@@ -24,6 +24,7 @@ export type LiquidityPositionType = {
   cRatio: Wei;
   debt: Wei;
 };
+
 export type LiquidityPositionsById = {
   [poolIdDashSymbol: `${string}-${string}`]: LiquidityPositionType;
 };

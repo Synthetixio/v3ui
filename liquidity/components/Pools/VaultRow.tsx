@@ -1,7 +1,7 @@
+import { FC } from 'react';
 import { Amount } from '@snx-v3/Amount';
 import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { generatePath, Link, useLocation } from 'react-router-dom';
-import { FC } from 'react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
@@ -35,14 +35,14 @@ function VaultRowUi({
         <Flex flexDir="row" py={4}>
           <CollateralIcon width="40px" height="40px" symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
-            <Text fontSize="sm" lineHeight="20px" fontWeight="500">
+            <Text fontSize="sm" lineHeight="20px" fontWeight="500" data-testid="collateral-value">
               {liquidityPosition?.collateralValue.gt(0) ? (
                 <Amount value={liquidityPosition.collateralValue} prefix="$" />
               ) : (
                 '-'
               )}
             </Text>
-            <Text fontSize="xs" color="gray.500">
+            <Text fontSize="xs" color="gray.500" data-testid="collateral-amount">
               {liquidityPosition?.collateralAmount.gt(0) && (
                 <Amount value={liquidityPosition.collateralAmount} />
               )}{' '}
@@ -51,15 +51,25 @@ function VaultRowUi({
           </Flex>
         </Flex>
       </Td>
-      <Td>
+      <Td data-testid="debt">
         {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
       </Td>
-      <Td>{cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}</Td>
-      <Td>
-        <Amount value={collateralType.issuanceRatioD18.mul(100)} suffix="%" />
+      <Td data-testid="c-ratio">
+        {cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}
       </Td>
       <Td>
-        <Amount value={collateralType.liquidationRatioD18.mul(100)} suffix="%" />
+        <Amount
+          data-testid="issuance-ratio"
+          value={collateralType.issuanceRatioD18.mul(100)}
+          suffix="%"
+        />
+      </Td>
+      <Td>
+        <Amount
+          value={collateralType.liquidationRatioD18.mul(100)}
+          data-testid="liquidation-ratio"
+          suffix="%"
+        />
       </Td>
       <Td textAlign="end">
         {isConnected && hasLiquidity ? (
