@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const os = require('os');
 const { readFileSync } = require('fs');
 const fs = require('fs/promises');
 const debug = require('debug');
@@ -8,20 +9,21 @@ const ethers = require('ethers');
 const prettier = require('prettier');
 const { runTypeChain } = require('typechain');
 const { OnChainRegistry, IPFSLoader } = require('@usecannon/builder');
+const { LocalRegistry } = require('@usecannon/builder/dist/registry');
 
 const IPFS_GATEWAY = 'https://ipfs.synthetix.io';
 const CANNON_REGISTRY_ADDRESS = '0x8E5C7EFC9636A6A0408A46BB7F617094B81e5dba';
-const PACKAGE_NAME = 'synthetix-omnibus';
-const PACKAGE_VERSION = 'latest';
+const CANNON_DIRECTORY = path.join(os.homedir(), '.local', 'share', 'cannon');
 
 const DEPLOYMENTS = [
-  { chainId: 1, preset: 'main' },
-  { chainId: 5, preset: 'main' },
-  { chainId: 10, preset: 'main' },
-  { chainId: 420, preset: 'main' },
-  { chainId: 11155111, preset: 'main' },
-  { chainId: 84531, preset: 'main' },
-  { chainId: 84531, preset: 'competition' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 1, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 5, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 10, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 420, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 11155111, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 84531, preset: 'main' },
+  //  { name: 'synthetix-omnibus', version: 'latest', chainId: 84531, preset: 'competition' },
+  { name: 'synthetix-local', version: 'latest', chainId: 13370, preset: 'main' },
 ];
 
 const prettierOptions = JSON.parse(readFileSync('../.prettierrc', 'utf8'));
@@ -69,7 +71,7 @@ async function manual({ chainId, preset }) {
   );
 }
 
-async function codegen({ chainId, preset, registry, loader }) {
+async function codegen({ name, version, chainId, preset, registry, loader }) {
   const log = debug(`codegen:${getDir({ chainId, preset })}`);
 
   const tsDir = `${__dirname}/src/${getDir({ chainId, preset })}`;
@@ -83,8 +85,8 @@ async function codegen({ chainId, preset, registry, loader }) {
 
   const contracts = {};
 
-  log('Resolving IPFS', `${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
-  const ipfs = await registry.getUrl(`${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
+  log('Resolving IPFS', `${name}:${version}`, `${chainId}-${preset}`);
+  const ipfs = await registry.getUrl(`${name}:${version}`, `${chainId}-${preset}`);
   log('Fetching deployment state', ipfs);
   const deployments = await loader.read(ipfs);
 
@@ -172,8 +174,8 @@ async function codegen({ chainId, preset, registry, loader }) {
   //
   //
   const index = {
-    name: PACKAGE_NAME,
-    version: PACKAGE_VERSION,
+    name,
+    version,
     preset,
     ipfs,
     chainId,
@@ -267,13 +269,19 @@ async function run() {
   await fs.rm(`${__dirname}/deployments`, { force: true, recursive: true });
   await fs.rm(`${__dirname}/cache`, { force: true, recursive: true });
 
+  //  const localRegistry = new LocalRegistry(CANNON_DIRECTORY);
+  //  console.log(`localRegistry`, localRegistry);
+  //  return;
+
   const registry = new OnChainRegistry({
     signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
     address: CANNON_REGISTRY_ADDRESS,
   });
   const loader = new IPFSLoader(IPFS_GATEWAY);
   const deployments = await Promise.all(
-    DEPLOYMENTS.map(({ chainId, preset }) => codegen({ chainId, preset, registry, loader }))
+    DEPLOYMENTS.map(({ name, version, chainId, preset }) =>
+      codegen({ name, version, chainId, preset, registry, loader })
+    )
   );
 
   const contracts = new Set();

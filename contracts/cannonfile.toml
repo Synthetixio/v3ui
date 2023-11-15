@@ -1,5 +1,5 @@
 name = "synthetix-local"
-version = "0.0.1"
+version = "1"
 description = "Synthetix V3 Local deployment"
 
 [setting.user]
@@ -13,12 +13,6 @@ defaultValue = "2"
 
 [setting.test_user_account_id]
 defaultValue = "1"
-
-# TODO: enable when we figure out cannon issue with nonce
-## In case we ever want to use generic Multicall
-#[provision.Multicall]
-#source = "multicall:3.0.0"
-#nonce = 0
 
 [provision.snx_token]
 source = "mintable-token:1.1"
