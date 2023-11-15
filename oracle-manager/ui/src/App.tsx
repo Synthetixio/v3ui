@@ -26,7 +26,7 @@ import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/c
 import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@chakra-ui/icons';
 import { providers } from 'ethers';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
 import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
 
 const activeIcon = (currentNetwork: number) => {
@@ -61,7 +61,7 @@ export const App: FC = () => {
   const network = useNetwork();
   const signer = useSigner();
   const isWalletConnected = useIsConnected();
-  const { data: contract } = useMulticall3();
+  const { data: contract } = useTrustedMulticallForwarder();
 
   useEffect(() => {
     if (colorMode === 'light') {
