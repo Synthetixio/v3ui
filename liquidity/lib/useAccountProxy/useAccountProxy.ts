@@ -16,7 +16,7 @@ export function useAccountProxy() {
       const { address, abi } = await importAccountProxy(network.id, network.preset);
       return new Contract(address, abi, signerOrProvider) as AccountProxyType;
     },
-    enabled: Boolean(network.isSupported && signerOrProvider),
+    enabled: Boolean(signerOrProvider),
     staleTime: Infinity,
   });
 }
