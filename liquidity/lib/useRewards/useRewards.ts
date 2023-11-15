@@ -155,7 +155,7 @@ export function useRewards(
         }
       );
 
-      const { returnData: ercReturnData } = await Multicall3.callStatic.aggregate(
+      const { returnData: ercReturnData } = await TrustedMulticallForwarder.callStatic.aggregate(
         distributorResult.flatMap(({ token }) => [
           {
             target: token,

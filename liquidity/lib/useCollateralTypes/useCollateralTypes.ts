@@ -77,14 +77,14 @@ async function loadCollateralTypes({
 export function useCollateralTypes(includeDelegationOff = false) {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: Multicall3 } = useTrustedMulticallForwarder();
+  const { data: TrustedMulticallForwarder } = useTrustedMulticallForwarder();
 
   return useQuery({
     queryKey: [`${network.id}-${network.preset}`, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3)
+      if (!CoreProxy || !TrustedMulticallForwarder)
         throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
+      const collateralTypes = await loadCollateralTypes({ CoreProxy, TrustedMulticallForwarder });
       if (includeDelegationOff) {
         return collateralTypes;
       }
@@ -98,7 +98,7 @@ export function useCollateralTypes(includeDelegationOff = false) {
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(CoreProxy && Multicall3),
+    enabled: Boolean(CoreProxy && TrustedMulticallForwarder),
   });
 }
 
