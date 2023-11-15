@@ -7,6 +7,8 @@ import type { USDProxy as USDProxy420Main } from './420/USDProxy';
 import type { USDProxy as USDProxy11155111Main } from './11155111/USDProxy';
 import type { USDProxy as USDProxy84531Main } from './84531/USDProxy';
 import type { USDProxy as USDProxy84531Competition } from './84531-competition/USDProxy';
+import type { USDProxy as USDProxy84531Andromeda } from './84531-andromeda/USDProxy';
+import type { USDProxy as USDProxy13370Main } from './13370/USDProxy';
 
 export type USDProxyType =
   | USDProxy1Main
@@ -15,7 +17,9 @@ export type USDProxyType =
   | USDProxy420Main
   | USDProxy11155111Main
   | USDProxy84531Main
-  | USDProxy84531Competition;
+  | USDProxy84531Competition
+  | USDProxy84531Andromeda
+  | USDProxy13370Main;
 
 export async function importUSDProxy(chainId: number, preset: string = 'main') {
   switch (`${chainId}-${preset}`) {
@@ -33,6 +37,10 @@ export async function importUSDProxy(chainId: number, preset: string = 'main') {
       return import('./84531/USDProxy');
     case '84531-competition':
       return import('./84531-competition/USDProxy');
+    case '84531-andromeda':
+      return import('./84531-andromeda/USDProxy');
+    case '13370-main':
+      return import('./13370/USDProxy');
     default:
       throw new Error(`Unsupported chain ${chainId} for USDProxy`);
   }
