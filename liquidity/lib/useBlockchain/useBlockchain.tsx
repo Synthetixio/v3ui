@@ -152,7 +152,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: `http://127.0.0.1:8545`,
     label: 'Cannon',
     Icon: () => <LogoIcon />,
-    isSupported: window.localStorage.getItem('DEFAULT_NETWORK') === '13370-main',
+    isSupported: false, // hidden by default but if wallet switched to 13370 it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
   },
