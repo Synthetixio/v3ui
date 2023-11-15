@@ -124,7 +124,20 @@ export const NETWORKS: Network[] = [
     token: 'ETH',
     name: 'base-goerli',
     rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
-    label: 'Base Goerli (competition)',
+    label: 'Base Goerli (Competition)',
+    Icon: () => <BaseIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://base-goerli.publicnode.com',
+    isTestnet: true,
+  },
+  {
+    id: 84531,
+    preset: 'andromeda',
+    hexId: `0x${Number(84531).toString(16)}`,
+    token: 'ETH',
+    name: 'base-goerli',
+    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Goerli (Andromeda)',
     Icon: () => <BaseIcon />,
     isSupported: true,
     publicRpcUrl: 'https://base-goerli.publicnode.com',
@@ -145,7 +158,7 @@ export const NETWORKS: Network[] = [
   },
 ];
 
-export const deploymentsWithERC7412: string[] = ['84531-competition'];
+export const deploymentsWithERC7412: string[] = ['84531-competition', '84531-andromeda'];
 
 export const DEFAULT_NETWORK =
   NETWORKS.find(
