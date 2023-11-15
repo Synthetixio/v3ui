@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/react": "^2.8.2",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

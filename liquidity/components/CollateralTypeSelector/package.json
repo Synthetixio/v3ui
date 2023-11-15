@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
-    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/react": "^2.8.2",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useCollateralTypes": "workspace:*",
     "react": "^18.2.0"

@@ -126,8 +126,8 @@ export function AccountsSelector() {
   const accountId = createAccountData
     ? createAccountData[0]
     : accounts?.includes(params?.accountId || '')
-    ? params.accountId
-    : accounts?.[0];
+      ? params.accountId
+      : accounts?.[0];
 
   return (
     <AccountsSelectorUi isLoading={isLoading} createAccount={createAccount} accountId={accountId} />
