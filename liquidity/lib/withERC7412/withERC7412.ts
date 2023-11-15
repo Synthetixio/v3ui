@@ -4,9 +4,9 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
-import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
+import { Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
+import { importTrustedMulticallForwarder } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';
 
 export const ERC7412_ABI = [
@@ -74,32 +74,6 @@ function makeMulticall(
     value: totalValue,
   };
 }
-
-// This should be used for networks that doesn't have a multicall setup as a trusted forwarder
-// TODO remove when all networks have a trusted forwarder
-const makeCoreProxyMulticall = (
-  calls: TransactionRequest[],
-  senderAddr: string,
-  coreProxyAddress: string,
-  coreProxyAbi: string[]
-) => {
-  const CoreProxyInterface = new ethers.utils.Interface(coreProxyAbi);
-  const encodedData = CoreProxyInterface.encodeFunctionData('multicall', [
-    calls.map((call) => call.data),
-  ]);
-
-  let totalValue = ethers.BigNumber.from(0);
-  for (const call of calls) {
-    totalValue = totalValue.add(call.value || ethers.BigNumber.from(0));
-  }
-
-  return {
-    from: senderAddr,
-    to: coreProxyAddress,
-    data: encodedData,
-    value: totalValue,
-  };
-};
 
 const ERC7412ErrorSchema = z.union([
   z.object({
@@ -191,12 +165,11 @@ export const withERC7412 = async (
 
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(network.name);
-  const networkHaveERC7412 = deploymentsWithERC7412.includes(`${network.id}-${network.preset}`);
-  const useCoreProxy = !networkHaveERC7412 && !isRead;
 
-  const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id, network.preset)
-    : await importMulticall3(network.id, network.preset);
+  const { address: multicallAddress, abi: multiCallAbi } = await importTrustedMulticallForwarder(
+    network.id,
+    network.preset
+  );
 
   while (true) {
     try {
@@ -208,10 +181,8 @@ export const withERC7412 = async (
         return { ...initialCall, gasLimit };
       }
       // If we're here it means we now added a tx to do .
-      // Some networks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
-      const multicallTxn = useCoreProxy
-        ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
-        : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
+      const multicallTxn = makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
+      makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
 
       const gasLimit = await jsonRpcProvider.estimateGas(multicallTxn);
 
@@ -278,7 +249,7 @@ export async function erc7412Call<T>(
   decode: (x: string[] | string) => T,
   logLabel?: string
 ) {
-  const { address: multicallAddress, abi: multicallAbi } = await importMulticall3(
+  const { address: multicallAddress, abi: multicallAbi } = await importTrustedMulticallForwarder(
     network.id,
     network.preset
   );
