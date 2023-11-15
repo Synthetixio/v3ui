@@ -1,4 +1,4 @@
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
 import { useQuery } from '@tanstack/react-query';
 import { utils, BigNumber } from 'ethers';
 import { Wei, wei } from '@synthetixio/wei';
@@ -60,12 +60,17 @@ export function useRewards(
   accountId?: string
 ) {
   const network = useNetwork();
-  const { data: Multicall3 } = useMulticall3();
+  const { data: TrustedMulticallForwarder } = useTrustedMulticallForwarder();
   const { data: CoreProxy } = useCoreProxy();
 
   return useQuery({
     enabled: Boolean(
-      Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
+      TrustedMulticallForwarder &&
+        CoreProxy &&
+        distributors &&
+        poolId &&
+        collateralAddress &&
+        accountId
     ),
     queryKey: [
       `${network.id}-${network.preset}`,
@@ -76,7 +81,7 @@ export function useRewards(
     ],
     queryFn: async () => {
       if (
-        !Multicall3 ||
+        !TrustedMulticallForwarder ||
         !CoreProxy ||
         !poolId ||
         !collateralAddress ||
@@ -93,7 +98,7 @@ export function useRewards(
       const ifaceERC20 = new utils.Interface(erc20Abi);
 
       const [{ returnData: distributorReturnData }, ...historicalData] = await Promise.all([
-        await Multicall3.callStatic.aggregate(
+        await TrustedMulticallForwarder.callStatic.aggregate(
           distributors.flatMap(({ id: address }) => [
             {
               target: address,
