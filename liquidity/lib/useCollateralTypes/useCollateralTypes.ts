@@ -1,11 +1,11 @@
 import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
+import { CoreProxyType, TrustedMulticallForwarderType } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
 import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
@@ -30,17 +30,17 @@ const SymbolSchema = z.string();
 const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
 
 async function loadSymbols({
-  Multicall3,
+  TrustedMulticallForwarder,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  TrustedMulticallForwarder: TrustedMulticallForwarderType;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
     target: tokenConfig.tokenAddress,
     callData: ERC20Interface.encodeFunctionData('symbol'),
   }));
-  const multicallResult = await Multicall3.callStatic.aggregate(calls);
+  const multicallResult = await TrustedMulticallForwarder.callStatic.aggregate(calls);
   return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
   );
@@ -48,10 +48,10 @@ async function loadSymbols({
 
 async function loadCollateralTypes({
   CoreProxy,
-  Multicall3,
+  TrustedMulticallForwarder,
 }: {
   CoreProxy: CoreProxyType;
-  Multicall3: Multicall3Type;
+  TrustedMulticallForwarder: TrustedMulticallForwarderType;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
   const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
@@ -59,7 +59,7 @@ async function loadCollateralTypes({
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
-  const symbols = await loadSymbols({ Multicall3, tokenConfigs });
+  const symbols = await loadSymbols({ TrustedMulticallForwarder, tokenConfigs });
 
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
@@ -77,7 +77,7 @@ async function loadCollateralTypes({
 export function useCollateralTypes(includeDelegationOff = false) {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: Multicall3 } = useMulticall3();
+  const { data: Multicall3 } = useTrustedMulticallForwarder();
 
   return useQuery({
     queryKey: [`${network.id}-${network.preset}`, 'CollateralTypes', { includeDelegationOff }],
