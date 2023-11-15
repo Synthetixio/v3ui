@@ -5491,7 +5491,7 @@ __metadata:
     "@snx-v3/liquidity": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
-    cypress: "npm:^13.5.1"
+    cypress: "npm:13.5.0"
     ethers: "npm:^5.7.2"
     react-router-dom: "npm:^6.18.0"
     ts-node: "npm:^10.9.1"
@@ -10813,9 +10813,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^13.5.1":
-  version: 13.5.1
-  resolution: "cypress@npm:13.5.1"
+"cypress@npm:13.5.0":
+  version: 13.5.0
+  resolution: "cypress@npm:13.5.0"
   dependencies:
     "@cypress/request": "npm:^3.0.0"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -10862,7 +10862,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 3392feb0d3f7aa7b87f2aef46065dad081b2c04fdd3baef38540df6091babb075637e350eda1ec7c2918d5eeed9eab31bebd2651b554c3e1dbaa631fea296eec
+  checksum: b3206079d1118e6734122fdd14a36e4aae09ac65df5d20f7d0b12f980cb83c5d01834372fd41630b91984d66e5707c84ee0a12d62cf60a4866459e54e7accb4e
   languageName: node
   linkType: hard
 
