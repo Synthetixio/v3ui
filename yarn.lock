@@ -6464,7 +6464,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@synthetixio/router@npm:^3.1.4, @synthetixio/router@npm:^3.3.0":
+"@synthetixio/router@npm:^3.3.0":
   version: 3.3.0
   resolution: "@synthetixio/router@npm:3.3.0"
   dependencies:
@@ -6497,7 +6497,6 @@ __metadata:
     "@typechain/ethers-v5": "npm:^11.1.2"
     "@usecannon/builder": "npm:^2.9.11"
     "@usecannon/cli": "npm:^2.9.11"
-    cannon-plugin-router: "npm:^1.0.16"
     debug: "npm:^4.3.4"
     ethers: "npm:^5.7.2"
     prettier: "npm:^3.1.0"
@@ -9769,16 +9768,6 @@ __metadata:
   version: 1.0.30001562
   resolution: "caniuse-lite@npm:1.0.30001562"
   checksum: 4192d7ec3a38adaa8a63606bfd6bc961349e447593d91dc3c88222b6e29283f5e8d209412935971107a621e57e12a681d7aacfbd5e33f3d2c37c864ddd23fd5d
-  languageName: node
-  linkType: hard
-
-"cannon-plugin-router@npm:^1.0.16":
-  version: 1.0.16
-  resolution: "cannon-plugin-router@npm:1.0.16"
-  dependencies:
-    "@synthetixio/router": "npm:^3.1.4"
-    zod: "npm:^3.21.4"
-  checksum: 627fedf2b1e98ce2ff5338a09e7b6d562cc48df46b03d1ea7bf63f742d9cdc9d7abf51dee5e9bc427fb79b741c92c830f2c605caad116a5fed16f4a6bd77bde8
   languageName: node
   linkType: hard
 
