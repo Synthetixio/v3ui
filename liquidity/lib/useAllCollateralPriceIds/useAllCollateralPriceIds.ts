@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
 import { ethers } from 'ethers';
 import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { z } from 'zod';
@@ -43,18 +43,18 @@ function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
 }
 
 export const useAllCollateralPriceIds = () => {
-  const { data: Multicall3 } = useMulticall3();
+  const { data: TrustedMulticallForwarder } = useTrustedMulticallForwarder();
   const { data: OracleProxy } = useOracleManagerProxy();
   const { data: CoreProxy } = useCoreProxy();
   const network = useNetwork();
   return useQuery({
-    enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
+    enabled: Boolean(TrustedMulticallForwarder && OracleProxy && CoreProxy),
     staleTime: Infinity,
 
     queryKey: [`${network.id}-${network.preset}`, 'Collateral Price IDs'],
 
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3 || !OracleProxy) {
+      if (!CoreProxy || !TrustedMulticallForwarder || !OracleProxy) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
@@ -66,7 +66,7 @@ export const useAllCollateralPriceIds = () => {
         callData: OracleProxy.interface.encodeFunctionData('getNode', [oracleNodeId]),
       }));
 
-      const { returnData } = await Multicall3.callStatic.aggregate(calls);
+      const { returnData } = await TrustedMulticallForwarder.callStatic.aggregate(calls);
       const decoded = returnData
         .map((bytes, i) => {
           const nodeResp = OracleProxy.interface.decodeFunctionResult('getNode', bytes)[0];
