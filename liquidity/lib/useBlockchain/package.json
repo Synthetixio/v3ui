@@ -7,7 +7,7 @@
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/icons": "workspace:*",
     "@web3-onboard/core": "^2.21.2",
-    "@web3-onboard/injected-wallets": "^2.10.8",
+    "@web3-onboard/injected-wallets": "^2.10.9",
     "@web3-onboard/walletconnect": "^2.5.0",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
