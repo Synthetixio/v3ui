@@ -20,9 +20,6 @@ defaultValue = "2"
 [setting.accountId]
 defaultValue = "1"
 
-# In case we ever want to use generic Multicall
-[provision.Multicall]
-source = "multicall:3.0.0"
 
 # Provision collateral token
 [provision.collateralToken]
