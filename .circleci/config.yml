@@ -104,9 +104,9 @@ commands:
             echo $checksum > $checksum_filename
             echo 'export checksum_filename=$checksum_filename' >> "$BASH_ENV"
 
-            gh release create -R $CIRCLE_PROJECT_REPONAME release-1
-            gh release upload -R $CIRCLE_PROJECT_REPONAME release-1 $bundle_filename
-            gh release upload -R $CIRCLE_PROJECT_REPONAME release-1 $checksum_filename
+            gh release create -R $CIRCLE_REPOSITORY_URL release-1
+            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $bundle_filename
+            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $checksum_filename
 
       - run:
           name: 'Validations'
