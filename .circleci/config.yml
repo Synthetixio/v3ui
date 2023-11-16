@@ -78,6 +78,24 @@ commands:
             curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | tee /tmp/pin-add-$IPFS_CID.log
             cat /tmp/pin-add-$IPFS_CID.log | jq
 
+  armada-deploy:
+    parameters:
+      source-dir:
+        type: string
+    steps:
+      - run:
+          name: 'Install armada-cli'
+          command: |
+            npx armada-cli --version
+
+      - run:
+          name: 'Build armada-cli package'
+          command: |
+            npx armada-cli bundle create armada-bundle "<< parameters.source-dir >>"
+      - run:
+          name: 'Run ls'
+          command: ls
+
 jobs:
   checks:
     working_directory: /tmp/app
@@ -239,6 +257,18 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
+  liquidity-armada:
+    working_directory: /tmp/app
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    resource_class: large
+    steps:
+      - checkout
+      - yarn-install
+      - run: yarn workspace @snx-v3/liquidity build
+      - armada-deploy:
+          source-dir: './liquidity/ui/dist'
+
 workflows:
   ui:
     unless:
@@ -261,7 +291,7 @@ workflows:
           name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
-      - liquidity-ipfs:
+      - liquidity-armada:
           requires:
             - checks
             - typecheck
@@ -276,3 +306,19 @@ workflows:
                 - release
                 - master
                 - ipfs-deploy
+                - dm-add-armada
+      # - liquidity-ipfs:
+      #     requires:
+      #       - checks
+      #       - typecheck
+      #       - tests
+      #       - liquidity-cy
+      #       - liquidity-e2e-optimism-mainnet
+      #       - liquidity-e2e-optimism-goerli
+      #       - liquidity-e2e-goerli
+      #     filters:
+      #       branches:
+      #         only:
+      #           - release
+      #           - master
+      #           - ipfs-deploy
