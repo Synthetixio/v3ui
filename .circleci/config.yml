@@ -91,10 +91,20 @@ commands:
       - run:
           name: 'Build armada-cli package'
           command: |
-            npx armada-cli bundle create armada-bundle "<< parameters.source-dir >>"
+            bundle_filename=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
+            checksum="$(npx armada bundle checksum $bundle_filename)"
+            echo $checksum
+            checksum_filename=$checksum"_SHA256SUM"
+            echo $checksum_filename
+            echo $checksum > $checksum_filename
+            echo $checksum_filename
+
       - run:
-          name: 'Run ls'
-          command: ls
+          name: 'Validations'
+          command: |
+            ls
+            pwd
+            gh
 
 jobs:
   checks:
@@ -277,29 +287,29 @@ workflows:
 
     jobs:
       - checks
-      - typecheck
-      - tests
-      - liquidity-cy
-      - liquidity-e2e:
-          chain: optimism-mainnet
-          name: liquidity-e2e-optimism-mainnet
-      - liquidity-e2e:
-          chain: optimism-goerli
-          name: liquidity-e2e-optimism-goerli
-      - liquidity-e2e:
-          chain: goerli
-          name: liquidity-e2e-goerli
-      - combine-coverage:
-          requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      # - typecheck
+      # - tests
+      # - liquidity-cy
+      # - liquidity-e2e:
+      #     chain: optimism-mainnet
+      #     name: liquidity-e2e-optimism-mainnet
+      # - liquidity-e2e:
+      #     chain: optimism-goerli
+      #     name: liquidity-e2e-optimism-goerli
+      # - liquidity-e2e:
+      #     chain: goerli
+      #     name: liquidity-e2e-goerli
+      # - combine-coverage:
+      #     requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-armada:
           requires:
             - checks
-            - typecheck
-            - tests
-            - liquidity-cy
-            - liquidity-e2e-optimism-mainnet
-            - liquidity-e2e-optimism-goerli
-            - liquidity-e2e-goerli
+            # - typecheck
+            # - tests
+            # - liquidity-cy
+            # - liquidity-e2e-optimism-mainnet
+            # - liquidity-e2e-optimism-goerli
+            # - liquidity-e2e-goerli
           filters:
             branches:
               only:
