@@ -2,7 +2,7 @@
   "name": "synthetix-local",
   "version": "latest",
   "preset": "main",
-  "url": "ipfs://QmcQjHrePy93fdDdU8n3BPYWzFYDyoaoRsQbzomuYLsfVN",
+  "url": "ipfs://QmXGfmYERRB8Hojf7GeDZat2nVube84qCLCkRQW3RHHX7q",
   "chainId": 13370,
   "addresses": {
     "CoreProxy": "0x381aeF01aB853657163ccbBFC1A993D49a77307c",
@@ -11,7 +11,7 @@
     "OracleManagerProxy": "0xc0958BD10cB079b7A6bfeC7Fb695F75845830E5f",
     "SpotMarketProxy": "0x63d7FEf6541Ae03101B11bbC7626a386a2e0e948",
     "MintableTokenBox": "0xE6A3ef85DD727784a82Fc014757C142Cb35a0AA4",
-    "Multicall3": "0xcA11bde05977b3631167028862bE2a173976CA11",
+    "TrustedMulticallForwarder": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "RewardDistributor": null
   }
 }

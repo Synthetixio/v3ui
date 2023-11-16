@@ -9,10 +9,10 @@
     "AccountProxy": "0x1b791d05E437C78039424749243F5A79E747525e",
     "USDProxy": "0xe487Ad4291019b33e2230F8E2FB1fb6490325260",
     "OracleManagerProxy": "0x12aE0D5CD26f212bFE242DA78139d463019f7a73",
-    "TrustedMulticallForwarder": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "SpotMarketProxy": "0x5FF4b3aacdeC86782d8c757FAa638d8790799E83",
     "PerpsMarketProxy": "0xf272382cB3BE898A8CdB1A23BE056fA2Fcf4513b",
     "PerpsAccountProxy": "0x01C2f64ABd46AF20950736f3C3e1a9cfc5c36c82",
+    "TrustedMulticallForwarder": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "RewardDistributor": null
   }
 }
