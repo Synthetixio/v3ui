@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const os = require('os');
 const { readFileSync } = require('fs');
 const fs = require('fs/promises');
 const debug = require('debug');
@@ -8,21 +9,12 @@ const ethers = require('ethers');
 const prettier = require('prettier');
 const { runTypeChain } = require('typechain');
 const { OnChainRegistry, IPFSLoader } = require('@usecannon/builder');
+const { LocalRegistry } = require('@usecannon/cli/dist/src/registry');
+const { CliLoader } = require('@usecannon/cli/dist/src/loader');
 
 const IPFS_GATEWAY = 'https://ipfs.synthetix.io';
 const CANNON_REGISTRY_ADDRESS = '0x8E5C7EFC9636A6A0408A46BB7F617094B81e5dba';
-const PACKAGE_NAME = 'synthetix-omnibus';
-const PACKAGE_VERSION = 'latest';
-
-const DEPLOYMENTS = [
-  { chainId: 1, preset: 'main' },
-  { chainId: 5, preset: 'main' },
-  { chainId: 10, preset: 'main' },
-  { chainId: 420, preset: 'main' },
-  { chainId: 11155111, preset: 'main' },
-  { chainId: 84531, preset: 'main' },
-  { chainId: 84531, preset: 'competition' },
-];
+const CANNON_DIRECTORY = path.join(os.homedir(), '.local', 'share', 'cannon');
 
 const prettierOptions = JSON.parse(readFileSync('../.prettierrc', 'utf8'));
 
@@ -69,9 +61,7 @@ async function manual({ chainId, preset }) {
   );
 }
 
-async function codegen({ chainId, preset, registry, loader }) {
-  const log = debug(`codegen:${getDir({ chainId, preset })}`);
-
+async function writeContracts({ name, version, chainId, preset, url, contracts, log }) {
   const tsDir = `${__dirname}/src/${getDir({ chainId, preset })}`;
   await fs.mkdir(tsDir, { recursive: true });
 
@@ -80,41 +70,6 @@ async function codegen({ chainId, preset, registry, loader }) {
 
   const tmpDir = `${__dirname}/cache/${getDir({ chainId, preset })}`;
   await fs.mkdir(tmpDir, { recursive: true });
-
-  const contracts = {};
-
-  log('Resolving IPFS', `${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
-  const ipfs = await registry.getUrl(`${PACKAGE_NAME}:${PACKAGE_VERSION}`, `${chainId}-${preset}`);
-  log('Fetching deployment state', ipfs);
-  const deployments = await loader.read(ipfs);
-
-  const system = deployments.state['provision.system'].artifacts.imports.system;
-
-  contracts.CoreProxy = system.contracts.CoreProxy;
-  contracts.AccountProxy = system.contracts.AccountProxy;
-  contracts.USDProxy = system.contracts.USDProxy;
-  contracts.OracleManagerProxy = system.imports.oracle_manager.contracts.Proxy;
-  const TrustedMulticallForwarder =
-    system.imports.trusted_multicall_forwarder?.contracts.TrustedMulticallForwarder;
-  if (TrustedMulticallForwarder) {
-    // TODO remove if when trusted multicall_forwarder is live on all network
-    contracts.TrustedMulticallForwarder = TrustedMulticallForwarder;
-  }
-  const spotFactory =
-    deployments?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
-  if (spotFactory) {
-    contracts.SpotMarketProxy = spotFactory.contracts.SpotMarketProxy;
-  }
-
-  const perpsFactory =
-    deployments?.state?.['provision.perpsFactory']?.artifacts?.imports?.perpsFactory;
-  if (perpsFactory) {
-    contracts.PerpsMarketProxy = perpsFactory.contracts.PerpsMarketProxy;
-    contracts.PerpsAccountProxy =
-      perpsFactory.contracts.PerpsAccountProxy ?? perpsFactory.contracts.AccountProxy;
-  }
-
-  Object.assign(contracts, await manual({ chainId, preset }));
 
   //
   //
@@ -177,10 +132,10 @@ async function codegen({ chainId, preset, registry, loader }) {
   //
   //
   const index = {
-    name: PACKAGE_NAME,
-    version: PACKAGE_VERSION,
+    name,
+    version,
     preset,
-    ipfs,
+    url,
     chainId,
     addresses: Object.fromEntries(
       Object.entries(contracts).map(([name, { address }]) => [name, address])
@@ -195,7 +150,90 @@ async function codegen({ chainId, preset, registry, loader }) {
   };
 }
 
-async function generateImporters(contracts) {
+async function codegen({ name, version, chainId, preset }) {
+  const log = debug(`codegen:${getDir({ chainId, preset })}`);
+
+  log('Resolving URL', `${name}:${version}`, `${chainId}-${preset}`);
+  const onChainRegistry = new OnChainRegistry({
+    signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+    address: CANNON_REGISTRY_ADDRESS,
+  });
+  const url = await onChainRegistry.getUrl(`${name}:${version}`, `${chainId}-${preset}`);
+
+  log('Fetching deployment state', url);
+  const ipfsLoader = new IPFSLoader(IPFS_GATEWAY);
+  const deployments = await ipfsLoader.read(url);
+
+  const contracts = {};
+
+  const system = deployments.state['provision.system'].artifacts.imports.system;
+
+  contracts.CoreProxy = system.contracts.CoreProxy;
+  contracts.AccountProxy = system.contracts.AccountProxy;
+  contracts.USDProxy = system.contracts.USDProxy;
+  contracts.OracleManagerProxy = system.imports.oracle_manager.contracts.Proxy;
+
+  const spotFactory =
+    deployments?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
+  if (spotFactory) {
+    contracts.SpotMarketProxy = spotFactory.contracts.SpotMarketProxy;
+  }
+
+  const perpsFactory =
+    deployments?.state?.['provision.perpsFactory']?.artifacts?.imports?.perpsFactory;
+  if (perpsFactory) {
+    contracts.PerpsMarketProxy = perpsFactory.contracts.PerpsMarketProxy;
+    contracts.PerpsAccountProxy =
+      perpsFactory.contracts.PerpsAccountProxy ?? perpsFactory.contracts.AccountProxy;
+  }
+  const TrustedMulticallForwarder =
+    system.imports.trusted_multicall_forwarder?.contracts.TrustedMulticallForwarder;
+  if (TrustedMulticallForwarder) {
+    // TODO remove if when trusted multicall_forwarder is live on all network
+    contracts.TrustedMulticallForwarder = TrustedMulticallForwarder;
+  }
+
+  Object.assign(contracts, await manual({ chainId, preset }));
+  return await writeContracts({ name, version, chainId, preset, url, contracts, log });
+}
+
+async function codegenLocal({ name, version, chainId, preset }) {
+  const log = debug(`codegen:${getDir({ chainId, preset })}`);
+
+  log('Resolving URL', `${name}:${version}`, `${chainId}-${preset}`);
+  const localRegistry = new LocalRegistry(CANNON_DIRECTORY);
+  const url = await await localRegistry.getUrl(`${name}:${version}`, `${chainId}-${preset}`);
+
+  log('Fetching deployment state', url);
+  const deployments = JSON.parse(
+    await fs.readFile(`${CANNON_DIRECTORY}/ipfs_cache/${CliLoader.getCacheHash(url)}.json`, 'utf8')
+  );
+
+  const contracts = {};
+  const coreSandbox = deployments.state['import.core_sandbox'].artifacts.imports.core_sandbox;
+
+  const synthetix = coreSandbox.imports.synthetix;
+  contracts.CoreProxy = synthetix.contracts.CoreProxy;
+  contracts.AccountProxy = synthetix.contracts.AccountProxy;
+  contracts.USDProxy = synthetix.contracts.USDProxy;
+  contracts.OracleManagerProxy = synthetix.imports.oracle_manager.contracts.Proxy;
+
+  const spotFactory = coreSandbox.imports.spot_factory;
+  contracts.SpotMarketProxy = spotFactory.contracts.SpotMarketProxy;
+
+  const boxToken = coreSandbox.imports.box_token;
+  contracts.MintableTokenBox = boxToken.contracts.MintableToken;
+
+  Object.assign(contracts, await manual({ chainId, preset }));
+  return await writeContracts({ name, version, chainId, preset, url, contracts, log });
+}
+
+async function generateImporters(allDeployments) {
+  const contracts = new Set();
+  allDeployments.forEach((deployment) =>
+    Object.keys(deployment.addresses).forEach((name) => contracts.add(name))
+  );
+
   await Promise.all(
     Array.from(contracts).map(async (name) => {
       const makeTypeName = ({ chainId, preset }) =>
@@ -203,7 +241,7 @@ async function generateImporters(contracts) {
 
       const deployments = (
         await Promise.all(
-          DEPLOYMENTS.map(async ({ chainId, preset }) => {
+          allDeployments.map(async ({ chainId, preset }) => {
             try {
               await fs.access(`${__dirname}/src/${getDir({ chainId, preset })}/${name}.ts`);
               return { chainId, preset };
@@ -272,21 +310,29 @@ async function run() {
   await fs.rm(`${__dirname}/deployments`, { force: true, recursive: true });
   await fs.rm(`${__dirname}/cache`, { force: true, recursive: true });
 
-  const registry = new OnChainRegistry({
-    signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    address: CANNON_REGISTRY_ADDRESS,
-  });
+  const deployments = await Promise.all([
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 1, preset: 'main' }),
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 5, preset: 'main' }),
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 10, preset: 'main' }),
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 420, preset: 'main' }),
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 11155111, preset: 'main' }),
+    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 84531, preset: 'main' }),
+    codegen({
+      name: 'synthetix-omnibus',
+      version: 'latest',
+      chainId: 84531,
+      preset: 'competition',
+    }),
+    codegen({
+      name: 'synthetix-omnibus',
+      version: 'latest',
+      chainId: 84531,
+      preset: 'andromeda',
+    }),
+    codegenLocal({ name: 'synthetix-local', version: 'latest', chainId: 13370, preset: 'main' }),
+  ]);
 
-  const loader = new IPFSLoader(IPFS_GATEWAY);
-  const deployments = await Promise.all(
-    DEPLOYMENTS.map(({ chainId, preset }) => codegen({ chainId, preset, registry, loader }))
-  );
-
-  const contracts = new Set();
-  deployments.forEach((deployment) =>
-    Object.keys(deployment.addresses).forEach((name) => contracts.add(name))
-  );
-  await generateImporters(contracts);
+  await generateImporters(deployments);
 }
 
 run();

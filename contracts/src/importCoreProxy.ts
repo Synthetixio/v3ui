@@ -7,6 +7,8 @@ import type { CoreProxy as CoreProxy420Main } from './420/CoreProxy';
 import type { CoreProxy as CoreProxy11155111Main } from './11155111/CoreProxy';
 import type { CoreProxy as CoreProxy84531Main } from './84531/CoreProxy';
 import type { CoreProxy as CoreProxy84531Competition } from './84531-competition/CoreProxy';
+import type { CoreProxy as CoreProxy84531Andromeda } from './84531-andromeda/CoreProxy';
+import type { CoreProxy as CoreProxy13370Main } from './13370/CoreProxy';
 
 export type CoreProxyType =
   | CoreProxy1Main
@@ -15,7 +17,9 @@ export type CoreProxyType =
   | CoreProxy420Main
   | CoreProxy11155111Main
   | CoreProxy84531Main
-  | CoreProxy84531Competition;
+  | CoreProxy84531Competition
+  | CoreProxy84531Andromeda
+  | CoreProxy13370Main;
 
 export async function importCoreProxy(chainId: number, preset: string = 'main') {
   switch (`${chainId}-${preset}`) {
@@ -33,6 +37,10 @@ export async function importCoreProxy(chainId: number, preset: string = 'main') 
       return import('./84531/CoreProxy');
     case '84531-competition':
       return import('./84531-competition/CoreProxy');
+    case '84531-andromeda':
+      return import('./84531-andromeda/CoreProxy');
+    case '13370-main':
+      return import('./13370/CoreProxy');
     default:
       throw new Error(`Unsupported chain ${chainId} for CoreProxy`);
   }

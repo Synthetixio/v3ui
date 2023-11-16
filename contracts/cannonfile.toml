@@ -1,318 +1,128 @@
 name = "synthetix-local"
-version = "0.0.1"
+version = "1"
 description = "Synthetix V3 Local deployment"
 
-[setting.user]
-defaultValue = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+[import.core_sandbox]
+source = "core-sandbox"
 
-[setting.synthetix]
-defaultValue = "synthetix:3.3.4"
-
-[setting.spotMarket]
-defaultValue = "synthetix-spot-market:3.3.4"
-
-[setting.defaultPoolId]
-defaultValue = "1"
-
-[setting.anotherPoolId]
-defaultValue = "2"
-
-[setting.accountId]
-defaultValue = "1"
+[setting.owner]
+# Matches owner of core system that's provisions on Cannon network
+defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266" # PK 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+# We can change the owner of pools and modules deployed in the Sandbox if we want
+#defaultValue = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC" # PK 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+description = "Hardhat/Anvil first test account"
 
 
-# Provision collateral token
-[provision.collateralToken]
-source = "mintable-token:1.1"
-options.symbol = "SNX"
-options.name = "Snax"
+[setting.test_user]
+defaultValue = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" # PK 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+description = "Hardhat/Anvil second test account"
 
-# Provision Chainlink mock for collateral token ($2)
-[provision.collateralChainlinkMock]
-source = "chainlink-mock-v3-aggregator:1.0"
-options.initialAnswer = "<%= parseEther('2') %>"
+[setting.test_user_account_id]
+defaultValue = "69"
 
-# Provision Synthetix core and oracle manager
-[provision.synthetix]
-source = "<%= settings.synthetix %>"
-options.owner = "<%= settings.user %>"
+[setting.test_user_perps_account_id]
+defaultValue = "420"
 
-# Register oracle manager node for collateral token
-[invoke.registerCollateralPriceNode]
-target = ["synthetix.oracle_manager.Proxy"]
-func = "registerNode"
-args = [
-    3, # Type for Chainlink aggregator
-    "<%= defaultAbiCoder.encode(['address', 'uint256', 'uint8'], [imports.collateralChainlinkMock.contracts.MockV3Aggregator.address, 0, 18]) %>",
-    [
-    ],
-]
-extra.tkn_oracle_id.event = "NodeRegistered"
-extra.tkn_oracle_id.arg = 0
-depends = ["provision.synthetix", "provision.collateralChainlinkMock"]
 
-# Configure collateral token as collateral for core
-[invoke.configureTknCollateral]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "configureCollateral"
-args = [
-    { tokenAddress = "<%= imports.collateralToken.contracts.MintableToken.address %>", oracleNodeId = "<%= extras.tkn_oracle_id %>", issuanceRatioD18 = "<%= parseEther('2') %>", liquidationRatioD18 = "<%= parseEther('1.5') %>", liquidationRewardD18 = "<%= parseEther('1') %>", minDelegationD18 = "<%= parseEther('1') %>", depositingEnabled = true },
-]
-depends = ["invoke.registerCollateralPriceNode", "provision.collateralToken"]
-
-[invoke.allowAllRegisterMarket]
-target = ["synthetix.CoreProxy"]
-fromCall.func = "owner"
-func = "setFeatureFlagAllowAll"
-args = ["<%= formatBytes32String('registerMarket') %>", true]
-depends = ["provision.synthetix"]
-
-[invoke.allowAllCreatePool]
-target = ["synthetix.CoreProxy"]
-fromCall.func = "owner"
-func = "setFeatureFlagAllowAll"
-args = ["<%= formatBytes32String('createPool') %>", true]
-depends = ["provision.synthetix"]
-
-# Create pool
-[invoke.create_default_pool]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "createPool"
-args = ["<%= settings.defaultPoolId %>", "<%= settings.user %>"]
-depends = ["invoke.allowAllCreatePool"]
-
-[invoke.configure_default_pool_name]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setPoolName"
-args = ["<%= settings.defaultPoolId %>", "First Local Pool"]
-depends = ["invoke.create_default_pool"]
-
-# Set pool as preferred
-[invoke.configure_default_pool_as_preferred_pool]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setPreferredPool"
-args = ["<%= settings.defaultPoolId %>"]
-depends = ["invoke.create_default_pool"]
-
-# User receives collateral token
-[invoke.mintCollateral]
-target = ["collateralToken.MintableToken"]
-func = "mint"
-args = ["<%= parseEther('10000') %>", "<%= settings.user %>"]
-depends = ["provision.collateralToken"]
-
-# User creates account
-[invoke.createAccount]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+#
+#
+#
+# Interacting with Core
+#
+#
+#
+[invoke.create_account]
+target = ["core_sandbox.synthetix.CoreProxy"]
+from = "<%= settings.test_user %>"
 func = "createAccount(uint128)"
-args = ["<%= settings.accountId %>"]
-extras.accountId.event = "AccountCreated"
-extras.accountId.arg = 0
-depends = ["provision.synthetix"]
+args = ["<%= settings.test_user_account_id %>"]
+extra.test_user_account_id.event = "AccountCreated"
+extra.test_user_account_id.arg = 0
 
-# User approves transfer of collateral
-[invoke.approveDeposit]
-target = ["collateralToken.MintableToken"]
-from = "<%= settings.user %>"
+[invoke.mint_10k_box]
+target = ["core_sandbox.box_token.MintableToken"]
+from = "<%= settings.test_user %>"
+func = "mint"
+args = ["<%= parseEther('10000') %>", "<%= settings.test_user %>"]
+
+[invoke.approve_10k_box_for_CoreProxy_to_spend]
+target = ["core_sandbox.box_token.MintableToken"]
+from = "<%= settings.test_user %>"
 func = "approve"
 args = [
-    "<%= imports.synthetix.contracts.CoreProxy.address %>",
+    "<%= imports.core_sandbox.imports.synthetix.contracts.CoreProxy.address %>",
     "<%= parseEther('10000') %>",
 ]
-depends = ["provision.synthetix", "invoke.mintCollateral"]
+depends = ["invoke.mint_10k_box"]
 
-# User deposits collateral token
-[invoke.depositCollateral]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.deposit_1k_box]
+target = ["core_sandbox.synthetix.CoreProxy"]
+from = "<%= settings.test_user %>"
 func = "deposit"
 args = [
-    "<%= settings.accountId %>",
-    "<%= imports.collateralToken.contracts.MintableToken.address %>",
+    "<%= extras.test_user_account_id %>",
+    "<%= imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
     "<%= parseEther('1000') %>",
 ]
-depends = ["invoke.createAccount", "invoke.approveDeposit"]
+depends = ["invoke.approve_10k_box_for_CoreProxy_to_spend"]
 
-# User delegates to pool
-[invoke.delegateCollateral]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.delegate_900_box]
+target = ["core_sandbox.synthetix.CoreProxy"]
+from = "<%= settings.test_user %>"
 func = "delegateCollateral"
 args = [
-    "<%= settings.accountId %>",
-    "<%= settings.defaultPoolId %>",
-    "<%= imports.collateralToken.contracts.MintableToken.address %>",
-    "<%= parseEther('1000') %>",
+    # examples of how to debug internal values line by line
+    "<%= /* console.log(extras) || */ extras.test_user_account_id %>",
+    "<%= /* console.log(imports.core_sandbox.extras) || */imports.core_sandbox.extras.spartan_council_pool_id %>",
+    "<%= /* console.log(imports.core_sandbox.imports) || */ imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
+    "<%= parseEther('900') %>",
     "<%= parseEther('1') %>",
 ]
-depends = ["invoke.depositCollateral"]
+depends = ["invoke.deposit_1k_box"]
 
-# User mints quarter of collateral value
-[invoke.mintStablecoins]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.borrow_300_susd]
+target = ["core_sandbox.synthetix.CoreProxy"]
+from = "<%= settings.test_user %>"
 func = "mintUsd"
 args = [
-    "<%= settings.accountId %>",
-    "<%= settings.defaultPoolId %>",
-    "<%= imports.collateralToken.contracts.MintableToken.address %>",
-    "<%= parseEther('500') %>",
+    "<%= extras.test_user_account_id %>",
+    "<%= imports.core_sandbox.extras.spartan_council_pool_id %>",
+    "<%= imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
+    "<%= parseEther('300') %>",
 ]
-depends = ["invoke.delegateCollateral"]
+depends = ["invoke.delegate_900_box"]
 
-# Set withdrawal timeout to 0, this will be reset later
-[invoke.setAccountTimeoutWithdraw]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setConfig"
-args = [
-    "<%= formatBytes32String('accountTimeoutWithdraw') %>",
-    "<%= hexZeroPad(hexlify(0), 32) %>",
-]
-depends = ["provision.synthetix"]
-
-
-# Set the minimum liquidity ratio
-[invoke.setMinimumLiquidityRatio]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setMinLiquidityRatio(uint256)"
-args = ["<%= parseEther('2') %>"]
-depends = ["provision.synthetix"]
-
-# Provision the spot market factory
-[provision.spotMarket]
-source = "<%= settings.spotMarket %>"
-options.coreProxyOwner = "<%= settings.user %>"
-options.owner = "<%= settings.user %>"
-options.synthetixPackage = "<%= settings.synthetix %>"
-depends = ["provision.synthetix"]
-
-# Create snxTKN Synth
-[invoke.createSynth]
-target = ["spotMarket.SpotMarketProxy"]
-func = "createSynth"
-from = "<%= settings.user %>"
-args = ["Synthetic Token", "snxTKN", "<%= settings.user %>"]
-extra.synthMarketId.event = "SynthRegistered"
-extra.synthMarketId.arg = 0
-depends = ["provision.spotMarket"]
-
-# Set oracle nodes for snxTKN price
-[invoke.updateSynthPriceData]
-target = ["spotMarket.SpotMarketProxy"]
-func = "updatePriceData"
-from = "<%= settings.user %>"
-args = [
-    "<%= extras.synthMarketId %>",
-    "<%= extras.tkn_oracle_id %>",
-    "<%= extras.tkn_oracle_id %>",
-]
-depends = ['invoke.createSynth', 'invoke.registerCollateralPriceNode']
-
-# Add a 1% fixed feed on atomic exchanges
-[invoke.addAtomicFixedFee]
-target = ["spotMarket.SpotMarketProxy"]
-func = "setAtomicFixedFee"
-from = "<%= settings.user %>"
-args = ["<%= extras.synthMarketId %>", "<%= parseEther('0.01') %>"]
-depends = ['invoke.createSynth']
-
-# Allow snxTKN market to deposit unlimited TKN for wrappers
-[invoke.setMarketCollateralSupplyCap]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "configureMaximumMarketCollateral"
-args = [
-    "<%= extras.synthMarketId %>",
-    "<%= imports.collateralToken.contracts.MintableToken.address %>",
-    "<%= MaxUint256 %>",
-]
-depends = ['invoke.createSynth', 'provision.collateralToken']
-
-# Initialize wrapper functionality on snxTKN market with an unlimited cap
-[invoke.initializeWrapper]
-target = ["spotMarket.SpotMarketProxy"]
-func = "setWrapper"
-from = "<%= settings.user %>"
-args = [
-    "<%= extras.synthMarketId %>",
-    "<%= imports.collateralToken.contracts.MintableToken.address %>",
-    "<%= MaxUint256 %>",
-]
-depends = [
-    'invoke.setMarketCollateralSupplyCap',
-    "invoke.mintStablecoins",              # We depend on mintStablecoins to make sure there is two tx in between minting and withdrawing
-]
-
-# Set Pool Configuration
-[invoke.setPoolConfiguration]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setPoolConfiguration"
-args = [
-    "<%= settings.defaultPoolId %>",
-    [
-        { marketId = "<%= extras.synthMarketId %>", weightD18 = "1", maxDebtShareValueD18 = "<%= parseEther('2') %>" },
-    ],
-]
-depends = [
-    "invoke.create_default_pool",
-    "invoke.updateSynthPriceData",
-    "invoke.mintStablecoins",      # We depend on mintStablecoins to make sure there is two tx in between minting and withdrawing
-]
-# Withdraw some of the minted stablecoins
-[invoke.withdrawStablecoins]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.withdraw_300_susd]
+target = ["core_sandbox.synthetix.CoreProxy"]
+from = "<%= settings.test_user %>"
 func = "withdraw"
 args = [
-    "<%= settings.accountId %>",
-    "<%= imports.synthetix.contracts.USDProxy.address %>",
-    "<%= parseEther('100') %>",
+    "<%= extras.test_user_account_id %>",
+    "<%= imports.core_sandbox.imports.synthetix.contracts.USDProxy.address %>",
+    "<%= parseEther('300') %>",
 ]
-depends = [
-    "invoke.approveAnotherPool",
-    # "invoke.mintStablecoins", # this is what I'd like to depend on...
-    "invoke.initializeWrapper",    # But we need to make sure at two tx exists in between minting and withdrawing,
-    "invoke.setPoolConfiguration", # otherwise we run into `AccountActivityTimeoutPending` (with 1sec diff) even though AccountTimeoutWithdraw is set to 0
-]
-
-# Reset withdrawal timeout to default 86400
-[invoke.resetAccountTimeoutWithdraw]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
-func = "setConfig"
-args = [
-    "<%= formatBytes32String('accountTimeoutWithdraw') %>",
-    "<%= hexZeroPad(hexlify(86400), 32) %>",
-]
-depends = ["invoke.withdrawStablecoins"]
+depends = ["invoke.borrow_300_susd"]
 
 # Create another pool
-[invoke.createAnotherPool]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.create_second_pool]
+target = ["core_sandbox.synthetix.CoreProxy"]
 func = "createPool"
-args = ["<%= settings.anotherPoolId %>", "<%= settings.user %>"]
-depends = ["invoke.allowAllCreatePool"]
+from = "<%= settings.owner %>"
+args = ["2", "<%= settings.owner %>"]
+extra.second_pool_id.event = "PoolCreated"
+extra.second_pool_id.arg = 0
+depends = ["import.core_sandbox"]
 
-[invoke.setAnotherPoolName]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.configure_second_pool_name]
+target = ["core_sandbox.synthetix.CoreProxy"]
 func = "setPoolName"
-args = ["<%= settings.anotherPoolId %>", "Another Pool"]
-depends = ["invoke.createAnotherPool"]
+fromCall.func = "getPoolOwner"
+fromCall.args = ["<%= extras.second_pool_id %>"]
+args = ["<%= extras.second_pool_id %>", "Another Pool"]
 
 # Set pool as preferred
-[invoke.approveAnotherPool]
-target = ["synthetix.CoreProxy"]
-from = "<%= settings.user %>"
+[invoke.approve_second_pool]
+target = ["core_sandbox.synthetix.CoreProxy"]
 func = "addApprovedPool"
-args = ["<%= settings.anotherPoolId %>"]
-depends = ["invoke.createAnotherPool"]
+fromCall.func = "owner"
+args = ["<%= extras.second_pool_id %>"]

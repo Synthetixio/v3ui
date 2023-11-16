@@ -2,7 +2,7 @@
   "name": "synthetix-omnibus",
   "version": "latest",
   "preset": "competition",
-  "ipfs": "ipfs://QmXC2wpi6AGHpbsamjK5vVaKE6Q43PWVvGnYoTs5FtTqf9",
+  "url": "ipfs://QmXC2wpi6AGHpbsamjK5vVaKE6Q43PWVvGnYoTs5FtTqf9",
   "chainId": 84531,
   "addresses": {
     "CoreProxy": "0xa53346A1684DAB73EFfd048fA40Fb1fA9327fDe9",
@@ -13,8 +13,6 @@
     "SpotMarketProxy": "0x17633A63083dbd4941891F87Bdf31B896e91e2B9",
     "PerpsMarketProxy": "0x9863Dae3f4b5F4Ffe3A841a21565d57F2BA10E87",
     "PerpsAccountProxy": "0x518F2905b24AE298Ca06C1137b806DD5ACD493b6",
-    "CCIP": "0xa189971a2c5aca0dfc5ee7a2c44a2ae27b3cf389",
-    "ChainlinkAggregator": null,
     "RewardDistributor": null
   }
 }
