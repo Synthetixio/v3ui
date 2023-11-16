@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  github-cli: circleci/github-cli@2.2.0
+
 
 parameters:
   node-version:
@@ -83,6 +86,7 @@ commands:
       source-dir:
         type: string
     steps:
+      - gh/install
       - run:
           name: 'Install armada-cli'
           command: |
@@ -92,7 +96,7 @@ commands:
           name: 'Build armada-cli package'
           command: |
             bundle_filename=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
-            checksum="$(npx armada bundle checksum $bundle_filename)"
+            checksum=$(npx armada bundle checksum $bundle_filename)
             echo $checksum
             checksum_filename=$checksum"_SHA256SUM"
             echo $checksum_filename
