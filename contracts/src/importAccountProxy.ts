@@ -7,6 +7,8 @@ import type { AccountProxy as AccountProxy420Main } from './420/AccountProxy';
 import type { AccountProxy as AccountProxy11155111Main } from './11155111/AccountProxy';
 import type { AccountProxy as AccountProxy84531Main } from './84531/AccountProxy';
 import type { AccountProxy as AccountProxy84531Competition } from './84531-competition/AccountProxy';
+import type { AccountProxy as AccountProxy84531Andromeda } from './84531-andromeda/AccountProxy';
+import type { AccountProxy as AccountProxy13370Main } from './13370/AccountProxy';
 
 export type AccountProxyType =
   | AccountProxy1Main
@@ -15,7 +17,9 @@ export type AccountProxyType =
   | AccountProxy420Main
   | AccountProxy11155111Main
   | AccountProxy84531Main
-  | AccountProxy84531Competition;
+  | AccountProxy84531Competition
+  | AccountProxy84531Andromeda
+  | AccountProxy13370Main;
 
 export async function importAccountProxy(chainId: number, preset: string = 'main') {
   switch (`${chainId}-${preset}`) {
@@ -33,6 +37,10 @@ export async function importAccountProxy(chainId: number, preset: string = 'main
       return import('./84531/AccountProxy');
     case '84531-competition':
       return import('./84531-competition/AccountProxy');
+    case '84531-andromeda':
+      return import('./84531-andromeda/AccountProxy');
+    case '13370-main':
+      return import('./13370/AccountProxy');
     default:
       throw new Error(`Unsupported chain ${chainId} for AccountProxy`);
   }

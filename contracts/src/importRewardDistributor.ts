@@ -7,6 +7,8 @@ import type { RewardDistributor as RewardDistributor420Main } from './420/Reward
 import type { RewardDistributor as RewardDistributor11155111Main } from './11155111/RewardDistributor';
 import type { RewardDistributor as RewardDistributor84531Main } from './84531/RewardDistributor';
 import type { RewardDistributor as RewardDistributor84531Competition } from './84531-competition/RewardDistributor';
+import type { RewardDistributor as RewardDistributor84531Andromeda } from './84531-andromeda/RewardDistributor';
+import type { RewardDistributor as RewardDistributor13370Main } from './13370/RewardDistributor';
 
 export type RewardDistributorType =
   | RewardDistributor1Main
@@ -15,7 +17,9 @@ export type RewardDistributorType =
   | RewardDistributor420Main
   | RewardDistributor11155111Main
   | RewardDistributor84531Main
-  | RewardDistributor84531Competition;
+  | RewardDistributor84531Competition
+  | RewardDistributor84531Andromeda
+  | RewardDistributor13370Main;
 
 export async function importRewardDistributor(chainId: number, preset: string = 'main') {
   switch (`${chainId}-${preset}`) {
@@ -33,6 +37,10 @@ export async function importRewardDistributor(chainId: number, preset: string = 
       return import('./84531/RewardDistributor');
     case '84531-competition':
       return import('./84531-competition/RewardDistributor');
+    case '84531-andromeda':
+      return import('./84531-andromeda/RewardDistributor');
+    case '13370-main':
+      return import('./13370/RewardDistributor');
     default:
       throw new Error(`Unsupported chain ${chainId} for RewardDistributor`);
   }

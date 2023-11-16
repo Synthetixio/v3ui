@@ -3,21 +3,29 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, Network } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
 export async function loadPrices({
+  network,
   CoreProxy,
   collateralAddresses,
 }: {
+  network: Network;
   CoreProxy: CoreProxyType;
   collateralAddresses: string[];
 }) {
   const calls = await Promise.all(
     collateralAddresses.map((address) => {
+      if (network.preset === 'andromeda' && network.id === 84531) {
+        // For new deployment we have new ABI
+        // 'function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)'
+        return CoreProxy.populateTransaction.getCollateralPrice(address, 1);
+      }
+      // @ts-ignore TODO: remove eventually when types are aligned
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
@@ -53,7 +61,7 @@ export const useCollateralPrices = () => {
       if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0) {
         throw 'useCollateralPrices missing required data';
       }
-      const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
+      const { calls, decoder } = await loadPrices({ network, CoreProxy, collateralAddresses });
 
       const prices = await erc7412Call(
         network,

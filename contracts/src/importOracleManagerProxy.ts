@@ -7,6 +7,8 @@ import type { OracleManagerProxy as OracleManagerProxy420Main } from './420/Orac
 import type { OracleManagerProxy as OracleManagerProxy11155111Main } from './11155111/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy84531Main } from './84531/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy84531Competition } from './84531-competition/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy84531Andromeda } from './84531-andromeda/OracleManagerProxy';
+import type { OracleManagerProxy as OracleManagerProxy13370Main } from './13370/OracleManagerProxy';
 
 export type OracleManagerProxyType =
   | OracleManagerProxy1Main
@@ -15,7 +17,9 @@ export type OracleManagerProxyType =
   | OracleManagerProxy420Main
   | OracleManagerProxy11155111Main
   | OracleManagerProxy84531Main
-  | OracleManagerProxy84531Competition;
+  | OracleManagerProxy84531Competition
+  | OracleManagerProxy84531Andromeda
+  | OracleManagerProxy13370Main;
 
 export async function importOracleManagerProxy(chainId: number, preset: string = 'main') {
   switch (`${chainId}-${preset}`) {
@@ -33,6 +37,10 @@ export async function importOracleManagerProxy(chainId: number, preset: string =
       return import('./84531/OracleManagerProxy');
     case '84531-competition':
       return import('./84531-competition/OracleManagerProxy');
+    case '84531-andromeda':
+      return import('./84531-andromeda/OracleManagerProxy');
+    case '13370-main':
+      return import('./13370/OracleManagerProxy');
     default:
       throw new Error(`Unsupported chain ${chainId} for OracleManagerProxy`);
   }

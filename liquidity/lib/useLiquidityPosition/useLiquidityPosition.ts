@@ -103,6 +103,7 @@ export const useLiquidityPosition = ({
         throw Error('useLiquidityPosition should not be enabled');
       }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
+        network,
         collateralAddresses: [tokenAddress],
         CoreProxy,
       });

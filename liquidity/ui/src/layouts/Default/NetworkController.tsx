@@ -42,7 +42,13 @@ export function NetworkController() {
               </Flex>
             </MenuButton>
             <MenuList>
-              {NETWORKS.filter((network) => network.isSupported).map((network) => (
+              {NETWORKS.filter(
+                (network) =>
+                  network.isSupported ||
+                  // Make sure we still show network in the list if user selected the chain, even thought we are not officially support it
+                  // This will allow us to mark all testnets as not supported, but they still will be operational
+                  activeNetwork.id === network.id
+              ).map((network) => (
                 <MenuItem
                   key={`${network.id}-${network.preset}`}
                   onClick={() => setNetwork(network)}
