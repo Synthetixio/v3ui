@@ -97,12 +97,12 @@ commands:
             GITHUB_TOKEN: $GITHUB_TOKEN
           command: |
             bundle_filename=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
-            echo 'export build_filename=$build_filename' >> "$BASH_ENV"
+            # echo 'export build_filename=$build_filename' >> "$BASH_ENV"
             checksum=$(npx armada-cli bundle checksum $bundle_filename)
-            echo 'export checksum=$checksum' >> "$BASH_ENV"
+            # echo 'export checksum=$checksum' >> "$BASH_ENV"
             checksum_filename=$checksum"_SHA256SUM"
             echo $checksum > $checksum_filename
-            echo 'export checksum_filename=$checksum_filename' >> "$BASH_ENV"
+            # echo 'export checksum_filename=$checksum_filename' >> "$BASH_ENV"
 
             gh release create -R $CIRCLE_REPOSITORY_URL release-1
             gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $bundle_filename
