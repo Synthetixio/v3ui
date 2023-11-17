@@ -97,18 +97,18 @@ commands:
             # new env vars: ARMADA_PROJECT_ID, ARMADA_PRIVATE_KEY, GITHUB_TOKEN
             BUNDLE_FILENAME=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
             echo "BUNDLE_FILENAME" $BUNDLE_FILENAME
-            echo 'export BUNDLE_FILENAME=${BUNDLE_FILENAME}' >> $BASH_ENV
+            echo 'export BUNDLE_FILENAME="${BUNDLE_FILENAME}"' >> $BASH_ENV
 
             CHECKSUM=$(npx armada-cli bundle checksum $BUNDLE_FILENAME)
             echo "CHECKSUM" $CHECKSUM
-            echo 'export CHECKSUM=${CHECKSUM}' >> $BASH_ENV
+            echo 'export CHECKSUM="${CHECKSUM}"' >> $BASH_ENV
 
             CHECKSUM_FILENAME="checksum_SHA256SUM"
             echo $CHECKSUM > $CHECKSUM_FILENAME
-            echo 'export CHECKSUM_FILENAME=${CHECKSUM_FILENAME}' >> $BASH_ENV
+            echo 'export CHECKSUM_FILENAME="${CHECKSUM_FILENAME}"' >> $BASH_ENV
 
             RELEASE_NAME=armada-release-$CIRCLE_SHA1
-            echo 'export RELEASE_NAME=${RELEASE_NAME}' >> $BASH_ENV
+            echo 'export RELEASE_NAME="${RELEASE_NAME}"' >> $BASH_ENV
 
             DMTEST=hello
             echo 'export DMTEST=${DMTEST}' >> $BASH_ENV
