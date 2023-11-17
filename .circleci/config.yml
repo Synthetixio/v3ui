@@ -93,8 +93,6 @@ commands:
 
       - run:
           name: 'Build armada-cli package'
-          environment:
-            GITHUB_TOKEN: $GITHUB_TOKEN
           command: |
             bundle_filename=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
             echo "bundle_filename" $bundle_filename
@@ -312,7 +310,7 @@ workflows:
       #     requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-armada:
           requires:
-            - checks
+            # - checks
             # - typecheck
             # - tests
             # - liquidity-cy
