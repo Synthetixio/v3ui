@@ -102,9 +102,9 @@ commands:
             echo $checksum > $checksum_filename
             echo "checksum_filename" $checksum_filename
 
-            gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" release-1
-            gh release upload -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" release-1 $bundle_filename
-            gh release upload -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" release-1 $checksum_filename
+            gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "release-1" release-1
+            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $bundle_filename
+            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $checksum_filename
 
       - run:
           name: 'Validations'
