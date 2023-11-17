@@ -5452,6 +5452,7 @@ __metadata:
     core-js: "npm:^3.33.2"
     crypto-browserify: "npm:^3.12.0"
     css-loader: "npm:^6.8.1"
+    ethers: "npm:^5.7.2"
     framer-motion: "npm:^10.16.5"
     html-webpack-plugin: "npm:^5.5.3"
     ipfs-http-client: "npm:^60.0.1"

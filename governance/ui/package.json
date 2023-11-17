@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "dev": "DEV=true webpack-cli serve",
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "load-env": "source ./load-env.sh",
@@ -18,6 +19,7 @@
     "@snx-v3/useBlockchain": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
+    "ethers": "^5.7.2",
     "framer-motion": "^10.16.5",
     "ipfs-http-client": "^60.0.1",
     "react": "^18.2.0",

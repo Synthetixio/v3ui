@@ -1,4 +1,9 @@
-const councils = [
+const councils: {
+  title: string;
+  slug: CouncilSlugs;
+  image: string;
+  address: string;
+}[] = [
   {
     title: 'Spartan Council',
     slug: 'spartan',
@@ -26,5 +31,7 @@ const councils = [
 ];
 
 export type Council = (typeof councils)[number];
+
+type CouncilSlugs = 'spartan' | 'grants' | 'ambassador' | 'treasury';
 
 export default councils;

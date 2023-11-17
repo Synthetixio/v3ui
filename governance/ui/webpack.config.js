@@ -162,6 +162,7 @@ module.exports = {
     .concat(
       new webpack.DefinePlugin({
         'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.DEV': JSON.stringify(process.env.DEV),
         'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
         'process.env.IPFS_INFURA_SECRET': JSON.stringify(process.env.IPFS_INFURA_SECRET),
         'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),

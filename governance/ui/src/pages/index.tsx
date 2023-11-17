@@ -11,7 +11,7 @@ import { Header } from '../components/Header/Header';
 import Councils from './Councils';
 import Members from './Members';
 import Profile from './Profile';
-import { AnnouncementBanner } from '../components/AnnouncementBanner';
+import Admin from './Admin';
 
 const router = createHashRouter([
   {
@@ -19,8 +19,16 @@ const router = createHashRouter([
     element: (
       <>
         <Header />
-        <AnnouncementBanner />
         <App />
+      </>
+    ),
+  },
+  {
+    path: '/admin',
+    element: (
+      <>
+        <Header />
+        <Admin />
       </>
     ),
   },
@@ -29,7 +37,6 @@ const router = createHashRouter([
     element: (
       <>
         <Header />
-        <AnnouncementBanner />
         <Councils />
       </>
     ),
@@ -39,7 +46,6 @@ const router = createHashRouter([
     element: (
       <>
         <Header />
-        <AnnouncementBanner />
         <Members />
       </>
     ),
@@ -49,7 +55,6 @@ const router = createHashRouter([
     element: (
       <>
         <Header />
-        <AnnouncementBanner />
         <Profile />
       </>
     ),
