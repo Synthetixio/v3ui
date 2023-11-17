@@ -106,6 +106,10 @@ commands:
             gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $bundle_filename
             gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $checksum_filename
 
+            bundle_url=$(gh release view -R $GITHUB_REPOSITORY ${{ steps.set_variables.outputs.release_name }} --json assets --jq ".assets[] | select(.name == \"${{ steps.create_release.outputs.bundle_filename }}\") | .url")
+
+            echo "bundle url" $bundle_url
+
       - run:
           name: 'Validations'
           command: |
