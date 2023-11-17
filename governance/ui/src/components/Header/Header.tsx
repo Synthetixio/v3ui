@@ -29,6 +29,7 @@ const routes = [
   },
   { path: 'members', label: 'Members' },
   { path: 'profile', label: 'Profile' },
+  { path: 'admin', label: '_Admin' },
 ];
 
 const activeIcon = (currentNetwork: Network) => {

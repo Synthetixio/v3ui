@@ -3,6 +3,7 @@ import { Council } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
+import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 
 interface CouncilCardProps {
   council: Council;
@@ -13,7 +14,8 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
   const navigate = useNavigate();
   const { data: councilPeriod } = useGetCurrentPeriod(council.slug);
   const { data: electedCouncilMembers } = useGetCouncilMembers(council.slug);
-  console.log(councilPeriod);
+  const { data: councilNominees } = useGetCouncilNominees(council.slug);
+
   return (
     <Flex
       p="6"
@@ -62,11 +64,11 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
           </Text>
         </Flex>
         <Flex flexDir="column">
-          <Text color="gray.500" fontSize="12px" lineHeight="16px">
-            NOMINEES
+          <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
+            Nominees
           </Text>
           <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
-            10
+            {councilNominees?.length ?? <Spinner colorScheme="cyan" />}
           </Text>
         </Flex>
       </Flex>
