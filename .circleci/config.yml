@@ -94,29 +94,35 @@ commands:
       - run:
           name: 'Build armada-cli package'
           command: |
+            # new env vars: ARMADA_PROJECT_ID, ARMADA_PRIVATE_KEY, GITHUB_TOKEN
             bundle_filename=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
             echo "bundle_filename" $bundle_filename
+            echo 'export bundle_filename=$bundle_filename' >> "$BASH_ENV"
+
             checksum=$(npx armada-cli bundle checksum $bundle_filename)
             echo "checksum" $checksum
-            checksum_filename=$checksum"_SHA256SUM"
+            echo 'export checksum=$checksum' >> "$BASH_ENV"
+
+            checksum_filename=checksum_SHA256SUM"
             echo $checksum > $checksum_filename
-            echo "checksum_filename" $checksum_filename
+            echo 'export checksum_filename=$checksum_filename' >> "$BASH_ENV"
 
-            release_name=release-$(date '+%Y-%m-%d')
+            release_name=armada-release-$CIRCLE_SHA1
 
+      - run:
+          name: 'Publish Armada Release to Github with assets'
+          command: |
             gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "$release_name" $release_name
             gh release upload -R $CIRCLE_REPOSITORY_URL $release_name $bundle_filename
             gh release upload -R $CIRCLE_REPOSITORY_URL $release_name $checksum_filename
 
+      - run:
+          name: 'Push to Armada'
+          command: |
             bundle_url=$(gh release view -R $CIRCLE_REPOSITORY_URL $release_name --json assets --jq ".assets[] | select(.name == \"$bundle_filename\") | .url")
             echo "bundle url" $bundle_url
 
-      - run:
-          name: 'Validations'
-          command: |
-            ls
-            pwd
-            gh
+            # npx armada-cli project publish $ARMADA_PROJECT_ID $bundle_url $checksum --key=$ARMADA_PRIVATE_KEY
 
 jobs:
   checks:
