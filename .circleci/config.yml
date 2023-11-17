@@ -113,6 +113,8 @@ commands:
       - run:
           name: 'Publish Armada Release to Github with assets'
           command: |
+            printenv | grep -E 'RELEASE_NAME|BUNDLE_FILENAME|CHECKSUM_FILENAME'
+            echo $RELEASE_NAME
             gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "${RELEASE_NAME}" ${RELEASE_NAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${BUNDLE_FILENAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${CHECKSUM_FILENAME}
