@@ -102,12 +102,13 @@ commands:
             echo $checksum > $checksum_filename
             echo "checksum_filename" $checksum_filename
 
-            gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "release-1" release-1
-            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $bundle_filename
-            gh release upload -R $CIRCLE_REPOSITORY_URL release-1 $checksum_filename
+            release_name=release-$(date '+%Y-%m-%d')
 
-            bundle_url=$(gh release view -R $GITHUB_REPOSITORY ${{ steps.set_variables.outputs.release_name }} --json assets --jq ".assets[] | select(.name == \"${{ steps.create_release.outputs.bundle_filename }}\") | .url")
+            gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "$release_name" $release_name
+            gh release upload -R $CIRCLE_REPOSITORY_URL $release_name $bundle_filename
+            gh release upload -R $CIRCLE_REPOSITORY_URL $release_name $checksum_filename
 
+            bundle_url=$(gh release view -R $CIRCLE_REPOSITORY_URL $release_name --json assets --jq ".assets[] | select(.name == \"$bundle_filename\") | .url")
             echo "bundle url" $bundle_url
 
       - run:
