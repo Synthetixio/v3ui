@@ -108,7 +108,7 @@ commands:
             echo 'export CHECKSUM_FILENAME=${CHECKSUM_FILENAME}' >> "$BASH_ENV"
 
             RELEASE_NAME=armada-release-$CIRCLE_SHA1
-            echo 'export RELEASE_NAME=$R{ELEASE_NAME}' >> "$BASH_ENV"
+            echo 'export RELEASE_NAME=${RELEASE_NAME}' >> "$BASH_ENV"
 
             DMTEST=hello
             echo 'export DMTEST=${DMTEST}' >> "$BASH_ENV"
@@ -118,6 +118,7 @@ commands:
       - run:
           name: 'Publish Armada Release to Github with assets'
           command: |
+            source "$BASH_ENV"
             printenv | grep -E 'RELEASE_NAME|BUNDLE_FILENAME|CHECKSUM_FILENAME'
             echo $RELEASE_NAME
             gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "${RELEASE_NAME}" ${RELEASE_NAME}
