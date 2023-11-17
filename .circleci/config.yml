@@ -99,7 +99,7 @@ commands:
             echo "BUNDLE_FILENAME" $BUNDLE_FILENAME
             echo 'export BUNDLE_FILENAME=$BUNDLE_FILENAME' >> "$BASH_ENV"
 
-            CHECKSUM=$(npx armada-cli bundle CHECKSUM $BUNDLE_FILENAME)
+            CHECKSUM=$(npx armada-cli bundle checksum $BUNDLE_FILENAME)
             echo "CHECKSUM" $CHECKSUM
             echo 'export CHECKSUM=$CHECKSUM' >> "$BASH_ENV"
 
