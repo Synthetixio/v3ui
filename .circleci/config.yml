@@ -103,7 +103,7 @@ commands:
             echo "checksum" $checksum
             echo 'export checksum=$checksum' >> "$BASH_ENV"
 
-            checksum_filename=checksum_SHA256SUM"
+            checksum_filename="checksum_SHA256SUM"
             echo $checksum > $checksum_filename
             echo 'export checksum_filename=$checksum_filename' >> "$BASH_ENV"
 
