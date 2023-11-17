@@ -304,7 +304,7 @@ workflows:
         - equal: ['skip-tests', << pipeline.git.branch >>]
 
     jobs:
-      - checks
+      # - checks
       # - typecheck
       # - tests
       # - liquidity-cy
@@ -320,7 +320,7 @@ workflows:
       # - combine-coverage:
       #     requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-armada:
-          requires:
+          # requires:
             # - checks
             # - typecheck
             # - tests
