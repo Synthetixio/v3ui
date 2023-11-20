@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Council } from '../utils/councils';
-import { ElectionModule } from '../utils/Contracts';
+import { CouncilSlugs } from '../utils/councils';
+import { ElectionModule } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
 
-export function useGetCouncilNominees(council: Council['slug']) {
+export function useGetCouncilNominees(council: CouncilSlugs) {
   return useQuery({
     queryKey: ['nominees', council],
     queryFn: async () => {

@@ -18,9 +18,9 @@ export default function Admin() {
                   .Epoch_setEpochDates(
                     0,
                     block.timestamp,
-                    block.timestamp + 1000,
-                    block.timestamp + 2000,
-                    block.timestamp + 3000
+                    block.timestamp + 10000,
+                    block.timestamp + 20000,
+                    block.timestamp + 30000
                   );
               });
             }
@@ -41,8 +41,8 @@ export default function Admin() {
                     0,
                     block.timestamp - 10,
                     block.timestamp,
-                    block.timestamp + 1000,
-                    block.timestamp + 2000
+                    block.timestamp + 10000,
+                    block.timestamp + 20000
                   );
               });
             }
@@ -64,7 +64,7 @@ export default function Admin() {
                     block.timestamp - 200,
                     block.timestamp - 100,
                     block.timestamp,
-                    block.timestamp + 1000
+                    block.timestamp + 10000
                   );
               });
             }

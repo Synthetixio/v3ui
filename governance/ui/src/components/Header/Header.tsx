@@ -21,6 +21,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect } from 'react';
+import NominationCountdown from '../NominationCountdown/NominationCountdown';
 
 const routes = [
   {
@@ -86,6 +87,7 @@ export function Header() {
           {route.label}
         </Text>
       ))}
+      <NominationCountdown />
       {isWalletConnected && (
         <Menu>
           {() => (

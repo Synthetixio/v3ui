@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Council } from '../utils/councils';
+import { CouncilSlugs } from '../utils/councils';
 import { ElectionModule } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
 
-export function useGetCurrentPeriod(council: Council['slug']) {
+export function useGetCurrentPeriod(council: CouncilSlugs) {
   return useQuery({
     queryKey: ['period', council],
     queryFn: async () => {
