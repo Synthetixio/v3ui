@@ -73,7 +73,13 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
         </Flex>
       </Flex>
       <Flex flexDir="column" w="100%">
-        <Button size="md" mb="1">
+        <Button
+          size="md"
+          mb="1"
+          onClick={() => {
+            navigate('/councils' + `?active=${council.slug}&nominateModal=true`);
+          }}
+        >
           Nominate Self
         </Button>
         <Button

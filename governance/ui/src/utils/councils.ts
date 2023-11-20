@@ -32,6 +32,6 @@ const councils: {
 
 export type Council = (typeof councils)[number];
 
-type CouncilSlugs = 'spartan' | 'grants' | 'ambassador' | 'treasury';
+export type CouncilSlugs = 'spartan' | 'grants' | 'ambassador' | 'treasury';
 
 export default councils;

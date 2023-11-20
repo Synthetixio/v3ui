@@ -1,9 +1,25 @@
 import { ChevronDownIcon, CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
 import { Badge } from '../Badge';
 import { prettyString } from '@snx-v3/format';
+import useGetUserDetails from '../../queries/useGetUserDetails';
+import { shortAddress } from '../../utils/address';
+import { Socials } from '../Socials';
+import { useNavigate } from 'react-router-dom';
+import Blockies from 'react-blockies';
+import './UserProfileCard.css';
 
-export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
+export function UserProfileCard({
+  walletAddress,
+  isNominated,
+  activeCouncil,
+}: {
+  walletAddress: string;
+  isNominated: boolean;
+  activeCouncil: string;
+}) {
+  const navigate = useNavigate();
+  const { data: userData } = useGetUserDetails(walletAddress);
   return (
     <Flex
       flexDir="column"
@@ -13,13 +29,24 @@ export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
       borderColor="gray.900"
       borderWidth="1px"
       p="4"
+      maxW="483px"
+      w="100%"
+      h="612px"
     >
       <Flex alignItems="center" mb="4">
-        <Image borderRadius="full" src="/img.png" w="56px" h="56px" mr="4" />
+        {userData?.pfpImageId ? (
+          <Image borderRadius="full" src={userData.pfpImageId} w="56px" h="56px" mr="4" />
+        ) : (
+          userData?.address && (
+            <Box mr="4">
+              <Blockies size={14} seed={userData.address} className="fully-rounded" />
+            </Box>
+          )
+        )}
         <Flex flexDir="column" w="100%">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700">
-              Andy
+              {shortAddress(userData?.address)}
             </Text>
             <IconButton
               size="xs"
@@ -31,7 +58,7 @@ export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
             />
           </Flex>
           <Text fontSize="12px" fontWeight="400" lineHeight="16px">
-            Og Defi Member
+            {userData?.about}
           </Text>
         </Flex>
       </Flex>
@@ -39,7 +66,11 @@ export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
         <Badge color="green">2x Elected</Badge>
       </Flex>
       <Flex mb="4">
-        <i>If user has socials here</i>
+        <Socials
+          discord={userData?.discord}
+          github={userData?.github}
+          twitter={userData?.twitter}
+        />
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
         {/* @TODO what gray is that? */}
@@ -70,10 +101,7 @@ export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
         Governance Pitch
       </Text>
       <Text fontSize="14px" lineHeight="20px">
-        Synthetix is at a watershed moment with v3 coming up, where we can finally offer our
-        carefully designed and battle-tested architecture to all of DeFi. However, we will also face
-        important and contentious decisions around value capture: how do we capture as much of a
-        bigger pie as possible, without jeopardizing the underlying SNX token?
+        {userData?.delegationPitch}
       </Text>
       <Button
         alignSelf="flex-start"
@@ -86,11 +114,19 @@ export function UserProfileCard({ walletAddress }: { walletAddress: string }) {
         View More
         <ChevronDownIcon color="cyan.500" ml="1" />
       </Button>
-
-      <Button variant="outline" colorScheme="gray" mb="1">
-        Edit Profile
-      </Button>
-      <Button>Nominate Self</Button>
+      <Box mt="auto">
+        <Button variant="outline" colorScheme="gray" mb="1" w="100%">
+          Edit Profile
+        </Button>
+        {!isNominated && (
+          <Button
+            w="100%"
+            onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)}
+          >
+            Nominate Self
+          </Button>
+        )}
+      </Box>
     </Flex>
   );
 }

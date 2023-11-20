@@ -5444,6 +5444,7 @@ __metadata:
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     "@types/react": "npm:^18.2.37"
+    "@types/react-blockies": "npm:^1"
     "@types/react-dom": "npm:^18.2.15"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
@@ -5458,6 +5459,7 @@ __metadata:
     ipfs-http-client: "npm:^60.0.1"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
+    react-blockies: "npm:^1.4.1"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.48.2"
     react-refresh: "npm:^0.14.0"
@@ -7265,6 +7267,15 @@ __metadata:
   version: 1.2.4
   resolution: "@types/range-parser@npm:1.2.4"
   checksum: b7c0dfd5080a989d6c8bb0b6750fc0933d9acabeb476da6fe71d8bdf1ab65e37c136169d84148034802f48378ab94e3c37bb4ef7656b2bec2cb9c0f8d4146a95
+  languageName: node
+  linkType: hard
+
+"@types/react-blockies@npm:^1":
+  version: 1.4.4
+  resolution: "@types/react-blockies@npm:1.4.4"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 842f12b6408c25fb73a0aa0c3ea261c97fb1e1fdd0d03da55d8e47ba3d102a2169aa389fd6d0d31a7957e18237e9ccfdbc970e97be36d786f4f013d4a1324006
   languageName: node
   linkType: hard
 
@@ -18539,7 +18550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -18807,6 +18818,17 @@ __metadata:
     iconv-lite: "npm:0.4.24"
     unpipe: "npm:1.0.0"
   checksum: 280bedc12db3490ecd06f740bdcf66093a07535374b51331242382c0e130bb273ebb611b7bc4cba1b4b4e016cc7b1f4b05a6df885a6af39c2bc3b94c02291c84
+  languageName: node
+  linkType: hard
+
+"react-blockies@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "react-blockies@npm:1.4.1"
+  dependencies:
+    prop-types: "npm:^15.5.10"
+  peerDependencies:
+    react: ">=15.0.0"
+  checksum: 2b15f8640e8991518a56cfab272fab4b35c3506fe20846afa423e75be464cd22d94bb655b0eae6affe4761d1e9fde22ff1f1eb1f9e24769a72651e072da494de
   languageName: node
   linkType: hard
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Council } from '../utils/councils';
-import { ElectionModule } from '../utils/Contracts';
+import { ElectionModule } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
 
 export function useGetCurrentPeriod(council: Council['slug']) {
