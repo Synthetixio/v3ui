@@ -25,7 +25,7 @@ import NominationCountdown from '../NominationCountdown/NominationCountdown';
 
 const routes = [
   {
-    path: 'councils',
+    path: 'councils?active=spartan',
     label: 'Councils',
   },
   { path: 'members', label: 'Members' },

@@ -4,6 +4,7 @@ import { PassedElectionAccordion } from '../components/PassedElectionAccordion';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useSearchParams } from 'react-router-dom';
 import UserActionBox from '../components/UserActionBox/UserActionBox';
+import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 
 export default function Councils() {
   const [searchParams] = useSearchParams();
@@ -12,7 +13,7 @@ export default function Councils() {
       <CouncilTabs activeCouncil={searchParams.get('active') as CouncilSlugs} />
       <Flex>
         <Flex flexDir="column" w="735px">
-          <div>Some text about council</div>
+          <CouncilInformation activeCouncil={searchParams.get('active') as CouncilSlugs} />
         </Flex>
 
         <UserActionBox

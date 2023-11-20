@@ -25,7 +25,7 @@ export default function UserActionBox({
   //   }, [nominationModalIsOpen]);
 
   if (
-    !nominationModalIsOpen ||
+    (!nominationModalIsOpen && wallet?.address) ||
     selectedUserAddress ||
     (wallet?.address && typeof isNominated === 'object')
   ) {

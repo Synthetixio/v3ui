@@ -28,7 +28,7 @@ export default function NominationCountdown() {
   );
 
   return atLeastOneIsInNomination ? (
-    <Flex bg="orange.700" rounded="base" px="5" py="1" mr="2">
+    <Flex bg="orange.700" rounded="base" px="5" py="1" mr="2" w="230px">
       <Text fontSize="sm" mr="2">
         Voting starts:
       </Text>
