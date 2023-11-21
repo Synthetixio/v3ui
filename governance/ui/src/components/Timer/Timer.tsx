@@ -8,7 +8,7 @@ export default function Timer({ expiryTimestamp }: { expiryTimestamp: number }) 
   });
 
   return (
-    <Text fontSize="sm" fontWeight="bold">
+    <Text fontSize={{ base: 'xs', lg: 'sm' }} fontWeight="bold">
       {days}D {hours}H {minutes}M
     </Text>
   );

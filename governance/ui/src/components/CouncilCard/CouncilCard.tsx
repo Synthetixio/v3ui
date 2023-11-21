@@ -19,10 +19,10 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
   return (
     <Flex
       p="6"
-      mr={isLast ? '0px' : '24px'}
+      mr={{ base: 0, md: isLast ? '0px' : '24px' }}
       mt="30px"
       w="290px"
-      h="413px"
+      h={{ base: 'auto', lg: '413px' }}
       borderWidth="1px"
       borderStyle="solid"
       borderColor="gray.900"

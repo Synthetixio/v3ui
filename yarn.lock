@@ -4279,6 +4279,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:^1.1.2":
+  version: 1.3.2
+  resolution: "@noble/hashes@npm:1.3.2"
+  checksum: 685f59d2d44d88e738114b71011d343a9f7dce9dfb0a121f1489132f9247baa60bc985e5ec6f3213d114fbd1e1168e7294644e46cbd0ce2eba37994f28eeb51b
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -5466,6 +5473,7 @@ __metadata:
     react-router-dom: "npm:^6.18.0"
     react-timer-hook: "npm:^3.0.7"
     recoil: "npm:^0.7.7"
+    siwe: "npm:^2.1.4"
     stream-browserify: "npm:^3.0.0"
     style-loader: "npm:^3.3.3"
     terser-webpack-plugin: "npm:^5.3.9"
@@ -6272,6 +6280,18 @@ __metadata:
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
+
+"@spruceid/siwe-parser@npm:*":
+  version: 2.0.2
+  resolution: "@spruceid/siwe-parser@npm:2.0.2"
+  dependencies:
+    "@noble/hashes": "npm:^1.1.2"
+    apg-js: "npm:^4.1.1"
+    uri-js: "npm:^4.4.1"
+    valid-url: "npm:^1.0.9"
+  checksum: a6c4b824465d4cfa351f89ab4e91a1be8643d5551946678dcc5d46373f2da47ab72b750a2fb351780f2cfbeb6c8055853496eb1c5eadc78a93dfd1c21fabcd89
+  languageName: node
+  linkType: hard
 
 "@stablelib/aead@npm:^1.0.1":
   version: 1.0.1
@@ -8674,6 +8694,13 @@ __metadata:
     normalize-path: "npm:^3.0.0"
     picomatch: "npm:^2.0.4"
   checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
+  languageName: node
+  linkType: hard
+
+"apg-js@npm:^4.1.1":
+  version: 4.2.1
+  resolution: "apg-js@npm:4.2.1"
+  checksum: d67f114f1c7bb370a8d1718c6ad057906e29d38018049647ef40a52ef6da68b4febf8e3af753b025250488ae286c58de7723b6af0e0bc713127d7f524ac02741
   languageName: node
   linkType: hard
 
@@ -20025,6 +20052,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"siwe@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "siwe@npm:2.1.4"
+  dependencies:
+    "@spruceid/siwe-parser": "npm:*"
+    "@stablelib/random": "npm:^1.0.1"
+    uri-js: "npm:^4.4.1"
+    valid-url: "npm:^1.0.9"
+  peerDependencies:
+    ethers: ^5.6.8 || ^6.0.8
+  checksum: 985d8a1c1a5a090d60d0263205c87884410d2f03de6756aeccf19f9915557efd5703488f417f5dc4a64df7270d8a9b22f88b5d37a63344d2c471f3dc860b4290
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -21685,7 +21726,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2":
+"uri-js@npm:^4.2.2, uri-js@npm:^4.4.1":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
   dependencies:
@@ -21819,6 +21860,13 @@ __metadata:
     "@types/istanbul-lib-coverage": "npm:^2.0.1"
     convert-source-map: "npm:^1.6.0"
   checksum: 0bbaffbb344af7172884a6f9868fa55df96230caf7100fa250b63d95ad0e24848141b35731d16607ae0d0023baa064b75c8e4197f6071f3bd3b09540c98490a1
+  languageName: node
+  linkType: hard
+
+"valid-url@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "valid-url@npm:1.0.9"
+  checksum: 343dfaf85eb3691dc8eb93f7bc007be1ee6091e6c6d1a68bf633cb85e4bf2930e34ca9214fb2c3330de5b652510b257a8ee1ff0a0a37df0925e9dabf93ee512d
   languageName: node
   linkType: hard
 

@@ -2,24 +2,26 @@ import { ChevronDownIcon, CloseIcon, CopyIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
 import { Badge } from '../Badge';
 import { prettyString } from '@snx-v3/format';
-import useGetUserDetails from '../../queries/useGetUserDetails';
 import { shortAddress } from '../../utils/address';
 import { Socials } from '../Socials';
 import { useNavigate } from 'react-router-dom';
 import Blockies from 'react-blockies';
 import './UserProfileCard.css';
+import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 
 export function UserProfileCard({
   walletAddress,
   isNominated,
   activeCouncil,
+  isOwn,
 }: {
   walletAddress: string;
-  isNominated: boolean;
+  isNominated?: boolean;
   activeCouncil: string;
+  isOwn?: boolean;
 }) {
   const navigate = useNavigate();
-  const { data: userData } = useGetUserDetails(walletAddress);
+  const { data: userData } = useGetUserDetailsQuery(walletAddress);
   return (
     <Flex
       flexDir="column"
@@ -49,6 +51,7 @@ export function UserProfileCard({
               {shortAddress(userData?.address)}
             </Text>
             <IconButton
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}
@@ -95,9 +98,7 @@ export function UserProfileCard({
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-
-      {/* @TODO what gray is that? */}
-      <Text fontSize="14px" fontWeight="700" color="#828295">
+      <Text fontSize="14px" fontWeight="700" color="gray.500">
         Governance Pitch
       </Text>
       <Text fontSize="14px" lineHeight="20px">
@@ -115,15 +116,36 @@ export function UserProfileCard({
         <ChevronDownIcon color="cyan.500" ml="1" />
       </Button>
       <Box mt="auto">
-        <Button variant="outline" colorScheme="gray" mb="1" w="100%">
-          Edit Profile
-        </Button>
-        {!isNominated && (
+        {isOwn ? (
+          <>
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              mb="1"
+              w="100%"
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}&editProfile=true`)}
+            >
+              Edit Profile
+            </Button>
+            {!isNominated && (
+              <Button
+                w="100%"
+                onClick={() =>
+                  navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)
+                }
+              >
+                Nominate Self
+              </Button>
+            )}
+          </>
+        ) : (
           <Button
+            variant="outline"
+            colorScheme="gray"
             w="100%"
-            onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)}
+            onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
           >
-            Nominate Self
+            Done
           </Button>
         )}
       </Box>

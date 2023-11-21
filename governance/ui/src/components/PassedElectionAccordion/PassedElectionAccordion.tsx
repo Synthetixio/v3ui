@@ -14,10 +14,10 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { Council } from '../../utils/councils';
+import { CouncilSlugs } from '../../utils/councils';
 import { Badge } from '../Badge';
 
-export function PassedElectionAccordion({ activeCouncil }: { activeCouncil: Council }) {
+export function PassedElectionAccordion({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   return (
     <Accordion allowMultiple allowToggle>
       <AccordionItem mb="6">

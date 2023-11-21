@@ -28,8 +28,17 @@ export default function NominationCountdown() {
   );
 
   return atLeastOneIsInNomination ? (
-    <Flex bg="orange.700" rounded="base" px="5" py="1" mr="2" w="230px">
-      <Text fontSize="sm" mr="2">
+    <Flex
+      bg="orange.700"
+      rounded="base"
+      px={{ base: 1, lg: 5 }}
+      py="1"
+      w={{ base: '121px', md: '230px' }}
+      alignItems="center"
+      flexWrap="wrap"
+      justifyContent="center"
+    >
+      <Text fontSize={{ base: 'xs', lg: 'sm' }} mr="2">
         Voting starts:
       </Text>
       {isLoading ? (

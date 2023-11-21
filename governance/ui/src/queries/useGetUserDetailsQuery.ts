@@ -30,15 +30,14 @@ type UserPitch = {
   protocol: string;
 };
 
-export default function useGetUserDetails(walletAddress: string) {
+export default function useGetUserDetailsQuery(walletAddress?: string) {
   return useQuery<GetUserDetails | undefined>({
     queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return;
       return await getUserDetails(walletAddress);
     },
-
-    enabled: walletAddress !== null,
+    enabled: !!walletAddress,
     staleTime: 900000,
   });
 }
@@ -65,7 +64,7 @@ export async function getUserDetails(walletAddress: string): Promise<GetUserDeta
       synthetixPitch = foundPitch[0].delegationPitch;
     }
   }
-
+  // TODO @dev why synthetixPitch is defined and sometimes not?????
   delete userProfile.data.delegationPitches;
 
   return { ...userProfile.data, delegationPitch: synthetixPitch };

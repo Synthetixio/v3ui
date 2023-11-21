@@ -1,9 +1,14 @@
-import { CopyIcon } from '@chakra-ui/icons';
-import { Button, Flex, Image, Input, Text, Textarea } from '@chakra-ui/react';
+import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
+import { Button, Flex, IconButton, Image, Input, Text, Textarea } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ipfs } from '../../utils/ipfs';
+import { useNavigate } from 'react-router-dom';
+import Blockies from 'react-blockies';
+import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
+import '../UserProfileCard/UserProfileCard.css';
+import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useWallet } from '@snx-v3/useBlockchain';
 
 interface User {
   address: string;
@@ -16,66 +21,37 @@ interface User {
   delegationPitch: string;
 }
 
-export function UserProfileForm({ user }: { user: Partial<User> }) {
-  const [showImageForm, setShowImageForm] = useState(false);
+export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
+  const wallet = useWallet();
+  const mutation = useUpdateUserDetailsMutation();
+  const navigate = useNavigate();
+  const { data: user } = useGetUserDetailsQuery(wallet?.address);
   const { register, getValues, resetField, setValue } = useForm({
     defaultValues: {
-      address: user.about,
-      username: user.username,
-      discord: user.discord,
-      twitter: user.twitter,
-      about: user.about,
-      github: user.github,
-      pfpUrl: user.pfpUrl,
-      delegationPitch: user.delegationPitch,
+      address: user?.about,
+      username: user?.username,
+      discord: user?.discord,
+      twitter: user?.twitter,
+      about: user?.about,
+      github: user?.github,
+      pfpUrl: user?.pfpUrl,
+      delegationPitch: user?.delegationPitch,
       file: '',
     },
   });
 
   return (
-    <Flex flexDir="column" gap="4">
-      <Flex w="100%">
-        <Flex flexDir="column" w="56px" mr="4" justifyContent="center">
-          <Image src={user.pfpUrl} w="56px" h="56px" mb="2" />
-          <Button
-            colorScheme="gray"
-            variant="outline"
-            onClick={() => setShowImageForm(!showImageForm)}
-          >
-            Edit
-          </Button>
-        </Flex>
-        <Flex flexDir="column" w="100%">
-          <Text color="gray.500">Username</Text>
-          <Input {...register('username')} mb="1" placeholder="John Doe" />
-          <Text color="gray.500">About</Text>
-          <Input {...register('about')} placeholder="OG DeFi Member" />
-        </Flex>
-      </Flex>
-      {showImageForm && (
-        <Flex flexDir="column">
-          <Text color="gray.500">Upload to IPFS</Text>
-          <Input
-            {...register('file')}
-            type="file"
-            accept="image/png, image/gif, image/jpeg"
-            mb="1"
-          />
-          <Button
-            variant="outline"
-            onClick={async () => {
-              let file: any = getValues('file');
-              if (typeof file === 'object') {
-                file = file.item(0);
-                const result = await ipfs.add(file);
-                setValue('pfpUrl', result.path);
-                resetField('file');
-              }
-            }}
-          >
-            Upload
-          </Button>
-          <Text color="gray.500">Or paste in the path</Text>
+    <Flex flexDir="column" gap="4" px="6" py="4" w="100%">
+      <Flex w="100%" alignItems="center">
+        {user?.pfpUrl ? (
+          <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
+        ) : (
+          <Blockies size={14} seed={user?.address!} className="fully-rounded" />
+        )}
+        <Flex w="100%" flexDirection="column" position="relative" ml="2" gap="2">
+          <Text size="xs" color="gray.500">
+            Avatar
+          </Text>
           <Input
             {...register('pfpUrl', {
               pattern: {
@@ -85,8 +61,49 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
             })}
             placeholder="QmSHZw..."
           />
+          <IconButton
+            position="absolute"
+            top="0px"
+            right="0px"
+            onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
+            size="xs"
+            aria-label="close button"
+            icon={<CloseIcon />}
+            variant="ghost"
+            colorScheme="whiteAlpha"
+            color="white"
+          />
+          <Flex alignItems="center">
+            <Input
+              {...register('file')}
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              mb="1"
+            />
+
+            <Button
+              variant="ghost"
+              onClick={async () => {
+                let file: any = getValues('file');
+                if (typeof file === 'object') {
+                  file = file.item(0);
+                  const result = await ipfs.add(file);
+                  setValue('pfpUrl', result.path);
+                  resetField('file');
+                }
+              }}
+            >
+              Upload
+            </Button>
+          </Flex>
         </Flex>
-      )}
+      </Flex>
+      <Flex flexDir="column" w="100%">
+        <Text color="gray.500">Username</Text>
+        <Input {...register('username')} mb="1" placeholder="John Doe" />
+        <Text color="gray.500">About</Text>
+        <Input {...register('about')} placeholder="OG DeFi Member" />
+      </Flex>
       <div>
         <Text color="gray.500">Discord</Text>
         <Input {...register('discord')} placeholder="John Doe" />
@@ -99,13 +116,8 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
         <Text color="gray.500">Github</Text>
         <Input {...register('github')} placeholder="John Doe" />
       </div>
-      <div>
-        <Text color="gray.500">Wallet Address</Text>
-        <Input disabled={true} placeholder={user.address} />
-      </div>
-      <Flex flexDirection="column" alignItems="flex-start" mb="6">
-        {/* @TODO what gray is that? */}
-        <Text fontSize="14px" fontWeight="400" color="#828295">
+      <Flex flexDirection="column" alignItems="flex-start">
+        <Text fontSize="14px" fontWeight="400" color="gray.500">
           Wallet Address
         </Text>
         <Button
@@ -114,24 +126,54 @@ export function UserProfileForm({ user }: { user: Partial<User> }) {
           variant="unstyled"
           onClick={() => {
             try {
-              navigator.clipboard.writeText(user.address!);
+              navigator.clipboard.writeText(user?.address!);
             } catch (error) {
               console.error(error);
             }
           }}
         >
-          <Text mr="1" fontSize="12px" fontWeight="700">
-            {prettyString(user.address || '')}
+          <Text mr="1" fontSize="md" fontWeight="700">
+            {prettyString(user?.address || '')}
           </Text>
-          <CopyIcon w="12px" h="12px" />
+          <CopyIcon
+            w="12px"
+            h="12px"
+            onClick={() => navigator.clipboard.writeText(user?.address!)}
+          />
         </Button>
       </Flex>
       <div>
         <Text color="gray.500">Governance Pitch</Text>
-        <Textarea placeholder="I will pump SNX" />
+        <Textarea {...register('delegationPitch')} placeholder="I will pump SNX" />
       </div>
 
-      <Button colorScheme="gray" variant="outline">
+      <Button
+        colorScheme="gray"
+        variant="outline"
+        onClick={() => {
+          mutation.mutate({
+            about: getValues('about')!,
+            address: user?.address!,
+            email: '',
+            associatedAddresses: '',
+            bannerImageId: '',
+            bannerUrl: '',
+            delegationPitch: getValues('delegationPitch')!,
+            discord: getValues('discord')!,
+            ens: '',
+            github: getValues('github')!,
+            bannerThumbnailUrl: '',
+            pfpUrl: getValues('pfpUrl')!,
+            website: '',
+            pfpImageId: '',
+            twitter: getValues('twitter')!,
+            pfpThumbnailUrl: '',
+            notificationPreferences: '',
+            type: '',
+            username: getValues('username')!,
+          });
+        }}
+      >
         Save Profile
       </Button>
     </Flex>

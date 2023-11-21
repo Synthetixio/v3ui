@@ -4,7 +4,7 @@ import { CouncilCard } from '../components/CouncilCard';
 
 function App() {
   return (
-    <Box px="102px" pt="57px">
+    <Box px="102px" pt="57px" mb="5">
       <Flex flexDir="column">
         <Heading color="gray.50" fontSize="48px" lineHeight="57px" mb="2">
           Governing Bodies

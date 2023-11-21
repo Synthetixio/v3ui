@@ -8,6 +8,7 @@ import {
   MenuList,
   MenuItem,
   useColorMode,
+  Show,
 } from '@chakra-ui/react';
 import {
   Network,
@@ -22,16 +23,6 @@ import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icon
 import { prettyString } from '@snx-v3/format';
 import { useEffect } from 'react';
 import NominationCountdown from '../NominationCountdown/NominationCountdown';
-
-const routes = [
-  {
-    path: 'councils?active=spartan',
-    label: 'Councils',
-  },
-  { path: 'members', label: 'Members' },
-  { path: 'profile', label: 'Profile' },
-  { path: 'admin', label: '_Admin' },
-];
 
 const activeIcon = (currentNetwork: Network) => {
   switch (currentNetwork.id) {
@@ -68,25 +59,20 @@ export function Header() {
   }, [colorMode, toggleColorMode]);
 
   return (
-    <Flex as="header" bg="navy.700" h="65px" alignItems="center" px="40px">
-      <Flex mr={7} cursor="pointer" onClick={() => navigate('/')}>
+    <Flex
+      as="header"
+      bg="navy.700"
+      h="65px"
+      alignItems="center"
+      px={{ base: '3', lg: '10' }}
+      py={{ base: '4', lg: '10' }}
+    >
+      <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
         <Image src="/snx-header.svg" pr="10px" />
-        <Image src="/governance-header.svg" />
+        <Show above="md">
+          <Image src="/governance-header.svg" />
+        </Show>
       </Flex>
-      {routes.map((route, index) => (
-        <Text
-          cursor="pointer"
-          key={route.path.concat(route.label)}
-          onClick={() => navigate('/' + route.path)}
-          color={location.pathname.includes(route.path) ? 'white' : 'gray.500'}
-          fontWeight="700"
-          fontSize="14px"
-          lineHeight="20px"
-          mr={index === routes.length - 2 ? 'auto' : index === routes.length - 1 ? '8px' : '32px'}
-        >
-          {route.label}
-        </Text>
-      ))}
       <NominationCountdown />
       {isWalletConnected && (
         <Menu>
@@ -163,7 +149,9 @@ export function Header() {
           </MenuList>
         </Menu>
       ) : (
-        <Button onClick={() => onboard.connectWallet()}>Connect Wallet</Button>
+        <Button onClick={() => onboard.connectWallet()} ml="2">
+          Connect Wallet
+        </Button>
       )}
     </Flex>
   );
