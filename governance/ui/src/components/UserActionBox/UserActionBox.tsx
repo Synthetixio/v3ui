@@ -5,6 +5,7 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '@snx-v3/useBlockchain';
 import EditProfile from '../EditProfile/EditProfile';
+import EditNomination from '../EditNomination/EditNomination';
 
 export default function UserActionBox({
   editNominationModalIsOpen,
@@ -57,15 +58,7 @@ export default function UserActionBox({
   }
 
   if (editNominationModalIsOpen && wallet?.address) {
-    //  <EditNomination activeCouncil={activeCouncil} />;
-    return (
-      <UserProfileCard
-        walletAddress={wallet.address}
-        isNominated={typeof isNominated === 'boolean' ? isNominated : true}
-        activeCouncil={activeCouncil}
-        isOwn
-      />
-    );
+    return <EditNomination activeCouncil={activeCouncil} />;
   }
 
   if (

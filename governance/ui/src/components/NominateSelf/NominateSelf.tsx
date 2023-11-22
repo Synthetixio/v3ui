@@ -24,6 +24,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       borderStyle="solid"
       rounded="base"
       p="6"
+      justifyContent="center"
     >
       {isSuccess ? (
         <>

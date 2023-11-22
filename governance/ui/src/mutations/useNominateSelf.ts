@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { ElectionModule } from '../utils/contracts';
-import { motherShipProvider } from '../utils/providers';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
   const signer = useSigner();
