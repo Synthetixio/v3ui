@@ -182,7 +182,6 @@ export const withERC7412 = async (
       }
       // If we're here it means we now added a tx to do .
       const multicallTxn = makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
-      makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
 
       const gasLimit = await jsonRpcProvider.estimateGas(multicallTxn);
 
