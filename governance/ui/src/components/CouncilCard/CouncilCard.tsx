@@ -37,7 +37,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
       {!councilPeriod ? (
         <Spinner colorScheme="cyan" />
       ) : councilPeriod === '0' ? (
-        <Badge bg="purple.600" color="white" mb="6" textTransform="uppercase">
+        <Badge bg="gray.600" color="white" mb="6" textTransform="uppercase">
           Closed - Council Elected
         </Badge>
       ) : councilPeriod === '1' ? (
@@ -64,12 +64,32 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
           </Text>
         </Flex>
         <Flex flexDir="column">
-          <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
-            Nominees
-          </Text>
-          <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
-            {councilNominees?.length ?? <Spinner colorScheme="cyan" />}
-          </Text>
+          {' '}
+          {councilPeriod === '0' ? (
+            <>
+              <Text
+                color="gray.500"
+                fontSize="12px"
+                lineHeight="16px"
+                textTransform="uppercase"
+                textAlign="right"
+              >
+                Votes Received
+              </Text>
+              <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
+                TODO 1234
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
+                Nominees
+              </Text>
+              <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
+                {councilNominees?.length ?? <Spinner colorScheme="cyan" />}
+              </Text>
+            </>
+          )}
         </Flex>
       </Flex>
       <Flex flexDir="column" w="100%">
@@ -93,7 +113,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
               View Council
             </Button>
           </>
-        ) : (
+        ) : councilPeriod === '2' ? (
           <Button
             size="md"
             mb="1"
@@ -102,6 +122,15 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
             }}
           >
             Vote
+          </Button>
+        ) : (
+          <Button
+            size="md"
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+          >
+            View Council
           </Button>
         )}
       </Flex>
