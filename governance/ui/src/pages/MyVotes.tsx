@@ -1,7 +1,7 @@
-import { Alert, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Alert, Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
-import { CloseIcon, WarningIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 
 export default function MyVotes() {
   const navigate = useNavigate();
@@ -56,6 +56,7 @@ export default function MyVotes() {
               <Text fontSize="x-small">Voted For address todo</Text>
             </Flex>
 
+            {/* <AddIcon /> */}
             <IconButton aria-label="action-button" icon={<CloseIcon />} variant="outlined" />
           </Flex>
         ))}
@@ -72,7 +73,36 @@ export default function MyVotes() {
         borderColor="gray.900"
         w="483px"
         p="6"
-      ></Flex>
+        flexDir="column"
+      >
+        <Heading>Cast Your Vote</Heading>
+        <Text fontSize="sm" color="gray.500" display="inline">
+          Your total voting powered is aggregated from all chains and used to vote on Optimism. It
+          can take{' '}
+          <Text color="cyan.500" display="inline">
+            up to 15 mins
+          </Text>{' '}
+          to transfer.
+        </Text>
+        <Flex
+          flexDir="column"
+          bg="navy.900"
+          p="2"
+          rounded="base"
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="gray.900"
+          mb="auto"
+        >
+          <Text fontSize="sm" color="gray.500">
+            Total Voting Power
+          </Text>
+          <Text fontSize="sm" color="white" fontWeight="bold">
+            8923748923,2390487239 TODO
+          </Text>
+        </Flex>
+        <Button size="md">Cast Vote</Button>
+      </Flex>
     </Flex>
   );
 }
