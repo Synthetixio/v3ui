@@ -1,11 +1,10 @@
 import { Divider, Flex, Heading, Text } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
-import NominationCountdown from '../NominationCountdown/NominationCountdown';
+import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
-import { UserCard } from '../UserCard';
 import UserListItem from '../UserListItem/UserListItem';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
@@ -75,7 +74,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           </Text>
         </Flex>
         <Flex>
-          <NominationCountdown />
+          <PeriodCountdown />
         </Flex>
       </Flex>
       <Divider />

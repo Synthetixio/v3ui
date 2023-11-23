@@ -1,9 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
-import { CouncilSlugs } from '../utils/councils';
-import { useSigner, useWallet } from '@snx-v3/useBlockchain';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSigner } from '@snx-v3/useBlockchain';
 import { ElectionModule } from '../utils/contracts';
 
 export default function useEditNomination(council: any, address?: string) {
+  const queryClient = useQueryClient();
   const signer = useSigner();
   return useMutation({
     mutationFn: async () => {
@@ -20,5 +20,8 @@ export default function useEditNomination(council: any, address?: string) {
       }
     },
     mutationKey: ['editNomination', council, address],
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: ['useGetIsNominated'] });
+    },
   });
 }

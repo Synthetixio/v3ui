@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { theme, Fonts } from '@synthetixio/v3-theme';
 import { BlockchainProvider } from '@snx-v3/useBlockchain';
@@ -9,9 +10,8 @@ import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Header } from '../components/Header/Header';
 import Councils from './Councils';
-import Members from './Members';
-import Profile from './Profile';
 import Admin from './Admin';
+import MyVotes from './MyVotes';
 
 const router = createHashRouter([
   {
@@ -42,23 +42,33 @@ const router = createHashRouter([
     ),
   },
   {
-    path: '/members',
+    path: '/my-votes',
     element: (
       <>
         <Header />
-        <Members />
+        <MyVotes />
       </>
     ),
   },
-  {
-    path: '/profile',
-    element: (
-      <>
-        <Header />
-        <Profile />
-      </>
-    ),
-  },
+  //  Todo @dev remove them?
+  // {
+  //   path: '/members',
+  //   element: (
+  //     <>
+  //       <Header />
+  //       <Members />
+  //     </>
+  //   ),
+  // },
+  // {
+  //   path: '/profile',
+  //   element: (
+  //     <>
+  //       <Header />
+  //       <Profile />
+  //     </>
+  //   ),
+  // },
 ]);
 
 const customTheme = extendTheme({
@@ -97,6 +107,7 @@ root.render(
       <QueryClientProvider client={new QueryClient()}>
         <BlockchainProvider>
           <ChakraProvider theme={customTheme}>
+            <ReactQueryDevtools initialIsOpen={false} />
             <Fonts />
             <RouterProvider router={router} />
           </ChakraProvider>

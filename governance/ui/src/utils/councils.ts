@@ -17,7 +17,7 @@ const councils: {
   {
     title: 'Grants Council',
     slug: 'grants',
-    image: '/councils/gc.svg',
+    image: '/councils/gc.png',
     address: '0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77',
     description: 'Lorem Ipsum',
     stipends: '2,000 SNX',

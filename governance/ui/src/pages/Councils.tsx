@@ -7,24 +7,16 @@ import CouncilInformation from '../components/CouncilInformation/CouncilInformat
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
 import { PassedElectionAccordion } from '../components/PassedElectionAccordion';
-import { useEffect, useState } from 'react';
 
 export default function Councils() {
   const [searchParams] = useSearchParams();
-  // const [params, setParams] = useState<{ view: string }>({ view: '' });
   const { data: councilPeriod } = useGetCurrentPeriod(searchParams.get('active') as CouncilSlugs);
 
-  // useEffect(() => {
-  //   setParams({ view: searchParams.get('view') as string });
-  // }, [searchParams.get('view')]);
-
-  // console.log(params);
-
   return (
-    <>
+    <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={searchParams.get('active') as CouncilSlugs} />
       <Flex>
-        <Flex flexDir="column" w="735px">
+        <Flex flexDir="column" w="735px" mr="4">
           <CouncilInformation activeCouncil={searchParams.get('active') as CouncilSlugs} />
           {councilPeriod === '1' && (
             <CouncilNominees activeCouncil={searchParams.get('active') as CouncilSlugs} />
@@ -39,6 +31,6 @@ export default function Councils() {
           editProfile={searchParams.get('editProfile') === 'true' ? true : false}
         />
       </Flex>
-    </>
+    </Flex>
   );
 }

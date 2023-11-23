@@ -22,7 +22,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect } from 'react';
-import NominationCountdown from '../NominationCountdown/NominationCountdown';
+import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 
 const activeIcon = (currentNetwork: Network) => {
   switch (currentNetwork.id) {
@@ -66,6 +66,9 @@ export function Header() {
       alignItems="center"
       px={{ base: '3', lg: '10' }}
       py={{ base: '4', lg: '10' }}
+      borderBottomWidth="1px"
+      borderStyle="solid"
+      borderBottomColor="gray.900"
     >
       <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
         <Image src="/snx-header.svg" pr="10px" />
@@ -73,7 +76,7 @@ export function Header() {
           <Image src="/governance-header.svg" />
         </Show>
       </Flex>
-      <NominationCountdown />
+      <PeriodCountdown />
       {isWalletConnected && (
         <Menu>
           {() => (

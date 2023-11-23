@@ -1,9 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { ElectionModule } from '../utils/contracts';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
+  const query = useQueryClient();
   const signer = useSigner();
   return useMutation({
     mutationFn: async () => {
@@ -14,5 +15,8 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
       }
     },
     mutationKey: ['nomination', council, address],
+    onSuccess: async () => {
+      await query.refetchQueries({ queryKey: ['useGetIsNominated'], exact: false });
+    },
   });
 }

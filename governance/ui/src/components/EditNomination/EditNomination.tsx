@@ -32,7 +32,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       p="6"
       justifyContent="center"
     >
-      {true ? (
+      {isSuccess ? (
         <>
           <Flex justifyContent="space-between" mb="auto">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -231,7 +231,9 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           </Flex>
 
           {isPending ? (
-            <Spinner colorScheme="cyan" />
+            <Flex w="100%" justifyContent="center">
+              <Spinner colorScheme="cyan" />
+            </Flex>
           ) : (
             <Button mt="12" onClick={() => mutate()}>
               Edit Nomination

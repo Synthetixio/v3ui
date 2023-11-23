@@ -1,11 +1,9 @@
 import { Flex, Spinner, Text } from '@chakra-ui/react';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import { useTimer } from 'react-timer-hook';
-import { useEffect } from 'react';
 import Timer from '../Timer/Timer';
 
-export default function NominationCountdown() {
+export default function PeriodCountdown() {
   const { data: spartanCouncilPeriod } = useGetCurrentPeriod('spartan');
   const { data: ambassadorCouncilPeriod } = useGetCurrentPeriod('ambassador');
   const { data: grantsCouncilPeriod } = useGetCurrentPeriod('grants');
@@ -17,6 +15,12 @@ export default function NominationCountdown() {
     grantsCouncilPeriod === '1' ||
     treasuryCouncilPeriod === '1';
 
+  const atLeastOneIsInVoting =
+    spartanCouncilPeriod === '2' ||
+    ambassadorCouncilPeriod === '2' ||
+    grantsCouncilPeriod === '2' ||
+    treasuryCouncilPeriod === '2';
+
   const { data: schedule, isLoading } = useGetEpochSchedule(
     spartanCouncilPeriod === '1'
       ? 'spartan'
@@ -27,9 +31,9 @@ export default function NominationCountdown() {
           : 'treasury'
   );
 
-  return atLeastOneIsInNomination ? (
+  return atLeastOneIsInNomination || atLeastOneIsInVoting ? (
     <Flex
-      bg="orange.700"
+      bg={atLeastOneIsInNomination ? 'orange.700' : 'teal.700'}
       rounded="base"
       px={{ base: 1, lg: 5 }}
       py="1"
@@ -39,14 +43,21 @@ export default function NominationCountdown() {
       justifyContent="center"
     >
       <Text fontSize={{ base: 'xs', lg: 'sm' }} mr="2">
-        Voting starts:
+        Voting {atLeastOneIsInNomination ? 'starts' : 'ends'}:
       </Text>
       {isLoading ? (
         <Spinner colorScheme="cyan" />
       ) : (
-        schedule?.votingPeriodStartDate && (
-          <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
-        )
+        schedule?.votingPeriodStartDate ||
+        (schedule?.votingPeriodStartDate && (
+          <Timer
+            expiryTimestamp={
+              atLeastOneIsInNomination
+                ? schedule.votingPeriodStartDate * 1000
+                : schedule.endDate * 1000
+            }
+          />
+        ))
       )}
     </Flex>
   ) : null;

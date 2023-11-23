@@ -54,7 +54,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
         </Badge>
       )}
       <Divider />
-      <Flex justifyContent="space-between" w="100%" my="6">
+      <Flex justifyContent="space-between" w="100%" my="6" mb="auto">
         <Flex flexDir="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
             Members
@@ -73,23 +73,37 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
         </Flex>
       </Flex>
       <Flex flexDir="column" w="100%">
-        <Button
-          size="md"
-          mb="1"
-          onClick={() => {
-            navigate('/councils' + `?active=${council.slug}&nominateModal=true`);
-          }}
-        >
-          Nominate Self
-        </Button>
-        <Button
-          size="md"
-          variant="outline"
-          colorScheme="gray"
-          onClick={() => navigate('/councils' + `?active=${council.slug}`)}
-        >
-          View Council
-        </Button>
+        {councilPeriod === '1' ? (
+          <>
+            <Button
+              size="md"
+              mb="1"
+              onClick={() => {
+                navigate('/councils' + `?active=${council.slug}&nominateModal=true`);
+              }}
+            >
+              Nominate Self
+            </Button>
+            <Button
+              size="md"
+              variant="outline"
+              colorScheme="gray"
+              onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+            >
+              View Council
+            </Button>
+          </>
+        ) : (
+          <Button
+            size="md"
+            mb="1"
+            onClick={() => {
+              navigate('/councils' + `?active=${council.slug}`);
+            }}
+          >
+            Vote
+          </Button>
+        )}
       </Flex>
     </Flex>
   );

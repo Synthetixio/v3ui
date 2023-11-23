@@ -5450,6 +5450,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    "@tanstack/react-query-devtools": "npm:^5.8.4"
     "@types/react": "npm:^18.2.37"
     "@types/react-blockies": "npm:^1"
     "@types/react-dom": "npm:^18.2.15"
@@ -6591,6 +6592,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-devtools@npm:5.8.4":
+  version: 5.8.4
+  resolution: "@tanstack/query-devtools@npm:5.8.4"
+  checksum: 62bd1ccb420eae3e68c5cecf409f9777ba71533fe975327b91082e6cecf24ae1d0ce409aa8d25355403e3d32c6c42c1b338e55c412c3bb9e48ad1f9e826bcea8
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query-devtools@npm:^5.8.3":
   version: 5.8.3
   resolution: "@tanstack/react-query-devtools@npm:5.8.3"
@@ -6601,6 +6609,19 @@ __metadata:
     react: ^18.0.0
     react-dom: ^18.0.0
   checksum: 9fd1b171727a97006100423c40d16eafa78b818006599435b44361089776609dedad5fcbe1c41fca8e246bfb88a870b34da8cae1b39ae7c3be51252f25596236
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.8.4":
+  version: 5.8.4
+  resolution: "@tanstack/react-query-devtools@npm:5.8.4"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.8.4"
+  peerDependencies:
+    "@tanstack/react-query": ^5.8.4
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: c0dec0b593df2cb809d22974a4c53d85332a3d796af293c3b2354733c425adb9f7b4d17a1259eb3c83db1871711101899241507ce88e006bbb5a4416a1739190
   languageName: node
   linkType: hard
 
