@@ -105,13 +105,13 @@ commands:
             echo $CHECKSUM > $CHECKSUM_FILENAME
             echo 'export CHECKSUM_FILENAME='${CHECKSUM_FILENAME} >> $BASH_ENV
 
-            RELEASE_NAME=armada-release-${CIRCLE_SHA1:0:7}-$(date +%s)
+            RELEASE_NAME=release-armada-$(date '+%Y%m%d')
             echo 'export RELEASE_NAME='${RELEASE_NAME} >> $BASH_ENV
 
       - run:
           name: 'Publish Armada Release to Github with assets'
           command: |
-            gh release create -R $CIRCLE_REPOSITORY_URL --notes "Armada 1.0.0" --title "${RELEASE_NAME}" ${RELEASE_NAME}
+            gh release create -R $CIRCLE_REPOSITORY_URL --notes-from-tag --title "${RELEASE_NAME}" ${RELEASE_NAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${BUNDLE_FILENAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${CHECKSUM_FILENAME}
 
@@ -119,7 +119,6 @@ commands:
           name: 'Push to Armada'
           command: |
             BUNDLE_URL=$(gh release view -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} --json assets --jq ".assets[] | select(.name == \"${BUNDLE_FILENAME}\") | .url")
-
             npx armada-cli project publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
 
 jobs:
@@ -333,6 +332,9 @@ workflows:
                 - master
                 - ipfs-deploy
                 - dm-add-armada
+            tags:
+              only:
+                - release-liquidity-*
       # - liquidity-ipfs:
       #     requires:
       #       - checks
