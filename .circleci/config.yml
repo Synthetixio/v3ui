@@ -334,7 +334,7 @@ workflows:
                 - dm-add-armada
             tags:
               only:
-                - release-liquidity-.*
+                - /release-liquidity-.*/
       # - liquidity-ipfs:
       #     requires:
       #       - checks
