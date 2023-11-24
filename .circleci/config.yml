@@ -104,7 +104,7 @@ commands:
             echo $CHECKSUM > $CHECKSUM_FILENAME
             echo 'export CHECKSUM_FILENAME='${CHECKSUM_FILENAME} >> $BASH_ENV
 
-            RELEASE_NAME=armada-release-${CIRCLE_SHA1:0:7}
+            RELEASE_NAME=armada-release-${CIRCLE_SHA1:0:7}-$(date +%s)
             echo 'export RELEASE_NAME='${RELEASE_NAME} >> $BASH_ENV
 
       - run:
