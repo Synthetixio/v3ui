@@ -87,8 +87,9 @@ commands:
     steps:
       - gh/install
       - run:
-          name: 'Install armada-cli'
+          name: 'Install armada-cli and dependencies'
           command: |
+            sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
             npx armada-cli --version
 
       - run:
