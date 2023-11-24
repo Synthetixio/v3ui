@@ -120,7 +120,7 @@ commands:
           command: |
             BUNDLE_URL=$(gh release view -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} --json assets --jq ".assets[] | select(.name == \"${BUNDLE_FILENAME}\") | .url")
 
-            npx armada-cli project publish $ARMADA_PROJECT_ID $BUNDLE_URL $checksum --key=$ARMADA_PRIVATE_KEY
+            npx armada-cli project publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
 
 jobs:
   checks:
