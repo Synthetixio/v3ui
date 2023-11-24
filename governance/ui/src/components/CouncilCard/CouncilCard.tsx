@@ -37,7 +37,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
       {!councilPeriod ? (
         <Spinner colorScheme="cyan" />
       ) : councilPeriod === '0' ? (
-        <Badge bg="gray.600" color="white" mb="6" textTransform="uppercase">
+        <Badge bg="gray.900" color="white" mb="6" textTransform="uppercase">
           Closed - Council Elected
         </Badge>
       ) : councilPeriod === '1' ? (
