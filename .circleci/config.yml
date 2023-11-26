@@ -117,7 +117,7 @@ commands:
       - run:
           name: 'Publish Armada Release to Github with assets'
           command: |
-            gh release create -R $CIRCLE_REPOSITORY_URL --notes "" --title "${RELEASE_NAME}" ${RELEASE_NAME}
+            gh release create -R $CIRCLE_REPOSITORY_URL --generate-notes --title "${RELEASE_NAME}" ${RELEASE_NAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${BUNDLE_FILENAME}
             gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${CHECKSUM_FILENAME}
 
