@@ -344,7 +344,8 @@ workflows:
             #     - ipfs-deploy
             #     - dm-add-armada
             tags:
-              only: ^release-liquidity-.*$
+              only:
+                - /.*/
       # - liquidity-ipfs:
       #     requires:
       #       - checks
