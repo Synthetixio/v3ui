@@ -339,7 +339,6 @@ workflows:
                 - release
                 - master
                 - ipfs-deploy
-                - dm-add-armada
       - liquidity-ipfs:
           requires:
             - checks
