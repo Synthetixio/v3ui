@@ -84,11 +84,12 @@ commands:
         type: string
     steps:
       - run:
-          name: 'Install armada-cli and dependencies'
+          name: 'Install dependencies'
           command: |
+            # dependencies for armada-cli
             sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
 
-            # gh cli
+            # gh cli, the github org is several minor versions behind
             type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
             curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
             && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -96,6 +97,7 @@ commands:
             && sudo apt update \
             && sudo apt install gh -y
             
+            # check that armada-cli runs
             npx armada-cli --version
 
       - run:
@@ -307,30 +309,30 @@ workflows:
         - equal: ['skip-tests', << pipeline.git.branch >>]
 
     jobs:
-      # - checks
-      # - typecheck
-      # - tests
-      # - liquidity-cy
-      # - liquidity-e2e:
-      #     chain: optimism-mainnet
-      #     name: liquidity-e2e-optimism-mainnet
-      # - liquidity-e2e:
-      #     chain: optimism-goerli
-      #     name: liquidity-e2e-optimism-goerli
-      # - liquidity-e2e:
-      #     chain: goerli
-      #     name: liquidity-e2e-goerli
-      # - combine-coverage:
-      #     requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      - checks
+      - typecheck
+      - tests
+      - liquidity-cy
+      - liquidity-e2e:
+          chain: optimism-mainnet
+          name: liquidity-e2e-optimism-mainnet
+      - liquidity-e2e:
+          chain: optimism-goerli
+          name: liquidity-e2e-optimism-goerli
+      - liquidity-e2e:
+          chain: goerli
+          name: liquidity-e2e-goerli
+      - combine-coverage:
+          requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-armada:
-          # requires:
-            # - checks
-            # - typecheck
-            # - tests
-            # - liquidity-cy
-            # - liquidity-e2e-optimism-mainnet
-            # - liquidity-e2e-optimism-goerli
-            # - liquidity-e2e-goerli
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - liquidity-cy
+            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-optimism-goerli
+            - liquidity-e2e-goerli
           filters:
             branches:
               only:
@@ -338,18 +340,18 @@ workflows:
                 - master
                 - ipfs-deploy
                 - dm-add-armada
-      # - liquidity-ipfs:
-      #     requires:
-      #       - checks
-      #       - typecheck
-      #       - tests
-      #       - liquidity-cy
-      #       - liquidity-e2e-optimism-mainnet
-      #       - liquidity-e2e-optimism-goerli
-      #       - liquidity-e2e-goerli
-      #     filters:
-      #       branches:
-      #         only:
-      #           - release
-      #           - master
-      #           - ipfs-deploy
+      - liquidity-ipfs:
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - liquidity-cy
+            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-optimism-goerli
+            - liquidity-e2e-goerli
+          filters:
+            branches:
+              only:
+                - release
+                - master
+                - ipfs-deploy
