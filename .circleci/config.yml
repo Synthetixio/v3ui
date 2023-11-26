@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  gh: circleci/github-cli@2.2.0
 
 parameters:
   node-version:
@@ -85,20 +83,18 @@ commands:
       source-dir:
         type: string
     steps:
-      - gh/install
       - run:
           name: 'Install armada-cli and dependencies'
           command: |
             sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
 
             # gh cli
-            # type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-            # curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-            # && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-            # && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-            # && sudo apt update \
-            # && sudo apt install gh -y
-
+            type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+            && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+            && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+            && sudo apt update \
+            && sudo apt install gh -y
             
             npx armada-cli --version
 
