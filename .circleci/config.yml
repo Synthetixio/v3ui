@@ -336,15 +336,12 @@ workflows:
             # - liquidity-e2e-optimism-goerli
             # - liquidity-e2e-goerli
           filters:
-            # branches:
-            #   only:
-            #     - release
-            #     - master
-            #     - ipfs-deploy
-            #     - dm-add-armada
-            tags:
+            branches:
               only:
-                - /.*/
+                - release
+                - master
+                - ipfs-deploy
+                # - dm-add-armada
       # - liquidity-ipfs:
       #     requires:
       #       - checks
