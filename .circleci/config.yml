@@ -78,6 +78,58 @@ commands:
             curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | tee /tmp/pin-add-$IPFS_CID.log
             cat /tmp/pin-add-$IPFS_CID.log | jq
 
+  armada-deploy:
+    parameters:
+      source-dir:
+        type: string
+    steps:
+      - run:
+          name: 'Install dependencies'
+          command: |
+            # dependencies for armada-cli
+            sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
+
+            # install gh official cli, the github-cli circleci orb is not up to date
+            # taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+            type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+            && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+            && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+            && sudo apt update \
+            && sudo apt install gh -y
+
+            # check that armada-cli runs
+            npx armada-cli --version
+
+      - run:
+          name: 'Build Armada bundle'
+          command: |
+            BUNDLE_FILENAME=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
+            echo 'export BUNDLE_FILENAME='${BUNDLE_FILENAME} >> $BASH_ENV
+
+            CHECKSUM=$(npx armada-cli bundle checksum $BUNDLE_FILENAME)
+            echo 'export CHECKSUM='${CHECKSUM} >> $BASH_ENV
+
+            CHECKSUM_FILENAME="checksum_SHA256SUM"
+            echo $CHECKSUM > $CHECKSUM_FILENAME
+            echo 'export CHECKSUM_FILENAME='${CHECKSUM_FILENAME} >> $BASH_ENV
+
+            RELEASE_NAME=release-armada-$(date '+%Y%m%d')
+            echo 'export RELEASE_NAME='${RELEASE_NAME} >> $BASH_ENV
+
+      - run:
+          name: 'Publish Armada Release to Github with assets'
+          command: |
+            gh release create -R $CIRCLE_REPOSITORY_URL --generate-notes --title "${RELEASE_NAME}" ${RELEASE_NAME}
+            gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${BUNDLE_FILENAME}
+            gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${CHECKSUM_FILENAME}
+
+      - run:
+          name: 'Push to Armada'
+          command: |
+            BUNDLE_URL=$(gh release view -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} --json assets --jq ".assets[] | select(.name == \"${BUNDLE_FILENAME}\") | .url")
+            npx armada-cli project publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
+
 jobs:
   checks:
     working_directory: /tmp/app
@@ -239,6 +291,18 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
+  liquidity-armada:
+    working_directory: /tmp/app
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    resource_class: large
+    steps:
+      - checkout
+      - yarn-install
+      - run: yarn workspace @snx-v3/liquidity build
+      - armada-deploy:
+          source-dir: './liquidity/ui/dist'
+
 workflows:
   ui:
     unless:
@@ -261,6 +325,21 @@ workflows:
           name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      - liquidity-armada:
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - liquidity-cy
+            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-optimism-goerli
+            - liquidity-e2e-goerli
+          filters:
+            branches:
+              only:
+                - release
+                - master
+                - ipfs-deploy
       - liquidity-ipfs:
           requires:
             - checks
