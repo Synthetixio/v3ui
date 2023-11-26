@@ -336,7 +336,8 @@ workflows:
             # - liquidity-e2e-optimism-goerli
             # - liquidity-e2e-goerli
           filters:
-            # branches:
+            branches:
+              ignore: /.*/
             #   only:
             #     - release
             #     - master
