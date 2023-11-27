@@ -10,11 +10,9 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 export default function UserListItem({
   address,
   activeCouncil,
-  isOwn,
 }: {
   address: string;
   activeCouncil: string;
-  isOwn?: boolean;
 }) {
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: isNominated } = useGetIsNominated(address);
@@ -33,21 +31,15 @@ export default function UserListItem({
       </Flex>
       <Button
         size="xs"
-        variant={!isOwn ? 'outline' : isNominated ? 'outline' : 'solid'}
-        colorScheme={!isOwn ? 'gray' : isNominated ? 'gray' : 'cyan'}
+        variant={isNominated ? 'outline' : 'solid'}
+        colorScheme={isNominated ? 'gray' : 'cyan'}
         onClick={() => {
-          if (isOwn) {
-            !isNominated
-              ? navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)
-              : navigate('/councils' + `?active=${activeCouncil}&editNomination=true`);
-          } else {
-            navigate('/councils' + `?active=${activeCouncil}&view=${address}`);
-          }
+          !isNominated
+            ? navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)
+            : navigate('/councils' + `?active=${activeCouncil}&editNomination=true`);
         }}
       >
-        {!isOwn ? (
-          <Text color="white">View</Text>
-        ) : isNominated ? (
+        {isNominated ? (
           <Text color="white">Edit Nomination</Text>
         ) : (
           <Text color="black">Nominate Self</Text>

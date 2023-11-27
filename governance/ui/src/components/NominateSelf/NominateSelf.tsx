@@ -28,7 +28,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
     >
       {isSuccess ? (
         <>
-          <Flex justifyContent="space-between">
+          <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
             <IconButton
               onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=false`)}

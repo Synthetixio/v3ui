@@ -16,7 +16,7 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
     },
     mutationKey: ['nomination', council, address],
     onSuccess: async () => {
-      await query.refetchQueries({ queryKey: ['useGetIsNominated'], exact: false });
+      await query.refetchQueries({ queryKey: ['isNominated', address], exact: false });
     },
   });
 }

@@ -48,8 +48,7 @@ export default function PeriodCountdown() {
       {isLoading ? (
         <Spinner colorScheme="cyan" />
       ) : (
-        schedule?.votingPeriodStartDate ||
-        (schedule?.votingPeriodStartDate && (
+        (schedule?.votingPeriodStartDate || schedule?.votingPeriodStartDate) && (
           <Timer
             expiryTimestamp={
               atLeastOneIsInNomination
@@ -57,7 +56,7 @@ export default function PeriodCountdown() {
                 : schedule.endDate * 1000
             }
           />
-        ))
+        )
       )}
     </Flex>
   ) : null;

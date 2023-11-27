@@ -1,15 +1,16 @@
-import { Divider, Flex, Heading, Text } from '@chakra-ui/react';
+import { Divider, Flex, Heading, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
 import { useWallet } from '@snx-v3/useBlockchain';
-import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 import UserListItem from '../UserListItem/UserListItem';
+import UserTableView from '../UserTableView/UserTableView';
+import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const wallet = useWallet();
-  const { data: councilNominees } = useGetCouncilNominees(activeCouncil);
+  const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
 
@@ -54,6 +55,12 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         ? `Q${startQuarter} - ${endQuarter} ${endYear}`
         : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
 
+  let sortedNominees = !!councilNomineesDetails?.length
+    ? councilNomineesDetails.filter(
+        (nominee) => nominee?.address.toLowerCase() !== wallet?.address.toLowerCase()
+      )
+    : [];
+
   return (
     <Flex
       borderWidth="1px"
@@ -78,19 +85,34 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {wallet?.address && (
-        <UserListItem address={wallet.address} activeCouncil={activeCouncil} isOwn />
-      )}
+      {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
       <Divider />
-      <div>TODO some headers for filtering</div>
-      {councilNominees &&
-        councilNominees
-          .filter(
-            (councilNominee) => councilNominee.toLowerCase() !== wallet?.address.toLowerCase()
-          )
-          .map((councilNominee) => (
-            <UserListItem address={councilNominee} activeCouncil={activeCouncil} />
-          ))}
+      <Table>
+        <Thead>
+          <Tr>
+            <Th
+              cursor="pointer"
+              onClick={() => {
+                sortedNominees = sortedNominees.sort((a, b) => {
+                  if (a?.username && b?.username) {
+                    return a.username.localeCompare(b.username);
+                  }
+                  return a?.address.localeCompare(b.address);
+                });
+              }}
+            >
+              Name
+            </Th>
+            <Th cursor="pointer">Role</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {!!sortedNominees?.length &&
+            sortedNominees.map((councilNominee) => (
+              <UserTableView user={councilNominee!} isNomination activeCouncil={activeCouncil} />
+            ))}
+        </Tbody>
+      </Table>
     </Flex>
   );
 }

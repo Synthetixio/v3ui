@@ -31,8 +31,7 @@ export function UserProfileCard({
       borderColor="gray.900"
       borderWidth="1px"
       p="4"
-      maxW="483px"
-      w="100%"
+      w="483px"
       h="612px"
     >
       <Flex alignItems="center" mb="4">

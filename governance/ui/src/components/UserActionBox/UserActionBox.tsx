@@ -23,7 +23,7 @@ export default function UserActionBox({
   const wallet = useWallet();
   const { data: isNominated } = useGetIsNominated(wallet?.address);
 
-  if (editProfile) {
+  if (editProfile || (isNominated && !selectedUserAddress)) {
     return <EditProfile activeCouncil={activeCouncil} />;
   }
 

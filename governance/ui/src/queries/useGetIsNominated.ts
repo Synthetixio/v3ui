@@ -5,7 +5,7 @@ import councils from '../utils/councils';
 
 export function useGetIsNominated(address?: string) {
   return useQuery({
-    queryKey: ['period', address],
+    queryKey: ['isNominated', address],
     queryFn: async () => {
       const isNominatedForSpartanCouncil = (await ElectionModule.connect(
         motherShipProvider
