@@ -31,7 +31,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=false`)}
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}
@@ -86,7 +86,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Flex justifyContent="space-between">
             <Heading fontSize="medium">Nominate Self</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=false`)}
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}

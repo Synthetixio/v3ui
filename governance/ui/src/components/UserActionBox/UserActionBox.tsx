@@ -1,32 +1,72 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  useMediaQuery,
+} from '@chakra-ui/react';
 import { UserProfileCard } from '../UserProfileCard';
-import NominateSelf from '../NominateSelf/NominateSelf';
 import { CouncilSlugs } from '../../utils/councils';
-import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '@snx-v3/useBlockchain';
 import EditProfile from '../EditProfile/EditProfile';
+import EditNomination from '../EditNomination/EditNomination';
+import NominateSelf from '../NominateSelf/NominateSelf';
 
 export default function UserActionBox({
-  editNominationModalIsOpen,
-  nominationModalIsOpen,
+  editNomination,
+  nominate,
   activeCouncil,
   selectedUserAddress,
   editProfile,
 }: {
-  nominationModalIsOpen: boolean;
-  editNominationModalIsOpen: boolean;
+  nominate: boolean;
+  editNomination: boolean;
   activeCouncil: CouncilSlugs;
   selectedUserAddress?: string;
   editProfile: boolean;
 }) {
   const wallet = useWallet();
-  const { data: isNominated } = useGetIsNominated(wallet?.address);
+  const [md] = useMediaQuery('(min-width: 768px)');
+  const { onClose } = useDisclosure();
 
   if (editProfile) {
+    if (md)
+      return (
+        <Modal isOpen={true} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <EditProfile activeCouncil={activeCouncil} />
+          </ModalContent>
+        </Modal>
+      );
     return <EditProfile activeCouncil={activeCouncil} />;
   }
 
-  if (editNominationModalIsOpen && wallet?.address) {
+  if (nominate && wallet?.address) {
+    if (md)
+      return (
+        <Modal isOpen={true} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <NominateSelf activeCouncil={activeCouncil} />
+          </ModalContent>
+        </Modal>
+      );
+    return <NominateSelf activeCouncil={activeCouncil} />;
+  }
+
+  if (editNomination && wallet?.address) {
+    if (md)
+      return (
+        <Modal isOpen={true} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <EditNomination activeCouncil={activeCouncil} />
+          </ModalContent>
+        </Modal>
+      );
     return (
       <UserProfileCard
         walletAddress={wallet?.address}
@@ -36,27 +76,21 @@ export default function UserActionBox({
     );
   }
 
-  if (!selectedUserAddress && !nominationModalIsOpen && !editNominationModalIsOpen) {
-    return (
-      <Flex
-        w="483px"
-        h="644px"
-        justifyContent="center"
-        alignItems="center"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="gray.900"
-        bg="navy.700"
-        rounded="base"
-      >
-        <Text color="gray.500" fontSize="md" fontWeight="700">
-          Click on a nominee to see their profile details
-        </Text>
-      </Flex>
-    );
-  }
-
   if (selectedUserAddress) {
+    if (md) {
+      return (
+        <Modal isOpen={true} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <UserProfileCard
+              walletAddress={selectedUserAddress}
+              activeCouncil={activeCouncil}
+              isOwn={wallet?.address.toLowerCase() === selectedUserAddress.toLowerCase()}
+            />
+          </ModalContent>
+        </Modal>
+      );
+    }
     return (
       <UserProfileCard
         walletAddress={selectedUserAddress}
@@ -66,27 +100,21 @@ export default function UserActionBox({
     );
   }
 
-  return (
-    <Box
-      w="100%"
-      //   position="absolute"
-      //   opacity={0.5}
-      //   bg="black"
-      //   top="0px"
-      //   bottom="0px"
-      //   right="0px"
-      //   left="0px"
-      //   w="100%"
+  return !md ? (
+    <Flex
+      w="483px"
+      h="644px"
+      justifyContent="center"
+      alignItems="center"
+      borderWidth="1px"
+      borderStyle="dashed"
+      borderColor="gray.900"
+      bg="navy.700"
+      rounded="base"
     >
-      {typeof isNominated === 'boolean' && !isNominated && (
-        <NominateSelf activeCouncil={activeCouncil} />
-      )}
-    </Box>
-    // <Modal isOpen={isOpen} onClose={onClose}>
-    //   <ModalOverlay />
-    //   <ModalContent containerProps={{ justifyContent: 'flex-end', paddingRight: '2rem' }}>
-    //     test
-    //   </ModalContent>
-    // </Modal>
-  );
+      <Text color="gray.500" fontSize="md" fontWeight="700">
+        Click on a nominee to see their profile details
+      </Text>
+    </Flex>
+  ) : null;
 }

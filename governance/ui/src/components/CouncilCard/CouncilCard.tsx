@@ -21,7 +21,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
       p="6"
       mr={{ base: 0, md: isLast ? '0px' : '24px' }}
       mt="30px"
-      w="290px"
+      w={{ base: '100%', md: '290px' }}
       h={{ base: 'auto', lg: '413px' }}
       borderWidth="1px"
       borderStyle="solid"
@@ -99,7 +99,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
               size="md"
               mb="1"
               onClick={() => {
-                navigate('/councils' + `?active=${council.slug}&nominateModal=true`);
+                navigate('/councils' + `?active=${council.slug}&nominate=true`);
               }}
             >
               Nominate Self

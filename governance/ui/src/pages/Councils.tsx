@@ -23,9 +23,10 @@ export default function Councils() {
           )}
           <PassedElectionAccordion activeCouncil={searchParams.get('active') as CouncilSlugs} />
         </Flex>
+
         <UserActionBox
-          editNominationModalIsOpen={searchParams.get('editNomination') === 'true' ? true : false}
-          nominationModalIsOpen={searchParams.get('nominateModal') === 'true' ? true : false}
+          editNomination={searchParams.get('editNomination') === 'true' ? true : false}
+          nominate={searchParams.get('nominate') === 'true' ? true : false}
           selectedUserAddress={searchParams.get('view') as string}
           activeCouncil={searchParams.get('active') as CouncilSlugs}
           editProfile={searchParams.get('editProfile') === 'true' ? true : false}

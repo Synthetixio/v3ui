@@ -37,7 +37,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           <Flex justifyContent="space-between" mb="auto">
             <Heading fontSize="medium">Nomination Successful</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=false`)}
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}
@@ -100,7 +100,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           <Flex justifyContent="space-between">
             <Heading fontSize="medium">Edit Nomination</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominateModal=false`)}
+              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}

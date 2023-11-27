@@ -35,8 +35,8 @@ export default function UserListItem({
         colorScheme={isNominated ? 'gray' : 'cyan'}
         onClick={() => {
           !isNominated
-            ? navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)
-            : navigate('/councils' + `?active=${activeCouncil}&editNomination=true`);
+            ? navigate('/councils' + `?active=${activeCouncil}&nominate=true`)
+            : navigate('/councils' + `?active=${activeCouncil}&view=${address}`);
         }}
       >
         {isNominated ? (

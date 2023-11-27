@@ -133,7 +133,7 @@ export function UserProfileCard({
                 navigate(
                   '/councils' +
                     `?active=${activeCouncil}&${
-                      isNominated ? 'nominateModal=true' : 'editNominationModal=true'
+                      !isNominated ? 'nominate=true' : 'editNomination=true'
                     }`
                 )
               }
