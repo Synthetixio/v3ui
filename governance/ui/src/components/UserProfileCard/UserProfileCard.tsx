@@ -8,20 +8,20 @@ import { useNavigate } from 'react-router-dom';
 import Blockies from 'react-blockies';
 import './UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetIsNominated } from '../../queries/useGetIsNominated';
 
 export function UserProfileCard({
   walletAddress,
-  isNominated,
   activeCouncil,
   isOwn,
 }: {
   walletAddress: string;
-  isNominated?: boolean;
   activeCouncil: string;
   isOwn?: boolean;
 }) {
   const navigate = useNavigate();
   const { data: userData } = useGetUserDetailsQuery(walletAddress);
+  const { data: isNominated } = useGetIsNominated(isOwn ? walletAddress : '');
   return (
     <Flex
       flexDir="column"
@@ -126,16 +126,20 @@ export function UserProfileCard({
             >
               Edit Profile
             </Button>
-            {!isNominated && (
-              <Button
-                w="100%"
-                onClick={() =>
-                  navigate('/councils' + `?active=${activeCouncil}&nominateModal=true`)
-                }
-              >
-                Nominate Self
-              </Button>
-            )}
+
+            <Button
+              w="100%"
+              onClick={() =>
+                navigate(
+                  '/councils' +
+                    `?active=${activeCouncil}&${
+                      isNominated ? 'nominateModal=true' : 'editNominationModal=true'
+                    }`
+                )
+              }
+            >
+              {isNominated ? 'Edit Nomination' : 'Nominate Self'}
+            </Button>
           </>
         ) : (
           <Button

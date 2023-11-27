@@ -5,7 +5,6 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '@snx-v3/useBlockchain';
 import EditProfile from '../EditProfile/EditProfile';
-import EditNomination from '../EditNomination/EditNomination';
 
 export default function UserActionBox({
   editNominationModalIsOpen,
@@ -23,8 +22,18 @@ export default function UserActionBox({
   const wallet = useWallet();
   const { data: isNominated } = useGetIsNominated(wallet?.address);
 
-  if (editProfile || (isNominated && !selectedUserAddress)) {
+  if (editProfile) {
     return <EditProfile activeCouncil={activeCouncil} />;
+  }
+
+  if (editNominationModalIsOpen && wallet?.address) {
+    return (
+      <UserProfileCard
+        walletAddress={wallet?.address}
+        activeCouncil={activeCouncil}
+        isOwn={wallet?.address.toLowerCase() === wallet.address.toLowerCase()}
+      />
+    );
   }
 
   if (!selectedUserAddress && !nominationModalIsOpen && !editNominationModalIsOpen) {
@@ -53,25 +62,6 @@ export default function UserActionBox({
         walletAddress={selectedUserAddress}
         activeCouncil={activeCouncil}
         isOwn={wallet?.address.toLowerCase() === selectedUserAddress.toLowerCase()}
-      />
-    );
-  }
-
-  if (editNominationModalIsOpen && wallet?.address) {
-    return <EditNomination activeCouncil={activeCouncil} />;
-  }
-
-  if (
-    (!nominationModalIsOpen && wallet?.address) ||
-    selectedUserAddress ||
-    (wallet?.address && typeof isNominated === 'object')
-  ) {
-    return (
-      <UserProfileCard
-        walletAddress={selectedUserAddress || wallet!.address}
-        isNominated={typeof isNominated === 'boolean' ? isNominated : true}
-        activeCouncil={activeCouncil}
-        isOwn={wallet?.address.toLowerCase() === selectedUserAddress?.toLowerCase()}
       />
     );
   }
