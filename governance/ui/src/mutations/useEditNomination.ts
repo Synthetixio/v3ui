@@ -21,7 +21,7 @@ export default function useEditNomination(council: any, address?: string) {
     },
     mutationKey: ['editNomination', council, address],
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ['useGetIsNominated'] });
+      await queryClient.refetchQueries({ queryKey: ['isNominated', address] });
     },
   });
 }

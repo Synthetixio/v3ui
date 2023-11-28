@@ -7,7 +7,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex w="735px" h="178px" py="5">
+    <Flex w="100%" maxW="735px" h="178px" py="5">
       <Flex
         borderRadius="50%"
         borderWidth="1px"

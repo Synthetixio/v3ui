@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Flex, Image, Select, Text, useMediaQuery } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -6,6 +6,31 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const navigate = useNavigate();
+  const [md] = useMediaQuery('(min-width: 768px)');
+
+  if (!md) {
+    return (
+      <Flex
+        w="100%"
+        bg="navy.700"
+        borderBottomWidth="1px"
+        borderStyle="solid"
+        borderBottomColor="gray.900"
+        p="4"
+      >
+        <Select
+          w="248px"
+          defaultValue={activeCouncil}
+          onChange={(e) => navigate('/councils' + `?active=${e.target.value}`)}
+        >
+          {councils.map((council) => (
+            <option value={council.slug}>{council.title}</option>
+          ))}
+        </Select>
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       w="100%"

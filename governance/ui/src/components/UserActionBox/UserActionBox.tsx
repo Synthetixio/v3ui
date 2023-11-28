@@ -32,7 +32,7 @@ export default function UserActionBox({
   const { onClose } = useDisclosure();
 
   if (editProfile) {
-    if (md)
+    if (!md)
       return (
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
@@ -45,7 +45,7 @@ export default function UserActionBox({
   }
 
   if (nominate && wallet?.address) {
-    if (md)
+    if (!md)
       return (
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
@@ -58,7 +58,7 @@ export default function UserActionBox({
   }
 
   if (editNomination && wallet?.address) {
-    if (md)
+    if (!md)
       return (
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
@@ -77,7 +77,7 @@ export default function UserActionBox({
   }
 
   if (selectedUserAddress) {
-    if (md) {
+    if (!md) {
       return (
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
@@ -100,7 +100,7 @@ export default function UserActionBox({
     );
   }
 
-  return !md ? (
+  return md ? (
     <Flex
       w="483px"
       h="644px"

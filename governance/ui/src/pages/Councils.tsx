@@ -16,7 +16,7 @@ export default function Councils() {
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={searchParams.get('active') as CouncilSlugs} />
       <Flex>
-        <Flex flexDir="column" w="735px" mr="4">
+        <Flex flexDir="column" maxW="735px" mr={{ base: 0, md: '4' }} w="100%" px={{ base: 4 }}>
           <CouncilInformation activeCouncil={searchParams.get('active') as CouncilSlugs} />
           {councilPeriod === '1' && (
             <CouncilNominees activeCouncil={searchParams.get('active') as CouncilSlugs} />
