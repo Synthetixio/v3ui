@@ -18,7 +18,10 @@ export default function UserTableView({
   const navigate = useNavigate();
   if (!user) return <Spinner colorScheme="cyan" />;
   return (
-    <Tr>
+    <Tr
+      cursor="pointer"
+      onClick={() => navigate(`/councils?active=${activeCouncil}&view=${user.address}`)}
+    >
       <Th color="white" display="flex" alignItems="center" gap="2">
         {user.pfpUrl ? (
           <Image src={user.pfpUrl} />

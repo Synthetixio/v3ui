@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
 import { useWallet } from '@snx-v3/useBlockchain';
-import councils, { Council, CouncilSlugs } from '../../utils/councils';
+import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';

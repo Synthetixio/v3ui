@@ -1,12 +1,11 @@
 import { Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { CouncilSlugs } from '../utils/councils';
+import councils, { CouncilSlugs } from '../utils/councils';
 import { useSearchParams } from 'react-router-dom';
 import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
-import { PassedElectionAccordion } from '../components/PassedElectionAccordion';
 
 export default function Councils() {
   const [searchParams] = useSearchParams();
@@ -18,10 +17,14 @@ export default function Councils() {
       <Flex>
         <Flex flexDir="column" maxW="735px" mr={{ base: 0, md: '4' }} w="100%" px={{ base: 4 }}>
           <CouncilInformation activeCouncil={searchParams.get('active') as CouncilSlugs} />
-          {councilPeriod === '1' && (
+          {(councilPeriod === '1' || councilPeriod === '2') && (
             <CouncilNominees activeCouncil={searchParams.get('active') as CouncilSlugs} />
           )}
-          <PassedElectionAccordion activeCouncil={searchParams.get('active') as CouncilSlugs} />
+          {/* <PassedElectionAccordion
+            activeCouncil={councils.find(
+              (council) => council.slug === (searchParams.get('active') as CouncilSlugs)
+            )}
+          /> */}
         </Flex>
 
         <UserActionBox

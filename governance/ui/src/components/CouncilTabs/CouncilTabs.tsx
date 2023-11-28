@@ -2,11 +2,13 @@ import { Flex, Image, Select, Text, useMediaQuery } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
+import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const navigate = useNavigate();
   const [md] = useMediaQuery('(min-width: 768px)');
+  const { data: votes } = useGetVotingCandidates();
 
   if (!md) {
     return (
@@ -109,7 +111,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
             My Votes
           </Text>
           <Text fontSize="x-small" fontWeight="bold">
-            TODO 1/4
+            {Object.values(!!votes ? votes : {}).length}/4
           </Text>
         </Flex>
       )}

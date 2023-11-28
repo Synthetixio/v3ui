@@ -3,13 +3,14 @@ import { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import UserListItem from '../UserListItem/UserListItem';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const wallet = useWallet();
+  const network = useNetwork();
   const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
@@ -85,7 +86,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
+      {wallet?.address && process.env.DEV === 'true' && network.id === 10 && (
+        <UserListItem address={wallet.address} activeCouncil={activeCouncil} />
+      )}
       <Divider />
       <Table>
         <Thead>
