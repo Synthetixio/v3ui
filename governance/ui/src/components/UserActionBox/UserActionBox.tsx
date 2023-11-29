@@ -67,13 +67,7 @@ export default function UserActionBox({
           </ModalContent>
         </Modal>
       );
-    return (
-      <UserProfileCard
-        walletAddress={wallet?.address}
-        activeCouncil={activeCouncil}
-        isOwn={wallet?.address.toLowerCase() === wallet.address.toLowerCase()}
-      />
-    );
+    return <EditNomination activeCouncil={activeCouncil} />;
   }
 
   if (selectedUserAddress) {
@@ -112,7 +106,7 @@ export default function UserActionBox({
       bg="navy.700"
       rounded="base"
     >
-      <Text color="gray.500" fontSize="md" fontWeight="700">
+      <Text color="gray.500" fontSize="md" fontWeight="700" textAlign="center">
         Click on a nominee to see their profile details
       </Text>
     </Flex>

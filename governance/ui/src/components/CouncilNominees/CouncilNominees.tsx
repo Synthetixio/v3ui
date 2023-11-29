@@ -86,9 +86,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {wallet?.address && process.env.DEV === 'true' && network.id === 10 && (
-        <UserListItem address={wallet.address} activeCouncil={activeCouncil} />
-      )}
+      {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
       <Divider />
       <Table>
         <Thead>

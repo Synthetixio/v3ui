@@ -143,8 +143,8 @@ export function UserProfileCard({
             View More
             <ChevronDownIcon color="cyan.500" ml="1" />
           </Button>
-          <Box mt="auto">
-            {isOwn ? (
+          <Flex mt="auto" gap="2" flexDir="column">
+            {isOwn && (
               <>
                 <Button
                   variant="outline"
@@ -157,7 +157,6 @@ export function UserProfileCard({
                 >
                   Edit Profile
                 </Button>
-
                 <Button
                   w="100%"
                   onClick={() =>
@@ -172,7 +171,8 @@ export function UserProfileCard({
                   {isNominated ? 'Edit Nomination' : 'Nominate Self'}
                 </Button>
               </>
-            ) : councilPeriod === '2' ? (
+            )}
+            {councilPeriod === '2' ? (
               <Button
                 w="100%"
                 onClick={() => {
@@ -198,7 +198,7 @@ export function UserProfileCard({
                 Done
               </Button>
             )}
-          </Box>
+          </Flex>
         </>
       )}
     </Flex>

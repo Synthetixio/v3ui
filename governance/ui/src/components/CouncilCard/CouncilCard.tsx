@@ -64,8 +64,7 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
           </Text>
         </Flex>
         <Flex flexDir="column">
-          {' '}
-          {councilPeriod === '0' ? (
+          {councilPeriod === '2' ? (
             <>
               <Text
                 color="gray.500"

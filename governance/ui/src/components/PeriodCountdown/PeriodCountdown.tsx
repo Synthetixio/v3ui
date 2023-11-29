@@ -35,12 +35,14 @@ export default function PeriodCountdown() {
     <Flex
       bg={atLeastOneIsInNomination ? 'orange.700' : 'teal.700'}
       rounded="base"
-      px={{ base: 1, lg: 5 }}
+      px={{ base: 1, lg: 2 }}
       py="1"
       w={{ base: '121px', md: '230px' }}
       alignItems="center"
       flexWrap="wrap"
       justifyContent="center"
+      maxW="210px"
+      maxH="40px"
     >
       <Text fontSize={{ base: 'xs', lg: 'sm' }} mr="2">
         Voting {atLeastOneIsInNomination ? 'starts' : 'ends'}:

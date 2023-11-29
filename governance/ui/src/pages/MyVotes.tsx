@@ -2,9 +2,17 @@ import { Alert, Button, Flex, Heading, IconButton, Image, Text } from '@chakra-u
 import councils from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { AddIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
+import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
+import { useQueryClient } from '@tanstack/react-query';
+import useGetUserDetailsQuery from '../queries/useGetUserDetailsQuery';
 
 export default function MyVotes() {
   const navigate = useNavigate();
+  const { data: votingCandidates } = useGetVotingCandidates();
+  const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
+  console.log(users);
+  const queryClient = useQueryClient();
+
   return (
     <Flex justifyContent="center" mt="8" gap="2">
       <Flex
@@ -19,7 +27,7 @@ export default function MyVotes() {
       >
         <Flex justifyContent="space-between" mb="4">
           <Heading fontSize="2xl">My Votes</Heading>
-          <Heading fontSize="2xl">Todo 1/4</Heading>
+          <Heading fontSize="2xl">{Object.values(votingCandidates || {}).length}/4</Heading>
         </Flex>
         <Text fontSize="xs" color="gray.500">
           You can cast 4 votes in one transaction. Continue voting if you want to add other nominee
@@ -56,8 +64,28 @@ export default function MyVotes() {
               <Text fontSize="x-small">Voted For address todo</Text>
             </Flex>
 
-            {/* <AddIcon /> */}
-            <IconButton aria-label="action-button" icon={<CloseIcon />} variant="outlined" />
+            {votingCandidates && !votingCandidates[council.slug] ? (
+              <IconButton
+                aria-label="action-button"
+                icon={<AddIcon />}
+                variant="outlined"
+                onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+              />
+            ) : (
+              <IconButton
+                aria-label="action-button"
+                icon={<CloseIcon />}
+                variant="outlined"
+                onClick={() => {
+                  const selection = localStorage.getItem('voteSelection');
+                  if (!selection) localStorage.setItem('voteSelection', '');
+                  const parsedSelection = JSON.parse(selection ? selection : '{}');
+                  delete parsedSelection[council.slug];
+                  localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+                  queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
+                }}
+              />
+            )}
           </Flex>
         ))}
         <Alert colorScheme="cyan">
