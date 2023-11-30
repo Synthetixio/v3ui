@@ -1,17 +1,30 @@
-import { Alert, Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
-import councils from '../utils/councils';
+import { Alert, Box, Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { AddIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { useQueryClient } from '@tanstack/react-query';
-import useGetUserDetailsQuery from '../queries/useGetUserDetailsQuery';
+import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
+import Blockies from 'react-blockies';
+import '../components/UserProfileCard/UserProfileCard.css';
 
 export default function MyVotes() {
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
   const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
-  console.log(users);
   const queryClient = useQueryClient();
+  const candidates =
+    users &&
+    votingCandidates &&
+    Object.entries(votingCandidates)
+      .map(([council, candidate]) => {
+        const user = users.find((user) => user.address.toLowerCase() === candidate.toLowerCase());
+        return { ...user, council };
+      })
+      .reduce(
+        (a, v) => ({ ...a, [v.council]: v }),
+        {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
+      );
 
   return (
     <Flex justifyContent="center" mt="8" gap="2">
@@ -48,20 +61,46 @@ export default function MyVotes() {
               position="relative"
             >
               <Image src={council.image} w="6" h="6" />
-              <Image
-                src={council.image}
-                borderRadius="50%"
-                w="6"
-                h="6"
-                position="absolute"
-                left="20px"
-              />
+              {candidates && candidates[council.slug]?.pfpUrl ? (
+                <Image
+                  src={candidates[council.slug].pfpUrl}
+                  borderRadius="50%"
+                  w="8"
+                  h="8"
+                  position="absolute"
+                  left="15px"
+                />
+              ) : candidates && candidates[council.slug] ? (
+                <Blockies
+                  seed={candidates[council.slug].address}
+                  scale={4}
+                  className="fully-rounded votes"
+                />
+              ) : (
+                <Box
+                  borderRadius="50%"
+                  w="8"
+                  h="8"
+                  position="absolute"
+                  left="15px"
+                  borderWidth="1px"
+                  bg="navy.700"
+                  borderStyle="dashed"
+                  borderColor="gray.500"
+                />
+              )}
             </Flex>
-            <Flex flexDir="column" mr="auto">
+            <Flex flexDir="column" mr="auto" ml="1">
               <Text fontSize="x-small" fontWeight="bold">
                 {council.title}
               </Text>
-              <Text fontSize="x-small">Voted For address todo</Text>
+              <Text fontSize="x-small">
+                {candidates
+                  ? candidates[council.slug]?.username
+                    ? candidates[council.slug].username
+                    : candidates[council.slug]?.address
+                  : 'not found'}
+              </Text>
             </Flex>
 
             {votingCandidates && !votingCandidates[council.slug] ? (
