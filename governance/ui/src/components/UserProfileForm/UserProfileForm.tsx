@@ -1,5 +1,5 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Button, Flex, IconButton, Image, Input, Text, Textarea } from '@chakra-ui/react';
+import { Button, Flex, IconButton, Image, Input, Spinner, Text, Textarea } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import { useForm } from 'react-hook-form';
 import { ipfs } from '../../utils/ipfs';
@@ -9,6 +9,7 @@ import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMu
 import '../UserProfileCard/UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useWallet } from '@snx-v3/useBlockchain';
+import { useEffect } from 'react';
 
 interface User {
   address: string;
@@ -25,7 +26,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
   const wallet = useWallet();
   const mutation = useUpdateUserDetailsMutation();
   const navigate = useNavigate();
-  const { data: user } = useGetUserDetailsQuery(wallet?.address);
+  const { data: user, isLoading } = useGetUserDetailsQuery(wallet?.address);
   const { register, getValues, resetField, setValue } = useForm({
     defaultValues: {
       address: user?.about,
@@ -39,6 +40,25 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
       file: '',
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      setValue('username', user.username);
+      setValue('discord', user.discord);
+      setValue('twitter', user.twitter);
+      setValue('about', user.about);
+      setValue('github', user.github);
+      setValue('pfpUrl', user.pfpUrl);
+      setValue('delegationPitch', user.delegationPitch);
+    }
+  }, [user]);
+
+  if (isLoading)
+    return (
+      <Flex flexDir="column" gap="4" px="6" py="4" w="100%">
+        <Spinner colorScheme="cyan" />
+      </Flex>
+    );
 
   return (
     <Flex flexDir="column" gap="4" px="6" py="4" w="100%">

@@ -30,12 +30,7 @@ type UserPitch = {
   protocol: string;
 };
 
-export default function useGetUserDetailsQuery<T extends string | string[]>(
-  walletAddress?: T
-): T extends string
-  ? QueryObserverRefetchErrorResult<GetUserDetails, Error>
-  : QueryObserverRefetchErrorResult<GetUserDetails[], Error> {
-  // @ts-ignore
+export default function useGetUserDetailsQuery<T extends string | string[]>(walletAddress?: T) {
   return useQuery({
     queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
@@ -72,10 +67,11 @@ export async function getUserDetails<T extends string | string[]>(
         synthetixPitch = foundPitch[0].delegationPitch;
       }
     }
-
     delete userProfile.data.delegationPitches;
 
-    return { ...userProfile.data, delegationPitch: synthetixPitch };
+    return { ...userProfile.data, delegationPitch: synthetixPitch } as T extends string
+      ? GetUserDetails
+      : GetUserDetails[];
   }
   if (Array.isArray(walletAddress)) {
     const randomNumber = Math.random();
@@ -101,18 +97,24 @@ export async function getUserDetails<T extends string | string[]>(
     let userPitches = await Promise.all(
       userPitchesResponse.map(async (responses) => await responses.json())
     );
-    let foundPitch: any[];
+    let foundPitch: string[] = [];
     if (userPitches.some((pitches) => !!pitches.data.delegationPitches.length)) {
       foundPitch = userPitches.map(({ data }) => {
         return data.delegationPitches?.filter((e: UserPitch) => e.protocol === 'synthetix');
       });
     }
 
-    return userProfile.map(({ data }) => ({
-      ...data,
-      delegationPitch: foundPitch?.find(
-        (pitch) => pitch[0].address.toLowerCase() === data.address.toLowerCase()
-      )[0]?.delegationPitch,
-    })) as any;
+    return userProfile.map(({ data }) => {
+      console.log(foundPitch);
+      delete data.delegationPitches;
+      return {
+        ...data,
+        delegationPitch: '',
+        // TODO DEV
+        // foundPitch?.find(
+        //   (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
+        // )[0]?.delegationPitch || '',
+      };
+    }) as T extends string ? GetUserDetails : GetUserDetails[];
   }
 }
