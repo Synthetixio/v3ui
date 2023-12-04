@@ -86,7 +86,7 @@ commands:
       - run:
           name: 'Install dependencies'
           command: |
-            # dependencies for armada-cli
+            # base circleci image is missing these dependencies
             sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
 
             # install gh official cli, the github-cli circleci orb is not up to date
@@ -98,16 +98,15 @@ commands:
             && sudo apt update \
             && sudo apt install gh -y
 
-            # check that armada-cli runs
-            npx armada-cli --version
+            yarn armada --version
 
       - run:
           name: 'Build Armada bundle'
           command: |
-            BUNDLE_FILENAME=$(npx armada-cli bundle create armada-bundle-liquidity "<< parameters.source-dir >>")
+            BUNDLE_FILENAME=$(yarn armada:bundle armada-bundle-liquidity "<< parameters.source-dir >>")
             echo 'export BUNDLE_FILENAME='${BUNDLE_FILENAME} >> $BASH_ENV
 
-            CHECKSUM=$(npx armada-cli bundle checksum $BUNDLE_FILENAME)
+            CHECKSUM=$(yarn armada:checksum $BUNDLE_FILENAME)
             echo 'export CHECKSUM='${CHECKSUM} >> $BASH_ENV
 
             CHECKSUM_FILENAME="checksum_SHA256SUM"
@@ -128,7 +127,7 @@ commands:
           name: 'Push to Armada'
           command: |
             BUNDLE_URL=$(gh release view -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} --json assets --jq ".assets[] | select(.name == \"${BUNDLE_FILENAME}\") | .url")
-            npx armada-cli project publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
+            yarn armada:publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
 
 jobs:
   checks:

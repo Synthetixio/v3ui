@@ -25,7 +25,10 @@
     "download-cci-coverage": "download-cci-coverage",
     "publish:release": "lerna publish",
     "publish:dev": "lerna publish --force-publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD)",
-    "prepublishOnly": "node ./prepublishOnly.js"
+    "prepublishOnly": "node ./prepublishOnly.js",
+    "armada:bundle": "armada bundle create",
+    "armada:checksum": "armada bundle checksum",
+    "armada:publish": "armada project publish"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
@@ -40,6 +43,7 @@
     "@types/jest": "^29.5.8",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
+    "armada-cli": "^0.3.3",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.53.0",
