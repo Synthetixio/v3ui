@@ -7,10 +7,9 @@ import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 
 interface CouncilCardProps {
   council: Council;
-  isLast: boolean;
 }
 
-export function CouncilCard({ council, isLast }: CouncilCardProps) {
+export function CouncilCard({ council }: CouncilCardProps) {
   const navigate = useNavigate();
   const { data: councilPeriod } = useGetCurrentPeriod(council.slug);
   const { data: electedCouncilMembers } = useGetCouncilMembers(council.slug);
@@ -19,8 +18,6 @@ export function CouncilCard({ council, isLast }: CouncilCardProps) {
   return (
     <Flex
       p="6"
-      mr={{ base: 0, md: isLast ? '0px' : '24px' }}
-      mt="30px"
       w={{ base: '100%', md: '290px' }}
       h={{ base: 'auto', lg: '413px' }}
       borderWidth="1px"

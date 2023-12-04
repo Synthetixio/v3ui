@@ -64,98 +64,101 @@ export function Header() {
       bg="navy.700"
       h="65px"
       alignItems="center"
-      px={{ base: '3', lg: '10' }}
-      py={{ base: '4', lg: '10' }}
+      px={{ base: '3', lg: 6 }}
+      py={{ base: '4' }}
       borderBottomWidth="1px"
       borderStyle="solid"
       borderBottomColor="gray.900"
+      justifyContent="center"
     >
-      <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
-        <Image src="/snx-header.svg" pr="10px" />
-        <Show above="md">
-          <Image src="/governance-header.svg" />
-        </Show>
+      <Flex maxW="1440px" w="100%">
+        <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
+          <Image src="/snx-header.svg" pr="10px" />
+          <Show above="md">
+            <Image src="/governance-header.svg" />
+          </Show>
+        </Flex>
+        <PeriodCountdown />
+        {isWalletConnected && (
+          <Menu>
+            {() => (
+              <>
+                <MenuButton as={Button} ml={2} variant="outline" colorScheme="gray" px={2}>
+                  {icon}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => switchNetwork(1)}>
+                    <EthereumIcon />
+                    <Text variant="nav" ml={2}>
+                      Ethereum Mainnet
+                    </Text>
+                  </MenuItem>
+                  <MenuItem onClick={() => switchNetwork(10)}>
+                    <OptimismIcon />
+                    <Text variant="nav" ml={2}>
+                      Optimism
+                    </Text>
+                  </MenuItem>
+                  <MenuItem onClick={() => switchNetwork(420)}>
+                    <OptimismIcon />
+                    <Text variant="nav" ml={2}>
+                      Optimism Goerli
+                    </Text>
+                  </MenuItem>
+                </MenuList>
+              </>
+            )}
+          </Menu>
+        )}
+        {wallet ? (
+          <Menu>
+            <MenuButton
+              as={Button}
+              variant="outline"
+              colorScheme="gray"
+              ml={2}
+              height={10}
+              py="6px"
+              px="9.5px"
+              whiteSpace="nowrap"
+            >
+              <WalletIcon />
+              <Text
+                as="span"
+                ml={1}
+                color="whiteAlpha.800"
+                fontWeight={700}
+                fontSize="xs"
+                userSelect="none"
+              >
+                {wallet.ens?.name || prettyString(wallet.address)}
+              </Text>
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                onClick={() => {
+                  try {
+                    navigator.clipboard.writeText(wallet?.address);
+                  } catch (_e) {}
+                }}
+              >
+                <Text variant="nav" ml={2}>
+                  Copy address
+                </Text>
+              </MenuItem>
+              <MenuItem onClick={disconnect}>
+                <Text variant="nav" ml={2}>
+                  Disconnect
+                </Text>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        ) : (
+          <Button onClick={() => onboard.connectWallet()} ml="2">
+            Connect Wallet
+          </Button>
+        )}
       </Flex>
-      <PeriodCountdown />
-      {isWalletConnected && (
-        <Menu>
-          {() => (
-            <>
-              <MenuButton as={Button} ml={2} variant="outline" colorScheme="gray" px={2}>
-                {icon}
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => switchNetwork(1)}>
-                  <EthereumIcon />
-                  <Text variant="nav" ml={2}>
-                    Ethereum Mainnet
-                  </Text>
-                </MenuItem>
-                <MenuItem onClick={() => switchNetwork(10)}>
-                  <OptimismIcon />
-                  <Text variant="nav" ml={2}>
-                    Optimism
-                  </Text>
-                </MenuItem>
-                <MenuItem onClick={() => switchNetwork(420)}>
-                  <OptimismIcon />
-                  <Text variant="nav" ml={2}>
-                    Optimism Goerli
-                  </Text>
-                </MenuItem>
-              </MenuList>
-            </>
-          )}
-        </Menu>
-      )}
-      {wallet ? (
-        <Menu>
-          <MenuButton
-            as={Button}
-            variant="outline"
-            colorScheme="gray"
-            ml={2}
-            height={10}
-            py="6px"
-            px="9.5px"
-            whiteSpace="nowrap"
-          >
-            <WalletIcon />
-            <Text
-              as="span"
-              ml={1}
-              color="whiteAlpha.800"
-              fontWeight={700}
-              fontSize="xs"
-              userSelect="none"
-            >
-              {wallet.ens?.name || prettyString(wallet.address)}
-            </Text>
-          </MenuButton>
-          <MenuList>
-            <MenuItem
-              onClick={() => {
-                try {
-                  navigator.clipboard.writeText(wallet?.address);
-                } catch (_e) {}
-              }}
-            >
-              <Text variant="nav" ml={2}>
-                Copy address
-              </Text>
-            </MenuItem>
-            <MenuItem onClick={disconnect}>
-              <Text variant="nav" ml={2}>
-                Disconnect
-              </Text>
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      ) : (
-        <Button onClick={() => onboard.connectWallet()} ml="2">
-          Connect Wallet
-        </Button>
-      )}
     </Flex>
   );
 }

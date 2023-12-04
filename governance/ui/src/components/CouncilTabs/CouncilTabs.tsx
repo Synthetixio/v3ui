@@ -46,75 +46,64 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
       justifyContent="center"
       mb="4"
     >
-      {councils.map((council) => (
-        <Flex
-          key={`tab-${council.slug}`}
-          cursor="pointer"
-          onClick={() => navigate('/councils' + `?active=${council.slug}`)}
-          w="100%"
-          height="48px"
-          maxW="260px"
-          rounded="base"
-          borderColor={activeCouncil === council.slug ? 'cyan.500' : 'gray.900'}
-          borderWidth="1px"
-          padding="2"
-          alignItems="center"
-          bg="navy.900"
-        >
+      <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
+        {councils.map((council) => (
           <Flex
-            borderRadius="50%"
+            key={`tab-${council.slug}`}
+            cursor="pointer"
+            onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+            w="100%"
+            height="48px"
+            maxW="260px"
+            rounded="base"
+            borderColor={activeCouncil === council.slug ? 'cyan.500' : 'gray.900'}
             borderWidth="1px"
-            borderStyle="solid"
-            borderColor="gray.900"
-            w="8"
-            h="8"
-            justifyContent="center"
+            padding="2"
             alignItems="center"
-            mr="3"
+            bg="navy.900"
           >
-            <Image src={council.image} w="6" h="6" />
-          </Flex>
-          <Text fontSize="x-small" fontWeight="bold" mr="auto">
-            {council.title}
-          </Text>
-          {councilPeriod === '2' && (
             <Flex
               borderRadius="50%"
               borderWidth="1px"
-              borderStyle="dashed"
+              borderStyle="solid"
               borderColor="gray.900"
               w="8"
               h="8"
               justifyContent="center"
               alignItems="center"
               mr="3"
-            ></Flex>
-          )}
-        </Flex>
-      ))}
-      {councilPeriod === '2' && (
-        <Flex
-          key="tab-my-votes"
-          cursor="pointer"
-          onClick={() => navigate('/my-votes')}
-          w="100%"
-          height="48px"
-          maxW="260px"
-          rounded="base"
-          borderColor="gray.900"
-          borderWidth="1px"
-          padding="2"
-          alignItems="center"
-          bg="navy.900"
-        >
-          <Text fontSize="x-small" fontWeight="bold" mr="auto">
-            My Votes
-          </Text>
-          <Text fontSize="x-small" fontWeight="bold">
-            {Object.values(!!votes ? votes : {}).length}/4
-          </Text>
-        </Flex>
-      )}
+            >
+              <Image src={council.image} w="6" h="6" />
+            </Flex>
+            <Text fontSize="x-small" fontWeight="bold" mr="auto">
+              {council.title}
+            </Text>
+          </Flex>
+        ))}
+        {councilPeriod === '2' && (
+          <Flex
+            key="tab-my-votes"
+            cursor="pointer"
+            onClick={() => navigate('/my-votes')}
+            w="100%"
+            height="48px"
+            maxW="260px"
+            rounded="base"
+            borderColor="gray.900"
+            borderWidth="1px"
+            padding="2"
+            alignItems="center"
+            bg="navy.900"
+          >
+            <Text fontSize="x-small" fontWeight="bold" mr="auto">
+              My Votes
+            </Text>
+            <Text fontSize="x-small" fontWeight="bold">
+              {Object.values(!!votes ? votes : {}).length}/4
+            </Text>
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   );
 }
