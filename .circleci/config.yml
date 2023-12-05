@@ -89,15 +89,6 @@ commands:
             # base circleci image is missing these dependencies
             sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
 
-            # install gh official cli, the github-cli circleci orb is not up to date
-            # taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-            type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-            && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-            && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-            && sudo apt update \
-            && sudo apt install gh -y
-
             yarn armada --version
 
       - run:
@@ -109,24 +100,14 @@ commands:
             CHECKSUM=$(yarn armada:checksum $BUNDLE_FILENAME)
             echo 'export CHECKSUM='${CHECKSUM} >> $BASH_ENV
 
-            CHECKSUM_FILENAME="checksum_SHA256SUM"
-            echo $CHECKSUM > $CHECKSUM_FILENAME
-            echo 'export CHECKSUM_FILENAME='${CHECKSUM_FILENAME} >> $BASH_ENV
-
-            RELEASE_NAME=release-armada-$(date '+%Y%m%d')
-            echo 'export RELEASE_NAME='${RELEASE_NAME} >> $BASH_ENV
-
-      - run:
-          name: 'Publish Armada Release to Github with assets'
-          command: |
-            gh release create -R $CIRCLE_REPOSITORY_URL --generate-notes --title "${RELEASE_NAME}" ${RELEASE_NAME}
-            gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${BUNDLE_FILENAME}
-            gh release upload -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} ${CHECKSUM_FILENAME}
+      - store_artifacts:
+          path: 'armada-bundle-liquidity.tgz'
 
       - run:
           name: 'Push to Armada'
           command: |
-            BUNDLE_URL=$(gh release view -R $CIRCLE_REPOSITORY_URL ${RELEASE_NAME} --json assets --jq ".assets[] | select(.name == \"${BUNDLE_FILENAME}\") | .url")
+            # https://support.circleci.com/hc/en-us/articles/5034956515355-How-to-Programmatically-Construct-the-URLs-for-Artifacts
+            BUNDLE_URL=https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/${BUNDLE_FILENAME}
             yarn armada:publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
 
 jobs:
