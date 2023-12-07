@@ -1,3 +1,21 @@
+type VoteOld @entity {
+  id: ID!
+  voter: String!
+  ballotId: Bytes!
+  epochIndex: String!
+  votePower: BigInt!
+  contract: String!
+}
+
+type VoteResultOld @entity {
+  id: ID!
+  epochIndex: String!
+  votePower: BigInt!
+  contract: String!
+  voteCount: BigInt!
+  ballotId: Bytes!
+}
+
 type CandidateNominated @entity(immutable: true) {
   id: Bytes!
   candidate: Bytes! # address

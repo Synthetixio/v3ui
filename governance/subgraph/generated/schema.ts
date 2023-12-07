@@ -11,6 +11,218 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class VoteOld extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save VoteOld entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type VoteOld must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("VoteOld", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): VoteOld | null {
+    return changetype<VoteOld | null>(store.get_in_block("VoteOld", id));
+  }
+
+  static load(id: string): VoteOld | null {
+    return changetype<VoteOld | null>(store.get("VoteOld", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get voter(): string {
+    let value = this.get("voter");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set voter(value: string) {
+    this.set("voter", Value.fromString(value));
+  }
+
+  get ballotId(): Bytes {
+    let value = this.get("ballotId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set ballotId(value: Bytes) {
+    this.set("ballotId", Value.fromBytes(value));
+  }
+
+  get epochIndex(): string {
+    let value = this.get("epochIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set epochIndex(value: string) {
+    this.set("epochIndex", Value.fromString(value));
+  }
+
+  get votePower(): BigInt {
+    let value = this.get("votePower");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set votePower(value: BigInt) {
+    this.set("votePower", Value.fromBigInt(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+}
+
+export class VoteResultOld extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save VoteResultOld entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type VoteResultOld must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("VoteResultOld", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): VoteResultOld | null {
+    return changetype<VoteResultOld | null>(
+      store.get_in_block("VoteResultOld", id)
+    );
+  }
+
+  static load(id: string): VoteResultOld | null {
+    return changetype<VoteResultOld | null>(store.get("VoteResultOld", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get epochIndex(): string {
+    let value = this.get("epochIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set epochIndex(value: string) {
+    this.set("epochIndex", Value.fromString(value));
+  }
+
+  get votePower(): BigInt {
+    let value = this.get("votePower");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set votePower(value: BigInt) {
+    this.set("votePower", Value.fromBigInt(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+
+  get voteCount(): BigInt {
+    let value = this.get("voteCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set voteCount(value: BigInt) {
+    this.set("voteCount", Value.fromBigInt(value));
+  }
+
+  get ballotId(): Bytes {
+    let value = this.get("ballotId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set ballotId(value: Bytes) {
+    this.set("ballotId", Value.fromBytes(value));
+  }
+}
+
 export class CandidateNominated extends Entity {
   constructor(id: Bytes) {
     super();
