@@ -1,0 +1,8 @@
+{
+  "optimism-goerli": {
+    "ElectionModule": {
+      "address": "0x88be56E9f0673b71af9c0Dd96eC965e4dC894ed2",
+      "startBlock": 18265250
+    }
+  }
+}

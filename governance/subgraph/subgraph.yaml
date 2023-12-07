@@ -1,0 +1,57 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ElectionModule
+    network: optimism-goerli
+    source:
+      address: "0x88be56E9f0673b71af9c0Dd96eC965e4dC894ed2"
+      abi: ElectionModule
+      startBlock: 18265250
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - ElectionBatchEvaluated
+        - ElectionEvaluated
+        - ElectionModuleInitialized
+        - EmergencyElectionStarted
+        - EpochScheduleUpdated
+        - EpochStarted
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMemberRemoved(indexed address,indexed uint256)
+          handler: handleCouncilMemberRemoved
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: ElectionBatchEvaluated(indexed uint256,uint256,uint256)
+          handler: handleElectionBatchEvaluated
+        - event: ElectionEvaluated(indexed uint256,uint256)
+          handler: handleElectionEvaluated
+        - event: ElectionModuleInitialized()
+          handler: handleElectionModuleInitialized
+        - event: EmergencyElectionStarted(indexed uint256)
+          handler: handleEmergencyElectionStarted
+        - event: EpochScheduleUpdated(indexed uint64,uint64,uint64)
+          handler: handleEpochScheduleUpdated
+        - event: EpochStarted(indexed uint256)
+          handler: handleEpochStarted
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed uint256,uint256)
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts

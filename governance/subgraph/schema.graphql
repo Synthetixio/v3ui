@@ -1,0 +1,108 @@
+type CandidateNominated @entity(immutable: true) {
+  id: Bytes!
+  candidate: Bytes! # address
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CouncilMemberAdded @entity(immutable: true) {
+  id: Bytes!
+  member: Bytes! # address
+  epochIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CouncilMemberRemoved @entity(immutable: true) {
+  id: Bytes!
+  member: Bytes! # address
+  epochIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CouncilMembersDismissed @entity(immutable: true) {
+  id: Bytes!
+  dismissedMembers: [Bytes!]! # address[]
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ElectionBatchEvaluated @entity(immutable: true) {
+  id: Bytes!
+  epochId: BigInt! # uint256
+  numEvaluatedBallots: BigInt! # uint256
+  totalBallots: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ElectionEvaluated @entity(immutable: true) {
+  id: Bytes!
+  epochId: BigInt! # uint256
+  ballotCount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ElectionModuleInitialized @entity(immutable: true) {
+  id: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EmergencyElectionStarted @entity(immutable: true) {
+  id: Bytes!
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EpochScheduleUpdated @entity(immutable: true) {
+  id: Bytes!
+  epochId: BigInt! # uint64
+  startDate: BigInt! # uint64
+  endDate: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EpochStarted @entity(immutable: true) {
+  id: Bytes!
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NominationWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  candidate: Bytes! # address
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type VoteRecorded @entity(immutable: true) {
+  id: Bytes!
+  voter: Bytes! # address
+  chainId: BigInt! # uint256
+  epochId: BigInt! # uint256
+  votingPower: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
