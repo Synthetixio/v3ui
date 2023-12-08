@@ -1,5 +1,5 @@
-import { newMockEvent } from "matchstick-as"
-import { ethereum, Address, BigInt } from "@graphprotocol/graph-ts"
+import { newMockEvent } from 'matchstick-as';
+import { ethereum, Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import {
   CandidateNominated,
   CouncilMemberAdded,
@@ -12,98 +12,84 @@ import {
   EpochScheduleUpdated,
   EpochStarted,
   NominationWithdrawn,
-  VoteRecorded
-} from "../generated/ElectionModule/ElectionModule"
+  VoteRecorded,
+} from '../generated/ElectionModule/ElectionModule';
+
+import {
+  VoteRecorded as VoteRecordedOldEvent,
+  VoteWithdrawn as VoteWithdrawnOldEvent,
+} from '../generated/Spartan/ElectionModuleOld';
 
 export function createCandidateNominatedEvent(
   candidate: Address,
   epochId: BigInt
 ): CandidateNominated {
-  let candidateNominatedEvent = changetype<CandidateNominated>(newMockEvent())
+  let candidateNominatedEvent = changetype<CandidateNominated>(newMockEvent());
 
-  candidateNominatedEvent.parameters = new Array()
+  candidateNominatedEvent.parameters = new Array();
 
   candidateNominatedEvent.parameters.push(
-    new ethereum.EventParam("candidate", ethereum.Value.fromAddress(candidate))
-  )
+    new ethereum.EventParam('candidate', ethereum.Value.fromAddress(candidate))
+  );
   candidateNominatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
 
-  return candidateNominatedEvent
+  return candidateNominatedEvent;
 }
 
 export function createCouncilMemberAddedEvent(
   member: Address,
   epochIndex: BigInt
 ): CouncilMemberAdded {
-  let councilMemberAddedEvent = changetype<CouncilMemberAdded>(newMockEvent())
+  let councilMemberAddedEvent = changetype<CouncilMemberAdded>(newMockEvent());
 
-  councilMemberAddedEvent.parameters = new Array()
+  councilMemberAddedEvent.parameters = new Array();
 
   councilMemberAddedEvent.parameters.push(
-    new ethereum.EventParam("member", ethereum.Value.fromAddress(member))
-  )
+    new ethereum.EventParam('member', ethereum.Value.fromAddress(member))
+  );
   councilMemberAddedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochIndex",
-      ethereum.Value.fromUnsignedBigInt(epochIndex)
-    )
-  )
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
 
-  return councilMemberAddedEvent
+  return councilMemberAddedEvent;
 }
 
 export function createCouncilMemberRemovedEvent(
   member: Address,
   epochIndex: BigInt
 ): CouncilMemberRemoved {
-  let councilMemberRemovedEvent = changetype<CouncilMemberRemoved>(
-    newMockEvent()
-  )
+  let councilMemberRemovedEvent = changetype<CouncilMemberRemoved>(newMockEvent());
 
-  councilMemberRemovedEvent.parameters = new Array()
+  councilMemberRemovedEvent.parameters = new Array();
 
   councilMemberRemovedEvent.parameters.push(
-    new ethereum.EventParam("member", ethereum.Value.fromAddress(member))
-  )
+    new ethereum.EventParam('member', ethereum.Value.fromAddress(member))
+  );
   councilMemberRemovedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochIndex",
-      ethereum.Value.fromUnsignedBigInt(epochIndex)
-    )
-  )
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
 
-  return councilMemberRemovedEvent
+  return councilMemberRemovedEvent;
 }
 
 export function createCouncilMembersDismissedEvent(
   dismissedMembers: Array<Address>,
   epochId: BigInt
 ): CouncilMembersDismissed {
-  let councilMembersDismissedEvent = changetype<CouncilMembersDismissed>(
-    newMockEvent()
-  )
+  let councilMembersDismissedEvent = changetype<CouncilMembersDismissed>(newMockEvent());
 
-  councilMembersDismissedEvent.parameters = new Array()
+  councilMembersDismissedEvent.parameters = new Array();
 
   councilMembersDismissedEvent.parameters.push(
-    new ethereum.EventParam(
-      "dismissedMembers",
-      ethereum.Value.fromAddressArray(dismissedMembers)
-    )
-  )
+    new ethereum.EventParam('dismissedMembers', ethereum.Value.fromAddressArray(dismissedMembers))
+  );
   councilMembersDismissedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
 
-  return councilMembersDismissedEvent
+  return councilMembersDismissedEvent;
 }
 
 export function createElectionBatchEvaluatedEvent(
@@ -111,85 +97,62 @@ export function createElectionBatchEvaluatedEvent(
   numEvaluatedBallots: BigInt,
   totalBallots: BigInt
 ): ElectionBatchEvaluated {
-  let electionBatchEvaluatedEvent = changetype<ElectionBatchEvaluated>(
-    newMockEvent()
-  )
+  let electionBatchEvaluatedEvent = changetype<ElectionBatchEvaluated>(newMockEvent());
 
-  electionBatchEvaluatedEvent.parameters = new Array()
+  electionBatchEvaluatedEvent.parameters = new Array();
 
   electionBatchEvaluatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
   electionBatchEvaluatedEvent.parameters.push(
     new ethereum.EventParam(
-      "numEvaluatedBallots",
+      'numEvaluatedBallots',
       ethereum.Value.fromUnsignedBigInt(numEvaluatedBallots)
     )
-  )
+  );
   electionBatchEvaluatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "totalBallots",
-      ethereum.Value.fromUnsignedBigInt(totalBallots)
-    )
-  )
+    new ethereum.EventParam('totalBallots', ethereum.Value.fromUnsignedBigInt(totalBallots))
+  );
 
-  return electionBatchEvaluatedEvent
+  return electionBatchEvaluatedEvent;
 }
 
 export function createElectionEvaluatedEvent(
   epochId: BigInt,
   ballotCount: BigInt
 ): ElectionEvaluated {
-  let electionEvaluatedEvent = changetype<ElectionEvaluated>(newMockEvent())
+  let electionEvaluatedEvent = changetype<ElectionEvaluated>(newMockEvent());
 
-  electionEvaluatedEvent.parameters = new Array()
+  electionEvaluatedEvent.parameters = new Array();
 
   electionEvaluatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
   electionEvaluatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "ballotCount",
-      ethereum.Value.fromUnsignedBigInt(ballotCount)
-    )
-  )
+    new ethereum.EventParam('ballotCount', ethereum.Value.fromUnsignedBigInt(ballotCount))
+  );
 
-  return electionEvaluatedEvent
+  return electionEvaluatedEvent;
 }
 
 export function createElectionModuleInitializedEvent(): ElectionModuleInitialized {
-  let electionModuleInitializedEvent = changetype<ElectionModuleInitialized>(
-    newMockEvent()
-  )
+  let electionModuleInitializedEvent = changetype<ElectionModuleInitialized>(newMockEvent());
 
-  electionModuleInitializedEvent.parameters = new Array()
+  electionModuleInitializedEvent.parameters = new Array();
 
-  return electionModuleInitializedEvent
+  return electionModuleInitializedEvent;
 }
 
-export function createEmergencyElectionStartedEvent(
-  epochId: BigInt
-): EmergencyElectionStarted {
-  let emergencyElectionStartedEvent = changetype<EmergencyElectionStarted>(
-    newMockEvent()
-  )
+export function createEmergencyElectionStartedEvent(epochId: BigInt): EmergencyElectionStarted {
+  let emergencyElectionStartedEvent = changetype<EmergencyElectionStarted>(newMockEvent());
 
-  emergencyElectionStartedEvent.parameters = new Array()
+  emergencyElectionStartedEvent.parameters = new Array();
 
   emergencyElectionStartedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
 
-  return emergencyElectionStartedEvent
+  return emergencyElectionStartedEvent;
 }
 
 export function createEpochScheduleUpdatedEvent(
@@ -197,68 +160,51 @@ export function createEpochScheduleUpdatedEvent(
   startDate: BigInt,
   endDate: BigInt
 ): EpochScheduleUpdated {
-  let epochScheduleUpdatedEvent = changetype<EpochScheduleUpdated>(
-    newMockEvent()
-  )
+  let epochScheduleUpdatedEvent = changetype<EpochScheduleUpdated>(newMockEvent());
 
-  epochScheduleUpdatedEvent.parameters = new Array()
+  epochScheduleUpdatedEvent.parameters = new Array();
 
   epochScheduleUpdatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
   epochScheduleUpdatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "startDate",
-      ethereum.Value.fromUnsignedBigInt(startDate)
-    )
-  )
+    new ethereum.EventParam('startDate', ethereum.Value.fromUnsignedBigInt(startDate))
+  );
   epochScheduleUpdatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "endDate",
-      ethereum.Value.fromUnsignedBigInt(endDate)
-    )
-  )
+    new ethereum.EventParam('endDate', ethereum.Value.fromUnsignedBigInt(endDate))
+  );
 
-  return epochScheduleUpdatedEvent
+  return epochScheduleUpdatedEvent;
 }
 
 export function createEpochStartedEvent(epochId: BigInt): EpochStarted {
-  let epochStartedEvent = changetype<EpochStarted>(newMockEvent())
+  let epochStartedEvent = changetype<EpochStarted>(newMockEvent());
 
-  epochStartedEvent.parameters = new Array()
+  epochStartedEvent.parameters = new Array();
 
   epochStartedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
 
-  return epochStartedEvent
+  return epochStartedEvent;
 }
 
 export function createNominationWithdrawnEvent(
   candidate: Address,
   epochId: BigInt
 ): NominationWithdrawn {
-  let nominationWithdrawnEvent = changetype<NominationWithdrawn>(newMockEvent())
+  let nominationWithdrawnEvent = changetype<NominationWithdrawn>(newMockEvent());
 
-  nominationWithdrawnEvent.parameters = new Array()
+  nominationWithdrawnEvent.parameters = new Array();
 
   nominationWithdrawnEvent.parameters.push(
-    new ethereum.EventParam("candidate", ethereum.Value.fromAddress(candidate))
-  )
+    new ethereum.EventParam('candidate', ethereum.Value.fromAddress(candidate))
+  );
   nominationWithdrawnEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
 
-  return nominationWithdrawnEvent
+  return nominationWithdrawnEvent;
 }
 
 export function createVoteRecordedEvent(
@@ -267,31 +213,74 @@ export function createVoteRecordedEvent(
   epochId: BigInt,
   votingPower: BigInt
 ): VoteRecorded {
-  let voteRecordedEvent = changetype<VoteRecorded>(newMockEvent())
+  let voteRecordedEvent = changetype<VoteRecorded>(newMockEvent());
 
-  voteRecordedEvent.parameters = new Array()
+  voteRecordedEvent.parameters = new Array();
 
   voteRecordedEvent.parameters.push(
-    new ethereum.EventParam("voter", ethereum.Value.fromAddress(voter))
-  )
+    new ethereum.EventParam('voter', ethereum.Value.fromAddress(voter))
+  );
   voteRecordedEvent.parameters.push(
-    new ethereum.EventParam(
-      "chainId",
-      ethereum.Value.fromUnsignedBigInt(chainId)
-    )
-  )
+    new ethereum.EventParam('chainId', ethereum.Value.fromUnsignedBigInt(chainId))
+  );
   voteRecordedEvent.parameters.push(
-    new ethereum.EventParam(
-      "epochId",
-      ethereum.Value.fromUnsignedBigInt(epochId)
-    )
-  )
+    new ethereum.EventParam('epochId', ethereum.Value.fromUnsignedBigInt(epochId))
+  );
   voteRecordedEvent.parameters.push(
-    new ethereum.EventParam(
-      "votingPower",
-      ethereum.Value.fromUnsignedBigInt(votingPower)
-    )
-  )
+    new ethereum.EventParam('votingPower', ethereum.Value.fromUnsignedBigInt(votingPower))
+  );
 
-  return voteRecordedEvent
+  return voteRecordedEvent;
+}
+
+export function createVoteRecordedOldEvent(
+  voter: Address,
+  ballotId: Bytes,
+  epochIndex: BigInt,
+  votePower: BigInt
+): VoteRecordedOldEvent {
+  let voteRecordedOldEvent = changetype<VoteRecordedOldEvent>(newMockEvent());
+
+  voteRecordedOldEvent.parameters = new Array();
+
+  voteRecordedOldEvent.parameters.push(
+    new ethereum.EventParam('voter', ethereum.Value.fromAddress(voter))
+  );
+  voteRecordedOldEvent.parameters.push(
+    new ethereum.EventParam('ballotId', ethereum.Value.fromBytes(ballotId))
+  );
+  voteRecordedOldEvent.parameters.push(
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
+  voteRecordedOldEvent.parameters.push(
+    new ethereum.EventParam('votePower', ethereum.Value.fromUnsignedBigInt(votePower))
+  );
+
+  return voteRecordedOldEvent;
+}
+
+export function createVoteWithdrawnOldEvent(
+  voter: Address,
+  ballotId: Bytes,
+  epochIndex: BigInt,
+  votePower: BigInt
+): VoteWithdrawnOldEvent {
+  let voteWithdrawnOldEvent = changetype<VoteWithdrawnOldEvent>(newMockEvent());
+
+  voteWithdrawnOldEvent.parameters = new Array();
+
+  voteWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('voter', ethereum.Value.fromAddress(voter))
+  );
+  voteWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('ballotId', ethereum.Value.fromBytes(ballotId))
+  );
+  voteWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
+  voteWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('votePower', ethereum.Value.fromUnsignedBigInt(votePower))
+  );
+
+  return voteWithdrawnOldEvent;
 }

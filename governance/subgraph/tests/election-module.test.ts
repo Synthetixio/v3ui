@@ -4,55 +4,31 @@ import {
   test,
   clearStore,
   beforeAll,
-  afterAll
-} from "matchstick-as/assembly/index"
-import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { CandidateNominated } from "../generated/schema"
-import { CandidateNominated as CandidateNominatedEvent } from "../generated/ElectionModule/ElectionModule"
-import { handleCandidateNominated } from "../src/election-module"
-import { createCandidateNominatedEvent } from "./election-module-utils"
+  afterAll,
+} from 'matchstick-as/assembly/index';
+import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { createVoteRecordedOldEvent } from './election-module-utils';
+import { handleVoteRecordedOld } from '../src/election-module';
 
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
+const candidate = Address.fromString('0x0000000000000000000000000000000000000001');
+const epochId = BigInt.fromI32(234);
 
-describe("Describe entity assertions", () => {
-  beforeAll(() => {
-    let candidate = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let epochId = BigInt.fromI32(234)
-    let newCandidateNominatedEvent = createCandidateNominatedEvent(
-      candidate,
-      epochId
-    )
-    handleCandidateNominated(newCandidateNominatedEvent)
-  })
+describe('Election Module Old', () => {
+  beforeAll(() => {});
 
   afterAll(() => {
-    clearStore()
-  })
+    clearStore();
+  });
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
-
-  test("CandidateNominated created and stored", () => {
-    assert.entityCount("CandidateNominated", 1)
-
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals(
-      "CandidateNominated",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "candidate",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "CandidateNominated",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "epochId",
-      "234"
-    )
-
-    // More assert options:
-    // https://thegraph.com/docs/en/developer/matchstick/#asserts
-  })
-})
+  test('user votes for non existing candidate', () => {
+    const voteRecordedOldEvent = createVoteRecordedOldEvent(
+      candidate,
+      Bytes.fromI32(1),
+      epochId,
+      BigInt.fromI32(100)
+    );
+    handleVoteRecordedOld(voteRecordedOldEvent);
+    assert.entityCount('VoteOld', 1);
+    assert.entityCount('VoteResultOld', 1);
+  });
+});

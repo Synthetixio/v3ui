@@ -61,7 +61,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
     .toHexString()
     .concat('-')
     .concat(event.params.epochIndex.toString());
-  let result = VoteResult.load(resultId);
+  let result = VoteResultOld.load(resultId);
   if (result == null) {
     result = new VoteResultOld(resultId);
     result.votePower = BigInt.fromString('0');
