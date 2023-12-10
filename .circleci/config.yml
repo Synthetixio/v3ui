@@ -84,30 +84,20 @@ commands:
         type: string
     steps:
       - run:
-          name: 'Install dependencies'
-          command: |
-            # base circleci image is missing these dependencies
-            sudo apt-get update && sudo apt-get install -y libusb-1.0 libudev-dev libsecret-1-dev
-
-            yarn armada --version
-
-      - run:
           name: 'Build Armada bundle'
           command: |
-            BUNDLE_FILENAME=$(yarn armada:bundle armada-bundle-liquidity "<< parameters.source-dir >>")
-            echo 'export BUNDLE_FILENAME='${BUNDLE_FILENAME} >> $BASH_ENV
-
-            CHECKSUM=$(yarn armada:checksum $BUNDLE_FILENAME)
+            yarn armada:bundle armada-bundle "<< parameters.source-dir >>"
+            CHECKSUM=$(yarn armada:checksum armada-bundle.tgz)
             echo 'export CHECKSUM='${CHECKSUM} >> $BASH_ENV
 
       - store_artifacts:
-          path: 'armada-bundle-liquidity.tgz'
+          path: 'armada-bundle.tgz'
 
       - run:
           name: 'Push to Armada'
           command: |
             # https://support.circleci.com/hc/en-us/articles/5034956515355-How-to-Programmatically-Construct-the-URLs-for-Artifacts
-            BUNDLE_URL=https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/${BUNDLE_FILENAME}
+            BUNDLE_URL=https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/armada-bundle.tgz
             yarn armada:publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
 
 jobs:

@@ -9052,9 +9052,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"armada-cli@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "armada-cli@npm:0.3.3"
+"armada-cli@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "armada-cli@npm:0.3.4"
   dependencies:
     "@ethersproject/constants": "npm:^5.7.0"
     "@ledgerhq/hw-app-eth": "npm:^6.29.10"
@@ -9068,7 +9068,7 @@ __metadata:
     yargs: "npm:^17.6.0"
   bin:
     armada: bin/run
-  checksum: d6b2f6af5ac2b33446c3adae87249e19b08797e9d1e7bda9152f67a693a19ccaef07fcfd776bb077a8da3ea3e83f9526c5234645622091efd64916984879b80d
+  checksum: e8ced591b4201e94d66abf594b4725bdedd0887abb80ce2488d68e3d9fca6f262fdbf25089908284b8e6993c86a5f5b3f860619b8b6fdc71e72b0fe6923ac594
   languageName: node
   linkType: hard
 
@@ -17635,11 +17635,11 @@ __metadata:
   linkType: hard
 
 "node-abi@npm:^3.3.0":
-  version: 3.51.0
-  resolution: "node-abi@npm:3.51.0"
+  version: 3.52.0
+  resolution: "node-abi@npm:3.52.0"
   dependencies:
     semver: "npm:^7.3.5"
-  checksum: 7ab89e7ecfee46cfa33b5687e57d55d25472af46f0df79876fa6b0a00ba4d72cd66519462ca269d42d19a789f177f5d0b17c1d0f201572704e63bcc7de9a75c4
+  checksum: 052f6d61308ce42c82f44c5b413164c0837c078946f928681ebecaf7cc804c738686e9b17063d0273a303c9bc1e3586ecf2a45328ef4d68919d8e93e1257ee05
   languageName: node
   linkType: hard
 
@@ -20308,7 +20308,7 @@ __metadata:
     "@types/jest": "npm:^29.5.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.11.0"
     "@typescript-eslint/parser": "npm:^6.11.0"
-    armada-cli: "npm:^0.3.3"
+    armada-cli: "npm:^0.3.4"
     babel-jest: "npm:^29.7.0"
     babel-plugin-module-resolver: "npm:^5.0.0"
     eslint: "npm:^8.53.0"
