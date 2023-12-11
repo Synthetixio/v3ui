@@ -1595,6 +1595,19 @@ export class User extends Entity {
     this.set("nominationCount", Value.fromBigInt(value));
   }
 
+  get nominationWithdrewCount(): BigInt {
+    let value = this.get("nominationWithdrewCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nominationWithdrewCount(value: BigInt) {
+    this.set("nominationWithdrewCount", Value.fromBigInt(value));
+  }
+
   get votingCount(): BigInt {
     let value = this.get("votingCount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1606,5 +1619,18 @@ export class User extends Entity {
 
   set votingCount(value: BigInt) {
     this.set("votingCount", Value.fromBigInt(value));
+  }
+
+  get votingWithdrewCount(): BigInt {
+    let value = this.get("votingWithdrewCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set votingWithdrewCount(value: BigInt) {
+    this.set("votingWithdrewCount", Value.fromBigInt(value));
   }
 }

@@ -128,5 +128,7 @@ type VoteRecorded @entity(immutable: true) {
 type User @entity(immutable: true) {
   id: String!
   nominationCount: BigInt!
+  nominationWithdrewCount: BigInt!
   votingCount: BigInt!
+  votingWithdrewCount: BigInt!
 }

@@ -5,7 +5,9 @@
 
 DIR="./node_modules/"
 if [ -d "$DIR" ]; then
+  eoch ""
   echo "node_modules dir found in subgraph directory, proceed with test "
+  eoch ""
 else
  cp -R ../../node_modules/ ./node_modules
 fi

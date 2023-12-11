@@ -45,11 +45,13 @@ export let ONE_BI = BigInt.fromI32(1);
 export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): void {
   let user = User.load(event.params.candidate.toHexString());
   if (user) {
-    user.nominationCount = user.nominationCount.plus(BigInt.fromI32(1));
+    user.nominationCount = user.nominationCount.plus(ONE_BI);
   } else {
     user = new User(event.params.candidate.toHexString());
-    user.nominationCount = BigInt.fromI32(1);
-    user.votingCount = BigInt.fromI32(0);
+    user.nominationCount = ONE_BI;
+    user.nominationWithdrewCount = ZERO_BI;
+    user.votingCount = ZERO_BI;
+    user.votingWithdrewCount = ZERO_BI;
   }
   user.save();
 }
@@ -57,7 +59,7 @@ export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): 
 export function handleNominationWithdrawnOld(event: NominationWithdrawnOldEvent): void {
   let user = User.load(event.params.candidate.toHexString());
   if (user) {
-    user.nominationCount = user.nominationCount.minus(BigInt.fromI32(1));
+    user.nominationWithdrewCount = user.nominationWithdrewCount.plus(ONE_BI);
     user.save();
   } else {
     log.critical('user withdrew without being nominated', [event.params.candidate.toHexString()]);
