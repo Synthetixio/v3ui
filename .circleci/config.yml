@@ -309,7 +309,7 @@ workflows:
               only:
                 - release
                 - master
-                - ipfs-deploy
+                - armada
       - liquidity-ipfs:
           requires:
             - checks
