@@ -18,6 +18,8 @@ import {
 import {
   VoteRecorded as VoteRecordedOldEvent,
   VoteWithdrawn as VoteWithdrawnOldEvent,
+  CandidateNominated as CandidateNominatedOldEvent,
+  NominationWithdrawn as NominationWithdrawnOldEvent,
 } from '../generated/Spartan/ElectionModuleOld';
 
 export function createCandidateNominatedEvent(
@@ -283,4 +285,40 @@ export function createVoteWithdrawnOldEvent(
   );
 
   return voteWithdrawnOldEvent;
+}
+
+export function createCandidateNominatedOldEvent(
+  voter: Address,
+  epochIndex: BigInt
+): CandidateNominatedOldEvent {
+  let candidateNominatedOldEvent = changetype<CandidateNominatedOldEvent>(newMockEvent());
+
+  candidateNominatedOldEvent.parameters = new Array();
+
+  candidateNominatedOldEvent.parameters.push(
+    new ethereum.EventParam('voter', ethereum.Value.fromAddress(voter))
+  );
+  candidateNominatedOldEvent.parameters.push(
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
+
+  return candidateNominatedOldEvent;
+}
+
+export function createNominationWithdrawOldEvent(
+  voter: Address,
+  epochIndex: BigInt
+): NominationWithdrawnOldEvent {
+  let nominationWithdrawnOldEvent = changetype<NominationWithdrawnOldEvent>(newMockEvent());
+
+  nominationWithdrawnOldEvent.parameters = new Array();
+
+  nominationWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('voter', ethereum.Value.fromAddress(voter))
+  );
+  nominationWithdrawnOldEvent.parameters.push(
+    new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
+
+  return nominationWithdrawnOldEvent;
 }

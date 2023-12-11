@@ -76,6 +76,10 @@ dataSources:
         - name: ElectionModuleOld
           file: ./abis/ElectionModuleOld.json
       eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
         - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
           handler: handleVoteRecordedOld
         - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
@@ -99,6 +103,10 @@ dataSources:
         - name: ElectionModuleOld
           file: ./abis/ElectionModuleOld.json
       eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
         - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
           handler: handleVoteRecordedOld
         - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
@@ -122,6 +130,10 @@ dataSources:
         - name: ElectionModuleOld
           file: ./abis/ElectionModuleOld.json
       eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
         - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
           handler: handleVoteRecordedOld
         - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
@@ -145,6 +157,10 @@ dataSources:
         - name: ElectionModuleOld
           file: ./abis/ElectionModuleOld.json
       eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
         - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
           handler: handleVoteRecordedOld
         - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)

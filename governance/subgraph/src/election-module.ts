@@ -15,6 +15,8 @@ import {
 import {
   VoteRecorded as VoteRecordedOldEvent,
   VoteWithdrawn as VoteWithdrawnOldEvent,
+  NominationWithdrawn as NominationWithdrawnOldEvent,
+  CandidateNominated as CandidateNominatedOldEvent,
 } from '../generated/Spartan/ElectionModuleOld';
 import {
   CandidateNominated,
@@ -31,13 +33,36 @@ import {
   VoteRecorded,
   VoteOld,
   VoteResultOld,
+  User,
 } from '../generated/schema';
-import { store, BigInt } from '@graphprotocol/graph-ts';
+import { store, BigInt, log } from '@graphprotocol/graph-ts';
 
 // Old Subgraph handlers
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
+
+export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): void {
+  let user = User.load(event.params.candidate.toHexString());
+  if (user) {
+    user.nominationCount = user.nominationCount.plus(BigInt.fromI32(1));
+  } else {
+    user = new User(event.params.candidate.toHexString());
+    user.nominationCount = BigInt.fromI32(1);
+    user.votingCount = BigInt.fromI32(0);
+  }
+  user.save();
+}
+
+export function handleNominationWithdrawnOld(event: NominationWithdrawnOldEvent): void {
+  let user = User.load(event.params.candidate.toHexString());
+  if (user) {
+    user.nominationCount = user.nominationCount.minus(BigInt.fromI32(1));
+    user.save();
+  } else {
+    log.critical('user withdrew without being nominated', [event.params.candidate.toHexString()]);
+  }
+}
 
 export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
   let id = event.params.voter

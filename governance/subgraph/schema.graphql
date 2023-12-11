@@ -124,3 +124,9 @@ type VoteRecorded @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+type User @entity(immutable: true) {
+  id: String!
+  nominationCount: BigInt!
+  votingCount: BigInt!
+}
