@@ -57,7 +57,9 @@ export function handleNominationWithdrawnOld(event: NominationWithdrawnOldEvent)
     user.nominationCount = user.nominationCount.minus(ONE_BI);
     user.save();
   } else {
-    log.critical('user withdrew without being nominated', [event.params.candidate.toHexString()]);
+    log.critical('user withdrew without being nominated {}', [
+      event.params.candidate.toHexString(),
+    ]);
   }
 }
 
@@ -67,6 +69,8 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
       .toHexString()
       .concat('-')
       .concat(event.address.toHexString())
+      .concat('-')
+      .concat('10')
       .concat('-')
       .concat(event.params.epochIndex.toString())
   );
@@ -113,14 +117,17 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
 }
 
 export function handleVoteWithdrawnOld(event: VoteWithdrawnOldEvent): void {
-  let id = event.params.voter
-    .toHexString()
-    .concat('-')
-    .concat(event.address.toHexString())
-    .concat('-')
-    .concat(event.params.epochIndex.toString());
-
-  store.remove('VoteRecorded', id);
+  store.remove(
+    'VoteRecorded',
+    event.params.voter
+      .toHexString()
+      .concat('-')
+      .concat(event.address.toHexString())
+      .concat('-')
+      .concat('10')
+      .concat('-')
+      .concat(event.params.epochIndex.toString())
+  );
 
   let user = User.load(event.params.voter.toHexString());
   if (user) {
@@ -201,6 +208,76 @@ export function handleCouncilMembersDismissed(event: CouncilMembersDismissedEven
   entity.save();
 }
 
+export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void {
+  let user = User.load(event.params.candidate.toHexString());
+  if (user) {
+    user.nominationCount = user.nominationCount.minus(ONE_BI);
+    user.save();
+  } else {
+    log.critical('user withdrew without being nominated', [event.params.candidate.toHexString()]);
+  }
+}
+
+export function handleVoteRecorded(event: VoteRecordedEvent): void {
+  let id = event.params.voter
+    .toHexString()
+    .concat('-')
+    .concat(event.address.toHexString())
+    .concat('-')
+    .concat(event.params.chainId.toString())
+    .concat('-')
+    .concat(event.params.epochId.toString());
+  let voteRecord = VoteRecorded.load(id);
+
+  let votePower = BigDecimal.fromString(event.params.votingPower.toString());
+  if (voteRecord) {
+    store.remove('VoteRecorded', id);
+  } else {
+    voteRecord = new VoteRecorded(id);
+    voteRecord.voter = event.params.voter.toHexString();
+    voteRecord.chainId = event.params.chainId;
+    voteRecord.epochId = event.params.epochId;
+    voteRecord.votePower = votePower;
+    voteRecord.blockNumber = event.block.number;
+    voteRecord.contract = event.address.toHexString();
+    voteRecord.save();
+  }
+
+  let user = User.load(event.params.voter.toHexString());
+  if (user) {
+    user.votingCount = user.votingCount.plus(ONE_BI);
+  } else {
+    user = new User(event.params.voter.toHexString());
+    user.nominationCount = ZERO_BI;
+    user.votingCount = ONE_BI;
+  }
+  user.save();
+
+  let resultId = event.params.voter
+    .toHexString()
+    .concat('-')
+    .concat(event.params.chainId.toString())
+    .concat('-')
+    .concat(event.address.toHexString())
+    .concat('-')
+    .concat(event.params.epochId.toString());
+  let result = VoteResult.load(resultId);
+
+  if (result == null) {
+    result = new VoteResult(resultId);
+    result.epochId = event.params.epochId.toString();
+    result.votePower = votePower;
+    result.voteCount = ONE_BI;
+    result.contract = event.address.toHexString();
+  } else {
+    result.votePower = result.votePower.plus(votePower);
+    result.voteCount = result.voteCount.plus(ONE_BI);
+  }
+  result.save();
+}
+
+// Do we need those?
+
 export function handleElectionBatchEvaluated(event: ElectionBatchEvaluatedEvent): void {
   let entity = new ElectionBatchEvaluated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.epochId = event.params.epochId;
@@ -273,65 +350,4 @@ export function handleEpochStarted(event: EpochStartedEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
-}
-
-export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void {
-  let user = User.load(event.params.candidate.toHexString());
-  if (user) {
-    user.nominationCount = user.nominationCount.minus(ONE_BI);
-    user.save();
-  } else {
-    log.critical('user withdrew without being nominated', [event.params.candidate.toHexString()]);
-  }
-}
-
-export function handleVoteRecorded(event: VoteRecordedEvent): void {
-  let voteRecord = new VoteRecorded(
-    event.params.voter
-      .toHexString()
-      .concat('-')
-      .concat(event.address.toHexString())
-      .concat('-')
-      .concat(event.params.epochId.toString())
-  );
-  let votePower = BigDecimal.fromString(event.params.votingPower.toString());
-
-  voteRecord.voter = event.params.voter.toHexString();
-  voteRecord.chainId = event.params.chainId;
-  voteRecord.epochId = event.params.epochId;
-  voteRecord.votePower = votePower;
-  voteRecord.blockNumber = event.block.number;
-  voteRecord.contract = event.address.toHexString();
-  voteRecord.save();
-
-  let user = User.load(event.params.voter.toHexString());
-  if (user) {
-    user.votingCount = user.votingCount.plus(ONE_BI);
-  } else {
-    user = new User(event.params.voter.toHexString());
-    user.nominationCount = ZERO_BI;
-    user.votingCount = ONE_BI;
-  }
-  user.save();
-
-  let resultId = event.params.voter
-    .toHexString()
-    .concat('-')
-    .concat('10')
-    .concat('-')
-    .concat(event.address.toHexString())
-    .concat('-')
-    .concat(event.params.epochId.toString());
-  let result = VoteResult.load(resultId);
-
-  if (result == null) {
-    result = new VoteResult(resultId);
-    result.epochId = event.params.epochId.toString();
-    result.votePower = BigDecimal.fromString('0');
-    result.voteCount = BigInt.fromI32(0);
-    result.contract = event.address.toHexString();
-  }
-  result.votePower = result.votePower.plus(votePower);
-  result.voteCount = result.voteCount.plus(ONE_BI);
-  result.save();
 }

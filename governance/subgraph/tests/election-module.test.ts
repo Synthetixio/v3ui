@@ -201,16 +201,31 @@ describe('Election Module', () => {
       assert.fieldEquals('VoteRecorded', id, 'votePower', '100');
       assert.fieldEquals('VoteRecorded', id, 'blockNumber', '1');
       assert.fieldEquals('VoteRecorded', id, 'contract', voteRecorded.address.toHexString());
-      assert.entityCount('VoteResult', 2);
+      assert.entityCount('VoteRecorded', 2);
 
       // Vote Result
       assert.entityCount('VoteResult', 2);
     });
     test('user votes for himself (multi chain)', () => {
+      const voteRecorded = createVoteRecordedEvent(
+        candidate,
+        BigInt.fromI32(8453),
+        epochId,
+        BigInt.fromI32(100)
+      );
+      handleVoteRecorded(voteRecorded);
+
       // User
       assert.entityCount('User', 1);
       assert.fieldEquals('User', candidate.toHexString(), 'nominationCount', '2');
-      assert.fieldEquals('User', candidate.toHexString(), 'votingCount', '2');
+      assert.fieldEquals('User', candidate.toHexString(), 'votingCount', '3');
+
+      // Vote Result
+      // assert.entityCount('VoteResult', 3);
+
+      logStore();
+
+      // assert.entityCount('VoteRecorded', 3);
     });
   });
 });
