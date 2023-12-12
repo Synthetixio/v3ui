@@ -243,6 +243,7 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     voteRecord.save();
   }
 
+  // If voted for address 0x00... minus one voting count
   let user = User.load(event.params.voter.toHexString());
   if (user) {
     user.votingCount = user.votingCount.plus(ONE_BI);

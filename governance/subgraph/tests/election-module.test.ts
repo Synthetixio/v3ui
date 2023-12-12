@@ -103,6 +103,8 @@ describe('Election Module', () => {
         .concat('-')
         .concat(voteRecordedOldEvent.address.toHexString())
         .concat('-')
+        .concat('10')
+        .concat('-')
         .concat(epochId.toString());
 
       assert.fieldEquals('VoteRecorded', id, 'voter', candidate.toHexString());
@@ -195,6 +197,8 @@ describe('Election Module', () => {
         .concat('-')
         .concat(voteRecorded.address.toHexString())
         .concat('-')
+        .concat(voteRecorded.params.chainId.toString())
+        .concat('-')
         .concat(epochId.toString());
       assert.fieldEquals('VoteRecorded', id, 'voter', candidate.toHexString());
       assert.fieldEquals('VoteRecorded', id, 'chainId', '10');
@@ -207,13 +211,13 @@ describe('Election Module', () => {
       assert.entityCount('VoteResult', 2);
     });
     test('user votes for himself (multi chain)', () => {
-      const voteRecorded = createVoteRecordedEvent(
+      const voteRecordedEvent = createVoteRecordedEvent(
         candidate,
         BigInt.fromI32(8453),
         epochId,
         BigInt.fromI32(100)
       );
-      handleVoteRecorded(voteRecorded);
+      handleVoteRecorded(voteRecordedEvent);
 
       // User
       assert.entityCount('User', 1);
@@ -221,11 +225,47 @@ describe('Election Module', () => {
       assert.fieldEquals('User', candidate.toHexString(), 'votingCount', '3');
 
       // Vote Result
-      // assert.entityCount('VoteResult', 3);
+      const resultId = candidate
+        .toHexString()
+        .concat('-')
+        .concat('8453')
+        .concat('-')
+        .concat(voteRecordedEvent.address.toHexString())
+        .concat('-')
+        .concat(epochId.toString());
+      assert.entityCount('VoteResult', 3);
+      // Don't understand that? why do we need that and how can it exceed one?
+      assert.fieldEquals('VoteResult', resultId, 'voteCount', '1');
 
-      logStore();
+      assert.fieldEquals('VoteResult', resultId, 'epochId', epochId.toString());
+      assert.fieldEquals('VoteResult', resultId, 'votePower', '100');
+      assert.fieldEquals(
+        'VoteResult',
+        resultId,
+        'contract',
+        voteRecordedEvent.address.toHexString()
+      );
 
-      // assert.entityCount('VoteRecorded', 3);
+      // Vote Recorded
+      const voteResultId = candidate
+        .toHexString()
+        .concat('-')
+        .concat(voteRecordedEvent.address.toHexString())
+        .concat('-')
+        .concat('8453')
+        .concat('-')
+        .concat(epochId.toString());
+      assert.entityCount('VoteRecorded', 3);
+      assert.fieldEquals('VoteRecorded', voteResultId, 'voter', candidate.toHexString());
+      assert.fieldEquals('VoteRecorded', voteResultId, 'epochId', epochId.toString());
+      assert.fieldEquals('VoteRecorded', voteResultId, 'votePower', '100');
+      assert.fieldEquals('VoteRecorded', voteResultId, 'blockNumber', '1');
+      assert.fieldEquals(
+        'VoteRecorded',
+        voteResultId,
+        'contract',
+        voteRecordedEvent.address.toHexString()
+      );
     });
   });
 });
