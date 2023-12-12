@@ -232,6 +232,8 @@ export function createVoteRecordedEvent(
     new ethereum.EventParam('votingPower', ethereum.Value.fromUnsignedBigInt(votingPower))
   );
 
+  voteRecordedEvent.address = Address.fromString('0x47872B16557875850a02C94B28d959515F894913');
+
   return voteRecordedEvent;
 }
 
@@ -300,6 +302,10 @@ export function createCandidateNominatedOldEvent(
   );
   candidateNominatedOldEvent.parameters.push(
     new ethereum.EventParam('epochIndex', ethereum.Value.fromUnsignedBigInt(epochIndex))
+  );
+
+  candidateNominatedOldEvent.address = Address.fromString(
+    '0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c'
   );
 
   return candidateNominatedOldEvent;
