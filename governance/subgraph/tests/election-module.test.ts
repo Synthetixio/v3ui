@@ -406,6 +406,7 @@ describe('Election Module', () => {
       assert.fieldEquals('VoteResult', voteRecordedId, 'votePower', '100');
       assert.fieldEquals('VoteResult', voteRecordedId, 'voteCount', '1');
       assert.fieldEquals('VoteResult', voteRecordedId, 'voter', voter.toHexString());
+      assert.fieldEquals('VoteResult', voteRecordedId, 'candidate', candidates.at(0).toHexString());
       assert.fieldEquals('VoteResult', voteRecordedId, 'contract', voteEvent.address.toHexString());
     });
 
@@ -489,6 +490,12 @@ describe('Election Module', () => {
       assert.fieldEquals(
         'VoteResult',
         voteRecordedIdBase,
+        'candidate',
+        candidates.at(0).toHexString()
+      );
+      assert.fieldEquals(
+        'VoteResult',
+        voteRecordedIdBase,
         'contract',
         voteEventBase.address.toHexString()
       );
@@ -506,6 +513,12 @@ describe('Election Module', () => {
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'votePower', '100');
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'voteCount', '1');
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'voter', voter.toHexString());
+      assert.fieldEquals(
+        'VoteResult',
+        voteRecordedIdL1,
+        'candidate',
+        candidates.at(0).toHexString()
+      );
       assert.fieldEquals(
         'VoteResult',
         voteRecordedIdL1,
@@ -552,6 +565,12 @@ describe('Election Module', () => {
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'votePower', '100');
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'voteCount', '1');
       assert.fieldEquals('VoteResult', voteRecordedIdL1, 'voter', voter.toHexString());
+      assert.fieldEquals(
+        'VoteResult',
+        voteRecordedIdL1,
+        'candidate',
+        candidates.at(0).toHexString()
+      );
       assert.fieldEquals(
         'VoteResult',
         voteRecordedIdL1,
