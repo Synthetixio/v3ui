@@ -213,7 +213,8 @@ export function createVoteRecordedEvent(
   voter: Address,
   chainId: BigInt,
   epochId: BigInt,
-  votingPower: BigInt
+  votingPower: BigInt,
+  candidates: Address[]
 ): VoteRecorded {
   let voteRecordedEvent = changetype<VoteRecorded>(newMockEvent());
 
@@ -230,6 +231,10 @@ export function createVoteRecordedEvent(
   );
   voteRecordedEvent.parameters.push(
     new ethereum.EventParam('votingPower', ethereum.Value.fromUnsignedBigInt(votingPower))
+  );
+
+  voteRecordedEvent.parameters.push(
+    new ethereum.EventParam('candidates', ethereum.Value.fromAddressArray(candidates))
   );
 
   voteRecordedEvent.address = Address.fromString('0x47872B16557875850a02C94B28d959515F894913');

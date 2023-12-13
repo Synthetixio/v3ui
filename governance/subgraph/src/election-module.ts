@@ -70,9 +70,9 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
       .concat('-')
       .concat(event.address.toHexString())
       .concat('-')
-      .concat('10')
-      .concat('-')
       .concat(event.params.epochIndex.toString())
+      .concat('-')
+      .concat('10')
   );
   let votePower = BigDecimal.fromString(event.params.votePower.toString());
 
@@ -111,6 +111,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
     result.voteCount = BigInt.fromI32(0);
     result.contract = event.address.toHexString();
   }
+  result.voter = event.params.voter.toHexString();
   result.votePower = result.votePower.plus(votePower);
   result.voteCount = result.voteCount.plus(ONE_BI);
   result.save();
@@ -124,9 +125,9 @@ export function handleVoteWithdrawnOld(event: VoteWithdrawnOldEvent): void {
       .concat('-')
       .concat(event.address.toHexString())
       .concat('-')
-      .concat('10')
-      .concat('-')
       .concat(event.params.epochIndex.toString())
+      .concat('-')
+      .concat('10')
   );
 
   let user = User.load(event.params.voter.toHexString());
@@ -224,13 +225,16 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     .concat('-')
     .concat(event.address.toHexString())
     .concat('-')
-    .concat(event.params.chainId.toString())
+    .concat(event.params.epochId.toString())
     .concat('-')
-    .concat(event.params.epochId.toString());
+    .concat(event.params.chainId.toString());
   let voteRecord = VoteRecorded.load(id);
 
   let votePower = BigDecimal.fromString(event.params.votingPower.toString());
-  if (voteRecord) {
+  if (
+    voteRecord &&
+    event.params.candidates[0].toHexString().includes('0x0000000000000000000000000000000000000000')
+  ) {
     store.remove('VoteRecorded', id);
   } else {
     voteRecord = new VoteRecorded(id);
@@ -242,11 +246,18 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     voteRecord.contract = event.address.toHexString();
     voteRecord.save();
   }
-
   // If voted for address 0x00... minus one voting count
   let user = User.load(event.params.voter.toHexString());
   if (user) {
-    user.votingCount = user.votingCount.plus(ONE_BI);
+    if (
+      event.params.candidates[0]
+        .toHexString()
+        .includes('0x0000000000000000000000000000000000000000')
+    ) {
+      user.votingCount = user.votingCount.minus(ONE_BI);
+    } else {
+      user.votingCount = user.votingCount.plus(ONE_BI);
+    }
   } else {
     user = new User(event.params.voter.toHexString());
     user.nominationCount = ZERO_BI;
@@ -274,6 +285,8 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     result.votePower = result.votePower.plus(votePower);
     result.voteCount = result.voteCount.plus(ONE_BI);
   }
+  result.candidate = event.params.candidates.at(0).toHexString();
+  result.voter = event.params.voter.toHexString();
   result.save();
 }
 

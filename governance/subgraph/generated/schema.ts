@@ -1297,6 +1297,32 @@ export class VoteResult extends Entity {
   set voteCount(value: BigInt) {
     this.set("voteCount", Value.fromBigInt(value));
   }
+
+  get voter(): string {
+    let value = this.get("voter");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set voter(value: string) {
+    this.set("voter", Value.fromString(value));
+  }
+
+  get candidate(): string {
+    let value = this.get("candidate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set candidate(value: string) {
+    this.set("candidate", Value.fromString(value));
+  }
 }
 
 export class User extends Entity {

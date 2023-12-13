@@ -103,6 +103,8 @@ type VoteResult @entity {
   votePower: BigDecimal!
   contract: String!
   voteCount: BigInt!
+  voter: String
+  candidate: String
 }
 
 type User @entity(immutable: true) {
