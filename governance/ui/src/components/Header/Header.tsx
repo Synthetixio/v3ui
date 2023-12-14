@@ -42,7 +42,6 @@ const activeIcon = (currentNetwork: Network) => {
 
 export function Header() {
   const navigate = useNavigate();
-  const location = useLocation();
   const isWalletConnected = useIsConnected();
   const wallet = useWallet();
   const currentNetwork = useNetwork();

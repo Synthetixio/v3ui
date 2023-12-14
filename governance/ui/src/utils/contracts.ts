@@ -1,6 +1,6 @@
 import { Contract } from 'ethers';
 
-export const ElectionModule = new Contract('0x4066a172DD5D21E4f787C07D3118D0876296750B', [
+export const ElectionModule = new Contract('0x62f424908beaf103d0dd1e0b230356a3785e409d', [
   {
     inputs: [],
     name: 'AlreadyACouncilMember',

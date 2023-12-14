@@ -1,4 +1,4 @@
-type CouncilMemberAdded @entity(immutable: true) {
+type CouncilMemberAdded @entity {
   id: Bytes!
   member: Bytes! # address
   epochIndex: BigInt! # uint256
@@ -7,7 +7,7 @@ type CouncilMemberAdded @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type CouncilMemberRemoved @entity(immutable: true) {
+type CouncilMemberRemoved @entity {
   id: Bytes!
   member: Bytes! # address
   epochIndex: BigInt! # uint256
@@ -16,7 +16,7 @@ type CouncilMemberRemoved @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type CouncilMembersDismissed @entity(immutable: true) {
+type CouncilMembersDismissed @entity {
   id: Bytes!
   dismissedMembers: [Bytes!]! # address[]
   epochId: BigInt! # uint256
@@ -25,7 +25,7 @@ type CouncilMembersDismissed @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ElectionBatchEvaluated @entity(immutable: true) {
+type ElectionBatchEvaluated @entity {
   id: Bytes!
   epochId: BigInt! # uint256
   numEvaluatedBallots: BigInt! # uint256
@@ -35,7 +35,7 @@ type ElectionBatchEvaluated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ElectionEvaluated @entity(immutable: true) {
+type ElectionEvaluated @entity {
   id: Bytes!
   epochId: BigInt! # uint256
   ballotCount: BigInt! # uint256
@@ -44,7 +44,7 @@ type ElectionEvaluated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ElectionModuleInitialized @entity(immutable: true) {
+type ElectionModuleInitialized @entity {
   id: Bytes!
 
   blockNumber: BigInt!
@@ -52,7 +52,7 @@ type ElectionModuleInitialized @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EmergencyElectionStarted @entity(immutable: true) {
+type EmergencyElectionStarted @entity {
   id: Bytes!
   epochId: BigInt! # uint256
   blockNumber: BigInt!
@@ -60,7 +60,7 @@ type EmergencyElectionStarted @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EpochScheduleUpdated @entity(immutable: true) {
+type EpochScheduleUpdated @entity {
   id: Bytes!
   epochId: BigInt! # uint64
   startDate: BigInt! # uint64
@@ -70,7 +70,7 @@ type EpochScheduleUpdated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EpochStarted @entity(immutable: true) {
+type EpochStarted @entity {
   id: Bytes!
   epochId: BigInt! # uint256
   blockNumber: BigInt!
@@ -78,7 +78,7 @@ type EpochStarted @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type NominationWithdrawn @entity(immutable: true) {
+type NominationWithdrawn @entity {
   id: Bytes!
   candidate: Bytes! # address
   epochId: BigInt! # uint256
@@ -87,7 +87,7 @@ type NominationWithdrawn @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type VoteRecorded @entity(immutable: true) {
+type VoteRecorded @entity {
   id: String!
   voter: String! # address
   chainId: BigInt! # uint256
@@ -107,7 +107,7 @@ type VoteResult @entity {
   candidate: String
 }
 
-type User @entity(immutable: true) {
+type User @entity {
   id: String!
   nominationCount: BigInt!
   votingCount: BigInt!
