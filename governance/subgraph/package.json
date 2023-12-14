@@ -1,13 +1,13 @@
 {
-  "name": "governance-subgraph",
+  "name": "@synthetixio/governance-subgraph",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ @synthetixio/governance-subgraph",
-    "create-local": "graph create --node http://localhost:8020/ @synthetixio/governance-subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ @synthetixio/governance-subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 @synthetixio/governance-subgraph",
+    "build:optimism-goerli": "npm run codegen  && graph build --output-dir ./build/optimism-goerli --network optimism-goerli",
+    "deploy:optimism-goerli": "graph deploy --output-dir ./build/optimism-goerli --network optimism-goerli synthetixio-governance-subgraph-optimism-goerli --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ??? --ipfs https://ipfs.satsuma.xyz",
+    "build:optimism": "npm run codegen  && graph build --output-dir ./build/optimism --network optimism",
+    "deploy:optimism": "graph deploy --output-dir ./build/optimism --network optimism synthetixio-governance-subgraph --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ??? --ipfs https://ipfs.satsuma.xyz --output-dir ./build/optimism --network optimism",
     "test": "graph test"
   },
   "dependencies": {
