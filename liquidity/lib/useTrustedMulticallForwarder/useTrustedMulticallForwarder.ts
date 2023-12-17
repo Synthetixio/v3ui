@@ -1,9 +1,12 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { importMulticall3, Multicall3Type } from '@synthetixio/v3-contracts';
+import {
+  importTrustedMulticallForwarder,
+  TrustedMulticallForwarderType,
+} from '@synthetixio/v3-contracts';
 
-export function useMulticall3() {
+export function useTrustedMulticallForwarder() {
   const network = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
@@ -11,10 +14,10 @@ export function useMulticall3() {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network.id}-${network.preset}`, 'Multicall3', { withSigner }],
+    queryKey: [`${network.id}-${network.preset}`, 'TrustedMulticallForwarderType', { withSigner }],
     queryFn: async function () {
-      const { address, abi } = await importMulticall3(network.id, network.preset);
-      return new Contract(address, abi, signerOrProvider) as Multicall3Type;
+      const { address, abi } = await importTrustedMulticallForwarder(network.id, network.preset);
+      return new Contract(address, abi, signerOrProvider) as TrustedMulticallForwarderType;
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,

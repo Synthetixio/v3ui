@@ -10,7 +10,6 @@
     "USDProxy": "0x2b99243d983d515c611a09Ae673399553452ce18",
     "OracleManagerProxy": "0xDca879a959f7B2AB73A6AC59bF84F647Eb6f203e",
     "SpotMarketProxy": "0x897CAf492D824a88d374f742E898f56FbD33d631",
-    "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "RewardDistributor": null
   }
 }

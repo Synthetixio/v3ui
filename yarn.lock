@@ -5797,7 +5797,7 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -5864,6 +5864,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
@@ -5901,8 +5902,8 @@ __metadata:
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/useOracleManagerProxy": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6008,7 +6009,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6152,21 +6153,10 @@ __metadata:
   resolution: "@snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     zod: "npm:^3.22.4"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useMulticall3@workspace:*, @snx-v3/useMulticall3@workspace:liquidity/lib/useMulticall3":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useMulticall3@workspace:liquidity/lib/useMulticall3"
-  dependencies:
-    "@ethersproject/contracts": "npm:^5.7.0"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -6226,6 +6216,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
@@ -6263,7 +6254,7 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6312,6 +6303,17 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTrustedMulticallForwarder@workspace:*, @snx-v3/useTrustedMulticallForwarder@workspace:liquidity/lib/useTrustedMulticallForwarder":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTrustedMulticallForwarder@workspace:liquidity/lib/useTrustedMulticallForwarder"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 

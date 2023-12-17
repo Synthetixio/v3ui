@@ -186,6 +186,12 @@ async function codegen({ name, version, chainId, preset }) {
     contracts.PerpsAccountProxy =
       perpsFactory.contracts.PerpsAccountProxy ?? perpsFactory.contracts.AccountProxy;
   }
+  const TrustedMulticallForwarder =
+    system.imports.trusted_multicall_forwarder?.contracts.TrustedMulticallForwarder;
+  if (TrustedMulticallForwarder) {
+    // TODO remove if when trusted multicall_forwarder is live on all network
+    contracts.TrustedMulticallForwarder = TrustedMulticallForwarder;
+  }
 
   Object.assign(contracts, await manual({ chainId, preset }));
   return await writeContracts({ name, version, chainId, preset, url, contracts, log });
@@ -217,6 +223,13 @@ async function codegenLocal({ name, version, chainId, preset }) {
 
   const boxToken = coreSandbox.imports.box_token;
   contracts.MintableTokenBox = boxToken.contracts.MintableToken;
+
+  const TrustedMulticallForwarder =
+    synthetix.imports.trusted_multicall_forwarder?.contracts.TrustedMulticallForwarder;
+  if (TrustedMulticallForwarder) {
+    // TODO remove if when trusted multicall_forwarder is live on all network
+    contracts.TrustedMulticallForwarder = TrustedMulticallForwarder;
+  }
 
   Object.assign(contracts, await manual({ chainId, preset }));
   return await writeContracts({ name, version, chainId, preset, url, contracts, log });

@@ -12,7 +12,7 @@
     "SpotMarketProxy": "0x41A883a85b1AdE59F41d459Fa550b40fa56429DB",
     "PerpsMarketProxy": "0xEED61f0CB02f3B38923b1b6EAa939D5f04f431b6",
     "PerpsAccountProxy": "0xfBD08C515DedDa6DbE59611b4bAC2E0f4a250301",
-    "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
+    "TrustedMulticallForwarder": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "RewardDistributor": null
   }
 }

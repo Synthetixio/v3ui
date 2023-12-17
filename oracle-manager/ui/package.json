@@ -15,7 +15,7 @@
     "@emotion/styled": "^11.11.0",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/useMulticall3": "workspace:*",
+    "@snx-v3/useTrustedMulticallForwarder": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",

@@ -4,6 +4,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
+import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
 
 export const PoolIdSchema = ZodBigNumber.transform((x) => x.toString());
 
@@ -20,16 +21,25 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 export function usePools() {
   const network = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
+  const { data: TrustedMulticallForwarder } = useTrustedMulticallForwarder();
 
   return useQuery({
-    enabled: Boolean(CoreProxy),
+    enabled: Boolean(CoreProxy && TrustedMulticallForwarder),
     queryKey: [`${network.id}-${network.preset}`, 'Pools'],
     queryFn: async () => {
-      if (!CoreProxy) throw 'usePools is missing required data';
+      if (!CoreProxy || !TrustedMulticallForwarder) throw 'usePools is missing required data';
 
-      const [preferredPoolIdRaw, approvedPoolIdsRaw] = await CoreProxy.callStatic.multicall([
-        CoreProxy.interface.encodeFunctionData('getPreferredPool'),
-        CoreProxy.interface.encodeFunctionData('getApprovedPools'),
+      const {
+        returnData: [preferredPoolIdRaw, approvedPoolIdsRaw],
+      } = await TrustedMulticallForwarder.callStatic.aggregate([
+        {
+          target: CoreProxy.address,
+          callData: CoreProxy.interface.encodeFunctionData('getPreferredPool'),
+        },
+        {
+          target: CoreProxy.address,
+          callData: CoreProxy.interface.encodeFunctionData('getApprovedPools'),
+        },
       ]);
 
       const [preferredPoolId] = CoreProxy.interface.decodeFunctionResult(
@@ -53,12 +63,15 @@ export function usePools() {
         }))
       );
 
-      const poolNamesRaw = await CoreProxy.callStatic.multicall(
-        incompletePools.map(({ id }) => CoreProxy.interface.encodeFunctionData('getPoolName', [id]))
+      const { returnData: poolNamesRaw } = await TrustedMulticallForwarder.callStatic.aggregate(
+        incompletePools.map(({ id }) => ({
+          target: CoreProxy.address,
+          callData: CoreProxy.interface.encodeFunctionData('getPoolName', [id]),
+        }))
       );
 
       const poolNames = poolNamesRaw.map(
-        (bytes: string) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
+        (bytes) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
       );
 
       const poolsRaw = incompletePools.map(({ id, isPreferred }, i) => ({
