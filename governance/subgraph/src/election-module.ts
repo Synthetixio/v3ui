@@ -24,29 +24,35 @@ export let ONE_BI = BigInt.fromI32(1);
 export function handleCouncilMemberAddedOld(event: CouncilMemberAddedOldEvent): void {
   let user = User.load(event.params.member.toHexString());
   if (user) {
-    user.memberIn!.push(event.address.toHexString());
+    const temp = user.memberIn;
+    temp!.push(event.address.toHexString());
+    user.memberIn = temp;
   } else {
     user = new User(event.params.member.toHexString());
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
     user.memberIn = [];
+    user.kickedOut = [];
   }
   user.save();
 }
 
 export function handleCouncilMembersDismissedOld(event: CouncilMembersDismissedOldEvent): void {
-  event.params.members.forEach((member) => {
-    let user = User.load(member.toHexString());
+  for (let index = 0; index < event.params.members.length; index++) {
+    let user = User.load(event.params.members[index].toHexString());
     if (user) {
-      user.memberIn!.push(event.address.toHexString());
+      const temp = user.kickedOut;
+      temp!.push(event.address.toHexString());
+      user.kickedOut = temp;
     } else {
-      user = new User(member.toHexString());
+      user = new User(event.params.members[index].toHexString());
       user.nominationCount = ONE_BI;
       user.votingCount = ZERO_BI;
       user.memberIn = [];
+      user.kickedOut = [];
     }
     user.save();
-  });
+  }
 }
 
 export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): void {
@@ -58,6 +64,7 @@ export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): 
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
     user.memberIn = [];
+    user.kickedOut = [];
   }
   user.save();
 }
@@ -103,6 +110,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
     user.nominationCount = ZERO_BI;
     user.votingCount = ONE_BI;
     user.memberIn = [];
+    user.kickedOut = [];
   }
   user.save();
 
@@ -180,6 +188,7 @@ export function handleCandidateNominated(event: CandidateNominatedEvent): void {
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
     user.memberIn = [];
+    user.kickedOut = [];
   }
   user.save();
 }
@@ -187,29 +196,35 @@ export function handleCandidateNominated(event: CandidateNominatedEvent): void {
 export function handleCouncilMemberAdded(event: CouncilMemberAddedEvent): void {
   let user = User.load(event.params.member.toHexString());
   if (user) {
-    user.memberIn!.push(event.address.toHexString());
+    const temp = user.memberIn;
+    temp!.push(event.address.toHexString());
+    user.memberIn = temp;
   } else {
     user = new User(event.params.member.toHexString());
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
     user.memberIn = [];
+    user.kickedOut = [];
   }
   user.save();
 }
 
 export function handleCouncilMembersDismissed(event: CouncilMembersDismissedEvent): void {
-  event.params.dismissedMembers.forEach((member) => {
-    let user = User.load(member.toHexString());
+  for (let index = 0; index < event.params.dismissedMembers.length; index++) {
+    let user = User.load(event.params.dismissedMembers[index].toHexString());
     if (user) {
-      user.memberIn!.push(event.address.toHexString());
+      const temp = user.kickedOut;
+      temp!.push(event.address.toHexString());
+      user.kickedOut = temp;
     } else {
-      user = new User(member.toHexString());
+      user = new User(event.params.dismissedMembers[index].toHexString());
       user.nominationCount = ONE_BI;
       user.votingCount = ZERO_BI;
       user.memberIn = [];
+      user.kickedOut = [];
     }
     user.save();
-  });
+  }
 }
 
 export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void {

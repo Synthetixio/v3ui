@@ -11,6 +11,10 @@ import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import {
   createCandidateNominatedEvent,
   createCandidateNominatedOldEvent,
+  createCouncilMemberAddedEvent,
+  createCouncilMemberAddedEventOld,
+  createCouncilMembersDismissedEvent,
+  createCouncilMembersDismissedEventOld,
   createNominationWithdrawOldEvent,
   createNominationWithdrawnEvent,
   createVoteRecordedEvent,
@@ -20,6 +24,10 @@ import {
 import {
   handleCandidateNominated,
   handleCandidateNominatedOld,
+  handleCouncilMemberAdded,
+  handleCouncilMemberAddedOld,
+  handleCouncilMembersDismissed,
+  handleCouncilMembersDismissedOld,
   handleNominationWithdrawn,
   handleNominationWithdrawnOld,
   handleVoteRecorded,
@@ -160,6 +168,72 @@ describe('Election Module', () => {
       assert.entityCount('User', 1);
       assert.fieldEquals('User', voter.toHexString(), 'nominationCount', '1');
       assert.fieldEquals('User', voter.toHexString(), 'votingCount', '0');
+    });
+  });
+
+  describe('Council Member Added Event Old', () => {
+    test('user gets added to council', () => {
+      const event = createCouncilMemberAddedEventOld(voter, epochId);
+      handleCouncilMemberAddedOld(event);
+      // User
+      assert.entityCount('User', 1);
+      assert.fieldEquals('User', voter.toHexString(), 'nominationCount', '1');
+      assert.fieldEquals('User', voter.toHexString(), 'votingCount', '0');
+      assert.fieldEquals(
+        'User',
+        voter.toHexString(),
+        'memberIn',
+        `[${event.address.toHexString()}]`
+      );
+    });
+  });
+
+  describe('Council Member Added Event', () => {
+    test('user gets added to council', () => {
+      const eventOld = createCouncilMemberAddedEventOld(voter, epochId);
+      const event = createCouncilMemberAddedEvent(voter, epochId);
+      handleCouncilMemberAdded(event);
+      // User
+      assert.entityCount('User', 1);
+      assert.fieldEquals('User', voter.toHexString(), 'nominationCount', '1');
+      assert.fieldEquals('User', voter.toHexString(), 'votingCount', '0');
+      assert.fieldEquals(
+        'User',
+        voter.toHexString(),
+        'memberIn',
+        `[${eventOld.address.toHexString()}, ${event.address.toHexString()}]`
+      );
+    });
+  });
+
+  describe('Council Member Dismissed Event Old', () => {
+    test('user gets dismissed from council', () => {
+      const event = createCouncilMembersDismissedEventOld([voter], epochId);
+      handleCouncilMembersDismissedOld(event);
+      // User
+      assert.entityCount('User', 1);
+      assert.fieldEquals(
+        'User',
+        voter.toHexString(),
+        'kickedOut',
+        `[${event.address.toHexString()}]`
+      );
+    });
+  });
+
+  describe('Council Member Dismissed Event', () => {
+    test('user gets dismissed from council', () => {
+      const eventOld = createCouncilMembersDismissedEventOld([voter], epochId);
+      const event = createCouncilMembersDismissedEvent([voter], epochId);
+      handleCouncilMembersDismissed(event);
+      // User
+      assert.entityCount('User', 1);
+      assert.fieldEquals(
+        'User',
+        voter.toHexString(),
+        'kickedOut',
+        `[${eventOld.address.toHexString()}, ${event.address.toHexString()}]`
+      );
     });
   });
 

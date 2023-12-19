@@ -447,4 +447,21 @@ export class User extends Entity {
       this.set("memberIn", Value.fromStringArray(<Array<string>>value));
     }
   }
+
+  get kickedOut(): Array<string> | null {
+    let value = this.get("kickedOut");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set kickedOut(value: Array<string> | null) {
+    if (!value) {
+      this.unset("kickedOut");
+    } else {
+      this.set("kickedOut", Value.fromStringArray(<Array<string>>value));
+    }
+  }
 }
