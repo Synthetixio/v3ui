@@ -1,14 +1,7 @@
 import {
   CandidateNominated as CandidateNominatedEvent,
   CouncilMemberAdded as CouncilMemberAddedEvent,
-  CouncilMemberRemoved as CouncilMemberRemovedEvent,
   CouncilMembersDismissed as CouncilMembersDismissedEvent,
-  ElectionBatchEvaluated as ElectionBatchEvaluatedEvent,
-  ElectionEvaluated as ElectionEvaluatedEvent,
-  ElectionModuleInitialized as ElectionModuleInitializedEvent,
-  EmergencyElectionStarted as EmergencyElectionStartedEvent,
-  EpochScheduleUpdated as EpochScheduleUpdatedEvent,
-  EpochStarted as EpochStartedEvent,
   NominationWithdrawn as NominationWithdrawnEvent,
   VoteRecorded as VoteRecordedEvent,
 } from '../generated/ElectionModule/ElectionModule';
@@ -17,27 +10,44 @@ import {
   VoteWithdrawn as VoteWithdrawnOldEvent,
   NominationWithdrawn as NominationWithdrawnOldEvent,
   CandidateNominated as CandidateNominatedOldEvent,
+  CouncilMemberAdded as CouncilMemberAddedOldEvent,
+  CouncilMembersDismissed as CouncilMembersDismissedOldEvent,
 } from '../generated/Spartan/ElectionModuleOld';
-import {
-  CouncilMemberAdded,
-  CouncilMemberRemoved,
-  CouncilMembersDismissed,
-  ElectionBatchEvaluated,
-  ElectionEvaluated,
-  ElectionModuleInitialized,
-  EmergencyElectionStarted,
-  EpochScheduleUpdated,
-  EpochStarted,
-  VoteRecorded,
-  User,
-  VoteResult,
-} from '../generated/schema';
+import { VoteRecorded, User, VoteResult } from '../generated/schema';
 import { store, BigInt, log, BigDecimal } from '@graphprotocol/graph-ts';
 
 // Old Subgraph handlers
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
+
+export function handleCouncilMemberAddedOld(event: CouncilMemberAddedOldEvent): void {
+  let user = User.load(event.params.member.toHexString());
+  if (user) {
+    user.memberIn!.push(event.address.toHexString());
+  } else {
+    user = new User(event.params.member.toHexString());
+    user.nominationCount = ONE_BI;
+    user.votingCount = ZERO_BI;
+    user.memberIn = [];
+  }
+  user.save();
+}
+
+export function handleCouncilMembersDismissedOld(event: CouncilMembersDismissedOldEvent): void {
+  event.params.members.forEach((member) => {
+    let user = User.load(member.toHexString());
+    if (user) {
+      user.memberIn!.push(event.address.toHexString());
+    } else {
+      user = new User(member.toHexString());
+      user.nominationCount = ONE_BI;
+      user.votingCount = ZERO_BI;
+      user.memberIn = [];
+    }
+    user.save();
+  });
+}
 
 export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): void {
   let user = User.load(event.params.candidate.toHexString());
@@ -47,6 +57,7 @@ export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): 
     user = new User(event.params.candidate.toHexString());
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
+    user.memberIn = [];
   }
   user.save();
 }
@@ -91,6 +102,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
     user = new User(event.params.voter.toHexString());
     user.nominationCount = ZERO_BI;
     user.votingCount = ONE_BI;
+    user.memberIn = [];
   }
   user.save();
 
@@ -167,44 +179,37 @@ export function handleCandidateNominated(event: CandidateNominatedEvent): void {
     user = new User(event.params.candidate.toHexString());
     user.nominationCount = ONE_BI;
     user.votingCount = ZERO_BI;
+    user.memberIn = [];
   }
   user.save();
 }
 
 export function handleCouncilMemberAdded(event: CouncilMemberAddedEvent): void {
-  let entity = new CouncilMemberAdded(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.member = event.params.member;
-  entity.epochIndex = event.params.epochIndex;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleCouncilMemberRemoved(event: CouncilMemberRemovedEvent): void {
-  let entity = new CouncilMemberRemoved(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.member = event.params.member;
-  entity.epochIndex = event.params.epochIndex;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
+  let user = User.load(event.params.member.toHexString());
+  if (user) {
+    user.memberIn!.push(event.address.toHexString());
+  } else {
+    user = new User(event.params.member.toHexString());
+    user.nominationCount = ONE_BI;
+    user.votingCount = ZERO_BI;
+    user.memberIn = [];
+  }
+  user.save();
 }
 
 export function handleCouncilMembersDismissed(event: CouncilMembersDismissedEvent): void {
-  // let entity = new CouncilMembersDismissed(
-  //   event.transaction.hash.concatI32(event.logIndex.toI32())
-  // );
-  // entity.dismissedMembers = event.params.dismissedMembers;
-  // entity.epochId = event.params.epochId;
-  // entity.blockNumber = event.block.number;
-  // entity.blockTimestamp = event.block.timestamp;
-  // entity.transactionHash = event.transaction.hash;
-  // entity.save();
+  event.params.dismissedMembers.forEach((member) => {
+    let user = User.load(member.toHexString());
+    if (user) {
+      user.memberIn!.push(event.address.toHexString());
+    } else {
+      user = new User(member.toHexString());
+      user.nominationCount = ONE_BI;
+      user.votingCount = ZERO_BI;
+      user.memberIn = [];
+    }
+    user.save();
+  });
 }
 
 export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void {
@@ -260,6 +265,7 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     user = new User(event.params.voter.toHexString());
     user.nominationCount = ZERO_BI;
     user.votingCount = ONE_BI;
+    user.memberIn = [];
   }
   user.save();
 
@@ -286,80 +292,4 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
   result.candidate = event.params.candidates.at(0).toHexString();
   result.voter = event.params.voter.toHexString();
   result.save();
-}
-
-// Do we need those?
-
-export function handleElectionBatchEvaluated(event: ElectionBatchEvaluatedEvent): void {
-  let entity = new ElectionBatchEvaluated(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.epochId = event.params.epochId;
-  entity.numEvaluatedBallots = event.params.numEvaluatedBallots;
-  entity.totalBallots = event.params.totalBallots;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleElectionEvaluated(event: ElectionEvaluatedEvent): void {
-  let entity = new ElectionEvaluated(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.epochId = event.params.epochId;
-  entity.ballotCount = event.params.ballotCount;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleElectionModuleInitialized(event: ElectionModuleInitializedEvent): void {
-  let entity = new ElectionModuleInitialized(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleEmergencyElectionStarted(event: EmergencyElectionStartedEvent): void {
-  let entity = new EmergencyElectionStarted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.epochId = event.params.epochId;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleEpochScheduleUpdated(event: EpochScheduleUpdatedEvent): void {
-  let entity = new EpochScheduleUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.epochId = event.params.epochId;
-  entity.startDate = event.params.startDate;
-  entity.endDate = event.params.endDate;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleEpochStarted(event: EpochStartedEvent): void {
-  let entity = new EpochStarted(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.epochId = event.params.epochId;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
 }

@@ -32,6 +32,8 @@ const epochId = BigInt.fromI32(234);
 const epochId2 = BigInt.fromI32(235);
 const candidates = [Address.fromString('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')];
 
+// TODO test member added and dismissed event for old and new contracts and work with epochID2
+
 describe('Election Module', () => {
   afterAll(() => {
     clearStore();
