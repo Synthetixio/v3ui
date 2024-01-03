@@ -18,7 +18,7 @@ import {
   useNetwork,
   useWallet,
 } from '@snx-v3/useBlockchain';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect } from 'react';
