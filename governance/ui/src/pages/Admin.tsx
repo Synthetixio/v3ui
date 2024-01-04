@@ -99,7 +99,7 @@ export default function Admin() {
   );
 }
 
-const proxy = new Contract('0x4066a172DD5D21E4f787C07D3118D0876296750B', [
+const proxy = new Contract('0x62F424908BEaF103d0Dd1e0b230356A3785e409d', [
   {
     inputs: [],
     name: 'OverflowUint256ToUint64',
