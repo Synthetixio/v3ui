@@ -18,7 +18,7 @@ import {
   useNetwork,
   useWallet,
 } from '@snx-v3/useBlockchain';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect } from 'react';
@@ -42,12 +42,12 @@ const activeIcon = (currentNetwork: Network) => {
 
 export function Header() {
   const navigate = useNavigate();
-  const location = useLocation();
   const isWalletConnected = useIsConnected();
   const wallet = useWallet();
   const currentNetwork = useNetwork();
   const { icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
+
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
   };

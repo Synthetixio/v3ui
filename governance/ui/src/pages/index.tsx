@@ -8,47 +8,22 @@ import { BlockchainProvider } from '@snx-v3/useBlockchain';
 import { RouterProvider, createHashRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Header } from '../components/Header/Header';
 import Councils from './Councils';
 import Admin from './Admin';
 import MyVotes from './MyVotes';
+import { Layout } from '../components/Layout';
 
 const router = createHashRouter([
   {
+    id: 'root',
     path: '/',
-    element: (
-      <>
-        <Header />
-        <App />
-      </>
-    ),
-  },
-  {
-    path: '/admin',
-    element: (
-      <>
-        <Header />
-        <Admin />
-      </>
-    ),
-  },
-  {
-    path: '/councils',
-    element: (
-      <>
-        <Header />
-        <Councils />
-      </>
-    ),
-  },
-  {
-    path: '/my-votes',
-    element: (
-      <>
-        <Header />
-        <MyVotes />
-      </>
-    ),
+    element: <Layout />,
+    children: [
+      { path: '/', element: <App /> },
+      { path: '/admin', element: <Admin /> },
+      { path: '/councils', element: <Councils /> },
+      { path: '/my-votes', element: <MyVotes /> },
+    ],
   },
   //  Todo @dev remove them?
   // {
