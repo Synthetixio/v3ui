@@ -15,7 +15,7 @@ export default function useGetIsUUIDValidQuery(uuid: string) {
     queryFn: async () => {
       const body = { address: wallet!.address, uuid };
 
-      let response = await fetch(VALID_UUID_API_URL, {
+      const response = await fetch(VALID_UUID_API_URL, {
         method: 'POST',
         body: JSON.stringify(body),
       });

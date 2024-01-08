@@ -1,5 +1,5 @@
 import { GET_PITCHES_FOR_USER_API_URL, GET_USER_DETAILS_API_URL } from '../utils/boardroom';
-import { QueryObserverRefetchErrorResult, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export type GetUserDetails = {
   address: string;
@@ -46,21 +46,21 @@ export async function getUserDetails<T extends string | string[]>(
 ): Promise<(T extends string ? GetUserDetails : GetUserDetails[]) | undefined> {
   if (typeof walletAddress === 'string') {
     const randomNumber = Math.random();
-    let userDetailsResponse = await fetch(GET_USER_DETAILS_API_URL(walletAddress), {
+    const userDetailsResponse = await fetch(GET_USER_DETAILS_API_URL(walletAddress), {
       method: 'POST',
     });
-    let userProfile = await userDetailsResponse.json();
-    let userPitchesResponse = await fetch(
+    const userProfile = await userDetailsResponse.json();
+    const userPitchesResponse = await fetch(
       GET_PITCHES_FOR_USER_API_URL(walletAddress, randomNumber),
       {
         method: 'GET',
       }
     );
-    let userPitches = await userPitchesResponse.json();
+    const userPitches = await userPitchesResponse.json();
 
     let synthetixPitch = '';
     if (userPitches.data.delegationPitches.length > 0) {
-      let foundPitch = userPitches.data.delegationPitches.filter(
+      const foundPitch = userPitches.data.delegationPitches.filter(
         (e: UserPitch) => e.protocol === 'synthetix'
       );
       if (foundPitch.length > 0) {
@@ -75,7 +75,7 @@ export async function getUserDetails<T extends string | string[]>(
   }
   if (Array.isArray(walletAddress)) {
     const randomNumber = Math.random();
-    let userDetailsResponse = await Promise.all(
+    const userDetailsResponse = await Promise.all(
       walletAddress.map(
         async (address) =>
           await fetch(GET_USER_DETAILS_API_URL(address), {
@@ -83,10 +83,10 @@ export async function getUserDetails<T extends string | string[]>(
           })
       )
     );
-    let userProfile = await Promise.all(
+    const userProfile = await Promise.all(
       userDetailsResponse.map(async (responses) => await responses.json())
     );
-    let userPitchesResponse = await Promise.all(
+    const userPitchesResponse = await Promise.all(
       walletAddress.map(
         async (address) =>
           await fetch(GET_PITCHES_FOR_USER_API_URL(address, randomNumber), {
@@ -94,7 +94,7 @@ export async function getUserDetails<T extends string | string[]>(
           })
       )
     );
-    let userPitches = await Promise.all(
+    const userPitches = await Promise.all(
       userPitchesResponse.map(async (responses) => await responses.json())
     );
     let foundPitch: string[] = [];
@@ -105,7 +105,6 @@ export async function getUserDetails<T extends string | string[]>(
     }
 
     return userProfile.map(({ data }) => {
-      console.log(foundPitch);
       delete data.delegationPitches;
       return {
         ...data,

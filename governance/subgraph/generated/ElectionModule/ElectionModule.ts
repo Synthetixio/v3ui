@@ -272,6 +272,10 @@ export class VoteRecorded__Params {
   get votingPower(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
+
+  get candidates(): Array<Address> {
+    return this._event.parameters[4].value.toAddressArray();
+  }
 }
 
 export class ElectionModule__getBallotResultValue0Struct extends ethereum.Tuple {
