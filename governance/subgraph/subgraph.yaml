@@ -7,7 +7,7 @@ dataSources:
     network: optimism
     source:
       abi: ElectionModule
-      address: '0x88be56E9f0673b71af9c0Dd96eC965e4dC894ed2'
+      address: '0x62F424908BEaF103d0Dd1e0b230356A3785e409d'
       startBlock: 113442424
     mapping:
       kind: ethereum/events
