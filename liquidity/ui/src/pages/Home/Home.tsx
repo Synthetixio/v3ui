@@ -8,7 +8,7 @@ import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { Welcome } from '../../components/Shared/Welcome';
 import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
 
-export function Home() {
+export function Home() { //whatever
   const { accountId } = useParams();
 
   const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
