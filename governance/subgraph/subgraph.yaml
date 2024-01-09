@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: ElectionModule
-    network: optimism
+    network: optimism-goerli
     source:
       abi: ElectionModule
-      address: '0x62F424908BEaF103d0Dd1e0b230356A3785e409d'
-      startBlock: 113442424
+      address: "0x62F424908BEaF103d0Dd1e0b230356A3785e409d"
+      startBlock: 18265250
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -38,10 +38,10 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Spartan
-    network: optimism
+    network: optimism-goerli
     source:
       abi: ElectionModuleOld
-      address: '0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c'
+      address: "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c"
       startBlock: 0
     mapping:
       kind: ethereum/events
@@ -68,10 +68,10 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Ambassador
-    network: optimism
+    network: optimism-goerli
     source:
       abi: ElectionModuleOld
-      address: '0x37fAc8c146889333734015B0C942b620aCfeeff8'
+      address: "0x37fAc8c146889333734015B0C942b620aCfeeff8"
       startBlock: 0
     mapping:
       kind: ethereum/events
@@ -98,10 +98,10 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Grants
-    network: optimism
+    network: optimism-goerli
     source:
       abi: ElectionModuleOld
-      address: '0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77'
+      address: "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77"
       startBlock: 0
     mapping:
       kind: ethereum/events
@@ -128,10 +128,10 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Treasury
-    network: optimism
+    network: optimism-goerli
     source:
       abi: ElectionModuleOld
-      address: '0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a'
+      address: "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a"
       startBlock: 0
     mapping:
       kind: ethereum/events

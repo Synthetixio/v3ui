@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "DEV=true webpack-cli serve",
-    "dev:testnet": "yarn load-env && TESTNET=true webpack-cli serve",
+    "dev:testnet": "TESTNET=true webpack-cli serve",
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "load-env": "source ./load-env.sh",
@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@babel/runtime-corejs3": "^7.23.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-    "@tanstack/react-query-devtools": "^5.8.4",
+    "@tanstack/react-query-devtools": "^5.8.3",
     "@types/react": "^18.2.37",
     "@types/react-blockies": "^1",
     "@types/react-dom": "^18.2.15",
