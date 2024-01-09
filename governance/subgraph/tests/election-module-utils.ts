@@ -237,7 +237,8 @@ export function createCouncilMembersDismissedEventOld(
   dismissedMembers: Address[],
   epochIndex: bigint
 ): CouncilMembersDismissedOldEvent {
-  const councilMembersDismissedOldEvent = changetype<CouncilMembersDismissedOldEvent>(newMockEvent());
+  const councilMembersDismissedOldEvent =
+    changetype<CouncilMembersDismissedOldEvent>(newMockEvent());
 
   councilMembersDismissedOldEvent.parameters = [];
 

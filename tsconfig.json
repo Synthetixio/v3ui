@@ -31,7 +31,7 @@
     "**/*.stories.tsx",
     "**/stories/**",
     "**/cache/**",
-    "governance/subgraph/generated/**"
+    "**/subgraph/generated/**"
   ],
 
   "include": ["**/*.ts", "**/*.tsx"]
