@@ -7,8 +7,8 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
-} from "@graphprotocol/graph-ts";
+  BigInt,
+} from '@graphprotocol/graph-ts';
 
 export class CandidateNominated extends ethereum.Event {
   get params(): CandidateNominated__Params {
@@ -597,9 +597,9 @@ export class ElectionModuleOld__getMinEpochDurationsResult {
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set('value0', ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set('value1', ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set('value2', ethereum.Value.fromUnsignedBigInt(this.value2));
     return map;
   }
 
@@ -618,20 +618,14 @@ export class ElectionModuleOld__getMinEpochDurationsResult {
 
 export class ElectionModuleOld extends ethereum.SmartContract {
   static bind(address: Address): ElectionModuleOld {
-    return new ElectionModuleOld("ElectionModuleOld", address);
+    return new ElectionModuleOld('ElectionModuleOld', address);
   }
 
-  getBallotCandidatesInEpoch(
-    ballotId: Bytes,
-    epochIndex: BigInt
-  ): Array<Address> {
+  getBallotCandidatesInEpoch(ballotId: Bytes, epochIndex: BigInt): Array<Address> {
     let result = super.call(
-      "getBallotCandidatesInEpoch",
-      "getBallotCandidatesInEpoch(bytes32,uint256):(address[])",
-      [
-        ethereum.Value.fromFixedBytes(ballotId),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotCandidatesInEpoch',
+      'getBallotCandidatesInEpoch(bytes32,uint256):(address[])',
+      [ethereum.Value.fromFixedBytes(ballotId), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toAddressArray();
@@ -642,12 +636,9 @@ export class ElectionModuleOld extends ethereum.SmartContract {
     epochIndex: BigInt
   ): ethereum.CallResult<Array<Address>> {
     let result = super.tryCall(
-      "getBallotCandidatesInEpoch",
-      "getBallotCandidatesInEpoch(bytes32,uint256):(address[])",
-      [
-        ethereum.Value.fromFixedBytes(ballotId),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotCandidatesInEpoch',
+      'getBallotCandidatesInEpoch(bytes32,uint256):(address[])',
+      [ethereum.Value.fromFixedBytes(ballotId), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -658,28 +649,19 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getBallotVotedAtEpoch(user: Address, epochIndex: BigInt): Bytes {
     let result = super.call(
-      "getBallotVotedAtEpoch",
-      "getBallotVotedAtEpoch(address,uint256):(bytes32)",
-      [
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotVotedAtEpoch',
+      'getBallotVotedAtEpoch(address,uint256):(bytes32)',
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBytes();
   }
 
-  try_getBallotVotedAtEpoch(
-    user: Address,
-    epochIndex: BigInt
-  ): ethereum.CallResult<Bytes> {
+  try_getBallotVotedAtEpoch(user: Address, epochIndex: BigInt): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "getBallotVotedAtEpoch",
-      "getBallotVotedAtEpoch(address,uint256):(bytes32)",
-      [
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotVotedAtEpoch',
+      'getBallotVotedAtEpoch(address,uint256):(bytes32)',
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -690,28 +672,19 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getBallotVotesInEpoch(ballotId: Bytes, epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getBallotVotesInEpoch",
-      "getBallotVotesInEpoch(bytes32,uint256):(uint256)",
-      [
-        ethereum.Value.fromFixedBytes(ballotId),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotVotesInEpoch',
+      'getBallotVotesInEpoch(bytes32,uint256):(uint256)',
+      [ethereum.Value.fromFixedBytes(ballotId), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getBallotVotesInEpoch(
-    ballotId: Bytes,
-    epochIndex: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_getBallotVotesInEpoch(ballotId: Bytes, epochIndex: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getBallotVotesInEpoch",
-      "getBallotVotesInEpoch(bytes32,uint256):(uint256)",
-      [
-        ethereum.Value.fromFixedBytes(ballotId),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getBallotVotesInEpoch',
+      'getBallotVotesInEpoch(bytes32,uint256):(uint256)',
+      [ethereum.Value.fromFixedBytes(ballotId), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -722,12 +695,9 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getCandidateVotesInEpoch(candidate: Address, epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getCandidateVotesInEpoch",
-      "getCandidateVotesInEpoch(address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(candidate),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getCandidateVotesInEpoch',
+      'getCandidateVotesInEpoch(address,uint256):(uint256)',
+      [ethereum.Value.fromAddress(candidate), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBigInt();
@@ -738,12 +708,9 @@ export class ElectionModuleOld extends ethereum.SmartContract {
     epochIndex: BigInt
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getCandidateVotesInEpoch",
-      "getCandidateVotesInEpoch(address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(candidate),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
+      'getCandidateVotesInEpoch',
+      'getCandidateVotesInEpoch(address,uint256):(uint256)',
+      [ethereum.Value.fromAddress(candidate), ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -754,20 +721,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getElectionWinnersInEpoch(epochIndex: BigInt): Array<Address> {
     let result = super.call(
-      "getElectionWinnersInEpoch",
-      "getElectionWinnersInEpoch(uint256):(address[])",
+      'getElectionWinnersInEpoch',
+      'getElectionWinnersInEpoch(uint256):(address[])',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toAddressArray();
   }
 
-  try_getElectionWinnersInEpoch(
-    epochIndex: BigInt
-  ): ethereum.CallResult<Array<Address>> {
+  try_getElectionWinnersInEpoch(epochIndex: BigInt): ethereum.CallResult<Array<Address>> {
     let result = super.tryCall(
-      "getElectionWinnersInEpoch",
-      "getElectionWinnersInEpoch(uint256):(address[])",
+      'getElectionWinnersInEpoch',
+      'getElectionWinnersInEpoch(uint256):(address[])',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
@@ -779,8 +744,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getEpochEndDateForIndex(epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getEpochEndDateForIndex",
-      "getEpochEndDateForIndex(uint256):(uint64)",
+      'getEpochEndDateForIndex',
+      'getEpochEndDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
@@ -789,8 +754,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_getEpochEndDateForIndex(epochIndex: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getEpochEndDateForIndex",
-      "getEpochEndDateForIndex(uint256):(uint64)",
+      'getEpochEndDateForIndex',
+      'getEpochEndDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
@@ -802,20 +767,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getEpochStartDateForIndex(epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getEpochStartDateForIndex",
-      "getEpochStartDateForIndex(uint256):(uint64)",
+      'getEpochStartDateForIndex',
+      'getEpochStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getEpochStartDateForIndex(
-    epochIndex: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_getEpochStartDateForIndex(epochIndex: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getEpochStartDateForIndex",
-      "getEpochStartDateForIndex(uint256):(uint64)",
+      'getEpochStartDateForIndex',
+      'getEpochStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
@@ -827,20 +790,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getNominationPeriodStartDateForIndex(epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getNominationPeriodStartDateForIndex",
-      "getNominationPeriodStartDateForIndex(uint256):(uint64)",
+      'getNominationPeriodStartDateForIndex',
+      'getNominationPeriodStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getNominationPeriodStartDateForIndex(
-    epochIndex: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_getNominationPeriodStartDateForIndex(epochIndex: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getNominationPeriodStartDateForIndex",
-      "getNominationPeriodStartDateForIndex(uint256):(uint64)",
+      'getNominationPeriodStartDateForIndex',
+      'getNominationPeriodStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
@@ -851,23 +812,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getNomineesAtEpoch(epochIndex: BigInt): Array<Address> {
-    let result = super.call(
-      "getNomineesAtEpoch",
-      "getNomineesAtEpoch(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
-    );
+    let result = super.call('getNomineesAtEpoch', 'getNomineesAtEpoch(uint256):(address[])', [
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
 
     return result[0].toAddressArray();
   }
 
-  try_getNomineesAtEpoch(
-    epochIndex: BigInt
-  ): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getNomineesAtEpoch",
-      "getNomineesAtEpoch(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
-    );
+  try_getNomineesAtEpoch(epochIndex: BigInt): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall('getNomineesAtEpoch', 'getNomineesAtEpoch(uint256):(address[])', [
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -877,20 +832,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getVotingPeriodStartDateForIndex(epochIndex: BigInt): BigInt {
     let result = super.call(
-      "getVotingPeriodStartDateForIndex",
-      "getVotingPeriodStartDateForIndex(uint256):(uint64)",
+      'getVotingPeriodStartDateForIndex',
+      'getVotingPeriodStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getVotingPeriodStartDateForIndex(
-    epochIndex: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_getVotingPeriodStartDateForIndex(epochIndex: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getVotingPeriodStartDateForIndex",
-      "getVotingPeriodStartDateForIndex(uint256):(uint64)",
+      'getVotingPeriodStartDateForIndex',
+      'getVotingPeriodStartDateForIndex(uint256):(uint64)',
       [ethereum.Value.fromUnsignedBigInt(epochIndex)]
     );
     if (result.reverted) {
@@ -901,30 +854,19 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   hasVotedInEpoch(user: Address, epochIndex: BigInt): boolean {
-    let result = super.call(
-      "hasVotedInEpoch",
-      "hasVotedInEpoch(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
-    );
+    let result = super.call('hasVotedInEpoch', 'hasVotedInEpoch(address,uint256):(bool)', [
+      ethereum.Value.fromAddress(user),
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
 
     return result[0].toBoolean();
   }
 
-  try_hasVotedInEpoch(
-    user: Address,
-    epochIndex: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "hasVotedInEpoch",
-      "hasVotedInEpoch(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
-    );
+  try_hasVotedInEpoch(user: Address, epochIndex: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall('hasVotedInEpoch', 'hasVotedInEpoch(address,uint256):(bool)', [
+      ethereum.Value.fromAddress(user),
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -933,30 +875,19 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   wasNominated(candidate: Address, epochIndex: BigInt): boolean {
-    let result = super.call(
-      "wasNominated",
-      "wasNominated(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(candidate),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
-    );
+    let result = super.call('wasNominated', 'wasNominated(address,uint256):(bool)', [
+      ethereum.Value.fromAddress(candidate),
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
 
     return result[0].toBoolean();
   }
 
-  try_wasNominated(
-    candidate: Address,
-    epochIndex: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "wasNominated",
-      "wasNominated(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(candidate),
-        ethereum.Value.fromUnsignedBigInt(epochIndex)
-      ]
-    );
+  try_wasNominated(candidate: Address, epochIndex: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall('wasNominated', 'wasNominated(address,uint256):(bool)', [
+      ethereum.Value.fromAddress(candidate),
+      ethereum.Value.fromUnsignedBigInt(epochIndex),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -965,23 +896,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   calculateBallotId(candidates: Array<Address>): Bytes {
-    let result = super.call(
-      "calculateBallotId",
-      "calculateBallotId(address[]):(bytes32)",
-      [ethereum.Value.fromAddressArray(candidates)]
-    );
+    let result = super.call('calculateBallotId', 'calculateBallotId(address[]):(bytes32)', [
+      ethereum.Value.fromAddressArray(candidates),
+    ]);
 
     return result[0].toBytes();
   }
 
-  try_calculateBallotId(
-    candidates: Array<Address>
-  ): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "calculateBallotId",
-      "calculateBallotId(address[]):(bytes32)",
-      [ethereum.Value.fromAddressArray(candidates)]
-    );
+  try_calculateBallotId(candidates: Array<Address>): ethereum.CallResult<Bytes> {
+    let result = super.tryCall('calculateBallotId', 'calculateBallotId(address[]):(bytes32)', [
+      ethereum.Value.fromAddressArray(candidates),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -990,23 +915,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getBallotCandidates(ballotId: Bytes): Array<Address> {
-    let result = super.call(
-      "getBallotCandidates",
-      "getBallotCandidates(bytes32):(address[])",
-      [ethereum.Value.fromFixedBytes(ballotId)]
-    );
+    let result = super.call('getBallotCandidates', 'getBallotCandidates(bytes32):(address[])', [
+      ethereum.Value.fromFixedBytes(ballotId),
+    ]);
 
     return result[0].toAddressArray();
   }
 
-  try_getBallotCandidates(
-    ballotId: Bytes
-  ): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getBallotCandidates",
-      "getBallotCandidates(bytes32):(address[])",
-      [ethereum.Value.fromFixedBytes(ballotId)]
-    );
+  try_getBallotCandidates(ballotId: Bytes): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall('getBallotCandidates', 'getBallotCandidates(bytes32):(address[])', [
+      ethereum.Value.fromFixedBytes(ballotId),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1015,21 +934,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getBallotVoted(user: Address): Bytes {
-    let result = super.call(
-      "getBallotVoted",
-      "getBallotVoted(address):(bytes32)",
-      [ethereum.Value.fromAddress(user)]
-    );
+    let result = super.call('getBallotVoted', 'getBallotVoted(address):(bytes32)', [
+      ethereum.Value.fromAddress(user),
+    ]);
 
     return result[0].toBytes();
   }
 
   try_getBallotVoted(user: Address): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "getBallotVoted",
-      "getBallotVoted(address):(bytes32)",
-      [ethereum.Value.fromAddress(user)]
-    );
+    let result = super.tryCall('getBallotVoted', 'getBallotVoted(address):(bytes32)', [
+      ethereum.Value.fromAddress(user),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1038,21 +953,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getBallotVotes(ballotId: Bytes): BigInt {
-    let result = super.call(
-      "getBallotVotes",
-      "getBallotVotes(bytes32):(uint256)",
-      [ethereum.Value.fromFixedBytes(ballotId)]
-    );
+    let result = super.call('getBallotVotes', 'getBallotVotes(bytes32):(uint256)', [
+      ethereum.Value.fromFixedBytes(ballotId),
+    ]);
 
     return result[0].toBigInt();
   }
 
   try_getBallotVotes(ballotId: Bytes): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getBallotVotes",
-      "getBallotVotes(bytes32):(uint256)",
-      [ethereum.Value.fromFixedBytes(ballotId)]
-    );
+    let result = super.tryCall('getBallotVotes', 'getBallotVotes(bytes32):(uint256)', [
+      ethereum.Value.fromFixedBytes(ballotId),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1061,21 +972,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getCandidateVotes(candidate: Address): BigInt {
-    let result = super.call(
-      "getCandidateVotes",
-      "getCandidateVotes(address):(uint256)",
-      [ethereum.Value.fromAddress(candidate)]
-    );
+    let result = super.call('getCandidateVotes', 'getCandidateVotes(address):(uint256)', [
+      ethereum.Value.fromAddress(candidate),
+    ]);
 
     return result[0].toBigInt();
   }
 
   try_getCandidateVotes(candidate: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getCandidateVotes",
-      "getCandidateVotes(address):(uint256)",
-      [ethereum.Value.fromAddress(candidate)]
-    );
+    let result = super.tryCall('getCandidateVotes', 'getCandidateVotes(address):(uint256)', [
+      ethereum.Value.fromAddress(candidate),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1084,21 +991,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getCouncilMembers(): Array<Address> {
-    let result = super.call(
-      "getCouncilMembers",
-      "getCouncilMembers():(address[])",
-      []
-    );
+    let result = super.call('getCouncilMembers', 'getCouncilMembers():(address[])', []);
 
     return result[0].toAddressArray();
   }
 
   try_getCouncilMembers(): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getCouncilMembers",
-      "getCouncilMembers():(address[])",
-      []
-    );
+    let result = super.tryCall('getCouncilMembers', 'getCouncilMembers():(address[])', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1107,21 +1006,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getCouncilToken(): Address {
-    let result = super.call(
-      "getCouncilToken",
-      "getCouncilToken():(address)",
-      []
-    );
+    let result = super.call('getCouncilToken', 'getCouncilToken():(address)', []);
 
     return result[0].toAddress();
   }
 
   try_getCouncilToken(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getCouncilToken",
-      "getCouncilToken():(address)",
-      []
-    );
+    let result = super.tryCall('getCouncilToken', 'getCouncilToken():(address)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1131,8 +1022,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getCrossChainDebtShareMerkleRoot(): Bytes {
     let result = super.call(
-      "getCrossChainDebtShareMerkleRoot",
-      "getCrossChainDebtShareMerkleRoot():(bytes32)",
+      'getCrossChainDebtShareMerkleRoot',
+      'getCrossChainDebtShareMerkleRoot():(bytes32)',
       []
     );
 
@@ -1141,8 +1032,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_getCrossChainDebtShareMerkleRoot(): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "getCrossChainDebtShareMerkleRoot",
-      "getCrossChainDebtShareMerkleRoot():(bytes32)",
+      'getCrossChainDebtShareMerkleRoot',
+      'getCrossChainDebtShareMerkleRoot():(bytes32)',
       []
     );
     if (result.reverted) {
@@ -1154,20 +1045,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getCrossChainDebtShareMerkleRootBlockNumber(): BigInt {
     let result = super.call(
-      "getCrossChainDebtShareMerkleRootBlockNumber",
-      "getCrossChainDebtShareMerkleRootBlockNumber():(uint256)",
+      'getCrossChainDebtShareMerkleRootBlockNumber',
+      'getCrossChainDebtShareMerkleRootBlockNumber():(uint256)',
       []
     );
 
     return result[0].toBigInt();
   }
 
-  try_getCrossChainDebtShareMerkleRootBlockNumber(): ethereum.CallResult<
-    BigInt
-  > {
+  try_getCrossChainDebtShareMerkleRootBlockNumber(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getCrossChainDebtShareMerkleRootBlockNumber",
-      "getCrossChainDebtShareMerkleRootBlockNumber():(uint256)",
+      'getCrossChainDebtShareMerkleRootBlockNumber',
+      'getCrossChainDebtShareMerkleRootBlockNumber():(uint256)',
       []
     );
     if (result.reverted) {
@@ -1178,21 +1067,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getCurrentPeriod(): BigInt {
-    let result = super.call(
-      "getCurrentPeriod",
-      "getCurrentPeriod():(uint256)",
-      []
-    );
+    let result = super.call('getCurrentPeriod', 'getCurrentPeriod():(uint256)', []);
 
     return result[0].toBigInt();
   }
 
   try_getCurrentPeriod(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getCurrentPeriod",
-      "getCurrentPeriod():(uint256)",
-      []
-    );
+    let result = super.tryCall('getCurrentPeriod', 'getCurrentPeriod():(uint256)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1201,19 +1082,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getDebtShare(user: Address): BigInt {
-    let result = super.call("getDebtShare", "getDebtShare(address):(uint256)", [
-      ethereum.Value.fromAddress(user)
+    let result = super.call('getDebtShare', 'getDebtShare(address):(uint256)', [
+      ethereum.Value.fromAddress(user),
     ]);
 
     return result[0].toBigInt();
   }
 
   try_getDebtShare(user: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getDebtShare",
-      "getDebtShare(address):(uint256)",
-      [ethereum.Value.fromAddress(user)]
-    );
+    let result = super.tryCall('getDebtShare', 'getDebtShare(address):(uint256)', [
+      ethereum.Value.fromAddress(user),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1222,21 +1101,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getDebtShareContract(): Address {
-    let result = super.call(
-      "getDebtShareContract",
-      "getDebtShareContract():(address)",
-      []
-    );
+    let result = super.call('getDebtShareContract', 'getDebtShareContract():(address)', []);
 
     return result[0].toAddress();
   }
 
   try_getDebtShareContract(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getDebtShareContract",
-      "getDebtShareContract():(address)",
-      []
-    );
+    let result = super.tryCall('getDebtShareContract', 'getDebtShareContract():(address)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1245,21 +1116,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getDebtShareSnapshotId(): BigInt {
-    let result = super.call(
-      "getDebtShareSnapshotId",
-      "getDebtShareSnapshotId():(uint128)",
-      []
-    );
+    let result = super.call('getDebtShareSnapshotId', 'getDebtShareSnapshotId():(uint128)', []);
 
     return result[0].toBigInt();
   }
 
   try_getDebtShareSnapshotId(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getDebtShareSnapshotId",
-      "getDebtShareSnapshotId():(uint128)",
-      []
-    );
+    let result = super.tryCall('getDebtShareSnapshotId', 'getDebtShareSnapshotId():(uint128)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1269,20 +1132,18 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getDeclaredCrossChainDebtShare(user: Address): BigInt {
     let result = super.call(
-      "getDeclaredCrossChainDebtShare",
-      "getDeclaredCrossChainDebtShare(address):(uint256)",
+      'getDeclaredCrossChainDebtShare',
+      'getDeclaredCrossChainDebtShare(address):(uint256)',
       [ethereum.Value.fromAddress(user)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getDeclaredCrossChainDebtShare(
-    user: Address
-  ): ethereum.CallResult<BigInt> {
+  try_getDeclaredCrossChainDebtShare(user: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getDeclaredCrossChainDebtShare",
-      "getDeclaredCrossChainDebtShare(address):(uint256)",
+      'getDeclaredCrossChainDebtShare',
+      'getDeclaredCrossChainDebtShare(address):(uint256)',
       [ethereum.Value.fromAddress(user)]
     );
     if (result.reverted) {
@@ -1294,8 +1155,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getDefaultBallotEvaluationBatchSize(): BigInt {
     let result = super.call(
-      "getDefaultBallotEvaluationBatchSize",
-      "getDefaultBallotEvaluationBatchSize():(uint256)",
+      'getDefaultBallotEvaluationBatchSize',
+      'getDefaultBallotEvaluationBatchSize():(uint256)',
       []
     );
 
@@ -1304,8 +1165,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_getDefaultBallotEvaluationBatchSize(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getDefaultBallotEvaluationBatchSize",
-      "getDefaultBallotEvaluationBatchSize():(uint256)",
+      'getDefaultBallotEvaluationBatchSize',
+      'getDefaultBallotEvaluationBatchSize():(uint256)',
       []
     );
     if (result.reverted) {
@@ -1316,21 +1177,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getElectionWinners(): Array<Address> {
-    let result = super.call(
-      "getElectionWinners",
-      "getElectionWinners():(address[])",
-      []
-    );
+    let result = super.call('getElectionWinners', 'getElectionWinners():(address[])', []);
 
     return result[0].toAddressArray();
   }
 
   try_getElectionWinners(): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getElectionWinners",
-      "getElectionWinners():(address[])",
-      []
-    );
+    let result = super.tryCall('getElectionWinners', 'getElectionWinners():(address[])', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1339,21 +1192,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getEpochEndDate(): BigInt {
-    let result = super.call(
-      "getEpochEndDate",
-      "getEpochEndDate():(uint64)",
-      []
-    );
+    let result = super.call('getEpochEndDate', 'getEpochEndDate():(uint64)', []);
 
     return result[0].toBigInt();
   }
 
   try_getEpochEndDate(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getEpochEndDate",
-      "getEpochEndDate():(uint64)",
-      []
-    );
+    let result = super.tryCall('getEpochEndDate', 'getEpochEndDate():(uint64)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1362,17 +1207,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getEpochIndex(): BigInt {
-    let result = super.call("getEpochIndex", "getEpochIndex():(uint256)", []);
+    let result = super.call('getEpochIndex', 'getEpochIndex():(uint256)', []);
 
     return result[0].toBigInt();
   }
 
   try_getEpochIndex(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getEpochIndex",
-      "getEpochIndex():(uint256)",
-      []
-    );
+    let result = super.tryCall('getEpochIndex', 'getEpochIndex():(uint256)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1381,21 +1222,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getEpochStartDate(): BigInt {
-    let result = super.call(
-      "getEpochStartDate",
-      "getEpochStartDate():(uint64)",
-      []
-    );
+    let result = super.call('getEpochStartDate', 'getEpochStartDate():(uint64)', []);
 
     return result[0].toBigInt();
   }
 
   try_getEpochStartDate(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getEpochStartDate",
-      "getEpochStartDate():(uint64)",
-      []
-    );
+    let result = super.tryCall('getEpochStartDate', 'getEpochStartDate():(uint64)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1405,8 +1238,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getMaxDateAdjustmenTolerance(): BigInt {
     let result = super.call(
-      "getMaxDateAdjustmenTolerance",
-      "getMaxDateAdjustmenTolerance():(uint64)",
+      'getMaxDateAdjustmenTolerance',
+      'getMaxDateAdjustmenTolerance():(uint64)',
       []
     );
 
@@ -1415,8 +1248,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_getMaxDateAdjustmenTolerance(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getMaxDateAdjustmenTolerance",
-      "getMaxDateAdjustmenTolerance():(uint64)",
+      'getMaxDateAdjustmenTolerance',
+      'getMaxDateAdjustmenTolerance():(uint64)',
       []
     );
     if (result.reverted) {
@@ -1428,8 +1261,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getMinEpochDurations(): ElectionModuleOld__getMinEpochDurationsResult {
     let result = super.call(
-      "getMinEpochDurations",
-      "getMinEpochDurations():(uint64,uint64,uint64)",
+      'getMinEpochDurations',
+      'getMinEpochDurations():(uint64,uint64,uint64)',
       []
     );
 
@@ -1440,12 +1273,10 @@ export class ElectionModuleOld extends ethereum.SmartContract {
     );
   }
 
-  try_getMinEpochDurations(): ethereum.CallResult<
-    ElectionModuleOld__getMinEpochDurationsResult
-  > {
+  try_getMinEpochDurations(): ethereum.CallResult<ElectionModuleOld__getMinEpochDurationsResult> {
     let result = super.tryCall(
-      "getMinEpochDurations",
-      "getMinEpochDurations():(uint64,uint64,uint64)",
+      'getMinEpochDurations',
+      'getMinEpochDurations():(uint64,uint64,uint64)',
       []
     );
     if (result.reverted) {
@@ -1462,21 +1293,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getMinimumActiveMembers(): i32 {
-    let result = super.call(
-      "getMinimumActiveMembers",
-      "getMinimumActiveMembers():(uint8)",
-      []
-    );
+    let result = super.call('getMinimumActiveMembers', 'getMinimumActiveMembers():(uint8)', []);
 
     return result[0].toI32();
   }
 
   try_getMinimumActiveMembers(): ethereum.CallResult<i32> {
-    let result = super.tryCall(
-      "getMinimumActiveMembers",
-      "getMinimumActiveMembers():(uint8)",
-      []
-    );
+    let result = super.tryCall('getMinimumActiveMembers', 'getMinimumActiveMembers():(uint8)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1485,21 +1308,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getNextEpochSeatCount(): i32 {
-    let result = super.call(
-      "getNextEpochSeatCount",
-      "getNextEpochSeatCount():(uint8)",
-      []
-    );
+    let result = super.call('getNextEpochSeatCount', 'getNextEpochSeatCount():(uint8)', []);
 
     return result[0].toI32();
   }
 
   try_getNextEpochSeatCount(): ethereum.CallResult<i32> {
-    let result = super.tryCall(
-      "getNextEpochSeatCount",
-      "getNextEpochSeatCount():(uint8)",
-      []
-    );
+    let result = super.tryCall('getNextEpochSeatCount', 'getNextEpochSeatCount():(uint8)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1509,8 +1324,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   getNominationPeriodStartDate(): BigInt {
     let result = super.call(
-      "getNominationPeriodStartDate",
-      "getNominationPeriodStartDate():(uint64)",
+      'getNominationPeriodStartDate',
+      'getNominationPeriodStartDate():(uint64)',
       []
     );
 
@@ -1519,8 +1334,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_getNominationPeriodStartDate(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getNominationPeriodStartDate",
-      "getNominationPeriodStartDate():(uint64)",
+      'getNominationPeriodStartDate',
+      'getNominationPeriodStartDate():(uint64)',
       []
     );
     if (result.reverted) {
@@ -1531,13 +1346,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getNominees(): Array<Address> {
-    let result = super.call("getNominees", "getNominees():(address[])", []);
+    let result = super.call('getNominees', 'getNominees():(address[])', []);
 
     return result[0].toAddressArray();
   }
 
   try_getNominees(): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall("getNominees", "getNominees():(address[])", []);
+    let result = super.tryCall('getNominees', 'getNominees():(address[])', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1546,19 +1361,17 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getVotePower(user: Address): BigInt {
-    let result = super.call("getVotePower", "getVotePower(address):(uint256)", [
-      ethereum.Value.fromAddress(user)
+    let result = super.call('getVotePower', 'getVotePower(address):(uint256)', [
+      ethereum.Value.fromAddress(user),
     ]);
 
     return result[0].toBigInt();
   }
 
   try_getVotePower(user: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getVotePower",
-      "getVotePower(address):(uint256)",
-      [ethereum.Value.fromAddress(user)]
-    );
+    let result = super.tryCall('getVotePower', 'getVotePower(address):(uint256)', [
+      ethereum.Value.fromAddress(user),
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1567,19 +1380,15 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getVotingPeriodStartDate(): BigInt {
-    let result = super.call(
-      "getVotingPeriodStartDate",
-      "getVotingPeriodStartDate():(uint64)",
-      []
-    );
+    let result = super.call('getVotingPeriodStartDate', 'getVotingPeriodStartDate():(uint64)', []);
 
     return result[0].toBigInt();
   }
 
   try_getVotingPeriodStartDate(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getVotingPeriodStartDate",
-      "getVotingPeriodStartDate():(uint64)",
+      'getVotingPeriodStartDate',
+      'getVotingPeriodStartDate():(uint64)',
       []
     );
     if (result.reverted) {
@@ -1590,16 +1399,16 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   hasVoted(user: Address): boolean {
-    let result = super.call("hasVoted", "hasVoted(address):(bool)", [
-      ethereum.Value.fromAddress(user)
+    let result = super.call('hasVoted', 'hasVoted(address):(bool)', [
+      ethereum.Value.fromAddress(user),
     ]);
 
     return result[0].toBoolean();
   }
 
   try_hasVoted(user: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("hasVoted", "hasVoted(address):(bool)", [
-      ethereum.Value.fromAddress(user)
+    let result = super.tryCall('hasVoted', 'hasVoted(address):(bool)', [
+      ethereum.Value.fromAddress(user),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1609,21 +1418,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   isElectionEvaluated(): boolean {
-    let result = super.call(
-      "isElectionEvaluated",
-      "isElectionEvaluated():(bool)",
-      []
-    );
+    let result = super.call('isElectionEvaluated', 'isElectionEvaluated():(bool)', []);
 
     return result[0].toBoolean();
   }
 
   try_isElectionEvaluated(): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isElectionEvaluated",
-      "isElectionEvaluated():(bool)",
-      []
-    );
+    let result = super.tryCall('isElectionEvaluated', 'isElectionEvaluated():(bool)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1633,8 +1434,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   isElectionModuleInitialized(): boolean {
     let result = super.call(
-      "isElectionModuleInitialized",
-      "isElectionModuleInitialized():(bool)",
+      'isElectionModuleInitialized',
+      'isElectionModuleInitialized():(bool)',
       []
     );
 
@@ -1643,8 +1444,8 @@ export class ElectionModuleOld extends ethereum.SmartContract {
 
   try_isElectionModuleInitialized(): ethereum.CallResult<boolean> {
     let result = super.tryCall(
-      "isElectionModuleInitialized",
-      "isElectionModuleInitialized():(bool)",
+      'isElectionModuleInitialized',
+      'isElectionModuleInitialized():(bool)',
       []
     );
     if (result.reverted) {
@@ -1655,16 +1456,16 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   isNominated(candidate: Address): boolean {
-    let result = super.call("isNominated", "isNominated(address):(bool)", [
-      ethereum.Value.fromAddress(candidate)
+    let result = super.call('isNominated', 'isNominated(address):(bool)', [
+      ethereum.Value.fromAddress(candidate),
     ]);
 
     return result[0].toBoolean();
   }
 
   try_isNominated(candidate: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("isNominated", "isNominated(address):(bool)", [
-      ethereum.Value.fromAddress(candidate)
+    let result = super.tryCall('isNominated', 'isNominated(address):(bool)', [
+      ethereum.Value.fromAddress(candidate),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1674,21 +1475,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   isOwnerModuleInitialized(): boolean {
-    let result = super.call(
-      "isOwnerModuleInitialized",
-      "isOwnerModuleInitialized():(bool)",
-      []
-    );
+    let result = super.call('isOwnerModuleInitialized', 'isOwnerModuleInitialized():(bool)', []);
 
     return result[0].toBoolean();
   }
 
   try_isOwnerModuleInitialized(): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isOwnerModuleInitialized",
-      "isOwnerModuleInitialized():(bool)",
-      []
-    );
+    let result = super.tryCall('isOwnerModuleInitialized', 'isOwnerModuleInitialized():(bool)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1697,17 +1490,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   nominatedOwner(): Address {
-    let result = super.call("nominatedOwner", "nominatedOwner():(address)", []);
+    let result = super.call('nominatedOwner', 'nominatedOwner():(address)', []);
 
     return result[0].toAddress();
   }
 
   try_nominatedOwner(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "nominatedOwner",
-      "nominatedOwner():(address)",
-      []
-    );
+    let result = super.tryCall('nominatedOwner', 'nominatedOwner():(address)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1716,13 +1505,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   owner(): Address {
-    let result = super.call("owner", "owner():(address)", []);
+    let result = super.call('owner', 'owner():(address)', []);
 
     return result[0].toAddress();
   }
 
   try_owner(): ethereum.CallResult<Address> {
-    let result = super.tryCall("owner", "owner():(address)", []);
+    let result = super.tryCall('owner', 'owner():(address)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1731,21 +1520,13 @@ export class ElectionModuleOld extends ethereum.SmartContract {
   }
 
   getImplementation(): Address {
-    let result = super.call(
-      "getImplementation",
-      "getImplementation():(address)",
-      []
-    );
+    let result = super.call('getImplementation', 'getImplementation():(address)', []);
 
     return result[0].toAddress();
   }
 
   try_getImplementation(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getImplementation",
-      "getImplementation():(address)",
-      []
-    );
+    let result = super.tryCall('getImplementation', 'getImplementation():(address)', []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
