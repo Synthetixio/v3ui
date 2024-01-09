@@ -11,17 +11,6 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useEffect } from 'react';
 
-interface User {
-  address: string;
-  username: string;
-  discord: string;
-  twitter: string;
-  about: string;
-  github: string;
-  pfpUrl: string;
-  delegationPitch: string;
-}
-
 export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
   const wallet = useWallet();
   const mutation = useUpdateUserDetailsMutation();
@@ -51,7 +40,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
       setValue('pfpUrl', user.pfpUrl);
       setValue('delegationPitch', user.delegationPitch);
     }
-  }, [user]);
+  }, [user, setValue]);
 
   if (isLoading)
     return (
@@ -66,7 +55,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         {user?.pfpUrl ? (
           <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
         ) : (
-          <Blockies size={14} seed={user?.address!} className="fully-rounded" />
+          <Blockies size={14} seed={user!.address} className="fully-rounded" />
         )}
         <Flex w="100%" flexDirection="column" position="relative" ml="2" gap="2">
           <Text size="xs" color="gray.500">
@@ -146,7 +135,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
           variant="unstyled"
           onClick={() => {
             try {
-              navigator.clipboard.writeText(user?.address!);
+              navigator.clipboard.writeText(user!.address);
             } catch (error) {
               console.error(error);
             }
@@ -158,7 +147,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
           <CopyIcon
             w="12px"
             h="12px"
-            onClick={() => navigator.clipboard.writeText(user?.address!)}
+            onClick={() => navigator.clipboard.writeText(user!.address)}
           />
         </Button>
       </Flex>
@@ -173,7 +162,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         onClick={() => {
           mutation.mutate({
             about: getValues('about')!,
-            address: user?.address!,
+            address: user!.address,
             email: '',
             associatedAddresses: '',
             bannerImageId: '',

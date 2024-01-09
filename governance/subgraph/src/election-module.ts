@@ -18,8 +18,8 @@ import { store, BigInt, log, BigDecimal } from '@graphprotocol/graph-ts';
 
 // Old Subgraph handlers
 
-export let ZERO_BI = BigInt.fromI32(0);
-export let ONE_BI = BigInt.fromI32(1);
+export const ZERO_BI = BigInt.fromI32(0);
+export const ONE_BI = BigInt.fromI32(1);
 
 export function handleCouncilMemberAddedOld(event: CouncilMemberAddedOldEvent): void {
   let user = User.load(event.params.member.toHexString());
@@ -70,7 +70,7 @@ export function handleCandidateNominatedOld(event: CandidateNominatedOldEvent): 
 }
 
 export function handleNominationWithdrawnOld(event: NominationWithdrawnOldEvent): void {
-  let user = User.load(event.params.candidate.toHexString());
+  const user = User.load(event.params.candidate.toHexString());
   if (user) {
     user.nominationCount = user.nominationCount.minus(ONE_BI);
     user.save();
@@ -82,7 +82,7 @@ export function handleNominationWithdrawnOld(event: NominationWithdrawnOldEvent)
 }
 
 export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
-  let voteRecord = new VoteRecorded(
+  const voteRecord = new VoteRecorded(
     event.params.voter
       .toHexString()
       .concat('-')
@@ -92,7 +92,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
       .concat('-')
       .concat('10')
   );
-  let votePower = BigDecimal.fromString(event.params.votePower.toString());
+  const votePower = BigDecimal.fromString(event.params.votePower.toString());
 
   voteRecord.voter = event.params.voter.toHexString();
   voteRecord.chainId = BigInt.fromI32(10);
@@ -114,7 +114,7 @@ export function handleVoteRecordedOld(event: VoteRecordedOldEvent): void {
   }
   user.save();
 
-  let resultId = event.params.voter
+  const resultId = event.params.voter
     .toHexString()
     .concat('-')
     .concat('10')
@@ -150,13 +150,13 @@ export function handleVoteWithdrawnOld(event: VoteWithdrawnOldEvent): void {
       .concat('10')
   );
 
-  let user = User.load(event.params.voter.toHexString());
+  const user = User.load(event.params.voter.toHexString());
   if (user) {
     user.votingCount = user.votingCount.minus(ONE_BI);
     user.save();
   }
 
-  let resultId = event.params.voter
+  const resultId = event.params.voter
     .toHexString()
     .concat('-')
     .concat('10')
@@ -164,7 +164,7 @@ export function handleVoteWithdrawnOld(event: VoteWithdrawnOldEvent): void {
     .concat(event.address.toHexString())
     .concat('-')
     .concat(event.params.epochIndex.toString());
-  let result = VoteResult.load(resultId);
+  const result = VoteResult.load(resultId);
 
   if (!!result) {
     result.votePower = result.votePower.minus(event.params.votePower.toBigDecimal());
@@ -228,7 +228,7 @@ export function handleCouncilMembersDismissed(event: CouncilMembersDismissedEven
 }
 
 export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void {
-  let user = User.load(event.params.candidate.toHexString());
+  const user = User.load(event.params.candidate.toHexString());
   if (user) {
     user.nominationCount = user.nominationCount.minus(ONE_BI);
     user.save();
@@ -238,7 +238,7 @@ export function handleNominationWithdrawn(event: NominationWithdrawnEvent): void
 }
 
 export function handleVoteRecorded(event: VoteRecordedEvent): void {
-  let id = event.params.voter
+  const id = event.params.voter
     .toHexString()
     .concat('-')
     .concat(event.address.toHexString())
@@ -248,7 +248,7 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
     .concat(event.params.chainId.toString());
   let voteRecord = VoteRecorded.load(id);
 
-  let votePower = BigDecimal.fromString(event.params.votingPower.toString());
+  const votePower = BigDecimal.fromString(event.params.votingPower.toString());
   if (
     voteRecord &&
     event.params.candidates[0].toHexString().includes('0x0000000000000000000000000000000000000000')
@@ -284,7 +284,7 @@ export function handleVoteRecorded(event: VoteRecordedEvent): void {
   }
   user.save();
 
-  let resultId = event.params.voter
+  const resultId = event.params.voter
     .toHexString()
     .concat('-')
     .concat(event.params.chainId.toString())

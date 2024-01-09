@@ -290,7 +290,7 @@ describe('Election Module', () => {
       assert.entityCount('VoteRecorded', 2);
 
       // Vote Result
-      let resultId = voter
+      const resultId = voter
         .toHexString()
         .concat('-')
         .concat(voteRecorded.params.chainId.toString())

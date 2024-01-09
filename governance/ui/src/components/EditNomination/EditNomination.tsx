@@ -60,7 +60,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
             w="100%"
             height="58px"
             rounded="base"
-            borderColor={'gray.900'}
+            borderColor="gray.900"
             borderWidth="1px"
             padding="2"
             alignItems="center"
