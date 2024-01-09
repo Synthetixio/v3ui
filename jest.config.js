@@ -16,4 +16,5 @@ module.exports = {
     '!<rootDir>/**/*.d.ts',
     '!<rootDir>/**/*.test.{js,jsx,ts,tsx}',
   ],
+  modulePathIgnorePatterns: ['<rootDir>/governance/subgraph/tests/*'],
 };
