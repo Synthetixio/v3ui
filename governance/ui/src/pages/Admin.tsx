@@ -1,5 +1,5 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
-import { Contract } from 'ethers';
+import { Contract, utils } from 'ethers';
 import { useSigner } from '@snx-v3/useBlockchain';
 
 export default function Admin() {
@@ -95,15 +95,99 @@ export default function Admin() {
           Now
         </Button>
       </Flex>
+
+      <Flex>
+        <Text>Set Snapshot Record Mock for voting power</Text>
+        <Button
+          onClick={() => {
+            if (signer) {
+              proxy
+                .connect(signer)
+                .setSnapshotContract('0x2f415c16d5527f630398bB4d787cd679726DaCE2', true);
+            }
+          }}
+        >
+          0x2f415c16d5527f630398bB4d787cd679726DaCE2
+        </Button>
+      </Flex>
+
+      <Flex>
+        <Text>Set Voting Power to current connected user</Text>
+        <Button
+          onClick={async () => {
+            if (signer) {
+              const address = await signer.getAddress();
+              const electionId = await proxy.connect(signer).getEpochIndex();
+              const snapshotId = await proxy
+                .connect(signer)
+                .getVotePowerSnapshotId('0x2f415c16d5527f630398bB4d787cd679726DaCE2', electionId);
+              new Contract('0x2f415c16d5527f630398bB4d787cd679726DaCE2', [
+                'function setBalanceOfOnPeriod(address user, uint balance, uint periodId) external',
+              ])
+                .connect(signer)
+                .setBalanceOfOnPeriod(address, utils.parseEther('100'), snapshotId);
+            }
+          }}
+        >
+          set voting power
+        </Button>
+      </Flex>
+
+      <Flex>
+        <Text>Take vote power snapshot</Text>
+        <Button
+          onClick={async () => {
+            if (signer) {
+              await proxy
+                .connect(signer)
+                .takeVotePowerSnapshot('0x2f415c16d5527f630398bB4d787cd679726DaCE2');
+            }
+          }}
+        >
+          LFG
+        </Button>
+      </Flex>
     </Flex>
   );
 }
 
 const proxy = new Contract('0x62F424908BEaF103d0Dd1e0b230356A3785e409d', [
+  'function takeVotePowerSnapshot(address snapshotContract) external override returns (uint128 snapshotId)',
+  'function prepareBallotWithSnapshot(address snapshotContract, address voter) external override returns (uint256 power)',
+  'function getVotePowerSnapshotId(address snapshotContract, uint128 electionId) external view returns (uint128)',
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'contract',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'enabled',
+        type: 'bool',
+      },
+    ],
+    name: 'setSnapshotContract',
+    stateMutability: 'external',
+    type: 'function',
+  },
   {
     inputs: [],
     name: 'OverflowUint256ToUint64',
     type: 'error',
+  },
+  {
+    name: 'getEpochIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
