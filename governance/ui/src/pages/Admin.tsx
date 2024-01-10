@@ -1,6 +1,7 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
 import { Contract, utils } from 'ethers';
 import { useSigner } from '@snx-v3/useBlockchain';
+import { SnapshotRecordContractAddress } from '../utils/contracts';
 
 export default function Admin() {
   const signer = useSigner();
@@ -101,13 +102,11 @@ export default function Admin() {
         <Button
           onClick={() => {
             if (signer) {
-              proxy
-                .connect(signer)
-                .setSnapshotContract('0x2f415c16d5527f630398bB4d787cd679726DaCE2', true);
+              proxy.connect(signer).setSnapshotContract(SnapshotRecordContractAddress, true);
             }
           }}
         >
-          0x2f415c16d5527f630398bB4d787cd679726DaCE2
+          LFG
         </Button>
       </Flex>
 
@@ -120,8 +119,8 @@ export default function Admin() {
               const electionId = await proxy.connect(signer).getEpochIndex();
               const snapshotId = await proxy
                 .connect(signer)
-                .getVotePowerSnapshotId('0x2f415c16d5527f630398bB4d787cd679726DaCE2', electionId);
-              new Contract('0x2f415c16d5527f630398bB4d787cd679726DaCE2', [
+                .getVotePowerSnapshotId(SnapshotRecordContractAddress, electionId);
+              new Contract(SnapshotRecordContractAddress, [
                 'function setBalanceOfOnPeriod(address user, uint balance, uint periodId) external',
               ])
                 .connect(signer)
@@ -138,9 +137,7 @@ export default function Admin() {
         <Button
           onClick={async () => {
             if (signer) {
-              await proxy
-                .connect(signer)
-                .takeVotePowerSnapshot('0x2f415c16d5527f630398bB4d787cd679726DaCE2');
+              await proxy.connect(signer).takeVotePowerSnapshot(SnapshotRecordContractAddress);
             }
           }}
         >
