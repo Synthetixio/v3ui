@@ -65,7 +65,7 @@ function useUpdateUserDetailsMutation() {
         });
         const nonceResponse: NonceResponse = await response.json();
 
-        let signedMessage = new SiweMessage({
+        const signedMessage = new SiweMessage({
           domain: domain,
           address: utils.getAddress(wallet.address),
           chainId: chainId,
@@ -91,6 +91,7 @@ function useUpdateUserDetailsMutation() {
         setUuid(signInResponse.data.uuid);
         return signInResponse.data.uuid;
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     }
@@ -110,12 +111,12 @@ function useUpdateUserDetailsMutation() {
           ...userProfile,
           uuid: signedInUuid,
         };
-        let updateUserDetailsResponse = await fetch(UPDATE_USER_DETAILS_API_URL(wallet.address), {
+        const updateUserDetailsResponse = await fetch(UPDATE_USER_DETAILS_API_URL(wallet.address), {
           method: 'POST',
           body: JSON.stringify(body),
         });
 
-        let updateUserDetailsResult =
+        const updateUserDetailsResult =
           (await updateUserDetailsResponse.json()) as UpdateUserDetailsResponse;
 
         let updateDelegationPitchResult = {
@@ -129,7 +130,7 @@ function useUpdateUserDetailsMutation() {
             delegationPitch: userProfile.delegationPitch,
             uuid: signedInUuid,
           };
-          let delegationUpdateReponse = await fetch(UPDATE_USER_PITCH_FOR_PROTOCOL, {
+          const delegationUpdateReponse = await fetch(UPDATE_USER_PITCH_FOR_PROTOCOL, {
             method: 'POST',
             body: JSON.stringify(delegationPitchesBody),
           });

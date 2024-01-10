@@ -7,7 +7,6 @@
     "dev:testnet": "TESTNET=true webpack-cli serve",
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "load-env": "source ./load-env.sh",
     "focus": "yarn workspaces focus '@snx-v3/governance'"
   },
   "dependencies": {
@@ -51,6 +50,7 @@
     "core-js": "^3.33.2",
     "crypto-browserify": "^3.12.0",
     "css-loader": "^6.8.1",
+    "dotenv": "^16.3.1",
     "html-webpack-plugin": "^5.5.3",
     "process": "^0.11.10",
     "react-refresh": "^0.14.0",

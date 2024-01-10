@@ -1,9 +1,10 @@
-import { Badge, Button, Divider, Flex, Heading, Image, Spinner, Text } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, Image, Text, Skeleton, Fade } from '@chakra-ui/react';
 import { Council } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
+import { CouncilPeriodBadge } from './CouncilPeriodBadge';
 
 interface CouncilCardProps {
   council: Council;
@@ -11,9 +12,15 @@ interface CouncilCardProps {
 
 export function CouncilCard({ council }: CouncilCardProps) {
   const navigate = useNavigate();
-  const { data: councilPeriod } = useGetCurrentPeriod(council.slug);
-  const { data: electedCouncilMembers } = useGetCouncilMembers(council.slug);
-  const { data: councilNominees } = useGetCouncilNominees(council.slug);
+  const { data: councilPeriod, isLoading: isPeriodLoading } = useGetCurrentPeriod(council.slug);
+  const { data: electedCouncilMembers, isLoading: isCouncilMembersLoading } = useGetCouncilMembers(
+    council.slug
+  );
+  const { data: councilNominees, isLoading: isCouncilNomineesLoading } = useGetCouncilNominees(
+    council.slug
+  );
+
+  const isLoading = isPeriodLoading || isCouncilMembersLoading || isCouncilNomineesLoading;
 
   return (
     <Flex
@@ -31,34 +38,20 @@ export function CouncilCard({ council }: CouncilCardProps) {
       <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
         {council.title}
       </Heading>
-      {!councilPeriod ? (
-        <Spinner colorScheme="cyan" />
-      ) : councilPeriod === '0' ? (
-        <Badge bg="gray.900" color="white" mb="6" textTransform="uppercase">
-          Closed - Council Elected
-        </Badge>
-      ) : councilPeriod === '1' ? (
-        <Badge bg="orange.600" color="white" mb="6" textTransform="uppercase">
-          Nomination Open
-        </Badge>
-      ) : councilPeriod === '2' ? (
-        <Badge bg="teal.500" color="white" mb="6" textTransform="uppercase">
-          Voting Open
-        </Badge>
-      ) : (
-        <Badge bg="purple.500" color="white" mb="6" textTransform="uppercase">
-          Evaluation
-        </Badge>
-      )}
+      <CouncilPeriodBadge councilPeriod={councilPeriod} isLoading={isLoading} />
       <Divider />
       <Flex justifyContent="space-between" w="100%" my="6" mb="auto">
         <Flex flexDir="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
             Members
           </Text>
-          <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-            {electedCouncilMembers?.length || <Spinner colorScheme="cyan" />}
-          </Text>
+          <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+            <Fade in>
+              <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                {electedCouncilMembers?.length || 'TBD'}
+              </Text>
+            </Fade>
+          </Skeleton>
         </Flex>
         <Flex flexDir="column">
           {councilPeriod === '2' ? (
@@ -81,9 +74,13 @@ export function CouncilCard({ council }: CouncilCardProps) {
               <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
                 Nominees
               </Text>
-              <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
-                {councilNominees?.length ?? <Spinner colorScheme="cyan" />}
-              </Text>
+              <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+                <Fade in>
+                  <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
+                    {councilNominees?.length || 'TBD'}
+                  </Text>
+                </Fade>
+              </Skeleton>
             </>
           )}
         </Flex>

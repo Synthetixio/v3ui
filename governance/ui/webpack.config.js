@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+require('dotenv').config();
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -67,25 +68,19 @@ const cssRule = {
 
 const devServer = {
   port: '3000',
-
   hot: !isTest,
   liveReload: false,
-
   historyApiFallback: true,
-
   devMiddleware: {
     writeToDisk: !isTest,
     publicPath: '',
   },
-
   client: {
     logging: 'log',
     overlay: false,
     progress: false,
   },
-
   static: './public',
-
   headers: { 'Access-Control-Allow-Origin': '*' },
   allowedHosts: 'all',
   open: false,
@@ -125,12 +120,9 @@ module.exports = {
     innerGraph: true,
     emitOnErrors: false,
   },
-
   plugins: [htmlPlugin]
     .concat(isProd ? [new CopyWebpackPlugin({ patterns: [{ from: 'public', to: '' }] })] : [])
-
     .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
-
     .concat([
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
@@ -138,14 +130,12 @@ module.exports = {
       ),
     ])
     .concat([])
-
     .concat([
       new webpack.ProvidePlugin({
         Buffer: ['buffer', 'Buffer'],
         process: 'process/browser.js',
       }),
     ])
-
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
       process.env.GENERATE_BUNDLE_REPORT === 'true'
@@ -161,13 +151,15 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
-        'process.env.DEV': JSON.stringify(process.env.DEV),
-        'process.env.TESTNET': JSON.stringify(process.env.TESTNET),
-        'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
-        'process.env.IPFS_INFURA_SECRET': JSON.stringify(process.env.IPFS_INFURA_SECRET),
-        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
-        'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
+        'process.env': {
+          INFURA_KEY: JSON.stringify(process.env.INFURA_KEY),
+          DEV: JSON.stringify(process.env.DEV),
+          TESTNET: JSON.stringify(process.env.TESTNET),
+          IPFS_INFURA_KEY: JSON.stringify(process.env.IPFS_INFURA_KEY),
+          IPFS_INFURA_SECRET: JSON.stringify(process.env.IPFS_INFURA_SECRET),
+          WC_PROJECT_ID: JSON.stringify(process.env.WC_PROJECT_ID),
+          BOARDROOM_KEY: JSON.stringify(process.env.BOARDROOM_KEY),
+        },
       })
     ),
   resolve: {
@@ -182,7 +174,6 @@ module.exports = {
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
   },
-
   module: {
     rules: [babelRule, imgRule, cssRule],
   },
