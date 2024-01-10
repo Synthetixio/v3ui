@@ -54,7 +54,7 @@ export function PassedElectionAccordion({ activeCouncil }: { activeCouncil?: Cou
                     overflow="hidden"
                     whiteSpace="nowrap"
                   >
-                    {activeCouncil.address}
+                    {activeCouncil?.address}
                   </Text>
                 </Td>
                 <Td>

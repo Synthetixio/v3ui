@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import councils, { CouncilSlugs } from '../utils/councils';
+import { CouncilSlugs } from '../utils/councils';
 import { useSearchParams } from 'react-router-dom';
 import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';

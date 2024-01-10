@@ -26,7 +26,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         <Text fontSize="sm" color="gray.500">
           {council?.description}
         </Text>
-        <Flex justifyContent={'space-between'} w="100%">
+        <Flex justifyContent="space-between" w="100%">
           <Heading fontSize="xs" mr="11">
             Council Seats: {getCouncilMembers?.length}
           </Heading>

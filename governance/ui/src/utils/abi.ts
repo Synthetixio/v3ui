@@ -1,4 +1,6 @@
 export const electionModuleABI = [
+  'function prepareBallotWithSnapshot(address snapshotContract, address voter) external override returns (uint256 power)',
+  'function getVotePowerSnapshotId(address snapshotContract, uint128 electionId) external view returns (uint128)',
   {
     inputs: [],
     name: 'AlreadyACouncilMember',

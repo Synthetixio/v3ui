@@ -35,3 +35,5 @@ export function getCouncilContract(council: CouncilSlugs) {
       throw new Error('could not find contract');
   }
 }
+
+export const SnapshotRecordContractAddress = '0x2f415c16d5527f630398bB4d787cd679726DaCE2';
