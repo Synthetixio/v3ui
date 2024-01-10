@@ -101,6 +101,7 @@ const customTheme = extendTheme({
 const container = document.querySelector('#app');
 
 const root = createRoot(container!);
+
 root.render(
   <React.StrictMode>
     <RecoilRoot>

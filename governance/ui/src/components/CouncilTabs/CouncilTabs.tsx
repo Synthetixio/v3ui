@@ -26,7 +26,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           onChange={(e) => navigate('/councils' + `?active=${e.target.value}`)}
         >
           {councils.map((council) => (
-            <option value={council.slug}>{council.title}</option>
+            <option key={council.address} value={council.slug}>
+              {council.title}
+            </option>
           ))}
         </Select>
       </Flex>
@@ -60,7 +62,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
             borderWidth="1px"
             padding="2"
             alignItems="center"
-            bg="navy.900"
+            bg="navy.700"
           >
             <Flex
               borderRadius="50%"
