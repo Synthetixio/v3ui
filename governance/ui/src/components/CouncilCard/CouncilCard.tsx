@@ -95,7 +95,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
               size="md"
               mb="1"
               onClick={() => {
-                navigate('/councils' + `?active=${council.slug}&nominate=true`);
+                navigate(`/councils/${council.slug}?nominate=true`);
               }}
             >
               Nominate Self
@@ -104,7 +104,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
               size="md"
               variant="outline"
               colorScheme="gray"
-              onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+              onClick={() => navigate(`/councils/${council.slug}`)}
             >
               View Council
             </Button>
@@ -114,7 +114,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             size="md"
             mb="1"
             onClick={() => {
-              navigate('/councils' + `?active=${council.slug}`);
+              navigate(`/councils/${council.slug}`);
             }}
           >
             Vote
@@ -124,7 +124,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             size="md"
             variant="outline"
             colorScheme="gray"
-            onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+            onClick={() => navigate(`/councils/${council.slug}`)}
           >
             View Council
           </Button>

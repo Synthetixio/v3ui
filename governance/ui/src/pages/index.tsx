@@ -5,50 +5,26 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { theme, Fonts } from '@synthetixio/v3-theme';
 import { BlockchainProvider } from '@snx-v3/useBlockchain';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
+import { RouterProvider, Navigate, createBrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Header } from '../components/Header/Header';
 import Councils from './Councils';
 import Admin from './Admin';
 import MyVotes from './MyVotes';
+import { Layout } from '../components/Layout';
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
+    id: 'root',
     path: '/',
-    element: (
-      <>
-        <Header />
-        <App />
-      </>
-    ),
-  },
-  {
-    path: '/admin',
-    element: (
-      <>
-        <Header />
-        <Admin />
-      </>
-    ),
-  },
-  {
-    path: '/councils',
-    element: (
-      <>
-        <Header />
-        <Councils />
-      </>
-    ),
-  },
-  {
-    path: '/my-votes',
-    element: (
-      <>
-        <Header />
-        <MyVotes />
-      </>
-    ),
+    element: <Layout />,
+    children: [
+      { path: '/', element: <App /> },
+      { path: '/admin', element: <Admin /> },
+      { path: '/councils', element: <Navigate to="/councils/spartan" /> },
+      { path: '/councils/:council', element: <Councils /> },
+      { path: '/my-votes', element: <MyVotes /> },
+    ],
   },
   //  Todo @dev remove them?
   // {
