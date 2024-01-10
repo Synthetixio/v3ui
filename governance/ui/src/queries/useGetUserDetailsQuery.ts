@@ -108,10 +108,9 @@ export async function getUserDetails<T extends string | string[]>(
       delete data.delegationPitches;
       return {
         ...data,
-        delegationPitch: '',
-        // TODO DEV
-        // foundPitch?.find(
-        //   (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
+        delegationPitch: foundPitch,
+        // foundPitch.find(
+        // (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
         // )[0]?.delegationPitch || '',
       };
     }) as T extends string ? GetUserDetails : GetUserDetails[];
