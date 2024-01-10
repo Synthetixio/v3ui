@@ -12,10 +12,7 @@ export default function useDeclareVotingPower(council: CouncilSlugs) {
         try {
           const electionModule = getCouncilContract(council).connect(signer);
           const voter = await signer.getAddress();
-          await electionModule.prepareBallotWithSnapshot(
-            SnapshotRecordContractAddress,
-            voter
-          );
+          await electionModule.prepareBallotWithSnapshot(SnapshotRecordContractAddress, voter);
         } catch (error) {
           console.error(error);
         }
