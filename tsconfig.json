@@ -30,7 +30,8 @@
     "**/*.test.tsx",
     "**/*.stories.tsx",
     "**/stories/**",
-    "**/cache/**"
+    "**/cache/**",
+    "governance/subgraph/*"
   ],
 
   "include": ["**/*.ts", "**/*.tsx"]

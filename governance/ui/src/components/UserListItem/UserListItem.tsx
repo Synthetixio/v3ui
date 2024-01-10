@@ -56,8 +56,8 @@ export default function UserListItem({
       ) : (
         <Button
           size="xs"
-          variant={'outline'}
-          colorScheme={'gray'}
+          variant="outline"
+          colorScheme="gray"
           onClick={() => {
             navigate('/councils' + `?active=${activeCouncil}&view=${address}`);
           }}

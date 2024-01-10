@@ -1,7 +1,5 @@
 import { Flex } from '@chakra-ui/react';
 import { UserProfileForm } from '../UserProfileForm';
-import { useWallet } from '@snx-v3/useBlockchain';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 
 export default function EditProfile({ activeCouncil }: { activeCouncil: string }) {
   return (
