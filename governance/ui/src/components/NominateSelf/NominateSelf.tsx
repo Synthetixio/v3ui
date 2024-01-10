@@ -31,7 +31,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
+              onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}
@@ -79,14 +79,14 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               {councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
-          <Button onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}>Done</Button>
+          <Button onClick={() => navigate(`/councils/${activeCouncil}`)}>Done</Button>
         </>
       ) : (
         <>
           <Flex justifyContent="space-between">
             <Heading fontSize="medium">Nominate Self</Heading>
             <IconButton
-              onClick={() => navigate('/councils' + `?active=${activeCouncil}&nominate=false`)}
+              onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
               size="xs"
               aria-label="close button"
               icon={<CloseIcon />}

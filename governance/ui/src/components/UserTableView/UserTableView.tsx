@@ -20,7 +20,7 @@ export default function UserTableView({
   return (
     <Tr
       cursor="pointer"
-      onClick={() => navigate(`/councils?active=${activeCouncil}&view=${user.address}`)}
+      onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
     >
       <Th color="white" display="flex" alignItems="center" gap="2">
         {user.pfpUrl ? (
@@ -38,7 +38,7 @@ export default function UserTableView({
           size="xs"
           colorScheme="gray"
           variant="outline"
-          onClick={() => navigate(`/councils?active=${activeCouncil}&view=${user.address}`)}
+          onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
           color="white"
         >
           {isNomination && 'View'}

@@ -79,7 +79,7 @@ export function UserProfileCard({
                   {shortAddress(userData?.address)}
                 </Text>
                 <IconButton
-                  onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
+                  onClick={() => navigate(`/councils/${activeCouncil}`)}
                   size="xs"
                   aria-label="close button"
                   icon={<CloseIcon />}
@@ -151,9 +151,7 @@ export function UserProfileCard({
                   colorScheme="gray"
                   mb="1"
                   w="100%"
-                  onClick={() =>
-                    navigate('/councils' + `?active=${activeCouncil}&editProfile=true`)
-                  }
+                  onClick={() => navigate(`/councils/${activeCouncil}?editProfile=true`)}
                 >
                   Edit Profile
                 </Button>
@@ -161,10 +159,9 @@ export function UserProfileCard({
                   w="100%"
                   onClick={() =>
                     navigate(
-                      '/councils' +
-                        `?active=${activeCouncil}&${
-                          !isNominated ? 'nominate=true' : 'editNomination=true'
-                        }`
+                      `/councils/${activeCouncil}?${
+                        !isNominated ? 'nominate=true' : 'editNomination=true'
+                      }`
                     )
                   }
                 >
@@ -193,7 +190,7 @@ export function UserProfileCard({
                 variant="outline"
                 colorScheme="gray"
                 w="100%"
-                onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
+                onClick={() => navigate(`/councils/${activeCouncil}`)}
               >
                 Done
               </Button>

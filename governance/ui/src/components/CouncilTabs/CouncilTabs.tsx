@@ -23,7 +23,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
         <Select
           w="248px"
           defaultValue={activeCouncil}
-          onChange={(e) => navigate('/councils' + `?active=${e.target.value}`)}
+          onChange={(e) => navigate(`/councils/${e.target.value}`)}
         >
           {councils.map((council) => (
             <option key={`option-${council.slug}`} value={council.slug}>
@@ -53,7 +53,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           <Flex
             key={`tab-${council.slug}`}
             cursor="pointer"
-            onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+            onClick={() => navigate(`/councils/${council.slug}`)}
             w="100%"
             height="48px"
             maxW="260px"
