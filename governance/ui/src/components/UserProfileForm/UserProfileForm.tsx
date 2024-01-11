@@ -74,7 +74,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
             position="absolute"
             top="0px"
             right="0px"
-            onClick={() => navigate('/councils' + `?active=${activeCouncil}`)}
+            onClick={() => navigate(`/councils/${activeCouncil}`)}
             size="xs"
             aria-label="close button"
             icon={<CloseIcon />}

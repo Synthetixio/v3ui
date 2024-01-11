@@ -109,7 +109,7 @@ export default function MyVotes() {
                   aria-label="action-button"
                   icon={<AddIcon />}
                   variant="outlined"
-                  onClick={() => navigate('/councils' + `?active=${council.slug}`)}
+                  onClick={() => navigate(`/councils/${council.slug}`)}
                 />
               ) : (
                 <IconButton

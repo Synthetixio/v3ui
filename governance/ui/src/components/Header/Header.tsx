@@ -47,6 +47,7 @@ export function Header() {
   const currentNetwork = useNetwork();
   const { icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
+
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
   };

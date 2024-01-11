@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
@@ -9,20 +9,22 @@ import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
 
 export default function Councils() {
   const [searchParams] = useSearchParams();
-  const { data: councilPeriod } = useGetCurrentPeriod(searchParams.get('active') as CouncilSlugs);
+  const { council } = useParams();
+  const activeCouncil = council as CouncilSlugs;
+  const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
 
   return (
     <Flex flexDirection="column" alignItems="center">
-      <CouncilTabs activeCouncil={searchParams.get('active') as CouncilSlugs} />
+      <CouncilTabs activeCouncil={activeCouncil} />
       <Flex maxW="1440px" w="100%" justifyContent="center" gap={{ base: 0, md: '4' }}>
         <Flex flexDir="column" maxW="735px" w="100%" px={{ base: 4, md: 2 }}>
-          <CouncilInformation activeCouncil={searchParams.get('active') as CouncilSlugs} />
+          <CouncilInformation activeCouncil={activeCouncil} />
           {(councilPeriod === '1' || councilPeriod === '2') && (
-            <CouncilNominees activeCouncil={searchParams.get('active') as CouncilSlugs} />
+            <CouncilNominees activeCouncil={activeCouncil} />
           )}
           {/* <PassedElectionAccordion
             activeCouncil={councils.find(
-              (council) => council.slug === (searchParams.get('active') as CouncilSlugs)
+              (council) => council.slug === (activeCouncil)
             )}
           /> */}
         </Flex>
@@ -31,7 +33,7 @@ export default function Councils() {
           editNomination={searchParams.get('editNomination') === 'true' ? true : false}
           nominate={searchParams.get('nominate') === 'true' ? true : false}
           selectedUserAddress={searchParams.get('view') as string}
-          activeCouncil={searchParams.get('active') as CouncilSlugs}
+          activeCouncil={activeCouncil}
           editProfile={searchParams.get('editProfile') === 'true' ? true : false}
         />
       </Flex>

@@ -43,8 +43,8 @@ export default function UserListItem({
           colorScheme={isNominated ? 'gray' : 'cyan'}
           onClick={() => {
             !isNominated
-              ? navigate('/councils' + `?active=${activeCouncil}&nominate=true`)
-              : navigate('/councils' + `?active=${activeCouncil}&view=${address}`);
+              ? navigate(`/councils/${activeCouncil}?nominate=true`)
+              : navigate(`/councils/${activeCouncil}?view=${address}`);
           }}
         >
           {isNominated && isOwn && (network.id === 11155111 || network.id === 10) ? (
@@ -59,7 +59,7 @@ export default function UserListItem({
           variant="outline"
           colorScheme="gray"
           onClick={() => {
-            navigate('/councils' + `?active=${activeCouncil}&view=${address}`);
+            navigate(`/councils/${activeCouncil}?view=${address}`);
           }}
           color="white"
         >
