@@ -26,15 +26,15 @@ export function CouncilCard({ council }: CouncilCardProps) {
     <Flex
       p="6"
       w={{ base: '100%', md: '290px' }}
-      h={{ base: 'auto', lg: '413px' }}
       borderWidth="1px"
       borderStyle="solid"
       borderColor="gray.900"
       borderRadius="base"
       flexDir="column"
       alignItems="center"
+      bg="navy.700"
     >
-      <Image src={council.image} h="80px" mb="4" />
+      <Image src={council.image} h="80px" w="80px" mb="4" />
       <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
         {council.title}
       </Heading>
@@ -85,7 +85,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
           )}
         </Flex>
       </Flex>
-      <Flex flexDir="column" w="100%">
+      <Flex flexDir="column" w="100%" mt="8">
         {councilPeriod === '1' ? (
           <>
             <Button
