@@ -91,7 +91,8 @@ function useUpdateUserDetailsMutation() {
         setUuid(signInResponse.data.uuid);
         return signInResponse.data.uuid;
       } catch (e) {
-        console.error(e);
+        // eslint-disable-next-line no-console
+        console.log(e);
       }
     }
   };

@@ -21,7 +21,6 @@
     "jsx": "preserve",
     "incremental": false
   },
-
   "exclude": [
     "**/node_modules/**",
     "**/coverage/**",
@@ -33,6 +32,5 @@
     "**/cache/**",
     "governance/subgraph/*"
   ],
-
   "include": ["**/*.ts", "**/*.tsx"]
 }

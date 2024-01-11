@@ -8,12 +8,10 @@ export const SpartanCouncilContract = new Contract(
 );
 export const AmbassadorCouncilContract = new Contract(
   '0x62F424908BEaF103d0Dd1e0b230356A3785e409d',
-
   electionModuleABI
 );
 export const GrantsCouncilContract = new Contract(
   '0x62F424908BEaF103d0Dd1e0b230356A3785e409d',
-
   electionModuleABI
 );
 export const TreasuryCouncilContract = new Contract(
