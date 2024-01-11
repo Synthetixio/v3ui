@@ -50,6 +50,7 @@ export function Header() {
   const { icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
+  const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
   const queryClient = useQueryClient();
   const [
     { data: spartanBallot, isFetched: spartanIsFetched },
@@ -67,13 +68,14 @@ export function Header() {
     if (
       wallet?.address &&
       currentNetwork.id &&
-      !localStorageUpdated &&
       spartanIsFetched &&
       ambassadorIsFetched &&
       grantsIsFetched &&
-      treasuryFetched
+      treasuryFetched &&
+      (!localStorageUpdated || !fetchedNetwork.includes(currentNetwork.id))
     ) {
       setLocalStorageUpdated(true);
+      setFetchedNetwork([...fetchedNetwork, currentNetwork.id]);
       const selection = localStorage.getItem('voteSelection');
       if (!selection) localStorage.setItem('voteSelection', '');
       const parsedSelection = JSON.parse(selection ? selection : '{}');
@@ -97,6 +99,7 @@ export function Header() {
     grantsBallot,
     treasuryBallot,
     queryClient,
+    fetchedNetwork,
   ]);
 
   const switchNetwork = async (id: number) => {
