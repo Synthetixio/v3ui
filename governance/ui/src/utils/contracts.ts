@@ -35,4 +35,4 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
-export const SnapshotRecordContractAddress = '0x2f415c16d5527f630398bB4d787cd679726DaCE2';
+export const SnapshotRecordContractAddress = '0xCb31766607a28bb381064d82C8146B8245f2c3c0';

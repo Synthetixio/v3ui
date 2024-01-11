@@ -21,8 +21,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
+import useGetUserBallot from '../../queries/useGetUserBallot';
+import { useQueryClient } from '@tanstack/react-query';
 
 const activeIcon = (currentNetwork: Network) => {
   switch (currentNetwork.id) {
@@ -47,6 +49,55 @@ export function Header() {
   const currentNetwork = useNetwork();
   const { icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
+  const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
+  const queryClient = useQueryClient();
+  const [
+    { data: spartanBallot, isFetched: spartanIsFetched },
+    { data: ambassadorBallot, isFetched: ambassadorIsFetched },
+    { data: grantsBallot, isFetched: grantsIsFetched },
+    { data: treasuryBallot, isFetched: treasuryFetched },
+  ] = [
+    useGetUserBallot('spartan'),
+    useGetUserBallot('ambassador'),
+    useGetUserBallot('grants'),
+    useGetUserBallot('treasury'),
+  ];
+
+  useEffect(() => {
+    if (
+      wallet?.address &&
+      currentNetwork.id &&
+      !localStorageUpdated &&
+      spartanIsFetched &&
+      ambassadorIsFetched &&
+      grantsIsFetched &&
+      treasuryFetched
+    ) {
+      setLocalStorageUpdated(true);
+      const selection = localStorage.getItem('voteSelection');
+      if (!selection) localStorage.setItem('voteSelection', '');
+      const parsedSelection = JSON.parse(selection ? selection : '{}');
+      parsedSelection['spartan'] = spartanBallot?.votedCandidates[0];
+      parsedSelection['ambassador'] = ambassadorBallot?.votedCandidates[0];
+      parsedSelection['grants'] = grantsBallot?.votedCandidates[0];
+      parsedSelection['treasury'] = treasuryBallot?.votedCandidates[0];
+      localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+      queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
+    }
+  }, [
+    wallet?.address,
+    currentNetwork.id,
+    localStorageUpdated,
+    spartanIsFetched,
+    grantsIsFetched,
+    ambassadorIsFetched,
+    treasuryFetched,
+    spartanBallot,
+    ambassadorBallot,
+    grantsBallot,
+    treasuryBallot,
+    queryClient,
+  ]);
 
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });

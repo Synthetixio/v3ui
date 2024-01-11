@@ -137,7 +137,7 @@ export default function Admin() {
                     const snapshotId = await proxy
                       .connect(signer)
                       .getVotePowerSnapshotId(SnapshotRecordContractAddress, electionId);
-                    new Contract(SnapshotRecordContractAddress, [
+                    await new Contract(SnapshotRecordContractAddress, [
                       'function setBalanceOfOnPeriod(address user, uint balance, uint periodId) external',
                     ])
                       .connect(signer)
