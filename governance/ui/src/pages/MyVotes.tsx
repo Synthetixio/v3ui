@@ -7,8 +7,24 @@ import { useQueryClient } from '@tanstack/react-query';
 import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
 import '../components/UserProfileCard/UserProfileCard.css';
+import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { useSigner } from '@snx-v3/useBlockchain';
+import useGetUserBallot from '../queries/useGetUserBallot';
 
 export default function MyVotes() {
+  const signer = useSigner();
+  const [
+    { data: spartanBallot },
+    // { data: ambassadorBallot },
+    // { data: grantsBallot },
+    // { data: treasuryBallot },
+  ] = [
+    useGetUserBallot('spartan'),
+    // useGetUserBallot('ambassador'),
+    // useGetUserBallot('grants'),
+    // useGetUserBallot('treasury'),
+  ];
+
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
   const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
@@ -169,7 +185,28 @@ export default function MyVotes() {
               8923748923,2390487239 TODO
             </Text>
           </Flex>
-          <Button size="md">Cast Vote</Button>
+          <Button
+            size="md"
+            onClick={async () => {
+              if (signer) {
+                try {
+                  await getCouncilContract('spartan')
+                    .connect(signer)
+                    .prepareBallotWithSnapshot(
+                      SnapshotRecordContractAddress,
+                      await signer.getAddress()
+                    );
+                } catch (error) {
+                  console.error('already prepared ballot');
+                }
+                await getCouncilContract('spartan')
+                  .connect(signer)
+                  .cast([candidates?.spartan.address], [spartanBallot?.votingPower]);
+              }
+            }}
+          >
+            Cast Vote
+          </Button>
         </Flex>
       </Flex>
     </Flex>

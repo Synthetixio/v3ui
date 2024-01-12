@@ -4,7 +4,7 @@ export const motherShipProvider = new providers.JsonRpcProvider(
   process.env.DEV
     ? 'http://127.0.0.1:19000/'
     : process.env.TESTNET
-      ? `https://optimism-goerli.infura.io/v3/${process.env.INFURA_KEY}`
+      ? `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`
       : 'https://mainnet.optimism.io'
 );
 

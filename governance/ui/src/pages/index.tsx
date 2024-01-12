@@ -26,25 +26,6 @@ const router = createBrowserRouter([
       { path: '/my-votes', element: <MyVotes /> },
     ],
   },
-  //  Todo @dev remove them?
-  // {
-  //   path: '/members',
-  //   element: (
-  //     <>
-  //       <Header />
-  //       <Members />
-  //     </>
-  //   ),
-  // },
-  // {
-  //   path: '/profile',
-  //   element: (
-  //     <>
-  //       <Header />
-  //       <Profile />
-  //     </>
-  //   ),
-  // },
 ]);
 
 const customTheme = extendTheme({
