@@ -34,7 +34,7 @@ export default function useGetUserDetailsQuery<T extends string | string[]>(wall
   return useQuery({
     queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
-      if (walletAddress) return await getUserDetails(walletAddress);
+      return await getUserDetails(walletAddress!);
     },
     enabled: !!walletAddress,
     staleTime: 900000,

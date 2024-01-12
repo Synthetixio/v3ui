@@ -52,26 +52,15 @@ export function Header() {
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
   const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
   const queryClient = useQueryClient();
-  const [
-    { data: spartanBallot, isFetched: spartanIsFetched },
-    { data: ambassadorBallot, isFetched: ambassadorIsFetched },
-    { data: grantsBallot, isFetched: grantsIsFetched },
-    { data: treasuryBallot, isFetched: treasuryFetched },
-  ] = [
-    useGetUserBallot('spartan'),
-    useGetUserBallot('ambassador'),
-    useGetUserBallot('grants'),
-    useGetUserBallot('treasury'),
+  const [{ data: ballots, isFetched }] = [
+    useGetUserBallot(['spartan', 'ambassador', 'grants', 'treasury']),
   ];
 
   useEffect(() => {
     if (
       wallet?.address &&
       currentNetwork.id &&
-      spartanIsFetched &&
-      ambassadorIsFetched &&
-      grantsIsFetched &&
-      treasuryFetched &&
+      isFetched &&
       (!localStorageUpdated || !fetchedNetwork.includes(currentNetwork.id))
     ) {
       setLocalStorageUpdated(true);
@@ -79,10 +68,17 @@ export function Header() {
       const selection = localStorage.getItem('voteSelection');
       if (!selection) localStorage.setItem('voteSelection', '');
       const parsedSelection = JSON.parse(selection ? selection : '{}');
-      parsedSelection['spartan'] = spartanBallot?.votedCandidates[0];
-      parsedSelection['ambassador'] = ambassadorBallot?.votedCandidates[0];
-      parsedSelection['grants'] = grantsBallot?.votedCandidates[0];
-      parsedSelection['treasury'] = treasuryBallot?.votedCandidates[0];
+      ballots?.forEach((ballot, index) => {
+        const council =
+          index === 0
+            ? 'spartan'
+            : index === 1
+              ? 'ambassador'
+              : index === 2
+                ? 'grants'
+                : 'treasury';
+        parsedSelection[council] = ballot.votedCandidates[0];
+      });
       localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
       queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
     }
@@ -90,14 +86,8 @@ export function Header() {
     wallet?.address,
     currentNetwork.id,
     localStorageUpdated,
-    spartanIsFetched,
-    grantsIsFetched,
-    ambassadorIsFetched,
-    treasuryFetched,
-    spartanBallot,
-    ambassadorBallot,
-    grantsBallot,
-    treasuryBallot,
+    isFetched,
+    ballots,
     queryClient,
     fetchedNetwork,
   ]);
