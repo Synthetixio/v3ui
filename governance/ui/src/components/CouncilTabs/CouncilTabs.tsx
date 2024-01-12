@@ -1,9 +1,10 @@
-import { Flex, Hide, Image, Show, Text } from '@chakra-ui/react';
+import { Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 import { CouncilsSelect } from './CouncilSelect';
+import { CouncilImage } from '../CouncilImage';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -54,19 +55,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                 alignItems="center"
                 bg="navy.700"
               >
-                <Flex
-                  borderRadius="50%"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="gray.900"
-                  w="8"
-                  h="8"
-                  justifyContent="center"
-                  alignItems="center"
-                  mr="3"
-                >
-                  <Image src={council.image} w="6" h="6" />
-                </Flex>
+                <CouncilImage imageUrl={council.image} />
                 <Text fontSize="x-small" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
