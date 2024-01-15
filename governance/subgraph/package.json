@@ -5,9 +5,9 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "build:optimism-goerli": "npm run codegen  && graph build --output-dir ./build/optimism-goerli --network optimism-goerli",
-    "deploy:optimism-goerli": "graph deploy --output-dir ./build/optimism-goerli --network optimism-goerli synthetixio-governance-subgraph-optimism-goerli --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ??? --ipfs https://ipfs.satsuma.xyz",
+    "deploy:optimism-goerli": "graph deploy --output-dir ./build/optimism-goerli --network optimism-goerli synthetixio-governance-subgraph-optimism-goerli --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz",
     "build:optimism": "npm run codegen  && graph build --output-dir ./build/optimism --network optimism",
-    "deploy:optimism": "graph deploy --output-dir ./build/optimism --network optimism synthetixio-governance-subgraph --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ??? --ipfs https://ipfs.satsuma.xyz --output-dir ./build/optimism --network optimism",
+    "deploy:optimism": "graph deploy --output-dir ./build/optimism --network optimism synthetixio-governance-subgraph --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz --output-dir ./build/optimism --network optimism",
     "test": "graph test"
   },
   "dependencies": {

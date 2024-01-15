@@ -21,8 +21,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
+import useGetUserBallot from '../../queries/useGetUserBallot';
+import { useQueryClient } from '@tanstack/react-query';
 
 const activeIcon = (currentNetwork: Network) => {
   switch (currentNetwork.id) {
@@ -47,6 +49,48 @@ export function Header() {
   const currentNetwork = useNetwork();
   const { icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
+  const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
+  const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
+  const queryClient = useQueryClient();
+  const [{ data: ballots, isFetched }] = [
+    useGetUserBallot(['spartan', 'ambassador', 'grants', 'treasury']),
+  ];
+
+  useEffect(() => {
+    if (
+      wallet?.address &&
+      currentNetwork.id &&
+      isFetched &&
+      (!localStorageUpdated || !fetchedNetwork.includes(currentNetwork.id))
+    ) {
+      setLocalStorageUpdated(true);
+      setFetchedNetwork([...fetchedNetwork, currentNetwork.id]);
+      const selection = localStorage.getItem('voteSelection');
+      if (!selection) localStorage.setItem('voteSelection', '');
+      const parsedSelection = JSON.parse(selection ? selection : '{}');
+      ballots?.forEach((ballot, index) => {
+        const council =
+          index === 0
+            ? 'spartan'
+            : index === 1
+              ? 'ambassador'
+              : index === 2
+                ? 'grants'
+                : 'treasury';
+        parsedSelection[council] = ballot.votedCandidates[0];
+      });
+      localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+      queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
+    }
+  }, [
+    wallet?.address,
+    currentNetwork.id,
+    localStorageUpdated,
+    isFetched,
+    ballots,
+    queryClient,
+    fetchedNetwork,
+  ]);
 
   const switchNetwork = async (id: number) => {
     return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
