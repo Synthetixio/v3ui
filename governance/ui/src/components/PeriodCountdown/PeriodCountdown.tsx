@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from '@chakra-ui/react';
+import { Box, Spinner, Text } from '@chakra-ui/react';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import Timer from '../Timer/Timer';
@@ -44,7 +44,7 @@ export default function PeriodCountdown() {
   );
 
   return lowestPeriod !== 'eval' ? (
-    <Flex
+    <Box
       bg={
         lowestPeriod === 'nomination'
           ? 'orange.700'
@@ -57,11 +57,10 @@ export default function PeriodCountdown() {
       py="1"
       w={{ base: '121px', md: '230px' }}
       alignItems="center"
-      flexWrap="wrap"
-      justifyContent="center"
-      maxH="44px"
+      maxH="50px"
+      maxW="fit-content"
     >
-      <Text fontSize={{ base: 'xs', lg: 'sm' }} mr="2">
+      <Text fontSize="12px">
         {lowestPeriod === 'admin'
           ? 'Next Elections:'
           : lowestPeriod === 'nomination'
@@ -83,6 +82,6 @@ export default function PeriodCountdown() {
           />
         )
       )}
-    </Flex>
+    </Box>
   ) : null;
 }

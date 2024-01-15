@@ -115,7 +115,7 @@ export function Header() {
       borderBottomColor="gray.900"
       justifyContent="center"
     >
-      <Flex maxW="1440px" w="100%">
+      <Flex maxW="1440px" w="100%" alignItems="center">
         <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
           <Image src="/snx-header.svg" pr="10px" />
           <Show above="md">
