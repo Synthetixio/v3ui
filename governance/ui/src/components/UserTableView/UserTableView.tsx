@@ -40,6 +40,7 @@ export default function UserTableView({
           variant="outline"
           onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
           color="white"
+          rounded="base"
         >
           {isNomination && 'View'}
         </Button>

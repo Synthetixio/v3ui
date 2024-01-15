@@ -81,7 +81,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             {startDay} {startMonth} {startYear} - {endDay} {endMonth} {endYear}
           </Text>
         </Flex>
-        <Flex>
+        <Flex justifyContent="flex-end">
           <PeriodCountdown />
         </Flex>
       </Flex>
