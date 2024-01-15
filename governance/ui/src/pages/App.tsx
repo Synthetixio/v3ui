@@ -15,7 +15,13 @@ function App() {
             of a DAO.
           </Text>
         </Flex>
-        <Flex wrap="wrap" w="100%" gap="6" mt="8" justifyContent={{ md: 'center', lg: 'initial' }}>
+        <Flex
+          wrap="wrap"
+          w="100%"
+          gap={{ base: 4, lg: 6 }}
+          mt="8"
+          justifyContent={{ md: 'center' }}
+        >
           {councils.map((council) => (
             <CouncilCard council={council} key={council.address} />
           ))}
