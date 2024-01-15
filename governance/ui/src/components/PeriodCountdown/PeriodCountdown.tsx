@@ -10,27 +10,19 @@ export default function PeriodCountdown() {
   const { data: grantsCouncilPeriod } = useGetCurrentPeriod('grants');
   const { data: treasuryCouncilPeriod } = useGetCurrentPeriod('treasury');
 
-  const lowestPeriod =
-    spartanCouncilPeriod === '0' ||
-    ambassadorCouncilPeriod === '0' ||
-    grantsCouncilPeriod === '0' ||
-    treasuryCouncilPeriod === '0'
-      ? 'admin'
-      : spartanCouncilPeriod === '1' ||
-          ambassadorCouncilPeriod === '1' ||
-          grantsCouncilPeriod === '1' ||
-          treasuryCouncilPeriod === '1'
-        ? 'nomination'
-        : spartanCouncilPeriod === '2' ||
-            ambassadorCouncilPeriod === '2' ||
-            grantsCouncilPeriod === '2' ||
-            treasuryCouncilPeriod === '2'
-          ? 'voting'
-          : 'eval';
+  // @dev we want to show the timer depending on the following hierarchy
+  // Admin => Nomination => Voting => Eval
+  const lowestPeriodCouncilEpoch = getLowestPeriodCouncilEpoch(
+    spartanCouncilPeriod,
+    ambassadorCouncilPeriod,
+    grantsCouncilPeriod,
+    treasuryCouncilPeriod
+  );
 
   const { data: schedule, isLoading } = useGetEpochSchedule(
     spartanCouncilPeriod && ambassadorCouncilPeriod && grantsCouncilPeriod && treasuryCouncilPeriod
-      ? ([
+      ? // @dev fetch the correct EpochSchedule depending on the hierarchy explained above
+        ([
           [spartanCouncilPeriod, 'spartan'],
           [ambassadorCouncilPeriod, 'ambassador'],
           [grantsCouncilPeriod, 'grants'],
@@ -43,12 +35,14 @@ export default function PeriodCountdown() {
       : undefined
   );
 
-  return lowestPeriod !== 'eval' ? (
+  if (lowestPeriodCouncilEpoch) return;
+
+  return lowestPeriodCouncilEpoch !== 'eval' ? (
     <Box
       bg={
-        lowestPeriod === 'nomination'
+        lowestPeriodCouncilEpoch === 'nomination'
           ? 'orange.700'
-          : lowestPeriod === 'voting'
+          : lowestPeriodCouncilEpoch === 'voting'
             ? 'teal.700'
             : 'gray.700'
       }
@@ -61,21 +55,21 @@ export default function PeriodCountdown() {
       maxW="fit-content"
     >
       <Text fontSize="12px">
-        {lowestPeriod === 'admin'
+        {lowestPeriodCouncilEpoch === 'admin'
           ? 'Next Elections:'
-          : lowestPeriod === 'nomination'
+          : lowestPeriodCouncilEpoch === 'nomination'
             ? 'Voting starts'
             : 'Voting ends'}
       </Text>
       {isLoading ? (
         <Spinner colorScheme="cyan" />
-      ) : lowestPeriod === 'admin' && schedule ? (
+      ) : lowestPeriodCouncilEpoch === 'admin' && schedule ? (
         <Timer expiryTimestamp={schedule.nominationPeriodStartDate * 1000} />
       ) : (
         (schedule?.votingPeriodStartDate || schedule?.votingPeriodStartDate) && (
           <Timer
             expiryTimestamp={
-              lowestPeriod === 'nomination'
+              lowestPeriodCouncilEpoch === 'nomination'
                 ? schedule.votingPeriodStartDate * 1000
                 : schedule.endDate * 1000
             }
@@ -84,4 +78,35 @@ export default function PeriodCountdown() {
       )}
     </Box>
   ) : null;
+}
+
+function getLowestPeriodCouncilEpoch(
+  spartanCouncilPeriod?: string,
+  ambassadorCouncilPeriod?: string,
+  grantsCouncilPeriod?: string,
+  treasuryCouncilPeriod?: string
+) {
+  if (
+    spartanCouncilPeriod ||
+    ambassadorCouncilPeriod ||
+    grantsCouncilPeriod ||
+    treasuryCouncilPeriod
+  )
+    return undefined;
+  return spartanCouncilPeriod === '0' ||
+    ambassadorCouncilPeriod === '0' ||
+    grantsCouncilPeriod === '0' ||
+    treasuryCouncilPeriod === '0'
+    ? 'admin'
+    : spartanCouncilPeriod === '1' ||
+        ambassadorCouncilPeriod === '1' ||
+        grantsCouncilPeriod === '1' ||
+        treasuryCouncilPeriod === '1'
+      ? 'nomination'
+      : spartanCouncilPeriod === '2' ||
+          ambassadorCouncilPeriod === '2' ||
+          grantsCouncilPeriod === '2' ||
+          treasuryCouncilPeriod === '2'
+        ? 'voting'
+        : 'eval';
 }
