@@ -1,10 +1,11 @@
-import { FlexProps, Flex, Image } from '@chakra-ui/react';
+import { FlexProps, Flex, Image, ImageProps } from '@chakra-ui/react';
 
 interface CouncilImageProps extends FlexProps {
   imageUrl: string;
+  imageProps?: ImageProps;
 }
 
-export const CouncilImage = ({ imageUrl, ...props }: CouncilImageProps) => {
+export const CouncilImage = ({ imageUrl, imageProps, ...props }: CouncilImageProps) => {
   return (
     <Flex
       borderRadius="50%"
@@ -18,7 +19,7 @@ export const CouncilImage = ({ imageUrl, ...props }: CouncilImageProps) => {
       mr="3"
       {...props}
     >
-      <Image src={imageUrl} w="6" h="6" />
+      <Image src={imageUrl} w="6" h="6" {...imageProps} />
     </Flex>
   );
 };

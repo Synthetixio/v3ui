@@ -24,7 +24,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           borderBottomWidth="1px"
           borderStyle="solid"
           borderBottomColor="gray.900"
-          p="4"
+          px={4}
+          py={1}
         >
           <CouncilsSelect activeCouncil={activeCouncil} />
         </Flex>
@@ -60,13 +61,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                 bg="navy.700"
                 _hover={{ borderColor: 'cyan.500' }}
               >
-                <CouncilImage imageUrl={council.image} />
+                <CouncilImage ml={2} imageUrl={council.image} />
                 <Text fontSize="12px" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
               </Flex>
             ))}
-
             <Flex
               key="tab-my-votes"
               cursor="pointer"

@@ -17,7 +17,7 @@ import {
 import { Council } from '../../utils/councils';
 import { Badge } from '../Badge';
 
-export function PassedElectionAccordion({ activeCouncil }: { activeCouncil?: Council }) {
+export function PastElectionAccordion({ activeCouncil }: { activeCouncil?: Council }) {
   return (
     <Accordion allowMultiple allowToggle>
       <AccordionItem mb="6">

@@ -1,28 +1,21 @@
-import { Flex, Heading, Image, Text } from '@chakra-ui/react';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
+import { CouncilImage } from '../CouncilImage';
 
 export default function CouncilInformation({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: getCouncilMembers } = useGetCouncilMembers(activeCouncil);
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex w="100%" maxW="735px" h="178px" py="5">
-      <Flex
-        borderRadius="50%"
-        borderWidth="1px"
-        borderStyle="solid"
-        borderColor="gray.900"
-        w="32"
-        h="32"
-        justifyContent="center"
-        alignItems="center"
-        mr="3"
-        bg="navy.700"
-      >
-        <Image src={council?.image} w="24" h="24" />
-      </Flex>
-      <Flex flexDir="column">
+    <Flex py="5">
+      <CouncilImage
+        imageUrl={council?.image || ''}
+        width="130px"
+        height="130px"
+        imageProps={{ w: '108px', h: '108px' }}
+      />
+      <Flex flexDir="column" maxWidth="80%">
         <Heading fontSize="lg" mb="2">
           {council?.title}
         </Heading>
