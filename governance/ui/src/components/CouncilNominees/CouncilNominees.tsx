@@ -1,4 +1,4 @@
-import { Divider, Flex, Heading, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Divider, Flex, Heading, Input, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
@@ -7,13 +7,21 @@ import { useWallet } from '@snx-v3/useBlockchain';
 import UserListItem from '../UserListItem/UserListItem';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
+import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
+import { useMemo, useState } from 'react';
+import { utils } from 'ethers';
+import { ChevronDown, ChevronUp } from '@snx-v3/icons';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
+  const [searchAddress, setSearchAddress] = useState('');
+  const [descending, setDescending] = useState(false);
+
   const wallet = useWallet();
 
   const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
+  const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
 
   const startDay =
     councilSchedule?.endDate && new Date(councilSchedule?.endDate * 1000).getUTCDate();
@@ -53,14 +61,26 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
     startYear === endYear && startQuarter === endQuarter
       ? `Q${startQuarter} ${startYear}`
       : startYear === endYear
-        ? `Q${startQuarter} - ${endQuarter} ${endYear}`
+        ? `Q${startQuarter} - ${endYear}`
         : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
 
-  let sortedNominees = !!councilNomineesDetails?.length
-    ? councilNomineesDetails.filter(
-        (nominee) => nominee?.address.toLowerCase() !== wallet?.address.toLowerCase()
-      )
-    : [];
+  let sortedNominees = useMemo(() => {
+    return !!councilNomineesDetails?.length
+      ? councilNomineesDetails
+          .filter((nominee) => {
+            if (councilPeriod !== '2') {
+              nominee?.address.toLowerCase() !== wallet?.address.toLowerCase();
+            }
+            return true;
+          })
+          .filter((nominee) => {
+            if (utils.isAddress(searchAddress)) {
+              return nominee.address.toLowerCase() === searchAddress;
+            }
+            return true;
+          })
+      : [];
+  }, [searchAddress, councilNomineesDetails, wallet?.address, councilPeriod]);
 
   return (
     <Flex
@@ -88,34 +108,56 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       <Divider />
       {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
       <Divider />
-      <Heading fontSize="medium" ml="6" my="7">
-        Current Nominees
-      </Heading>
-      {/* TODO @dev add search bar for addresses */}
+      <Flex justifyContent="space-between" alignItems="center" p="6">
+        <Heading fontSize="medium">
+          Current {councilPeriod === '1' ? 'Nominees' : 'Results'}
+        </Heading>
+        <Input
+          maxW="320px"
+          bg="navy.900"
+          placeholder="Search"
+          onChange={(e) => setSearchAddress(e.target.value.trim().toLowerCase())}
+        />
+      </Flex>
       <Table>
-        {/* TODO @dev add sorting functionality */}
         <Thead>
           <Tr>
+            {councilPeriod === '2' && <Th w="20px">N°</Th>}
             <Th
+              textTransform="capitalize"
+              w="200px"
               cursor="pointer"
+              userSelect="none"
               onClick={() => {
+                setDescending(!descending);
                 sortedNominees = sortedNominees.sort((a, b) => {
-                  if (a?.username && b?.username) {
-                    return a.username.localeCompare(b.username);
+                  if (a.username && b.username) {
+                    return descending
+                      ? a.username.localeCompare(b.username)
+                      : a.username.localeCompare(b.username) * -1;
                   }
-                  return a?.address.localeCompare(b.address);
+                  return descending
+                    ? a?.address.localeCompare(b.address)
+                    : a?.address.localeCompare(b.address) * -1;
                 });
               }}
             >
-              Name
+              Name {councilPeriod !== '2' && (descending ? <ChevronUp /> : <ChevronDown />)}
             </Th>
-            <Th cursor="pointer">Role</Th>
+            <Th textTransform="capitalize">Role</Th>
+            {councilPeriod === '2' && <Th textTransform="capitalize">Votes</Th>}
+            {councilPeriod === '2' && (
+              <Th textTransform="capitalize" px="0">
+                Voting Power
+              </Th>
+            )}
           </Tr>
         </Thead>
         <Tbody>
           {!!sortedNominees?.length &&
-            sortedNominees.map((councilNominee) => (
+            sortedNominees.map((councilNominee, index) => (
               <UserTableView
+                place={index}
                 user={councilNominee!}
                 isNomination
                 activeCouncil={activeCouncil}

@@ -124,7 +124,11 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
             {user?.pfpImageId ? (
               <Image src={user.pfpImageId} w="10" h="10" />
             ) : (
-              <Blockies seed={user?.address || '0x'} size={10} className="fully-rounded" />
+              <Blockies
+                seed={user?.address.toLowerCase() || '0x'}
+                size={10}
+                className="fully-rounded"
+              />
             )}
             <Flex flexDirection="column" ml="2">
               <Text fontSize="xs" color="white" fontWeight="bold">
