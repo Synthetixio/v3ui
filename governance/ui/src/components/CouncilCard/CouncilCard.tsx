@@ -51,7 +51,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Text color="gray.500" fontSize="12px" lineHeight="16px">
               Members
             </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
                 <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
                   {electedCouncilMembers?.length}
@@ -78,10 +78,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
               Votes Received
             </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-                  last epoch
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
+                  0000
                 </Text>
               </Fade>
             </Skeleton>
@@ -91,7 +91,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
               Nominees
             </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
                 <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
                   {councilNominees?.length}
@@ -104,10 +104,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
               Votes Received
             </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-                  this epoch
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
+                  0000
                 </Text>
               </Fade>
             </Skeleton>

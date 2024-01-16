@@ -13,7 +13,8 @@ export const Badge: FC<Props> = ({ children, color = 'cyan', ...props }) => {
         borderColor: color + '.500',
         bg: color + '.900',
         color: color + '.500',
-        borderWidth: 2,
+        borderWidth: 1,
+        fontSize: '10px',
       }}
       {...props}
     >
