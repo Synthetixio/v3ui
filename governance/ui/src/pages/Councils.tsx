@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
 import { useParams, useSearchParams } from 'react-router-dom';
