@@ -10,7 +10,6 @@ import {
   Textarea,
   Tooltip,
 } from '@chakra-ui/react';
-import { prettyString } from '@snx-v3/format';
 import { useForm } from 'react-hook-form';
 import { ipfs } from '../../utils/ipfs';
 import { useNavigate } from 'react-router-dom';
