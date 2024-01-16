@@ -26,6 +26,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           borderBottomColor="gray.900"
           px={4}
           py={1}
+          position="sticky"
+          top="0px"
         >
           <CouncilsSelect activeCouncil={activeCouncil} />
         </Flex>
