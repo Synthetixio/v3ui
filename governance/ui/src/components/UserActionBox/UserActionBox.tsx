@@ -96,8 +96,8 @@ export default function UserActionBox({
 
   return md ? (
     <Flex
-      w="483px"
-      h="644px"
+      w="100%"
+      height="100%"
       justifyContent="center"
       alignItems="center"
       borderWidth="1px"
