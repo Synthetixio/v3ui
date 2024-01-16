@@ -3,7 +3,7 @@ import Blockies from 'react-blockies';
 import '../UserProfileCard/UserProfileCard.css';
 import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -16,6 +16,7 @@ export default function UserListItem({
   address: string;
   activeCouncil: CouncilSlugs;
 }) {
+  const [searchParams] = useSearchParams();
   const wallet = useWallet();
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: isNominated } = useGetIsNominated(address);
@@ -25,19 +26,33 @@ export default function UserListItem({
   const isOwn = wallet?.address.toLowerCase() === user?.address.toLowerCase();
 
   return (
-    <Flex p="6" justifyContent="space-between" alignItems="center">
+    <Flex
+      p="6"
+      justifyContent="space-between"
+      alignItems="center"
+      cursor="pointer"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/councils/${activeCouncil}?view=${address}`);
+      }}
+      borderY="1px solid"
+      borderX={address === searchParams.get('view') ? '1px solid' : ''}
+      borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
+      _hover={{ background: 'rgba(255,255,255,0.12)' }}
+    >
       <Flex alignItems="center">
         {user?.pfpImageId ? (
-          <Image src={user.pfpImageId} w="7" h="7" />
+          <Image src={user.pfpImageId} w="8" h="8" />
         ) : (
-          <Blockies seed={address} size={14} className="fully-rounded" />
+          <Blockies seed={address} size={8} className="fully-rounded" />
         )}
-        <Text fontWeight="bold" fontSize="small" ml="2">
+        <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.ens ? user.ens : shortAddress(user?.address)}
         </Text>
       </Flex>
       {councilPeriod === '1' ? (
         <Button
+          rounded="base"
           size="xs"
           variant={isNominated ? 'outline' : 'solid'}
           colorScheme={isNominated ? 'gray' : 'cyan'}

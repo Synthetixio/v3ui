@@ -18,15 +18,18 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         justifyContent="center"
         alignItems="center"
         mr="3"
+        bg="navy.700"
       >
-        <Image src={council?.image} w="32" h="32" />
+        <Image src={council?.image} w="24" h="24" />
       </Flex>
       <Flex flexDir="column">
-        <Heading fontSize="large">{council?.title}</Heading>
+        <Heading fontSize="lg" mb="2">
+          {council?.title}
+        </Heading>
         <Text fontSize="sm" color="gray.500">
           {council?.description}
         </Text>
-        <Flex justifyContent="space-between" w="100%">
+        <Flex justifyContent="space-between" w="100%" mt="2">
           <Heading fontSize="xs" mr="11">
             Council Seats: {getCouncilMembers?.length}
           </Heading>

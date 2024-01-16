@@ -35,7 +35,7 @@ export default function PeriodCountdown() {
       : undefined
   );
 
-  if (lowestPeriodCouncilEpoch) return;
+  if (!lowestPeriodCouncilEpoch) return;
 
   return lowestPeriodCouncilEpoch !== 'eval' ? (
     <Box
@@ -87,10 +87,10 @@ function getLowestPeriodCouncilEpoch(
   treasuryCouncilPeriod?: string
 ) {
   if (
-    spartanCouncilPeriod ||
-    ambassadorCouncilPeriod ||
-    grantsCouncilPeriod ||
-    treasuryCouncilPeriod
+    !spartanCouncilPeriod ||
+    !ambassadorCouncilPeriod ||
+    !grantsCouncilPeriod ||
+    !treasuryCouncilPeriod
   )
     return undefined;
   return spartanCouncilPeriod === '0' ||
