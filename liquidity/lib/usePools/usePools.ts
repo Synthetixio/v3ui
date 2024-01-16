@@ -27,6 +27,7 @@ export function usePools() {
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
 
+      // @ts-ignore TODO: remove eventually when types are aligned
       const [preferredPoolIdRaw, approvedPoolIdsRaw] = await CoreProxy.callStatic.multicall([
         CoreProxy.interface.encodeFunctionData('getPreferredPool'),
         CoreProxy.interface.encodeFunctionData('getApprovedPools'),
@@ -53,6 +54,7 @@ export function usePools() {
         }))
       );
 
+      // @ts-ignore TODO: remove eventually when types are aligned
       const poolNamesRaw = await CoreProxy.callStatic.multicall(
         incompletePools.map(({ id }) => CoreProxy.interface.encodeFunctionData('getPoolName', [id]))
       );
