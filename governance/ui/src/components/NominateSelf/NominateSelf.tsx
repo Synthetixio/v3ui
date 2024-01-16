@@ -5,28 +5,30 @@ import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
+import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import Blockies from 'react-blockies';
+import '../UserProfileCard/UserProfileCard.css';
+import { shortAddress } from '../../utils/address';
 
 export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
   const navigate = useNavigate();
   const wallet = useWallet();
   const { mutate, isPending, isSuccess } = useNominateSelf(activeCouncil, wallet?.address);
+  const { data } = useGetUserDetailsQuery(wallet?.address);
 
   return (
     <Flex
       flexDirection="column"
       bg="navy.700"
       w="100%"
-      maxW="483px"
-      maxH="650px"
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"
       rounded="base"
       p="6"
-      justifyContent="center"
     >
-      {isSuccess ? (
+      {!isSuccess ? (
         <>
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -43,7 +45,21 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
-          {wallet?.address}
+          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+            {data?.pfpUrl ? (
+              <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
+            ) : (
+              <Blockies seed={data?.address || ''} size={10} className="fully-rounded" />
+            )}
+            <Flex ml="2" flexDir="column">
+              <Text fontWeight={700} fontSize="14px">
+                {data?.username ? data.username : 'No Username'}
+              </Text>
+              <Text fontSize="12px" color="gray.500">
+                Nomination Wallet: {shortAddress(data?.address)}
+              </Text>
+            </Flex>
+          </Flex>
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominated for:
           </Text>
@@ -84,7 +100,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       ) : (
         <>
           <Flex justifyContent="space-between">
-            <Heading fontSize="medium">Nominate Self</Heading>
+            <Heading fontSize="md">Nominate Self</Heading>
             <IconButton
               onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
               size="xs"
@@ -99,7 +115,21 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
             nominating the wallet below:
           </Text>
-          {wallet?.address}
+          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+            {data?.pfpUrl ? (
+              <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
+            ) : (
+              <Blockies seed={data?.address || ''} size={10} className="fully-rounded" />
+            )}
+            <Flex ml="2" flexDir="column">
+              <Text fontWeight={700} fontSize="14px">
+                {data?.username ? data.username : 'No Username'}
+              </Text>
+              <Text fontSize="12px" color="gray.500">
+                Nomination Wallet: {shortAddress(data?.address)}
+              </Text>
+            </Flex>
+          </Flex>
           <Text fontSize="sm" color="gray.500" mb="2">
             Chose which governing body you would like to represent if chosen as an elected member:
           </Text>
@@ -143,7 +173,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
-            <Button mt="12" onClick={() => mutate()}>
+            <Button onClick={() => mutate()} mt="auto">
               Nominate Self
             </Button>
           )}

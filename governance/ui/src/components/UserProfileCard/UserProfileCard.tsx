@@ -39,8 +39,6 @@ export function UserProfileCard({
         borderWidth="1px"
         p="4"
         w="100%"
-        maxW="483px"
-        h="612px"
       >
         {error.message}
       </Flex>

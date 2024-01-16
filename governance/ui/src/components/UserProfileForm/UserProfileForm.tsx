@@ -1,6 +1,15 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Button, Flex, IconButton, Image, Input, Spinner, Text, Textarea } from '@chakra-ui/react';
-import { prettyString } from '@snx-v3/format';
+import {
+  Button,
+  Flex,
+  IconButton,
+  Image,
+  Input,
+  Spinner,
+  Text,
+  Textarea,
+  Tooltip,
+} from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { ipfs } from '../../utils/ipfs';
 import { useNavigate } from 'react-router-dom';
@@ -55,10 +64,10 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         {user?.pfpUrl ? (
           <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
         ) : (
-          <Blockies size={14} seed={user!.address} className="fully-rounded" />
+          <Blockies size={14} seed={user?.address || ''} className="fully-rounded" />
         )}
         <Flex w="100%" flexDirection="column" position="relative" ml="2" gap="2">
-          <Text size="xs" color="gray.500">
+          <Text fontSize="12px" color="gray.500">
             Avatar
           </Text>
           <Input
@@ -86,19 +95,31 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
             <Input
               {...register('file')}
               type="file"
+              id="imgUpload"
+              display="none"
               accept="image/png, image/gif, image/jpeg"
-              mb="1"
-            />
-
-            <Button
-              variant="ghost"
-              onClick={async () => {
-                let file: any = getValues('file');
+              onChange={(e) => {
+                let file: any = e.target.files;
                 if (typeof file === 'object') {
                   file = file.item(0);
-                  const result = await ipfs.add(file);
-                  setValue('pfpUrl', result.path);
-                  resetField('file');
+                  ipfs.add(file).then((result) => {
+                    setValue('pfpUrl', result.path);
+                    resetField('file');
+                  });
+                }
+              }}
+            />
+            <Text fontSize="12px" color="gray.500">
+              Or
+            </Text>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={async () => {
+                try {
+                  document.getElementById('imgUpload')?.click();
+                } catch (error) {
+                  console.error(error);
                 }
               }}
             >
@@ -107,53 +128,75 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
           </Flex>
         </Flex>
       </Flex>
-      <Flex flexDir="column" w="100%">
-        <Text color="gray.500">Username</Text>
+      <Flex flexDir="column" w="100%" gap="2">
+        <Text color="gray.500" fontSize="12px" lineHeight="16px">
+          Username
+        </Text>
         <Input {...register('username')} mb="1" placeholder="John Doe" />
-        <Text color="gray.500">About</Text>
+        <Text color="gray.500" fontSize="12px" lineHeight="16px">
+          About
+        </Text>
         <Input {...register('about')} placeholder="OG DeFi Member" />
       </Flex>
       <div>
-        <Text color="gray.500">Discord</Text>
+        <Text color="gray.500" fontSize="12px" lineHeight="16px">
+          Discord
+        </Text>
         <Input {...register('discord')} placeholder="John Doe" />
       </div>
       <div>
-        <Text color="gray.500">Twitter</Text>
+        <Text color="gray.500" fontSize="12px" lineHeight="16px">
+          Twitter
+        </Text>
         <Input {...register('twitter')} placeholder="John_Doe" />
       </div>
       <div>
-        <Text color="gray.500">Github</Text>
+        <Text color="gray.500" fontSize="12px" lineHeight="16px">
+          Github
+        </Text>
         <Input {...register('github')} placeholder="John Doe" />
       </div>
       <Flex flexDirection="column" alignItems="flex-start">
-        <Text fontSize="14px" fontWeight="400" color="gray.500">
+        <Text fontSize="12px" fontWeight="400" color="gray.500">
           Wallet Address
         </Text>
-        <Button
-          size="xs"
-          display="flex"
-          variant="unstyled"
-          onClick={() => {
-            try {
-              navigator.clipboard.writeText(user!.address);
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-        >
-          <Text mr="1" fontSize="md" fontWeight="700">
-            {prettyString(user?.address || '')}
-          </Text>
-          <CopyIcon
-            w="12px"
-            h="12px"
-            onClick={() => navigator.clipboard.writeText(user!.address)}
-          />
-        </Button>
+        <Tooltip label="The wallet address cannot be edited, connect with a different wallet to change the address">
+          <Button
+            bg="rgba(255,255,255,0.12)"
+            size="xs"
+            display="flex"
+            justifyContent="space-between"
+            px="2"
+            variant="unstyled"
+            color="gray.500"
+            w="100%"
+            onClick={() => {
+              try {
+                navigator.clipboard.writeText(user!.address);
+              } catch (error) {
+                console.error(error);
+              }
+            }}
+          >
+            <Text mr="1" fontSize="14px" fontWeight="400">
+              {user?.address}
+            </Text>
+            <CopyIcon
+              w="12px"
+              h="12px"
+              onClick={() => navigator.clipboard.writeText(user!.address)}
+            />
+          </Button>
+        </Tooltip>
       </Flex>
       <div>
-        <Text color="gray.500">Governance Pitch</Text>
-        <Textarea {...register('delegationPitch')} placeholder="I will pump SNX" />
+        <Text color="gray.500" fontSize="12px">
+          Governance Pitch
+        </Text>
+        <Textarea
+          {...register('delegationPitch')}
+          placeholder="eg: How am I going to make a difference at Synthetix"
+        />
       </div>
 
       <Button
