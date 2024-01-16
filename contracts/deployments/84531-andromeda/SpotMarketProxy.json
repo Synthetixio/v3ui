@@ -3,47 +3,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "DeniedMulticallTarget",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "RecursiveMulticall",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes[]",
-        "name": "data",
-        "type": "bytes[]"
-      }
-    ],
-    "name": "multicall",
-    "outputs": [
-      {
-        "internalType": "bytes[]",
-        "name": "results",
-        "type": "bytes[]"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "implementation",
         "type": "address"
       }
@@ -488,6 +447,12 @@
         "internalType": "bytes32",
         "name": "sellFeedId",
         "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "strictStalenessTolerance",
+        "type": "uint256"
       }
     ],
     "name": "SynthPriceDataUpdated",
@@ -924,6 +889,11 @@
         "internalType": "bytes32",
         "name": "sellFeedId",
         "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strictPriceStalenessTolerance",
+        "type": "uint256"
       }
     ],
     "name": "updatePriceData",
@@ -1337,6 +1307,11 @@
         "internalType": "uint256",
         "name": "usdAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "enum Price.Tolerance",
+        "name": "stalenessTolerance",
+        "type": "uint8"
       }
     ],
     "name": "quoteBuyExactIn",
@@ -1388,6 +1363,11 @@
         "internalType": "uint256",
         "name": "synthAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "enum Price.Tolerance",
+        "name": "stalenessTolerance",
+        "type": "uint8"
       }
     ],
     "name": "quoteBuyExactOut",
@@ -1439,6 +1419,11 @@
         "internalType": "uint256",
         "name": "synthAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "enum Price.Tolerance",
+        "name": "stalenessTolerance",
+        "type": "uint8"
       }
     ],
     "name": "quoteSellExactIn",
@@ -1490,6 +1475,11 @@
         "internalType": "uint256",
         "name": "usdAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "enum Price.Tolerance",
+        "name": "stalenessTolerance",
+        "type": "uint8"
       }
     ],
     "name": "quoteSellExactOut",
@@ -1854,7 +1844,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "settlementTime",
+            "name": "commitmentTime",
             "type": "uint256"
           },
           {
@@ -2013,7 +2003,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "settlementTime",
+            "name": "commitmentTime",
             "type": "uint256"
           },
           {
@@ -2084,7 +2074,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "settlementTime",
+            "name": "commitmentTime",
             "type": "uint256"
           },
           {
@@ -2141,37 +2131,6 @@
       }
     ],
     "name": "MinimumSettlementAmountNotMet",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "internalType": "string[]",
-        "name": "urls",
-        "type": "string[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "callData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes4",
-        "name": "callbackFunction",
-        "type": "bytes4"
-      },
-      {
-        "internalType": "bytes",
-        "name": "extraData",
-        "type": "bytes"
-      }
-    ],
-    "name": "OffchainLookup",
     "type": "error"
   },
   {
@@ -2289,19 +2248,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "PRECISION",
-    "outputs": [
-      {
-        "internalType": "int256",
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint128",
@@ -2355,53 +2301,13 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "result",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "extraData",
-        "type": "bytes"
-      }
-    ],
-    "name": "settlePythOrder",
-    "outputs": [
-      {
         "internalType": "uint256",
-        "name": "finalOrderAmount",
+        "name": "duration",
         "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "fixedFees",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "utilizationFees",
-            "type": "uint256"
-          },
-          {
-            "internalType": "int256",
-            "name": "skewFees",
-            "type": "int256"
-          },
-          {
-            "internalType": "int256",
-            "name": "wrapperFees",
-            "type": "int256"
-          }
-        ],
-        "internalType": "struct OrderFees.Data",
-        "name": "fees",
-        "type": "tuple"
       }
     ],
-    "stateMutability": "payable",
-    "type": "function"
+    "name": "InvalidSettlementWindowDuration",
+    "type": "error"
   },
   {
     "anonymous": false,
@@ -2438,13 +2344,70 @@
         "type": "uint256"
       },
       {
+        "components": [
+          {
+            "internalType": "enum SettlementStrategy.Type",
+            "name": "strategyType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementDelay",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementWindowDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "priceVerificationContract",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "feedId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "priceDeviationTolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimumUsdExchangeAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxRoundingLoss",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "disabled",
+            "type": "bool"
+          }
+        ],
         "indexed": false,
-        "internalType": "bool",
-        "name": "enabled",
-        "type": "bool"
+        "internalType": "struct SettlementStrategy.Data",
+        "name": "strategy",
+        "type": "tuple"
       }
     ],
-    "name": "SettlementStrategyUpdated",
+    "name": "SettlementStrategySet",
     "type": "event"
   },
   {
@@ -2489,6 +2452,11 @@
           {
             "internalType": "uint256",
             "name": "settlementReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "priceDeviationTolerance",
             "type": "uint256"
           },
           {
@@ -2577,6 +2545,11 @@
           },
           {
             "internalType": "uint256",
+            "name": "priceDeviationTolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
             "name": "minimumUsdExchangeAmount",
             "type": "uint256"
           },
@@ -2597,6 +2570,86 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strategyId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum SettlementStrategy.Type",
+            "name": "strategyType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementDelay",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementWindowDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "priceVerificationContract",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "feedId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "settlementReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "priceDeviationTolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimumUsdExchangeAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxRoundingLoss",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "disabled",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct SettlementStrategy.Data",
+        "name": "strategy",
+        "type": "tuple"
+      }
+    ],
+    "name": "setSettlementStrategy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -2646,9 +2699,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "message",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "configuredCollateralType",
+        "type": "address"
       }
     ],
     "name": "InvalidCollateralType",
