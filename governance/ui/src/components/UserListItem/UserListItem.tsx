@@ -38,6 +38,7 @@ export default function UserListItem({
       </Flex>
       {councilPeriod === '1' ? (
         <Button
+          rounded="base"
           size="xs"
           variant={isNominated ? 'outline' : 'solid'}
           colorScheme={isNominated ? 'gray' : 'cyan'}

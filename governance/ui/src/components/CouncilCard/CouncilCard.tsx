@@ -33,6 +33,11 @@ export function CouncilCard({ council }: CouncilCardProps) {
       flexDir="column"
       alignItems="center"
       bg="navy.700"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/councils/${council.slug}`);
+      }}
+      cursor="pointer"
     >
       <Image src={council.image} h="80px" w="80px" mb="4" />
       <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
@@ -41,49 +46,73 @@ export function CouncilCard({ council }: CouncilCardProps) {
       <CouncilPeriodBadge councilPeriod={councilPeriod} isLoading={isLoading} />
       <Divider />
       <Flex justifyContent="space-between" w="100%" my="6" mb="auto">
-        <Flex flexDir="column">
-          <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
-            Members
-          </Text>
-          <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
-            <Fade in>
-              <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-                {electedCouncilMembers?.length || 'TBD'}
-              </Text>
-            </Fade>
-          </Skeleton>
-        </Flex>
-        <Flex flexDir="column">
-          {councilPeriod === '2' ? (
-            <>
-              <Text
-                color="gray.500"
-                fontSize="12px"
-                lineHeight="16px"
-                textTransform="uppercase"
-                textAlign="right"
-              >
-                Votes Received
-              </Text>
-              <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
-                TODO 1234
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text color="gray.500" fontSize="12px" lineHeight="16px" textTransform="uppercase">
-                Nominees
-              </Text>
-              <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
-                <Fade in>
-                  <Text textAlign="end" fontSize="24px" lineHeight="32px" fontWeight={700}>
-                    {councilNominees?.length || 'TBD'}
-                  </Text>
-                </Fade>
-              </Skeleton>
-            </>
-          )}
-        </Flex>
+        {councilPeriod === '0' || councilPeriod === '1' ? (
+          <Flex flexDir="column">
+            <Text color="gray.500" fontSize="12px" lineHeight="16px">
+              Members
+            </Text>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+              <Fade in>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                  {electedCouncilMembers?.length}
+                </Text>
+              </Fade>
+            </Skeleton>
+          </Flex>
+        ) : (
+          <Flex flexDir="column">
+            <Text color="gray.500" fontSize="12px" lineHeight="16px">
+              Nominees
+            </Text>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+              <Fade in>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                  {councilNominees?.length}
+                </Text>
+              </Fade>
+            </Skeleton>
+          </Flex>
+        )}
+        {councilPeriod === '0' ? (
+          <Flex flexDir="column">
+            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
+              Votes Received
+            </Text>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+              <Fade in>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                  last epoch
+                </Text>
+              </Fade>
+            </Skeleton>
+          </Flex>
+        ) : councilPeriod === '1' ? (
+          <Flex flexDir="column">
+            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
+              Nominees
+            </Text>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+              <Fade in>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                  {councilNominees?.length}
+                </Text>
+              </Fade>
+            </Skeleton>
+          </Flex>
+        ) : (
+          <Flex flexDir="column">
+            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
+              Votes Received
+            </Text>
+            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
+              <Fade in>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                  this epoch
+                </Text>
+              </Fade>
+            </Skeleton>
+          </Flex>
+        )}
       </Flex>
       <Flex flexDir="column" w="100%" mt="8">
         {councilPeriod === '1' ? (

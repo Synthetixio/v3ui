@@ -10,8 +10,13 @@ import '../components/UserProfileCard/UserProfileCard.css';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useSigner } from '@snx-v3/useBlockchain';
 import useGetUserBallot from '../queries/useGetUserBallot';
+import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
+import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
+import Timer from '../components/Timer/Timer';
 
 export default function MyVotes() {
+  const { data: period } = useGetCurrentPeriod('spartan');
+  const { data: schedule } = useGetEpochSchedule('spartan');
   const signer = useSigner();
   const [
     { data: spartanBallot },
@@ -54,17 +59,63 @@ export default function MyVotes() {
           w="735px"
           flexDirection="column"
           p="6"
+          position="relative"
         >
-          <Flex justifyContent="space-between" mb="4">
+          {period !== '2' && (
+            <Flex
+              position="absolute"
+              zIndex="10"
+              textColor="white"
+              top="50%"
+              right="50%"
+              transform="translate(50%, -50%)"
+              rounded="base"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="gray.900"
+              bg="navy.700"
+              p="4"
+              flexDir="column"
+              alignItems="center"
+            >
+              <Text fontSize="14px" textAlign="center">
+                Voting starts in:{' '}
+                <Text display="inline-block">
+                  <Timer expiryTimestamp={schedule ? schedule?.votingPeriodStartDate * 1000 : 0} />
+                </Text>
+              </Text>
+              <Text fontSize="12px" lineHeight="16px" textAlign="center" color="gray.500">
+                The voting period hasn’t started yet, come back later to vote for your councils.
+              </Text>
+              <Button
+                onClick={() => navigate('/council/spartan')}
+                variant="outline"
+                colorScheme="gray"
+                size="sm"
+                color="white"
+                mt="3"
+                w="fit-content"
+              >
+                See all nominees
+              </Button>
+            </Flex>
+          )}
+          <Flex justifyContent="space-between" mb="4" opacity={period !== '2' ? '0.4' : '1'}>
             <Heading fontSize="2xl">My Votes</Heading>
             <Heading fontSize="2xl">{Object.values(votingCandidates || {}).length}/4</Heading>
           </Flex>
-          <Text fontSize="xs" color="gray.500">
+          <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>
             You can cast 4 votes in one transaction. Continue voting if you want to add other
             nominee otherwise cast your vote to complete your voting.
           </Text>
           {councils.map((council) => (
-            <Flex key={`vote-${council.slug}`} w="100%" padding="2" alignItems="center">
+            <Flex
+              key={`vote-${council.slug}`}
+              w="100%"
+              padding="2"
+              alignItems="center"
+              opacity={period !== '2' ? '0.4' : '1'}
+            >
               <Flex
                 borderRadius="50%"
                 borderWidth="1px"
@@ -125,6 +176,7 @@ export default function MyVotes() {
                   aria-label="action-button"
                   icon={<AddIcon />}
                   variant="outlined"
+                  isDisabled={period !== '2'}
                   onClick={() => navigate(`/councils/${council.slug}`)}
                 />
               ) : (
@@ -132,6 +184,7 @@ export default function MyVotes() {
                   aria-label="action-button"
                   icon={<CloseIcon />}
                   variant="outlined"
+                  isDisabled={period !== '2'}
                   onClick={() => {
                     const selection = localStorage.getItem('voteSelection');
                     if (!selection) localStorage.setItem('voteSelection', '');
@@ -144,7 +197,7 @@ export default function MyVotes() {
               )}
             </Flex>
           ))}
-          <Alert colorScheme="cyan">
+          <Alert colorScheme="cyan" opacity={period !== '2' ? '0.4' : '1'}>
             <WarningIcon color="cyan" mr="4" />
             You can now cast all your votes in one unique transaction
           </Alert>
@@ -187,6 +240,7 @@ export default function MyVotes() {
           </Flex>
           <Button
             size="md"
+            isDisabled={period !== '2'}
             onClick={async () => {
               if (signer) {
                 try {
