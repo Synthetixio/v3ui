@@ -52,7 +52,7 @@ export function UserProfileCard({
       bg="navy.700"
       borderRadius="base"
       borderStyle="solid"
-      borderColor="gray.900"
+      borderColor="cyan.900"
       borderWidth="1px"
       p="4"
       w="100%"
@@ -156,6 +156,8 @@ export function UserProfileCard({
                   Edit Profile
                 </Button>
                 <Button
+                  variant="outline"
+                  colorScheme="gray"
                   w="100%"
                   onClick={() =>
                     navigate(
@@ -169,7 +171,7 @@ export function UserProfileCard({
                 </Button>
               </>
             )}
-            {councilPeriod === '2' ? (
+            {councilPeriod === '2' && (
               <Button
                 w="100%"
                 onClick={() => {
@@ -184,15 +186,6 @@ export function UserProfileCard({
                 }}
               >
                 Select {userData?.ens || userData?.username || shortAddress(userData?.address)}
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                colorScheme="gray"
-                w="100%"
-                onClick={() => navigate(`/councils/${activeCouncil}`)}
-              >
-                Done
               </Button>
             )}
           </Flex>

@@ -88,7 +88,12 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       <Divider />
       {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
       <Divider />
+      <Heading fontSize="medium" ml="6" my="7">
+        Current Nominees
+      </Heading>
+      {/* TODO @dev add search bar for addresses */}
       <Table>
+        {/* TODO @dev add sorting functionality */}
         <Thead>
           <Tr>
             <Th
