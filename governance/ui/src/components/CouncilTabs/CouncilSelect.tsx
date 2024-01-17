@@ -14,14 +14,14 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
             <Flex
               flexDirection="row"
               justifyContent="space-between"
-              height="100%"
+              height="40px"
               width="100%"
               bg="navy.700"
               borderWidth="1px"
-              py="10px"
               px="12px"
               borderRadius="3px"
               borderColor="gray.900"
+              alignItems="center"
             >
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
@@ -30,7 +30,6 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
-                mt="2px"
               >
                 {slugToName(activeCouncil)}
               </Text>
