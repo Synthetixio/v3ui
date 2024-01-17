@@ -78,6 +78,28 @@ commands:
             curl --silent --request POST --user "$IPFS_USER:$IPFS_PASS" "<< parameters.ipfs-cluster-api >>/pin/add?arg=$IPFS_CID" | tee /tmp/pin-add-$IPFS_CID.log
             cat /tmp/pin-add-$IPFS_CID.log | jq
 
+  armada-deploy:
+    parameters:
+      source-dir:
+        type: string
+    steps:
+      - run:
+          name: 'Build Armada bundle'
+          command: |
+            yarn armada:bundle armada-bundle "<< parameters.source-dir >>"
+            CHECKSUM=$(yarn armada:checksum armada-bundle.tgz)
+            echo 'export CHECKSUM='${CHECKSUM} >> $BASH_ENV
+
+      - store_artifacts:
+          path: 'armada-bundle.tgz'
+
+      - run:
+          name: 'Push to Armada'
+          command: |
+            # https://support.circleci.com/hc/en-us/articles/5034956515355-How-to-Programmatically-Construct-the-URLs-for-Artifacts
+            BUNDLE_URL=https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/armada-bundle.tgz
+            yarn armada:publish $ARMADA_PROJECT_ID $BUNDLE_URL $CHECKSUM --key=$ARMADA_PRIVATE_KEY
+
 jobs:
   checks:
     working_directory: /tmp/app
@@ -239,6 +261,18 @@ jobs:
           ipfs-cluster-api: 'https://ipfs.synthetix.io/api/v0'
           ipns-key: 'v3.synthetix.eth'
 
+  liquidity-armada:
+    working_directory: /tmp/app
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    resource_class: large
+    steps:
+      - checkout
+      - yarn-install
+      - run: yarn workspace @snx-v3/liquidity build
+      - armada-deploy:
+          source-dir: './liquidity/ui/dist'
+
 workflows:
   ui:
     unless:
@@ -261,6 +295,21 @@ workflows:
           name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      - liquidity-armada:
+          requires:
+            - checks
+            - typecheck
+            - tests
+            - liquidity-cy
+            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-optimism-goerli
+            - liquidity-e2e-goerli
+          filters:
+            branches:
+              only:
+                - release
+                - master
+                - armada
       - liquidity-ipfs:
           requires:
             - checks

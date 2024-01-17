@@ -5,6 +5,8 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 import { CouncilPeriodBadge } from './CouncilPeriodBadge';
+import { useWallet } from '@snx-v3/useBlockchain';
+import { useGetIsNominated } from '../../queries/useGetIsNominated';
 
 interface CouncilCardProps {
   council: Council;
@@ -12,10 +14,12 @@ interface CouncilCardProps {
 
 export function CouncilCard({ council }: CouncilCardProps) {
   const navigate = useNavigate();
+  const wallet = useWallet();
   const { data: councilPeriod, isLoading: isPeriodLoading } = useGetCurrentPeriod(council.slug);
   const { data: electedCouncilMembers, isLoading: isCouncilMembersLoading } = useGetCouncilMembers(
     council.slug
   );
+  const { data: isNominated } = useGetIsNominated(wallet?.address);
   const { data: councilNominees, isLoading: isCouncilNomineesLoading } = useGetCouncilNominees(
     council.slug
   );
@@ -120,17 +124,27 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Button
               size="md"
               mb="1"
-              onClick={() => {
-                navigate(`/councils/${council.slug}?nominate=true`);
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isNominated && isNominated.slug === council.slug) {
+                  navigate(`/councils/${council.slug}?editNomination=true`);
+                } else {
+                  navigate(`/councils/${council.slug}?nominate=true`);
+                }
               }}
             >
-              Nominate Self
+              {isNominated && isNominated.slug === council.slug
+                ? 'Edit Nomination'
+                : 'Nominate Self'}
             </Button>
             <Button
               size="md"
               variant="outline"
               colorScheme="gray"
-              onClick={() => navigate(`/councils/${council.slug}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/councils/${council.slug}`);
+              }}
             >
               View Council
             </Button>
@@ -139,7 +153,8 @@ export function CouncilCard({ council }: CouncilCardProps) {
           <Button
             size="md"
             mb="1"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               navigate(`/councils/${council.slug}`);
             }}
           >
@@ -150,7 +165,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
             size="md"
             variant="outline"
             colorScheme="gray"
-            onClick={() => navigate(`/councils/${council.slug}`)}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/councils/${council.slug}`);
+            }}
           >
             View Council
           </Button>

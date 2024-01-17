@@ -44,7 +44,7 @@ export default function UserListItem({
         {user?.pfpImageId ? (
           <Image src={user.pfpImageId} w="8" h="8" />
         ) : (
-          <Blockies seed={address} size={8} className="fully-rounded" />
+          <Blockies seed={address.toLowerCase()} size={8} className="fully-rounded" />
         )}
         <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.ens ? user.ens : shortAddress(user?.address)}
@@ -56,10 +56,13 @@ export default function UserListItem({
           size="xs"
           variant={isNominated ? 'outline' : 'solid'}
           colorScheme={isNominated ? 'gray' : 'cyan'}
-          onClick={() => {
-            !isNominated
-              ? navigate(`/councils/${activeCouncil}?nominate=true`)
-              : navigate(`/councils/${activeCouncil}?view=${address}`);
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isNominated) {
+              navigate(`/councils/${activeCouncil}?nominate=true`);
+            } else {
+              navigate(`/councils/${activeCouncil}?editNomination=true`);
+            }
           }}
         >
           {isNominated && isOwn && (network.id === 11155111 || network.id === 10) ? (

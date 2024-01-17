@@ -4,7 +4,7 @@ import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx
 import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-import walletConnectModule from '@web3-onboard/walletconnect';
+// import walletConnectModule from '@web3-onboard/walletconnect';
 import SynthetixIcon from './SynthetixIcon.svg';
 import SynthetixLogo from './SynthetixLogo.svg';
 
@@ -167,13 +167,16 @@ export const DEFAULT_NETWORK =
   ) ?? NETWORK_OPTIMISM;
 
 const injected = injectedModule();
-const walletConnect = walletConnectModule({
-  version: 2,
-  projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
-  requiredChains: [1, 10],
-});
+// const walletConnect = walletConnectModule({
+//   version: 2,
+//   projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
+//   requiredChains: [1, 10],
+// });
 
-const wallets = [injected, walletConnect];
+const wallets = [
+  injected,
+  // walletConnect
+];
 
 const uniqueChains: Network[] = Object.values(
   NETWORKS.reduce((result, network) => {

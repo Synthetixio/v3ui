@@ -28,7 +28,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       rounded="base"
       p="6"
     >
-      {!isSuccess ? (
+      {isSuccess ? (
         <>
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -49,7 +49,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             {data?.pfpUrl ? (
               <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
             ) : (
-              <Blockies seed={data?.address || ''} size={10} className="fully-rounded" />
+              <Blockies
+                seed={wallet?.address.toLowerCase() || ''}
+                size={10}
+                className="fully-rounded"
+              />
             )}
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
@@ -119,7 +123,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             {data?.pfpUrl ? (
               <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
             ) : (
-              <Blockies seed={data?.address || ''} size={10} className="fully-rounded" />
+              <Blockies
+                seed={data?.address.toLowerCase() || ''}
+                size={10}
+                className="fully-rounded"
+              />
             )}
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
