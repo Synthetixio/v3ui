@@ -25,6 +25,8 @@ import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import { useQueryClient } from '@tanstack/react-query';
+import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
+import councils from '../../utils/councils';
 
 const activeIcon = (currentNetwork: Network) => {
   switch (currentNetwork.id) {
@@ -122,7 +124,7 @@ export function Header() {
             <Image src="/governance-header.svg" />
           </Show>
         </Flex>
-        <PeriodCountdown />
+        <PeriodCountdown council={councils[0].slug} />
         {isWalletConnected && (
           <Menu>
             {() => (
