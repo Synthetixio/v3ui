@@ -21,8 +21,8 @@ const router = createHashRouter([
     children: [
       { path: '/', element: <App /> },
       { path: '/admin', element: <Admin /> },
-      { path: '/councils', element: <Navigate to="/councils/spartan" /> },
       { path: '/councils/:council', element: <Councils /> },
+      { path: '/councils', element: <Navigate to="/councils/spartan" /> },
       { path: '/my-votes', element: <MyVotes /> },
     ],
   },
