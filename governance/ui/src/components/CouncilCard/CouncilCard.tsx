@@ -124,7 +124,8 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Button
               size="md"
               mb="1"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 if (isNominated && isNominated.slug === council.slug) {
                   navigate(`/councils/${council.slug}?editNomination=true`);
                 } else {
@@ -140,7 +141,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
               size="md"
               variant="outline"
               colorScheme="gray"
-              onClick={() => navigate(`/councils/${council.slug}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/councils/${council.slug}`);
+              }}
             >
               View Council
             </Button>
@@ -149,7 +153,8 @@ export function CouncilCard({ council }: CouncilCardProps) {
           <Button
             size="md"
             mb="1"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               navigate(`/councils/${council.slug}`);
             }}
           >
@@ -160,7 +165,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
             size="md"
             variant="outline"
             colorScheme="gray"
-            onClick={() => navigate(`/councils/${council.slug}`)}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/councils/${council.slug}`);
+            }}
           >
             View Council
           </Button>
