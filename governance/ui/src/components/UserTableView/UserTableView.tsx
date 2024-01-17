@@ -47,18 +47,23 @@ export default function UserTableView({
       </Th>
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
-      <Th textAlign="end">
-        <Button
-          size="xs"
-          colorScheme="gray"
-          variant="outline"
-          onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
-          color="white"
-          rounded="base"
-        >
-          {isNomination && 'View'}
-        </Button>
-      </Th>
+      {councilPeriod !== '2' && (
+        <Th textAlign="end">
+          <Button
+            size="xs"
+            colorScheme="gray"
+            variant="outline"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/councils/${activeCouncil}?view=${user.address}`);
+            }}
+            color="white"
+            rounded="base"
+          >
+            {isNomination && 'View'}
+          </Button>
+        </Th>
+      )}
     </Tr>
   );
 }

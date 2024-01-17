@@ -14,7 +14,7 @@ import { ChevronDown, ChevronUp } from '@snx-v3/icons';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [searchAddress, setSearchAddress] = useState('');
-  const [descending, setDescending] = useState(false);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'ranking']);
 
   const wallet = useWallet();
 
@@ -122,33 +122,114 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       <Table>
         <Thead>
           <Tr>
-            {councilPeriod === '2' && <Th w="20px">N°</Th>}
+            {councilPeriod === '2' && (
+              <Th
+                cursor="pointer"
+                w="50px"
+                userSelect="none"
+                px="0"
+                textAlign="center"
+                onClick={() => {
+                  setSortConfig([!sortConfig[0], 'ranking']);
+                  // sortedNominees = sortedNominees.sort((a, b) => {
+                  // TODO implement sorting for most votes when subgraph is ready
+                  // });
+                }}
+              >
+                N°{' '}
+                {sortConfig[1] === 'ranking' ? (
+                  councilPeriod === '2' && sortConfig[0] ? (
+                    <ChevronUp />
+                  ) : (
+                    <ChevronDown />
+                  )
+                ) : (
+                  <></>
+                )}
+              </Th>
+            )}
             <Th
               textTransform="capitalize"
               w="200px"
               cursor="pointer"
               userSelect="none"
               onClick={() => {
-                setDescending(!descending);
+                setSortConfig([!sortConfig[0], 'name']);
                 sortedNominees = sortedNominees.sort((a, b) => {
                   if (a.username && b.username) {
-                    return descending
+                    return sortConfig[0]
                       ? a.username.localeCompare(b.username)
                       : a.username.localeCompare(b.username) * -1;
                   }
-                  return descending
+                  return sortConfig[0]
                     ? a?.address.localeCompare(b.address)
                     : a?.address.localeCompare(b.address) * -1;
                 });
               }}
             >
-              Name {councilPeriod !== '2' && (descending ? <ChevronUp /> : <ChevronDown />)}
+              Name{' '}
+              {sortConfig[1] === 'name' ? (
+                councilPeriod === '2' && sortConfig[0] ? (
+                  <ChevronUp />
+                ) : (
+                  <ChevronDown />
+                )
+              ) : (
+                <></>
+              )}
             </Th>
             <Th textTransform="capitalize">Role</Th>
-            {councilPeriod === '2' && <Th textTransform="capitalize">Votes</Th>}
             {councilPeriod === '2' && (
-              <Th textTransform="capitalize" px="0">
-                Voting Power
+              <Th
+                cursor="pointer"
+                w="150px"
+                px="0"
+                userSelect="none"
+                textTransform="capitalize"
+                textAlign="center"
+                onClick={() => {
+                  setSortConfig([!sortConfig[0], 'votes']);
+                  // sortedNominees = sortedNominees.sort((a, b) => {
+                  // TODO implement sorting for most votes when subgraph is ready
+                  // });
+                }}
+              >
+                Votes{' '}
+                {sortConfig[1] === 'votes' ? (
+                  councilPeriod === '2' && sortConfig[0] ? (
+                    <ChevronUp />
+                  ) : (
+                    <ChevronDown />
+                  )
+                ) : (
+                  <></>
+                )}
+              </Th>
+            )}
+            {councilPeriod === '2' && (
+              <Th
+                cursor="pointer"
+                userSelect="none"
+                textTransform="capitalize"
+                textAlign="center"
+                px="0"
+                onClick={() => {
+                  setSortConfig([!sortConfig[0], 'votingPower']);
+                  // sortedNominees = sortedNominees.sort((a, b) => {
+                  // TODO implement sorting for most votes when subgraph is ready
+                  // });
+                }}
+              >
+                Voting Power{' '}
+                {sortConfig[1] === 'votingPower' ? (
+                  councilPeriod === '2' && sortConfig[0] ? (
+                    <ChevronUp />
+                  ) : (
+                    <ChevronDown />
+                  )
+                ) : (
+                  <></>
+                )}
               </Th>
             )}
           </Tr>
