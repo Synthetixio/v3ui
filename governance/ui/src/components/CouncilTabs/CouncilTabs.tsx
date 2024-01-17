@@ -1,4 +1,4 @@
-import { Flex, Hide, Show, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -6,7 +6,7 @@ import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import Timer from '../Timer/Timer';
+import { MyVotes } from './MyVotes';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -24,9 +24,20 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           borderBottomWidth="1px"
           borderStyle="solid"
           borderBottomColor="gray.900"
-          p="4"
+          px={4}
+          py={1}
+          position="sticky"
+          top="0px"
+          justifyContent="space-between"
+          alignItems="center"
         >
           <CouncilsSelect activeCouncil={activeCouncil} />
+          <MyVotes
+            isLoading={isLoading}
+            councilPeriod={councilPeriod}
+            schedule={schedule}
+            votes={votes}
+          />
         </Flex>
       </Hide>
       <Show above="lg">
@@ -60,39 +71,18 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                 bg="navy.700"
                 _hover={{ borderColor: 'cyan.500' }}
               >
-                <CouncilImage imageUrl={council.image} />
+                <CouncilImage ml={2} imageUrl={council.image} />
                 <Text fontSize="12px" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
               </Flex>
             ))}
-
-            <Flex
-              key="tab-my-votes"
-              cursor="pointer"
-              onClick={() => navigate('/my-votes')}
-              w="100%"
-              height="48px"
-              maxW="260px"
-              rounded="base"
-              borderColor="gray.900"
-              borderWidth="1px"
-              padding="2"
-              alignItems="center"
-              bg="navy.900"
-              _hover={{ borderColor: 'cyan.500' }}
-            >
-              <Text fontSize="x-small" fontWeight="bold" mr="auto">
-                My Votes
-              </Text>
-              <Text fontSize="x-small" fontWeight="bold">
-                {councilPeriod === '2' && <>{Object.values(!!votes ? votes : {}).length}/4</>}
-                {isLoading && <Spinner colorScheme="cyan" />}
-                {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-                  <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
-                )}
-              </Text>
-            </Flex>
+            <MyVotes
+              isLoading={isLoading}
+              councilPeriod={councilPeriod}
+              schedule={schedule}
+              votes={votes}
+            />
           </Flex>
         </Flex>
       </Show>

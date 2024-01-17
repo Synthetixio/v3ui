@@ -16,9 +16,11 @@ export default function Councils() {
   return (
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={activeCouncil} />
-      <Flex maxW="1440px" w="100%" justifyContent="center" gap={{ base: 0, md: '4' }}>
+      <Flex maxW="1440px" justifyContent="flex-start" w="100%" gap={{ base: 0, md: '4' }}>
+        <CouncilInformation activeCouncil={activeCouncil} />
+      </Flex>
+      <Flex maxW="1440px" w="100%" justifyContent="space-between" gap={{ base: 0, md: '4' }}>
         <Flex flexDir="column" maxW="735px" w="100%" px={{ base: 4, md: 2 }}>
-          <CouncilInformation activeCouncil={activeCouncil} />
           {(councilPeriod === '1' || councilPeriod === '2') && (
             <CouncilNominees activeCouncil={activeCouncil} />
           )}
@@ -28,7 +30,6 @@ export default function Councils() {
             )}
           /> */}
         </Flex>
-
         <Box
           position={{ md: 'sticky' }}
           top="100px"
