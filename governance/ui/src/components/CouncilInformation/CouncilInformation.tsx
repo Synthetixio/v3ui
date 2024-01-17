@@ -8,7 +8,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex py="5">
+    <Flex py="5" maxW="735px" w="100%">
       <CouncilImage
         imageUrl={council?.image || ''}
         width="130px"
