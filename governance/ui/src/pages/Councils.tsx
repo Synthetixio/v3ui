@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -30,13 +30,21 @@ export default function Councils() {
             )}
           /> */}
         </Flex>
-        <UserActionBox
-          editNomination={searchParams.get('editNomination') === 'true' ? true : false}
-          nominate={searchParams.get('nominate') === 'true' ? true : false}
-          selectedUserAddress={searchParams.get('view') as string}
-          activeCouncil={activeCouncil}
-          editProfile={searchParams.get('editProfile') === 'true' ? true : false}
-        />
+        <Box
+          position={{ md: 'sticky' }}
+          top="100px"
+          height={{ md: '644px' }}
+          width={{ md: '483px' }}
+          mr="4"
+        >
+          <UserActionBox
+            editNomination={searchParams.get('editNomination') === 'true' ? true : false}
+            nominate={searchParams.get('nominate') === 'true' ? true : false}
+            selectedUserAddress={searchParams.get('view') as string}
+            activeCouncil={activeCouncil}
+            editProfile={searchParams.get('editProfile') === 'true' ? true : false}
+          />
+        </Box>
       </Flex>
     </Flex>
   );

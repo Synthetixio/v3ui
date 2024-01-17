@@ -9,7 +9,6 @@ export default function EditProfile({ activeCouncil }: { activeCouncil: string }
       borderColor="gray.900"
       rounded="base"
       w="100%"
-      maxW="483px"
       bg="navy.700"
     >
       <UserProfileForm activeCouncil={activeCouncil} />
