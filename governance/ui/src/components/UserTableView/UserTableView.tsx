@@ -53,7 +53,10 @@ export default function UserTableView({
             size="xs"
             colorScheme="gray"
             variant="outline"
-            onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/councils/${activeCouncil}?view=${user.address}`);
+            }}
             color="white"
             rounded="base"
           >
