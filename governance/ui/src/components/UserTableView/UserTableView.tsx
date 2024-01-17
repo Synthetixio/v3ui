@@ -47,7 +47,7 @@ export default function UserTableView({
       </Th>
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
-      {councilPeriod === '2' && (
+      {councilPeriod !== '2' && (
         <Th textAlign="end">
           <Button
             size="xs"
