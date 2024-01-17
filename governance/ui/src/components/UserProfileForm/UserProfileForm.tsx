@@ -64,7 +64,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         {user?.pfpUrl ? (
           <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
         ) : (
-          <Blockies size={14} seed={user?.address || ''} className="fully-rounded" />
+          <Blockies size={14} seed={user?.address.toLowerCase() || ''} className="fully-rounded" />
         )}
         <Flex w="100%" flexDirection="column" position="relative" ml="2" gap="2">
           <Text fontSize="12px" color="gray.500">

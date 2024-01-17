@@ -5,18 +5,24 @@ import '../UserProfileCard/UserProfileCard.css';
 import Blockies from 'react-blockies';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
+import { CouncilSlugs } from '../../utils/councils';
 
 export default function UserTableView({
   user,
   activeCouncil,
   isNomination,
+  place,
 }: {
+  place: number;
   user: GetUserDetails;
-  activeCouncil: string;
+  activeCouncil: CouncilSlugs;
   isNomination?: boolean;
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
+
   if (!user) return <Spinner colorScheme="cyan" />;
   return (
     <Tr
@@ -27,17 +33,20 @@ export default function UserTableView({
       borderTop="1px solid"
       borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
     >
-      <Th color="white" display="flex" alignItems="center" gap="2">
+      {councilPeriod === '2' && <Th color="white">#{place + 1}</Th>}
+      <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
         {user.pfpUrl ? (
           <Image src={user.pfpUrl} />
         ) : (
-          <Blockies seed={user.address} size={8} className="fully-rounded" />
+          <Blockies seed={user.address.toLowerCase()} size={8} className="fully-rounded" />
         )}{' '}
-        {shortAddress(user.address)}
+        {user.username ? user.username : shortAddress(user.address)}
       </Th>
       <Th>
         <Badge color="green">Nominee</Badge>
       </Th>
+      {councilPeriod === '2' && <Th color="white">TODO</Th>}
+      {councilPeriod === '2' && <Th color="white">TODO</Th>}
       <Th textAlign="end">
         <Button
           size="xs"

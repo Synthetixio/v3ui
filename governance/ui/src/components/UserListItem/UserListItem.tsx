@@ -44,7 +44,7 @@ export default function UserListItem({
         {user?.pfpImageId ? (
           <Image src={user.pfpImageId} w="8" h="8" />
         ) : (
-          <Blockies seed={address} size={8} className="fully-rounded" />
+          <Blockies seed={address.toLowerCase()} size={8} className="fully-rounded" />
         )}
         <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.ens ? user.ens : shortAddress(user?.address)}

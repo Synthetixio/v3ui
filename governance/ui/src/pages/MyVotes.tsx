@@ -140,7 +140,7 @@ export default function MyVotes() {
                   />
                 ) : candidates && candidates[council.slug] ? (
                   <Blockies
-                    seed={candidates[council.slug].address}
+                    seed={candidates[council.slug].address.toLowerCase()}
                     scale={4}
                     className="fully-rounded votes"
                   />

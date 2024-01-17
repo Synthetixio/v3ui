@@ -67,7 +67,11 @@ export function UserProfileCard({
             ) : (
               userData?.address && (
                 <Box mr="4">
-                  <Blockies size={14} seed={userData.address} className="fully-rounded" />
+                  <Blockies
+                    size={14}
+                    seed={userData.address.toLowerCase()}
+                    className="fully-rounded"
+                  />
                 </Box>
               )
             )}
