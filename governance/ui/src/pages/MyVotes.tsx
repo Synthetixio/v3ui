@@ -13,11 +13,15 @@ import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
+import useGetUserVotingPower from '../queries/useGetUserVotingPower';
+import { formatNumber } from '@snx-v3/formatters';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const signer = useSigner();
+  const { data: votingPower } = useGetUserVotingPower('spartan');
+
   const [
     { data: spartanBallot },
     // { data: ambassadorBallot },
@@ -49,7 +53,7 @@ export default function MyVotes() {
 
   return (
     <Flex justifyContent="center" mt="8" gap="2" w="100%">
-      <Flex maxW="1440px" w="100%" justifyContent="center" flexWrap="wrap">
+      <Flex maxW="1440px" w="100%" justifyContent="center" flexWrap="wrap" gap="5">
         <Flex
           bg="navy.700"
           rounded="base"
@@ -235,7 +239,7 @@ export default function MyVotes() {
               Total Voting Power
             </Text>
             <Text fontSize="sm" color="white" fontWeight="bold">
-              8923748923,2390487239 TODO
+              {formatNumber(votingPower)}
             </Text>
           </Flex>
           <Button
@@ -251,7 +255,7 @@ export default function MyVotes() {
                       await signer.getAddress()
                     );
                 } catch (error) {
-                  console.error('already prepared ballot');
+                  console.error('already prepared ballot', error);
                 }
                 await getCouncilContract('spartan')
                   .connect(signer)
