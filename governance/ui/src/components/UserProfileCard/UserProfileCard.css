@@ -1,0 +1,8 @@
+.fully-rounded {
+  border-radius: 99999px;
+}
+
+.votes {
+  position: absolute;
+  left: 15px;
+}

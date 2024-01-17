@@ -1,0 +1,46 @@
+{
+  "optimism-goerli": {
+    "ElectionModule": {
+      "address": "0x62F424908BEaF103d0Dd1e0b230356A3785e409d",
+      "startBlock": 18265250
+    },
+    "Spartan": {
+      "address": "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c",
+      "startBlock": 0
+    },
+    "Ambassador": {
+      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
+      "startBlock": 0
+    },
+    "Grants": {
+      "address": "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77",
+      "startBlock": 0
+    },
+    "Treasury": {
+      "address": "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a",
+      "startBlock": 0
+    }
+  },
+  "optimism": {
+    "ElectionModule": {
+      "address": "0x62F424908BEaF103d0Dd1e0b230356A3785e409d",
+      "startBlock": 113442424
+    },
+    "Spartan": {
+      "address": "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c",
+      "startBlock": 0
+    },
+    "Ambassador": {
+      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
+      "startBlock": 0
+    },
+    "Grants": {
+      "address": "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77",
+      "startBlock": 0
+    },
+    "Treasury": {
+      "address": "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a",
+      "startBlock": 0
+    }
+  }
+}

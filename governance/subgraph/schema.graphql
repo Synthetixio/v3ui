@@ -1,0 +1,36 @@
+type NominationWithdrawn @entity {
+  id: Bytes!
+  candidate: Bytes! # address
+  epochId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type VoteRecorded @entity {
+  id: String!
+  voter: String! # address
+  chainId: BigInt! # uint256
+  epochId: BigInt! # uint256
+  votePower: BigDecimal! # uint256
+  blockNumber: BigInt!
+  contract: String!
+}
+
+type VoteResult @entity {
+  id: ID!
+  epochId: String!
+  votePower: BigDecimal!
+  contract: String!
+  voteCount: BigInt!
+  voter: String
+  candidate: String
+}
+
+type User @entity {
+  id: String!
+  nominationCount: BigInt!
+  votingCount: BigInt!
+  memberIn: [String!]
+  kickedOut: [String!]
+}

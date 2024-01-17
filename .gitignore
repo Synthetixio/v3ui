@@ -56,3 +56,6 @@ staged-txns.txt
 tsconfig.tsbuildinfo
 
 junit.xml
+
+**/.bin
+**/.latest.json

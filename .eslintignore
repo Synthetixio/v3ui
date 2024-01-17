@@ -11,3 +11,4 @@ dist
 **/.nyc_output
 **/junit.xml
 **/generated
+governance/subgraph/tests/*
