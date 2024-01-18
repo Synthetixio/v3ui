@@ -1,14 +1,13 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Container, Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
 
 export default function Councils() {
-  const [searchParams] = useSearchParams();
   const { council } = useParams();
   const activeCouncil = council as CouncilSlugs;
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -16,10 +15,19 @@ export default function Councils() {
   return (
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={activeCouncil} />
-      <Flex maxW="1440px" justifyContent="flex-start" w="100%" gap={{ base: 0, md: '4' }}>
+
+      <Container
+        maxW={{ base: '100%', md: '768px', lg: '1280px' }}
+        justifyContent="flex-start"
+        w="100%"
+      >
         <CouncilInformation activeCouncil={activeCouncil} />
-      </Flex>
-      <Flex maxW="1440px" w="100%" justifyContent="space-between" gap={{ base: 0, md: '4' }}>
+      </Container>
+      <Container
+        maxW={{ base: '100%', md: '768px', lg: '1280px' }}
+        justifyContent="flex-start"
+        w="100%"
+      >
         <Flex flexDir="column" maxW="735px" w="100%" px={{ base: 4, md: 2 }}>
           {(councilPeriod === '1' || councilPeriod === '2') && (
             <CouncilNominees activeCouncil={activeCouncil} />
@@ -30,22 +38,8 @@ export default function Councils() {
             )}
           /> */}
         </Flex>
-        <Box
-          position={{ md: 'sticky' }}
-          top="100px"
-          height={{ md: '644px' }}
-          width={{ md: '483px' }}
-          mr="4"
-        >
-          <UserActionBox
-            editNomination={searchParams.get('editNomination') === 'true' ? true : false}
-            nominate={searchParams.get('nominate') === 'true' ? true : false}
-            selectedUserAddress={searchParams.get('view') as string}
-            activeCouncil={activeCouncil}
-            editProfile={searchParams.get('editProfile') === 'true' ? true : false}
-          />
-        </Box>
-      </Flex>
+        <UserActionBox activeCouncil={activeCouncil} />
+      </Container>
     </Flex>
   );
 }
