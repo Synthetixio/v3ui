@@ -15,7 +15,6 @@ export default function Councils() {
   return (
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={activeCouncil} />
-
       <Container
         maxW={{ base: '100%', md: '768px', lg: '1280px' }}
         justifyContent="flex-start"
@@ -31,7 +30,7 @@ export default function Councils() {
         flexDirection="row"
         w="100%"
       >
-        <Flex flexDir="column" maxW="735px" w="100%" px={{ base: 4, md: 2 }}>
+        <Flex flexDir="column" maxW="735px" w="100%">
           {(councilPeriod === '1' || councilPeriod === '2') && (
             <CouncilNominees activeCouncil={activeCouncil} />
           )}

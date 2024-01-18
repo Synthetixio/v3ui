@@ -90,6 +90,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       borderColor="gray.900"
       bg="navy.700"
       flexDirection="column"
+      mt="24px"
     >
       <Flex p="6" justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
@@ -113,6 +114,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           Current {councilPeriod === '1' ? 'Nominees' : 'Results'}
         </Heading>
         <Input
+          zIndex="1"
           maxW="320px"
           bg="navy.900"
           placeholder="Search"

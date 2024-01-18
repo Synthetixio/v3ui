@@ -35,6 +35,7 @@ export default function EditProfile({
           rounded="base"
           w="100%"
           bg="navy.700"
+          mt="24px"
         >
           <UserProfileForm activeCouncil={activeCouncil} />
         </Flex>

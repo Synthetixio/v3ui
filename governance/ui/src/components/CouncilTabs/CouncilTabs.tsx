@@ -54,6 +54,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           mb="4"
           position="sticky"
           top="0px"
+          zIndex={99}
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council) => (

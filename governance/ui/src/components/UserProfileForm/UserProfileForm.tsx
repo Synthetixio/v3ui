@@ -25,6 +25,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
   const mutation = useUpdateUserDetailsMutation();
   const navigate = useNavigate();
   const { data: user, isLoading } = useGetUserDetailsQuery(wallet?.address);
+
   const { register, getValues, resetField, setValue } = useForm({
     defaultValues: {
       address: user?.about,
