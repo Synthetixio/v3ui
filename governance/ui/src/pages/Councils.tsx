@@ -25,7 +25,10 @@ export default function Councils() {
       </Container>
       <Container
         maxW={{ base: '100%', md: '768px', lg: '1280px' }}
-        justifyContent="flex-start"
+        gap={4}
+        as={Flex}
+        // justifyContent="space"
+        flexDirection="row"
         w="100%"
       >
         <Flex flexDir="column" maxW="735px" w="100%" px={{ base: 4, md: 2 }}>
