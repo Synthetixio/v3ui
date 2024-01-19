@@ -90,7 +90,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       borderColor="gray.900"
       bg="navy.700"
       flexDirection="column"
-      mt="24px"
+      mt={6}
     >
       <Flex p="6" justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">

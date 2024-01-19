@@ -23,7 +23,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         ml={{ base: 'unset', md: '24px' }}
         mt={{ base: '24px', md: 'unset' }}
       >
-        <Heading fontSize="lg" mb="8px">
+        <Heading fontSize="lg" mb="2">
           {council?.title}
         </Heading>
         <Text
@@ -35,11 +35,13 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         >
           {council?.description}
         </Text>
-        <Flex w="100%" mt="8px">
-          <Heading fontSize="xs" mr="44px" lineHeight="110%">
+        <Flex w="100%" mt="2">
+          <Heading fontSize="xs" mr={10} lineHeight="1rem">
             Council Seats: {getCouncilMembers?.length}
           </Heading>
-          <Heading fontSize="xs">Stipends P/M: {council?.stipends}</Heading>
+          <Heading fontSize="xs" lineHeight="1rem">
+            Stipends P/M: {council?.stipends}
+          </Heading>
         </Flex>
       </Flex>
     </Flex>

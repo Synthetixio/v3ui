@@ -58,7 +58,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         borderColor="gray.900"
         bg="navy.700"
         rounded="base"
-        mt="24px"
+        mt={6}
       >
         <Text
           w="225px"
