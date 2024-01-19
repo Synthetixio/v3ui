@@ -1,0 +1,18 @@
+{
+  "name": "synthetix-omnibus",
+  "version": "3.3.5",
+  "preset": "andromeda",
+  "url": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
+  "chainId": 8453,
+  "addresses": {
+    "CoreProxy": "0x32C222A9A159782aFD7529c87FA34b96CA72C696",
+    "AccountProxy": "0x63f4Dd0434BEB5baeCD27F3778a909278d8cf5b8",
+    "USDProxy": "0x09d51516F38980035153a554c26Df3C6f51a23C3",
+    "OracleManagerProxy": "0x3d07CBC5Cb9376A67E76C0655Fe239dDa8E2B264",
+    "SpotMarketProxy": "0x18141523403e2595D31b22604AcB8Fc06a4CaA61",
+    "PerpsMarketProxy": "0x0A2AF931eFFd34b81ebcc57E3d3c9B1E1dE1C9Ce",
+    "PerpsAccountProxy": "0xcb68b813210aFa0373F076239Ad4803f8809e8cf",
+    "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
+    "RewardDistributor": null
+  }
+}

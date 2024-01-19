@@ -103,7 +103,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           </Text>
         </Flex>
         <Flex justifyContent="flex-end">
-          <PeriodCountdown />
+          <PeriodCountdown council={activeCouncil} />
         </Flex>
       </Flex>
       <Divider />

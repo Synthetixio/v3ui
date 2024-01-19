@@ -1,11 +1,11 @@
 import { Contract, providers, utils } from 'ethers';
 
-import * as OracleManagerProxy1 from '@synthetixio/v3-contracts/build/1/OracleManagerProxy';
-import * as OracleManagerProxy5 from '@synthetixio/v3-contracts/build/5/OracleManagerProxy';
-import * as OracleManagerProxy10 from '@synthetixio/v3-contracts/build/10/OracleManagerProxy';
-import * as OracleManagerProxy420 from '@synthetixio/v3-contracts/build/420/OracleManagerProxy';
-import * as OracleManagerProxy11155111 from '@synthetixio/v3-contracts/build/11155111/OracleManagerProxy';
-import * as OracleManagerProxy84531Competition from '@synthetixio/v3-contracts/build/84531-competition/OracleManagerProxy';
+import * as OracleManagerProxy1 from '@synthetixio/v3-contracts/build/1-main/OracleManagerProxy';
+import * as OracleManagerProxy5 from '@synthetixio/v3-contracts/build/5-main/OracleManagerProxy';
+import * as OracleManagerProxy10 from '@synthetixio/v3-contracts/build/10-main/OracleManagerProxy';
+import * as OracleManagerProxy420 from '@synthetixio/v3-contracts/build/420-main/OracleManagerProxy';
+import * as OracleManagerProxy11155111 from '@synthetixio/v3-contracts/build/11155111-main/OracleManagerProxy';
+import * as OracleManagerProxy84531Andromeda from '@synthetixio/v3-contracts/build/84531-andromeda/OracleManagerProxy';
 
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
@@ -155,8 +155,8 @@ export const getNodeModuleContract = (
       );
     case 84531:
       return new Contract(
-        OracleManagerProxy84531Competition.address,
-        OracleManagerProxy84531Competition.abi,
+        OracleManagerProxy84531Andromeda.address,
+        OracleManagerProxy84531Andromeda.abi,
         signerOrProvider
       );
     case 11155111:

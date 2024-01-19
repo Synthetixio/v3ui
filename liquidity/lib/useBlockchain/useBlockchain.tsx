@@ -106,32 +106,6 @@ export const NETWORKS: Network[] = [
   },
   {
     id: 84531,
-    preset: 'main',
-    hexId: `0x${Number(84531).toString(16)}`,
-    token: 'ETH',
-    name: 'base-goerli',
-    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
-    label: 'Base Goerli',
-    Icon: () => <BaseIcon />,
-    isSupported: true,
-    publicRpcUrl: 'https://base-goerli.publicnode.com',
-    isTestnet: true,
-  },
-  {
-    id: 84531,
-    preset: 'competition',
-    hexId: `0x${Number(84531).toString(16)}`,
-    token: 'ETH',
-    name: 'base-goerli',
-    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
-    label: 'Base Goerli (Competition)',
-    Icon: () => <BaseIcon />,
-    isSupported: true,
-    publicRpcUrl: 'https://base-goerli.publicnode.com',
-    isTestnet: true,
-  },
-  {
-    id: 84531,
     preset: 'andromeda',
     hexId: `0x${Number(84531).toString(16)}`,
     token: 'ETH',
@@ -139,8 +113,21 @@ export const NETWORKS: Network[] = [
     rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
     label: 'Base Goerli (Andromeda)',
     Icon: () => <BaseIcon />,
-    isSupported: true,
-    publicRpcUrl: 'https://base-goerli.publicnode.com',
+    isSupported: false, // hidden by default but if wallet switched to Base Goerli it will be visible
+    publicRpcUrl: 'https://goerli.base.org',
+    isTestnet: true,
+  },
+  {
+    id: 84532,
+    preset: 'andromeda',
+    hexId: `0x${Number(84532).toString(16)}`,
+    token: 'ETH',
+    name: 'base-sepolia',
+    rpcUrl: `https://base-sepolia.infura.io/v3/${INFURA_KEY}`,
+    label: 'Base Sepolia (Andromeda)',
+    Icon: () => <BaseIcon />,
+    isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
+    publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,
   },
   {
@@ -152,13 +139,13 @@ export const NETWORKS: Network[] = [
     rpcUrl: `http://127.0.0.1:8545`,
     label: 'Cannon',
     Icon: () => <LogoIcon />,
-    isSupported: false, // hidden by default but if wallet switched to 13370 it will be visible
+    isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
   },
 ];
 
-export const deploymentsWithERC7412: string[] = ['84531-competition', '84531-andromeda'];
+export const deploymentsWithERC7412: string[] = ['84531-andromeda', '84532-andromeda'];
 
 export const DEFAULT_NETWORK =
   NETWORKS.find(

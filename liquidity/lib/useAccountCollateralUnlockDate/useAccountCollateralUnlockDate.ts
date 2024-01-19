@@ -14,6 +14,7 @@ export function useAccountCollateralUnlockDate({ accountId }: { accountId?: stri
       if (!CoreProxy || !accountId) throw 'OMG';
 
       const [getAccountLastInteraction, getConfigUintAccountTimeoutWithdraw] =
+        // @ts-ignore TODO: remove eventually when types are aligned
         await CoreProxy.callStatic.multicall([
           CoreProxy.interface.encodeFunctionData('getAccountLastInteraction', [accountId]),
           CoreProxy.interface.encodeFunctionData('getConfigUint', [
