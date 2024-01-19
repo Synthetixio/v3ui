@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Spinner, Text, FlexProps } from '@chakra-ui/react';
 import './UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
@@ -6,15 +6,18 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { UserProfileDetails } from './UserProfileDetails';
 
+interface UserProfileCardInterface extends FlexProps {
+  walletAddress: string;
+  activeCouncil: CouncilSlugs;
+  isOwn?: boolean;
+}
+
 export function UserProfileCard({
   walletAddress,
   activeCouncil,
   isOwn,
-}: {
-  walletAddress: string;
-  activeCouncil: CouncilSlugs;
-  isOwn?: boolean;
-}) {
+  ...props
+}: UserProfileCardInterface) {
   const {
     data: userData,
     error,
@@ -40,7 +43,7 @@ export function UserProfileCard({
       w="100%"
       maxW="483px"
       h="612px"
-      mt="24px"
+      {...props}
     >
       {error && <Text>{error.message}</Text>}
       {isLoading ? (

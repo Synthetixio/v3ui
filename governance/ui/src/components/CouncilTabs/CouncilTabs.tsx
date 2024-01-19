@@ -30,6 +30,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           top="0px"
           justifyContent="space-between"
           alignItems="center"
+          zIndex={99}
         >
           <CouncilsSelect activeCouncil={activeCouncil} />
           <MyVotes

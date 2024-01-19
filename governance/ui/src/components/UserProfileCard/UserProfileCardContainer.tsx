@@ -31,6 +31,7 @@ export const UserProfileCardContainer = ({
       </Show>
       <Hide below="md">
         <UserProfileCard
+          mt="24px"
           walletAddress={selectedUserAddress}
           activeCouncil={activeCouncil}
           isOwn={wallet?.address.toLowerCase() === selectedUserAddress.toLowerCase()}
