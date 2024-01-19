@@ -184,7 +184,7 @@ const chains = uniqueChains.map((network) => ({
   publicRpcUrl: network.publicRpcUrl,
 }));
 
-const appMetadata = {
+export const appMetadata = {
   name: 'Synthetix',
   icon: SynthetixIcon,
   logo: SynthetixLogo,
