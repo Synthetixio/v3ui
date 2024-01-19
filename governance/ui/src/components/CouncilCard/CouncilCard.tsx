@@ -42,6 +42,9 @@ export function CouncilCard({ council }: CouncilCardProps) {
         navigate(`/councils/${council.slug}`);
       }}
       cursor="pointer"
+      _hover={{
+        bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+      }}
     >
       <Image src={council.image} h="80px" w="80px" mb="4" />
       <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
