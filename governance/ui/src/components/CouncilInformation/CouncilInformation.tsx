@@ -8,7 +8,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex py="5" maxW="735px" w="100%">
+    <Flex py="5" maxW="735px" w="100%" flexDirection={{ base: 'column', md: 'row' }}>
       <Flex>
         <CouncilImage
           imageUrl={council?.image || ''}
@@ -17,11 +17,22 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
           imageProps={{ w: '108px', h: '108px' }}
         />
       </Flex>
-      <Flex flexDir="column" ml="24px">
+      <Flex
+        width={{ base: '100%' }}
+        flexDir="column"
+        ml={{ base: 'unset', md: '24px' }}
+        mt={{ base: '24px', md: 'unset' }}
+      >
         <Heading fontSize="lg" mb="8px">
           {council?.title}
         </Heading>
-        <Text w="581px" fontSize="14px" lineHeight="20px" fontFamily="heading" color="gray.500">
+        <Text
+          w={{ base: '100%', md: '581px' }}
+          fontSize="14px"
+          lineHeight="20px"
+          fontFamily="heading"
+          color="gray.500"
+        >
           {council?.description}
         </Text>
         <Flex w="100%" mt="8px">
