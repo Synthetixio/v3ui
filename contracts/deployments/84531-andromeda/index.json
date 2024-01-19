@@ -1,17 +1,17 @@
 {
   "name": "synthetix-omnibus",
-  "version": "latest",
+  "version": "3.3.5-2",
   "preset": "andromeda",
-  "url": "ipfs://QmUDdE79X2fXXPbfXkXxXmso5U1SfcMrK3Ys6b6Tx4BsGM",
+  "url": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 84531,
   "addresses": {
-    "CoreProxy": "0xd7cFdcf6499896a1E15Db92629AAC8085af8B2ac",
-    "AccountProxy": "0x09190c9Be3e79dF2Cb5DAEA6320f9A1129aD8e8c",
-    "USDProxy": "0xC9ee9628f23b14483EA413C28712690E8D2dC6a3",
-    "OracleManagerProxy": "0xEC618B8994B76d89EfCD7051BA2D57Dcb6442E95",
-    "SpotMarketProxy": "0x41A883a85b1AdE59F41d459Fa550b40fa56429DB",
-    "PerpsMarketProxy": "0xEED61f0CB02f3B38923b1b6EAa939D5f04f431b6",
-    "PerpsAccountProxy": "0xfBD08C515DedDa6DbE59611b4bAC2E0f4a250301",
+    "CoreProxy": "0xF4Df9Dd327Fd30695d478c3c8a2fffAddcdD0d31",
+    "AccountProxy": "0xa88694d0025dd96194D1B0237fDEbf7D1D34B02F",
+    "USDProxy": "0xa89163A087fe38022690C313b5D4BBF12574637f",
+    "OracleManagerProxy": "0x439e6cbAaF61C63f406687907022960088801EC0",
+    "SpotMarketProxy": "0x26f3EcFa0Aa924649cfd4b74C57637e910A983a4",
+    "PerpsMarketProxy": "0x75c43165ea38cB857C45216a37C5405A7656673c",
+    "PerpsAccountProxy": "0xD8FD25C1A4d90244699f5Eb1966dB07FbDE9dcFa",
     "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
     "RewardDistributor": null
   }

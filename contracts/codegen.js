@@ -1,20 +1,12 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const os = require('os');
 const { readFileSync } = require('fs');
 const fs = require('fs/promises');
 const debug = require('debug');
 const ethers = require('ethers');
 const prettier = require('prettier');
 const { runTypeChain } = require('typechain');
-const { OnChainRegistry, IPFSLoader } = require('@usecannon/builder');
-const { LocalRegistry } = require('@usecannon/cli/dist/src/registry');
-const { CliLoader } = require('@usecannon/cli/dist/src/loader');
-
-const IPFS_GATEWAY = 'https://ipfs.synthetix.io';
-const CANNON_REGISTRY_ADDRESS = '0x8E5C7EFC9636A6A0408A46BB7F617094B81e5dba';
-const CANNON_DIRECTORY = path.join(os.homedir(), '.local', 'share', 'cannon');
 
 const prettierOptions = JSON.parse(readFileSync('../.prettierrc', 'utf8'));
 
@@ -37,15 +29,8 @@ function readableAbi(abi) {
   return iface.format(ethers.utils.FormatTypes.full);
 }
 
-function getDir({ chainId, preset }) {
-  if (preset === 'main') {
-    return `${chainId}`;
-  }
-  return `${chainId}-${preset}`;
-}
-
 async function manual({ chainId, preset }) {
-  const manualDir = `${__dirname}/manual/${getDir({ chainId, preset })}`;
+  const manualDir = `${__dirname}/manual/${chainId}-${preset}`;
 
   const files = await fs.readdir(manualDir, { withFileTypes: true });
   return Object.fromEntries(
@@ -62,13 +47,13 @@ async function manual({ chainId, preset }) {
 }
 
 async function writeContracts({ name, version, chainId, preset, url, contracts, log }) {
-  const tsDir = `${__dirname}/src/${getDir({ chainId, preset })}`;
+  const tsDir = `${__dirname}/src/${chainId}-${preset}`;
   await fs.mkdir(tsDir, { recursive: true });
 
-  const deploymentsDir = `${__dirname}/deployments/${getDir({ chainId, preset })}`;
+  const deploymentsDir = `${__dirname}/deployments/${chainId}-${preset}`;
   await fs.mkdir(deploymentsDir, { recursive: true });
 
-  const tmpDir = `${__dirname}/cache/${getDir({ chainId, preset })}`;
+  const tmpDir = `${__dirname}/cache/${chainId}-${preset}`;
   await fs.mkdir(tmpDir, { recursive: true });
 
   //
@@ -150,23 +135,16 @@ async function writeContracts({ name, version, chainId, preset, url, contracts, 
   };
 }
 
-async function codegen({ name, version, chainId, preset }) {
-  const log = debug(`codegen:${getDir({ chainId, preset })}`);
-
-  log('Resolving URL', `${name}:${version}`, `${chainId}-${preset}`);
-  const onChainRegistry = new OnChainRegistry({
-    signerOrProvider: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    address: CANNON_REGISTRY_ADDRESS,
-  });
-  const url = await onChainRegistry.getUrl(`${name}:${version}`, `${chainId}-${preset}`);
-
-  log('Fetching deployment state', url);
-  const ipfsLoader = new IPFSLoader(IPFS_GATEWAY);
-  const deployments = await ipfsLoader.read(url);
+async function codegen({ chainId, preset, cannonState }) {
+  const log = debug(`codegen:${chainId}-${preset}`);
+  const {
+    def: { name, version },
+    miscUrl: url,
+  } = cannonState;
 
   const contracts = {};
 
-  const system = deployments.state['provision.system'].artifacts.imports.system;
+  const system = cannonState.state['provision.system'].artifacts.imports.system;
 
   contracts.CoreProxy = system.contracts.CoreProxy;
   contracts.AccountProxy = system.contracts.AccountProxy;
@@ -174,13 +152,13 @@ async function codegen({ name, version, chainId, preset }) {
   contracts.OracleManagerProxy = system.imports.oracle_manager.contracts.Proxy;
 
   const spotFactory =
-    deployments?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
+    cannonState?.state?.['provision.spotFactory']?.artifacts?.imports?.spotFactory;
   if (spotFactory) {
     contracts.SpotMarketProxy = spotFactory.contracts.SpotMarketProxy;
   }
 
   const perpsFactory =
-    deployments?.state?.['provision.perpsFactory']?.artifacts?.imports?.perpsFactory;
+    cannonState?.state?.['provision.perpsFactory']?.artifacts?.imports?.perpsFactory;
   if (perpsFactory) {
     contracts.PerpsMarketProxy = perpsFactory.contracts.PerpsMarketProxy;
     contracts.PerpsAccountProxy =
@@ -191,20 +169,15 @@ async function codegen({ name, version, chainId, preset }) {
   return await writeContracts({ name, version, chainId, preset, url, contracts, log });
 }
 
-async function codegenLocal({ name, version, chainId, preset }) {
-  const log = debug(`codegen:${getDir({ chainId, preset })}`);
-
-  log('Resolving URL', `${name}:${version}`, `${chainId}-${preset}`);
-  const localRegistry = new LocalRegistry(CANNON_DIRECTORY);
-  const url = await await localRegistry.getUrl(`${name}:${version}`, `${chainId}-${preset}`);
-
-  log('Fetching deployment state', url);
-  const deployments = JSON.parse(
-    await fs.readFile(`${CANNON_DIRECTORY}/ipfs_cache/${CliLoader.getCacheHash(url)}.json`, 'utf8')
-  );
+async function codegenLocal({ chainId, preset, cannonState }) {
+  const log = debug(`codegen:${chainId}-${preset}`);
+  const {
+    def: { name, version },
+    miscUrl: url,
+  } = cannonState;
 
   const contracts = {};
-  const coreSandbox = deployments.state['import.core_sandbox'].artifacts.imports.core_sandbox;
+  const coreSandbox = cannonState.state['import.core_sandbox'].artifacts.imports.core_sandbox;
 
   const synthetix = coreSandbox.imports.synthetix;
   contracts.CoreProxy = synthetix.contracts.CoreProxy;
@@ -237,7 +210,7 @@ async function generateImporters(allDeployments) {
         await Promise.all(
           allDeployments.map(async ({ chainId, preset }) => {
             try {
-              await fs.access(`${__dirname}/src/${getDir({ chainId, preset })}/${name}.ts`);
+              await fs.access(`${__dirname}/src/${chainId}-${preset}/${name}.ts`);
               return { chainId, preset };
             } catch (_e) {
               return null;
@@ -248,7 +221,7 @@ async function generateImporters(allDeployments) {
 
       const imports = deployments.map(({ chainId, preset }) => {
         const typeName = makeTypeName({ chainId, preset });
-        const importPath = `./${getDir({ chainId, preset })}/${name}`;
+        const importPath = `./${chainId}-${preset}/${name}`;
         return `import type { ${name} as ${typeName} } from '${importPath}';`;
       });
 
@@ -263,7 +236,7 @@ async function generateImporters(allDeployments) {
         '  switch (`${chainId}-${preset}`) {',
         ...deployments.flatMap(({ chainId, preset }) => [
           `  case '${chainId}-${preset}':`,
-          `     return import('./${getDir({ chainId, preset })}/${name}')`,
+          `     return import('./${chainId}-${preset}/${name}')`,
         ]),
         '    default:',
         `      throw new Error(\`Unsupported chain $\{chainId} for ${name}\`)`,
@@ -301,32 +274,28 @@ async function generateImporters(allDeployments) {
 
 async function run() {
   await fs.rm(`${__dirname}/src`, { force: true, recursive: true });
+  await fs.mkdir(`${__dirname}/src`, { recursive: true });
   await fs.rm(`${__dirname}/deployments`, { force: true, recursive: true });
+  await fs.mkdir(`${__dirname}/deployments`, { recursive: true });
   await fs.rm(`${__dirname}/cache`, { force: true, recursive: true });
+  await fs.mkdir(`${__dirname}/cache`, { recursive: true });
 
-  const deployments = await Promise.all([
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 1, preset: 'main' }),
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 5, preset: 'main' }),
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 10, preset: 'main' }),
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 420, preset: 'main' }),
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 11155111, preset: 'main' }),
-    codegen({ name: 'synthetix-omnibus', version: 'latest', chainId: 84531, preset: 'main' }),
-    codegen({
-      name: 'synthetix-omnibus',
-      version: 'latest',
-      chainId: 84531,
-      preset: 'competition',
-    }),
-    codegen({
-      name: 'synthetix-omnibus',
-      version: 'latest',
-      chainId: 84531,
-      preset: 'andromeda',
-    }),
-    codegenLocal({ name: 'synthetix-local', version: 'latest', chainId: 13370, preset: 'main' }),
-  ]);
+  const deployments = await Promise.all(
+    (await fs.readdir(`${__dirname}/cannon`, { withFileTypes: true }))
+      .filter((dirent) => dirent.isFile() && path.extname(dirent.name) === '.json')
+      .map((dirent) => dirent.name)
+      .map(async (name) => {
+        const [chainIdString, preset] = path.basename(name, '.json').split('-');
+        const chainId = parseInt(chainIdString);
+        const cannonState = JSON.parse(await fs.readFile(`${__dirname}/cannon/${name}`));
+        if (chainId === 13370) {
+          return codegenLocal({ chainId, preset, cannonState });
+        }
+        return codegen({ chainId, preset, cannonState });
+      })
+  );
 
-  await generateImporters(deployments);
+  await generateImporters(deployments.filter(Boolean));
 }
 
 run();
