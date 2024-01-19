@@ -10,13 +10,15 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
 import '../UserProfileCard/UserProfileCard.css';
 import { shortAddress } from '../../utils/address';
+import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 
 export default function EditNomination({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(activeCouncil);
+  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
   const navigate = useNavigate();
   const wallet = useWallet();
   const { data: nominatedFor } = useGetIsNominated(wallet?.address);
   const { data: user } = useGetUserDetailsQuery(wallet?.address);
+  const { data: councilPeriodFromNomination } = useGetCurrentPeriod(activeCouncil);
   const { mutate, isPending, isSuccess } = useEditNomination({
     currentNomination: typeof nominatedFor === 'object' ? nominatedFor.slug : undefined,
     nextNomination: selectedCouncil,
@@ -26,6 +28,23 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
   useEffect(() => {
     if (isSuccess) setShowConfirm(false);
   }, [isSuccess]);
+
+  if (councilPeriodFromNomination === '2') {
+    return (
+      <Flex
+        flexDirection="column"
+        bg="navy.700"
+        w="100%"
+        borderColor="gray.900"
+        borderWidth="1px"
+        borderStyle="solid"
+        rounded="base"
+        p="6"
+      >
+        Not possible during Voting
+      </Flex>
+    );
+  }
 
   return (
     <Flex
@@ -246,6 +265,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           </Flex>
           {isPending ? (
             <Flex w="100%" justifyContent="center">
+              loading&nsbp;
               <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
@@ -253,7 +273,6 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
               <Button
                 mt="auto"
                 onClick={() => {
-                  // setShowConfirm(false);
                   mutate();
                 }}
               >
@@ -298,6 +317,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
             borderWidth="1px"
             alignItems="center"
             p="2"
+            mt="3"
           >
             {user?.pfpImageId ? (
               <Image src={user.pfpImageId} w="10" h="10" />
@@ -329,7 +349,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
                 borderWidth="1px"
                 padding="2"
                 alignItems="center"
-                mb="2"
+                mb="12"
               >
                 <Flex
                   borderRadius="50%"

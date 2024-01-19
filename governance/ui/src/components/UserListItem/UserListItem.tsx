@@ -8,6 +8,7 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
+import { Badge } from '../Badge';
 
 export default function UserListItem({
   address,
@@ -27,8 +28,8 @@ export default function UserListItem({
 
   return (
     <Flex
-      p="6"
-      justifyContent="space-between"
+      px="6"
+      h="56px"
       alignItems="center"
       cursor="pointer"
       onClick={(e) => {
@@ -39,6 +40,7 @@ export default function UserListItem({
       borderX={address === searchParams.get('view') ? '1px solid' : ''}
       borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
+      rounded="base"
     >
       <Flex alignItems="center">
         {user?.pfpImageId ? (
@@ -50,8 +52,14 @@ export default function UserListItem({
           {user?.ens ? user.ens : shortAddress(user?.address)}
         </Text>
       </Flex>
+      {isNominated && (
+        <Badge color="green" ml="4">
+          Nominee
+        </Badge>
+      )}
       {councilPeriod === '1' ? (
         <Button
+          ml="auto"
           rounded="base"
           size="xs"
           variant={isNominated ? 'outline' : 'solid'}

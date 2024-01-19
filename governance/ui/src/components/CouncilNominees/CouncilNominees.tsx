@@ -11,10 +11,11 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
+import { ArrowUpDownIcon } from '@chakra-ui/icons';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [searchAddress, setSearchAddress] = useState('');
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'ranking']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
 
   const wallet = useWallet();
 
@@ -170,12 +171,10 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               }}
             >
               Name{' '}
-              {sortConfig[1] === 'name' ? (
-                councilPeriod === '2' && sortConfig[0] ? (
-                  <ChevronUp />
-                ) : (
-                  <ChevronDown />
-                )
+              {sortConfig[1] === 'name' ? sortConfig[0] ? <ChevronUp /> : <ChevronDown /> : <></>}
+              {/* @ts-ignore */}
+              {sortConfig[1] === 'start' && sortConfig[1] !== 'name' ? (
+                <ArrowUpDownIcon color="cyan" />
               ) : (
                 <></>
               )}

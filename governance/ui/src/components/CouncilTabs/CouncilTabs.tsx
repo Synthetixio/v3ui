@@ -8,7 +8,7 @@ import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotes } from './MyVotes';
 
-export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
+export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: votes } = useGetVotingCandidates();
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
@@ -32,7 +32,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           alignItems="center"
           zIndex={99}
         >
-          <CouncilsSelect activeCouncil={activeCouncil} />
+          {/* If on my votes page, spartan council is active by default for navigation */}
+          <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
           <MyVotes
             isLoading={isLoading}
             councilPeriod={councilPeriod}

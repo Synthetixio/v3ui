@@ -37,7 +37,7 @@ export function UserProfileCard({
       bg="navy.700"
       borderRadius="base"
       borderStyle="solid"
-      borderColor="cyan.900"
+      borderColor="cyan.500"
       borderWidth="1px"
       p="4"
       w="100%"

@@ -1,6 +1,5 @@
 import { CloseIcon, CopyIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Button, Image, Box, Text } from '@chakra-ui/react';
-import { Badge } from '../Badge';
 import { prettyString } from '@snx-v3/format';
 import Blockies from 'react-blockies';
 import { shortAddress } from '../../utils/address';
@@ -71,9 +70,6 @@ export const UserProfileDetails = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex mb="6">
-        <Badge color="green">2x Elected</Badge>
-      </Flex>
       <Flex mb="4">
         <Socials
           discord={userData?.discord}
@@ -107,20 +103,10 @@ export const UserProfileDetails = ({
       <Text fontSize="14px" fontWeight="700" color="gray.500">
         Governance Pitch
       </Text>
-      <Text fontSize="14px" lineHeight="20px">
+      <Text fontSize="14px" lineHeight="20px" overflowY="scroll">
         {userData?.delegationPitch}
       </Text>
-      <Button
-        alignSelf="flex-start"
-        size="xs"
-        variant="ghost"
-        colorScheme="cyan"
-        fontSize="12px"
-        fontWeight="400"
-      >
-        View More
-        <ChevronDownIcon color="cyan.500" ml="1" />
-      </Button>
+
       <Flex mt="auto" gap="2" flexDir="column">
         {isOwn && (
           <>
@@ -134,8 +120,6 @@ export const UserProfileDetails = ({
               Edit Profile
             </Button>
             <Button
-              variant="outline"
-              colorScheme="gray"
               w="100%"
               onClick={() =>
                 navigate(
