@@ -1,4 +1,4 @@
-import { CloseIcon, CopyIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Button, Image, Box, Text } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import Blockies from 'react-blockies';

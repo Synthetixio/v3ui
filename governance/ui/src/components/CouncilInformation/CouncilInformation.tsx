@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { CouncilImage } from '../CouncilImage';
