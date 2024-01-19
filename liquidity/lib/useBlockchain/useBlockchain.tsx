@@ -113,7 +113,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
     label: 'Base Goerli (Andromeda)',
     Icon: () => <BaseIcon />,
-    isSupported: true,
+    isSupported: false, // hidden by default but if wallet switched to Base Goerli it will be visible
     publicRpcUrl: 'https://goerli.base.org',
     isTestnet: true,
   },
@@ -126,7 +126,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: `https://base-sepolia.infura.io/v3/${INFURA_KEY}`,
     label: 'Base Sepolia (Andromeda)',
     Icon: () => <BaseIcon />,
-    isSupported: true,
+    isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
     publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,
   },
@@ -139,7 +139,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: `http://127.0.0.1:8545`,
     label: 'Cannon',
     Icon: () => <LogoIcon />,
-    isSupported: false, // hidden by default but if wallet switched to 13370 it will be visible
+    isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
   },
