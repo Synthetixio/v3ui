@@ -25,7 +25,7 @@ export function UserProfileCard({
   } = useGetUserDetailsQuery(walletAddress);
   const { data: councilPeriod, isLoading: councilPeriodLoading } =
     useGetCurrentPeriod(activeCouncil);
-  const { data: isNonominationInformation, isLoading: isNominatedLoading } = useGetIsNominated(
+  const { data: isNominated, isLoading: isNominatedLoading } = useGetIsNominated(
     isOwn ? walletAddress : ''
   );
 
@@ -54,7 +54,7 @@ export function UserProfileCard({
           councilPeriod={councilPeriod}
           walletAddress={walletAddress}
           isOwn={isOwn}
-          isNominated={!!isNonominationInformation?.isNominated}
+          isNominated={!!isNominated?.isNominated}
           userData={userData}
         />
       )}

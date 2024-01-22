@@ -8,6 +8,7 @@ import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -28,6 +29,10 @@ export const UserProfileDetails = ({
 }: UserProfileDetailsProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [removeOrSelect, setRemoveOrSelect] = useState(
+    JSON.parse(localStorage.getItem('voteSelection') || '')?.[activeCouncil]?.toLowerCase() ===
+      userData?.address.toLowerCase()
+  );
 
   return (
     <>
@@ -114,6 +119,18 @@ export const UserProfileDetails = ({
             >
               Edit Profile
             </Button>
+            {!isNominated ? (
+              <Button
+                variant="outline"
+                colorScheme="gray"
+                w="100%"
+                onClick={() => navigate(`/councils/${activeCouncil}?nominate=true`)}
+              >
+                Nominate Self
+              </Button>
+            ) : (
+              <></>
+            )}
             {councilPeriod === '2' ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button
@@ -151,13 +168,20 @@ export const UserProfileDetails = ({
                 const selection = localStorage.getItem('voteSelection');
                 if (!selection) localStorage.setItem('voteSelection', '');
                 const parsedSelection = JSON.parse(selection ? selection : '{}');
-                parsedSelection[activeCouncil] = userData?.address;
+                parsedSelection[activeCouncil] =
+                  parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+                    ? ''
+                    : userData.address;
                 localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
                 queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
+                setRemoveOrSelect(
+                  parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+                );
               }
             }}
           >
-            Select {userData?.ens || userData?.username || shortAddress(userData?.address)}
+            {removeOrSelect ? 'Remove ' : 'Select '}
+            {userData?.ens || userData?.username || shortAddress(userData?.address)}
           </Button>
         )}
       </Flex>

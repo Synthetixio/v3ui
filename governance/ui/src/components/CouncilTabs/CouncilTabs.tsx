@@ -47,7 +47,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
     ...data,
     userInformation: data.userInformation.data,
   }));
-  console.log(userInformation);
 
   return (
     <>
