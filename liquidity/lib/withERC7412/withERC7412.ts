@@ -187,7 +187,7 @@ export const withERC7412 = async (
 
   const from = multicallCalls[0].from as string;
 
-  const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
+  const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl()); // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
 
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(network.name);
