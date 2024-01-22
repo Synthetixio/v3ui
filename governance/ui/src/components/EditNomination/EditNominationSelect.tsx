@@ -170,7 +170,7 @@ export default function EditNominationSelect({
         </Flex>
       </Flex>
 
-      <Button mt="12" onClick={() => setShowConfirm(true)}>
+      <Button mt="auto" onClick={() => setShowConfirm(true)}>
         Edit Nomination
       </Button>
     </>

@@ -81,9 +81,9 @@ export default function EditNominationConfirmation({
         </Flex>
       </Flex>
       <Flex alignItems="center" justifyContent="space-between" mt="2">
-        {typeof nominatedFor === 'object' ? (
+        {nominationInformation?.isNominated ? (
           <Flex
-            key={`tab-nomination-${nominatedFor.docLink}`}
+            key={`tab-nomination-${nominationInformation.council.docLink}`}
             cursor="pointer"
             w="45%"
             height="58px"
@@ -105,10 +105,10 @@ export default function EditNominationConfirmation({
               alignItems="center"
               mr="3"
             >
-              <Image src={nominatedFor.image} w="6" h="6" />
+              <Image src={nominationInformation.council.image} w="6" h="6" />
             </Flex>
             <Text fontSize="x-small" fontWeight="bold">
-              {nominatedFor.title}
+              {nominationInformation.council.title}
             </Text>
           </Flex>
         ) : (
