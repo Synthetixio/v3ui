@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { BigNumber, providers } from 'ethers';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
-import { BigNumber, providers } from 'ethers';
+import { useNetwork, useSigner } from './useWallet';
 
 export default function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(council: T) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const signer = useSigner();
 
   return useQuery({
     queryFn: async () => {
-      if (signer) {
+      if (signer && network?.id) {
         return await getBallot(council, signer, network.id);
       }
     },
@@ -23,7 +23,7 @@ export default function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]
 async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   council: T,
   signer: providers.JsonRpcSigner,
-  chianId: number
+  chainId: number
 ): Promise<
   T extends CouncilSlugs
     ? { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }
@@ -36,14 +36,14 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
         const electionModule = getCouncilContract(c).connect(signer!);
         const voter = await signer!.getAddress();
         const electionId = electionModule.getEpochIndex();
-        return await electionModule.getBallot(voter, chianId, electionId);
+        return await electionModule.getBallot(voter, chainId, electionId);
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
     const electionModule = getCouncilContract(council).connect(signer!);
     const voter = await signer!.getAddress();
     const electionId = electionModule.getEpochIndex();
-    ballot = (await electionModule.getBallot(voter, chianId, electionId)) as {
+    ballot = (await electionModule.getBallot(voter, chainId, electionId)) as {
       votingPower: BigNumber;
       votedCandidates: string[];
       amounts: BigNumber[];

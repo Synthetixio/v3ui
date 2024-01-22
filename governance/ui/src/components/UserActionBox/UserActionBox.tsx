@@ -1,18 +1,18 @@
 import { Flex, Show, Text, useDisclosure } from '@chakra-ui/react';
-import { useWallet } from '@snx-v3/useBlockchain';
 import { useSearchParams } from 'react-router-dom';
 import { CouncilSlugs } from '../../utils/councils';
 import EditProfile from '../EditProfile/EditProfile';
 import { NominateSelfContainer } from '../NominateSelf/NominateSelfContainer';
 import { EditNominationContainer } from '../EditNomination/EditNominationContainer';
 import { UserProfileCardContainer } from '../UserProfileCard/UserProfileCardContainer';
+import { useWallet } from '../../queries/useWallet';
 
 interface UserActionBoxProps {
   activeCouncil: CouncilSlugs;
 }
 
 export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
   const [searchParams] = useSearchParams();
 
   const editNomination = searchParams.get('editNomination') === 'true' ? true : false;
@@ -26,11 +26,11 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
     return <EditProfile activeCouncil={activeCouncil} onClose={onClose} />;
   }
 
-  if (nominate && wallet?.address) {
+  if (nominate && activeWallet?.address) {
     return <NominateSelfContainer activeCouncil={activeCouncil} onClose={onClose} />;
   }
 
-  if (editNomination && wallet?.address) {
+  if (editNomination && activeWallet?.address) {
     return <EditNominationContainer activeCouncil={activeCouncil} onClose={onClose} />;
   }
 
@@ -40,7 +40,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
-        wallet={wallet}
+        wallet={activeWallet}
       />
     );
   }

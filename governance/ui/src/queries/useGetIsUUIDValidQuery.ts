@@ -1,6 +1,6 @@
-import { useWallet } from '@snx-v3/useBlockchain';
 import { VALID_UUID_API_URL } from '../utils/boardroom';
 import { useQuery } from '@tanstack/react-query';
+import { useWallet } from './useWallet';
 
 type UUIDResponse = {
   data: {
@@ -9,11 +9,12 @@ type UUIDResponse = {
 };
 
 export default function useGetIsUUIDValidQuery(uuid: string) {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
+
   return useQuery<boolean>({
     queryKey: ['isUUIDValid'],
     queryFn: async () => {
-      const body = { address: wallet!.address, uuid };
+      const body = { address: activeWallet!.address, uuid };
 
       const response = await fetch(VALID_UUID_API_URL, {
         method: 'POST',
@@ -25,6 +26,6 @@ export default function useGetIsUUIDValidQuery(uuid: string) {
       return data.success as boolean;
     },
 
-    enabled: wallet?.address !== null && uuid !== null,
+    enabled: activeWallet?.address !== null && uuid !== null,
   });
 }

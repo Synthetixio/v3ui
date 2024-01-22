@@ -7,10 +7,10 @@ import {
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SiweMessage } from 'siwe';
-import { useSigner, useWallet } from '@snx-v3/useBlockchain';
 import useIsUUIDValidQuery from '../queries/useGetIsUUIDValidQuery';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
+import { useWallet, useSigner } from '../queries/useWallet';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -47,7 +47,7 @@ type SignInResponse = {
 };
 
 function useUpdateUserDetailsMutation() {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
   const signer = useSigner();
 
   const [uuid, setUuid] = useState<null | string>(null);
@@ -56,10 +56,10 @@ function useUpdateUserDetailsMutation() {
     const domain = 'governance.synthetix.io';
     const chainId = 10;
 
-    if (signer && wallet?.address) {
+    if (signer && activeWallet?.address) {
       try {
         const body = {
-          address: wallet.address,
+          address: activeWallet.address,
         };
         let response = await fetch(NONCE_API_URL, {
           method: 'POST',
@@ -69,7 +69,7 @@ function useUpdateUserDetailsMutation() {
 
         const signedMessage = new SiweMessage({
           domain: domain,
-          address: utils.getAddress(wallet.address),
+          address: utils.getAddress(activeWallet.address),
           chainId: chainId,
           uri: `https://${domain}`,
           version: '1',
@@ -108,15 +108,18 @@ function useUpdateUserDetailsMutation() {
       if (!isUuidValidQuery.data) {
         signedInUuid = (await boardroomSignIn()) || '';
       }
-      if (wallet?.address) {
+      if (activeWallet?.address) {
         const body = {
           ...userProfile,
           uuid: signedInUuid,
         };
-        const updateUserDetailsResponse = await fetch(UPDATE_USER_DETAILS_API_URL(wallet.address), {
-          method: 'POST',
-          body: JSON.stringify(body),
-        });
+        const updateUserDetailsResponse = await fetch(
+          UPDATE_USER_DETAILS_API_URL(activeWallet.address),
+          {
+            method: 'POST',
+            body: JSON.stringify(body),
+          }
+        );
 
         const updateUserDetailsResult =
           (await updateUserDetailsResponse.json()) as UpdateUserDetailsResponse;
@@ -128,7 +131,7 @@ function useUpdateUserDetailsMutation() {
         if (userProfile.delegationPitch) {
           const delegationPitchesBody = {
             protocol: 'synthetix',
-            address: wallet.address,
+            address: activeWallet.address,
             delegationPitch: userProfile.delegationPitch,
             uuid: signedInUuid,
           };

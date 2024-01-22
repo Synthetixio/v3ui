@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSigner } from '@snx-v3/useBlockchain';
+import { useSigner } from '../queries/useWallet';
 import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
 
 export default function useEditNomination(council: CouncilSlugs, address?: string) {
   const queryClient = useQueryClient();
   const signer = useSigner();
+
   return useMutation({
     mutationFn: async () => {
       if (signer) {

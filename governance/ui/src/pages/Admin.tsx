@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { Contract, utils } from 'ethers';
-import { useSigner } from '@snx-v3/useBlockchain';
+import { useSigner } from '../queries/useWallet';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 
 export default function Admin() {

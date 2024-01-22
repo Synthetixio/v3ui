@@ -3,7 +3,6 @@ import { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
-import { useWallet } from '@snx-v3/useBlockchain';
 import UserListItem from '../UserListItem/UserListItem';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
@@ -11,12 +10,13 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
+import { useWallet } from '../../queries/useWallet';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [searchAddress, setSearchAddress] = useState('');
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'ranking']);
 
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
 
   const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
@@ -69,7 +69,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       ? councilNomineesDetails
           .filter((nominee) => {
             if (councilPeriod !== '2') {
-              nominee?.address.toLowerCase() !== wallet?.address.toLowerCase();
+              nominee?.address.toLowerCase() !== activeWallet?.address.toLowerCase();
             }
             return true;
           })
@@ -80,7 +80,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             return true;
           })
       : [];
-  }, [searchAddress, councilNomineesDetails, wallet?.address, councilPeriod]);
+  }, [searchAddress, councilNomineesDetails, activeWallet?.address, councilPeriod]);
 
   return (
     <Flex
@@ -107,7 +107,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
+      {activeWallet?.address && (
+        <UserListItem address={activeWallet.address} activeCouncil={activeCouncil} />
+      )}
       <Divider />
       <Flex justifyContent="space-between" alignItems="center" p="6">
         <Heading fontSize="medium">

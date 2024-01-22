@@ -1,5 +1,6 @@
 import { NETWORKS } from '@snx-v3/useBlockchain';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
+import { ethers } from 'ethers';
 import { useCallback } from 'react';
 
 export function useWallet() {
@@ -50,4 +51,33 @@ export function useNetwork() {
     network,
     setNetwork,
   };
+}
+
+export function useIsConnected(): boolean {
+  const [{ wallet }] = useConnectWallet();
+  return Boolean(wallet);
+}
+
+export function useSigner() {
+  const [{ wallet }] = useConnectWallet();
+
+  if (!wallet) {
+    return null;
+  }
+
+  const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+
+  return provider.getSigner();
+}
+
+export function useProvider() {
+  const [{ wallet }] = useConnectWallet();
+
+  if (!wallet) {
+    return null;
+  }
+
+  const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+
+  return provider;
 }
