@@ -178,8 +178,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
 
           {isPending ? (
             <Flex w="100%" justifyContent="center">
-              loading&nsbp;
-              <Spinner colorScheme="cyan" />
+              loading <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
             <Button onClick={() => mutate()} mt="auto">
