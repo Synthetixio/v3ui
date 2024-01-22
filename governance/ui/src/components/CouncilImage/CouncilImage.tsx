@@ -17,6 +17,7 @@ export const CouncilImage = ({ imageUrl, imageProps, ...props }: CouncilImagePro
       justifyContent="center"
       alignItems="center"
       mr="3"
+      bg="navy.700"
       {...props}
     >
       <Image src={imageUrl} w="6" h="6" {...imageProps} />

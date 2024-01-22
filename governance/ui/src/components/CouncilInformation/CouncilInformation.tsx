@@ -8,25 +8,40 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex py="5" maxW="735px" w="100%">
-      <CouncilImage
-        imageUrl={council?.image || ''}
-        width="130px"
-        height="130px"
-        imageProps={{ w: '108px', h: '108px' }}
-      />
-      <Flex flexDir="column" maxWidth="80%">
+    <Flex py="5" maxW="735px" w="100%" flexDirection={{ base: 'column', md: 'row' }}>
+      <Flex>
+        <CouncilImage
+          imageUrl={council?.image || ''}
+          width="130px"
+          height="130px"
+          imageProps={{ w: '108px', h: '108px' }}
+        />
+      </Flex>
+      <Flex
+        width={{ base: '100%' }}
+        flexDir="column"
+        ml={{ base: 'unset', md: '24px' }}
+        mt={{ base: '24px', md: 'unset' }}
+      >
         <Heading fontSize="lg" mb="2">
           {council?.title}
         </Heading>
-        <Text fontSize="sm" color="gray.500">
+        <Text
+          w={{ base: '100%', md: '581px' }}
+          fontSize="14px"
+          lineHeight="20px"
+          fontFamily="heading"
+          color="gray.500"
+        >
           {council?.description}
         </Text>
-        <Flex justifyContent="space-between" w="100%" mt="2">
-          <Heading fontSize="xs" mr="11">
+        <Flex w="100%" mt="2">
+          <Heading fontSize="xs" mr={10} lineHeight="1rem">
             Council Seats: {getCouncilMembers?.length}
           </Heading>
-          <Heading fontSize="xs">Stipends P/M: {council?.stipends}</Heading>
+          <Heading fontSize="xs" lineHeight="1rem">
+            Stipends P/M: {council?.stipends}
+          </Heading>
         </Flex>
       </Flex>
     </Flex>
