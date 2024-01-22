@@ -21,7 +21,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
   const { data: electedCouncilMembers, isLoading: isCouncilMembersLoading } = useGetCouncilMembers(
     council.slug
   );
-  const { data: isNominated } = useGetIsNominated(activeWallet?.address);
+  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
   const { data: councilNominees, isLoading: isCouncilNomineesLoading } = useGetCouncilNominees(
     council.slug
   );
@@ -44,6 +44,9 @@ export function CouncilCard({ council }: CouncilCardProps) {
         navigate(`/councils/${council.slug}`);
       }}
       cursor="pointer"
+      _hover={{
+        bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+      }}
     >
       <Image src={council.image} h="80px" w="80px" mb="4" />
       <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
@@ -99,7 +102,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             </Text>
             <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="right">
                   {councilNominees?.length}
                 </Text>
               </Fade>
@@ -128,14 +131,18 @@ export function CouncilCard({ council }: CouncilCardProps) {
               mb="1"
               onClick={(e) => {
                 e.stopPropagation();
-                if (isNominated && isNominated.slug === council.slug) {
+                if (
+                  nominationInformation?.isNominated &&
+                  nominationInformation.council.slug === council.slug
+                ) {
                   navigate(`/councils/${council.slug}?editNomination=true`);
                 } else {
                   navigate(`/councils/${council.slug}?nominate=true`);
                 }
               }}
             >
-              {isNominated && isNominated.slug === council.slug
+              {nominationInformation?.isNominated &&
+              nominationInformation.council.slug === council.slug
                 ? 'Edit Nomination'
                 : 'Nominate Self'}
             </Button>

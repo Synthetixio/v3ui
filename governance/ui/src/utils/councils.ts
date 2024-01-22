@@ -7,6 +7,7 @@ const councils: {
   address: string;
   description: string;
   stipends: string;
+  docLink: string;
 }[] = [
   {
     title: 'Spartan Council',
@@ -16,6 +17,7 @@ const councils: {
     description:
       'The Spartan Council (SC), established via SIP-93, is the central governing body of the Synthetix protocol. The SC votes on Synthetix Improvement Proposals (SIPs) and Synthetix Configuration Change Proposal (SCCPs). The SC is responsible for conducting SIP/SCCP interviews, debating the implications of proposed changes, coordinating protocol changes with core contributors, and hosting periodic community governance meetings.',
     stipends: '2,000 SNX',
+    docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
   },
   {
     title: 'Grants Council',
@@ -25,6 +27,7 @@ const councils: {
     description:
       'The Grants Council, established via SIP 39, is responsible for public goods funding through grants, initiative bounties, or competition prizes. It is a value-based entity, whose ultimate goal in funding projects is to produce publicly accessible, beneficial, high-quality work where profit margins are not the priority. Projects are chosen not based on the value they can extract but instead on the value they can add to the community.',
     stipends: '2,000 SNX',
+    docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
   },
   {
     title: 'Ambassador Council',
@@ -34,6 +37,7 @@ const councils: {
     description:
       "The Ambassador Council, established via SIP 157 is responsible for promoting Synthetix's interest in the DeFi ecosystem. This advocation comes through two primary means: governance and partnerships. Governance includes seeking governance power in protocols that may be beneficial for Synthetix, and voting for proposals in the interest of the community. Partnerships include working with Synthetix integrators to help them integrate within the Synthetix Ecosystem.",
     stipends: '2,000 SNX',
+    docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
   },
   {
     title: 'Treasury Council',
@@ -43,6 +47,7 @@ const councils: {
     description:
       "The Treasury Council, established via SIP 155, provides resources for the protocol's growth and expansion. This includes managing the treasury in a way that allows continuity of funding for protocol costs (on-chain/off-chain), council and Core Contributor Stipends, ecosystem incentives, including Grants Council funding, and other discretionary incentives. The members of the council manage the treasury through a gnosis-safe multi-sig.",
     stipends: '2,000 SNX',
+    docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
   },
 ];
 

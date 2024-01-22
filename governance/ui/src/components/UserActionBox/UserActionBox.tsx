@@ -50,7 +50,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
     <Show above="md">
       <Flex
         w="451px"
-        height="651px"
+        height="80vh"
         justifyContent="center"
         alignItems="center"
         borderWidth="1px"
@@ -59,6 +59,8 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         bg="navy.700"
         rounded="base"
         mt={6}
+        my="6"
+        boxShadow="lg"
       >
         <Text
           w="225px"

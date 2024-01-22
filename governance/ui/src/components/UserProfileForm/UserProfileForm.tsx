@@ -135,29 +135,29 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         <Text color="gray.500" fontSize="12px" lineHeight="16px">
           Username
         </Text>
-        <Input {...register('username')} mb="1" placeholder="John Doe" />
+        <Input {...register('username')} mb="1" placeholder="eg: DeFiLoard" />
         <Text color="gray.500" fontSize="12px" lineHeight="16px">
           About
         </Text>
-        <Input {...register('about')} placeholder="OG DeFi Member" />
+        <Input {...register('about')} placeholder="eq: OG DeFi Member" />
       </Flex>
       <div>
         <Text color="gray.500" fontSize="12px" lineHeight="16px">
           Discord
         </Text>
-        <Input {...register('discord')} placeholder="John Doe" />
+        <Input {...register('discord')} placeholder="eg: https://discord.com/username" />
       </div>
       <div>
         <Text color="gray.500" fontSize="12px" lineHeight="16px">
           Twitter
         </Text>
-        <Input {...register('twitter')} placeholder="John_Doe" />
+        <Input {...register('twitter')} placeholder="eg: https://twitter.com/username" />
       </div>
       <div>
         <Text color="gray.500" fontSize="12px" lineHeight="16px">
           Github
         </Text>
-        <Input {...register('github')} placeholder="John Doe" />
+        <Input {...register('github')} placeholder="eg: https://github.com/username" />
       </div>
       <Flex flexDirection="column" alignItems="flex-start">
         <Text fontSize="12px" fontWeight="400" color="gray.500">
@@ -201,36 +201,47 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
           placeholder="eg: How am I going to make a difference at Synthetix"
         />
       </div>
-
-      <Button
-        colorScheme="gray"
-        variant="outline"
-        onClick={() => {
-          mutation.mutate({
-            about: getValues('about')!,
-            address: user!.address,
-            email: '',
-            associatedAddresses: '',
-            bannerImageId: '',
-            bannerUrl: '',
-            delegationPitch: getValues('delegationPitch')!,
-            discord: getValues('discord')!,
-            ens: '',
-            github: getValues('github')!,
-            bannerThumbnailUrl: '',
-            pfpUrl: getValues('pfpUrl')!,
-            website: '',
-            pfpImageId: '',
-            twitter: getValues('twitter')!,
-            pfpThumbnailUrl: '',
-            notificationPreferences: '',
-            type: '',
-            username: getValues('username')!,
-          });
-        }}
-      >
-        Save Profile
-      </Button>
+      {mutation.isPending ? (
+        <Flex w="100%" justifyContent="center">
+          loading&nbsp;
+          <Spinner />
+        </Flex>
+      ) : (
+        <Button
+          colorScheme="gray"
+          variant="outline"
+          color="white"
+          onClick={() => {
+            mutation
+              .mutateAsync({
+                about: getValues('about')!,
+                address: user!.address,
+                email: '',
+                associatedAddresses: '',
+                bannerImageId: '',
+                bannerUrl: '',
+                delegationPitch: getValues('delegationPitch')!,
+                discord: getValues('discord')!,
+                ens: '',
+                github: getValues('github')!,
+                bannerThumbnailUrl: '',
+                pfpUrl: getValues('pfpUrl')!,
+                website: '',
+                pfpImageId: '',
+                twitter: getValues('twitter')!,
+                pfpThumbnailUrl: '',
+                notificationPreferences: '',
+                type: '',
+                username: getValues('username')!,
+              })
+              .then(() => {
+                navigate(`/councils/${activeCouncil}?view=${wallet?.address}`);
+              });
+          }}
+        >
+          Save Profile
+        </Button>
+      )}
     </Flex>
   );
 }

@@ -9,12 +9,13 @@ import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
-import { ChevronDown, ChevronUp } from '@snx-v3/icons';
+import { ArrowUpDownIcon } from '@chakra-ui/icons';
+import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [searchAddress, setSearchAddress] = useState('');
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'ranking']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
 
   const { activeWallet } = useWallet();
 
@@ -141,15 +142,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 }}
               >
                 N°{' '}
-                {sortConfig[1] === 'ranking' ? (
-                  councilPeriod === '2' && sortConfig[0] ? (
-                    <ChevronUp />
-                  ) : (
-                    <ChevronDown />
-                  )
-                ) : (
-                  <></>
-                )}
+                {sortConfig[1] === 'ranking' && sortConfig[0] && <SortArrows up={sortConfig[0]} />}
               </Th>
             )}
             <Th
@@ -171,15 +164,10 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 });
               }}
             >
-              Name{' '}
-              {sortConfig[1] === 'name' ? (
-                councilPeriod === '2' && sortConfig[0] ? (
-                  <ChevronUp />
-                ) : (
-                  <ChevronDown />
-                )
-              ) : (
-                <></>
+              Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
+              {/* @ts-ignore */}
+              {sortConfig[1] === 'start' && sortConfig[1] !== 'name' && (
+                <ArrowUpDownIcon color="cyan" />
               )}
             </Th>
             <Th textTransform="capitalize">Role</Th>
@@ -198,16 +186,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   // });
                 }}
               >
-                Votes{' '}
-                {sortConfig[1] === 'votes' ? (
-                  councilPeriod === '2' && sortConfig[0] ? (
-                    <ChevronUp />
-                  ) : (
-                    <ChevronDown />
-                  )
-                ) : (
-                  <></>
-                )}
+                Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
               </Th>
             )}
             {councilPeriod === '2' && (
@@ -224,16 +203,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   // });
                 }}
               >
-                Voting Power{' '}
-                {sortConfig[1] === 'votingPower' ? (
-                  councilPeriod === '2' && sortConfig[0] ? (
-                    <ChevronUp />
-                  ) : (
-                    <ChevronDown />
-                  )
-                ) : (
-                  <></>
-                )}
+                Voting Power {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
               </Th>
             )}
           </Tr>
