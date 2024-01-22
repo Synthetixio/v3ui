@@ -23,7 +23,7 @@ export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id))
 
 export const onboard = init({
   wallets: [
-    injectedModule({ displayUnavailable: [ProviderLabel.Trust] }),
+    injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
     trezorModule({
       appUrl: 'https://governance.synthetix.io',
       email: 'info@synthetix.io',
