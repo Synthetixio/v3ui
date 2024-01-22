@@ -22,6 +22,7 @@
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "@web3-onboard/coinbase": "^2.2.6",
+    "@web3-onboard/core": "^2.21.2",
     "@web3-onboard/gnosis": "^2.2.1",
     "@web3-onboard/injected-wallets": "^2.10.11",
     "@web3-onboard/ledger": "^2.5.2",
