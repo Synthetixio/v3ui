@@ -5827,7 +5827,6 @@ __metadata:
     "@types/react": "npm:^18.2.37"
     "@types/react-blockies": "npm:^1"
     "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/core": "npm:^2.21.2"
     "@web3-onboard/injected-wallets": "npm:^2.10.11"
     "@web3-onboard/react": "npm:^2.8.13"
     babel-loader: "npm:^9.1.3"

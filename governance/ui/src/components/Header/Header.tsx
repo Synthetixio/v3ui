@@ -10,14 +10,6 @@ import {
   useColorMode,
   Show,
 } from '@chakra-ui/react';
-import {
-  Network,
-  disconnect,
-  onboard,
-  useIsConnected,
-  useNetwork,
-  useWallet,
-} from '@snx-v3/useBlockchain';
 import { useNavigate } from 'react-router-dom';
 import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
@@ -26,13 +18,17 @@ import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
+import { useWallet, useNetwork } from '../../queries/useWallet';
+import { Network } from '@snx-v3/useBlockchain';
 
-const activeIcon = (currentNetwork: Network) => {
-  switch (currentNetwork.id) {
+const activeIcon = (currentNetwork: Network | null) => {
+  switch (currentNetwork?.id) {
     case 1:
       return { icon: <EthereumIcon />, name: 'Ethereum' };
     case 5:
       return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
+    case 11155111:
+      return { icon: <EthereumIcon />, name: 'Sepolia Testnet' };
     case 10:
       return { icon: <OptimismIcon />, name: 'Optimism' };
     case 420:
@@ -45,27 +41,31 @@ const activeIcon = (currentNetwork: Network) => {
 
 export function Header() {
   const navigate = useNavigate();
-  const isWalletConnected = useIsConnected();
-  const wallet = useWallet();
-  const currentNetwork = useNetwork();
-  const { icon } = activeIcon(currentNetwork);
+
+  const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
+  const { network, setNetwork } = useNetwork();
+
+  const { icon } = activeIcon(network);
   const { colorMode, toggleColorMode } = useColorMode();
+
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
   const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
+
   const queryClient = useQueryClient();
+
   const [{ data: ballots, isFetched }] = [
     useGetUserBallot(['spartan', 'ambassador', 'grants', 'treasury']),
   ];
 
   useEffect(() => {
     if (
-      wallet?.address &&
-      currentNetwork.id &&
+      activeWallet?.address &&
+      network?.id &&
       isFetched &&
-      (!localStorageUpdated || !fetchedNetwork.includes(currentNetwork.id))
+      (!localStorageUpdated || !fetchedNetwork.includes(network?.id))
     ) {
       setLocalStorageUpdated(true);
-      setFetchedNetwork([...fetchedNetwork, currentNetwork.id]);
+      setFetchedNetwork([...fetchedNetwork, network?.id]);
       const selection = localStorage.getItem('voteSelection');
       if (!selection) localStorage.setItem('voteSelection', '');
       const parsedSelection = JSON.parse(selection ? selection : '{}');
@@ -84,8 +84,8 @@ export function Header() {
       queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
     }
   }, [
-    wallet?.address,
-    currentNetwork.id,
+    activeWallet?.address,
+    network?.id,
     localStorageUpdated,
     isFetched,
     ballots,
@@ -93,15 +93,17 @@ export function Header() {
     fetchedNetwork,
   ]);
 
-  const switchNetwork = async (id: number) => {
-    return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
-  };
-
   useEffect(() => {
     if (colorMode === 'light') {
       toggleColorMode();
     }
   }, [colorMode, toggleColorMode]);
+
+  const onDisconnect = () => {
+    if (walletsInfo) {
+      disconnect(walletsInfo);
+    }
+  };
 
   return (
     <Flex
@@ -124,7 +126,7 @@ export function Header() {
           </Show>
         </Flex>
         <PeriodCountdown council={councils[0].slug} />
-        {isWalletConnected && (
+        {activeWallet && (
           <Menu>
             {() => (
               <>
@@ -132,19 +134,19 @@ export function Header() {
                   {icon}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => switchNetwork(1)}>
+                  <MenuItem onClick={() => setNetwork(1)}>
                     <EthereumIcon />
                     <Text variant="nav" ml={2}>
                       Ethereum Mainnet
                     </Text>
                   </MenuItem>
-                  <MenuItem onClick={() => switchNetwork(10)}>
+                  <MenuItem onClick={() => setNetwork(10)}>
                     <OptimismIcon />
                     <Text variant="nav" ml={2}>
                       Optimism
                     </Text>
                   </MenuItem>
-                  <MenuItem onClick={() => switchNetwork(420)}>
+                  <MenuItem onClick={() => setNetwork(420)}>
                     <OptimismIcon />
                     <Text variant="nav" ml={2}>
                       Optimism Goerli
@@ -155,7 +157,7 @@ export function Header() {
             )}
           </Menu>
         )}
-        {wallet ? (
+        {activeWallet ? (
           <Menu>
             <MenuButton
               as={Button}
@@ -176,14 +178,14 @@ export function Header() {
                 fontSize="xs"
                 userSelect="none"
               >
-                {wallet.ens?.name || prettyString(wallet.address)}
+                {activeWallet.ens?.name || prettyString(activeWallet.address)}
               </Text>
             </MenuButton>
             <MenuList>
               <MenuItem
                 onClick={() => {
                   try {
-                    navigator.clipboard.writeText(wallet?.address);
+                    navigator.clipboard.writeText(activeWallet?.address);
                   } catch (_e) {}
                 }}
               >
@@ -191,7 +193,7 @@ export function Header() {
                   Copy address
                 </Text>
               </MenuItem>
-              <MenuItem onClick={disconnect}>
+              <MenuItem onClick={onDisconnect}>
                 <Text variant="nav" ml={2}>
                   Disconnect
                 </Text>
@@ -199,7 +201,7 @@ export function Header() {
             </MenuList>
           </Menu>
         ) : (
-          <Button onClick={() => onboard.connectWallet()} ml="2">
+          <Button onClick={() => connect()} ml="2">
             Connect Wallet
           </Button>
         )}

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import React from 'react';
 import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx-v3/icons';
-import { INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
+import { INFURA_KEY as DEFAULT_INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 // import walletConnectModule from '@web3-onboard/walletconnect';
@@ -14,7 +14,7 @@ export type Network = {
   hexId: string;
   token: string;
   name: string;
-  rpcUrl: string;
+  rpcUrl: () => string;
   label: string;
   Icon: React.FC;
   isSupported: boolean;
@@ -28,25 +28,11 @@ export const UNSUPPORTED_NETWORK: Network = {
   hexId: `0x${Number(0).toString(16)}`,
   token: 'ETH',
   name: 'unsupported',
-  rpcUrl: '',
+  rpcUrl: () => '',
   publicRpcUrl: '',
   label: 'Unsupported',
   Icon: () => <FailedIcon width="24px" height="24px" />,
   isSupported: false,
-  isTestnet: false,
-};
-
-const NETWORK_OPTIMISM: Network = {
-  id: 10,
-  preset: 'main',
-  hexId: `0x${Number(10).toString(16)}`,
-  token: 'ETH',
-  name: 'optimism-mainnet',
-  rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-  label: 'Optimism',
-  Icon: () => <OptimismIcon />,
-  isSupported: true,
-  publicRpcUrl: 'https://mainnet.optimism.io',
   isTestnet: false,
 };
 
@@ -57,21 +43,36 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(1).toString(16)}`,
     token: 'ETH',
     name: 'mainnet',
-    rpcUrl: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Ethereum',
     Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum.publicnode.com',
     isTestnet: false,
   },
-  NETWORK_OPTIMISM,
+  {
+    id: 10,
+    preset: 'main',
+    hexId: `0x${Number(10).toString(16)}`,
+    token: 'ETH',
+    name: 'optimism-mainnet',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://optimism-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Optimism',
+    Icon: () => <OptimismIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://mainnet.optimism.io',
+    isTestnet: false,
+  },
   {
     id: 5,
     preset: 'main',
     hexId: `0x${Number(5).toString(16)}`,
     token: 'ETH',
     name: 'goerli',
-    rpcUrl: `https://goerli.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Goerli Testnet',
     Icon: () => <EthereumIcon />,
     isSupported: true,
@@ -84,7 +85,8 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(11155111).toString(16)}`,
     token: 'ETH',
     name: 'sepolia',
-    rpcUrl: `https://sepolia.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Sepolia Testnet',
     Icon: () => <EthereumIcon />,
     isSupported: true,
@@ -97,7 +99,8 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(420).toString(16)}`,
     token: 'ETH',
     name: 'optimism-goerli',
-    rpcUrl: `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://optimism-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Optimistic Goerli',
     Icon: () => <OptimismIcon />,
     isSupported: true,
@@ -110,7 +113,8 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(84531).toString(16)}`,
     token: 'ETH',
     name: 'base-goerli',
-    rpcUrl: `https://base-goerli.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://base-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base Goerli (Andromeda)',
     Icon: () => <BaseIcon />,
     isSupported: false, // hidden by default but if wallet switched to Base Goerli it will be visible
@@ -123,7 +127,8 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(84532).toString(16)}`,
     token: 'ETH',
     name: 'base-sepolia',
-    rpcUrl: `https://base-sepolia.infura.io/v3/${INFURA_KEY}`,
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base Sepolia (Andromeda)',
     Icon: () => <BaseIcon />,
     isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
@@ -136,11 +141,39 @@ export const NETWORKS: Network[] = [
     hexId: `0x${Number(13370).toString(16)}`,
     token: 'ETH',
     name: 'cannon',
-    rpcUrl: `http://127.0.0.1:8545`,
+    rpcUrl: () => `http://127.0.0.1:8545`,
     label: 'Cannon',
     Icon: () => <LogoIcon />,
     isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
+    isTestnet: true,
+  },
+  {
+    id: 8453,
+    preset: 'main',
+    hexId: `0x${Number(8451).toString(16)}`,
+    token: 'ETH',
+    name: 'base',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Base',
+    Icon: () => <BaseIcon />,
+    isSupported: false,
+    publicRpcUrl: 'https://base.publicnode.com',
+    isTestnet: false,
+  },
+  {
+    id: 11155420,
+    preset: 'main',
+    hexId: `0x${Number(11155420).toString(16)}`,
+    token: 'ETH',
+    name: 'optimism-sepolia',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://optimism-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Base',
+    Icon: () => <OptimismIcon />,
+    isSupported: false,
+    publicRpcUrl: 'https://sepolia.optimism.io/',
     isTestnet: true,
   },
 ];
@@ -151,7 +184,7 @@ export const DEFAULT_NETWORK =
   NETWORKS.find(
     (network) =>
       `${network.id}-${network.preset}` === window.localStorage.getItem('DEFAULT_NETWORK')
-  ) ?? NETWORK_OPTIMISM;
+  ) ?? NETWORKS[1];
 
 const injected = injectedModule();
 // const walletConnect = walletConnectModule({
@@ -176,11 +209,12 @@ const uniqueChains: Network[] = Object.values(
     return result;
   }, {})
 );
+
 const chains = uniqueChains.map((network) => ({
   id: network.hexId,
   token: network.token,
   label: network.label,
-  rpcUrl: network.rpcUrl,
+  rpcUrl: network.rpcUrl(),
   publicRpcUrl: network.publicRpcUrl,
 }));
 
@@ -330,11 +364,11 @@ export function useProvider() {
     return new ethers.providers.Web3Provider(wallet.provider, 'any');
   }
 
-  return new ethers.providers.JsonRpcProvider(network.rpcUrl);
+  return new ethers.providers.JsonRpcProvider(network.rpcUrl());
 }
 
 export function useProviderForChain(network?: Network) {
-  return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl) : undefined;
+  return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined;
 }
 
 export function useSigner() {

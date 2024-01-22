@@ -1,45 +1,38 @@
-import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
+import { init } from '@web3-onboard/react';
 
-const MAINNET_RPC_URL = `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`;
-// const SEPOLIA_RPC_URL = `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`;
+import { NETWORKS, appMetadata } from '@snx-v3/useBlockchain';
 
 const injected = injectedModule();
 
-export const onboard = Onboard({
+// Governance Supported Networks
+// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, OPTIMISM, OPTIMISM SEPOLIA
+const supportedNetworks = [1, 11155111, 8453, 84532, 10, 11155420];
+
+// Filter networks to only supported ones
+export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
+  id: n.id,
+  token: n.token,
+  label: n.label,
+  rpcUrl: n.rpcUrl(),
+}));
+
+export const onboard = init({
   wallets: [injected],
-  chains: [
-    {
-      id: 1,
-      token: 'ETH',
-      label: 'Ethereum Mainnet',
-      rpcUrl: MAINNET_RPC_URL,
-    },
-    {
-      id: 42161,
-      token: 'ARB-ETH',
-      label: 'Arbitrum One',
-      rpcUrl: 'https://rpc.ankr.com/arbitrum',
-    },
-    {
-      id: '0xa4ba',
-      token: 'ARB',
-      label: 'Arbitrum Nova',
-      rpcUrl: 'https://nova.arbitrum.io/rpc',
-    },
-    {
-      id: '0x2105',
-      token: 'ETH',
-      label: 'Base',
-      rpcUrl: 'https://mainnet.base.org',
-    },
-  ],
+  chains: [...networks],
   appMetadata: {
+    ...appMetadata,
     name: 'Synthetix Governance',
-    icon: '<SVG_ICON_STRING>',
+  },
+  accountCenter: {
+    desktop: {
+      enabled: false,
+    },
+    mobile: {
+      enabled: false,
+    },
+  },
+  notify: {
+    enabled: false,
   },
 });
-
-const connectedWallets = await onboard.connectWallet();
-
-console.log(connectedWallets);

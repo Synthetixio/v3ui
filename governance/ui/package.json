@@ -19,7 +19,6 @@
     "@snx-v3/useBlockchain": "workspace:^",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
-    "@web3-onboard/core": "^2.21.2",
     "@web3-onboard/injected-wallets": "^2.10.11",
     "@web3-onboard/react": "^2.8.13",
     "ethers": "^5.7.2",

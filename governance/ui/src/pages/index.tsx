@@ -12,6 +12,8 @@ import Councils from './Councils';
 import Admin from './Admin';
 import MyVotes from './MyVotes';
 import { Layout } from '../components/Layout';
+import { Web3OnboardProvider } from '@web3-onboard/react';
+import { onboard } from '../utils/onboard';
 
 const router = createHashRouter([
   {
@@ -61,16 +63,18 @@ const root = createRoot(container!);
 
 root.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <QueryClientProvider client={new QueryClient()}>
-        <BlockchainProvider>
-          <ChakraProvider theme={customTheme}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <Fonts />
-            <RouterProvider router={router} />
-          </ChakraProvider>
-        </BlockchainProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
+    <Web3OnboardProvider web3Onboard={onboard}>
+      <RecoilRoot>
+        <QueryClientProvider client={new QueryClient()}>
+          <BlockchainProvider>
+            <ChakraProvider theme={customTheme}>
+              <ReactQueryDevtools initialIsOpen={false} />
+              <Fonts />
+              <RouterProvider router={router} />
+            </ChakraProvider>
+          </BlockchainProvider>
+        </QueryClientProvider>
+      </RecoilRoot>
+    </Web3OnboardProvider>
   </React.StrictMode>
 );
