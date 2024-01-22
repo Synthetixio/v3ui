@@ -8,17 +8,18 @@ import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDet
 import Blockies from 'react-blockies';
 import '../components/UserProfileCard/UserProfileCard.css';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
-import { useSigner } from '@snx-v3/useBlockchain';
 import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
+import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const signer = useSigner();
+
   const [
     { data: spartanBallot },
     // { data: grantsBallot },

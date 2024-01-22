@@ -9,34 +9,31 @@ import {
   MenuItem,
   useColorMode,
   Show,
+  Fade,
 } from '@chakra-ui/react';
-import {
-  Network,
-  disconnect,
-  onboard,
-  useIsConnected,
-  useNetwork,
-  useWallet,
-} from '@snx-v3/useBlockchain';
 import { useNavigate } from 'react-router-dom';
-import { EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
+import { BaseIcon, EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
+import { useWallet, useNetwork } from '../../queries/useWallet';
+import { Network } from '@snx-v3/useBlockchain';
 
-const activeIcon = (currentNetwork: Network) => {
-  switch (currentNetwork.id) {
+const activeIcon = (currentNetwork: Network | null) => {
+  switch (currentNetwork?.id) {
     case 1:
       return { icon: <EthereumIcon />, name: 'Ethereum' };
-    case 5:
-      return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
+    case 11155111:
+      return { icon: <EthereumIcon />, name: 'Sepolia Testnet' };
     case 10:
       return { icon: <OptimismIcon />, name: 'Optimism' };
-    case 420:
-      return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
+    case 8453:
+      return { icon: <BaseIcon />, name: 'Base' };
+    case 84532:
+      return { icon: <BaseIcon />, name: 'Base Sepolia' };
 
     default:
       return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
@@ -45,27 +42,31 @@ const activeIcon = (currentNetwork: Network) => {
 
 export function Header() {
   const navigate = useNavigate();
-  const isWalletConnected = useIsConnected();
-  const wallet = useWallet();
-  const currentNetwork = useNetwork();
-  const { icon } = activeIcon(currentNetwork);
+
+  const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
+  const { network, setNetwork } = useNetwork();
+
+  const { icon } = activeIcon(network);
   const { colorMode, toggleColorMode } = useColorMode();
+
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
   const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
+
   const queryClient = useQueryClient();
+
   const [{ data: ballots, isFetched }] = [
     useGetUserBallot(['spartan', 'ambassador', 'grants', 'treasury']),
   ];
 
   useEffect(() => {
     if (
-      wallet?.address &&
-      currentNetwork.id &&
+      activeWallet?.address &&
+      network?.id &&
       isFetched &&
-      (!localStorageUpdated || !fetchedNetwork.includes(currentNetwork.id))
+      (!localStorageUpdated || !fetchedNetwork.includes(network?.id))
     ) {
       setLocalStorageUpdated(true);
-      setFetchedNetwork([...fetchedNetwork, currentNetwork.id]);
+      setFetchedNetwork([...fetchedNetwork, network?.id]);
       const selection = localStorage.getItem('voteSelection');
       if (!selection) localStorage.setItem('voteSelection', '');
       const parsedSelection = JSON.parse(selection ? selection : '{}');
@@ -84,8 +85,8 @@ export function Header() {
       queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
     }
   }, [
-    wallet?.address,
-    currentNetwork.id,
+    activeWallet?.address,
+    network?.id,
     localStorageUpdated,
     isFetched,
     ballots,
@@ -93,15 +94,36 @@ export function Header() {
     fetchedNetwork,
   ]);
 
-  const switchNetwork = async (id: number) => {
-    return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
-  };
-
   useEffect(() => {
     if (colorMode === 'light') {
       toggleColorMode();
     }
   }, [colorMode, toggleColorMode]);
+
+  useEffect(() => {
+    // Check if wallet preference is stored in local storage
+    if (!walletsInfo) {
+      const defaultWallet = localStorage.getItem('defaultWallet');
+
+      if (defaultWallet) {
+        connect({
+          autoSelect: { disableModals: true, label: JSON.parse(defaultWallet) },
+        });
+      }
+    }
+
+    if (walletsInfo) {
+      // store in local storage
+      localStorage.setItem('defaultWallet', JSON.stringify(walletsInfo.label));
+    }
+  }, [walletsInfo, connect]);
+
+  const onDisconnect = () => {
+    if (walletsInfo) {
+      disconnect(walletsInfo);
+      localStorage.removeItem('defaultWallet');
+    }
+  };
 
   return (
     <Flex
@@ -124,30 +146,44 @@ export function Header() {
           </Show>
         </Flex>
         <PeriodCountdown council={councils[0].slug} />
-        {isWalletConnected && (
+        {activeWallet && (
           <Menu>
             {() => (
               <>
                 <MenuButton as={Button} ml={2} variant="outline" colorScheme="gray" px={2}>
                   {icon}
                 </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => switchNetwork(1)}>
+                <MenuList zIndex={100}>
+                  <MenuItem onClick={() => setNetwork(1)}>
                     <EthereumIcon />
                     <Text variant="nav" ml={2}>
                       Ethereum Mainnet
                     </Text>
                   </MenuItem>
-                  <MenuItem onClick={() => switchNetwork(10)}>
+                  <MenuItem onClick={() => setNetwork(10)}>
                     <OptimismIcon />
                     <Text variant="nav" ml={2}>
                       Optimism
                     </Text>
                   </MenuItem>
-                  <MenuItem onClick={() => switchNetwork(420)}>
-                    <OptimismIcon />
+                  <MenuItem onClick={() => setNetwork(8453)}>
+                    <BaseIcon />
                     <Text variant="nav" ml={2}>
-                      Optimism Goerli
+                      Base
+                    </Text>
+                  </MenuItem>
+
+                  {/* Testnets */}
+                  <MenuItem onClick={() => setNetwork(11155111)}>
+                    <EthereumIcon />
+                    <Text variant="nav" ml={2}>
+                      Sepolia
+                    </Text>
+                  </MenuItem>
+                  <MenuItem onClick={() => setNetwork(84532)}>
+                    <BaseIcon />
+                    <Text variant="nav" ml={2}>
+                      Base Sepolia
                     </Text>
                   </MenuItem>
                 </MenuList>
@@ -155,54 +191,56 @@ export function Header() {
             )}
           </Menu>
         )}
-        {wallet ? (
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant="outline"
-              colorScheme="gray"
-              ml={2}
-              height={10}
-              py="6px"
-              px="9.5px"
-              whiteSpace="nowrap"
-            >
-              <WalletIcon />
-              <Text
-                as="span"
-                ml={1}
-                color="whiteAlpha.800"
-                fontWeight={700}
-                fontSize="xs"
-                userSelect="none"
+        <Fade in>
+          {activeWallet ? (
+            <Menu>
+              <MenuButton
+                as={Button}
+                variant="outline"
+                colorScheme="gray"
+                ml={2}
+                height={10}
+                py="6px"
+                px="9.5px"
+                whiteSpace="nowrap"
               >
-                {wallet.ens?.name || prettyString(wallet.address)}
-              </Text>
-            </MenuButton>
-            <MenuList>
-              <MenuItem
-                onClick={() => {
-                  try {
-                    navigator.clipboard.writeText(wallet?.address);
-                  } catch (_e) {}
-                }}
-              >
-                <Text variant="nav" ml={2}>
-                  Copy address
+                <WalletIcon />
+                <Text
+                  as="span"
+                  ml={1}
+                  color="whiteAlpha.800"
+                  fontWeight={700}
+                  fontSize="xs"
+                  userSelect="none"
+                >
+                  {activeWallet.ens?.name || prettyString(activeWallet.address)}
                 </Text>
-              </MenuItem>
-              <MenuItem onClick={disconnect}>
-                <Text variant="nav" ml={2}>
-                  Disconnect
-                </Text>
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        ) : (
-          <Button onClick={() => onboard.connectWallet()} ml="2">
-            Connect Wallet
-          </Button>
-        )}
+              </MenuButton>
+              <MenuList zIndex={100}>
+                <MenuItem
+                  onClick={() => {
+                    try {
+                      navigator.clipboard.writeText(activeWallet?.address);
+                    } catch (_e) {}
+                  }}
+                >
+                  <Text variant="nav" ml={2}>
+                    Copy address
+                  </Text>
+                </MenuItem>
+                <MenuItem onClick={onDisconnect}>
+                  <Text variant="nav" ml={2}>
+                    Disconnect
+                  </Text>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <Button onClick={() => connect()} ml="2">
+              Connect Wallet
+            </Button>
+          )}
+        </Fade>
       </Flex>
     </Flex>
   );

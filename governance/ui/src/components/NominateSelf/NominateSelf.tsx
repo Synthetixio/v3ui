@@ -1,5 +1,4 @@
 import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
-import { useWallet } from '@snx-v3/useBlockchain';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
@@ -9,13 +8,16 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
 import '../UserProfileCard/UserProfileCard.css';
 import { shortAddress } from '../../utils/address';
+import { useWallet } from '../../queries/useWallet';
 
 export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
   const navigate = useNavigate();
-  const wallet = useWallet();
-  const { mutate, isPending, isSuccess } = useNominateSelf(activeCouncil, wallet?.address);
-  const { data } = useGetUserDetailsQuery(wallet?.address);
+
+  const { activeWallet } = useWallet();
+
+  const { mutate, isPending, isSuccess } = useNominateSelf(activeCouncil, activeWallet?.address);
+  const { data } = useGetUserDetailsQuery(activeWallet?.address);
 
   return (
     <Flex
@@ -50,7 +52,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
             ) : (
               <Blockies
-                seed={wallet?.address.toLowerCase() || ''}
+                seed={activeWallet?.address.toLowerCase() || ''}
                 size={10}
                 className="fully-rounded"
               />

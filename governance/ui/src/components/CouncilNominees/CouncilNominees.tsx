@@ -3,7 +3,6 @@ import { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
-import { useWallet } from '@snx-v3/useBlockchain';
 import UserListItem from '../UserListItem/UserListItem';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
@@ -12,12 +11,13 @@ import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
+import { useWallet } from '../../queries/useWallet';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
 
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
 
   const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
@@ -70,7 +70,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       ? councilNomineesDetails
           .filter((nominee) => {
             if (councilPeriod !== '2') {
-              nominee?.address.toLowerCase() !== wallet?.address.toLowerCase();
+              nominee?.address.toLowerCase() !== activeWallet?.address.toLowerCase();
             }
             return true;
           })
@@ -84,7 +84,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             return true;
           })
       : [];
-  }, [search, councilNomineesDetails, wallet?.address, councilPeriod]);
+  }, [search, councilNomineesDetails, activeWallet?.address, councilPeriod]);
 
   return (
     <Flex
@@ -111,7 +111,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {wallet?.address && <UserListItem address={wallet.address} activeCouncil={activeCouncil} />}
+      {activeWallet?.address && (
+        <UserListItem address={activeWallet.address} activeCouncil={activeCouncil} />
+      )}
       <Divider />
       <Flex justifyContent="space-between" alignItems="center" p="6">
         <Heading fontSize="medium">

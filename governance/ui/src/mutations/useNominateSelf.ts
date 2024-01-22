@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
-import { useSigner } from '@snx-v3/useBlockchain';
 import { getCouncilContract } from '../utils/contracts';
+import { useSigner } from '../queries/useWallet';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
   const query = useQueryClient();

@@ -17,14 +17,16 @@ import Blockies from 'react-blockies';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
 import '../UserProfileCard/UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import { useWallet } from '@snx-v3/useBlockchain';
+
 import { useEffect } from 'react';
+import { useWallet } from '../../queries/useWallet';
 
 export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
-  const wallet = useWallet();
-  const mutation = useUpdateUserDetailsMutation();
   const navigate = useNavigate();
-  const { data: user, isLoading } = useGetUserDetailsQuery(wallet?.address);
+  const { activeWallet } = useWallet();
+
+  const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
+  const mutation = useUpdateUserDetailsMutation();
 
   const { register, getValues, resetField, setValue } = useForm({
     defaultValues: {
@@ -233,7 +235,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
                 username: getValues('username')!,
               })
               .then(() => {
-                navigate(`/councils/${activeCouncil}?view=${wallet?.address}`);
+                navigate(`/councils/${activeCouncil}?view=${activeWallet?.address}`);
               });
           }}
         >

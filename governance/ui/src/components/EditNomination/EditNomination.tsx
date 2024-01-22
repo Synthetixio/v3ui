@@ -1,11 +1,11 @@
 import { Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
-import { useWallet } from '@snx-v3/useBlockchain';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useEditNomination from '../../mutations/useEditNomination';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
+import { useWallet } from '../../queries/useWallet';
 import EditNominationConfirmation from './EditNominationConfirmation';
 import EditNominationSelect from './EditNominationSelect';
 import '../UserProfileCard/UserProfileCard.css';
@@ -14,8 +14,8 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
   const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
-  const wallet = useWallet();
-  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
+  const { activeWallet } = useWallet();
+  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
 
   const { isSuccess } = useEditNomination({
     currentNomination: nominationInformation?.council.slug,
@@ -53,11 +53,10 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
-          {wallet?.address}
+          {activeWallet?.address}
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominated for:
           </Text>
-
           <Flex
             key={`tab-nomination-${selectedCouncil}-done`}
             w="100%"

@@ -1,11 +1,12 @@
 import { Show, Modal, ModalOverlay, ModalContent, Hide } from '@chakra-ui/react';
 import { UserProfileCard } from './UserProfileCard';
 import { CouncilSlugs } from '../../utils/councils';
+import { Account } from '@web3-onboard/core/dist/types';
 
 interface UserProfileCardContainerInterface {
   activeCouncil: CouncilSlugs;
   selectedUserAddress: string;
-  wallet?: any; // TODO Update with useBlockchain refactor
+  wallet: Account | null;
   onClose: () => void;
 }
 

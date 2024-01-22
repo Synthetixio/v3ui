@@ -5,9 +5,9 @@ import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
+import { useWallet, useNetwork } from '../../queries/useWallet';
 import { Badge } from '../Badge';
 
 export default function UserListItem({
@@ -17,14 +17,17 @@ export default function UserListItem({
   address: string;
   activeCouncil: CouncilSlugs;
 }) {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const wallet = useWallet();
+
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: nominationInformation } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-  const navigate = useNavigate();
-  const network = useNetwork();
-  const isOwn = wallet?.address.toLowerCase() === user?.address.toLowerCase();
+
+  const { network } = useNetwork();
+  const { activeWallet } = useWallet();
+
+  const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
 
   return (
     <Flex
@@ -76,7 +79,7 @@ export default function UserListItem({
           {nominationInformation?.isNominated &&
           isOwn &&
           // TODO @dev remove once live
-          (network.id === 11155111 || network.id === 10) ? (
+          (network?.id === 11155111 || network?.id === 10) ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="black">Nominate Self</Text>

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { useSigner } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
+import { useSigner } from '../queries/useWallet';
 
 export default function useDeclareVotingPower(council: CouncilSlugs) {
   const signer = useSigner();
