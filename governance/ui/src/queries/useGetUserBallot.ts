@@ -26,8 +26,18 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   chianId: number
 ): Promise<
   T extends CouncilSlugs
-    ? { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }
-    : { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[]
+    ? {
+        votingPower: BigNumber;
+        votedCandidates: string[];
+        amounts: BigNumber[];
+        council: CouncilSlugs;
+      }
+    : {
+        votingPower: BigNumber;
+        votedCandidates: string[];
+        amounts: BigNumber[];
+        council: CouncilSlugs;
+      }[]
 > {
   let ballot;
   if (Array.isArray(council)) {
@@ -36,18 +46,20 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
         const electionModule = getCouncilContract(c).connect(signer!);
         const voter = await signer!.getAddress();
         const electionId = electionModule.getEpochIndex();
-        return await electionModule.getBallot(voter, chianId, electionId);
+        const temp = await electionModule.getBallot(voter, chianId, electionId);
+        return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
     const electionModule = getCouncilContract(council).connect(signer!);
     const voter = await signer!.getAddress();
     const electionId = electionModule.getEpochIndex();
-    ballot = (await electionModule.getBallot(voter, chianId, electionId)) as {
+    const temp = (await electionModule.getBallot(voter, chianId, electionId)) as {
       votingPower: BigNumber;
       votedCandidates: string[];
       amounts: BigNumber[];
     };
+    ballot = { ...temp, council };
   }
   // @ts-ignore
   // TODO @MF check why TS is acting up
