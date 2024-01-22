@@ -22,10 +22,10 @@ export function useGetIsNominated(address?: string) {
         .isNominated(address)) as boolean | undefined;
       return {
         isNominated:
-          !isNominatedForSpartanCouncil &&
-          !isNominatedForAmbassadorCouncil &&
-          !isNominatedForGrantsCouncil &&
-          !isNominatedForTreasuryCouncil,
+          isNominatedForSpartanCouncil ||
+          isNominatedForAmbassadorCouncil ||
+          isNominatedForGrantsCouncil ||
+          isNominatedForTreasuryCouncil,
         council: isNominatedForSpartanCouncil
           ? councils[0]
           : isNominatedForGrantsCouncil

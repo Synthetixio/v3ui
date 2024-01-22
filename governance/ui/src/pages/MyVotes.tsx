@@ -21,13 +21,13 @@ export default function MyVotes() {
   const signer = useSigner();
   const [
     { data: spartanBallot },
-    // { data: ambassadorBallot },
     // { data: grantsBallot },
+    // { data: ambassadorBallot },
     // { data: treasuryBallot },
   ] = [
     useGetUserBallot('spartan'),
-    // useGetUserBallot('ambassador'),
     // useGetUserBallot('grants'),
+    // useGetUserBallot('ambassador'),
     // useGetUserBallot('treasury'),
   ];
 
@@ -120,6 +120,9 @@ export default function MyVotes() {
                 padding="2"
                 alignItems="center"
                 opacity={period !== '2' ? '0.4' : '1'}
+                border="1px solid"
+                borderColor="gray.900"
+                rounded="base"
               >
                 <Flex
                   borderRadius="50%"
@@ -202,7 +205,7 @@ export default function MyVotes() {
                 )}
               </Flex>
             ))}
-            <Alert colorScheme="cyan" opacity={period !== '2' ? '0.4' : '1'}>
+            <Alert colorScheme="blue" opacity={period !== '2' ? '0.4' : '1'} rounded="base" mt="12">
               <WarningIcon color="cyan" mr="4" />
               You can now cast all your votes in one unique transaction
             </Alert>
