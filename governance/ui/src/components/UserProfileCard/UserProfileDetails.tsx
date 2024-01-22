@@ -14,16 +14,7 @@ interface UserProfileDetailsProps {
   activeCouncil: CouncilSlugs;
   walletAddress: string;
   isOwn?: boolean;
-  isNominated?:
-    | false
-    | {
-        title: string;
-        slug: CouncilSlugs;
-        image: string;
-        address: string;
-        description: string;
-        stipends: string;
-      };
+  isNominated?: boolean;
   councilPeriod?: string;
 }
 
