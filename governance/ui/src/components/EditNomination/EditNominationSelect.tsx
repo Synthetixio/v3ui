@@ -1,7 +1,5 @@
-import { Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { CloseIcon } from '@chakra-ui/icons';
 import Blockies from 'react-blockies';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useWallet } from '@snx-v3/useBlockchain';
@@ -10,34 +8,21 @@ import { Dispatch, SetStateAction } from 'react';
 import { shortAddress } from '../../utils/address';
 
 export default function EditNominationSelect({
-  activeCouncil,
   selectedCouncil,
   setSelectedCouncil,
   setShowConfirm,
 }: {
-  activeCouncil: CouncilSlugs;
   selectedCouncil?: CouncilSlugs;
   setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined>>;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
-  const navigate = useNavigate();
   const wallet = useWallet();
   const { data: nominationInformation } = useGetIsNominated(wallet?.address);
   const { data: user } = useGetUserDetailsQuery(wallet?.address);
   return (
     <>
-      <Flex justifyContent="space-between">
-        <Heading fontSize="medium">Edit Nomination</Heading>
-        <IconButton
-          onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
-          size="xs"
-          aria-label="close button"
-          icon={<CloseIcon />}
-          variant="ghost"
-          colorScheme="whiteAlpha"
-          color="white"
-        />
-      </Flex>
+      <Heading fontSize="medium">Edit Nomination</Heading>
+
       <Text fontSize="sm" color="gray.500" mt="2">
         Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
         nominating the wallet below:

@@ -7,6 +7,7 @@ import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
+import { useGetElectionSettings } from '../../queries/useGetElectionSettings';
 
 export default function UserTableView({
   user,
@@ -22,6 +23,7 @@ export default function UserTableView({
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
+  const { data: councilSettings } = useGetElectionSettings(activeCouncil);
 
   if (!user) return <Spinner colorScheme="cyan" />;
   return (
@@ -34,7 +36,11 @@ export default function UserTableView({
       borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
       rounded="base"
     >
-      {councilPeriod === '2' && <Th color="white">#{place + 1}</Th>}
+      {councilPeriod === '2' && (
+        <Th color="white">
+          #{councilSettings && councilSettings?.epochSeatCount > place ? place + 1 : '-'}
+        </Th>
+      )}
       <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
         {user.pfpUrl ? (
           <Image src={user.pfpUrl} />
@@ -45,6 +51,7 @@ export default function UserTableView({
       </Th>
       <Th>
         <Badge color="green">Nominee</Badge>
+        {councilSettings && councilSettings?.epochSeatCount > place && <Badge ml="2">Member</Badge>}
       </Th>
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod === '2' && <Th color="white">TODO</Th>}

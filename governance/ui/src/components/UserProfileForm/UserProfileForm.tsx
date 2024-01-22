@@ -62,14 +62,26 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
     );
 
   return (
-    <Flex flexDir="column" gap="4" px="6" py="4" w="100%">
+    <Flex flexDir="column" gap="4" px="6" py="4" w="100%" position="relative">
+      <IconButton
+        onClick={() => navigate(`/councils/${activeCouncil}`)}
+        size="xs"
+        aria-label="close button"
+        icon={<CloseIcon />}
+        variant="ghost"
+        colorScheme="whiteAlpha"
+        color="white"
+        position="absolute"
+        top="5px"
+        right="5px"
+      />
       <Flex w="100%" alignItems="center">
         {user?.pfpUrl ? (
           <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
         ) : (
           <Blockies size={14} seed={user?.address.toLowerCase() || ''} className="fully-rounded" />
         )}
-        <Flex w="100%" flexDirection="column" position="relative" ml="2" gap="2">
+        <Flex w="100%" flexDirection="column" ml="2" gap="2">
           <Text fontSize="12px" color="gray.500">
             Avatar
           </Text>
@@ -81,18 +93,6 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
               },
             })}
             placeholder="QmSHZw..."
-          />
-          <IconButton
-            position="absolute"
-            top="0px"
-            right="0px"
-            onClick={() => navigate(`/councils/${activeCouncil}`)}
-            size="xs"
-            aria-label="close button"
-            icon={<CloseIcon />}
-            variant="ghost"
-            colorScheme="whiteAlpha"
-            color="white"
           />
           <Flex alignItems="center">
             <Input

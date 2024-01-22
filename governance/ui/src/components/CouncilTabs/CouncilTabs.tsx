@@ -1,4 +1,4 @@
-import { Flex, Hide, Show, Text } from '@chakra-ui/react';
+import { Box, Flex, Hide, Image, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -7,13 +7,46 @@ import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotes } from './MyVotes';
+import useGetUserBallot from '../../queries/useGetUserBallot';
+import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import Blockies from 'react-blockies';
+import '../UserProfileCard/UserProfileCard.css';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: votes } = useGetVotingCandidates();
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
-
+  const votedNomineesData = [
+    useGetUserBallot('spartan'),
+    useGetUserBallot('ambassador'),
+    useGetUserBallot('grants'),
+    useGetUserBallot('treasury'),
+  ];
   const navigate = useNavigate();
+  const votedNominees = votedNomineesData.map(({ data }) => data);
+
+  const userInformationData = [
+    {
+      council: votedNominees[0]?.council,
+      userInformation: useGetUserDetailsQuery(votedNominees[0]?.votedCandidates[0]),
+    },
+    {
+      council: votedNominees[1]?.council,
+      userInformation: useGetUserDetailsQuery(votedNominees[1]?.votedCandidates[0]),
+    },
+    {
+      council: votedNominees[2]?.council,
+      userInformation: useGetUserDetailsQuery(votedNominees[2]?.votedCandidates[0]),
+    },
+    {
+      council: votedNominees[3]?.council,
+      userInformation: useGetUserDetailsQuery(votedNominees[3]?.votedCandidates[0]),
+    },
+  ];
+  const userInformation = userInformationData.map((data) => ({
+    ...data,
+    userInformation: data.userInformation.data,
+  }));
 
   return (
     <>
@@ -59,7 +92,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           zIndex={99}
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
-            {councils.map((council) => (
+            {councils.map((council, index) => (
               <Flex
                 key={`tab-${council.slug}`}
                 cursor="pointer"
@@ -73,11 +106,35 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                 alignItems="center"
                 bg="navy.700"
                 _hover={{ borderColor: 'cyan.500' }}
+                px="2"
               >
-                <CouncilImage ml={2} imageUrl={council.image} />
+                <CouncilImage imageUrl={council.image} />
                 <Text fontSize="12px" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
+                {userInformation[index].userInformation?.pfpUrl ? (
+                  <Image
+                    borderRadius="50%"
+                    w="8"
+                    h="8"
+                    src={userInformation[index].userInformation?.pfpUrl}
+                  />
+                ) : !!userInformation[index].userInformation?.address ? (
+                  <Blockies
+                    seed={userInformation[index].userInformation!.address}
+                    className="fully-rounded"
+                  />
+                ) : (
+                  <Box
+                    borderRadius="50%"
+                    w="8"
+                    h="8"
+                    borderWidth="1px"
+                    bg="navy.700"
+                    borderStyle="dashed"
+                    borderColor="gray.500"
+                  />
+                )}
               </Flex>
             ))}
             <MyVotes

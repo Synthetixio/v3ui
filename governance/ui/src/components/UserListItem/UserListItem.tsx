@@ -56,7 +56,7 @@ export default function UserListItem({
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (
-        <Badge color="green" ml="4">
+        <Badge color="green" ml="4" mr="auto">
           Nominee
         </Badge>
       )}

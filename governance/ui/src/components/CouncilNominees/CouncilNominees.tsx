@@ -14,7 +14,7 @@ import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const [searchAddress, setSearchAddress] = useState('');
+  const [search, setSearch] = useState('');
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
 
   const { activeWallet } = useWallet();
@@ -75,13 +75,16 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             return true;
           })
           .filter((nominee) => {
-            if (utils.isAddress(searchAddress)) {
-              return nominee.address.toLowerCase() === searchAddress;
+            if (utils.isAddress(search)) {
+              return nominee.address.toLowerCase() === search;
+            }
+            if (search) {
+              return nominee.username.toLowerCase().includes(search);
             }
             return true;
           })
       : [];
-  }, [searchAddress, councilNomineesDetails, activeWallet?.address, councilPeriod]);
+  }, [search, councilNomineesDetails, activeWallet?.address, councilPeriod]);
 
   return (
     <Flex
@@ -121,7 +124,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           maxW="320px"
           bg="navy.900"
           placeholder="Search"
-          onChange={(e) => setSearchAddress(e.target.value.trim().toLowerCase())}
+          onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
         />
       </Flex>
       <Table>
