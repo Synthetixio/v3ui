@@ -9,6 +9,7 @@ import {
   MenuItem,
   useColorMode,
   Show,
+  Fade,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BaseIcon, EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
@@ -99,9 +100,28 @@ export function Header() {
     }
   }, [colorMode, toggleColorMode]);
 
+  useEffect(() => {
+    // Check if wallet preference is stored in local storage
+    if (!walletsInfo) {
+      const defaultWallet = localStorage.getItem('defaultWallet');
+
+      if (defaultWallet) {
+        connect({
+          autoSelect: { disableModals: true, label: JSON.parse(defaultWallet) },
+        });
+      }
+    }
+
+    if (walletsInfo) {
+      // store in local storage
+      localStorage.setItem('defaultWallet', JSON.stringify(walletsInfo.label));
+    }
+  }, [walletsInfo, connect]);
+
   const onDisconnect = () => {
     if (walletsInfo) {
       disconnect(walletsInfo);
+      localStorage.removeItem('defaultWallet');
     }
   };
 
@@ -171,54 +191,56 @@ export function Header() {
             )}
           </Menu>
         )}
-        {activeWallet ? (
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant="outline"
-              colorScheme="gray"
-              ml={2}
-              height={10}
-              py="6px"
-              px="9.5px"
-              whiteSpace="nowrap"
-            >
-              <WalletIcon />
-              <Text
-                as="span"
-                ml={1}
-                color="whiteAlpha.800"
-                fontWeight={700}
-                fontSize="xs"
-                userSelect="none"
+        <Fade in>
+          {activeWallet ? (
+            <Menu>
+              <MenuButton
+                as={Button}
+                variant="outline"
+                colorScheme="gray"
+                ml={2}
+                height={10}
+                py="6px"
+                px="9.5px"
+                whiteSpace="nowrap"
               >
-                {activeWallet.ens?.name || prettyString(activeWallet.address)}
-              </Text>
-            </MenuButton>
-            <MenuList zIndex={100}>
-              <MenuItem
-                onClick={() => {
-                  try {
-                    navigator.clipboard.writeText(activeWallet?.address);
-                  } catch (_e) {}
-                }}
-              >
-                <Text variant="nav" ml={2}>
-                  Copy address
+                <WalletIcon />
+                <Text
+                  as="span"
+                  ml={1}
+                  color="whiteAlpha.800"
+                  fontWeight={700}
+                  fontSize="xs"
+                  userSelect="none"
+                >
+                  {activeWallet.ens?.name || prettyString(activeWallet.address)}
                 </Text>
-              </MenuItem>
-              <MenuItem onClick={onDisconnect}>
-                <Text variant="nav" ml={2}>
-                  Disconnect
-                </Text>
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        ) : (
-          <Button onClick={() => connect()} ml="2">
-            Connect Wallet
-          </Button>
-        )}
+              </MenuButton>
+              <MenuList zIndex={100}>
+                <MenuItem
+                  onClick={() => {
+                    try {
+                      navigator.clipboard.writeText(activeWallet?.address);
+                    } catch (_e) {}
+                  }}
+                >
+                  <Text variant="nav" ml={2}>
+                    Copy address
+                  </Text>
+                </MenuItem>
+                <MenuItem onClick={onDisconnect}>
+                  <Text variant="nav" ml={2}>
+                    Disconnect
+                  </Text>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <Button onClick={() => connect()} ml="2">
+              Connect Wallet
+            </Button>
+          )}
+        </Fade>
       </Flex>
     </Flex>
   );

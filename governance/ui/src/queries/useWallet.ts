@@ -4,7 +4,10 @@ import { ethers } from 'ethers';
 import { useCallback } from 'react';
 
 export function useWallet() {
-  const [{ wallet }, connect, disconnect] = useConnectWallet();
+  const [{ wallet }, conn, disconn] = useConnectWallet();
+
+  const connect = useCallback(conn, [conn]);
+  const disconnect = useCallback(disconn, [disconn]);
 
   if (!wallet) {
     return {

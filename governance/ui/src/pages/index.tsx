@@ -13,6 +13,7 @@ import MyVotes from './MyVotes';
 import { Layout } from '../components/Layout';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from '../utils/onboard';
+import './index.css';
 
 const router = createHashRouter([
   {
