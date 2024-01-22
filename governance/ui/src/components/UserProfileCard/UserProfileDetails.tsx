@@ -1,5 +1,5 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, Button, Image, Box, Text } from '@chakra-ui/react';
+import { Flex, IconButton, Button, Image, Box, Text, Tooltip } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import Blockies from 'react-blockies';
 import { shortAddress } from '../../utils/address';
@@ -31,7 +31,19 @@ export const UserProfileDetails = ({
 
   return (
     <>
-      <Flex alignItems="center" mb="4">
+      <Flex alignItems="center" mb="4" position="relative">
+        <IconButton
+          onClick={() => navigate(`/councils/${activeCouncil}`)}
+          size="xs"
+          aria-label="close button"
+          icon={<CloseIcon />}
+          variant="ghost"
+          colorScheme="whiteAlpha"
+          color="white"
+          position="absolute"
+          top="0px"
+          right="0px"
+        />
         {userData?.pfpImageId ? (
           <Image borderRadius="full" src={userData.pfpImageId} w="56px" h="56px" mr="4" />
         ) : (
@@ -46,15 +58,6 @@ export const UserProfileDetails = ({
             <Text fontSize="16px" fontWeight="700">
               {shortAddress(userData?.address)}
             </Text>
-            <IconButton
-              onClick={() => navigate(`/councils/${activeCouncil}`)}
-              size="xs"
-              aria-label="close button"
-              icon={<CloseIcon />}
-              variant="ghost"
-              colorScheme="whiteAlpha"
-              color="white"
-            />
           </Flex>
           <Text fontSize="12px" fontWeight="400" lineHeight="16px">
             {userData?.about}
@@ -107,21 +110,37 @@ export const UserProfileDetails = ({
               mb="1"
               w="100%"
               onClick={() => navigate(`/councils/${activeCouncil}?editProfile=true`)}
+              color="white"
             >
               Edit Profile
             </Button>
-            <Button
-              w="100%"
-              onClick={() =>
-                navigate(
-                  `/councils/${activeCouncil}?${
-                    !isNominated ? 'nominate=true' : 'editNomination=true'
-                  }`
-                )
-              }
-            >
-              {isNominated ? 'Edit Nomination' : 'Nominate Self'}
-            </Button>
+            {councilPeriod === '2' ? (
+              <Tooltip label="You cannot edit nor remove your nomination during the voting period">
+                <Button
+                  variant="outline"
+                  colorScheme="gray"
+                  w="100%"
+                  isDisabled={councilPeriod === '2'}
+                >
+                  Edit Nomination
+                </Button>
+              </Tooltip>
+            ) : (
+              <Button
+                variant="outline"
+                colorScheme="gray"
+                w="100%"
+                onClick={() =>
+                  navigate(
+                    `/councils/${activeCouncil}?${
+                      !isNominated ? 'nominate=true' : 'editNomination=true'
+                    }`
+                  )
+                }
+              >
+                {isNominated ? 'Edit Nomination' : 'Nominate Self'}
+              </Button>
+            )}
           </>
         )}
         {councilPeriod === '2' && (

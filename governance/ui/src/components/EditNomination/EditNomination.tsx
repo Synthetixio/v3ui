@@ -6,10 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import useEditNomination from '../../mutations/useEditNomination';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
-import '../UserProfileCard/UserProfileCard.css';
-import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import EditNominationConfirmation from './EditNominationConfirmation';
 import EditNominationSelect from './EditNominationSelect';
+import '../UserProfileCard/UserProfileCard.css';
 
 export default function EditNomination({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
@@ -17,29 +16,11 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
   const navigate = useNavigate();
   const wallet = useWallet();
   const { data: nominationInformation } = useGetIsNominated(wallet?.address);
-  const { data: councilPeriodFromNomination } = useGetCurrentPeriod(activeCouncil);
 
   const { isSuccess } = useEditNomination({
     currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
-
-  if (councilPeriodFromNomination === '2') {
-    return (
-      <Flex
-        flexDirection="column"
-        bg="navy.700"
-        w="100%"
-        borderColor="gray.900"
-        borderWidth="1px"
-        borderStyle="solid"
-        rounded="base"
-        p="6"
-      >
-        Not possible during Voting
-      </Flex>
-    );
-  }
 
   return (
     <Flex
@@ -51,21 +32,23 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       borderStyle="solid"
       rounded="base"
       p="6"
+      position="relative"
     >
+      <IconButton
+        onClick={() => navigate(`/councils/${activeCouncil}`)}
+        size="xs"
+        aria-label="close button"
+        icon={<CloseIcon />}
+        variant="ghost"
+        colorScheme="whiteAlpha"
+        color="white"
+        position="absolute"
+        top="10px"
+        right="10px"
+      />
       {isSuccess ? (
         <>
-          <Flex justifyContent="space-between" mb="auto">
-            <Heading fontSize="medium">Nomination Successful</Heading>
-            <IconButton
-              onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
-              size="xs"
-              aria-label="close button"
-              icon={<CloseIcon />}
-              variant="ghost"
-              colorScheme="whiteAlpha"
-              color="white"
-            />
-          </Flex>
+          <Heading fontSize="medium">Nomination Successful</Heading>
 
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
@@ -123,8 +106,6 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
         />
       ) : (
         <EditNominationSelect
-          selectedCouncil={selectedCouncil}
-          activeCouncil={activeCouncil}
           setSelectedCouncil={setSelectedCouncil}
           setShowConfirm={setShowConfirm}
         />

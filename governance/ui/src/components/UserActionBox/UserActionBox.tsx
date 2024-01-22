@@ -70,7 +70,8 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
           fontWeight="700"
           textAlign="center"
         >
-          Click on a nominee to see their profile details
+          Click on nominee to see <br />
+          their profile details
         </Text>
       </Flex>
     </Show>

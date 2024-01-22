@@ -1,11 +1,11 @@
-import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Image, Spinner, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import useEditNomination from '../../mutations/useEditNomination';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '@snx-v3/useBlockchain';
-import { ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
 import { shortAddress } from '../../utils/address';
@@ -20,7 +20,6 @@ export default function EditNominationConfirmation({
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const navigate = useNavigate();
-
   const wallet = useWallet();
   const { data: nominationInformation } = useGetIsNominated(wallet?.address);
   const { data: user } = useGetUserDetailsQuery(wallet?.address);
@@ -36,21 +35,7 @@ export default function EditNominationConfirmation({
 
   return (
     <>
-      <Flex justifyContent="space-between">
-        <Heading fontSize="medium">Confirm changes</Heading>
-        <IconButton
-          onClick={() => {
-            navigate(`/councils/${activeCouncil}?nominate=false`);
-            setShowConfirm(false);
-          }}
-          size="xs"
-          aria-label="close button"
-          icon={<CloseIcon />}
-          variant="ghost"
-          colorScheme="whiteAlpha"
-          color="white"
-        />
-      </Flex>
+      <Heading fontSize="medium">Confirm changes</Heading>
       <Text fontSize="sm" color="gray.500" mt="2">
         Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
         nominating the wallet below:
@@ -80,6 +65,9 @@ export default function EditNominationConfirmation({
           <Text fontSize="xs">Nomination Wallet: {shortAddress(user?.address)}</Text>
         </Flex>
       </Flex>
+      <Text>
+        Chose which governing body you would like to represent if chosen as an elected member:
+      </Text>
       <Flex alignItems="center" justifyContent="space-between" mt="2">
         {nominationInformation?.isNominated ? (
           <Flex
