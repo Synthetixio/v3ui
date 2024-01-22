@@ -6,7 +6,7 @@ import { Account } from '@web3-onboard/core/dist/types';
 interface UserProfileCardContainerInterface {
   activeCouncil: CouncilSlugs;
   selectedUserAddress: string;
-  wallet?: Account;
+  wallet: Account | null;
   onClose: () => void;
 }
 

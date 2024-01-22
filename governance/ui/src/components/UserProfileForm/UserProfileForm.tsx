@@ -235,7 +235,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
                 username: getValues('username')!,
               })
               .then(() => {
-                navigate(`/councils/${activeCouncil}?view=${wallet?.address}`);
+                navigate(`/councils/${activeCouncil}?view=${activeWallet?.address}`);
               });
           }}
         >
