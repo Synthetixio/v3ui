@@ -5,8 +5,9 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 import { CouncilPeriodBadge } from './CouncilPeriodBadge';
-import { useWallet } from '@snx-v3/useBlockchain';
+
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
+import { useWallet } from '../../queries/useWallet';
 
 interface CouncilCardProps {
   council: Council;
@@ -14,12 +15,13 @@ interface CouncilCardProps {
 
 export function CouncilCard({ council }: CouncilCardProps) {
   const navigate = useNavigate();
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
+
   const { data: councilPeriod, isLoading: isPeriodLoading } = useGetCurrentPeriod(council.slug);
   const { data: electedCouncilMembers, isLoading: isCouncilMembersLoading } = useGetCouncilMembers(
     council.slug
   );
-  const { data: isNominated } = useGetIsNominated(wallet?.address);
+  const { data: isNominated } = useGetIsNominated(activeWallet?.address);
   const { data: councilNominees, isLoading: isCouncilNomineesLoading } = useGetCouncilNominees(
     council.slug
   );

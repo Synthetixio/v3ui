@@ -17,6 +17,7 @@ type UpdateUserDetailsResponse = {
     uuid: string;
   };
 };
+
 type SIWEMessage = {
   message: {
     domain: string;
@@ -50,6 +51,7 @@ function useUpdateUserDetailsMutation() {
   const signer = useSigner();
 
   const [uuid, setUuid] = useState<null | string>(null);
+
   const boardroomSignIn = async () => {
     const domain = 'governance.synthetix.io';
     const chainId = 10;

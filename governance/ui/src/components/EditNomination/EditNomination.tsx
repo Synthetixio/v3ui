@@ -1,5 +1,4 @@
 import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
-import { useWallet } from '@snx-v3/useBlockchain';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,14 +9,20 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
 import '../UserProfileCard/UserProfileCard.css';
 import { shortAddress } from '../../utils/address';
+import { useWallet } from '../../queries/useWallet';
 
 export default function EditNomination({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState<any>(activeCouncil);
   const navigate = useNavigate();
-  const wallet = useWallet();
-  const { data: nominatedFor } = useGetIsNominated(wallet?.address);
-  const { data: user } = useGetUserDetailsQuery(wallet?.address);
-  const { mutate, isPending, isSuccess } = useEditNomination(selectedCouncil, wallet?.address);
+  const { activeWallet } = useWallet();
+
+  const { data: nominatedFor } = useGetIsNominated(activeWallet?.address);
+  const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
+
+  const { mutate, isPending, isSuccess } = useEditNomination(
+    selectedCouncil,
+    activeWallet?.address
+  );
 
   return (
     <Flex
@@ -49,11 +54,10 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
-          {wallet?.address}
+          {activeWallet?.address}
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominated for:
           </Text>
-
           <Flex
             key={`tab-nomination-${selectedCouncil}-done`}
             w="100%"

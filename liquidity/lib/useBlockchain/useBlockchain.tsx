@@ -151,7 +151,7 @@ export const NETWORKS: Network[] = [
   {
     id: 8453,
     preset: 'main',
-    hexId: `0x${Number(8451).toString(16)}`,
+    hexId: `0x${Number(8453).toString(16)}`,
     token: 'ETH',
     name: 'base',
     rpcUrl: (INFURA_KEY?: string) =>
