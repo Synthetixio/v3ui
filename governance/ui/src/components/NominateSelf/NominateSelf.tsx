@@ -138,7 +138,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               </Text>
             </Flex>
           </Flex>
-          <Text fontSize="sm" color="gray.500" mb="2">
+          <Text fontSize="sm" color="gray.500" mb="2" pt="12">
             Chose which governing body you would like to represent if chosen as an elected member:
           </Text>
           <Flex flexDirection="column">
@@ -178,7 +178,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
 
           {isPending ? (
             <Flex w="100%" justifyContent="center">
-              <Spinner colorScheme="cyan" />
+              loading <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
             <Button onClick={() => mutate()} mt="auto">

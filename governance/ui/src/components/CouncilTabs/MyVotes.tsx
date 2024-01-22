@@ -21,8 +21,8 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
       key="tab-my-votes"
       cursor="pointer"
       onClick={() => navigate('/my-votes')}
-      maxW="260px"
       rounded="base"
+      w="100%"
       borderColor="gray.900"
       borderWidth="1px"
       py={2}

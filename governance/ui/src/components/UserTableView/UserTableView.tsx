@@ -32,6 +32,7 @@ export default function UserTableView({
       border={searchParams.get('view') === user.address ? '1px solid' : ''}
       borderTop="1px solid"
       borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
+      rounded="base"
     >
       {councilPeriod === '2' && <Th color="white">#{place + 1}</Th>}
       <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">

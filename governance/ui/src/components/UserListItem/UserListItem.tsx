@@ -8,6 +8,7 @@ import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
+import { Badge } from '../Badge';
 
 export default function UserListItem({
   address,
@@ -19,7 +20,7 @@ export default function UserListItem({
   const [searchParams] = useSearchParams();
   const wallet = useWallet();
   const { data: user } = useGetUserDetailsQuery(address);
-  const { data: isNominated } = useGetIsNominated(address);
+  const { data: nominationInformation } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const navigate = useNavigate();
   const network = useNetwork();
@@ -27,8 +28,8 @@ export default function UserListItem({
 
   return (
     <Flex
-      p="6"
-      justifyContent="space-between"
+      px="6"
+      h="56px"
       alignItems="center"
       cursor="pointer"
       onClick={(e) => {
@@ -39,6 +40,7 @@ export default function UserListItem({
       borderX={address === searchParams.get('view') ? '1px solid' : ''}
       borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
+      rounded="base"
     >
       <Flex alignItems="center">
         {user?.pfpImageId ? (
@@ -50,22 +52,31 @@ export default function UserListItem({
           {user?.ens ? user.ens : shortAddress(user?.address)}
         </Text>
       </Flex>
+      {nominationInformation?.isNominated && (
+        <Badge color="green" ml="4">
+          Nominee
+        </Badge>
+      )}
       {councilPeriod === '1' ? (
         <Button
+          ml="auto"
           rounded="base"
           size="xs"
-          variant={isNominated ? 'outline' : 'solid'}
-          colorScheme={isNominated ? 'gray' : 'cyan'}
+          variant={nominationInformation?.isNominated ? 'outline' : 'solid'}
+          colorScheme={nominationInformation?.isNominated ? 'gray' : 'cyan'}
           onClick={(e) => {
             e.stopPropagation();
-            if (!isNominated) {
+            if (!nominationInformation?.isNominated) {
               navigate(`/councils/${activeCouncil}?nominate=true`);
             } else {
               navigate(`/councils/${activeCouncil}?editNomination=true`);
             }
           }}
         >
-          {isNominated && isOwn && (network.id === 11155111 || network.id === 10) ? (
+          {nominationInformation?.isNominated &&
+          isOwn &&
+          // TODO @dev remove once live
+          (network.id === 11155111 || network.id === 10) ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="black">Nominate Self</Text>

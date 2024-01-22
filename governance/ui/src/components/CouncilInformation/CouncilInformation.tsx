@@ -2,6 +2,8 @@ import { Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { CouncilImage } from '../CouncilImage';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Link } from 'react-router-dom';
 
 export default function CouncilInformation({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: getCouncilMembers } = useGetCouncilMembers(activeCouncil);
@@ -35,13 +37,43 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         >
           {council?.description}
         </Text>
-        <Flex w="100%" mt="2">
-          <Heading fontSize="xs" mr={10} lineHeight="1rem">
+        <Flex w="100%" mt="2" gap={{ md: '6' }}>
+          <Heading
+            fontSize="xs"
+            lineHeight="1rem"
+            border="1px solid"
+            borderColor="gray.900"
+            rounded="base"
+            px="2"
+            py="1"
+          >
             Council Seats: {getCouncilMembers?.length}
           </Heading>
-          <Heading fontSize="xs" lineHeight="1rem">
+          <Heading
+            fontSize="xs"
+            lineHeight="1rem"
+            border="1px solid"
+            borderColor="gray.900"
+            rounded="base"
+            px="2"
+            py="1"
+          >
             Stipends P/M: {council?.stipends}
           </Heading>
+          <Link to={council!.docLink} target="_blank" rel="noopener noreferrer">
+            <Heading
+              fontSize="xs"
+              lineHeight="1rem"
+              border="1px solid"
+              borderColor="gray.900"
+              rounded="base"
+              px="2"
+              py="1"
+              cursor="pointer"
+            >
+              Learn more <ExternalLinkIcon />
+            </Heading>
+          </Link>
         </Flex>
       </Flex>
     </Flex>
