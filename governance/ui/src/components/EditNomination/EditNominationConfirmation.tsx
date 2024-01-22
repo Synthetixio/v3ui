@@ -22,11 +22,11 @@ export default function EditNominationConfirmation({
   const navigate = useNavigate();
 
   const wallet = useWallet();
-  const { data: nominatedFor } = useGetIsNominated(wallet?.address);
+  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
   const { data: user } = useGetUserDetailsQuery(wallet?.address);
 
   const { mutate, isPending, isSuccess } = useEditNomination({
-    currentNomination: typeof nominatedFor === 'object' ? nominatedFor.slug : undefined,
+    currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
 

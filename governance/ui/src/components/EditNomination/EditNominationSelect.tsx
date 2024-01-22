@@ -22,7 +22,7 @@ export default function EditNominationSelect({
 }) {
   const navigate = useNavigate();
   const wallet = useWallet();
-  const { data: nominatedFor } = useGetIsNominated(wallet?.address);
+  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
   const { data: user } = useGetUserDetailsQuery(wallet?.address);
   return (
     <>
@@ -67,7 +67,7 @@ export default function EditNominationSelect({
           <Text fontSize="xs">Nomination Wallet: {shortAddress(user?.address)}</Text>
         </Flex>
       </Flex>
-      {nominatedFor !== false && (
+      {nominationInformation?.isNominated && (
         <>
           <Text fontSize="sm" color="gray.500" mb="2">
             You will withdraw your nomination from:
@@ -94,10 +94,10 @@ export default function EditNominationSelect({
               alignItems="center"
               mr="3"
             >
-              <Image src={typeof nominatedFor === 'object' ? nominatedFor.image : ''} w="6" h="6" />
+              <Image src={nominationInformation.council.image} w="6" h="6" />
             </Flex>
             <Text fontSize="x-small" fontWeight="bold">
-              {typeof nominatedFor === 'object' && nominatedFor.title}
+              {nominationInformation.council.title}
             </Text>
           </Flex>
         </>
@@ -107,7 +107,7 @@ export default function EditNominationSelect({
       </Text>
       <Flex flexDirection="column">
         {councils
-          .filter((c) => (typeof nominatedFor === 'object' ? nominatedFor.slug !== c.slug : true))
+          .filter((c) => nominationInformation?.council.slug !== c.slug)
           .map((council) => (
             <Flex
               key={`tab-nomination-${council.slug}`}

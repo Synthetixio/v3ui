@@ -20,7 +20,7 @@ export default function UserListItem({
   const [searchParams] = useSearchParams();
   const wallet = useWallet();
   const { data: user } = useGetUserDetailsQuery(address);
-  const { data: isNominated } = useGetIsNominated(address);
+  const { data: nominationInformation } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const navigate = useNavigate();
   const network = useNetwork();
@@ -52,7 +52,7 @@ export default function UserListItem({
           {user?.ens ? user.ens : shortAddress(user?.address)}
         </Text>
       </Flex>
-      {isNominated && (
+      {nominationInformation?.isNominated && (
         <Badge color="green" ml="4">
           Nominee
         </Badge>
@@ -62,18 +62,21 @@ export default function UserListItem({
           ml="auto"
           rounded="base"
           size="xs"
-          variant={isNominated ? 'outline' : 'solid'}
-          colorScheme={isNominated ? 'gray' : 'cyan'}
+          variant={nominationInformation?.isNominated ? 'outline' : 'solid'}
+          colorScheme={nominationInformation?.isNominated ? 'gray' : 'cyan'}
           onClick={(e) => {
             e.stopPropagation();
-            if (!isNominated) {
+            if (!nominationInformation?.isNominated) {
               navigate(`/councils/${activeCouncil}?nominate=true`);
             } else {
               navigate(`/councils/${activeCouncil}?editNomination=true`);
             }
           }}
         >
-          {isNominated && isOwn && (network.id === 11155111 || network.id === 10) ? (
+          {nominationInformation?.isNominated &&
+          isOwn &&
+          // TODO @dev remove once live
+          (network.id === 11155111 || network.id === 10) ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="black">Nominate Self</Text>

@@ -20,18 +20,20 @@ export function useGetIsNominated(address?: string) {
       const isNominatedForTreasuryCouncil = (await getCouncilContract('treasury')
         .connect(motherShipProvider)
         .isNominated(address)) as boolean | undefined;
-      return !isNominatedForSpartanCouncil &&
-        !isNominatedForAmbassadorCouncil &&
-        !isNominatedForGrantsCouncil &&
-        !isNominatedForTreasuryCouncil
-        ? false
-        : isNominatedForSpartanCouncil
+      return {
+        isNominated:
+          !isNominatedForSpartanCouncil &&
+          !isNominatedForAmbassadorCouncil &&
+          !isNominatedForGrantsCouncil &&
+          !isNominatedForTreasuryCouncil,
+        council: isNominatedForSpartanCouncil
           ? councils[0]
           : isNominatedForGrantsCouncil
             ? councils[1]
             : isNominatedForAmbassadorCouncil
               ? councils[2]
-              : councils[3];
+              : councils[3],
+      };
     },
     enabled: !!address,
     staleTime: 900000,

@@ -16,11 +16,11 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const wallet = useWallet();
-  const { data: nominatedFor } = useGetIsNominated(wallet?.address);
+  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
   const { data: councilPeriodFromNomination } = useGetCurrentPeriod(activeCouncil);
 
   const { isSuccess } = useEditNomination({
-    currentNomination: typeof nominatedFor === 'object' ? nominatedFor.slug : undefined,
+    currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
 
