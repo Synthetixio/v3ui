@@ -54,8 +54,8 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
             <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
           )}
         </Text>
+        {showCart && <ShoppingCart closeCart={() => setShowCart(false)} votes={votes} />}
       </Show>
-      {showCart && <ShoppingCart closeCart={() => setShowCart(false)} votes={votes} />}
     </Flex>
   );
 };
