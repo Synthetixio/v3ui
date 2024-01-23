@@ -101,7 +101,9 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               {councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
-          <Button onClick={() => navigate(`/councils/${activeCouncil}`)}>Done</Button>
+          <Button onClick={() => navigate(`/councils/${activeCouncil}`)} mt="auto">
+            Done
+          </Button>
         </>
       ) : (
         <>

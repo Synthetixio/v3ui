@@ -143,6 +143,7 @@ export const UserProfileDetails = ({
                 variant="outline"
                 colorScheme="gray"
                 w="100%"
+                color="white"
                 onClick={() =>
                   navigate(
                     `/councils/${activeCouncil}?${

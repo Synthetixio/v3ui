@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import useEditNomination from '../../mutations/useEditNomination';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useWallet } from '../../queries/useWallet';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
@@ -20,9 +20,9 @@ export default function EditNominationConfirmation({
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const navigate = useNavigate();
-  const wallet = useWallet();
-  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
-  const { data: user } = useGetUserDetailsQuery(wallet?.address);
+  const { activeWallet } = useWallet();
+  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
+  const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
 
   const { mutate, isPending, isSuccess } = useEditNomination({
     currentNomination: nominationInformation?.council.slug,
