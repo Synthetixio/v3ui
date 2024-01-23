@@ -28,7 +28,6 @@ export default function UserListItem({
   const { activeWallet } = useWallet();
 
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
-
   return (
     <Flex
       px="6"
@@ -52,7 +51,7 @@ export default function UserListItem({
           <Blockies seed={address.toLowerCase()} size={8} className="fully-rounded" />
         )}
         <Text fontWeight="bold" fontSize="14px" ml="3">
-          {user?.ens ? user.ens : shortAddress(user?.address)}
+          {user?.username ? user.username : shortAddress(user?.address)}
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (

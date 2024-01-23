@@ -40,7 +40,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
-        wallet={activeWallet}
+        isOwn={selectedUserAddress?.toLowerCase() === activeWallet?.address.toLowerCase()}
       />
     );
   }

@@ -1,4 +1,4 @@
-import { Button, Image, Spinner, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Image, Spinner, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { shortAddress } from '../../utils/address';
 import '../UserProfileCard/UserProfileCard.css';
@@ -50,8 +50,12 @@ export default function UserTableView({
         {user.username ? user.username : shortAddress(user.address)}
       </Th>
       <Th>
-        <Badge color="green">Nominee</Badge>
-        {councilSettings && councilSettings?.epochSeatCount > place && <Badge ml="2">Member</Badge>}
+        <Flex>
+          <Badge color="green">Nominee</Badge>
+          {councilSettings && councilSettings?.epochSeatCount > place && (
+            <Badge ml="2">Member</Badge>
+          )}
+        </Flex>
       </Th>
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
