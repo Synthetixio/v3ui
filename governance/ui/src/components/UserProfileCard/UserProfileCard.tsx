@@ -1,15 +1,15 @@
 import { Flex, Spinner, Text, FlexProps } from '@chakra-ui/react';
 import './UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { UserProfileDetails } from './UserProfileDetails';
+import { useGetIsNominated } from '../../queries/useGetIsNominated';
 
 interface UserProfileCardInterface extends FlexProps {
   walletAddress: string;
   activeCouncil: CouncilSlugs;
-  isOwn?: boolean;
+  isOwn: boolean;
 }
 
 export function UserProfileCard({
@@ -47,7 +47,9 @@ export function UserProfileCard({
     >
       {error && <Text>{error.message}</Text>}
       {isLoading ? (
-        <Spinner colorScheme="cyan" />
+        <Flex w="100%" justifyContent="center" h="100%" alignItems="center">
+          <Spinner colorScheme="cyan" />
+        </Flex>
       ) : (
         <UserProfileDetails
           activeCouncil={activeCouncil}

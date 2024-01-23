@@ -18,6 +18,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
   const editNomination = searchParams.get('editNomination') === 'true' ? true : false;
   const nominate = searchParams.get('nominate') === 'true' ? true : false;
   const selectedUserAddress = searchParams.get('view') as string;
+  const ownProfile = searchParams.get('ownProfile') as string;
   const editProfile = searchParams.get('editProfile') === 'true' ? true : false;
 
   const { onClose } = useDisclosure();
@@ -34,13 +35,13 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
     return <EditNominationContainer activeCouncil={activeCouncil} onClose={onClose} />;
   }
 
-  if (selectedUserAddress) {
+  if (selectedUserAddress || ownProfile) {
     return (
       <UserProfileCardContainer
         activeCouncil={activeCouncil}
         onClose={onClose}
-        selectedUserAddress={selectedUserAddress}
-        wallet={activeWallet}
+        selectedUserAddress={selectedUserAddress || ownProfile}
+        isOwn={!!ownProfile}
       />
     );
   }

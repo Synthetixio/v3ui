@@ -8,7 +8,7 @@ import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -33,6 +33,15 @@ export const UserProfileDetails = ({
     JSON.parse(localStorage.getItem('voteSelection') || '')?.[activeCouncil]?.toLowerCase() ===
       userData?.address.toLowerCase()
   );
+
+  useEffect(() => {
+    if (activeCouncil && userData?.address) {
+      setRemoveOrSelect(
+        JSON.parse(localStorage.getItem('voteSelection') || '')?.[activeCouncil]?.toLowerCase() ===
+          userData?.address.toLowerCase()
+      );
+    }
+  }, [activeCouncil, userData?.address]);
 
   return (
     <>
@@ -77,8 +86,7 @@ export const UserProfileDetails = ({
         />
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
-        {/* @TODO what gray is that? */}
-        <Text fontSize="14px" fontWeight="700" color="#828295">
+        <Text fontSize="14px" fontWeight="700" color="gray.500">
           Wallet Address
         </Text>
         <Button

@@ -37,7 +37,7 @@ export default function UserListItem({
       cursor="pointer"
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/councils/${activeCouncil}?view=${address}`);
+        navigate(`/councils/${activeCouncil}?ownProfile=${address}`);
       }}
       borderY="1px solid"
       borderX={address === searchParams.get('view') ? '1px solid' : ''}
@@ -91,7 +91,7 @@ export default function UserListItem({
           variant="outline"
           colorScheme="gray"
           onClick={() => {
-            navigate(`/councils/${activeCouncil}?view=${address}`);
+            navigate(`/councils/${activeCouncil}?ownProfile=${address}`);
           }}
           color="white"
         >

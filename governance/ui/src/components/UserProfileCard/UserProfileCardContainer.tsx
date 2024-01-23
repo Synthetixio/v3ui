@@ -1,20 +1,19 @@
 import { Show, Modal, ModalOverlay, ModalContent, Hide } from '@chakra-ui/react';
 import { UserProfileCard } from './UserProfileCard';
 import { CouncilSlugs } from '../../utils/councils';
-import { Account } from '@web3-onboard/core/dist/types';
 
 interface UserProfileCardContainerInterface {
   activeCouncil: CouncilSlugs;
   selectedUserAddress: string;
-  wallet: Account | null;
+  isOwn: boolean;
   onClose: () => void;
 }
 
 export const UserProfileCardContainer = ({
   activeCouncil,
   selectedUserAddress,
-  wallet,
   onClose,
+  isOwn,
 }: UserProfileCardContainerInterface) => {
   return (
     <>
@@ -25,7 +24,7 @@ export const UserProfileCardContainer = ({
             <UserProfileCard
               walletAddress={selectedUserAddress}
               activeCouncil={activeCouncil}
-              isOwn={wallet?.address.toLowerCase() === selectedUserAddress.toLowerCase()}
+              isOwn={isOwn}
             />
           </ModalContent>
         </Modal>
@@ -35,7 +34,7 @@ export const UserProfileCardContainer = ({
           mt={6}
           walletAddress={selectedUserAddress}
           activeCouncil={activeCouncil}
-          isOwn={wallet?.address.toLowerCase() === selectedUserAddress.toLowerCase()}
+          isOwn={isOwn}
         />
       </Hide>
     </>
