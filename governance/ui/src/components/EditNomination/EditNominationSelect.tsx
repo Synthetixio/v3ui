@@ -2,7 +2,7 @@ import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import Blockies from 'react-blockies';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { Dispatch, SetStateAction } from 'react';
 import { shortAddress } from '../../utils/address';
@@ -16,9 +16,10 @@ export default function EditNominationSelect({
   setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined>>;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
-  const wallet = useWallet();
-  const { data: nominationInformation } = useGetIsNominated(wallet?.address);
-  const { data: user } = useGetUserDetailsQuery(wallet?.address);
+  const { activeWallet } = useWallet();
+  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
+  const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
+
   return (
     <>
       <Heading fontSize="medium">Edit Nomination</Heading>
