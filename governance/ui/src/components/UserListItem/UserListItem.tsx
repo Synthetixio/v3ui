@@ -28,7 +28,6 @@ export default function UserListItem({
   const { activeWallet } = useWallet();
 
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
-
   return (
     <Flex
       px="6"

@@ -6486,7 +6486,6 @@ __metadata:
     "@types/react-blockies": "npm:^1"
     "@types/react-dom": "npm:^18.2.15"
     "@web3-onboard/coinbase": "npm:^2.2.6"
-    "@web3-onboard/core": "npm:^2.21.2"
     "@web3-onboard/gnosis": "npm:^2.2.1"
     "@web3-onboard/injected-wallets": "npm:^2.10.11"
     "@web3-onboard/ledger": "npm:^2.5.2"

@@ -127,18 +127,6 @@ export const UserProfileDetails = ({
             >
               Edit Profile
             </Button>
-            {!isNominated ? (
-              <Button
-                variant="outline"
-                colorScheme="gray"
-                w="100%"
-                onClick={() => navigate(`/councils/${activeCouncil}?nominate=true`)}
-              >
-                Nominate Self
-              </Button>
-            ) : (
-              <></>
-            )}
             {councilPeriod === '2' ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button

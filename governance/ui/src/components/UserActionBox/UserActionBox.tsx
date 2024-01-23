@@ -41,7 +41,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress || ownProfile}
-        isOwn={!!ownProfile}
+        isOwn={ownProfile?.toLowerCase() === activeWallet?.address.toLowerCase()}
       />
     );
   }
