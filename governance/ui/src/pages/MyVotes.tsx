@@ -48,7 +48,6 @@ export default function MyVotes() {
         (a, v) => ({ ...a, [v.council]: v }),
         {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
       );
-
   return (
     <>
       <CouncilTabs />
