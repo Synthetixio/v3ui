@@ -36,7 +36,7 @@ export default function UserListItem({
       cursor="pointer"
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/councils/${activeCouncil}?ownProfile=${address}`);
+        navigate(`/councils/${activeCouncil}?view=${address}`);
       }}
       borderY="1px solid"
       borderX={address === searchParams.get('view') ? '1px solid' : ''}
@@ -51,7 +51,7 @@ export default function UserListItem({
           <Blockies seed={address.toLowerCase()} size={8} className="fully-rounded" />
         )}
         <Text fontWeight="bold" fontSize="14px" ml="3">
-          {user?.ens ? user.ens : shortAddress(user?.address)}
+          {user?.username ? user.username : shortAddress(user?.address)}
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (
@@ -90,7 +90,7 @@ export default function UserListItem({
           variant="outline"
           colorScheme="gray"
           onClick={() => {
-            navigate(`/councils/${activeCouncil}?ownProfile=${address}`);
+            navigate(`/councils/${activeCouncil}?view=${address}`);
           }}
           color="white"
         >
