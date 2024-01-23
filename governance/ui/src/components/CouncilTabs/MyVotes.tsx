@@ -1,6 +1,9 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+
 import Timer from '../Timer/Timer';
+import { useState } from 'react';
+import ShoppingCart from '../ShoppingCart/ShoppingCart';
+import { useNavigate } from 'react-router-dom';
 
 interface MyVotesInterface {
   isLoading: boolean;
@@ -15,12 +18,20 @@ interface MyVotesInterface {
 }
 
 export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesInterface) => {
+  const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
   return (
     <Flex
+      position="relative"
       key="tab-my-votes"
       cursor="pointer"
-      onClick={() => navigate('/my-votes')}
+      onClick={() => {
+        if (councilPeriod === '2' && showCart) {
+          navigate('/my-votes');
+        } else {
+          setShowCart(true);
+        }
+      }}
       rounded="base"
       w="100%"
       borderColor="gray.900"
@@ -43,6 +54,7 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
             <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
           )}
         </Text>
+        {showCart && <ShoppingCart closeCart={() => setShowCart(false)} votes={votes} />}
       </Show>
     </Flex>
   );
