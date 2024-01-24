@@ -30,6 +30,7 @@ const babelRule = {
     /theme/,
     /liquidity\/lib/,
     /liquidity\/components/,
+    /governance\/cypress/,
   ],
   resolve: {
     fullySpecified: false,
