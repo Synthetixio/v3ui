@@ -15,8 +15,6 @@
     "@cypress/code-coverage": "^3.12.9",
     "@snx-cy/onLogAdded": "workspace:*",
     "@snx-cy/printBrowserLogs": "workspace:*",
-    "@snx-v3/liquidity": "workspace:*",
-    "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "cypress": "13.5.0",
     "ethers": "^5.7.2",
