@@ -143,7 +143,7 @@ export default function ShoppingCart({
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            console.error('implement me');
+            navigate('my-votes');
           }}
           mx="6"
           mt="4"
