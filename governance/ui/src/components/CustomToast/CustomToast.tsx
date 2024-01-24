@@ -19,9 +19,9 @@ export const CustomToast = ({ onClose, status, description }: CustomToastProps) 
       <Flex mx="4" alignItems="center">
         {icon}
       </Flex>
-      <Flex width="92.5%" py="8px">
+      <Flex width="92.5%" py="2">
         <Text
-          py="4px"
+          py="1"
           fontSize="16px"
           fontFamily="heading"
           fontWeight="700"
@@ -31,7 +31,7 @@ export const CustomToast = ({ onClose, status, description }: CustomToastProps) 
           {description}
         </Text>
       </Flex>
-      <Flex mr="8px" pt="8px">
+      <Flex mr="2" pt="2">
         <CloseIcon
           w="10px"
           h="10px"
