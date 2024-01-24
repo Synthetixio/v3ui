@@ -25,13 +25,8 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
       position="relative"
       key="tab-my-votes"
       cursor="pointer"
-      onClick={() => {
-        if (councilPeriod === '2' && showCart) {
-          navigate('/my-votes');
-        } else {
-          setShowCart(true);
-        }
-      }}
+      onClick={() => navigate('/my-votes')}
+      onMouseEnter={() => setShowCart(true)}
       rounded="base"
       w="100%"
       borderColor="gray.900"
@@ -40,7 +35,7 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
       px={4}
       height="48px"
       alignItems="center"
-      bg="navy.900"
+      bg="navy.700"
       _hover={{ borderColor: 'cyan.500' }}
     >
       <Text fontSize="x-small" fontWeight="bold" mr="auto">
