@@ -172,7 +172,6 @@ export function Header() {
                       Base
                     </Text>
                   </MenuItem>
-
                   {/* Testnets */}
                   <MenuItem onClick={() => setNetwork(11155111)}>
                     <EthereumIcon />

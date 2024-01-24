@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSigner } from '../queries/useWallet';
 import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
+import { CustomToast } from '../components/CustomToast';
+import { useToast } from '@chakra-ui/react';
 
 export default function useEditNomination({
   currentNomination,
@@ -12,6 +14,7 @@ export default function useEditNomination({
 }) {
   const queryClient = useQueryClient();
   const signer = useSigner();
+  const toast = useToast();
 
   return useMutation({
     mutationFn: async () => {
@@ -31,6 +34,11 @@ export default function useEditNomination({
     mutationKey: ['editNomination', currentNomination, nextNomination],
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ['isNominated'] });
+      toast({
+        description: 'Nomination successfully edited.',
+        status: 'success',
+        render: CustomToast,
+      });
     },
   });
 }
