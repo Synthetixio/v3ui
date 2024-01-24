@@ -6467,8 +6467,6 @@ __metadata:
     "@cypress/code-coverage": "npm:^3.12.9"
     "@snx-cy/onLogAdded": "workspace:*"
     "@snx-cy/printBrowserLogs": "workspace:*"
-    "@snx-v3/liquidity": "workspace:*"
-    "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     cypress: "npm:13.5.0"
     ethers: "npm:^5.7.2"
