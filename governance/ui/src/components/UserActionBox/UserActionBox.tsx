@@ -40,7 +40,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
-        wallet={activeWallet}
+        isOwn={selectedUserAddress?.toLowerCase() === activeWallet?.address.toLowerCase()}
       />
     );
   }
@@ -50,7 +50,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
     <Show above="md">
       <Flex
         w="451px"
-        height="80vh"
+        height="50vh"
         justifyContent="center"
         alignItems="center"
         borderWidth="1px"
