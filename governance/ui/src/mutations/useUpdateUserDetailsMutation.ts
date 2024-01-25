@@ -5,12 +5,14 @@ import {
   UPDATE_USER_PITCH_FOR_PROTOCOL,
 } from '../utils/boardroom';
 import { useState } from 'react';
+import { useToast } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SiweMessage } from 'siwe';
 import useIsUUIDValidQuery from '../queries/useGetIsUUIDValidQuery';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { useWallet, useSigner } from '../queries/useWallet';
+import { CustomToast } from '../components/CustomToast';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -49,6 +51,7 @@ type SignInResponse = {
 function useUpdateUserDetailsMutation() {
   const { activeWallet } = useWallet();
   const signer = useSigner();
+  const toast = useToast();
 
   const [uuid, setUuid] = useState<null | string>(null);
 
@@ -101,6 +104,7 @@ function useUpdateUserDetailsMutation() {
 
   const isUuidValidQuery = useIsUUIDValidQuery(uuid || '');
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['updateUserDetails'],
     mutationFn: async (userProfile: GetUserDetails) => {
@@ -150,6 +154,12 @@ function useUpdateUserDetailsMutation() {
 
     onSuccess: async () => {
       await queryClient.resetQueries();
+
+      toast({
+        description: 'Your profile has been updated.',
+        status: 'success',
+        render: CustomToast,
+      });
     },
   });
 }
