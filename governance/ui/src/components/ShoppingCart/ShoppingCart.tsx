@@ -1,11 +1,11 @@
-import { Box, Button, Fade, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Button, Fade, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 import useGetUserDetailsQuery, { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import Blockies from 'react-blockies';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function ShoppingCart({
   closeCart,
@@ -74,34 +74,10 @@ export default function ShoppingCart({
               position="relative"
             >
               <Image src={council.image} w="6" h="6" />
-              {candidates && candidates[council.slug]?.pfpUrl ? (
-                <Image
-                  src={candidates[council.slug].pfpUrl}
-                  borderRadius="50%"
-                  w="8"
-                  h="8"
-                  position="absolute"
-                  left="15px"
-                />
-              ) : candidates && candidates[council.slug] ? (
-                <Blockies
-                  seed={candidates[council.slug].address.toLowerCase()}
-                  scale={4}
-                  className="fully-rounded votes"
-                />
-              ) : (
-                <Box
-                  borderRadius="50%"
-                  w="8"
-                  h="8"
-                  position="absolute"
-                  left="15px"
-                  borderWidth="1px"
-                  bg="navy.700"
-                  borderStyle="dashed"
-                  borderColor="gray.500"
-                />
-              )}
+              <ProfilePicture
+                imageSrc={candidates && candidates[council.slug]?.pfpUrl}
+                address={candidates && candidates[council.slug].address}
+              />
             </Flex>
             <Flex flexDir="column" mr="auto" ml="1">
               <Text fontSize="x-small" fontWeight="bold">

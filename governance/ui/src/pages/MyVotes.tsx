@@ -35,7 +35,9 @@ export default function MyVotes() {
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
   const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
+
   const queryClient = useQueryClient();
+
   const candidates =
     users &&
     votingCandidates &&
@@ -48,6 +50,7 @@ export default function MyVotes() {
         (a, v) => ({ ...a, [v.council]: v }),
         {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
       );
+
   return (
     <>
       <CouncilTabs />

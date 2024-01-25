@@ -4,7 +4,7 @@ import { CouncilSlugs } from '../../utils/councils';
 import EditProfile from '../EditProfile/EditProfile';
 import { NominateSelfContainer } from '../NominateSelf/NominateSelfContainer';
 import { EditNominationContainer } from '../EditNomination/EditNominationContainer';
-import { UserProfileCardContainer } from '../UserProfileCard/UserProfileCardContainer';
+import { SelectedContainer } from '../UserProfileCard/SelectedContainer';
 import { useWallet } from '../../queries/useWallet';
 
 interface UserActionBoxProps {
@@ -36,7 +36,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
 
   if (selectedUserAddress) {
     return (
-      <UserProfileCardContainer
+      <SelectedContainer
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
@@ -50,7 +50,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
     <Show above="md">
       <Flex
         w="451px"
-        height="50vh"
+        height="612px"
         justifyContent="center"
         alignItems="center"
         borderWidth="1px"

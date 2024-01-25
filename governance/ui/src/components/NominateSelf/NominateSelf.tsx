@@ -5,10 +5,9 @@ import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import Blockies from 'react-blockies';
-import '../UserProfileCard/UserProfileCard.css';
 import { shortAddress } from '../../utils/address';
 import { useWallet } from '../../queries/useWallet';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
@@ -48,15 +47,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             Nominee:
           </Text>
           <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
-            {data?.pfpUrl ? (
-              <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
-            ) : (
-              <Blockies
-                seed={activeWallet?.address.toLowerCase() || ''}
-                size={10}
-                className="fully-rounded"
-              />
-            )}
+            <ProfilePicture imageSrc={data?.pfpImageId} address={activeWallet?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
                 {data?.username ? data.username : 'No Username'}
@@ -124,15 +115,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             nominating the wallet below:
           </Text>
           <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
-            {data?.pfpUrl ? (
-              <Image src={data.pfpUrl} w="10" height="10" rounded="100%" />
-            ) : (
-              <Blockies
-                seed={data?.address.toLowerCase() || ''}
-                size={10}
-                className="fully-rounded"
-              />
-            )}
+            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
                 {data?.username ? data.username : 'No Username'}
@@ -179,7 +162,6 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               </Flex>
             ))}
           </Flex>
-
           {isPending ? (
             <Flex w="100%" justifyContent="center">
               loading <Spinner colorScheme="cyan" />

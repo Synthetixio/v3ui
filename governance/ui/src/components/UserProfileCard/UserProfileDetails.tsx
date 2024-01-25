@@ -1,7 +1,6 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, Button, Image, Box, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, IconButton, Button, Text, Tooltip } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import Blockies from 'react-blockies';
 import { shortAddress } from '../../utils/address';
 import { Socials } from '../Socials';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
@@ -9,6 +8,7 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { ProfilePicture } from './ProfilePicture';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -29,6 +29,7 @@ export const UserProfileDetails = ({
 }: UserProfileDetailsProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const [removeOrSelect, setRemoveOrSelect] = useState(
     JSON.parse(localStorage.getItem('voteSelection') || '')?.[activeCouncil]?.toLowerCase() ===
       userData?.address.toLowerCase()
@@ -58,15 +59,7 @@ export const UserProfileDetails = ({
           top="0px"
           right="0px"
         />
-        {userData?.pfpImageId ? (
-          <Image borderRadius="full" src={userData.pfpImageId} w="56px" h="56px" mr="4" />
-        ) : (
-          userData?.address && (
-            <Box mr="4">
-              <Blockies size={14} seed={userData.address.toLowerCase()} className="fully-rounded" />
-            </Box>
-          )
-        )}
+        <ProfilePicture imageSrc={userData?.pfpImageId} address={userData?.address} />
         <Flex flexDir="column" w="100%">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700">
@@ -113,7 +106,6 @@ export const UserProfileDetails = ({
       <Text fontSize="14px" lineHeight="20px" overflowY="scroll">
         {userData?.delegationPitch}
       </Text>
-
       <Flex mt="auto" gap="2" flexDir="column">
         {isOwn && (
           <>

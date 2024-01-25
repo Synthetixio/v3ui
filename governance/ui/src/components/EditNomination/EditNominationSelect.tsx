@@ -6,6 +6,7 @@ import { useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { Dispatch, SetStateAction } from 'react';
 import { shortAddress } from '../../utils/address';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function EditNominationSelect({
   selectedCouncil,
@@ -37,15 +38,7 @@ export default function EditNominationSelect({
         p="2"
         mt="3"
       >
-        {user?.pfpImageId ? (
-          <Image src={user.pfpImageId} w="10" h="10" />
-        ) : (
-          <Blockies
-            seed={user?.address.toLowerCase() || '0x'}
-            size={10}
-            className="fully-rounded"
-          />
-        )}
+        <ProfilePicture imageSrc={user?.pfpImageId} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
             {user?.ens || shortAddress(user?.address)}

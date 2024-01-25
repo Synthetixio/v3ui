@@ -1,5 +1,4 @@
 import { Flex, Spinner, Text, FlexProps } from '@chakra-ui/react';
-import './UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
