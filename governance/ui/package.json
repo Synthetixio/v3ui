@@ -30,7 +30,6 @@
     "@web3-onboard/walletconnect": "^2.5.3",
     "ethers": "^5.7.2",
     "framer-motion": "^10.16.5",
-    "ipfs-http-client": "^60.0.1",
     "react": "^18.2.0",
     "react-blockies": "^1.4.1",
     "react-dom": "^18.2.0",

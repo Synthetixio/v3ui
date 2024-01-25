@@ -11,13 +11,11 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { ipfs } from '../../utils/ipfs';
 import { useNavigate } from 'react-router-dom';
 import Blockies from 'react-blockies';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
 import '../UserProfileCard/UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-
 import { useEffect } from 'react';
 import { useWallet } from '../../queries/useWallet';
 
@@ -28,7 +26,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
   const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
   const mutation = useUpdateUserDetailsMutation();
 
-  const { register, getValues, resetField, setValue } = useForm({
+  const { register, getValues, setValue } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -38,7 +36,6 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
       github: user?.github,
       pfpUrl: user?.pfpUrl,
       delegationPitch: user?.delegationPitch,
-      file: '',
     },
   });
 
@@ -94,41 +91,6 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
             })}
             placeholder="QmSHZw..."
           />
-          <Flex alignItems="center">
-            <Input
-              {...register('file')}
-              type="file"
-              id="imgUpload"
-              display="none"
-              accept="image/png, image/gif, image/jpeg"
-              onChange={(e) => {
-                let file: any = e.target.files;
-                if (typeof file === 'object') {
-                  file = file.item(0);
-                  ipfs.add(file).then((result) => {
-                    setValue('pfpUrl', result.path);
-                    resetField('file');
-                  });
-                }
-              }}
-            />
-            <Text fontSize="12px" color="gray.500">
-              Or
-            </Text>
-            <Button
-              size="xs"
-              variant="ghost"
-              onClick={async () => {
-                try {
-                  document.getElementById('imgUpload')?.click();
-                } catch (error) {
-                  console.error(error);
-                }
-              }}
-            >
-              Upload
-            </Button>
-          </Flex>
         </Flex>
       </Flex>
       <Flex flexDir="column" w="100%" gap="2">
