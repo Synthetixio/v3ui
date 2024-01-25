@@ -14,7 +14,7 @@ export const ProfilePicture = ({ imageSrc, address }: ProfilePictureInterface) =
         <Image borderRadius="full" src={imageSrc} w="56px" h="56px" mr="4" />
       ) : address ? (
         <Box mr="4">
-          <Blockies size={14} seed={address.toLowerCase()} className="fully-rounded" />
+          <Blockies size={14} seed={address?.toLowerCase()} className="fully-rounded" />
         </Box>
       ) : (
         <Box

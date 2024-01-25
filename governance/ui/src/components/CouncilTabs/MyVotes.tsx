@@ -20,6 +20,7 @@ interface MyVotesInterface {
 export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesInterface) => {
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
+
   return (
     <Flex
       position="relative"

@@ -76,7 +76,7 @@ export default function ShoppingCart({
               <Image src={council.image} w="6" h="6" />
               <ProfilePicture
                 imageSrc={candidates && candidates[council.slug]?.pfpUrl}
-                address={candidates && candidates[council.slug].address}
+                address={candidates && candidates[council.slug]?.address}
               />
             </Flex>
             <Flex flexDir="column" mr="auto" ml="1">
@@ -91,7 +91,6 @@ export default function ShoppingCart({
                   : 'not found'}
               </Text>
             </Flex>
-
             {votingCandidates && !votingCandidates[council.slug] ? (
               <IconButton
                 aria-label="action-button"
