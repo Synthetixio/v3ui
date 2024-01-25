@@ -1,6 +1,4 @@
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
-import Blockies from 'react-blockies';
-import '../UserProfileCard/UserProfileCard.css';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -46,7 +44,7 @@ export default function UserListItem({
       rounded="base"
     >
       <Flex alignItems="center">
-        <ProfilePicture imageSrc={user?.pfpImageId} address={address} />
+        <ProfilePicture imageSrc={user?.pfpUrl} address={address} />
         <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.username ? user.username : shortAddress(user?.address)}
         </Text>

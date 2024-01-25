@@ -1,6 +1,5 @@
 import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import Blockies from 'react-blockies';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
@@ -24,7 +23,6 @@ export default function EditNominationSelect({
   return (
     <>
       <Heading fontSize="medium">Edit Nomination</Heading>
-
       <Text fontSize="sm" color="gray.500" mt="2">
         Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
         nominating the wallet below:
@@ -38,7 +36,7 @@ export default function EditNominationSelect({
         p="2"
         mt="3"
       >
-        <ProfilePicture imageSrc={user?.pfpImageId} address={user?.address} />
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
             {user?.ens || shortAddress(user?.address)}
@@ -148,7 +146,6 @@ export default function EditNominationSelect({
           </Text>
         </Flex>
       </Flex>
-
       <Button mt="auto" onClick={() => setShowConfirm(true)}>
         Edit Nomination
       </Button>

@@ -59,7 +59,7 @@ export const UserProfileDetails = ({
           top="0px"
           right="0px"
         />
-        <ProfilePicture imageSrc={userData?.pfpImageId} address={userData?.address} />
+        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700">

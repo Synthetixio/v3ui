@@ -47,7 +47,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             Nominee:
           </Text>
           <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
-            <ProfilePicture imageSrc={data?.pfpImageId} address={activeWallet?.address} />
+            <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
                 {data?.username ? data.username : 'No Username'}

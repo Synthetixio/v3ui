@@ -49,7 +49,7 @@ export default function EditNominationConfirmation({
         p="2"
         mt="3"
       >
-        <ProfilePicture userData={user} />
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
             {user?.ens || shortAddress(user?.address)}
