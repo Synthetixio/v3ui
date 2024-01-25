@@ -2,11 +2,10 @@ import { Box, Flex, Hide, Image, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
-import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import { MyVotes } from './MyVotes';
+import { MyVotesSummary } from '../MyVotesSummary';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import Blockies from 'react-blockies';
@@ -14,7 +13,6 @@ import '../UserProfileCard/UserProfileCard.css';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-  const { data: votes } = useGetVotingCandidates();
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
   const votedNomineesData = [
     useGetUserBallot('spartan'),
@@ -67,12 +65,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
         >
           {/* If on my votes page, spartan council is active by default for navigation */}
           <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
-          <MyVotes
-            isLoading={isLoading}
-            councilPeriod={councilPeriod}
-            schedule={schedule}
-            votes={votes}
-          />
+          <MyVotesSummary isLoading={isLoading} councilPeriod={councilPeriod} schedule={schedule} />
         </Flex>
       </Hide>
       <Show above="lg">
@@ -137,11 +130,10 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                 )}
               </Flex>
             ))}
-            <MyVotes
+            <MyVotesSummary
               isLoading={isLoading}
               councilPeriod={councilPeriod}
               schedule={schedule}
-              votes={votes}
             />
           </Flex>
         </Flex>

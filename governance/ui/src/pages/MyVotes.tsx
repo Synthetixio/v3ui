@@ -14,6 +14,8 @@ import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
+import useGetUserVotingPower from '../queries/useGetUserVotingPower';
+import { formatNumber } from '@snx-v3/formatters';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
@@ -31,6 +33,7 @@ export default function MyVotes() {
     // useGetUserBallot('ambassador'),
     // useGetUserBallot('treasury'),
   ];
+  const { data: votingPower } = useGetUserVotingPower('spartan');
 
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
@@ -243,7 +246,7 @@ export default function MyVotes() {
                 Total Voting Power
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold">
-                8923748923,2390487239 TODO
+                {formatNumber(votingPower)}
               </Text>
             </Flex>
             <Button

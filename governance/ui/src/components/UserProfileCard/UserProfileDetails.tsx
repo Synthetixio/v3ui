@@ -7,8 +7,8 @@ import { Socials } from '../Socials';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { useVoteContext } from '../../context/VoteContext';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -27,8 +27,8 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const { dispatch } = useVoteContext();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [removeOrSelect, setRemoveOrSelect] = useState(
     JSON.parse(localStorage.getItem('voteSelection') || '')?.[activeCouncil]?.toLowerCase() ===
       userData?.address.toLowerCase()
@@ -161,20 +161,25 @@ export const UserProfileDetails = ({
           <Button
             w="100%"
             onClick={() => {
-              if (userData?.address) {
-                const selection = localStorage.getItem('voteSelection');
-                if (!selection) localStorage.setItem('voteSelection', '');
-                const parsedSelection = JSON.parse(selection ? selection : '{}');
-                parsedSelection[activeCouncil] =
-                  parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-                    ? ''
-                    : userData.address;
-                localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-                queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
-                setRemoveOrSelect(
-                  parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-                );
-              }
+              dispatch({
+                type: activeCouncil.toUpperCase(),
+                payload: userData?.address || '',
+              });
+
+              // if (userData?.address) {
+              //   const selection = localStorage.getItem('voteSelection');
+              //   if (!selection) localStorage.setItem('voteSelection', '');
+              //   const parsedSelection = JSON.parse(selection ? selection : '{}');
+              //   parsedSelection[activeCouncil] =
+              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+              //       ? ''
+              //       : userData.address;
+              //   localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+              //   queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
+              //   setRemoveOrSelect(
+              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+              //   );
+              // }
             }}
           >
             {removeOrSelect ? 'Remove ' : 'Select '}

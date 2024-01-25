@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import Blockies from 'react-blockies';
 
-export default function ShoppingCart({
+export default function MyVotesBox({
   closeCart,
   votes,
 }: {
   closeCart: () => void;
-  votes?: Record<string, string>;
+  votes?: Record<string, string | undefined>;
 }) {
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
@@ -50,7 +50,9 @@ export default function ShoppingCart({
       >
         <Flex justifyContent="space-between" px="6" pb="4">
           <Heading fontSize="large">My Votes</Heading>
-          <Heading fontSize="large">{Object.values(!!votes ? votes : {}).length}/4</Heading>
+          <Heading fontSize="large">
+            {Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/4
+          </Heading>
         </Flex>
         {councils.map((council) => (
           <Flex
@@ -143,7 +145,7 @@ export default function ShoppingCart({
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            navigate('my-votes');
+            navigate('/my-votes');
           }}
           mx="6"
           mt="4"

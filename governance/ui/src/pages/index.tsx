@@ -14,6 +14,7 @@ import { Layout } from '../components/Layout';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from '../utils/onboard';
 import './index.css';
+import { VoteProvider } from '../context/VoteContext';
 
 const router = createHashRouter([
   {
@@ -69,7 +70,9 @@ root.render(
           <ChakraProvider theme={customTheme}>
             <ReactQueryDevtools initialIsOpen={false} />
             <Fonts />
-            <RouterProvider router={router} />
+            <VoteProvider>
+              <RouterProvider router={router} />
+            </VoteProvider>
           </ChakraProvider>
         </QueryClientProvider>
       </RecoilRoot>
