@@ -1,7 +1,7 @@
 {
   "sepolia": {
     "Spartan-Old": {
-      "address": "",
+      "address": "0x0000000000000000000000000000000000000000",
       "startBlock": 5141719
     },
     "Spartan": {
@@ -9,7 +9,7 @@
       "startBlock": 5141719
     },
     "Ambassador-Old": {
-      "address": "",
+      "address": "0x0000000000000000000000000000000000000000",
       "startBlock": 5141719
     },
     "Ambassador": {
@@ -17,7 +17,7 @@
       "startBlock": 5141719
     },
     "Grants-Old": {
-      "address": "",
+      "address": "0x0000000000000000000000000000000000000000",
       "startBlock": 5141719
     },
     "Grants": {
@@ -25,46 +25,12 @@
       "startBlock": 5141719
     },
     "Treasury-Old": {
-      "address": "",
+      "address": "0x0000000000000000000000000000000000000000",
       "startBlock": 5141719
     },
     "Treasury": {
       "address": "0x01fa5a659da52fa0ae26bc60698b2760b745d910",
       "startBlock": 5141719
-    }
-  },
-  "optimism-goerli": {
-    "Spartan-Old": {
-      "address": "",
-      "startBlock": 0
-    },
-    "Spartan": {
-      "address": "0xDAA5A8bFDEBcA03cCAF0d5285265A7d7Fbb42e15",
-      "startBlock": 0
-    },
-    "Ambassador-Old": {
-      "address": "",
-      "startBlock": 0
-    },
-    "Ambassador": {
-      "address": "0x9abCc1d560C1af4Cf8a84D80AE5E35a24C1f38FA",
-      "startBlock": 0
-    },
-    "Grants-Old": {
-      "address": "",
-      "startBlock": 0
-    },
-    "Grants": {
-      "address": "0x8A3bA910172c4b77BF4c52d04bA1a59b963700ec",
-      "startBlock": 0
-    },
-    "Treasury-Old": {
-      "address": "",
-      "startBlock": 0
-    },
-    "Treasury": {
-      "address": "0x01fa5a659da52fa0ae26bc60698b2760b745d910",
-      "startBlock": 0
     }
   },
   "optimism": {
