@@ -1,0 +1,244 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Spartan
+    network: optimism
+    source:
+      abi: ElectionModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Ambassador
+    network: optimism
+    source:
+      abi: ElectionModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Grants
+    network: optimism
+    source:
+      abi: ElectionModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Treasury
+    network: optimism
+    source:
+      abi: ElectionModule
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum/contract
+    name: Spartan-Old
+    network: optimism
+    source:
+      abi: ElectionModuleOld
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VoteRecorded
+      abis:
+        - name: ElectionModuleOld
+          file: ./abis/ElectionModuleOld.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
+        - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteRecordedOld
+        - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteWithdrawnOld
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAddedOld
+        - event: CouncilMembersDismissed(address[],indexed uint256)
+          handler: handleCouncilMembersDismissedOld
+      file: ./src/election-module.ts
+  - kind: ethereum/contract
+    name: Ambassador-Old
+    network: optimism
+    source:
+      abi: ElectionModuleOld
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VoteRecorded
+      abis:
+        - name: ElectionModuleOld
+          file: ./abis/ElectionModuleOld.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
+        - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteRecordedOld
+        - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteWithdrawnOld
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAddedOld
+        - event: CouncilMembersDismissed(address[],indexed uint256)
+          handler: handleCouncilMembersDismissedOld
+      file: ./src/election-module.ts
+  - kind: ethereum/contract
+    name: Grants-Old
+    network: optimism
+    source:
+      abi: ElectionModuleOld
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VoteRecorded
+      abis:
+        - name: ElectionModuleOld
+          file: ./abis/ElectionModuleOld.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
+        - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteRecordedOld
+        - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteWithdrawnOld
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAddedOld
+        - event: CouncilMembersDismissed(address[],indexed uint256)
+          handler: handleCouncilMembersDismissedOld
+      file: ./src/election-module.ts
+  - kind: ethereum/contract
+    name: Treasury-Old
+    network: optimism
+    source:
+      abi: ElectionModuleOld
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VoteRecorded
+      abis:
+        - name: ElectionModuleOld
+          file: ./abis/ElectionModuleOld.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominatedOld
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawnOld
+        - event: VoteRecorded(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteRecordedOld
+        - event: VoteWithdrawn(indexed address,indexed bytes32,indexed uint256,uint256)
+          handler: handleVoteWithdrawnOld
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAddedOld
+        - event: CouncilMembersDismissed(address[],indexed uint256)
+          handler: handleCouncilMembersDismissedOld
+      file: ./src/election-module.ts

@@ -3,11 +3,14 @@
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
-    "build": "graph build",
-    "build:optimism-goerli": "npm run codegen  && graph build --output-dir ./build/optimism-goerli --network optimism-goerli",
-    "deploy:optimism-goerli": "graph deploy --output-dir ./build/optimism-goerli --network optimism-goerli synthetixio-governance-subgraph-optimism-goerli --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz",
-    "build:optimism": "npm run codegen  && graph build --output-dir ./build/optimism --network optimism",
-    "deploy:optimism": "graph deploy --output-dir ./build/optimism --network optimism synthetixio-governance-subgraph --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz --output-dir ./build/optimism --network optimism",
+    "build": "yarn copy:manifest && graph build",
+    "copy:manifest": "cp subgraph.base.yaml ./subgraph.yaml",
+    "build:optimism-goerli": "yarn copy:manifest && npm run codegen  && graph build --output-dir ./build/optimism-goerli --network optimism-goerli",
+    "deploy:optimism-goerli": "yarn copy:manifest &&  graph deploy --output-dir ./build/optimism-goerli --network optimism-goerli synthetixio-governance-subgraph-optimism-goerli --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz",
+    "build:optimism": "yarn copy:manifest &&  npm run codegen  && graph build --output-dir ./build/optimism --network optimism",
+    "deploy:optimism": "yarn copy:manifest &&  graph deploy --output-dir ./build/optimism --network optimism synthetixio-governance-subgraph --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz --output-dir ./build/optimism --network optimism",
+    "build:sepolia": "yarn copy:manifest &&  npm run codegen  && graph build --output-dir ./build/sepolia --network sepolia",
+    "deploy:sepolia": "yarn copy:manifest && graph deploy --output-dir ./build/sepolia --network sepolia synthetixio-governance-subgraph-sepolia --version-label v0.0.1 --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key ${SUBGRAPH_KEY} --ipfs https://ipfs.satsuma.xyz",
     "test": "graph test"
   },
   "dependencies": {
