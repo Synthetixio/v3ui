@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Spartan
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModule
       address: "0xDAA5A8bFDEBcA03cCAF0d5285265A7d7Fbb42e15"
-      startBlock: 45154163
+      startBlock: 115332259
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -38,11 +38,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum
     name: Ambassador
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModule
       address: "0x9abCc1d560C1af4Cf8a84D80AE5E35a24C1f38FA"
-      startBlock: 45154163
+      startBlock: 115332259
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -72,11 +72,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum
     name: Grants
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModule
       address: "0x8A3bA910172c4b77BF4c52d04bA1a59b963700ec"
-      startBlock: 45154163
+      startBlock: 115332259
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -106,11 +106,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum
     name: Treasury
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModule
-      address: "0x01fa5a659da52fa0ae26bc60698b2760b745d910"
-      startBlock: 45154163
+      address: "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a"
+      startBlock: 115332259
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -140,11 +140,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Spartan-Old
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModuleOld
-      address: ""
-      startBlock: 45154163
+      address: "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c"
+      startBlock: 113442424
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -170,11 +170,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Ambassador-Old
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModuleOld
-      address: ""
-      startBlock: 45154163
+      address: "0x37fAc8c146889333734015B0C942b620aCfeeff8"
+      startBlock: 113442424
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -200,11 +200,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Grants-Old
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModuleOld
-      address: ""
-      startBlock: 45154163
+      address: "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77"
+      startBlock: 113442424
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -230,11 +230,11 @@ dataSources:
       file: ./src/election-module.ts
   - kind: ethereum/contract
     name: Treasury-Old
-    network: polygon-mumbai
+    network: optimism
     source:
       abi: ElectionModuleOld
-      address: ""
-      startBlock: 45154163
+      address: "0x37fAc8c146889333734015B0C942b620aCfeeff8"
+      startBlock: 113442424
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

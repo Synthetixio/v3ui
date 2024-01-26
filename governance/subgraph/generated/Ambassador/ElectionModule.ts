@@ -10,6 +10,54 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class AssociatedSystemSet extends ethereum.Event {
+  get params(): AssociatedSystemSet__Params {
+    return new AssociatedSystemSet__Params(this);
+  }
+}
+
+export class AssociatedSystemSet__Params {
+  _event: AssociatedSystemSet;
+
+  constructor(event: AssociatedSystemSet) {
+    this._event = event;
+  }
+
+  get kind(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get id(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
+  get proxy(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get impl(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+}
+
+export class NewSupportedCrossChainNetwork extends ethereum.Event {
+  get params(): NewSupportedCrossChainNetwork__Params {
+    return new NewSupportedCrossChainNetwork__Params(this);
+  }
+}
+
+export class NewSupportedCrossChainNetwork__Params {
+  _event: NewSupportedCrossChainNetwork;
+
+  constructor(event: NewSupportedCrossChainNetwork) {
+    this._event = event;
+  }
+
+  get newChainId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class CandidateNominated extends ethereum.Event {
   get params(): CandidateNominated__Params {
     return new CandidateNominated__Params(this);
@@ -278,6 +326,123 @@ export class VoteRecorded__Params {
   }
 }
 
+export class VoteWithdrawn extends ethereum.Event {
+  get params(): VoteWithdrawn__Params {
+    return new VoteWithdrawn__Params(this);
+  }
+}
+
+export class VoteWithdrawn__Params {
+  _event: VoteWithdrawn;
+
+  constructor(event: VoteWithdrawn) {
+    this._event = event;
+  }
+
+  get voter(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get chainId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get epochId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get candidates(): Array<Address> {
+    return this._event.parameters[3].value.toAddressArray();
+  }
+}
+
+export class OwnerChanged extends ethereum.Event {
+  get params(): OwnerChanged__Params {
+    return new OwnerChanged__Params(this);
+  }
+}
+
+export class OwnerChanged__Params {
+  _event: OwnerChanged;
+
+  constructor(event: OwnerChanged) {
+    this._event = event;
+  }
+
+  get oldOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newOwner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class OwnerNominated extends ethereum.Event {
+  get params(): OwnerNominated__Params {
+    return new OwnerNominated__Params(this);
+  }
+}
+
+export class OwnerNominated__Params {
+  _event: OwnerNominated;
+
+  constructor(event: OwnerNominated) {
+    this._event = event;
+  }
+
+  get newOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class Upgraded extends ethereum.Event {
+  get params(): Upgraded__Params {
+    return new Upgraded__Params(this);
+  }
+}
+
+export class Upgraded__Params {
+  _event: Upgraded;
+
+  constructor(event: Upgraded) {
+    this._event = event;
+  }
+
+  get self(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get implementation(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class ElectionModule__getAssociatedSystemResult {
+  value0: Address;
+  value1: Bytes;
+
+  constructor(value0: Address, value1: Bytes) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromFixedBytes(this.value1));
+    return map;
+  }
+
+  getAddr(): Address {
+    return this.value0;
+  }
+
+  getKind(): Bytes {
+    return this.value1;
+  }
+}
+
 export class ElectionModule__getBallotResultValue0Struct extends ethereum.Tuple {
   get votingPower(): BigInt {
     return this[0].toBigInt();
@@ -365,6 +530,321 @@ export class ElectionModule__getNextElectionSettingsResultSettingsStruct extends
 export class ElectionModule extends ethereum.SmartContract {
   static bind(address: Address): ElectionModule {
     return new ElectionModule("ElectionModule", address);
+  }
+
+  getAssociatedSystem(id: Bytes): ElectionModule__getAssociatedSystemResult {
+    let result = super.call(
+      "getAssociatedSystem",
+      "getAssociatedSystem(bytes32):(address,bytes32)",
+      [ethereum.Value.fromFixedBytes(id)]
+    );
+
+    return new ElectionModule__getAssociatedSystemResult(
+      result[0].toAddress(),
+      result[1].toBytes()
+    );
+  }
+
+  try_getAssociatedSystem(
+    id: Bytes
+  ): ethereum.CallResult<ElectionModule__getAssociatedSystemResult> {
+    let result = super.tryCall(
+      "getAssociatedSystem",
+      "getAssociatedSystem(bytes32):(address,bytes32)",
+      [ethereum.Value.fromFixedBytes(id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ElectionModule__getAssociatedSystemResult(
+        value[0].toAddress(),
+        value[1].toBytes()
+      )
+    );
+  }
+
+  setSupportedCrossChainNetworks(
+    supportedNetworks: Array<BigInt>,
+    ccipSelectors: Array<BigInt>
+  ): BigInt {
+    let result = super.call(
+      "setSupportedCrossChainNetworks",
+      "setSupportedCrossChainNetworks(uint64[],uint64[]):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigIntArray(supportedNetworks),
+        ethereum.Value.fromUnsignedBigIntArray(ccipSelectors)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_setSupportedCrossChainNetworks(
+    supportedNetworks: Array<BigInt>,
+    ccipSelectors: Array<BigInt>
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "setSupportedCrossChainNetworks",
+      "setSupportedCrossChainNetworks(uint64[],uint64[]):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigIntArray(supportedNetworks),
+        ethereum.Value.fromUnsignedBigIntArray(ccipSelectors)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getCandidateVotesInEpoch(candidate: Address, epochIndex: BigInt): BigInt {
+    let result = super.call(
+      "getCandidateVotesInEpoch",
+      "getCandidateVotesInEpoch(address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(candidate),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getCandidateVotesInEpoch(
+    candidate: Address,
+    epochIndex: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getCandidateVotesInEpoch",
+      "getCandidateVotesInEpoch(address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(candidate),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getElectionWinnersInEpoch(epochIndex: BigInt): Array<Address> {
+    let result = super.call(
+      "getElectionWinnersInEpoch",
+      "getElectionWinnersInEpoch(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getElectionWinnersInEpoch(
+    epochIndex: BigInt
+  ): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getElectionWinnersInEpoch",
+      "getElectionWinnersInEpoch(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
+  getEpochEndDateForIndex(epochIndex: BigInt): BigInt {
+    let result = super.call(
+      "getEpochEndDateForIndex",
+      "getEpochEndDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getEpochEndDateForIndex(epochIndex: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getEpochEndDateForIndex",
+      "getEpochEndDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getEpochStartDateForIndex(epochIndex: BigInt): BigInt {
+    let result = super.call(
+      "getEpochStartDateForIndex",
+      "getEpochStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getEpochStartDateForIndex(
+    epochIndex: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getEpochStartDateForIndex",
+      "getEpochStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getNominationPeriodStartDateForIndex(epochIndex: BigInt): BigInt {
+    let result = super.call(
+      "getNominationPeriodStartDateForIndex",
+      "getNominationPeriodStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getNominationPeriodStartDateForIndex(
+    epochIndex: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getNominationPeriodStartDateForIndex",
+      "getNominationPeriodStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getNomineesAtEpoch(epochIndex: BigInt): Array<Address> {
+    let result = super.call(
+      "getNomineesAtEpoch",
+      "getNomineesAtEpoch(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getNomineesAtEpoch(
+    epochIndex: BigInt
+  ): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getNomineesAtEpoch",
+      "getNomineesAtEpoch(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
+  getVotingPeriodStartDateForIndex(epochIndex: BigInt): BigInt {
+    let result = super.call(
+      "getVotingPeriodStartDateForIndex",
+      "getVotingPeriodStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getVotingPeriodStartDateForIndex(
+    epochIndex: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getVotingPeriodStartDateForIndex",
+      "getVotingPeriodStartDateForIndex(uint256):(uint64)",
+      [ethereum.Value.fromUnsignedBigInt(epochIndex)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  hasVotedInEpoch(user: Address, chainId: BigInt, epochIndex: BigInt): boolean {
+    let result = super.call(
+      "hasVotedInEpoch",
+      "hasVotedInEpoch(address,uint256,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(user),
+        ethereum.Value.fromUnsignedBigInt(chainId),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_hasVotedInEpoch(
+    user: Address,
+    chainId: BigInt,
+    epochIndex: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "hasVotedInEpoch",
+      "hasVotedInEpoch(address,uint256,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(user),
+        ethereum.Value.fromUnsignedBigInt(chainId),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  wasNominated(candidate: Address, epochIndex: BigInt): boolean {
+    let result = super.call(
+      "wasNominated",
+      "wasNominated(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(candidate),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_wasNominated(
+    candidate: Address,
+    epochIndex: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "wasNominated",
+      "wasNominated(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(candidate),
+        ethereum.Value.fromUnsignedBigInt(epochIndex)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   getBallot(
@@ -813,6 +1293,349 @@ export class ElectionModule extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
+
+  getVotePowerSnapshotId(
+    snapshotContract: Address,
+    electionId: BigInt
+  ): BigInt {
+    let result = super.call(
+      "getVotePowerSnapshotId",
+      "getVotePowerSnapshotId(address,uint128):(uint128)",
+      [
+        ethereum.Value.fromAddress(snapshotContract),
+        ethereum.Value.fromUnsignedBigInt(electionId)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getVotePowerSnapshotId(
+    snapshotContract: Address,
+    electionId: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getVotePowerSnapshotId",
+      "getVotePowerSnapshotId(address,uint128):(uint128)",
+      [
+        ethereum.Value.fromAddress(snapshotContract),
+        ethereum.Value.fromUnsignedBigInt(electionId)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  prepareBallotWithSnapshot(snapshotContract: Address, voter: Address): BigInt {
+    let result = super.call(
+      "prepareBallotWithSnapshot",
+      "prepareBallotWithSnapshot(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(snapshotContract),
+        ethereum.Value.fromAddress(voter)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_prepareBallotWithSnapshot(
+    snapshotContract: Address,
+    voter: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "prepareBallotWithSnapshot",
+      "prepareBallotWithSnapshot(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(snapshotContract),
+        ethereum.Value.fromAddress(voter)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  takeVotePowerSnapshot(snapshotContract: Address): BigInt {
+    let result = super.call(
+      "takeVotePowerSnapshot",
+      "takeVotePowerSnapshot(address):(uint128)",
+      [ethereum.Value.fromAddress(snapshotContract)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_takeVotePowerSnapshot(
+    snapshotContract: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "takeVotePowerSnapshot",
+      "takeVotePowerSnapshot(address):(uint128)",
+      [ethereum.Value.fromAddress(snapshotContract)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getImplementation(): Address {
+    let result = super.call(
+      "getImplementation",
+      "getImplementation():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getImplementation(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getImplementation",
+      "getImplementation():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  nominatedOwner(): Address {
+    let result = super.call("nominatedOwner", "nominatedOwner():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_nominatedOwner(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "nominatedOwner",
+      "nominatedOwner():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  owner(): Address {
+    let result = super.call("owner", "owner():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_owner(): ethereum.CallResult<Address> {
+    let result = super.tryCall("owner", "owner():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+}
+
+export class InitOrUpgradeNftCall extends ethereum.Call {
+  get inputs(): InitOrUpgradeNftCall__Inputs {
+    return new InitOrUpgradeNftCall__Inputs(this);
+  }
+
+  get outputs(): InitOrUpgradeNftCall__Outputs {
+    return new InitOrUpgradeNftCall__Outputs(this);
+  }
+}
+
+export class InitOrUpgradeNftCall__Inputs {
+  _call: InitOrUpgradeNftCall;
+
+  constructor(call: InitOrUpgradeNftCall) {
+    this._call = call;
+  }
+
+  get id(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get name(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get symbol(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
+  get uri(): string {
+    return this._call.inputValues[3].value.toString();
+  }
+
+  get impl(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+}
+
+export class InitOrUpgradeNftCall__Outputs {
+  _call: InitOrUpgradeNftCall;
+
+  constructor(call: InitOrUpgradeNftCall) {
+    this._call = call;
+  }
+}
+
+export class InitOrUpgradeTokenCall extends ethereum.Call {
+  get inputs(): InitOrUpgradeTokenCall__Inputs {
+    return new InitOrUpgradeTokenCall__Inputs(this);
+  }
+
+  get outputs(): InitOrUpgradeTokenCall__Outputs {
+    return new InitOrUpgradeTokenCall__Outputs(this);
+  }
+}
+
+export class InitOrUpgradeTokenCall__Inputs {
+  _call: InitOrUpgradeTokenCall;
+
+  constructor(call: InitOrUpgradeTokenCall) {
+    this._call = call;
+  }
+
+  get id(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get name(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get symbol(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
+  get decimals(): i32 {
+    return this._call.inputValues[3].value.toI32();
+  }
+
+  get impl(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+}
+
+export class InitOrUpgradeTokenCall__Outputs {
+  _call: InitOrUpgradeTokenCall;
+
+  constructor(call: InitOrUpgradeTokenCall) {
+    this._call = call;
+  }
+}
+
+export class RegisterUnmanagedSystemCall extends ethereum.Call {
+  get inputs(): RegisterUnmanagedSystemCall__Inputs {
+    return new RegisterUnmanagedSystemCall__Inputs(this);
+  }
+
+  get outputs(): RegisterUnmanagedSystemCall__Outputs {
+    return new RegisterUnmanagedSystemCall__Outputs(this);
+  }
+}
+
+export class RegisterUnmanagedSystemCall__Inputs {
+  _call: RegisterUnmanagedSystemCall;
+
+  constructor(call: RegisterUnmanagedSystemCall) {
+    this._call = call;
+  }
+
+  get id(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get endpoint(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class RegisterUnmanagedSystemCall__Outputs {
+  _call: RegisterUnmanagedSystemCall;
+
+  constructor(call: RegisterUnmanagedSystemCall) {
+    this._call = call;
+  }
+}
+
+export class ConfigureChainlinkCrossChainCall extends ethereum.Call {
+  get inputs(): ConfigureChainlinkCrossChainCall__Inputs {
+    return new ConfigureChainlinkCrossChainCall__Inputs(this);
+  }
+
+  get outputs(): ConfigureChainlinkCrossChainCall__Outputs {
+    return new ConfigureChainlinkCrossChainCall__Outputs(this);
+  }
+}
+
+export class ConfigureChainlinkCrossChainCall__Inputs {
+  _call: ConfigureChainlinkCrossChainCall;
+
+  constructor(call: ConfigureChainlinkCrossChainCall) {
+    this._call = call;
+  }
+
+  get ccipRouter(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class ConfigureChainlinkCrossChainCall__Outputs {
+  _call: ConfigureChainlinkCrossChainCall;
+
+  constructor(call: ConfigureChainlinkCrossChainCall) {
+    this._call = call;
+  }
+}
+
+export class SetSupportedCrossChainNetworksCall extends ethereum.Call {
+  get inputs(): SetSupportedCrossChainNetworksCall__Inputs {
+    return new SetSupportedCrossChainNetworksCall__Inputs(this);
+  }
+
+  get outputs(): SetSupportedCrossChainNetworksCall__Outputs {
+    return new SetSupportedCrossChainNetworksCall__Outputs(this);
+  }
+}
+
+export class SetSupportedCrossChainNetworksCall__Inputs {
+  _call: SetSupportedCrossChainNetworksCall;
+
+  constructor(call: SetSupportedCrossChainNetworksCall) {
+    this._call = call;
+  }
+
+  get supportedNetworks(): Array<BigInt> {
+    return this._call.inputValues[0].value.toBigIntArray();
+  }
+
+  get ccipSelectors(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
+  }
+}
+
+export class SetSupportedCrossChainNetworksCall__Outputs {
+  _call: SetSupportedCrossChainNetworksCall;
+
+  constructor(call: SetSupportedCrossChainNetworksCall) {
+    this._call = call;
+  }
+
+  get numRegistered(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
 }
 
 export class _recvCastCall extends ethereum.Call {
@@ -895,56 +1718,6 @@ export class _recvDismissMembersCall__Outputs {
   _call: _recvDismissMembersCall;
 
   constructor(call: _recvDismissMembersCall) {
-    this._call = call;
-  }
-}
-
-export class _recvInitElectionModuleSatelliteCall extends ethereum.Call {
-  get inputs(): _recvInitElectionModuleSatelliteCall__Inputs {
-    return new _recvInitElectionModuleSatelliteCall__Inputs(this);
-  }
-
-  get outputs(): _recvInitElectionModuleSatelliteCall__Outputs {
-    return new _recvInitElectionModuleSatelliteCall__Outputs(this);
-  }
-}
-
-export class _recvInitElectionModuleSatelliteCall__Inputs {
-  _call: _recvInitElectionModuleSatelliteCall;
-
-  constructor(call: _recvInitElectionModuleSatelliteCall) {
-    this._call = call;
-  }
-
-  get epochIndex(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get epochStartDate(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get nominationPeriodStartDate(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get votingPeriodStartDate(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get epochEndDate(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-
-  get councilMembers(): Array<Address> {
-    return this._call.inputValues[5].value.toAddressArray();
-  }
-}
-
-export class _recvInitElectionModuleSatelliteCall__Outputs {
-  _call: _recvInitElectionModuleSatelliteCall;
-
-  constructor(call: _recvInitElectionModuleSatelliteCall) {
     this._call = call;
   }
 }
@@ -1037,6 +1810,48 @@ export class _recvTweakEpochScheduleCall__Outputs {
   _call: _recvTweakEpochScheduleCall;
 
   constructor(call: _recvTweakEpochScheduleCall) {
+    this._call = call;
+  }
+}
+
+export class _recvWithdrawVoteCall extends ethereum.Call {
+  get inputs(): _recvWithdrawVoteCall__Inputs {
+    return new _recvWithdrawVoteCall__Inputs(this);
+  }
+
+  get outputs(): _recvWithdrawVoteCall__Outputs {
+    return new _recvWithdrawVoteCall__Outputs(this);
+  }
+}
+
+export class _recvWithdrawVoteCall__Inputs {
+  _call: _recvWithdrawVoteCall;
+
+  constructor(call: _recvWithdrawVoteCall) {
+    this._call = call;
+  }
+
+  get epochIndex(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get voter(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get chainId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get candidates(): Array<Address> {
+    return this._call.inputValues[3].value.toAddressArray();
+  }
+}
+
+export class _recvWithdrawVoteCall__Outputs {
+  _call: _recvWithdrawVoteCall;
+
+  constructor(call: _recvWithdrawVoteCall) {
     this._call = call;
   }
 }
@@ -1152,8 +1967,28 @@ export class InitElectionModuleSatelliteCall__Inputs {
     this._call = call;
   }
 
-  get chainId(): BigInt {
+  get epochIndex(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get epochStartDate(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get nominationPeriodStartDate(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get votingPeriodStartDate(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get epochEndDate(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get councilMembers(): Array<Address> {
+    return this._call.inputValues[5].value.toAddressArray();
   }
 }
 
@@ -1161,6 +1996,32 @@ export class InitElectionModuleSatelliteCall__Outputs {
   _call: InitElectionModuleSatelliteCall;
 
   constructor(call: InitElectionModuleSatelliteCall) {
+    this._call = call;
+  }
+}
+
+export class InitElectionModuleSatellite1Call extends ethereum.Call {
+  get inputs(): InitElectionModuleSatellite1Call__Inputs {
+    return new InitElectionModuleSatellite1Call__Inputs(this);
+  }
+
+  get outputs(): InitElectionModuleSatellite1Call__Outputs {
+    return new InitElectionModuleSatellite1Call__Outputs(this);
+  }
+}
+
+export class InitElectionModuleSatellite1Call__Inputs {
+  _call: InitElectionModuleSatellite1Call;
+
+  constructor(call: InitElectionModuleSatellite1Call) {
+    this._call = call;
+  }
+}
+
+export class InitElectionModuleSatellite1Call__Outputs {
+  _call: InitElectionModuleSatellite1Call;
+
+  constructor(call: InitElectionModuleSatellite1Call) {
     this._call = call;
   }
 }
@@ -1378,5 +2239,347 @@ export class WithdrawNominationCall__Outputs {
 
   constructor(call: WithdrawNominationCall) {
     this._call = call;
+  }
+}
+
+export class WithdrawVoteCall extends ethereum.Call {
+  get inputs(): WithdrawVoteCall__Inputs {
+    return new WithdrawVoteCall__Inputs(this);
+  }
+
+  get outputs(): WithdrawVoteCall__Outputs {
+    return new WithdrawVoteCall__Outputs(this);
+  }
+}
+
+export class WithdrawVoteCall__Inputs {
+  _call: WithdrawVoteCall;
+
+  constructor(call: WithdrawVoteCall) {
+    this._call = call;
+  }
+
+  get candidates(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
+  }
+}
+
+export class WithdrawVoteCall__Outputs {
+  _call: WithdrawVoteCall;
+
+  constructor(call: WithdrawVoteCall) {
+    this._call = call;
+  }
+}
+
+export class PrepareBallotWithSnapshotCall extends ethereum.Call {
+  get inputs(): PrepareBallotWithSnapshotCall__Inputs {
+    return new PrepareBallotWithSnapshotCall__Inputs(this);
+  }
+
+  get outputs(): PrepareBallotWithSnapshotCall__Outputs {
+    return new PrepareBallotWithSnapshotCall__Outputs(this);
+  }
+}
+
+export class PrepareBallotWithSnapshotCall__Inputs {
+  _call: PrepareBallotWithSnapshotCall;
+
+  constructor(call: PrepareBallotWithSnapshotCall) {
+    this._call = call;
+  }
+
+  get snapshotContract(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get voter(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class PrepareBallotWithSnapshotCall__Outputs {
+  _call: PrepareBallotWithSnapshotCall;
+
+  constructor(call: PrepareBallotWithSnapshotCall) {
+    this._call = call;
+  }
+
+  get power(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class SetSnapshotContractCall extends ethereum.Call {
+  get inputs(): SetSnapshotContractCall__Inputs {
+    return new SetSnapshotContractCall__Inputs(this);
+  }
+
+  get outputs(): SetSnapshotContractCall__Outputs {
+    return new SetSnapshotContractCall__Outputs(this);
+  }
+}
+
+export class SetSnapshotContractCall__Inputs {
+  _call: SetSnapshotContractCall;
+
+  constructor(call: SetSnapshotContractCall) {
+    this._call = call;
+  }
+
+  get snapshotContract(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get enabled(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class SetSnapshotContractCall__Outputs {
+  _call: SetSnapshotContractCall;
+
+  constructor(call: SetSnapshotContractCall) {
+    this._call = call;
+  }
+}
+
+export class TakeVotePowerSnapshotCall extends ethereum.Call {
+  get inputs(): TakeVotePowerSnapshotCall__Inputs {
+    return new TakeVotePowerSnapshotCall__Inputs(this);
+  }
+
+  get outputs(): TakeVotePowerSnapshotCall__Outputs {
+    return new TakeVotePowerSnapshotCall__Outputs(this);
+  }
+}
+
+export class TakeVotePowerSnapshotCall__Inputs {
+  _call: TakeVotePowerSnapshotCall;
+
+  constructor(call: TakeVotePowerSnapshotCall) {
+    this._call = call;
+  }
+
+  get snapshotContract(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class TakeVotePowerSnapshotCall__Outputs {
+  _call: TakeVotePowerSnapshotCall;
+
+  constructor(call: TakeVotePowerSnapshotCall) {
+    this._call = call;
+  }
+
+  get snapshotId(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class AcceptOwnershipCall extends ethereum.Call {
+  get inputs(): AcceptOwnershipCall__Inputs {
+    return new AcceptOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): AcceptOwnershipCall__Outputs {
+    return new AcceptOwnershipCall__Outputs(this);
+  }
+}
+
+export class AcceptOwnershipCall__Inputs {
+  _call: AcceptOwnershipCall;
+
+  constructor(call: AcceptOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class AcceptOwnershipCall__Outputs {
+  _call: AcceptOwnershipCall;
+
+  constructor(call: AcceptOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class NominateNewOwnerCall extends ethereum.Call {
+  get inputs(): NominateNewOwnerCall__Inputs {
+    return new NominateNewOwnerCall__Inputs(this);
+  }
+
+  get outputs(): NominateNewOwnerCall__Outputs {
+    return new NominateNewOwnerCall__Outputs(this);
+  }
+}
+
+export class NominateNewOwnerCall__Inputs {
+  _call: NominateNewOwnerCall;
+
+  constructor(call: NominateNewOwnerCall) {
+    this._call = call;
+  }
+
+  get newNominatedOwner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class NominateNewOwnerCall__Outputs {
+  _call: NominateNewOwnerCall;
+
+  constructor(call: NominateNewOwnerCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceNominationCall extends ethereum.Call {
+  get inputs(): RenounceNominationCall__Inputs {
+    return new RenounceNominationCall__Inputs(this);
+  }
+
+  get outputs(): RenounceNominationCall__Outputs {
+    return new RenounceNominationCall__Outputs(this);
+  }
+}
+
+export class RenounceNominationCall__Inputs {
+  _call: RenounceNominationCall;
+
+  constructor(call: RenounceNominationCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceNominationCall__Outputs {
+  _call: RenounceNominationCall;
+
+  constructor(call: RenounceNominationCall) {
+    this._call = call;
+  }
+}
+
+export class SimulateUpgradeToCall extends ethereum.Call {
+  get inputs(): SimulateUpgradeToCall__Inputs {
+    return new SimulateUpgradeToCall__Inputs(this);
+  }
+
+  get outputs(): SimulateUpgradeToCall__Outputs {
+    return new SimulateUpgradeToCall__Outputs(this);
+  }
+}
+
+export class SimulateUpgradeToCall__Inputs {
+  _call: SimulateUpgradeToCall;
+
+  constructor(call: SimulateUpgradeToCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SimulateUpgradeToCall__Outputs {
+  _call: SimulateUpgradeToCall;
+
+  constructor(call: SimulateUpgradeToCall) {
+    this._call = call;
+  }
+}
+
+export class UpgradeToCall extends ethereum.Call {
+  get inputs(): UpgradeToCall__Inputs {
+    return new UpgradeToCall__Inputs(this);
+  }
+
+  get outputs(): UpgradeToCall__Outputs {
+    return new UpgradeToCall__Outputs(this);
+  }
+}
+
+export class UpgradeToCall__Inputs {
+  _call: UpgradeToCall;
+
+  constructor(call: UpgradeToCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpgradeToCall__Outputs {
+  _call: UpgradeToCall;
+
+  constructor(call: UpgradeToCall) {
+    this._call = call;
+  }
+}
+
+export class CcipReceiveCall extends ethereum.Call {
+  get inputs(): CcipReceiveCall__Inputs {
+    return new CcipReceiveCall__Inputs(this);
+  }
+
+  get outputs(): CcipReceiveCall__Outputs {
+    return new CcipReceiveCall__Outputs(this);
+  }
+}
+
+export class CcipReceiveCall__Inputs {
+  _call: CcipReceiveCall;
+
+  constructor(call: CcipReceiveCall) {
+    this._call = call;
+  }
+
+  get message(): CcipReceiveCallMessageStruct {
+    return changetype<CcipReceiveCallMessageStruct>(
+      this._call.inputValues[0].value.toTuple()
+    );
+  }
+}
+
+export class CcipReceiveCall__Outputs {
+  _call: CcipReceiveCall;
+
+  constructor(call: CcipReceiveCall) {
+    this._call = call;
+  }
+}
+
+export class CcipReceiveCallMessageStruct extends ethereum.Tuple {
+  get messageId(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get sourceChainSelector(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get sender(): Bytes {
+    return this[2].toBytes();
+  }
+
+  get data(): Bytes {
+    return this[3].toBytes();
+  }
+
+  get tokenAmounts(): Array<CcipReceiveCallMessageTokenAmountsStruct> {
+    return this[4].toTupleArray<CcipReceiveCallMessageTokenAmountsStruct>();
+  }
+}
+
+export class CcipReceiveCallMessageTokenAmountsStruct extends ethereum.Tuple {
+  get token(): Address {
+    return this[0].toAddress();
+  }
+
+  get amount(): BigInt {
+    return this[1].toBigInt();
   }
 }
