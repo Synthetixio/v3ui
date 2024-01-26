@@ -1,280 +1,446 @@
 export const electionModuleABI = [
-  'function takeVotePowerSnapshot(address snapshotContract) external returns (uint128 snapshotId)',
-  'function prepareBallotWithSnapshot(address snapshotContract, address voter) external returns (uint256 power)',
-  'function getVotePowerSnapshotId(address snapshotContract, uint128 electionId) external view returns (uint128)',
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'expected',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'actual',
+        type: 'bytes32',
+      },
+    ],
+    name: 'MismatchAssociatedSystemKind',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+    ],
+    name: 'MissingAssociatedSystem',
+    type: 'error',
+  },
   {
     inputs: [
       {
         internalType: 'address',
-        name: 'contract',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'Unauthorized',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'kind',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'proxy',
         type: 'address',
       },
       {
+        indexed: false,
+        internalType: 'address',
+        name: 'impl',
+        type: 'address',
+      },
+    ],
+    name: 'AssociatedSystemSet',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+    ],
+    name: 'getAssociatedSystem',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'kind',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'uri',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: 'impl',
+        type: 'address',
+      },
+    ],
+    name: 'initOrUpgradeNft',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+      {
+        internalType: 'uint8',
+        name: 'decimals',
+        type: 'uint8',
+      },
+      {
+        internalType: 'address',
+        name: 'impl',
+        type: 'address',
+      },
+    ],
+    name: 'initOrUpgradeToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'address',
+        name: 'endpoint',
+        type: 'address',
+      },
+    ],
+    name: 'registerUnmanagedSystem',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'parameter',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'reason',
+        type: 'string',
+      },
+    ],
+    name: 'InvalidParameter',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'OverflowUint256ToUint64',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ValueAlreadyInSet',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'newChainId',
+        type: 'uint64',
+      },
+    ],
+    name: 'NewSupportedCrossChainNetwork',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'ccipRouter',
+        type: 'address',
+      },
+    ],
+    name: 'configureChainlinkCrossChain',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint64[]',
+        name: 'supportedNetworks',
+        type: 'uint64[]',
+      },
+      {
+        internalType: 'uint64[]',
+        name: 'ccipSelectors',
+        type: 'uint64[]',
+      },
+    ],
+    name: 'setSupportedCrossChainNetworks',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'numRegistered',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'candidate',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getCandidateVotesInEpoch',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getElectionWinnersInEpoch',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getEpochEndDateForIndex',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getEpochStartDateForIndex',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getNominationPeriodStartDateForIndex',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getNomineesAtEpoch',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'getVotingPeriodStartDateForIndex',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'chainId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'hasVotedInEpoch',
+    outputs: [
+      {
         internalType: 'bool',
-        name: 'enabled',
+        name: '',
         type: 'bool',
       },
     ],
-    name: 'setSnapshotContract',
-    stateMutability: 'external',
-    type: 'function',
-  },
-  {
-    name: 'getEpochIndex',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'index',
-        type: 'uint256',
-      },
-    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'candidate',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
-        name: '_load_epochIndex',
+        name: 'epochIndex',
         type: 'uint256',
       },
     ],
-    name: 'Epoch_getCurrentPeriod',
+    name: 'wasNominated',
     outputs: [
       {
-        internalType: 'enum Epoch.ElectionPeriod',
+        internalType: 'bool',
         name: '',
-        type: 'uint8',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint64',
-            name: 'startDate',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'nominationPeriodStartDate',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'votingPeriodStartDate',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'endDate',
-            type: 'uint64',
-          },
-        ],
-        internalType: 'struct Epoch.Data',
-        name: 'epoch',
-        type: 'tuple',
-      },
-    ],
-    name: 'Epoch_getPeriodFor',
-    outputs: [
-      {
-        internalType: 'enum Epoch.ElectionPeriod',
-        name: '',
-        type: 'uint8',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-    ],
-    name: 'Epoch_get_endDate',
-    outputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-    ],
-    name: 'Epoch_get_nominationPeriodStartDate',
-    outputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-    ],
-    name: 'Epoch_get_startDate',
-    outputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-    ],
-    name: 'Epoch_get_votingPeriodStartDate',
-    outputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'startDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'nominationPeriodStartDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'votingPeriodStartDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'endDate',
-        type: 'uint64',
-      },
-    ],
-    name: 'Epoch_setEpochDates',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'val',
-        type: 'uint64',
-      },
-    ],
-    name: 'Epoch_set_endDate',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'val',
-        type: 'uint64',
-      },
-    ],
-    name: 'Epoch_set_nominationPeriodStartDate',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'val',
-        type: 'uint64',
-      },
-    ],
-    name: 'Epoch_set_startDate',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_load_epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'val',
-        type: 'uint64',
-      },
-    ],
-    name: 'Epoch_set_votingPeriodStartDate',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -366,38 +532,6 @@ export const electionModuleABI = [
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'parameter',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'reason',
-        type: 'string',
-      },
-    ],
-    name: 'InvalidParameter',
-    type: 'error',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'expected',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'actual',
-        type: 'bytes32',
-      },
-    ],
-    name: 'MismatchAssociatedSystemKind',
-    type: 'error',
-  },
-  {
     inputs: [],
     name: 'NoCandidates',
     type: 'error',
@@ -430,12 +564,12 @@ export const electionModuleABI = [
   },
   {
     inputs: [],
-    name: 'NotNominated',
+    name: 'NotImplemented',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'OverflowUint256ToUint64',
+    name: 'NotNominated',
     type: 'error',
   },
   {
@@ -444,46 +578,8 @@ export const electionModuleABI = [
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    name: 'Test',
-    type: 'error',
-  },
-  {
     inputs: [],
     name: 'TooManyMembers',
-    type: 'error',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'addr',
-        type: 'address',
-      },
-    ],
-    name: 'Unauthorized',
-    type: 'error',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
-    name: 'UnsupportedNetwork',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'ValueAlreadyInSet',
     type: 'error',
   },
   {
@@ -714,8 +810,45 @@ export const electionModuleABI = [
         name: 'votingPower',
         type: 'uint256',
       },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
     ],
     name: 'VoteRecorded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'chainId',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'epochId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
+    ],
+    name: 'VoteWithdrawn',
     type: 'event',
   },
   {
@@ -807,44 +940,6 @@ export const electionModuleABI = [
         type: 'address[]',
       },
     ],
-    name: '_recvInitElectionModuleSatellite',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'epochIndex',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint64',
-        name: 'epochStartDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'nominationPeriodStartDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'votingPeriodStartDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'epochEndDate',
-        type: 'uint64',
-      },
-      {
-        internalType: 'address[]',
-        name: 'councilMembers',
-        type: 'address[]',
-      },
-    ],
     name: '_recvResolve',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -874,6 +969,34 @@ export const electionModuleABI = [
       },
     ],
     name: '_recvTweakEpochSchedule',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'chainId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
+    ],
+    name: '_recvWithdrawVote',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1115,6 +1238,19 @@ export const electionModuleABI = [
   },
   {
     inputs: [],
+    name: 'getEpochIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'getEpochSchedule',
     outputs: [
       {
@@ -1263,10 +1399,42 @@ export const electionModuleABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'chainId',
+        name: 'epochIndex',
         type: 'uint256',
       },
+      {
+        internalType: 'uint64',
+        name: 'epochStartDate',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint64',
+        name: 'nominationPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint64',
+        name: 'votingPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint64',
+        name: 'epochEndDate',
+        type: 'uint64',
+      },
+      {
+        internalType: 'address[]',
+        name: 'councilMembers',
+        type: 'address[]',
+      },
     ],
+    name: 'initElectionModuleSatellite',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'initElectionModuleSatellite',
     outputs: [],
     stateMutability: 'payable',
@@ -1433,6 +1601,443 @@ export const electionModuleABI = [
   {
     inputs: [],
     name: 'withdrawNomination',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
+    ],
+    name: 'withdrawVote',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'electionId',
+        type: 'uint256',
+      },
+    ],
+    name: 'BallotAlreadyPrepared',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidSnapshotContract',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'NoPower',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'OverflowUint256ToUint128',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint128',
+        name: 'snapshotId',
+        type: 'uint128',
+      },
+    ],
+    name: 'SnapshotAlreadyTaken',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'uint128',
+        name: 'electionId',
+        type: 'uint128',
+      },
+    ],
+    name: 'SnapshotNotTaken',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'uint128',
+        name: 'electionId',
+        type: 'uint128',
+      },
+    ],
+    name: 'getVotePowerSnapshotId',
+    outputs: [
+      {
+        internalType: 'uint128',
+        name: '',
+        type: 'uint128',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+    ],
+    name: 'prepareBallotWithSnapshot',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'power',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'enabled',
+        type: 'bool',
+      },
+    ],
+    name: 'setSnapshotContract',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+    ],
+    name: 'takeVotePowerSnapshot',
+    outputs: [
+      {
+        internalType: 'uint128',
+        name: 'snapshotId',
+        type: 'uint128',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'ImplementationIsSterile',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NoChange',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'contr',
+        type: 'address',
+      },
+    ],
+    name: 'NotAContract',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
+    name: 'NotNominated',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'UpgradeSimulationFailed',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ZeroAddress',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'oldOwner',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnerChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnerNominated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'self',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'Upgraded',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getImplementation',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newNominatedOwner',
+        type: 'address',
+      },
+    ],
+    name: 'nominateNewOwner',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'nominatedOwner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceNomination',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'simulateUpgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'InvalidMessage',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'NotCcipRouter',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    name: 'UnsupportedNetwork',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'bytes32',
+            name: 'messageId',
+            type: 'bytes32',
+          },
+          {
+            internalType: 'uint64',
+            name: 'sourceChainSelector',
+            type: 'uint64',
+          },
+          {
+            internalType: 'bytes',
+            name: 'sender',
+            type: 'bytes',
+          },
+          {
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'token',
+                type: 'address',
+              },
+              {
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'struct CcipClient.EVMTokenAmount[]',
+            name: 'tokenAmounts',
+            type: 'tuple[]',
+          },
+        ],
+        internalType: 'struct CcipClient.Any2EVMMessage',
+        name: 'message',
+        type: 'tuple',
+      },
+    ],
+    name: 'ccipReceive',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
