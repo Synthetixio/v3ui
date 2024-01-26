@@ -3,12 +3,114 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: ElectionModule
-    network: optimism-goerli
+    name: Spartan
+    network: polygon-mumbai
     source:
       abi: ElectionModule
-      address: '0x62F424908BEaF103d0Dd1e0b230356A3785e409d'
-      startBlock: 18265250
+      address: "0xDAA5A8bFDEBcA03cCAF0d5285265A7d7Fbb42e15"
+      startBlock: 45154163
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Ambassador
+    network: polygon-mumbai
+    source:
+      abi: ElectionModule
+      address: "0x9abCc1d560C1af4Cf8a84D80AE5E35a24C1f38FA"
+      startBlock: 45154163
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Grants
+    network: polygon-mumbai
+    source:
+      abi: ElectionModule
+      address: "0x8A3bA910172c4b77BF4c52d04bA1a59b963700ec"
+      startBlock: 45154163
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CandidateNominated
+        - CouncilMemberAdded
+        - CouncilMemberRemoved
+        - CouncilMembersDismissed
+        - NominationWithdrawn
+        - VoteRecorded
+      abis:
+        - name: ElectionModule
+          file: ./abis/ElectionModule.json
+      eventHandlers:
+        - event: CandidateNominated(indexed address,indexed uint256)
+          handler: handleCandidateNominated
+        - event: CouncilMemberAdded(indexed address,indexed uint256)
+          handler: handleCouncilMemberAdded
+        - event: CouncilMembersDismissed(address[],uint256)
+          handler: handleCouncilMembersDismissed
+        - event: NominationWithdrawn(indexed address,indexed uint256)
+          handler: handleNominationWithdrawn
+        - event: VoteRecorded(indexed address,indexed uint256,indexed
+            uint256,uint256,address[])
+          handler: handleVoteRecorded
+      file: ./src/election-module.ts
+  - kind: ethereum
+    name: Treasury
+    network: polygon-mumbai
+    source:
+      abi: ElectionModule
+      address: "0x01fa5a659da52fa0ae26bc60698b2760b745d910"
+      startBlock: 45154163
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -37,12 +139,12 @@ dataSources:
           handler: handleVoteRecorded
       file: ./src/election-module.ts
   - kind: ethereum/contract
-    name: Spartan
-    network: optimism-goerli
+    name: Spartan-Old
+    network: polygon-mumbai
     source:
       abi: ElectionModuleOld
-      address: '0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c'
-      startBlock: 0
+      address: ""
+      startBlock: 45154163
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -67,12 +169,12 @@ dataSources:
           handler: handleCouncilMembersDismissedOld
       file: ./src/election-module.ts
   - kind: ethereum/contract
-    name: Ambassador
-    network: optimism-goerli
+    name: Ambassador-Old
+    network: polygon-mumbai
     source:
       abi: ElectionModuleOld
-      address: '0x37fAc8c146889333734015B0C942b620aCfeeff8'
-      startBlock: 0
+      address: ""
+      startBlock: 45154163
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -97,12 +199,12 @@ dataSources:
           handler: handleCouncilMembersDismissedOld
       file: ./src/election-module.ts
   - kind: ethereum/contract
-    name: Grants
-    network: optimism-goerli
+    name: Grants-Old
+    network: polygon-mumbai
     source:
       abi: ElectionModuleOld
-      address: '0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77'
-      startBlock: 0
+      address: ""
+      startBlock: 45154163
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -127,12 +229,12 @@ dataSources:
           handler: handleCouncilMembersDismissedOld
       file: ./src/election-module.ts
   - kind: ethereum/contract
-    name: Treasury
-    network: optimism-goerli
+    name: Treasury-Old
+    network: polygon-mumbai
     source:
       abi: ElectionModuleOld
-      address: '0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a'
-      startBlock: 0
+      address: ""
+      startBlock: 45154163
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
