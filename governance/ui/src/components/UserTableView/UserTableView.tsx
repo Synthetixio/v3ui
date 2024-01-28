@@ -1,13 +1,12 @@
-import { Button, Flex, Image, Spinner, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Spinner, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { shortAddress } from '../../utils/address';
-import '../UserProfileCard/UserProfileCard.css';
-import Blockies from 'react-blockies';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { useGetElectionSettings } from '../../queries/useGetElectionSettings';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function UserTableView({
   user,
@@ -42,11 +41,7 @@ export default function UserTableView({
         </Th>
       )}
       <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
-        {user.pfpUrl ? (
-          <Image src={user.pfpUrl} />
-        ) : (
-          <Blockies seed={user.address.toLowerCase()} size={8} className="fully-rounded" />
-        )}{' '}
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} blockiesSize={8} mr="0" />{' '}
         {user.username ? user.username : shortAddress(user.address)}
       </Th>
       <Th>

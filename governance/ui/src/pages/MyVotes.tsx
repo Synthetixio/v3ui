@@ -5,8 +5,6 @@ import { AddIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { useQueryClient } from '@tanstack/react-query';
 import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
-import Blockies from 'react-blockies';
-import '../components/UserProfileCard/UserProfileCard.css';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
@@ -14,6 +12,7 @@ import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
+import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
@@ -140,34 +139,27 @@ export default function MyVotes() {
                   position="relative"
                 >
                   <Image src={council.image} w="6" h="6" />
-                  {candidates && candidates[council.slug]?.pfpUrl ? (
-                    <Image
-                      src={candidates[council.slug].pfpUrl}
-                      borderRadius="50%"
-                      w="8"
-                      h="8"
-                      position="absolute"
-                      left="15px"
-                    />
-                  ) : candidates && candidates[council.slug] ? (
-                    <Blockies
-                      seed={candidates[council.slug].address.toLowerCase()}
-                      scale={4}
-                      className="fully-rounded votes"
-                    />
-                  ) : (
-                    <Box
-                      borderRadius="50%"
-                      w="8"
-                      h="8"
-                      position="absolute"
-                      left="15px"
-                      borderWidth="1px"
-                      bg="navy.700"
-                      borderStyle="dashed"
-                      borderColor="gray.500"
-                    />
-                  )}
+
+                  <>
+                    {candidates ? (
+                      <ProfilePicture
+                        imageSrc={candidates && candidates[council.slug]?.pfpUrl}
+                        address={candidates && candidates[council.slug]?.address}
+                      />
+                    ) : (
+                      <Box
+                        borderRadius="50%"
+                        w="8"
+                        h="8"
+                        position="absolute"
+                        left="15px"
+                        borderWidth="1px"
+                        bg="navy.700"
+                        borderStyle="dashed"
+                        borderColor="gray.500"
+                      />
+                    )}
+                  </>
                 </Flex>
                 <Flex flexDir="column" mr="auto" ml="1">
                   <Text fontSize="x-small" fontWeight="bold">
@@ -181,7 +173,6 @@ export default function MyVotes() {
                       : 'not found'}
                   </Text>
                 </Flex>
-
                 {votingCandidates && !votingCandidates[council.slug] ? (
                   <IconButton
                     aria-label="action-button"
