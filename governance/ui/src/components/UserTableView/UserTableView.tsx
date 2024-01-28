@@ -41,7 +41,13 @@ export default function UserTableView({
         </Th>
       )}
       <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
-        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} blockiesSize={8} mr="0" />{' '}
+        <ProfilePicture
+          imageSrc={user?.pfpUrl}
+          address={user?.address}
+          blockiesSize={8}
+          mr="0"
+          ImageProps={{ w: '32px', h: '32px' }}
+        />{' '}
         {user.username ? user.username : shortAddress(user.address)}
       </Th>
       <Th>
@@ -52,7 +58,6 @@ export default function UserTableView({
           )}
         </Flex>
       </Th>
-      {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod === '2' && <Th color="white">TODO</Th>}
       {councilPeriod !== '2' && (
         <Th textAlign="end">

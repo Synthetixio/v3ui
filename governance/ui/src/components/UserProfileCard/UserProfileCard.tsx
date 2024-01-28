@@ -40,7 +40,7 @@ export function UserProfileCard({
       borderWidth="1px"
       p="4"
       w="100%"
-      maxW="483px"
+      maxW="451px"
       h="612px"
       {...props}
     >
