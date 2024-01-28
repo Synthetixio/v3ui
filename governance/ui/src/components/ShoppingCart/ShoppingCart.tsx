@@ -1,4 +1,4 @@
-import { Button, Fade, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Fade, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetVotingCandidates } from '../../queries/useGetVotingCandidates';
 import useGetUserDetailsQuery, { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
@@ -74,10 +74,24 @@ export default function ShoppingCart({
               position="relative"
             >
               <Image src={council.image} w="6" h="6" />
-              <ProfilePicture
-                imageSrc={candidates && candidates[council.slug]?.pfpUrl}
-                address={candidates && candidates[council.slug]?.address}
-              />
+              {candidates ? (
+                <ProfilePicture
+                  imageSrc={candidates && candidates[council.slug]?.pfpUrl}
+                  address={candidates && candidates[council.slug]?.address}
+                />
+              ) : (
+                <Box
+                  borderRadius="50%"
+                  w="8"
+                  h="8"
+                  position="absolute"
+                  left="15px"
+                  borderWidth="1px"
+                  bg="navy.700"
+                  borderStyle="dashed"
+                  borderColor="gray.500"
+                />
+              )}
             </Flex>
             <Flex flexDir="column" mr="auto" ml="1">
               <Text fontSize="x-small" fontWeight="bold">

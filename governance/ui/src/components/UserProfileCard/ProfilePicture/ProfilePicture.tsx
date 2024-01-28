@@ -7,7 +7,6 @@ interface ProfilePictureInterface {
   ImageProps?: ImageProps;
 }
 
-// TODO - Remove Empty State
 export const ProfilePicture = ({ imageSrc, address, ImageProps }: ProfilePictureInterface) => {
   return (
     <>
