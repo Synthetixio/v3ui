@@ -101,7 +101,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           <Heading fontSize="lg" w="100%">
             Nominees for {quarter}
           </Heading>
-
           <Text fontSize="xs" w="100%">
             {startDay} {startMonth} {startYear} - {endDay} {endMonth} {endYear}
           </Text>

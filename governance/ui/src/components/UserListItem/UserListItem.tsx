@@ -27,6 +27,7 @@ export default function UserListItem({
   const { activeWallet } = useWallet();
 
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
+
   return (
     <Flex
       px="6"
@@ -44,7 +45,13 @@ export default function UserListItem({
       rounded="base"
     >
       <Flex alignItems="center">
-        <ProfilePicture imageSrc={user?.pfpUrl} address={address} />
+        <ProfilePicture
+          imageSrc={user?.pfpUrl}
+          address={address}
+          ImageProps={{ w: '8', h: '8' }}
+          blockiesSize={8}
+          mr="0"
+        />
         <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.username ? user.username : shortAddress(user?.address)}
         </Text>

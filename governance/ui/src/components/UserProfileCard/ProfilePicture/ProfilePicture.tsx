@@ -5,17 +5,25 @@ interface ProfilePictureInterface {
   imageSrc?: string;
   address?: string;
   ImageProps?: ImageProps;
+  blockiesSize?: number;
+  mr?: string;
 }
 
-export const ProfilePicture = ({ imageSrc, address, ImageProps }: ProfilePictureInterface) => {
+export const ProfilePicture = ({
+  imageSrc,
+  address,
+  ImageProps,
+  blockiesSize = 14,
+  mr = '4',
+}: ProfilePictureInterface) => {
   return (
     <>
       {imageSrc ? (
-        <Image borderRadius="full" src={imageSrc} w="56px" h="56px" mr="4" {...ImageProps} />
+        <Image borderRadius="full" src={imageSrc} w="56px" h="56px" mr={mr} {...ImageProps} />
       ) : (
         address && (
           <Box
-            mr="4"
+            mr={mr}
             borderRadius="100%"
             sx={{
               '.fully-rounded': {
@@ -23,7 +31,7 @@ export const ProfilePicture = ({ imageSrc, address, ImageProps }: ProfilePicture
               },
             }}
           >
-            <Blockies size={14} seed={address?.toLowerCase()} className="fully-rounded" />
+            <Blockies size={blockiesSize} seed={address?.toLowerCase()} className="fully-rounded" />
           </Box>
         )
       )}
