@@ -1,4 +1,4 @@
-import { Flex, Hide, Show, Text } from '@chakra-ui/react';
+import { Box, Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -111,10 +111,23 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                 <Text fontSize="12px" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
-                <ProfilePicture
-                  imageSrc={userInformation[index].userInformation?.pfpUrl}
-                  address={userInformation[index].userInformation?.address}
-                />
+                {userInformation[index].userInformation?.pfpUrl ||
+                !!userInformation[index].userInformation?.address ? (
+                  <ProfilePicture
+                    imageSrc={userInformation[index].userInformation?.pfpUrl}
+                    address={userInformation[index].userInformation?.address}
+                  />
+                ) : (
+                  <Box
+                    borderRadius="50%"
+                    w="8"
+                    h="8"
+                    borderWidth="1px"
+                    bg="navy.700"
+                    borderStyle="dashed"
+                    borderColor="gray.500"
+                  />
+                )}
               </Flex>
             ))}
             <MyVotes
