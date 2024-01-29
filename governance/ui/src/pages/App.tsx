@@ -1,8 +1,12 @@
-import { Container, Flex, Heading, Text } from '@chakra-ui/react';
+import { Button, Container, Flex, Heading, Text } from '@chakra-ui/react';
 import councils from '../utils/councils';
 import { CouncilCard } from '../components/CouncilCard';
+import { useNavigate } from 'react-router-dom';
+import { useWallet } from '../queries/useWallet';
 
 function App() {
+  const navigate = useNavigate();
+  const { activeWallet } = useWallet();
   return (
     <Flex w="100%" justifyContent="center">
       <Container maxW={{ base: '100%', md: '768px', lg: '1280px' }} pt={{ base: 4, md: 14 }} mb="5">
@@ -21,6 +25,13 @@ function App() {
           ))}
         </Flex>
       </Container>
+      <Button
+        onClick={() => {
+          navigate('/councils/spartan?view=' + activeWallet?.address);
+        }}
+      >
+        Click
+      </Button>
     </Flex>
   );
 }

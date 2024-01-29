@@ -11,8 +11,9 @@ import { SiweMessage } from 'siwe';
 import useIsUUIDValidQuery from '../queries/useGetIsUUIDValidQuery';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
-import { useWallet, useSigner } from '../queries/useWallet';
+import { useWallet, useSigner, useProvider } from '../queries/useWallet';
 import { CustomToast } from '../components/CustomToast';
+import { getSSX } from '../utils/ssx';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -51,6 +52,7 @@ type SignInResponse = {
 function useUpdateUserDetailsMutation() {
   const { activeWallet } = useWallet();
   const signer = useSigner();
+  const provider = useProvider();
   const toast = useToast();
 
   const [uuid, setUuid] = useState<null | string>(null);
@@ -61,6 +63,8 @@ function useUpdateUserDetailsMutation() {
 
     if (signer && activeWallet?.address) {
       try {
+        const isSafe = (await signer.provider.getCode(activeWallet.address)).length > 5;
+
         const body = {
           address: activeWallet.address,
         };
@@ -70,26 +74,42 @@ function useUpdateUserDetailsMutation() {
         });
         const nonceResponse: NonceResponse = await response.json();
 
-        const signedMessage = new SiweMessage({
-          domain: domain,
-          address: utils.getAddress(activeWallet.address),
-          chainId: chainId,
-          uri: `https://${domain}`,
-          version: '1',
-          statement: 'Sign into Boardroom with this wallet',
-          nonce: nonceResponse.data.nonce,
-          issuedAt: new Date().toISOString(),
-        });
+        const messageObject = {
+          message: {
+            domain,
+            address: utils.getAddress(activeWallet.address),
+            chainId: chainId,
+            uri: `https://${domain}`,
+            version: '1',
+            statement: 'Sign into Boardroom with this wallet',
+            nonce: nonceResponse.data.nonce,
+            issuedAt: new Date().toISOString(),
+          } as SIWEMessage['message'],
+        };
+        if (isSafe && provider) {
+          const ssxMessage = await getSSX(provider);
+          messageObject.message = {
+            ...messageObject.message,
+            signature: ssxMessage.signature,
+          };
+        } else {
+          const signedMessage = new SiweMessage({
+            domain,
+            address: utils.getAddress(activeWallet.address),
+            chainId: chainId,
+            uri: `https://${domain}`,
+            version: '1',
+            statement: 'Sign into Boardroom with this wallet',
+            nonce: nonceResponse.data.nonce,
+            issuedAt: new Date().toISOString(),
+          });
+          const signature = await signer.signMessage(signedMessage.prepareMessage());
 
-        const signature = await signer.signMessage(signedMessage.prepareMessage());
-
-        const message = {
-          message: { ...signedMessage, signature },
-        } as SIWEMessage;
-
+          messageObject.message = { ...messageObject.message, signature };
+        }
         response = await fetch(BOARDROOM_SIGNIN_API_URL, {
           method: 'POST',
-          body: JSON.stringify(message),
+          body: JSON.stringify(messageObject),
         });
 
         const signInResponse: SignInResponse = await response.json();
