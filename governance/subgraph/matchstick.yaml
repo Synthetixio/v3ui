@@ -1,3 +1,2 @@
 libsFolder: ../../node_modules/
-# testFolder: ./governance/subgraph/tests/.bin/
 manifestPath: ./subgraph.yaml

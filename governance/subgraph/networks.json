@@ -1,46 +1,70 @@
 {
-  "optimism-goerli": {
-    "ElectionModule": {
-      "address": "0x62F424908BEaF103d0Dd1e0b230356A3785e409d",
-      "startBlock": 18265250
+  "sepolia": {
+    "Spartan-Old": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 5141719
     },
     "Spartan": {
-      "address": "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c",
-      "startBlock": 0
+      "address": "0xDAA5A8bFDEBcA03cCAF0d5285265A7d7Fbb42e15",
+      "startBlock": 5141719
+    },
+    "Ambassador-Old": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 5141719
     },
     "Ambassador": {
-      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
-      "startBlock": 0
+      "address": "0x9abCc1d560C1af4Cf8a84D80AE5E35a24C1f38FA",
+      "startBlock": 5141719
+    },
+    "Grants-Old": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 5141719
     },
     "Grants": {
-      "address": "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77",
-      "startBlock": 0
+      "address": "0x8A3bA910172c4b77BF4c52d04bA1a59b963700ec",
+      "startBlock": 5141719
+    },
+    "Treasury-Old": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 5141719
     },
     "Treasury": {
-      "address": "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a",
-      "startBlock": 0
+      "address": "0x01fa5a659da52fa0ae26bc60698b2760b745d910",
+      "startBlock": 5141719
     }
   },
   "optimism": {
-    "ElectionModule": {
-      "address": "0x62F424908BEaF103d0Dd1e0b230356A3785e409d",
+    "Spartan-Old": {
+      "address": "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c",
       "startBlock": 113442424
     },
     "Spartan": {
-      "address": "0xE832C302D1160EAe57045eb9d9Ea14daBd2E229c",
-      "startBlock": 0
+      "address": "0xDAA5A8bFDEBcA03cCAF0d5285265A7d7Fbb42e15",
+      "startBlock": 115332259
+    },
+    "Ambassador-Old": {
+      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
+      "startBlock": 113442424
     },
     "Ambassador": {
-      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
-      "startBlock": 0
+      "address": "0x9abCc1d560C1af4Cf8a84D80AE5E35a24C1f38FA",
+      "startBlock": 115332259
+    },
+    "Grants-Old": {
+      "address": "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77",
+      "startBlock": 113442424
     },
     "Grants": {
-      "address": "0x6891FfAA59c0Ce04b4E3C6eaa50CFc5E2fc77b77",
-      "startBlock": 0
+      "address": "0x8A3bA910172c4b77BF4c52d04bA1a59b963700ec",
+      "startBlock": 115332259
+    },
+    "Treasury-Old": {
+      "address": "0x37fAc8c146889333734015B0C942b620aCfeeff8",
+      "startBlock": 113442424
     },
     "Treasury": {
       "address": "0x6cC6050bE3214D14DB46188e5df59bDEAE97a42a",
-      "startBlock": 0
+      "startBlock": 115332259
     }
   }
 }
