@@ -14,8 +14,8 @@ export const getSSX = async (provider: providers.JsonRpcProvider) => {
         },
       },
     });
+    session = await ssx.signIn();
   }
-  session = await ssx.signIn();
 
   return session;
 };
