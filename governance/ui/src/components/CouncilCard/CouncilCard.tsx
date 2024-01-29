@@ -49,7 +49,13 @@ export function CouncilCard({ council }: CouncilCardProps) {
       }}
     >
       <Image src={council.image} h="80px" w="80px" mb="4" />
-      <Heading fontSize="20px" lineHeight="28px" textAlign="center" mb="4">
+      <Heading
+        fontSize="20px"
+        lineHeight="28px"
+        textAlign="center"
+        mb="4"
+        id={`council-card-header-${council.slug}`}
+      >
         {council.title}
       </Heading>
       <CouncilPeriodBadge councilPeriod={councilPeriod} isLoading={isLoading} />
