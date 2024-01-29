@@ -1,3 +1,5 @@
+export const electionModuleABITest = [];
+
 export const electionModuleABI = [
   {
     inputs: [
