@@ -1,4 +1,4 @@
-import { Box, Flex, Hide, Image, Show, Text } from '@chakra-ui/react';
+import { Box, Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -9,8 +9,7 @@ import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotes } from './MyVotes';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import Blockies from 'react-blockies';
-import '../UserProfileCard/UserProfileCard.css';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -112,17 +111,11 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                 <Text fontSize="12px" fontWeight="bold" mr="auto">
                   {council.title}
                 </Text>
-                {userInformation[index].userInformation?.pfpUrl ? (
-                  <Image
-                    borderRadius="50%"
-                    w="8"
-                    h="8"
-                    src={userInformation[index].userInformation?.pfpUrl}
-                  />
-                ) : !!userInformation[index].userInformation?.address ? (
-                  <Blockies
-                    seed={userInformation[index].userInformation!.address}
-                    className="fully-rounded"
+                {userInformation[index].userInformation?.pfpUrl ||
+                !!userInformation[index].userInformation?.address ? (
+                  <ProfilePicture
+                    imageSrc={userInformation[index].userInformation?.pfpUrl}
+                    address={userInformation[index].userInformation?.address}
                   />
                 ) : (
                   <Box

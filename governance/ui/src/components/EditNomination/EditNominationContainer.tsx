@@ -14,7 +14,7 @@ export const EditNominationContainer = ({
       <Show below="md">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent mx="4">
             <EditNomination activeCouncil={activeCouncil} />
           </ModalContent>
         </Modal>

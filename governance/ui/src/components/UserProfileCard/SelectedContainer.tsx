@@ -2,25 +2,25 @@ import { Show, Modal, ModalOverlay, ModalContent, Hide } from '@chakra-ui/react'
 import { UserProfileCard } from './UserProfileCard';
 import { CouncilSlugs } from '../../utils/councils';
 
-interface UserProfileCardContainerInterface {
+interface SelectedContainerInterface {
   activeCouncil: CouncilSlugs;
   selectedUserAddress: string;
   isOwn: boolean;
   onClose: () => void;
 }
 
-export const UserProfileCardContainer = ({
+export const SelectedContainer = ({
   activeCouncil,
   selectedUserAddress,
   onClose,
   isOwn,
-}: UserProfileCardContainerInterface) => {
+}: SelectedContainerInterface) => {
   return (
     <>
       <Show below="md">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent mx="4">
             <UserProfileCard
               walletAddress={selectedUserAddress}
               activeCouncil={activeCouncil}

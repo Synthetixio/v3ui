@@ -13,7 +13,7 @@ export default function EditProfile({
       <Show below="md">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent px="4" bg="transparent">
             <Flex
               borderWidth="1px"
               borderStyle="solid"
