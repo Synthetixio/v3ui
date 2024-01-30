@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useSigner, useWallet } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { useSigner } from './useWallet';
 
 export default function useGetUserVotingPower(council: CouncilSlugs) {
   const network = useNetwork();
@@ -29,7 +30,9 @@ export default function useGetUserVotingPower(council: CouncilSlugs) {
           );
 
           return votingPower.toString();
-        } catch (error) {}
+        } catch (error) {
+          console.log({ error });
+        }
 
         return '0';
       }
