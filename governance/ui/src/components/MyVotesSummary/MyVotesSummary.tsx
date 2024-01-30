@@ -1,10 +1,10 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 
 import Timer from '../Timer/Timer';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
-import { useVoteContext } from '../../context/VoteContext';
+import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -21,17 +21,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
 
-  const { state } = useVoteContext();
-
-  const votes = useMemo(
-    () => ({
-      spartan: state.spartan,
-      grants: state.grants,
-      ambassador: state.ambassador,
-      treasury: state.treasury,
-    }),
-    [state.ambassador, state.grants, state.spartan, state.treasury]
-  );
+  const votes = useGetUserSelectedVotes();
 
   // useEffect(() => {
   //   setShowCart(true);

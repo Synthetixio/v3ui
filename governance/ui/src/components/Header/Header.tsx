@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
 import { Network } from '@snx-v3/useBlockchain';
+import { useGetUserCurrentVotes } from '../../queries/useGetUserCurrentVotes';
 
 const activeIcon = (currentNetwork: Network | null) => {
   switch (currentNetwork?.id) {
