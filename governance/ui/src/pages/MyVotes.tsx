@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
-import '../components/UserProfileCard/UserProfileCard.css';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
@@ -15,6 +14,8 @@ import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import useGetUserVotingPower from '../queries/useGetUserVotingPower';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
+
+import '../components/UserProfileCard/UserProfileCard.css';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
@@ -49,6 +50,7 @@ export default function MyVotes() {
         (a, v) => ({ ...a, [v.council]: v }),
         {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
       );
+
   return (
     <>
       <CouncilTabs />

@@ -7,8 +7,8 @@ import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '../../queries/useWallet';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
-import Blockies from 'react-blockies';
 import { shortAddress } from '../../utils/address';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function EditNominationConfirmation({
   selectedCouncil,
@@ -49,15 +49,7 @@ export default function EditNominationConfirmation({
         p="2"
         mt="3"
       >
-        {user?.pfpImageId ? (
-          <Image src={user.pfpImageId} w="10" h="10" />
-        ) : (
-          <Blockies
-            seed={user?.address.toLowerCase() || '0x'}
-            size={10}
-            className="fully-rounded"
-          />
-        )}
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
             {user?.ens || shortAddress(user?.address)}

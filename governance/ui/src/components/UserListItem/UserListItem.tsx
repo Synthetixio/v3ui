@@ -1,6 +1,4 @@
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
-import Blockies from 'react-blockies';
-import '../UserProfileCard/UserProfileCard.css';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,6 +7,7 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
 import { Badge } from '../Badge';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function UserListItem({
   address,
@@ -28,6 +27,7 @@ export default function UserListItem({
   const { activeWallet } = useWallet();
 
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
+
   return (
     <Flex
       px="6"
@@ -45,11 +45,13 @@ export default function UserListItem({
       rounded="base"
     >
       <Flex alignItems="center">
-        {user?.pfpImageId ? (
-          <Image src={user.pfpImageId} w="8" h="8" />
-        ) : (
-          <Blockies seed={address.toLowerCase()} size={8} className="fully-rounded" />
-        )}
+        <ProfilePicture
+          imageSrc={user?.pfpUrl}
+          address={address}
+          ImageProps={{ w: '8', h: '8' }}
+          blockiesSize={8}
+          mr="0"
+        />
         <Text fontWeight="bold" fontSize="14px" ml="3">
           {user?.username ? user.username : shortAddress(user?.address)}
         </Text>
