@@ -15,8 +15,6 @@ import useGetUserVotingPower from '../queries/useGetUserVotingPower';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
 
-import '../components/UserProfileCard/UserProfileCard.css';
-
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');

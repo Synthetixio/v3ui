@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import Blockies from 'react-blockies';
-import useGetUserDetailsQuery from '../../../../queries/useGetUserDetailsQuery';
-import councils, { CouncilSlugs } from '../../../../utils/councils';
+import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import councils, { CouncilSlugs } from '../../utils/councils';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export default function CouncilUser({
   address,
@@ -21,34 +21,33 @@ export default function CouncilUser({
 
   return (
     <Flex alignItems="center">
-      <Flex
-        borderRadius="50%"
-        borderWidth="1px"
-        borderStyle="solid"
-        borderColor="gray.900"
-        w="8"
-        h="8"
-        justifyContent="center"
-        alignItems="center"
-        mr="4"
-        position="relative"
-      >
-        <Image src={council.image} w="6" h="6" />
-        {user?.pfpUrl ? (
-          <Image src={user.pfpUrl} borderRadius="50%" w="8" h="8" position="absolute" left="15px" />
-        ) : user ? (
-          <Blockies seed={user.address?.toLowerCase()} scale={4} className="fully-rounded votes" />
+      <Flex alignItems="center">
+        <Flex
+          borderRadius="50%"
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="gray.900"
+          w="8"
+          h="8"
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+        >
+          <Image src={council.image} w="6" h="6" />
+        </Flex>
+        {user ? (
+          <ProfilePicture size={7} imageSrc={user?.pfpUrl} address={user?.address} ml="-3" />
         ) : (
           <Box
             borderRadius="50%"
-            w="8"
-            h="8"
-            position="absolute"
-            left="15px"
+            w="7"
+            h="7"
             borderWidth="1px"
             bg="navy.700"
             borderStyle="dashed"
             borderColor="gray.500"
+            ml="-3"
+            zIndex={10}
           />
         )}
       </Flex>

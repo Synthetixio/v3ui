@@ -2,17 +2,17 @@ import { Flex, IconButton } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { AddIcon, ChevronRightIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import { useGetUserCurrentVotes } from '../../queries/useGetUserCurrentVotes';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
-import CouncilUser from './components/CouncilUser/CouncilUser';
+import CouncilUser from '../CouncilUser/CouncilUser';
+import { useVoteContext } from '../../context/VoteContext';
 
 export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }) {
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
   const council = councils.find((council) => council.slug === councilSlug);
   const { data: currentVotes } = useGetUserCurrentVotes();
-  const queryClient = useQueryClient();
+  const { dispatch } = useVoteContext();
 
   if (!council) {
     return null;
@@ -24,7 +24,7 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
       w="100%"
       padding="2"
       alignItems="center"
-      justifyContent='space-between'
+      justifyContent="space-between"
       border="1px solid"
       borderColor="gray.900"
     >
@@ -55,13 +55,19 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
           aria-label="action-button"
           icon={<CloseIcon />}
           variant="outlined"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
+
+            dispatch({
+              type: councilSlug.toUpperCase(),
+              payload: undefined,
+            });
+
             const selection = localStorage.getItem('voteSelection');
             if (!selection) localStorage.setItem('voteSelection', '');
             const parsedSelection = JSON.parse(selection ? selection : '{}');
             delete parsedSelection[council.slug];
             localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-            queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
           }}
         />
       )}

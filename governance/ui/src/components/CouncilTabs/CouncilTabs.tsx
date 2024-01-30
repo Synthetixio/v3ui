@@ -109,6 +109,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   <ProfilePicture
                     imageSrc={userInformation[index].userInformation?.pfpUrl}
                     address={userInformation[index].userInformation?.address}
+                    size={6}
                   />
                 ) : (
                   <Box
