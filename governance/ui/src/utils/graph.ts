@@ -11,3 +11,6 @@ export async function graphQuery(query: string) {
   );
   return response.json();
 }
+
+// https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetixio-governance-subgraph-sepolia/version/v0.0.1/api
+// https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetixio-governance-subgraph/version/v0.0.1/api
