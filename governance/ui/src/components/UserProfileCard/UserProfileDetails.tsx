@@ -62,7 +62,7 @@ export const UserProfileDetails = ({
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%">
           <Flex justifyContent="space-between">
-            <Text fontSize="16px" fontWeight="700" data-cy="user-wallet-profile-address">
+            <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
               {shortAddress(userData?.address)}
             </Text>
           </Flex>

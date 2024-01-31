@@ -9,9 +9,9 @@ it('shows homepage to a connected wallet', () => {
 
     cy.visit('/');
 
-    cy.get('[data-cy="user-wallet-address"]').contains('0x');
-    cy.get('[data-cy="user-menu-button"]').click();
-    cy.get('[data-cy="copy-user-wallet-address"]').click();
+    cy.get('[data-testid="user-wallet-address"]').contains('0x');
+    cy.get('[data-testid="user-menu-button"]').click();
+    cy.get('[data-testid="copy-user-wallet-address"]').click();
     cy.assertValueCopiedToClipboard(address);
   });
 });

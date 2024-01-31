@@ -8,7 +8,7 @@ it('shows user profile card', () => {
     cy.viewport(1100, 900);
 
     cy.visit('/#/councils/spartan?view=' + address);
-    cy.get('[data-cy="user-wallet-profile-address"]').contains(
+    cy.get('[data-testid="user-wallet-profile-address"]').contains(
       address
         .substring(0, 4)
         .concat('...')
