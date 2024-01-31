@@ -145,9 +145,6 @@ jobs:
       - run: yarn typecheck
 
   governance-cy:
-    parameters:
-      chain:
-        type: string
     working_directory: /tmp/app
     docker:
       - image: cypress/included:<< pipeline.parameters.cypress-version >>
