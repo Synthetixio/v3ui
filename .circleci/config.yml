@@ -144,7 +144,7 @@ jobs:
             git diff --name-only --exit-code
       - run: yarn typecheck
 
-  governance-e2e:
+  governance-cy:
     parameters:
       chain:
         type: string
@@ -289,6 +289,7 @@ jobs:
       - run: rm -rf /tmp/cov
       - run: yarn download-cci-coverage tests /tmp/cov || true
       - run: yarn download-cci-coverage liquidity-cy /tmp/cov || true
+      - run: yarn download-cci-coverage governance-cy /tmp/cov || true
       - run: yarn download-cci-coverage liquidity-e2e-optimism-mainnet /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
@@ -337,6 +338,9 @@ workflows:
       - typecheck
       - tests
       - liquidity-cy
+      - governance-cy
+      - governance-e2e:
+          name: governance-e2e-sepolia
       - liquidity-e2e:
           chain: optimism-mainnet
           name: liquidity-e2e-optimism-mainnet
@@ -348,8 +352,6 @@ workflows:
           name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
-      - governance-e2e:
-          name: governance-e2e-sepolia
       - liquidity-armada:
           requires:
             - checks
