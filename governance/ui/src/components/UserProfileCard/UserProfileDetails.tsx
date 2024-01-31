@@ -130,7 +130,7 @@ export const UserProfileDetails = ({
                   Edit Nomination
                 </Button>
               </Tooltip>
-            ) : (
+            ) : councilPeriod === '1' ? (
               <Button
                 variant="outline"
                 colorScheme="gray"
@@ -146,7 +146,7 @@ export const UserProfileDetails = ({
               >
                 {isNominated ? 'Edit Nomination' : 'Nominate Self'}
               </Button>
-            )}
+            ) : null}
           </>
         )}
         {councilPeriod === '2' && (
