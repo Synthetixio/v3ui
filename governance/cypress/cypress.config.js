@@ -31,9 +31,9 @@ module.exports = defineConfig({
         require('@cypress/code-coverage/task')(on, config);
       }
       on('task', {
+        ...require('./cypress/tasks/setEthBalance'),
         ...require('./cypress/tasks/automineBlocks'),
         ...require('./cypress/tasks/mineBlock'),
-        ...require('./cypress/tasks/setEthBalance'),
       });
 
       return config;
