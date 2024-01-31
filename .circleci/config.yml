@@ -346,7 +346,7 @@ workflows:
           chain: goerli
           name: liquidity-e2e-goerli
       - combine-coverage:
-          requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+          requires: [tests, liquidity-cy, governance-cy, liquidity-e2e-optimism-mainnet]
       - liquidity-armada:
           requires:
             - checks

@@ -7397,8 +7397,6 @@ __metadata:
 "@synthetixio/download-cci-coverage@workspace:*, @synthetixio/download-cci-coverage@workspace:tools/download-cci-coverage":
   version: 0.0.0-use.local
   resolution: "@synthetixio/download-cci-coverage@workspace:tools/download-cci-coverage"
-  dependencies:
-    node-fetch: "npm:^2.7.0"
   bin:
     download-cci-coverage: ./download-cci-coverage.js
   languageName: unknown
