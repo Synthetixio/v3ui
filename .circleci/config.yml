@@ -348,6 +348,8 @@ workflows:
           name: liquidity-e2e-goerli
       - combine-coverage:
           requires: [tests, liquidity-cy, liquidity-e2e-optimism-mainnet]
+      - governance-ui:
+          name: governance-ui-sepolia
       - liquidity-armada:
           requires:
             - checks
