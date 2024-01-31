@@ -336,7 +336,7 @@ workflows:
       - tests
       - liquidity-cy
       - governance-cy
-      - governance-e2e:
+      - governance-cy:
           name: governance-e2e-sepolia
       - liquidity-e2e:
           chain: optimism-mainnet
