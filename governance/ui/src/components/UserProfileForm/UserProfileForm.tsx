@@ -3,7 +3,6 @@ import {
   Button,
   Flex,
   IconButton,
-  Image,
   Input,
   Spinner,
   Text,
@@ -12,12 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import Blockies from 'react-blockies';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
-import '../UserProfileCard/UserProfileCard.css';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { useEffect } from 'react';
 import { useWallet } from '../../queries/useWallet';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
 export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
   const navigate = useNavigate();
@@ -73,11 +71,7 @@ export function UserProfileForm({ activeCouncil }: { activeCouncil: string }) {
         right="5px"
       />
       <Flex w="100%" alignItems="center">
-        {user?.pfpUrl ? (
-          <Image src={user?.pfpUrl} w="56px" h="56px" mb="2" />
-        ) : (
-          <Blockies size={14} seed={user?.address.toLowerCase() || ''} className="fully-rounded" />
-        )}
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex w="100%" flexDirection="column" ml="2" gap="2">
           <Text fontSize="12px" color="gray.500">
             Avatar

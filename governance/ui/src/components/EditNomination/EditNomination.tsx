@@ -8,7 +8,6 @@ import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '../../queries/useWallet';
 import EditNominationConfirmation from './EditNominationConfirmation';
 import EditNominationSelect from './EditNominationSelect';
-import '../UserProfileCard/UserProfileCard.css';
 
 export default function EditNomination({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
@@ -49,7 +48,6 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       {isSuccess ? (
         <>
           <Heading fontSize="medium">Nomination Successful</Heading>
-
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
