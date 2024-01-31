@@ -335,7 +335,6 @@ workflows:
       - typecheck
       - tests
       - liquidity-cy
-      - governance-cy
       - liquidity-e2e:
           chain: optimism-mainnet
           name: liquidity-e2e-optimism-mainnet
