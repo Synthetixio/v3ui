@@ -54,7 +54,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
         lineHeight="28px"
         textAlign="center"
         mb="4"
-        id={`council-card-header-${council.slug}`}
+        data-testid={`council-card-header-${council.slug}`}
       >
         {council.title}
       </Heading>
