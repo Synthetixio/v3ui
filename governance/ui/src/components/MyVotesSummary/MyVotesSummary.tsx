@@ -23,14 +23,6 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
 
   const votes = useGetUserSelectedVotes();
 
-  // useEffect(() => {
-  //   setShowCart(true);
-
-  //   setTimeout(() => {
-  //     setShowCart(false);
-  //   }, 3000);
-  // }, [state.spartan, state.grants, state.ambassador, state.treasury]);
-
   return (
     <Flex
       position="relative"

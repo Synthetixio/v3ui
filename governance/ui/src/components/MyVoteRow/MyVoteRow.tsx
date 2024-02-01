@@ -10,6 +10,9 @@ import { useVoteContext } from '../../context/VoteContext';
 export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }) {
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
+
+  console.log('Selected votes', selectedVotes);
+
   const council = councils.find((council) => council.slug === councilSlug);
   const { data: currentVotes } = useGetUserCurrentVotes();
   const { dispatch } = useVoteContext();

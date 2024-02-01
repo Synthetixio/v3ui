@@ -1,62 +1,7 @@
 import { useCallback } from 'react';
 import { BigNumber, Transaction, ethers } from 'ethers';
 import { useProvider, useWallet } from '@snx-v3/useBlockchain';
-
-export const multicallInterface = new ethers.utils.Interface([
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'target',
-            type: 'address',
-          },
-          {
-            internalType: 'bool',
-            name: 'requireSuccess',
-            type: 'bool',
-          },
-          {
-            internalType: 'uint256',
-            name: 'value',
-            type: 'uint256',
-          },
-          {
-            internalType: 'bytes',
-            name: 'callData',
-            type: 'bytes',
-          },
-        ],
-        internalType: 'struct TrustedMulticallForwarder.Call3Value[]',
-        name: 'calls',
-        type: 'tuple[]',
-      },
-    ],
-    name: 'aggregate3Value',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'bool',
-            name: 'success',
-            type: 'bool',
-          },
-          {
-            internalType: 'bytes',
-            name: 'returnData',
-            type: 'bytes',
-          },
-        ],
-        internalType: 'struct TrustedMulticallForwarder.Result[]',
-        name: 'returnData',
-        type: 'tuple[]',
-      },
-    ],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-]);
+import { multicallInterface } from '../utils/abi';
 
 const multicallAddress = '0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e';
 
@@ -81,6 +26,7 @@ export const useMulticall = () => {
       }
 
       let gas = BigNumber.from(1000);
+
       try {
         gas = await provider.estimateGas({
           to: multicallAddress,

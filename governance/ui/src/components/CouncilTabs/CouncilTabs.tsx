@@ -9,16 +9,21 @@ import { MyVotesSummary } from '../MyVotesSummary';
 import useGetUserBallot from '../../queries/useGetUserBallot';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
+
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
     useGetUserBallot('grants'),
     useGetUserBallot('treasury'),
   ];
+
+  const selectedVotes = useGetUserSelectedVotes();
+
   const navigate = useNavigate();
   const votedNominees = votedNomineesData.map(({ data }) => data);
 
@@ -40,10 +45,13 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
       userInformation: useGetUserDetailsQuery(votedNominees[3]?.votedCandidates[0]),
     },
   ];
+
   const userInformation = userInformationData.map((data) => ({
     ...data,
     userInformation: data.userInformation.data,
   }));
+
+  console.log('selected votes', selectedVotes);
 
   return (
     <>
@@ -84,46 +92,52 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           zIndex={99}
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
-            {councils.map((council, index) => (
-              <Flex
-                key={`tab-${council.slug}`}
-                cursor="pointer"
-                onClick={() => navigate(`/councils/${council.slug}`)}
-                w="100%"
-                height="48px"
-                rounded="base"
-                borderColor={activeCouncil === council.slug ? 'cyan.500' : 'gray.900'}
-                borderWidth="1px"
-                py="1"
-                alignItems="center"
-                bg="navy.700"
-                _hover={{ borderColor: 'cyan.500' }}
-                px="2"
-              >
-                <CouncilImage imageUrl={council.image} />
-                <Text fontSize="12px" fontWeight="bold" mr="auto">
-                  {council.title}
-                </Text>
-                {userInformation[index].userInformation?.pfpUrl ||
-                !!userInformation[index].userInformation?.address ? (
-                  <ProfilePicture
-                    imageSrc={userInformation[index].userInformation?.pfpUrl}
-                    address={userInformation[index].userInformation?.address}
-                    size={6}
-                  />
-                ) : (
-                  <Box
-                    borderRadius="50%"
-                    w="8"
-                    h="8"
-                    borderWidth="1px"
-                    bg="navy.700"
-                    borderStyle="dashed"
-                    borderColor="gray.500"
-                  />
-                )}
-              </Flex>
-            ))}
+            {councils.map((council, index) => {
+              const newVoteCast = selectedVotes[council.slug];
+              console.log('New vote cast', !!newVoteCast);
+              return (
+                <Flex
+                  key={`tab-${council.slug}`}
+                  cursor="pointer"
+                  onClick={() => navigate(`/councils/${council.slug}`)}
+                  w="100%"
+                  height="48px"
+                  rounded="base"
+                  borderColor={activeCouncil === council.slug ? 'cyan.500' : 'gray.900'}
+                  borderWidth="1px"
+                  py="1"
+                  alignItems="center"
+                  bg="navy.700"
+                  _hover={{ borderColor: 'cyan.500' }}
+                  px="2"
+                >
+                  <CouncilImage imageUrl={council.image} />
+                  <Text fontSize="12px" fontWeight="bold" mr="auto">
+                    {council.title}
+                  </Text>
+                  {userInformation[index].userInformation?.pfpUrl ||
+                  !!userInformation[index].userInformation?.address ||
+                  newVoteCast ? (
+                    <ProfilePicture
+                      imageSrc={userInformation[index].userInformation?.pfpUrl}
+                      address={userInformation[index].userInformation?.address}
+                      size={7}
+                      newVoteCast={newVoteCast}
+                    />
+                  ) : (
+                    <Box
+                      borderRadius="50%"
+                      w="7"
+                      h="7"
+                      borderWidth="1px"
+                      bg="navy.700"
+                      borderStyle="dashed"
+                      borderColor="gray.500"
+                    />
+                  )}
+                </Flex>
+              );
+            })}
             <MyVotesSummary
               isLoading={isLoading}
               councilPeriod={councilPeriod}
