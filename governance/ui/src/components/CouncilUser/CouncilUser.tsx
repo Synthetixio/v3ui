@@ -2,6 +2,7 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { truncateAddress } from '@snx-v3/formatters';
 
 export default function CouncilUser({
   address,
@@ -57,7 +58,7 @@ export default function CouncilUser({
             {council.title}
           </Text>
           <Text fontSize="x-small">
-            {user ? (user?.username ? user.username : user?.address) : 'not found'}
+            {user ? (user?.username ? user.username : truncateAddress(user?.address)) : 'not found'}
           </Text>
         </Flex>
       )}

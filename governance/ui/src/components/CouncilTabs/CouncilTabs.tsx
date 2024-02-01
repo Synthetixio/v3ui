@@ -51,8 +51,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
     userInformation: data.userInformation.data,
   }));
 
-  console.log('selected votes', selectedVotes);
-
   return (
     <>
       <Hide above="lg">
@@ -94,7 +92,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
               const newVoteCast = selectedVotes[council.slug];
-              console.log('New vote cast', !!newVoteCast);
+
               return (
                 <Flex
                   key={`tab-${council.slug}`}

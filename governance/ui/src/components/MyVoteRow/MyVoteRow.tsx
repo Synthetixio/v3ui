@@ -11,8 +11,6 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
 
-  console.log('Selected votes', selectedVotes);
-
   const council = councils.find((council) => council.slug === councilSlug);
   const { data: currentVotes } = useGetUserCurrentVotes();
   const { dispatch } = useVoteContext();
@@ -45,7 +43,6 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
           </>
         )}
       </Flex>
-
       {currentVotes && !currentVotes[council.slug] ? (
         <IconButton
           aria-label="action-button"
