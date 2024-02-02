@@ -1,6 +1,6 @@
 import { Contract, ethers } from 'ethers';
 
-export async function setToAdminPeriod() {
+export async function setToNominationPeriod() {
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
   const wallet = new ethers.Wallet(
     '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
@@ -18,8 +18,8 @@ export async function setToAdminPeriod() {
       const block = await provider.getBlock('latest');
       return await c.Epoch_setEpochDates(
         0,
+        block.timestamp - 1000,
         block.timestamp,
-        block.timestamp + 10000,
         block.timestamp + 20000,
         block.timestamp + 30000,
         { nonce: nonce + i }

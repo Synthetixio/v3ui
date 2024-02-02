@@ -34,6 +34,8 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/setEthBalance'),
         ...require('./cypress/tasks/automineBlocks'),
         ...require('./cypress/tasks/mineBlock'),
+        ...require('./cypress/tasks/setToAdminPeriod'),
+        ...require('./cypress/tasks/setToNominationPeriod'),
       });
 
       return config;

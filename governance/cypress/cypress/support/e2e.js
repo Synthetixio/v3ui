@@ -39,7 +39,9 @@ Cypress.Commands.add('connectWallet', (namespace = 'wallet') => {
     win.ethereum = metamask({ privateKey, address });
   });
 
-  return cy.wrap(wallet).as(namespace);
+  return cy
+    .wrap(wallet.connect(new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545')))
+    .as(namespace);
 });
 
 Cypress.Commands.add('assertValueCopiedToClipboard', (value) => {
