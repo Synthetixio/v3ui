@@ -6,8 +6,7 @@ import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
-import useGetUserBallot from '../../queries/useGetUserBallot';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery, useGetUserBallot } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 

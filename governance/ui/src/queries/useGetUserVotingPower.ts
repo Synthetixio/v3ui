@@ -2,44 +2,42 @@ import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
-import { useSigner } from './useWallet';
+import { useProvider } from './';
 
-export default function useGetUserVotingPower(council: CouncilSlugs) {
+export function useGetUserVotingPower(council: CouncilSlugs) {
   const network = useNetwork();
-  const signer = useSigner();
+  const provider = useProvider();
   const wallet = useWallet();
 
   return useQuery({
     queryFn: async () => {
-      if (signer) {
-        try {
-          const electionModule = getCouncilContract(council).connect(signer!);
-          const voter = await signer!.getAddress();
-          const electionId = electionModule.connect(signer!).getEpochIndex();
-          const ballot = await electionModule
-            .connect(signer!)
-            .getBallot(voter, network.id, electionId);
+      if (!wallet?.address || !provider) return;
 
-          if (ballot && ballot.votingPower.gt(0)) {
-            return ballot.votingPower.toString();
-          }
+      try {
+        const electionModule = getCouncilContract(council).connect(provider);
+        const electionId = electionModule.connect(provider).getEpochIndex();
 
-          const votingPower = await electionModule.callStatic.prepareBallotWithSnapshot(
-            SnapshotRecordContractAddress,
-            wallet?.address
-          );
+        const ballot = await electionModule
+          .connect(provider)
+          .getBallot(wallet?.address, network.id, electionId);
 
-          return votingPower.toString();
-        } catch (error) {
-          console.log({ error });
+        if (ballot && ballot.votingPower.gt(0)) {
+          return ballot.votingPower.toString();
         }
 
-        return '0';
+        const votingPower = await electionModule.callStatic.prepareBallotWithSnapshot(
+          SnapshotRecordContractAddress,
+          wallet?.address
+        );
+
+        return votingPower.toString();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log({ error });
       }
     },
-    enabled: !!signer,
+    enabled: !!provider && !!wallet?.address,
     queryKey: ['userBallot', council.toString(), wallet?.address],
     staleTime: 60000,
-    initialData: '0',
   });
 }

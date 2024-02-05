@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { useGetCouncilNominees } from './useGetCouncilNominees';
 import { GetUserDetails, getUserDetails } from './useGetUserDetailsQuery';
-import { Wallet } from 'ethers';
 
 export function useGetNomineesDetails(activeCouncil: CouncilSlugs) {
   const { data: councilNominees } = useGetCouncilNominees(activeCouncil);

@@ -18,6 +18,7 @@
     "@safe-global/safe-apps-sdk": "^9.0.0",
     "@snx-v3/format": "workspace:*",
     "@snx-v3/icons": "workspace:*",
+    "@snx-v3/txnReducer": "workspace:^",
     "@snx-v3/useBlockchain": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",

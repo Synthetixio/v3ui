@@ -6,7 +6,7 @@ import { motherShipProvider } from '../utils/providers';
 import { BigNumber, utils } from 'ethers';
 import { useWallet, useNetwork } from './useWallet';
 
-export default function useGetCastVotes() {
+export function useGetCastVotes() {
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
 

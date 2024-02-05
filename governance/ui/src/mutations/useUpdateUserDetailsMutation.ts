@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SiweMessage } from 'siwe';
-import useIsUUIDValidQuery from '../queries/useGetIsUUIDValidQuery';
+import { useGetIsUUIDValidQuery } from '../queries/';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { useWallet, useSigner } from '../queries/useWallet';
@@ -102,7 +102,7 @@ function useUpdateUserDetailsMutation() {
     }
   };
 
-  const isUuidValidQuery = useIsUUIDValidQuery(uuid || '');
+  const isUuidValidQuery = useGetIsUUIDValidQuery(uuid || '');
   const queryClient = useQueryClient();
 
   return useMutation({

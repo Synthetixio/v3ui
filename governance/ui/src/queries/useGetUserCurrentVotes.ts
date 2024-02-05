@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useGetUserBallot from './useGetUserBallot';
+import { useGetUserBallot } from './';
 
 export const useGetUserCurrentVotes = () => {
   const { data: ballots, isLoading } = useGetUserBallot([

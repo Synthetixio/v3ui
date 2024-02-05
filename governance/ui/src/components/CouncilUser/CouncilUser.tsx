@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { truncateAddress } from '@snx-v3/formatters';

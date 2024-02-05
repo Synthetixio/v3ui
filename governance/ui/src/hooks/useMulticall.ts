@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { BigNumber, Transaction, ethers } from 'ethers';
 import { useProvider, useWallet } from '@snx-v3/useBlockchain';
+import { BigNumber, Transaction, ethers } from 'ethers';
 import { multicallInterface } from '../utils/abi';
 
 const multicallAddress = '0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e';
@@ -21,6 +21,7 @@ export const useMulticall = () => {
       ]);
 
       let totalValue = ethers.BigNumber.from(0);
+
       for (const call of calls) {
         totalValue = totalValue.add(call.value || ethers.BigNumber.from(0));
       }
@@ -33,7 +34,9 @@ export const useMulticall = () => {
           data: encodedData,
           value: totalValue,
         });
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
 
       return {
         from: wallet?.address,

@@ -2,7 +2,8 @@ import { Button, Fade, Flex, Heading } from '@chakra-ui/react';
 import councils from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import MyVoteRow from '../MyVoteRow/MyVoteRow';
-import { useMulticall } from '../../hooks/useMulticall';
+import { useGetUserVotingPower, useCastVotes } from '../../queries';
+// import { useMulticall } from '../../hooks/useMulticall';
 
 export default function MyVotesBox({
   closeCart,
@@ -13,7 +14,9 @@ export default function MyVotesBox({
 }) {
   const navigate = useNavigate();
 
-  const { makeMulticall } = useMulticall();
+  // const { makeMulticall } = useMulticall();
+  const { mutateAsync } = useCastVotes();
+  const {} = useGetUserVotingPower();
 
   return (
     <Fade in={true}>

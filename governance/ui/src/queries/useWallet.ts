@@ -81,6 +81,5 @@ export function useProvider() {
   }
 
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
-
   return provider;
 }

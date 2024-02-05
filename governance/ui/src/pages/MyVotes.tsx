@@ -3,15 +3,18 @@ import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
-import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
-import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import useGetUserVotingPower from '../queries/useGetUserVotingPower';
+import {
+  useGetUserVotingPower,
+  useGetUserBallot,
+  GetUserDetails,
+  useGetUserDetailsQuery,
+} from '../queries/';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
 
