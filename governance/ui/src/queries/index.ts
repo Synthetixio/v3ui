@@ -1,4 +1,4 @@
-export * from './useCastVotes';
+export * from '../mutations/useCastVotes';
 export * from './useGetCouncilNominees';
 export * from './useGetUserBallot';
 export * from './useGetUserCurrentVotes';

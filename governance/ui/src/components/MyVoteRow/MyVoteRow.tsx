@@ -2,7 +2,7 @@ import { Flex, IconButton } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { AddIcon, ChevronRightIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserCurrentVotes } from '../../queries/useGetUserCurrentVotes';
+import { useGetUserCurrentVotes } from '../../queries';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
