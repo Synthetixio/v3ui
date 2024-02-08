@@ -12,6 +12,7 @@ import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
+import { Positions } from './pages/Dashboard';
 
 export const Router = () => {
   return (
@@ -19,6 +20,7 @@ export const Router = () => {
       <Routes>
         <Route element={<DefaultLayout />}>
           <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
+          <Route path="/dashboard/positions/:accountId" element={<Positions />} />
           <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
           {/*<Route path="/collateral" element={<Collateral />} />*/}
           {/*<Route path="/accept-nomination" element={<AcceptNomination />} />*/}
