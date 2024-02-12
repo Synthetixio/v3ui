@@ -6,10 +6,11 @@ import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { GasSpeedProvider } from '@snx-v3/useGasSpeed';
-import { BlockchainProvider } from '@snx-v3/useBlockchain';
 import { TermsModal } from '@snx-v3/TermsModal';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
+import { Web3OnboardProvider } from '@web3-onboard/react';
+import { onboard } from './utils/onboard';
 import './i18n';
 
 const queryClient = new QueryClient({
@@ -39,10 +40,10 @@ export const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <ColorMode />
-        <Fonts />
-        <BlockchainProvider>
+      <Web3OnboardProvider web3Onboard={onboard}>
+        <ChakraProvider theme={theme}>
+          <ColorMode />
+          <Fonts />
           <GasSpeedProvider>
             <HashRouter>
               <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
@@ -50,8 +51,8 @@ export const App = () => {
             </HashRouter>
           </GasSpeedProvider>
           <ReactQueryDevtools />
-        </BlockchainProvider>
-      </ChakraProvider>
+        </ChakraProvider>
+      </Web3OnboardProvider>
     </QueryClientProvider>
   );
 };

@@ -4,6 +4,7 @@
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/icons": "workspace:*",
     "@web3-onboard/core": "^2.21.2",

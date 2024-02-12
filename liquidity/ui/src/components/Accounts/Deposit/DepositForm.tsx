@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
-import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
+import { useIsConnected } from '@snx-v3/useBlockchain';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import {
   CollateralTypeSelector,
@@ -29,6 +29,7 @@ import { AccountCollateralType, useAccountSpecificCollateral } from '@snx-v3/use
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useConnectWallet } from '@web3-onboard/react';
 
 export function DepositFormUi({
   collateralType,
@@ -280,6 +281,7 @@ export function DepositFormUi({
 }
 
 export const DepositForm = (props: { staticCollateral?: boolean }) => {
+  const [_, connect] = useConnectWallet();
   const navigate = useNavigate();
   const isConnected = useIsConnected();
   const params = useParams();
@@ -297,7 +299,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
     <DepositFormUi
       staticCollateral={props.staticCollateral}
       isConnected={isConnected}
-      openConnectModal={() => onboard.connectWallet()}
+      openConnectModal={() => connect()}
       collateralType={collateralType}
       accountCollateral={accountCollateral}
       tokenBalance={tokenBalance}

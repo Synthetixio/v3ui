@@ -1,19 +1,14 @@
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
-import {
-  disconnect,
-  NETWORKS,
-  onboard,
-  useNetwork,
-  useSetNetwork,
-  useWallet,
-} from '@snx-v3/useBlockchain';
+import { NETWORKS, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
+import { useConnectWallet } from '@web3-onboard/react';
 
 export function NetworkController() {
-  const wallet = useWallet();
-  const activeNetwork = useNetwork();
-  const setNetwork = useSetNetwork();
+  const { network: activeNetwork, setNetwork } = useNetwork();
+  const { activeWallet, walletsInfo } = useWallet();
+  const [_, connect, disconnect] = useConnectWallet();
+
   return (
     <Flex>
       <Menu>
@@ -26,7 +21,7 @@ export function NetworkController() {
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
             >
-              <activeNetwork.Icon />
+              <NetworkIcon networkId={activeNetwork?.id} />
               <Text
                 variant="nav"
                 fontSize="sm"
@@ -35,7 +30,7 @@ export function NetworkController() {
                 mr={2}
                 display={{ base: 'none', md: 'initial' }}
               >
-                {activeNetwork.label}
+                {activeNetwork?.label}
               </Text>
               <Flex display={{ base: 'none', md: 'initial' }}>
                 {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
@@ -47,13 +42,13 @@ export function NetworkController() {
                   network.isSupported ||
                   // Make sure we still show network in the list if user selected the chain, even thought we are not officially support it
                   // This will allow us to mark all testnets as not supported, but they still will be operational
-                  activeNetwork.id === network.id
+                  activeNetwork?.id === network.id
               ).map((network) => (
                 <MenuItem
                   key={`${network.id}-${network.preset}`}
-                  onClick={() => setNetwork(network)}
+                  onClick={() => setNetwork(network.id)}
                 >
-                  <network.Icon />
+                  <NetworkIcon networkId={network.id} />
                   <Text variant="nav" ml={2}>
                     {network.label}
                   </Text>
@@ -63,7 +58,7 @@ export function NetworkController() {
           </>
         )}
       </Menu>
-      {wallet ? (
+      {activeWallet ? (
         <Menu>
           <MenuButton
             as={Button}
@@ -84,14 +79,14 @@ export function NetworkController() {
               fontSize="xs"
               userSelect="none"
             >
-              {wallet.ens?.name || prettyString(wallet.address)}
+              {activeWallet.ens?.name || prettyString(activeWallet.address)}
             </Text>
           </MenuButton>
           <MenuList>
             <MenuItem
               onClick={() => {
                 try {
-                  navigator.clipboard.writeText(wallet?.address);
+                  navigator.clipboard.writeText(activeWallet?.address);
                 } catch (_e) {}
               }}
             >
@@ -99,7 +94,7 @@ export function NetworkController() {
                 Copy address
               </Text>
             </MenuItem>
-            <MenuItem onClick={disconnect}>
+            <MenuItem onClick={() => disconnect({ label: walletsInfo.label })}>
               <Text variant="nav" ml={2}>
                 Disconnect
               </Text>
@@ -108,7 +103,7 @@ export function NetworkController() {
         </Menu>
       ) : (
         <Button
-          onClick={() => onboard.connectWallet()}
+          onClick={() => connect()}
           type="button"
           size="sm"
           ml={2}

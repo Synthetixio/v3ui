@@ -1,14 +1,12 @@
 import { ethers } from 'ethers';
 import React from 'react';
 import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx-v3/icons';
-import { INFURA_KEY as DEFAULT_INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
-import onboardInit, { WalletState } from '@web3-onboard/core';
-import injectedModule from '@web3-onboard/injected-wallets';
-// import walletConnectModule from '@web3-onboard/walletconnect';
+import { INFURA_KEY as DEFAULT_INFURA_KEY } from '@snx-v3/constants';
 import SynthetixIcon from './SynthetixIcon.svg';
 import SynthetixLogo from './SynthetixLogo.svg';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import { useCallback } from 'react';
+import { IconProps } from '@chakra-ui/react';
 
 export type Network = {
   id: number;
@@ -18,7 +16,6 @@ export type Network = {
   name: string;
   rpcUrl: () => string;
   label: string;
-  Icon: React.FC;
   isSupported: boolean;
   publicRpcUrl: string;
   isTestnet: boolean;
@@ -33,9 +30,39 @@ export const UNSUPPORTED_NETWORK: Network = {
   rpcUrl: () => '',
   publicRpcUrl: '',
   label: 'Unsupported',
-  Icon: () => <FailedIcon width="24px" height="24px" />,
   isSupported: false,
   isTestnet: false,
+};
+
+interface NetworkIconProps extends IconProps {
+  networkId?: Network['id'];
+}
+
+export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
+  switch (networkId) {
+    case 1:
+      return <EthereumIcon w="24px" h="24px" {...props} />;
+    case 10:
+      return <OptimismIcon w="24px" h="24px" {...props} />;
+    case 5:
+      return <EthereumIcon w="24px" h="24px" {...props} />;
+    case 11155111:
+      return <EthereumIcon w="24px" h="24px" {...props} />;
+    case 420:
+      return <OptimismIcon w="24px" h="24px" {...props} />;
+    case 84531:
+      return <BaseIcon w="24px" h="24px" {...props} />;
+    case 84532:
+      return <BaseIcon w="24px" h="24px" {...props} />;
+    case 13370:
+      return <LogoIcon w="24px" h="24px" {...props} />;
+    case 8453:
+      return <BaseIcon w="24px" h="24px" {...props} />;
+    case 11155420:
+      return <OptimismIcon w="24px" h="24px" {...props} />;
+    default:
+      return <FailedIcon w="24px" h="24px" {...props} />;
+  }
 };
 
 export const NETWORKS: Network[] = [
@@ -48,7 +75,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Ethereum',
-    Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum.publicnode.com',
     isTestnet: false,
@@ -62,7 +88,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://optimism-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Optimism',
-    Icon: () => <OptimismIcon />,
     isSupported: true,
     publicRpcUrl: 'https://mainnet.optimism.io',
     isTestnet: false,
@@ -76,7 +101,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Goerli Testnet',
-    Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
     isTestnet: true,
@@ -90,7 +114,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Sepolia Testnet',
-    Icon: () => <EthereumIcon />,
     isSupported: true,
     publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
     isTestnet: true,
@@ -104,7 +127,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://optimism-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Optimistic Goerli',
-    Icon: () => <OptimismIcon />,
     isSupported: true,
     publicRpcUrl: 'https://goerli.optimism.io',
     isTestnet: true,
@@ -118,7 +140,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base Goerli (Andromeda)',
-    Icon: () => <BaseIcon />,
     isSupported: false, // hidden by default but if wallet switched to Base Goerli it will be visible
     publicRpcUrl: 'https://goerli.base.org',
     isTestnet: true,
@@ -132,7 +153,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base Sepolia (Andromeda)',
-    Icon: () => <BaseIcon />,
     isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
     publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,
@@ -145,7 +165,6 @@ export const NETWORKS: Network[] = [
     name: 'cannon',
     rpcUrl: () => `http://127.0.0.1:8545`,
     label: 'Cannon',
-    Icon: () => <LogoIcon />,
     isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
@@ -159,7 +178,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base',
-    Icon: () => <BaseIcon />,
     isSupported: false,
     publicRpcUrl: 'https://base.publicnode.com',
     isTestnet: false,
@@ -173,7 +191,6 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://optimism-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base',
-    Icon: () => <OptimismIcon />,
     isSupported: false,
     publicRpcUrl: 'https://sepolia.optimism.io/',
     isTestnet: true,
@@ -188,26 +205,6 @@ export const DEFAULT_NETWORK =
       `${network.id}-${network.preset}` === window.localStorage.getItem('DEFAULT_NETWORK')
   ) ?? NETWORKS[1];
 
-const uniqueChains: Network[] = Object.values(
-  NETWORKS.reduce((result, network) => {
-    if (network.id in result) {
-      return result;
-    }
-    Object.assign(result, {
-      [network.id]: network,
-    });
-    return result;
-  }, {})
-);
-
-const chains = uniqueChains.map((network) => ({
-  id: network.hexId,
-  token: network.token,
-  label: network.label,
-  rpcUrl: network.rpcUrl(),
-  publicRpcUrl: network.publicRpcUrl,
-}));
-
 export const appMetadata = {
   name: 'Synthetix',
   icon: SynthetixIcon,
@@ -220,25 +217,6 @@ export const appMetadata = {
   gettingStartedGuide: 'https://synthetix.io',
   explore: 'https://blog.synthetix.io',
 };
-
-export const onboard = onboardInit({
-  theme: 'dark',
-  wallets, // Implementation detail inside the app itself
-  chains,
-  appMetadata,
-  apiKey: ONBOARD_KEY,
-  accountCenter: {
-    desktop: {
-      enabled: false,
-    },
-    mobile: {
-      enabled: false,
-    },
-  },
-  notify: {
-    enabled: false,
-  },
-});
 
 export function useProviderForChain(network?: Network) {
   return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined;
