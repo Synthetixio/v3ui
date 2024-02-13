@@ -15,9 +15,8 @@ export function useCoreProxy() {
     queryKey: [`${network?.id}-${network?.preset}`, 'CoreProxy', { withSigner }],
     queryFn: async function () {
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
-      console.log('About to import');
+
       const { address, abi } = await importCoreProxy(network?.id, network?.preset);
-      console.log('Address', address, 'Abi', abi);
       return new Contract(address, abi, signerOrProvider) as CoreProxyType;
     },
     enabled: Boolean(signerOrProvider),
