@@ -13,8 +13,8 @@ export function useAccountProxy() {
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'AccountProxy', { withSigner }],
     queryFn: async function () {
-      if (!signerOrProvider) throw new Error('Should be disabled');
-      const { address, abi } = await importAccountProxy(network?.id, network?.preset);
+      if (!signerOrProvider || !network) throw new Error('Should be disabled');
+      const { address, abi } = await importAccountProxy(network.id, network?.preset);
       return new Contract(address, abi, signerOrProvider) as AccountProxyType;
     },
     enabled: Boolean(signerOrProvider),

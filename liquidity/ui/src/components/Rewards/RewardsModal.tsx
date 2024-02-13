@@ -30,7 +30,7 @@ export const RewardsModal = ({
 }: RewardsModalInterface) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentNetwork = useNetwork();
+  const { network } = useNetwork();
 
   useEffect(() => {
     if (txnStatus === 'prompting') {
@@ -137,7 +137,7 @@ export const RewardsModal = ({
               Done
             </Button>
           )}
-          {txnHash && (
+          {txnHash && network && (
             <Flex
               justifyContent="center"
               px={3}
@@ -149,7 +149,7 @@ export const RewardsModal = ({
             >
               <Link
                 variant="outline"
-                href={etherscanLink({ chain: currentNetwork.name, address: txnHash })}
+                href={etherscanLink({ chain: network.name, address: txnHash })}
                 fontFamily="heading"
                 color="cyan.500"
                 fontWeight={700}

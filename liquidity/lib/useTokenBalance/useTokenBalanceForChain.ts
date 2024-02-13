@@ -9,6 +9,7 @@ export const useTokenBalanceForChain = (address?: string, network?: Network) => 
   const { activeWallet } = useWallet();
   const provider = useProviderForChain(network);
   const tokenAddress = assertAddressType(address) ? address : undefined;
+
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
