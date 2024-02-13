@@ -55,7 +55,7 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
     case 84532:
       return <BaseIcon w="24px" h="24px" {...props} />;
     case 13370:
-      return <LogoIcon w="24px" h="24px" {...props} />;
+      return <LogoIcon w="29px" h="21px" {...props} />;
     case 8453:
       return <BaseIcon w="24px" h="24px" {...props} />;
     case 11155420:
@@ -77,6 +77,19 @@ export const NETWORKS: Network[] = [
     label: 'Ethereum',
     isSupported: true,
     publicRpcUrl: 'https://ethereum.publicnode.com',
+    isTestnet: false,
+  },
+  {
+    id: 8453,
+    preset: 'main',
+    hexId: `0x${Number(8453).toString(16)}`,
+    token: 'ETH',
+    name: 'base',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Base',
+    isSupported: false,
+    publicRpcUrl: 'https://base.publicnode.com',
     isTestnet: false,
   },
   {
@@ -168,19 +181,6 @@ export const NETWORKS: Network[] = [
     isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
     publicRpcUrl: 'http://127.0.0.1:8545',
     isTestnet: true,
-  },
-  {
-    id: 8453,
-    preset: 'main',
-    hexId: `0x${Number(8453).toString(16)}`,
-    token: 'ETH',
-    name: 'base',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base',
-    isSupported: false,
-    publicRpcUrl: 'https://base.publicnode.com',
-    isTestnet: false,
   },
   {
     id: 11155420,

@@ -1,8 +1,8 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-export const FailedIcon = ({ width = '94px', height = '94px' }: IconProps) => {
+export const FailedIcon = ({ w = '94px', h = '94px' }: IconProps) => {
   return (
-    <Icon width={width} height={height} viewBox="0 0 94 94" fill="none">
+    <Icon w={w} h={h} viewBox="0 0 94 94" fill="none">
       <g filter="url(#filter0_d_1044_28165)">
         <path
           fillRule="evenodd"

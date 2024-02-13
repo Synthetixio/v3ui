@@ -22,7 +22,7 @@ export function NetworkController() {
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
             >
-              <NetworkIcon networkId={activeNetwork?.id} />
+              <NetworkIcon networkId={activeNetwork?.id || 666} />
               <Text
                 variant="nav"
                 fontSize="sm"
@@ -31,7 +31,7 @@ export function NetworkController() {
                 mr={2}
                 display={{ base: 'none', md: 'initial' }}
               >
-                {activeNetwork?.label}
+                {activeNetwork?.label || 'Not Connected'}
               </Text>
               <Flex display={{ base: 'none', md: 'initial' }}>
                 {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
