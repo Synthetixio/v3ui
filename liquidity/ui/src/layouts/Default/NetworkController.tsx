@@ -1,8 +1,9 @@
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
-import { NETWORKS, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useConnectWallet } from '@web3-onboard/react';
+import { networks } from '../../utils/onboard';
 
 export function NetworkController() {
   const { network: activeNetwork, setNetwork } = useNetwork();
@@ -37,23 +38,16 @@ export function NetworkController() {
               </Flex>
             </MenuButton>
             <MenuList>
-              {NETWORKS.filter(
-                (network) =>
-                  network.isSupported ||
-                  // Make sure we still show network in the list if user selected the chain, even thought we are not officially support it
-                  // This will allow us to mark all testnets as not supported, but they still will be operational
-                  activeNetwork?.id === network.id
-              ).map((network) => (
-                <MenuItem
-                  key={`${network.id}-${network.preset}`}
-                  onClick={() => setNetwork(network.id)}
-                >
-                  <NetworkIcon networkId={network.id} />
-                  <Text variant="nav" ml={2}>
-                    {network.label}
-                  </Text>
-                </MenuItem>
-              ))}
+              {networks.map(({ id, label }) => {
+                return (
+                  <MenuItem key={`${id}`} onClick={() => setNetwork(id)}>
+                    <NetworkIcon networkId={id} />
+                    <Text variant="nav" ml={2}>
+                      {label}
+                    </Text>
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </>
         )}

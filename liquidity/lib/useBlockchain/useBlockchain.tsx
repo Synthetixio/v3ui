@@ -190,7 +190,7 @@ export const NETWORKS: Network[] = [
     name: 'optimism-sepolia',
     rpcUrl: (INFURA_KEY?: string) =>
       `https://optimism-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base',
+    label: 'Optimism Sepolia',
     isSupported: false,
     publicRpcUrl: 'https://sepolia.optimism.io/',
     isTestnet: true,
