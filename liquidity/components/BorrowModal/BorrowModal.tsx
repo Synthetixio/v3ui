@@ -181,6 +181,7 @@ export const BorrowModal: React.FC<{
   }, [execBorrow, queryClient, network?.id, network?.preset, errorParserCoreProxy, toast]);
 
   const { txnStatus } = txnState;
+
   if (!params.poolId || !params.accountId || !collateralType) return null;
 
   return (

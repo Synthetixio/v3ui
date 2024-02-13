@@ -16,6 +16,7 @@ const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
   amount: ZodBigNumber.transform((x) => wei(x)),
 });
+
 const DebtSchema = ZodBigNumber.transform((x) => wei(x));
 
 export const loadPosition = async ({
@@ -123,6 +124,7 @@ export const useLiquidityPosition = ({
           tokenAddresses: [tokenAddress, UsdProxy.address],
           CoreProxy,
         });
+
       const collateralPriceCalls = await fetchPriceUpdates(
         collateralPriceUpdates,
         network.isTestnet
