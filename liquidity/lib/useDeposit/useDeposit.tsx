@@ -35,14 +35,18 @@ export const useDeposit = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
-  const network = useNetwork();
-  const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
+
+  const { network } = useNetwork();
+  const signer = useSigner();
   const provider = useProvider();
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (
         !(
+          network &&
+          provider &&
           signer &&
           CoreProxy &&
           poolId &&
@@ -83,7 +87,7 @@ export const useDeposit = ({
         const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
         const collateralPriceCallsPromise = fetchPriceUpdates(
           collateralPriceUpdates,
-          network.isTestnet
+          network?.isTestnet
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );

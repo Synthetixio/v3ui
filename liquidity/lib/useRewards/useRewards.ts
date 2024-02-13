@@ -59,7 +59,7 @@ export function useRewards(
   collateralAddress?: string,
   accountId?: string
 ) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: Multicall3 } = useMulticall3();
   const { data: CoreProxy } = useCoreProxy();
 
@@ -68,7 +68,7 @@ export function useRewards(
       Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
     ),
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
@@ -81,13 +81,14 @@ export function useRewards(
         !poolId ||
         !collateralAddress ||
         !accountId ||
-        !distributors
+        !distributors ||
+        !network
       ) {
         throw 'useRewards is missing required data';
       }
       if (distributors.length === 0) return [];
 
-      const { abi } = await importRewardDistributor(network.id, network.preset);
+      const { abi } = await importRewardDistributor(network?.id, network?.preset);
 
       const ifaceRD = new utils.Interface(abi);
       const ifaceERC20 = new utils.Interface(erc20Abi);
@@ -106,7 +107,7 @@ export function useRewards(
           ])
         ),
         ...distributors.map(async ({ id: address }) => {
-          return await fetch(getSubgraphUrl(network.name), {
+          return await fetch(getSubgraphUrl(network?.name), {
             method: 'POST',
             body: JSON.stringify({
               query: RewardsDataDocument,

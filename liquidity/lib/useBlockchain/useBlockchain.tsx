@@ -81,7 +81,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: 8453,
-    preset: 'main',
+    preset: 'andromeda',
     hexId: `0x${Number(8453).toString(16)}`,
     token: 'ETH',
     name: 'base',

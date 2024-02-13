@@ -33,6 +33,7 @@ export const loadPosition = async ({
     CoreProxy.populateTransaction.getPositionCollateral(accountId, poolId, tokenAddress),
     CoreProxy.populateTransaction.getPositionDebt(accountId, poolId, tokenAddress),
   ]);
+
   const decoder = (multicallEncoded: string | string[]) => {
     if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
       const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
@@ -76,10 +77,11 @@ export const useLiquidityPosition = ({
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'LiquidityPosition',
       { accountId },
       {
@@ -98,7 +100,8 @@ export const useLiquidityPosition = ({
         !poolId ||
         !tokenAddress ||
         !collateralPriceUpdates ||
-        !UsdProxy
+        !UsdProxy ||
+        !network
       ) {
         throw Error('useLiquidityPosition should not be enabled');
       }
@@ -155,7 +158,6 @@ export const useLiquidityPosition = ({
             usdCollateral,
           };
         },
-
         `useLiquidityPosition`
       );
     },

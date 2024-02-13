@@ -75,12 +75,12 @@ async function loadCollateralTypes({
 }
 
 export function useCollateralTypes(includeDelegationOff = false) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: Multicall3 } = useMulticall3();
 
   return useQuery({
-    queryKey: [`${network.id}-${network.preset}`, 'CollateralTypes', { includeDelegationOff }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');

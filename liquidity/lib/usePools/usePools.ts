@@ -18,12 +18,12 @@ export const PoolsSchema = z.array(PoolSchema);
 export type PoolsType = z.infer<typeof PoolsSchema>;
 
 export function usePools() {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
 
   return useQuery({
     enabled: Boolean(CoreProxy),
-    queryKey: [`${network.id}-${network.preset}`, 'Pools'],
+    queryKey: [`${network?.id}-${network?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
 

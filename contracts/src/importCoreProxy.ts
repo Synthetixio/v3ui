@@ -24,6 +24,7 @@ export type CoreProxyType =
   | CoreProxy84532Andromeda;
 
 export async function importCoreProxy(chainId: number, preset: string = 'main') {
+  console.log(`importCoreProxy(${chainId}, ${preset})`)
   switch (`${chainId}-${preset}`) {
     case '1-main':
       return import('./1-main/CoreProxy');
