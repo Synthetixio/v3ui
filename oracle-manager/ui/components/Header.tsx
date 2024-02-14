@@ -17,7 +17,7 @@ import { GitHubIcon } from './GitHubIcon';
 import { useConnectWallet } from '@web3-onboard/react';
 
 const activeIcon = (currentNetwork: Network) => {
-  switch (currentNetwork.id) {
+  switch (currentNetwork?.id) {
     case 1:
       return { icon: <EthereumIcon />, name: 'Ethereum' };
     case 10:
@@ -39,13 +39,8 @@ const activeIcon = (currentNetwork: Network) => {
 
 export const Header: FC = () => {
   const isWalletConnected = useIsConnected();
-  const [
-    {
-      wallet: { label },
-    },
-    connect,
-    disconnect,
-  ] = useConnectWallet();
+  const [{ wallet }, connect, disconnect] = useConnectWallet();
+
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { activeWallet } = useWallet();
 
@@ -133,7 +128,13 @@ export const Header: FC = () => {
           )}
 
           {isWalletConnected ? (
-            <Button onClick={() => disconnect({ label })}>
+            <Button
+              onClick={() => {
+                if (wallet) {
+                  disconnect({ label: wallet.label });
+                }
+              }}
+            >
               {shortAddress(activeWallet?.address || '')}
             </Button>
           ) : (
