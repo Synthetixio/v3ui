@@ -6323,6 +6323,7 @@ __metadata:
     "@safe-global/safe-apps-provider": "npm:^0.18.2"
     "@safe-global/safe-apps-sdk": "npm:^9.0.0"
     "@snx-v3/format": "workspace:*"
+    "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/txnReducer": "workspace:^"
     "@snx-v3/useBlockchain": "workspace:*"
