@@ -204,7 +204,7 @@ const injected = injectedModule();
 const walletConnect = walletConnectModule({
   version: 2,
   projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
-  requiredChains: [1, 10],
+  requiredChains: [1, 10, 8453],
 });
 
 const wallets = [injected, walletConnect];
