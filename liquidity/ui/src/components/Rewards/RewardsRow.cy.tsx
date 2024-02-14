@@ -1,6 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RewardsRow } from './RewardsRow'; // Replace with the actual path to your component
 import { Table } from '@chakra-ui/react';
+import injectedModule from '@web3-onboard/injected-wallets';
+import { init, Web3OnboardProvider } from '@web3-onboard/react';
+
+const onboard = init({ wallets: [injectedModule()], chains: [{ id: 1 }] });
 
 describe('RewardsRow', () => {
   let queryClient: QueryClient;
@@ -24,11 +28,13 @@ describe('RewardsRow', () => {
     };
 
     cy.mount(
-      <QueryClientProvider client={queryClient}>
-        <Table>
-          <RewardsRow {...props} />
-        </Table>
-      </QueryClientProvider>
+      <Web3OnboardProvider web3Onboard={onboard}>
+        <QueryClientProvider client={queryClient}>
+          <Table>
+            <RewardsRow {...props} />
+          </Table>
+        </QueryClientProvider>
+      </Web3OnboardProvider>
     );
 
     // Continue with your assertions and interactions

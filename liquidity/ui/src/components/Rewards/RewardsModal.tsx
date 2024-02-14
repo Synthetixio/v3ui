@@ -137,7 +137,7 @@ export const RewardsModal = ({
               Done
             </Button>
           )}
-          {txnHash && network && (
+          {txnHash && (
             <Flex
               justifyContent="center"
               px={3}
@@ -149,7 +149,7 @@ export const RewardsModal = ({
             >
               <Link
                 variant="outline"
-                href={etherscanLink({ chain: network.name, address: txnHash })}
+                href={etherscanLink({ chain: network?.name || '', address: txnHash })}
                 fontFamily="heading"
                 color="cyan.500"
                 fontWeight={700}
