@@ -9,33 +9,12 @@ import {
   MenuList,
   Text,
 } from '@chakra-ui/react';
-import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
-import { useIsConnected, useWallet, useNetwork, Network } from '@snx-v3/useBlockchain';
+import { EthereumIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
+import { useIsConnected, useWallet, useNetwork, NetworkIcon } from '@snx-v3/useBlockchain';
 import { FC } from 'react';
 import { shortAddress } from '../utils/addresses';
 import { GitHubIcon } from './GitHubIcon';
 import { useConnectWallet } from '@web3-onboard/react';
-
-const activeIcon = (currentNetwork: Network) => {
-  switch (currentNetwork?.id) {
-    case 1:
-      return { icon: <EthereumIcon />, name: 'Ethereum' };
-    case 10:
-      return { icon: <OptimismIcon />, name: 'Optimism' };
-    case 5:
-      return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
-    case 420:
-      return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
-    case 84531:
-      return {
-        icon: <BaseIcon />,
-        name: 'Base Goerli',
-      };
-
-    default:
-      return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
-  }
-};
 
 export const Header: FC = () => {
   const isWalletConnected = useIsConnected();
@@ -43,8 +22,6 @@ export const Header: FC = () => {
 
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { activeWallet } = useWallet();
-
-  const { name, icon } = activeIcon(currentNetwork);
 
   return (
     <Flex as="header" p="2" flexDir="column" w="100%" gap="2">
@@ -78,10 +55,10 @@ export const Header: FC = () => {
                     colorScheme="gray"
                     sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
                   >
-                    {icon}
+                    <NetworkIcon networkId={currentNetwork?.id} />
                     <>
                       <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                        {name}
+                        {currentNetwork?.name}
                       </Text>
                       {isOpen ? (
                         <ChevronUpIcon color="cyan" />

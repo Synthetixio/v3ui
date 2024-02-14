@@ -137,13 +137,13 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const handleButtonClick = async () => {
     if (!isWalletConnected) {
       await connect();
-      if (network) {
+      if (network && node?.network) {
         setNetwork(node.network);
       }
     } else if (nodeState === 'registerNode') {
       try {
         setIsLoading(true);
-        if (network.id && signer) {
+        if (network?.id && signer) {
           const contract = getNodeModuleContract(signer, network.id);
           const tx: providers.TransactionResponse = await contract.registerNode(
             node.typeId,
@@ -162,7 +162,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
             setNodes((state) => {
               return state.map((n) => {
                 if (n.id === nodeID) {
-                  return { ...n, isRegistered: true, network: network.id };
+                  return { ...n, isRegistered: true, network: network?.id };
                 }
                 return n;
               });
