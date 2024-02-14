@@ -20,6 +20,7 @@
     "@snx-v3/usePools": "workspace:*",
     "@synthetixio/safe-import": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
+    "@web3-onboard/injected-wallets": "^2.10.11",
     "@web3-onboard/react": "^2.8.13",
     "react": "^18.2.0",
     "react-router-dom": "^6.18.0"
