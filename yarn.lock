@@ -6670,6 +6670,7 @@ __metadata:
     "@snx-v3/icons": "workspace:*"
     "@web3-onboard/core": "npm:^2.21.2"
     "@web3-onboard/injected-wallets": "npm:^2.10.11"
+    "@web3-onboard/walletconnect": "npm:^2.5.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
