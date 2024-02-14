@@ -1,6 +1,7 @@
 import { Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { providers, utils } from 'ethers';
 import { FC, useCallback, useEffect, useState } from 'react';
+import { useConnectWallet } from '@web3-onboard/react';
 import {
   encodeBytesByNodeType,
   getNodeModuleContract,
@@ -11,7 +12,7 @@ import { Node } from '../utils/types';
 import { useRecoilState } from 'recoil';
 import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
-import { onboard, useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
 
 let interval: any;
@@ -23,11 +24,15 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodeId, setNodeId] = useState('');
   const [price, setPrice] = useState('0');
   const [time, setTime] = useState(new Date());
+
+  const [_, connect] = useConnectWallet();
   const signer = useSigner();
   const isWalletConnected = useIsConnected();
-  const network = useNetwork();
+  const { network, setNetwork } = useNetwork();
+
   const toast = useToast();
   const param = useParams();
+
   const networkParam = param?.network ? Number(param.network) : undefined;
   const provider = new providers.JsonRpcProvider(
     `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
@@ -131,9 +136,10 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
 
   const handleButtonClick = async () => {
     if (!isWalletConnected) {
-      onboard.connectWallet().then(() => {
-        if (node.network) onboard.setChain({ chainId: node.network });
-      });
+      await connect();
+      if (network) {
+        setNetwork(node.network);
+      }
     } else if (nodeState === 'registerNode') {
       try {
         setIsLoading(true);
