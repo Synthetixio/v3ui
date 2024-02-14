@@ -71,7 +71,7 @@ function useUpdateUserDetailsMutation() {
         const nonceResponse: NonceResponse = await response.json();
 
         const signedMessage = new SiweMessage({
-          domain: domain,
+          domain,
           address: utils.getAddress(activeWallet.address),
           chainId: chainId,
           uri: `https://${domain}`,
@@ -80,7 +80,6 @@ function useUpdateUserDetailsMutation() {
           nonce: nonceResponse.data.nonce,
           issuedAt: new Date().toISOString(),
         });
-
         const signature = await signer.signMessage(signedMessage.prepareMessage());
 
         const message = {

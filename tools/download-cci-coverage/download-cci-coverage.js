@@ -1,9 +1,5 @@
 #!/usr/bin/env node
 
-const fetch = require('node-fetch');
-const https = require('https');
-const fs = require('fs');
-
 function req(env) {
   throw new Error(`${env} is required`);
 }
@@ -19,21 +15,6 @@ async function get(path) {
   }
   const json = await res.json();
   return json;
-}
-
-async function download(url, out) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, (res1) => {
-      res1.once('error', reject);
-      res1.once('end', resolve);
-      https.get(res1.headers.location, (res2) => {
-        res2.pipe(fs.createWriteStream(out));
-        res2.once('error', reject);
-        res2.once('end', resolve);
-      });
-    });
-    req.once('error', reject);
-  });
 }
 
 async function run() {
@@ -52,12 +33,16 @@ async function run() {
   );
   console.dir({ coverageArtifacts }, { depth: Infinity });
 
-  await fs.promises.mkdir(OUT_DIR, { recursive: true });
+  await require('fs').promises.mkdir(OUT_DIR, { recursive: true });
   await coverageArtifacts.reduce(async (promise, artifact) => {
     await promise;
     const filename = `${WORKFLOW_NAME}-${artifact.node_index}.json`;
-    console.log('...Downloading', artifact.path, 'to', `${OUT_DIR}/${filename}`);
-    await download(artifact.url, `${OUT_DIR}/${filename}`);
+    console.log('...Downloading', artifact.url, 'to', `${OUT_DIR}/${filename}`);
+    await require('fs').promises.writeFile(
+      `${OUT_DIR}/${filename}`,
+      await (await fetch(artifact.url, { method: 'GET' })).text(),
+      'utf8'
+    );
     console.log('Saved', `${OUT_DIR}/${filename}`);
   }, Promise.resolve());
 }

@@ -20,7 +20,7 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
       maxH="50px"
       maxW="fit-content"
     >
-      <Text fontSize="12px" lineHeight="short">
+      <Text fontSize="12px" lineHeight="short" data-testid="period-countdown">
         {councilPeriod === '0'
           ? 'Next Elections:'
           : councilPeriod === '1'

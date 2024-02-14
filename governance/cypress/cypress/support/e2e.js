@@ -14,7 +14,7 @@ beforeEach(() => {
     return subgraph(req);
   }).as('subgraph');
 
-  ['mainnet', 'optimism-mainnet', 'goerli', 'optimism-goerli'].forEach((networkName) => {
+  ['sepolia'].forEach((networkName) => {
     cy.intercept(`https://${networkName}.infura.io/v3/*`, (req) => {
       req.url = 'http://127.0.0.1:8545';
       req.continue();
@@ -39,5 +39,15 @@ Cypress.Commands.add('connectWallet', (namespace = 'wallet') => {
     win.ethereum = metamask({ privateKey, address });
   });
 
-  return cy.wrap(wallet).as(namespace);
+  return cy
+    .wrap(wallet.connect(new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545')))
+    .as(namespace);
+});
+
+Cypress.Commands.add('assertValueCopiedToClipboard', (value) => {
+  cy.window().then((win) => {
+    win.navigator.clipboard.readText().then((text) => {
+      expect(text).to.eq(value);
+    });
+  });
 });

@@ -59,7 +59,7 @@ export const UserProfileDetails = ({
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%">
           <Flex justifyContent="space-between">
-            <Text fontSize="16px" fontWeight="700">
+            <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
               {shortAddress(userData?.address)}
             </Text>
           </Flex>
@@ -127,7 +127,7 @@ export const UserProfileDetails = ({
                   Edit Nomination
                 </Button>
               </Tooltip>
-            ) : (
+            ) : councilPeriod === '1' ? (
               <Button
                 variant="outline"
                 colorScheme="gray"
@@ -143,7 +143,7 @@ export const UserProfileDetails = ({
               >
                 {isNominated ? 'Edit Nomination' : 'Nominate Self'}
               </Button>
-            )}
+            ) : null}
           </>
         )}
         {councilPeriod === '2' && (

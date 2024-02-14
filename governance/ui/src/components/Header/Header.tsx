@@ -202,6 +202,7 @@ export function Header() {
                 py="6px"
                 px="9.5px"
                 whiteSpace="nowrap"
+                data-testid="user-menu-button"
               >
                 <WalletIcon />
                 <Text
@@ -211,12 +212,14 @@ export function Header() {
                   fontWeight={700}
                   fontSize="xs"
                   userSelect="none"
+                  data-testid="user-wallet-address"
                 >
                   {activeWallet.ens?.name || prettyString(activeWallet.address)}
                 </Text>
               </MenuButton>
               <MenuList zIndex={100}>
                 <MenuItem
+                  data-testid="copy-user-wallet-address"
                   onClick={() => {
                     try {
                       navigator.clipboard.writeText(activeWallet?.address);
