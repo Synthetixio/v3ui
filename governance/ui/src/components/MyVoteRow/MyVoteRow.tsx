@@ -33,10 +33,9 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
         <CouncilUser
           councilSlug={councilSlug}
           address={currentVotes[councilSlug]}
-          hideName={selectedVotes[councilSlug] !== undefined}
+          hideName={!selectedVotes[councilSlug]}
         />
-
-        {selectedVotes[councilSlug] !== undefined && (
+        {!selectedVotes[councilSlug] && (
           <>
             <ChevronRightIcon />
             <CouncilUser councilSlug={councilSlug} address={selectedVotes[councilSlug]} />

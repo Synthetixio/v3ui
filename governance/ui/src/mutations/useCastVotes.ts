@@ -1,17 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 import { useReducer } from 'react';
-import { useMulticall } from '../hooks/useMulticall';
+// import { useMulticall } from '../hooks/useMulticall';
 import { initialState, reducer } from '@snx-v3/txnReducer';
-import { useGetUserVotingPower } from '../queries';
-import { useProvider } from '@snx-v3/useBlockchain';
+// import { useGetUserVotingPower } from '../queries';
+// import { useProvider } from '@snx-v3/useBlockchain';
 
 export function useCastVotes() {
-  const { makeMulticall } = useMulticall();
-  const provider = useProvider();
+  // const { makeMulticall } = useMulticall();
+  // const provider = useProvider();
 
-  const thing = useGetUserVotingPower('spartan');
-
-  console.log({ thing });
+  // const votingPower = useGetUserVotingPower('spartan');
 
   const [txnState, dispatch] = useReducer(reducer, initialState);
 

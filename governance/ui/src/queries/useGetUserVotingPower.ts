@@ -12,20 +12,17 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
   return useQuery({
     queryFn: async () => {
-      console.log('council is', council);
       if (!activeWallet || !provider) return;
-      console.log('about to try');
+
       try {
         const electionModule = getCouncilContract(council).connect(provider);
         // const implementation = await electionModule.getImplementation();
-        console.log('implementation is', electionModule);
+
         const electionId = electionModule.connect(provider).getEpochIndex();
 
         const ballot = await electionModule
           .connect(provider)
           .getBallot(activeWallet.address, network.id, electionId);
-
-        console.log('Ballot', ballot);
 
         if (ballot && ballot.votingPower.gt(0)) {
           return ballot.votingPower;
@@ -35,8 +32,6 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           SnapshotRecordContractAddress,
           activeWallet?.address
         );
-
-        console.log('voting power is', votingPower.toString());
 
         return votingPower.toString();
       } catch (error) {
