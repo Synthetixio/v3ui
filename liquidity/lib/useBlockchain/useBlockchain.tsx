@@ -4,7 +4,7 @@ import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx
 import { INFURA_KEY as DEFAULT_INFURA_KEY, ONBOARD_KEY } from '@snx-v3/constants';
 import onboardInit, { AppState, WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-// import walletConnectModule from '@web3-onboard/walletconnect';
+import walletConnectModule from '@web3-onboard/walletconnect';
 import SynthetixIcon from './SynthetixIcon.svg';
 import SynthetixLogo from './SynthetixLogo.svg';
 
@@ -108,6 +108,20 @@ export const NETWORKS: Network[] = [
     isTestnet: true,
   },
   {
+    id: 8453,
+    preset: 'andromeda',
+    hexId: `0x${Number(8453).toString(16)}`,
+    token: 'ETH',
+    name: 'base',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://base.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Base',
+    Icon: () => <BaseIcon />,
+    isSupported: true,
+    publicRpcUrl: 'https://base.publicnode.com',
+    isTestnet: false,
+  },
+  {
     id: 84531,
     preset: 'andromeda',
     hexId: `0x${Number(84531).toString(16)}`,
@@ -187,16 +201,13 @@ export const DEFAULT_NETWORK =
   ) ?? NETWORKS[1];
 
 const injected = injectedModule();
-// const walletConnect = walletConnectModule({
-//   version: 2,
-//   projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
-//   requiredChains: [1, 10],
-// });
+const walletConnect = walletConnectModule({
+  version: 2,
+  projectId: `${process.env.NEXT_PUBLIC_WC_PROJECT_ID}`,
+  requiredChains: [1, 10],
+});
 
-const wallets = [
-  injected,
-  // walletConnect
-];
+const wallets = [injected, walletConnect];
 
 const uniqueChains: Network[] = Object.values(
   NETWORKS.reduce((result, network) => {
