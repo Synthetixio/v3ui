@@ -26,21 +26,24 @@ export function usePools() {
     queryKey: [`${network?.id}-${network?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
+      const isBase = network?.name === 'base';
+      const [preferredPoolIdRaw, approvedPoolIdsRaw] = !isBase
+        ? // @ts-ignore TODO: remove eventually when types are aligned
+          await CoreProxy.callStatic.multicall([
+            CoreProxy.interface.encodeFunctionData('getPreferredPool'),
+            CoreProxy.interface.encodeFunctionData('getApprovedPools'),
+          ])
+        : await Promise.all([
+            CoreProxy.callStatic.getPreferredPool(),
+            CoreProxy.callStatic.getApprovedPools(),
+          ]);
 
-      // @ts-ignore TODO: remove eventually when types are aligned
-      const [preferredPoolIdRaw, approvedPoolIdsRaw] = await CoreProxy.callStatic.multicall([
-        CoreProxy.interface.encodeFunctionData('getPreferredPool'),
-        CoreProxy.interface.encodeFunctionData('getApprovedPools'),
-      ]);
-
-      const [preferredPoolId] = CoreProxy.interface.decodeFunctionResult(
-        'getPreferredPool',
-        preferredPoolIdRaw
-      );
-      const [approvedPoolIds] = CoreProxy.interface.decodeFunctionResult(
-        'getApprovedPools',
-        approvedPoolIdsRaw
-      );
+      const [preferredPoolId] = isBase
+        ? [Number(preferredPoolIdRaw.toString())]
+        : CoreProxy.interface.decodeFunctionResult('getPreferredPool', preferredPoolIdRaw);
+      const [approvedPoolIds] = isBase
+        ? [approvedPoolIdsRaw]
+        : CoreProxy.interface.decodeFunctionResult('getApprovedPools', approvedPoolIdsRaw);
 
       const incompletePools = [
         {
@@ -54,14 +57,20 @@ export function usePools() {
         }))
       );
 
-      // @ts-ignore TODO: remove eventually when types are aligned
-      const poolNamesRaw = await CoreProxy.callStatic.multicall(
-        incompletePools.map(({ id }) => CoreProxy.interface.encodeFunctionData('getPoolName', [id]))
-      );
+      const poolNamesRaw = !isBase
+        ? // @ts-ignore TODO: remove eventually when types are aligned
+          await CoreProxy.callStatic.multicall(
+            incompletePools.map(({ id }) =>
+              CoreProxy.interface.encodeFunctionData('getPoolName', [id])
+            )
+          )
+        : await Promise.all(incompletePools.map(async ({ id }) => await CoreProxy.getPoolName(id)));
 
-      const poolNames = poolNamesRaw.map(
-        (bytes: string) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
-      );
+      const poolNames = isBase
+        ? poolNamesRaw
+        : poolNamesRaw.map(
+            (bytes: string) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
+          );
 
       const poolsRaw = incompletePools.map(({ id, isPreferred }, i) => ({
         id,
@@ -69,7 +78,9 @@ export function usePools() {
         name: poolNames[i],
       }));
 
-      const pools = PoolsSchema.parse(poolsRaw);
+      const pools = isBase
+        ? poolsRaw.map((pool) => ({ ...pool, id: pool.id.toString() }))
+        : PoolsSchema.parse(poolsRaw);
 
       return pools;
     },
