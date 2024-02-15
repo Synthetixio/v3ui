@@ -1,6 +1,6 @@
 {
   "name": "synthetix-omnibus",
-  "version": "3.3.5",
+  "version": "3.3.5-2",
   "preset": "andromeda",
   "url": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 8453,
@@ -12,7 +12,7 @@
     "SpotMarketProxy": "0x18141523403e2595D31b22604AcB8Fc06a4CaA61",
     "PerpsMarketProxy": "0x0A2AF931eFFd34b81ebcc57E3d3c9B1E1dE1C9Ce",
     "PerpsAccountProxy": "0xcb68b813210aFa0373F076239Ad4803f8809e8cf",
-    "Multicall3": "0xAE788aaf52780741E12BF79Ad684B91Bb0EF4D92",
+    "Multicall3": "0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e",
     "RewardDistributor": null
   }
 }
