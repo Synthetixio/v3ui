@@ -26,7 +26,7 @@ beforeEach(() => {
     const network = await provider.getNetwork();
     win.localStorage.setItem('DEFAULT_NETWORK', `${network.chainId}-main`);
     win.localStorage.setItem('UNSAFE_IMPORT', 'true');
-    win.localStorage.setItem('connectedWallets', '["MetaMask"]');
+    win.localStorage.setItem('connectedWallets', '"MetaMask"');
     win.localStorage.setItem('CONTRACT_ERROR_OPEN', 'true');
   });
 });
