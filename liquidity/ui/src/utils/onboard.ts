@@ -3,7 +3,7 @@ import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets';
 import trezorModule from '@web3-onboard/trezor';
 import ledgerModule from '@web3-onboard/ledger';
 import walletConnectModule from '@web3-onboard/walletconnect';
-import gnosisModule from '@web3-onboard/gnosis';
+// import gnosisModule from '@web3-onboard/gnosis';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 
@@ -34,7 +34,7 @@ export const onboard = init({
       version: 2,
       projectId: process.env.WC_PROJECT_ID,
     }),
-    gnosisModule(),
+    // gnosisModule(),
     coinbaseModule(),
   ],
   chains: [...networks],
