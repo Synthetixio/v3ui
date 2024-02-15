@@ -1,14 +1,39 @@
+import { useEffect } from 'react';
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-import { useConnectWallet } from '@web3-onboard/react';
+
 import { networks } from '../../utils/onboard';
 
 export function NetworkController() {
+  const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-  const { activeWallet, walletsInfo } = useWallet();
-  const [_, connect, disconnect] = useConnectWallet();
+
+  useEffect(() => {
+    // Check if wallet preference is stored in local storage
+    if (!walletsInfo) {
+      const defaultWallet = localStorage.getItem('defaultWallet');
+
+      if (defaultWallet) {
+        connect({
+          autoSelect: { disableModals: true, label: JSON.parse(defaultWallet) },
+        });
+      }
+    }
+
+    if (walletsInfo) {
+      // store in local storage
+      localStorage.setItem('defaultWallet', JSON.stringify(walletsInfo.label));
+    }
+  }, [walletsInfo, connect]);
+
+  const onDisconnect = () => {
+    if (walletsInfo) {
+      disconnect(walletsInfo);
+      localStorage.removeItem('defaultWallet');
+    }
+  };
 
   return (
     <Flex>
@@ -88,7 +113,7 @@ export function NetworkController() {
                 Copy address
               </Text>
             </MenuItem>
-            <MenuItem onClick={() => disconnect({ label: walletsInfo.label })}>
+            <MenuItem onClick={onDisconnect}>
               <Text variant="nav" ml={2}>
                 Disconnect
               </Text>
