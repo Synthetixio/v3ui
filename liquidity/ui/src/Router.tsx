@@ -21,7 +21,7 @@ export const Router = () => {
         <Route element={<DefaultLayout />}>
           <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
           <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
-          <Route path="/dashboard/positions/:accountId" element={<Dashboard />} />
+          <Route path="/dashboard/positions" element={<Dashboard />} />
           {/*<Route path="/collateral" element={<Collateral />} />*/}
           {/*<Route path="/accept-nomination" element={<AcceptNomination />} />*/}
           {/*<Route path="/settings" element={<Settings />} />*/}
