@@ -1,21 +1,17 @@
 import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { usePools } from '@snx-v3/usePools';
 import Wei from '@synthetixio/wei';
 import { useSearchParams } from 'react-router-dom';
 import { AssetsList } from '../../components';
 
 export function Dashboard() {
   const [params] = useSearchParams();
-  const { data: pools } = usePools();
-
   const { data: positions, isLoading } = useLiquidityPositions({
     accountId: params.get('accountId') || '',
   });
 
   const debt =
     positions && Object.values(positions).reduce((prev, cur) => prev.add(cur.debt), new Wei(0));
-  console.log(debt?.toString(), positions);
 
   return (
     <Flex flexDir="column">
