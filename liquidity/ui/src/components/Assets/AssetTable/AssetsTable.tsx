@@ -1,7 +1,7 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { TableContainer, Table, Heading, Tooltip, Flex, Tbody } from '@chakra-ui/react';
 import { AssetsRow } from './AssetsRow';
-import { TableHeader } from './TableHeader';
+import { AssetTableHeader } from './AssetTableHeader';
 
 interface Asset {
   token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
@@ -82,7 +82,7 @@ export const AssetsTable = () => {
         </Tooltip>
       </Flex>
       <Table variant="simple">
-        <TableHeader />
+        <AssetTableHeader />
         <Tbody>
           {mockAssets.map(
             ({

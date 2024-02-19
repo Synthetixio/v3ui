@@ -1,3 +1,3 @@
 export * from './AssetsTable';
 export * from './AssetsRow';
-export * from './TableHeader';
+export * from './AssetTableHeader';
