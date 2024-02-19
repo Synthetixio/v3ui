@@ -2,6 +2,7 @@ import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import Wei from '@synthetixio/wei';
 import { useSearchParams } from 'react-router-dom';
+import { AssetsList } from '../../components';
 
 export function Dashboard() {
   const [params] = useSearchParams();
@@ -87,6 +88,7 @@ export function Dashboard() {
           </Text>
         </Flex>
       </Flex>
+      <AssetsList />
     </Flex>
   );
 }
