@@ -12,7 +12,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries/';
 import { useEffect } from 'react';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';

@@ -44,7 +44,7 @@ export default function UserTableView({
         <ProfilePicture
           imageSrc={user?.pfpUrl}
           address={user?.address}
-          blockiesSize={8}
+          size={8}
           mr="0"
           ImageProps={{ w: '32px', h: '32px' }}
         />{' '}

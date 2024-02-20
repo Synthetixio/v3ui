@@ -6,7 +6,7 @@ import useEditNomination from '../../mutations/useEditNomination';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '../../queries/useWallet';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries';
 import { shortAddress } from '../../utils/address';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
