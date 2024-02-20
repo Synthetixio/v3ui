@@ -6,7 +6,7 @@ import { useProvider, useWallet } from './';
 import { ethers } from 'ethers';
 
 export function useGetUserVotingPower(council: CouncilSlugs) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const provider = useProvider();
   const { activeWallet } = useWallet();
 
@@ -22,7 +22,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
         const ballot = await electionModule
           .connect(provider)
-          .getBallot(activeWallet.address, network.id, electionId);
+          .getBallot(activeWallet.address, network?.id, electionId);
 
         if (ballot && ballot.votingPower.gt(0)) {
           return ballot.votingPower;
