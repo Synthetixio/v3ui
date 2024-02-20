@@ -6325,7 +6325,7 @@ __metadata:
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
-    "@snx-v3/txnReducer": "workspace:^"
+    "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6561,7 +6561,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:^, @snx-v3/txnReducer@workspace:liquidity/lib/txnReducer":
+"@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:liquidity/lib/txnReducer":
   version: 0.0.0-use.local
   resolution: "@snx-v3/txnReducer@workspace:liquidity/lib/txnReducer"
   languageName: unknown
