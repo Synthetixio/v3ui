@@ -11,10 +11,12 @@ const AmbassadorCouncilContract = new Contract(
   '0x7bcE99fd5B548974a56062EFAc519B11d736D3AA',
   process.env.DEV ? electionModuleABI : electionModuleABITest
 );
+
 const GrantsCouncilContract = new Contract(
   '0x14F4d1a2Cc1553d55A86623A468C9Cd452176361',
   process.env.DEV ? electionModuleABI : electionModuleABITest
 );
+
 const TreasuryCouncilContract = new Contract(
   '0x3e6C2487242DB3Ee685Bf2Bb646420CCa2243c8f',
   process.env.DEV ? electionModuleABI : electionModuleABITest

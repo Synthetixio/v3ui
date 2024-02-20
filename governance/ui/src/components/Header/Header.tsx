@@ -16,7 +16,7 @@ import { BaseIcon, EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@s
 import { prettyString } from '@snx-v3/format';
 import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
-import useGetUserBallot from '../../queries/useGetUserBallot';
+import { useGetUserBallot } from '../../queries';
 import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';

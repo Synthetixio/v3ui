@@ -8,7 +8,7 @@ type UUIDResponse = {
   };
 };
 
-export default function useGetIsUUIDValidQuery(uuid: string) {
+export function useGetIsUUIDValidQuery(uuid: string) {
   const { activeWallet } = useWallet();
 
   return useQuery<boolean>({

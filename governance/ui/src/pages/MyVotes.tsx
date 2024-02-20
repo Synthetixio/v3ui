@@ -1,18 +1,22 @@
-import { Alert, Box, Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Alert, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
-import { AddIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
+import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
-import { useQueryClient } from '@tanstack/react-query';
-import useGetUserDetailsQuery, { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
-import useGetUserBallot from '../queries/useGetUserBallot';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import Timer from '../components/Timer/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
+import {
+  useGetUserVotingPower,
+  useGetUserBallot,
+  GetUserDetails,
+  useGetUserDetailsQuery,
+} from '../queries/';
+import { formatNumber } from '@snx-v3/formatters';
+import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
@@ -30,13 +34,11 @@ export default function MyVotes() {
     // useGetUserBallot('ambassador'),
     // useGetUserBallot('treasury'),
   ];
+  const { data: votingPower } = useGetUserVotingPower('spartan');
 
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
   const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
-
-  const queryClient = useQueryClient();
-
   const candidates =
     users &&
     votingCandidates &&
@@ -116,88 +118,7 @@ export default function MyVotes() {
               nominee otherwise cast your vote to complete your voting.
             </Text>
             {councils.map((council) => (
-              <Flex
-                key={`vote-${council.slug}`}
-                w="100%"
-                padding="2"
-                alignItems="center"
-                opacity={period !== '2' ? '0.4' : '1'}
-                border="1px solid"
-                borderColor="gray.900"
-                rounded="base"
-              >
-                <Flex
-                  borderRadius="50%"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="gray.900"
-                  w="8"
-                  h="8"
-                  justifyContent="center"
-                  alignItems="center"
-                  mr="4"
-                  position="relative"
-                >
-                  <Image src={council.image} w="6" h="6" />
-
-                  <>
-                    {candidates ? (
-                      <ProfilePicture
-                        imageSrc={candidates && candidates[council.slug]?.pfpUrl}
-                        address={candidates && candidates[council.slug]?.address}
-                      />
-                    ) : (
-                      <Box
-                        borderRadius="50%"
-                        w="8"
-                        h="8"
-                        position="absolute"
-                        left="15px"
-                        borderWidth="1px"
-                        bg="navy.700"
-                        borderStyle="dashed"
-                        borderColor="gray.500"
-                      />
-                    )}
-                  </>
-                </Flex>
-                <Flex flexDir="column" mr="auto" ml="1">
-                  <Text fontSize="x-small" fontWeight="bold">
-                    {council.title}
-                  </Text>
-                  <Text fontSize="x-small">
-                    {candidates
-                      ? candidates[council.slug]?.username
-                        ? candidates[council.slug].username
-                        : candidates[council.slug]?.address
-                      : 'not found'}
-                  </Text>
-                </Flex>
-                {votingCandidates && !votingCandidates[council.slug] ? (
-                  <IconButton
-                    aria-label="action-button"
-                    icon={<AddIcon />}
-                    variant="outlined"
-                    isDisabled={period !== '2'}
-                    onClick={() => navigate(`/councils/${council.slug}`)}
-                  />
-                ) : (
-                  <IconButton
-                    aria-label="action-button"
-                    icon={<CloseIcon />}
-                    variant="outlined"
-                    isDisabled={period !== '2'}
-                    onClick={() => {
-                      const selection = localStorage.getItem('voteSelection');
-                      if (!selection) localStorage.setItem('voteSelection', '');
-                      const parsedSelection = JSON.parse(selection ? selection : '{}');
-                      delete parsedSelection[council.slug];
-                      localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-                      queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
-                    }}
-                  />
-                )}
-              </Flex>
+              <MyVoteRow key={council.slug} councilSlug={council.slug} />
             ))}
             <Alert colorScheme="blue" opacity={period !== '2' ? '0.4' : '1'} rounded="base" mt="12">
               <WarningIcon color="cyan" mr="4" />
@@ -237,7 +158,7 @@ export default function MyVotes() {
                 Total Voting Power
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold">
-                8923748923,2390487239 TODO
+                {formatNumber(votingPower)}
               </Text>
             </Flex>
             <Button

@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries';
 import { useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { Dispatch, SetStateAction } from 'react';

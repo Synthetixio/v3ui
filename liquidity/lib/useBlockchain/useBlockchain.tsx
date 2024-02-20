@@ -384,9 +384,11 @@ export function useSigner() {
 
 export function useWallet() {
   const wallet = useOnboardWallet();
+
   if (!wallet) {
     return undefined;
   }
+
   const [account] = wallet.accounts;
   return account;
 }

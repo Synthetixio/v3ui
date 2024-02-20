@@ -15,7 +15,7 @@ export default function Admin() {
         getCouncilContract('treasury'),
       ].map((proxy, index) => {
         return (
-          <>
+          <Flex direction="column" key={index} p="3" gap={4}>
             <Heading>
               {index === 0
                 ? 'Spartan'
@@ -25,7 +25,7 @@ export default function Admin() {
                     ? 'Grants'
                     : 'Treasury'}
             </Heading>
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Start Now Admin Period</Text>
               <Button
                 onClick={() => {
@@ -47,7 +47,7 @@ export default function Admin() {
                 Now
               </Button>
             </Flex>
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Start Now Nomination Period</Text>
               <Button
                 onClick={() => {
@@ -69,7 +69,7 @@ export default function Admin() {
                 Now
               </Button>
             </Flex>
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Start Now Voting Period</Text>
               <Button
                 onClick={() => {
@@ -91,7 +91,7 @@ export default function Admin() {
                 Now
               </Button>
             </Flex>
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Start Now Eval Period</Text>
               <Button
                 onClick={() => {
@@ -114,7 +114,7 @@ export default function Admin() {
               </Button>
             </Flex>
 
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Set Snapshot Record Mock for voting power</Text>
               <Button
                 onClick={() => {
@@ -123,11 +123,11 @@ export default function Admin() {
                   }
                 }}
               >
-                LFG
+                LFG (only in Administration)
               </Button>
             </Flex>
 
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Set Voting Power to current connected user</Text>
               <Button
                 onClick={async () => {
@@ -149,7 +149,7 @@ export default function Admin() {
               </Button>
             </Flex>
 
-            <Flex>
+            <Flex alignItems="center" gap={2}>
               <Text>Take vote power snapshot</Text>
               <Button
                 onClick={async () => {
@@ -160,10 +160,10 @@ export default function Admin() {
                   }
                 }}
               >
-                LFG
+                LFG (only in Nomination)
               </Button>
             </Flex>
-          </>
+          </Flex>
         );
       })}
     </Flex>

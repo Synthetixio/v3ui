@@ -4,7 +4,7 @@ import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries';
 import { shortAddress } from '../../utils/address';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';

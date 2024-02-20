@@ -30,7 +30,7 @@ type UserPitch = {
   protocol: string;
 };
 
-export default function useGetUserDetailsQuery<T extends string | string[]>(walletAddress?: T) {
+export function useGetUserDetailsQuery<T extends string | string[]>(walletAddress?: T) {
   return useQuery({
     queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
