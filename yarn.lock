@@ -6536,8 +6536,6 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/react": "npm:^2.8.13"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
     bn.js: "npm:^5.2.1"
