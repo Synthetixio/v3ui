@@ -6,7 +6,6 @@ import * as OracleManagerProxy10 from '@synthetixio/v3-contracts/build/10-main/O
 import * as OracleManagerProxy420 from '@synthetixio/v3-contracts/build/420-main/OracleManagerProxy';
 import * as OracleManagerProxy11155111 from '@synthetixio/v3-contracts/build/11155111-main/OracleManagerProxy';
 import * as OracleManagerProxy84531Andromeda from '@synthetixio/v3-contracts/build/84531-andromeda/OracleManagerProxy';
-
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
 
