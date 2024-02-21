@@ -2,8 +2,9 @@ import { FC } from 'react';
 import { Amount } from '@snx-v3/Amount';
 import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { generatePath, Link, useLocation } from 'react-router-dom';
+import { useConnectWallet } from '@web3-onboard/react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
-import { onboard, useIsConnected } from '@snx-v3/useBlockchain';
+import { useIsConnected } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
 import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
@@ -118,6 +119,7 @@ export type VaultRowProps = {
 
 export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
   const isConnected = useIsConnected();
+  const [_, connect] = useConnectWallet();
 
   return (
     <VaultRowUi
@@ -125,7 +127,7 @@ export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityP
       liquidityPosition={liquidityPosition}
       poolId={poolId}
       isConnected={isConnected}
-      openConnectModal={() => onboard.connectWallet()}
+      openConnectModal={() => connect()}
     />
   );
 };

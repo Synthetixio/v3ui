@@ -46,21 +46,24 @@ export const useAllCollateralPriceIds = () => {
   const { data: Multicall3 } = useMulticall3();
   const { data: OracleProxy } = useOracleManagerProxy();
   const { data: CoreProxy } = useCoreProxy();
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
 
-    queryKey: [`${network.id}-${network.preset}`, 'Collateral Price IDs'],
+    queryKey: [`${network?.id}-${network?.preset}`, 'Collateral Price IDs'],
 
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3 || !OracleProxy) {
+      if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
       if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
       const configs = await loadConfigs({ CoreProxy });
+
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
+
       const calls = oracleNodeIds.map((oracleNodeId) => ({
         target: OracleProxy.address,
         callData: OracleProxy.interface.encodeFunctionData('getNode', [oracleNodeId]),

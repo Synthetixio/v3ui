@@ -152,13 +152,13 @@ export const BorrowModal: React.FC<{
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
-  const network = useNetwork();
+  const { network } = useNetwork();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();
       await queryClient.invalidateQueries({
-        queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
+        queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
       });
     } catch (error: any) {
@@ -178,10 +178,12 @@ export const BorrowModal: React.FC<{
       });
       throw Error('Borrow failed', { cause: error });
     }
-  }, [execBorrow, queryClient, network.id, network.preset, errorParserCoreProxy, toast]);
+  }, [execBorrow, queryClient, network?.id, network?.preset, errorParserCoreProxy, toast]);
 
   const { txnStatus } = txnState;
+
   if (!params.poolId || !params.accountId || !collateralType) return null;
+
   return (
     <BorrowModalUi
       execBorrow={execBorrowWithErrorParser}

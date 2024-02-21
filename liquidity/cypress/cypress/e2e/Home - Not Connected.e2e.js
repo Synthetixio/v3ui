@@ -5,5 +5,5 @@ it('shows homepage to not connected wallet', () => {
 
   cy.visit('/');
 
-  cy.get('#app').should('contain', 'Spartan Council Pool');
+  cy.get('#app').should('contain', 'Not Connected');
 });

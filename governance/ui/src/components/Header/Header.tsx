@@ -103,7 +103,7 @@ export function Header() {
   useEffect(() => {
     // Check if wallet preference is stored in local storage
     if (!walletsInfo) {
-      const defaultWallet = localStorage.getItem('defaultWallet');
+      const defaultWallet = localStorage.getItem('connectedWallets');
 
       if (defaultWallet) {
         connect({
@@ -114,14 +114,14 @@ export function Header() {
 
     if (walletsInfo) {
       // store in local storage
-      localStorage.setItem('defaultWallet', JSON.stringify(walletsInfo.label));
+      localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
     }
   }, [walletsInfo, connect]);
 
   const onDisconnect = () => {
     if (walletsInfo) {
       disconnect(walletsInfo);
-      localStorage.removeItem('defaultWallet');
+      localStorage.removeItem('connectedWallets');
     }
   };
 

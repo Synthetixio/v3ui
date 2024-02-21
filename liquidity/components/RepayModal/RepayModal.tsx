@@ -110,7 +110,8 @@ export const RepayModal: React.FC<{
   const { debtChange } = useContext(ManagePositionContext);
   const params = useParams();
 
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   const queryClient = useQueryClient();
   const { data: USDProxy } = useUSDProxy();
 
@@ -136,6 +137,7 @@ export const RepayModal: React.FC<{
     amount: amountToDeposit.toBN(),
     spender: CoreProxy?.address,
   });
+
   const [state, send] = useMachine(RepayMachine, {
     services: {
       [ServiceNames.approveSUSD]: async () => {
@@ -174,13 +176,13 @@ export const RepayModal: React.FC<{
 
           await Promise.all([
             queryClient.invalidateQueries({
-              queryKey: [`${network.id}-${network.preset}`, 'TokenBalance'],
+              queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
             }),
             queryClient.invalidateQueries({
-              queryKey: [`${network.id}-${network.preset}`, 'Allowance'],
+              queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
             }),
             queryClient.invalidateQueries({
-              queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
+              queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             }),
           ]);
 

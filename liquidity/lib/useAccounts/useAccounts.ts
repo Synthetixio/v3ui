@@ -1,20 +1,26 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAccountProxy } from '@snx-v3/useAccountProxy';
-import { useNetwork, useWallet, onboard } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { useConnectWallet } from '@web3-onboard/react';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
 export function useAccounts() {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
   const { data: AccountProxy } = useAccountProxy();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network.id}-${network.preset}`, 'Accounts', { accountAddress: wallet?.address }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'Accounts',
+      { accountAddress: activeWallet?.address },
+    ],
     queryFn: async function () {
-      if (!AccountProxy || !wallet?.address) throw new Error('Should be disabled');
-      const numberOfAccountTokens = await AccountProxy.balanceOf(wallet.address);
+      if (!AccountProxy || !activeWallet?.address) throw new Error('Should be disabled');
+      const numberOfAccountTokens = await AccountProxy.balanceOf(activeWallet.address);
+
       if (numberOfAccountTokens.eq(0)) {
         // No accounts created yet
         return [];
@@ -22,13 +28,13 @@ export function useAccounts() {
       const accountIndexes = Array.from(Array(numberOfAccountTokens.toNumber()).keys());
       const accounts = await Promise.all(
         accountIndexes.map(async (i) => {
-          if (!wallet?.address) throw new Error('OMG!');
-          return await AccountProxy.tokenOfOwnerByIndex(wallet.address, i);
+          if (!activeWallet?.address) throw new Error('OMG!');
+          return await AccountProxy.tokenOfOwnerByIndex(activeWallet.address, i);
         })
       );
       return accounts.map((accountId) => accountId.toString());
     },
-    enabled: Boolean(AccountProxy?.address && wallet?.address),
+    enabled: Boolean(AccountProxy?.address && activeWallet?.address),
     placeholderData: [],
   });
 }
@@ -67,6 +73,8 @@ export function useCreateAccount() {
 
 export function useAccountUrlSync() {
   const accounts = useAccounts();
+  const [{ wallet }] = useConnectWallet();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -92,10 +100,10 @@ export function useAccountUrlSync() {
       return;
     }
 
-    const { wallets } = onboard.state.get();
+    const wallets = wallet?.accounts;
     if (
       // Check separately for the case when wallet is not connected
-      wallets.length < 1 ||
+      (wallets && wallets.length < 1) ||
       (accounts.isFetched && (!accounts.data || accounts.data.length < 1))
     ) {
       // We have fetched accounts but there are none, remove account id from url
@@ -110,5 +118,12 @@ export function useAccountUrlSync() {
         );
       }
     }
-  }, [accounts.data, accounts.isFetched, navigate, location.pathname, queryParams]);
+  }, [
+    accounts.data,
+    accounts.isFetched,
+    navigate,
+    location.pathname,
+    queryParams,
+    wallet?.accounts,
+  ]);
 }

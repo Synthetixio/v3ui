@@ -15,7 +15,7 @@ describe('useGasPrice', () => {
       getBlock: jest.fn(() => ({})),
       getGasPrice: jest.fn(() => wei(2, GWEI_DECIMALS).toBN()),
     };
-    useNetwork = jest.fn(() => ({ id: 10, name: 'optimism-mainnet', preset: 'main' }));
+    useNetwork = jest.fn(() => ({ network: { id: 10, name: 'optimism-mainnet', preset: 'main' } }));
     useProvider = jest.fn(() => provider);
 
     reactQuery = {
@@ -38,7 +38,7 @@ describe('useGasPrice', () => {
   });
 
   test('Returns gas prices for mainnet', async () => {
-    useNetwork.mockReturnValue({ id: 1, name: 'mainnet', preset: 'main' });
+    useNetwork.mockReturnValue({ network: { id: 1, name: 'mainnet', preset: 'main' } });
     provider.getBlock.mockReturnValue({ baseFeePerGas: wei(2, GWEI_DECIMALS).toBN() });
 
     const result = useGasPrice();

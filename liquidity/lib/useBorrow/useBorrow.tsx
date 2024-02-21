@@ -30,12 +30,21 @@ export const useBorrow = ({
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
   const provider = useProvider();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   const mutation = useMutation({
     mutationFn: async () => {
       if (
-        !(signer && CoreProxy && poolId && accountId && collateralTypeAddress && collateralPriceIds)
+        !(
+          signer &&
+          CoreProxy &&
+          poolId &&
+          accountId &&
+          collateralTypeAddress &&
+          collateralPriceIds &&
+          network &&
+          provider
+        )
       )
         return;
       if (debtChange.eq(0)) return;

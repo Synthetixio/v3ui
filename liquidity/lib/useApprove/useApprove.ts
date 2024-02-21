@@ -37,7 +37,8 @@ export const useApprove = (
 
   const mutation = useMutation({
     mutationFn: async (infiniteApproval: boolean) => {
-      if (!(signer && contractAddress && spender)) return;
+      if (!signer || !contractAddress || !spender || !provider)
+        throw new Error('Signer, contract address or spender is not defined');
       if (sufficientAllowance) return;
 
       try {
@@ -48,9 +49,11 @@ export const useApprove = (
 
         const gasPricesPromised = getGasPrice({ provider });
         const gasLimitPromised = contract.estimateGas.approve(spender, amountToAppove);
+
         const populatedTxnPromised = contract.populateTransaction.approve(spender, amountToAppove, {
           gasLimit: gasLimitPromised,
         });
+
         const [gasPrices, gasLimit, populatedTxn] = await Promise.all([
           gasPricesPromised,
           gasLimitPromised,

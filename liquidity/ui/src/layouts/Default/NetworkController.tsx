@@ -1,19 +1,40 @@
+import { useEffect } from 'react';
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
-import {
-  disconnect,
-  NETWORKS,
-  onboard,
-  useNetwork,
-  useSetNetwork,
-  useWallet,
-} from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 
+import { networks } from '../../utils/onboard';
+
 export function NetworkController() {
-  const wallet = useWallet();
-  const activeNetwork = useNetwork();
-  const setNetwork = useSetNetwork();
+  const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
+  const { network: activeNetwork, setNetwork } = useNetwork();
+
+  useEffect(() => {
+    // Check if wallet preference is stored in local storage
+    if (!walletsInfo) {
+      const defaultWallet = localStorage.getItem('connectedWallets');
+
+      if (defaultWallet) {
+        connect({
+          autoSelect: { disableModals: true, label: JSON.parse(defaultWallet) },
+        });
+      }
+    }
+
+    if (walletsInfo) {
+      // store in local storage
+      localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
+    }
+  }, [walletsInfo, connect]);
+
+  const onDisconnect = () => {
+    if (walletsInfo) {
+      disconnect(walletsInfo);
+      localStorage.removeItem('connectedWallets');
+    }
+  };
+
   return (
     <Flex>
       <Menu>
@@ -26,7 +47,7 @@ export function NetworkController() {
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
             >
-              <activeNetwork.Icon />
+              <NetworkIcon networkId={activeNetwork?.id || 666} />
               <Text
                 variant="nav"
                 fontSize="sm"
@@ -35,35 +56,28 @@ export function NetworkController() {
                 mr={2}
                 display={{ base: 'none', md: 'initial' }}
               >
-                {activeNetwork.label}
+                {activeNetwork?.label || 'Not Connected'}
               </Text>
               <Flex display={{ base: 'none', md: 'initial' }}>
                 {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
               </Flex>
             </MenuButton>
             <MenuList>
-              {NETWORKS.filter(
-                (network) =>
-                  network.isSupported ||
-                  // Make sure we still show network in the list if user selected the chain, even thought we are not officially support it
-                  // This will allow us to mark all testnets as not supported, but they still will be operational
-                  activeNetwork.id === network.id
-              ).map((network) => (
-                <MenuItem
-                  key={`${network.id}-${network.preset}`}
-                  onClick={() => setNetwork(network)}
-                >
-                  <network.Icon />
-                  <Text variant="nav" ml={2}>
-                    {network.label}
-                  </Text>
-                </MenuItem>
-              ))}
+              {networks.map(({ id, label }) => {
+                return (
+                  <MenuItem key={`${id}`} onClick={() => setNetwork(id)}>
+                    <NetworkIcon networkId={id} />
+                    <Text variant="nav" ml={2}>
+                      {label}
+                    </Text>
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </>
         )}
       </Menu>
-      {wallet ? (
+      {activeWallet ? (
         <Menu>
           <MenuButton
             as={Button}
@@ -84,14 +98,14 @@ export function NetworkController() {
               fontSize="xs"
               userSelect="none"
             >
-              {wallet.ens?.name || prettyString(wallet.address)}
+              {activeWallet.ens?.name || prettyString(activeWallet.address)}
             </Text>
           </MenuButton>
           <MenuList>
             <MenuItem
               onClick={() => {
                 try {
-                  navigator.clipboard.writeText(wallet?.address);
+                  navigator.clipboard.writeText(activeWallet?.address);
                 } catch (_e) {}
               }}
             >
@@ -99,7 +113,7 @@ export function NetworkController() {
                 Copy address
               </Text>
             </MenuItem>
-            <MenuItem onClick={disconnect}>
+            <MenuItem onClick={onDisconnect}>
               <Text variant="nav" ml={2}>
                 Disconnect
               </Text>
@@ -108,7 +122,7 @@ export function NetworkController() {
         </Menu>
       ) : (
         <Button
-          onClick={() => onboard.connectWallet()}
+          onClick={() => connect()}
           type="button"
           size="sm"
           ml={2}

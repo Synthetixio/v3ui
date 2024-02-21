@@ -113,13 +113,16 @@ export function WithdrawModal({
 }) {
   const params = useParams();
   const toast = useToast({ isClosable: true, duration: 9000 });
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   const { exec: unwrap } = useUnWrapEth();
+
   const { exec: execWithdraw } = useWithdraw({
     accountId: params.accountId,
     collateralTypeAddress: accountCollateral?.tokenAddress,
     accountCollateral,
   });
+
   const queryClient = useQueryClient();
 
   const { data: CoreProxy } = useCoreProxy();
@@ -134,7 +137,7 @@ export function WithdrawModal({
         try {
           await execWithdraw();
           await queryClient.invalidateQueries({
-            queryKey: [`${network.id}-${network.preset}`, 'AccountSpecificCollateral'],
+            queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
           });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);

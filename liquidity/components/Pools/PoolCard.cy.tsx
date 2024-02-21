@@ -1,6 +1,10 @@
 import React from 'react';
 import { PoolCard } from './PoolCard'; // Import your PoolCard component
 import { wei } from '@synthetixio/wei';
+import { Web3OnboardProvider, init } from '@web3-onboard/react';
+import injectedModule from '@web3-onboard/injected-wallets';
+
+const onboard = init({ wallets: [injectedModule()], chains: [{ id: 1 }] });
 
 describe('PoolCard Component', () => {
   const pool = {
@@ -56,11 +60,13 @@ describe('PoolCard Component', () => {
     };
 
     cy.mount(
-      <PoolCard
-        pool={pool}
-        collateralTypes={collateralTypes}
-        liquidityPositionsById={liquidityPositionsById}
-      />
+      <Web3OnboardProvider web3Onboard={onboard}>
+        <PoolCard
+          pool={pool}
+          collateralTypes={collateralTypes}
+          liquidityPositionsById={liquidityPositionsById}
+        />
+      </Web3OnboardProvider>
     );
 
     cy.get('table').should('exist');

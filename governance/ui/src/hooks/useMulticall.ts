@@ -11,6 +11,7 @@ export const useMulticall = () => {
 
   const makeMulticall = useCallback(
     async (calls: Transaction[]) => {
+      if (!provider) throw Error('provider not defined');
       const encodedData = multicallInterface.encodeFunctionData('aggregate3Value', [
         calls.map((call) => ({
           target: call.to,
@@ -39,14 +40,14 @@ export const useMulticall = () => {
       }
 
       return {
-        from: wallet?.address,
+        from: wallet.activeWallet?.address,
         to: multicallAddress,
         data: encodedData,
         value: totalValue,
         gasLimit: gas.mul(11).div(10),
       } as Transaction;
     },
-    [provider, wallet?.address]
+    [provider, wallet.activeWallet?.address]
   );
 
   return {

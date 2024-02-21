@@ -31,11 +31,11 @@ export const useUndelegate = ({
   const { gasSpeed } = useGasSpeed();
   const provider = useProvider();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!signer) return;
+      if (!signer || !network || !provider) throw new Error('No signer or network');
       if (!(CoreProxy && poolId && collateralTypeAddress && collateralPriceUpdates)) return;
       if (collateralChange.eq(0)) return;
       if (currentCollateral.eq(0)) return;
@@ -49,6 +49,7 @@ export const useUndelegate = ({
           currentCollateral.add(collateralChange).toBN(),
           wei(1).toBN()
         );
+
         const walletAddress = await signer.getAddress();
 
         const collateralPriceCallsPromise = fetchPriceUpdates(

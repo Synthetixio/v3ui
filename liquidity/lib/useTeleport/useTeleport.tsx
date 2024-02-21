@@ -50,8 +50,8 @@ export const useTeleport = ({
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!signer) return;
-      if (!CoreProxy) return;
+      if (!signer || !CoreProxy || !provider) throw new Error('No signer or CoreProxy');
+
       if (!ethBalance) return;
       if (ethBalance.eq(0)) return;
       if (amount.eq(0)) return;

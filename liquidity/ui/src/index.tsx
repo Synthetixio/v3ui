@@ -1,15 +1,12 @@
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
-import { preserveConnectedWallets, autoConnect } from '@snx-v3/useBlockchain';
 
 const container = document.querySelector('#app');
+
 export async function bootstrap() {
   if (!container) {
     throw new Error('Container #app does not exist');
   }
-
-  preserveConnectedWallets();
-  await autoConnect();
 
   if (process.env.NODE_ENV === 'development') {
     const { Wei, wei } = await import('@synthetixio/wei');

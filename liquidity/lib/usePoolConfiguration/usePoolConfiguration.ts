@@ -20,17 +20,19 @@ export const PoolConfigurationSchema = z.object({
   markets: MarketConfigurationSchema.array(),
   isAnyMarketLocked: z.boolean(),
 });
+
 const isLockedSchema = z.boolean();
+
 export const usePoolConfiguration = (poolId?: string) => {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
     enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),
-    queryKey: [`${network.id}-${network.preset}`, 'PoolConfiguration', { poolId }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'PoolConfiguration', { poolId }],
     queryFn: async () => {
-      if (!CoreProxy || !poolId || !collateralPriceUpdates) {
+      if (!CoreProxy || !poolId || !collateralPriceUpdates || !network) {
         throw Error('usePoolConfiguration should not be enabled');
       }
       const marketsData = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));

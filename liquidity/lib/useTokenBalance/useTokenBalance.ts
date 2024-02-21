@@ -9,25 +9,25 @@ export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
 export const abi = ['function balanceOf(address) view returns (uint256)'];
 
 export const useTokenBalance = (address?: string) => {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
   const provider = useProvider();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   const tokenAddress = assertAddressType(address) ? address : undefined;
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'TokenBalance',
-      { accountAddress: wallet?.address },
+      { accountAddress: activeWallet?.address },
       { tokenAddress },
     ],
     queryFn: async () => {
-      if (wallet?.address && tokenAddress && provider) {
+      if (activeWallet?.address && tokenAddress && provider) {
         const contract = new ethers.Contract(tokenAddress, abi, provider);
-        return BalanceSchema.parse(await contract.balanceOf(wallet?.address));
+        return BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
       }
     },
-    enabled: Boolean(wallet?.address && tokenAddress && provider),
+    enabled: Boolean(activeWallet?.address && tokenAddress && provider),
     refetchInterval: 5000,
   });
 };
