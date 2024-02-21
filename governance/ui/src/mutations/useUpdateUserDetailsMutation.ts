@@ -80,6 +80,7 @@ function useUpdateUserDetailsMutation() {
           nonce: nonceResponse.data.nonce,
           issuedAt: new Date().toISOString(),
         });
+
         const signature = await signer.signMessage(signedMessage.prepareMessage());
 
         const message = {
