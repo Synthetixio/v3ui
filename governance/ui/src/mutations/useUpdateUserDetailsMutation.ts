@@ -13,7 +13,6 @@ import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { useWallet, useSigner } from '../queries/useWallet';
 import { CustomToast } from '../components/CustomToast';
-import { hexlify, toUtf8Bytes } from 'ethers/lib/utils';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -82,10 +81,7 @@ function useUpdateUserDetailsMutation() {
           issuedAt: new Date().toISOString(),
         });
 
-        const signature = await signer.signMessage(
-          hexlify(toUtf8Bytes(signedMessage.prepareMessage()))
-        );
-        // const signature = await signer.signMessage(signedMessage.prepareMessage());
+        const signature = await signer.signMessage(signedMessage.prepareMessage());
 
         const message = {
           message: { ...signedMessage, signature },
