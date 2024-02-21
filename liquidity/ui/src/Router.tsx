@@ -13,6 +13,7 @@ import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
 import { Dashboard } from './pages/Dashboard';
+import { Pools } from './pages/Pools';
 
 export const Router = () => {
   return (
@@ -26,6 +27,7 @@ export const Router = () => {
           {/*<Route path="/accept-nomination" element={<AcceptNomination />} />*/}
           {/*<Route path="/settings" element={<Settings />} />*/}
           {/*<Route path="/accounts/create" element={<CreateAccount />} />*/}
+          <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
           {/*<Route path="/markets/create" element={<CreateMarket />} />*/}
           {/*<Route path="/markets/:marketId" element={<Market />} />*/}
