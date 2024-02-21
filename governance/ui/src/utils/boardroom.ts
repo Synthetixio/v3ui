@@ -3,7 +3,7 @@ import { getAddress } from 'ethers/lib/utils';
 const MAIN_NET_URL = 'https://api.boardroom.info';
 const STAGING_URL = 'https://staging-api.boardroom.info/';
 
-const BASE_URL = STAGING_URL;
+const BASE_URL = window.location.hostname === 'localhost' ? STAGING_URL : MAIN_NET_URL;
 
 const BOARDROOM_KEY = 'd9abe7a1ab45ace58e6bd91bb9771586';
 
