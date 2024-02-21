@@ -159,6 +159,7 @@ const getDefaultFromAddress = (chainName: string) => {
     case 'optimism-mainnet':
     case 'optimism-goerli':
     case 'base-goerli':
+    case 'base':
       return '0x4200000000000000000000000000000000000006';
 
     default:

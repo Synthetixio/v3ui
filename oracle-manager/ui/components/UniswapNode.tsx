@@ -12,6 +12,7 @@ export const UniswapNode: FC<{ data: { label: string }; id: string }> = ({ data,
   const [nodes, setNodes] = useRecoilState(nodesState);
   const params = useParams();
   const node = nodes.find((node) => node.id === id);
+
   return (
     <Box
       bg="pink.800"

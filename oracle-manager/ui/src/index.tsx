@@ -6,8 +6,9 @@ import { App } from './App';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { RegisteredNode } from './RegisteredNode';
-import { BlockchainProvider } from '@snx-v3/useBlockchain';
+import { Web3OnboardProvider } from '@web3-onboard/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { onboard } from '../utils/onboard';
 
 const Alert: ComponentStyleConfig = {
   variants: {
@@ -50,13 +51,13 @@ root.render(
         })
       }
     >
-      <BlockchainProvider>
+      <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={customTheme}>
           <Fonts />
           <Header />
           <RouterProvider router={router} />
         </ChakraProvider>
-      </BlockchainProvider>
+      </Web3OnboardProvider>
     </QueryClientProvider>
   </RecoilRoot>
 );

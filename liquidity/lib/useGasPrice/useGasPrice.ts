@@ -32,12 +32,15 @@ export const getGasPrice = async ({ provider }: { provider: ethers.providers.Jso
 export type GasPrices = Awaited<ReturnType<typeof getGasPrice>>;
 
 export const useGasPrice = () => {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const provider = useProvider();
 
   return useQuery({
     enabled: Boolean(provider),
-    queryKey: [`${network.id}-${network.preset}`, 'GasPrice'],
-    queryFn: () => getGasPrice({ provider }),
+    queryKey: [`${network?.id}-${network?.preset}`, 'GasPrice'],
+    queryFn: () => {
+      if (!provider) throw new Error('useGasPrice should not be enabled');
+      return getGasPrice({ provider });
+    },
   });
 };

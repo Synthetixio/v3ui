@@ -19,14 +19,8 @@ import Head from 'react-helmet';
 import { TeleporterModal } from './TeleporterModal';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CCIP, ChevronDown, ChevronUp, DollarCircle } from '@snx-v3/icons';
-import {
-  Network,
-  NETWORKS,
-  onboard,
-  useNetwork,
-  useSetNetwork,
-  useWallet,
-} from '@snx-v3/useBlockchain';
+import { Network, NetworkIcon, NETWORKS, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { useConnectWallet } from '@web3-onboard/react';
 import { useUSDProxy, useUSDProxyForChain } from '@snx-v3/useUSDProxy';
 import Wei, { wei } from '@synthetixio/wei';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -37,8 +31,8 @@ export const TeleporterUi: FC<{
   connectedWallet?: string;
   amount: Wei;
   setAmount: (val: Wei) => void;
-  activeNetwork: Network;
-  setActiveNetwork: (network: Network) => void;
+  activeNetwork: Network | null;
+  setActiveNetwork: (networkId: number) => void;
   balance?: Wei;
   toBalance?: Wei;
   toNetworkBalance?: Wei;
@@ -59,6 +53,8 @@ export const TeleporterUi: FC<{
   usdProxyAddress,
   onTeleportClick,
 }) => {
+  const [_, connect] = useConnectWallet();
+
   return (
     <Box maxW="600px">
       <HomeLink />
@@ -97,7 +93,7 @@ export const TeleporterUi: FC<{
                     mr={1}
                     width="fit-content"
                   >
-                    <activeNetwork.Icon />
+                    <NetworkIcon networkId={activeNetwork?.id} />
                     <Text
                       variant="nav"
                       fontSize="sm"
@@ -106,7 +102,7 @@ export const TeleporterUi: FC<{
                       mr={2}
                       display={{ base: 'none', md: 'initial' }}
                     >
-                      {activeNetwork.label}
+                      {activeNetwork?.label}
                     </Text>
                     <Flex display={{ base: 'none', md: 'initial' }}>
                       {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
@@ -115,12 +111,12 @@ export const TeleporterUi: FC<{
                 </Flex>
                 <MenuList background="black">
                   {SUPPORTED_NETWORKS.filter((item) => item.name !== 'goerli')
-                    .filter((chain) => chain.id !== activeNetwork.id)
+                    .filter((chain) => chain.id !== activeNetwork?.id)
                     .map((chain) => {
                       return (
                         <MenuItem
                           onClick={() => {
-                            setActiveNetwork(chain);
+                            setActiveNetwork(chain.id);
                             if (chain.id === toNetwork?.id) {
                               // If user pick the same network as to, reset toNetwork
                               setToNetwork(undefined);
@@ -130,7 +126,7 @@ export const TeleporterUi: FC<{
                           alignItems="center"
                           key={chain.id}
                         >
-                          <chain.Icon />
+                          <NetworkIcon networkId={chain?.id} />
                           <Text variant="nav" ml={2}>
                             {chain.label}
                           </Text>
@@ -141,7 +137,6 @@ export const TeleporterUi: FC<{
               </>
             )}
           </Menu>
-
           <Flex>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
               <DollarCircle width="35px" height="35px" />
@@ -191,7 +186,7 @@ export const TeleporterUi: FC<{
                   >
                     {toNetwork ? (
                       <>
-                        <toNetwork.Icon />
+                        <NetworkIcon networkId={toNetwork.id} />
                         <Text
                           variant="nav"
                           fontSize="sm"
@@ -213,9 +208,9 @@ export const TeleporterUi: FC<{
                 </Flex>
                 <MenuList background="black">
                   {SUPPORTED_NETWORKS.filter((item) => item.name !== 'goerli')
-                    .filter((chain) => chain.id !== activeNetwork.id)
+                    .filter((chain) => chain.id !== activeNetwork?.id)
                     .filter((chain) =>
-                      activeNetwork.isTestnet ? chain.isTestnet : !chain.isTestnet
+                      activeNetwork?.isTestnet ? chain.isTestnet : !chain.isTestnet
                     )
                     .map((chain) => {
                       return (
@@ -227,7 +222,7 @@ export const TeleporterUi: FC<{
                           alignItems="center"
                           key={chain.id}
                         >
-                          <chain.Icon />
+                          <NetworkIcon networkId={chain.id} />
                           <Text variant="nav" ml={2}>
                             {chain.label}
                           </Text>
@@ -270,7 +265,7 @@ export const TeleporterUi: FC<{
           </Flex>
         </BorderBox>
         {!connectedWallet ? (
-          <Button type="submit" onClick={() => onboard.connectWallet()}>
+          <Button type="submit" onClick={() => connect()}>
             Connect Wallet
           </Button>
         ) : (
@@ -287,9 +282,8 @@ export const Teleporter = () => {
   const [amount, setAmount] = useState(wei(0));
   const [txnModalOpen, setTxnModalOpen] = useState(false);
 
-  const connectedWallet = useWallet();
-  const activeNetwork = useNetwork();
-  const setNetwork = useSetNetwork();
+  const { activeWallet } = useWallet();
+  const { network: activeNetwork, setNetwork } = useNetwork();
   const [toNetwork, setToNetwork] = useState<Network | undefined>();
 
   const { data: USDProxy } = useUSDProxy();
@@ -301,7 +295,7 @@ export const Teleporter = () => {
   return (
     <>
       <TeleporterUi
-        connectedWallet={connectedWallet?.address}
+        connectedWallet={activeWallet?.address}
         activeNetwork={activeNetwork}
         balance={balance}
         amount={amount}

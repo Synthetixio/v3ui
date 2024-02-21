@@ -162,13 +162,13 @@ const getPoolData = async (chainName: string, id: string) => {
 };
 
 export const usePoolData = (poolId?: string) => {
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network.id}-${network.preset}`, 'Pool', { pool: poolId }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'Pool', { pool: poolId }],
     queryFn: async () => {
-      if (!poolId) throw Error('OMG!');
-      const poolData = await getPoolData(network.name, poolId);
+      if (!poolId || !network) throw Error('No poolId or network');
+      const poolData = await getPoolData(network?.name, poolId);
       if (!poolData.data.pool) {
         throw Error(`Pool ${poolId} not found`);
       }

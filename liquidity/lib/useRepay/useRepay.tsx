@@ -35,13 +35,13 @@ export const useRepay = ({
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
 
   const signer = useSigner();
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { gasSpeed } = useGasSpeed();
   const provider = useProvider();
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!signer) return;
+      if (!signer || !network || !provider) throw new Error('No signer or network');
       if (
         !(
           CoreProxy &&

@@ -9,49 +9,20 @@ import {
   MenuList,
   Text,
 } from '@chakra-ui/react';
-import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
-import {
-  disconnect,
-  onboard,
-  useIsConnected,
-  useWallet,
-  useNetwork,
-  Network,
-} from '@snx-v3/useBlockchain';
+import { EthereumIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
+import { useIsConnected, useWallet, useNetwork, NetworkIcon } from '@snx-v3/useBlockchain';
 import { FC } from 'react';
 import { shortAddress } from '../utils/addresses';
 import { GitHubIcon } from './GitHubIcon';
-
-const activeIcon = (currentNetwork: Network) => {
-  switch (currentNetwork.id) {
-    case 1:
-      return { icon: <EthereumIcon />, name: 'Ethereum' };
-    case 10:
-      return { icon: <OptimismIcon />, name: 'Optimism' };
-    case 5:
-      return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
-    case 420:
-      return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
-    case 84531:
-      return {
-        icon: <BaseIcon />,
-        name: 'Base Goerli',
-      };
-
-    default:
-      return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
-  }
-};
+import { useConnectWallet } from '@web3-onboard/react';
 
 export const Header: FC = () => {
   const isWalletConnected = useIsConnected();
-  const currentNetwork = useNetwork();
-  const wallet = useWallet();
+  const [{ wallet }, connect, disconnect] = useConnectWallet();
 
-  const { name, icon } = activeIcon(currentNetwork);
-  const switchNetwork = async (id: number) => {
-    return onboard?.setChain({ chainId: `0x${id.toString(16)}` });
-  };
+  const { network: currentNetwork, setNetwork } = useNetwork();
+  const { activeWallet } = useWallet();
+
   return (
     <Flex as="header" p="2" flexDir="column" w="100%" gap="2">
       <Flex w="100%" justifyContent="space-between" alignItems="center" px="5">
@@ -84,10 +55,10 @@ export const Header: FC = () => {
                     colorScheme="gray"
                     sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
                   >
-                    {icon}
+                    <NetworkIcon networkId={currentNetwork?.id} />
                     <>
                       <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                        {name}
+                        {currentNetwork?.name}
                       </Text>
                       {isOpen ? (
                         <ChevronUpIcon color="cyan" />
@@ -97,31 +68,31 @@ export const Header: FC = () => {
                     </>
                   </MenuButton>
                   <MenuList>
-                    <MenuItem onClick={() => switchNetwork(1)}>
+                    <MenuItem onClick={() => setNetwork(1)}>
                       <EthereumIcon />
                       <Text variant="nav" ml={2}>
                         Ethereum Mainnet
                       </Text>
                     </MenuItem>
-                    <MenuItem onClick={() => switchNetwork(5)}>
+                    <MenuItem onClick={() => setNetwork(5)}>
                       <EthereumIcon />
                       <Text variant="nav" ml={2}>
                         Goerli
                       </Text>
                     </MenuItem>
-                    <MenuItem onClick={() => switchNetwork(10)}>
+                    <MenuItem onClick={() => setNetwork(10)}>
                       <OptimismIcon />
                       <Text variant="nav" ml={2}>
                         Optimism
                       </Text>
                     </MenuItem>
-                    <MenuItem onClick={() => switchNetwork(420)}>
+                    <MenuItem onClick={() => setNetwork(420)}>
                       <OptimismIcon />
                       <Text variant="nav" ml={2}>
                         Optimism Goerli
                       </Text>
                     </MenuItem>
-                    <MenuItem onClick={() => switchNetwork(84531)}>
+                    <MenuItem onClick={() => setNetwork(84531)}>
                       <BaseIcon />
                       <Text variant="nav" ml={2}>
                         Base Goerli
@@ -134,9 +105,17 @@ export const Header: FC = () => {
           )}
 
           {isWalletConnected ? (
-            <Button onClick={disconnect}>{shortAddress(wallet?.address || '')}</Button>
+            <Button
+              onClick={() => {
+                if (wallet) {
+                  disconnect({ label: wallet.label });
+                }
+              }}
+            >
+              {shortAddress(activeWallet?.address || '')}
+            </Button>
           ) : (
-            <Button onClick={() => onboard.connectWallet()}>Connect Wallet</Button>
+            <Button onClick={() => connect()}>Connect Wallet</Button>
           )}
         </Flex>
       </Flex>

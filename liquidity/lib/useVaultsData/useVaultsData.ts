@@ -15,14 +15,14 @@ const VaultCollateralSchema = z
 const VaultDebtSchema = ZodBigNumber.transform((x) => wei(x));
 
 export const useVaultsData = (poolId?: number) => {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: collateralTypes } = useCollateralTypes();
   const { data: CoreProxyContract } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'VaultCollaterals',
       {
         pool: poolId,
@@ -30,7 +30,13 @@ export const useVaultsData = (poolId?: number) => {
       },
     ],
     queryFn: async () => {
-      if (!CoreProxyContract || !collateralTypes || !poolId || !collateralPriceUpdates) {
+      if (
+        !CoreProxyContract ||
+        !collateralTypes ||
+        !poolId ||
+        !collateralPriceUpdates ||
+        !network
+      ) {
         throw Error('useVaultsData should not be enabled when missing data');
       }
 

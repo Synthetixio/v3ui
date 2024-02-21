@@ -95,7 +95,8 @@ export type UndelegateModalProps = FC<{
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
   const { collateralChange } = useContext(ManagePositionContext);
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   const queryClient = useQueryClient();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -103,6 +104,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
+
   const { exec: execUndelegate } = useUndelegate({
     accountId: params.accountId,
     poolId: params.poolId,
@@ -123,7 +125,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
         try {
           await execUndelegate();
           await queryClient.invalidateQueries({
-            queryKey: [`${network.id}-${network.preset}`, 'LiquidityPosition'],
+            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,
           });
         } catch (error: any) {

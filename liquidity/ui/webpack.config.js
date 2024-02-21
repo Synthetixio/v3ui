@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+require('dotenv').config();
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -157,7 +158,14 @@ module.exports = {
         process: 'process/browser.js',
       }),
     ])
-
+    .concat(
+      new webpack.DefinePlugin({
+        'process.env': {
+          INFURA_KEY: JSON.stringify(process.env.INFURA_KEY),
+          WC_PROJECT_ID: JSON.stringify(process.env.WC_PROJECT_ID),
+        },
+      })
+    )
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
       process.env.GENERATE_BUNDLE_REPORT === 'true'

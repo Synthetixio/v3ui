@@ -5,13 +5,13 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 
 export function useAccountCollateralUnlockDate({ accountId }: { accountId?: string }) {
   const { data: CoreProxy } = useCoreProxy();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network.id}-${network.preset}`, 'AccountCollateralUnlockDate', { accountId }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate', { accountId }],
     enabled: Boolean(CoreProxy && accountId),
     queryFn: async function () {
-      if (!CoreProxy || !accountId) throw 'OMG';
+      if (!CoreProxy || !accountId) throw new Error('Core Proxy or account id is not defined');
 
       const [getAccountLastInteraction, getConfigUintAccountTimeoutWithdraw] =
         // @ts-ignore TODO: remove eventually when types are aligned

@@ -5,20 +5,20 @@ import { ethers } from 'ethers';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export function useTransferableSynthetix() {
-  const network = useNetwork();
-  const account = useWallet();
+  const { network } = useNetwork();
+  const { activeWallet } = useWallet();
   const provider = useProvider();
   const { data: snxCollateral } = useCollateralType('SNX');
 
-  const accountAddress = account?.address;
+  const accountAddress = activeWallet?.address;
   const snxAddress = snxCollateral?.tokenAddress;
 
   return useQuery({
     enabled: Boolean(provider && accountAddress && snxAddress),
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'TransferableSynthetix',
-      { address: account?.address },
+      { address: activeWallet?.address },
     ],
     queryFn: async function (): Promise<{ transferable: Wei; collateral?: Wei }> {
       if (!(provider && accountAddress && snxAddress)) {
@@ -35,7 +35,7 @@ export function useTransferableSynthetix() {
       );
       try {
         // Cannon case
-        if (network.name === 'cannon') {
+        if (network?.name === 'cannon') {
           const balanceOf = await contract.balanceOf(accountAddress);
           return {
             transferable: wei(balanceOf),

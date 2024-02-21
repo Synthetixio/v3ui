@@ -1,8 +1,7 @@
 it('shows council card and header in nomination period', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
-    win.localStorage.setItem('connectedWallets', '["MetaMask"]');
-    win.localStorage.setItem('defaultWallet', '"MetaMask"');
+    win.localStorage.setItem('connectedWallets', '"MetaMask"');
   });
   cy.connectWallet().then((signer) => {
     cy.task('setEthBalance', { address: signer.address, balance: 100 });

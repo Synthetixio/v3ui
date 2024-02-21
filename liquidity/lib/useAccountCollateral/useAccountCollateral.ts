@@ -62,8 +62,7 @@ export function useAccountCollateral({
   includeDelegationOff?: boolean;
 }) {
   const { data: CoreProxy } = useCoreProxy();
-
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   const collateralTypes = useCollateralTypes(includeDelegationOff);
 
@@ -71,14 +70,14 @@ export function useAccountCollateral({
 
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
       { tokens: tokenAddresses },
     ],
     enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || tokenAddresses.length < 1) {
+      if (!CoreProxy || !accountId || tokenAddresses.length < 1 || !network) {
         throw 'useAccountCollateral should be disabled';
       }
       const { calls, decoder } = await loadAccountCollateral({
@@ -104,18 +103,18 @@ export function useAccountCollateral({
 
 export function useAccountSpecificCollateral(accountId?: string, collateralAddress?: string) {
   const { data: CoreProxy } = useCoreProxy();
+  const { network } = useNetwork();
 
-  const network = useNetwork();
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'AccountSpecificCollateral',
       { accountId },
       { token: collateralAddress },
     ],
     enabled: Boolean(CoreProxy && accountId && collateralAddress),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || !collateralAddress) {
+      if (!CoreProxy || !accountId || !collateralAddress || !network) {
         throw 'useAccountSpecificCollateral should not be enabled';
       }
       const { calls, decoder } = await loadAccountCollateral({
@@ -123,6 +122,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
         tokenAddresses: [collateralAddress],
         CoreProxy,
       });
+
       const data = await erc7412Call(
         network,
         CoreProxy.provider,

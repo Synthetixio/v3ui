@@ -24,7 +24,7 @@ export const useWithdraw = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   const { gasSpeed } = useGasSpeed();
   const signer = useSigner();
@@ -32,7 +32,8 @@ export const useWithdraw = ({
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!signer) return;
+      if (!signer || !network || !provider) throw new Error('No signer or network');
+
       if (
         !(
           CoreProxy &&

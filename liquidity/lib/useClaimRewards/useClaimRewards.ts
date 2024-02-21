@@ -12,7 +12,7 @@ export function useClaimRewards(
   distributorAddress?: string,
   amount?: number
 ) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const client = useQueryClient();
@@ -21,7 +21,7 @@ export function useClaimRewards(
     mutationFn: async function () {
       try {
         if (!amount) return;
-        if (!poolId || !collateralAddress || !accountId || !distributorAddress)
+        if (!poolId || !collateralAddress || !accountId || !distributorAddress || !network)
           throw new Error('Parameters Undefined');
         if (!CoreProxy) throw new Error('CoreProxy undefined');
 
@@ -52,7 +52,7 @@ export function useClaimRewards(
         });
 
         dispatch({ type: 'success' });
-        client.invalidateQueries({ queryKey: [`${network.id}-${network.preset}`, 'Rewards'] });
+        client.invalidateQueries({ queryKey: [`${network?.id}-${network?.preset}`, 'Rewards'] });
         return claimedAmount;
       } catch (error) {
         const err = error as Error;

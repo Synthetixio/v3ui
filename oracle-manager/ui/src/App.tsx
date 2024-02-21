@@ -45,7 +45,7 @@ const activeIcon = (currentNetwork: number) => {
         name: 'Base Goerli',
       };
     default:
-      return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
+      return { icon: <FailedIcon w="24px" h="24px" />, name: 'Unsupported Network' };
   }
 };
 
@@ -58,7 +58,7 @@ export const App: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, getValues } = useForm({ defaultValues: { search: '' } });
   const navigate = useNavigate();
-  const network = useNetwork();
+  const { network } = useNetwork();
   const signer = useSigner();
   const isWalletConnected = useIsConnected();
   const { data: contract } = useMulticall3();
@@ -153,7 +153,7 @@ export const App: FC = () => {
               onClick={() => {
                 navigate(
                   '/node/' +
-                    (isWalletConnected ? network.id.toString() : currentNetwork.toString()) +
+                    (isWalletConnected ? network?.id.toString() : currentNetwork.toString()) +
                     '/' +
                     getValues('search').trim()
                 );

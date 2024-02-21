@@ -13,10 +13,11 @@ export const useMarketNamesById = (
   marketIdsAndAddresses?: { marketId: string; address: string }[]
 ) => {
   const { data: MultiCall3 } = useMulticall3();
-  const network = useNetwork();
+  const { network } = useNetwork();
+
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'MarketNamesById',
       {
         markets: marketIdsAndAddresses

@@ -17,9 +17,9 @@ export function Balance({
   onMax?: (balance: Wei) => void;
   hideBuyButton?: boolean;
 }) {
-  const network = useNetwork();
+  const { network } = useNetwork();
   const buyAssetLink = useMemo(() => {
-    switch (network.name) {
+    switch (network?.name) {
       case 'goerli':
         return `https://goerli.etherscan.io/address/${address}#writeContract`;
       case 'sepolia':
@@ -31,7 +31,7 @@ export function Balance({
       default:
         return `https://app.1inch.io/#/1/unified/swap/ETH/${symbol.toUpperCase()}`;
     }
-  }, [address, network.name, symbol]);
+  }, [address, network?.name, symbol]);
 
   return (
     <Text display="flex" gap={2} alignItems="center" fontSize="xs">

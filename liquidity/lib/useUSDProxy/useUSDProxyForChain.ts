@@ -6,6 +6,7 @@ import { importUSDProxy, USDProxyType } from '@synthetixio/v3-contracts';
 export function useUSDProxyForChain(network?: Network) {
   const provider = useProviderForChain(network);
   const withSigner = false;
+
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'USDProxy', { withSigner }],
     queryFn: async function () {

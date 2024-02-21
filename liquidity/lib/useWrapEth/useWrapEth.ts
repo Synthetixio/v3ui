@@ -26,6 +26,7 @@ export const useWrapEth = () => {
       await txn.wait();
     },
   });
+
   const exec = useCallback(
     async (amount: Wei) => {
       if (!ethBalance) return;
@@ -37,6 +38,7 @@ export const useWrapEth = () => {
     },
     [ethBalance, mutateAsync, refetchETHBalance, refetchWETHBalance]
   );
+
   return {
     exec,
     isLoading: isPending,

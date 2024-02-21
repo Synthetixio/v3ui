@@ -6,6 +6,7 @@ import { wei } from '@synthetixio/wei';
 
 const AllowanceSchema = ZodBigNumber.transform((x) => wei(x));
 const abi = ['function allowance(address, address) view returns (uint256)'];
+
 export const useAllowance = ({
   contractAddress,
   spender,
@@ -13,23 +14,24 @@ export const useAllowance = ({
   contractAddress?: string;
   spender?: string;
 }) => {
-  const wallet = useWallet();
+  const { activeWallet } = useWallet();
   const provider = useProvider();
-  const network = useNetwork();
+  const { network } = useNetwork();
 
   return useQuery({
     queryKey: [
-      `${network.id}-${network.preset}`,
+      `${network?.id}-${network?.preset}`,
       'Allowance',
-      { accountAddress: wallet?.address },
+      { accountAddress: activeWallet?.address },
       { contractAddress, spender },
     ],
     queryFn: async () => {
-      if (!(contractAddress && spender && wallet?.address)) throw new Error('OMG');
+      if (!(contractAddress && spender && activeWallet?.address && provider))
+        throw new Error('OMG');
       const contract = new Contract(contractAddress, abi, provider);
-      const allowance = await contract.allowance(wallet.address, spender);
+      const allowance = await contract.allowance(activeWallet.address, spender);
       return AllowanceSchema.parse(allowance);
     },
-    enabled: Boolean(wallet?.address && contractAddress && spender && provider),
+    enabled: Boolean(activeWallet?.address && contractAddress && spender && provider),
   });
 };
