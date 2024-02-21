@@ -2,6 +2,7 @@ import { NETWORKS } from '@snx-v3/useBlockchain';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useCallback } from 'react';
+import { motherShipProvider } from '../utils/providers';
 
 export function useWallet() {
   const [{ wallet }, conn, disconn] = useConnectWallet();
@@ -77,10 +78,9 @@ export function useProvider() {
   const [{ wallet }] = useConnectWallet();
 
   if (!wallet) {
-    return null;
+    return motherShipProvider;
   }
 
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
-
   return provider;
 }

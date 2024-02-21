@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import useGetUserDetailsQuery from '../../queries/useGetUserDetailsQuery';
+import { useGetUserDetailsQuery } from '../../queries';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
@@ -49,7 +49,7 @@ export default function UserListItem({
           imageSrc={user?.pfpUrl}
           address={address}
           ImageProps={{ w: '8', h: '8' }}
-          blockiesSize={8}
+          size={8}
           mr="0"
         />
         <Text fontWeight="bold" fontSize="14px" ml="3">

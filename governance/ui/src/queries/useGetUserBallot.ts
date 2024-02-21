@@ -4,7 +4,7 @@ import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
 import { useNetwork, useSigner } from './useWallet';
 
-export default function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(council: T) {
+export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(council: T) {
   const { network } = useNetwork();
   const signer = useSigner();
 

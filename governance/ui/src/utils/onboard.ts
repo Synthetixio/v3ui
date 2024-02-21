@@ -35,6 +35,7 @@ export const onboard = init({
     walletConnectModule({
       version: 2,
       projectId: process.env.WC_PROJECT_ID,
+      dappUrl: 'https://governance.synthetix.io',
     }),
     gnosisModule(),
     coinbaseModule(),

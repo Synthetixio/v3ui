@@ -2,13 +2,13 @@ import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 
 import Timer from '../Timer/Timer';
 import { useState } from 'react';
-import ShoppingCart from '../ShoppingCart/ShoppingCart';
+import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
+import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 
-interface MyVotesInterface {
+interface MyVotesSummary {
   isLoading: boolean;
   councilPeriod?: string;
-  votes?: Record<string, string>;
   schedule?: {
     startDate: number;
     nominationPeriodStartDate: number;
@@ -17,9 +17,11 @@ interface MyVotesInterface {
   };
 }
 
-export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesInterface) => {
+export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSummary) => {
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
+
+  const votes = useGetUserSelectedVotes();
 
   return (
     <Flex
@@ -44,13 +46,17 @@ export const MyVotes = ({ isLoading, councilPeriod, votes, schedule }: MyVotesIn
       </Text>
       <Show above="md">
         <Text fontSize="x-small" ml={8} fontWeight="bold">
-          {councilPeriod === '2' && <>{Object.values(!!votes ? votes : {}).length}/4</>}
+          {councilPeriod === '2' && (
+            <>{Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/4</>
+          )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-            <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
+            <>
+              <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
+            </>
           )}
         </Text>
-        {showCart && <ShoppingCart closeCart={() => setShowCart(false)} votes={votes} />}
+        {showCart && <MyVotesBox closeCart={() => setShowCart(false)} votes={votes} />}
       </Show>
     </Flex>
   );
