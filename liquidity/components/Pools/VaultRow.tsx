@@ -29,7 +29,7 @@ function VaultRowUi({
     liquidityPosition?.collateralValue || wei(0)
   );
   const hasLiquidity = liquidityPosition && liquidityPosition.collateralAmount.gt(0);
-
+  console.log('ROW: ', collateralType, liquidityPosition);
   return (
     <Tr>
       <Td>

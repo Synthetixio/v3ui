@@ -4,6 +4,7 @@ import { SNXIcon } from '../SNXIcon';
 import { DollarCircle } from '../DollarCircle';
 import { Icon, IconProps } from '@chakra-ui/react';
 import { BitcoinIcon } from '../BitcoinIcon';
+import { SUSDCIcon } from '../SUSDCIcon';
 
 interface CollateralIconProps extends IconProps {
   symbol?: string;
@@ -30,6 +31,8 @@ export const CollateralIcon = ({
       return <DollarCircle {...props} />;
     case 'WBTC':
       return <BitcoinIcon {...props} />;
+    case 'sUSDC':
+      return <SUSDCIcon {...props} />;
     default:
       return <UnknownIcon {...props} />;
   }

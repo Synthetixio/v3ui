@@ -36,6 +36,7 @@ export const loadPosition = async ({
   ]);
 
   const decoder = (multicallEncoded: string | string[]) => {
+    console.log(multicallEncoded);
     if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
       const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
         'getPositionCollateral',

@@ -83,7 +83,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         )
       );
       const positionCallsAndData = positionCallsAndDataNested.flat();
-
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         network,
         collateralAddresses: collateralTypes.map((x) => x.tokenAddress),
@@ -115,7 +114,11 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           );
 
           const positionsEncoded = encoded.slice(priceCalls.length);
-          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
+          const positionData =
+            positionsEncoded.length === 1
+              ? positionsEncoded.map((x) => singlePositionDecoder(x))
+              : toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
+          console.log('QUERY', positionData);
 
           const positions = positionData.map(({ debt, collateral }, index) => {
             const { poolName, collateralType, poolId } = positionCallsAndData[index];
