@@ -114,11 +114,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           );
 
           const positionsEncoded = encoded.slice(priceCalls.length);
-          const positionData =
-            positionsEncoded.length === 1
-              ? positionsEncoded.map((x) => singlePositionDecoder(x))
-              : toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
-          console.log('QUERY', positionData);
+          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
 
           const positions = positionData.map(({ debt, collateral }, index) => {
             const { poolName, collateralType, poolId } = positionCallsAndData[index];
