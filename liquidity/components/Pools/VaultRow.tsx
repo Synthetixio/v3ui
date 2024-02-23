@@ -9,6 +9,7 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
+import { constants } from 'ethers';
 
 function VaultRowUi({
   collateralType,
@@ -46,8 +47,8 @@ function VaultRowUi({
             <Text fontSize="xs" color="gray.500" data-testid="collateral-amount">
               {liquidityPosition?.collateralAmount.gt(0) && (
                 <Amount value={liquidityPosition.collateralAmount} />
-              )}{' '}
-              {collateralType.symbol}
+              )}
+              &nbsp;{collateralType.symbol}
             </Text>
           </Flex>
         </Flex>
@@ -59,11 +60,16 @@ function VaultRowUi({
         {cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}
       </Td>
       <Td>
-        <Amount
-          data-testid="issuance-ratio"
-          value={collateralType.issuanceRatioD18.mul(100)}
-          suffix="%"
-        />
+        {' '}
+        {collateralType.issuanceRatioD18.eq(constants.MaxUint256) ? (
+          'Unlimited'
+        ) : (
+          <Amount
+            data-testid="issuance-ratio"
+            value={collateralType.issuanceRatioD18.mul(100)}
+            suffix="%"
+          />
+        )}
       </Td>
       <Td>
         <Amount
