@@ -112,8 +112,8 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               address: collateralTypes[i].tokenAddress,
             }))
           );
-
-          const positionsEncoded = encoded.slice(priceCalls.length);
+          const positionsEncoded =
+            encoded.length % 2 === 0 ? encoded : encoded.slice(priceCalls.length);
           const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
 
           const positions = positionData.map(({ debt, collateral }, index) => {
