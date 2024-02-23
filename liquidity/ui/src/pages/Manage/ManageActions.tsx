@@ -112,7 +112,7 @@ const ManageActionUi: FC<{
         </ActionButton>
         {chainId === 8453 ? (
           <ActionButton onClick={() => {}} action="borrow">
-            Borrow sUSD isn't available
+            Borrow sUSD isn&apos;t available
           </ActionButton>
         ) : (
           <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>

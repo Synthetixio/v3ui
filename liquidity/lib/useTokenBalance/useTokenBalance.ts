@@ -24,7 +24,11 @@ export const useTokenBalance = (address?: string) => {
     queryFn: async () => {
       if (activeWallet?.address && tokenAddress && provider) {
         const contract = new ethers.Contract(tokenAddress, abi, provider);
-        return BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+        const balance =
+          network?.id === 8453 && network.preset === 'andromeda'
+            ? wei(await contract.balanceOf(activeWallet?.address), 6)
+            : BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+        return balance;
       }
     },
     enabled: Boolean(activeWallet?.address && tokenAddress && provider),
