@@ -176,8 +176,6 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
       : collateralType?.tokenAddress
   );
 
-  console.log(tokenBalance?.toString());
-
   const { data: ethBalance } = useEthBalance();
 
   if (!collateralType || !liquidityPosition?.accountCollateral) return null;
