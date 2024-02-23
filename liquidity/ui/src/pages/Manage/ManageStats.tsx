@@ -10,6 +10,7 @@ import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { constants } from 'ethers';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -220,12 +221,13 @@ export const ManageStatsUi: FC<{
                 fontFamily="heading"
                 lineHeight="24px"
               >
-                Minimum{' '}
-                {currency(collateralType.issuanceRatioD18, {
-                  style: 'percent',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
+                  ? 'Unlimited'
+                  : `Minimum ${currency(collateralType.issuanceRatioD18, {
+                      style: 'percent',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}`}
               </Text>
             </>
           ) : (
