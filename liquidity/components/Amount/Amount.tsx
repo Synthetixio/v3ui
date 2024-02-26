@@ -2,6 +2,7 @@ import { Tooltip } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { currency } from '@snx-v3/format';
 import { Wei, wei } from '@synthetixio/wei';
+import { constants } from 'ethers';
 
 export function Amount({
   value,
@@ -23,7 +24,11 @@ export function Amount({
 
     return {
       formattedValue,
-      preciseValue: value.eq(cleanNumber) ? formattedValue : value.toString(),
+      preciseValue: value.eq(constants.MaxUint256)
+        ? 'Unlimited'
+        : value.eq(cleanNumber)
+          ? formattedValue
+          : value.toString(),
     };
   }, [value]);
 
