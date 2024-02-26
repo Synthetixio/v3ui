@@ -20,6 +20,6 @@ export const SESSION_STORAGE_KEYS = {
   TERMS_CONDITIONS_ACCEPTED: 'TERMS_CONDITIONS_ACCEPTED',
 };
 export const offchainMainnetEndpoint =
-  process.env.PYTH_MAINNET_ENDPOINT || 'https://xc-mainnet.pyth.network';
+  process.env.PYTH_MAINNET_ENDPOINT || 'https://hermes.pyth.network';
 export const offchainTestnetEndpoint =
-  process.env.PYTH_TESTNET_ENDPOINT || 'https://xc-testnet.pyth.network';
+  process.env.PYTH_TESTNET_ENDPOINT || 'https://hermes.pyth.network';
