@@ -5919,6 +5919,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/format": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
+    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
