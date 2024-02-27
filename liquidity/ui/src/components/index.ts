@@ -4,3 +4,4 @@ export * from './Assets';
 export * from './CollateralAlert';
 export * from './Rewards';
 export * from './Shared';
+export * from './Stats';

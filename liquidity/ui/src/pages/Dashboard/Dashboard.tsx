@@ -1,10 +1,11 @@
-import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import Wei from '@synthetixio/wei';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import { AssetsList } from '../../components';
 import Positions from '../../components/Positions/Positions';
+import { StatBox } from '../../components/Stats';
 
 export function Dashboard() {
   const [params] = useSearchParams();
@@ -23,78 +24,34 @@ export function Dashboard() {
       </Helmet>
 
       <Flex flexDir="column">
-        <Heading>Dashboard</Heading>
-        <Flex w="100%" gap="4">
-          <Flex
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="center"
-            w="297px"
-            height="88px"
-          >
-            <Text fontSize="14px" color="gray.500">
-              Total Assets
-            </Text>
-            <Text fontSize="24px" fontWeight={800}>
-              TODO
-            </Text>
-          </Flex>
-          <Flex
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="center"
-            w="297px"
-            height="88px"
-          >
-            <Text fontSize="14px" color="gray.500">
-              Total Delegated
-            </Text>
-            <Text fontSize="24px" fontWeight={800}>
-              TODO
-            </Text>
-          </Flex>
-          <Flex
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="center"
-            w="297px"
-            height="88px"
-          >
-            <Text fontSize="14px" color="gray.500">
-              Total Debt
-            </Text>
-            <Skeleton isLoaded={!isLoading}>
-              <Text fontSize="24px" fontWeight={800}>
-                ${debt && debt.toNumber().toFixed(2)}
-              </Text>
-            </Skeleton>
-          </Flex>
-          <Flex
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="center"
-            w="297px"
-            height="88px"
-          >
-            <Text fontSize="14px" color="gray.500">
-              APY
-            </Text>
-            <Text fontSize="24px" fontWeight={800}>
-              TODO
-            </Text>
-          </Flex>
+        <Heading color="gray.50" fontSize="1.5rem">
+          Dashboard
+        </Heading>
+        <Flex w="100%" gap="4" mt={6}>
+          <StatBox
+            title="Total Assets"
+            isLoading={true}
+            value="TODO"
+            label="All assets in your Wallet and in your Synthetix Account."
+          />
+          <StatBox
+            title="Total Delegated"
+            isLoading={false}
+            value="TODO"
+            label="All assets in your Account that have been Delegated to a Pool."
+          />
+          <StatBox
+            title="Total Debt"
+            isLoading={isLoading}
+            value={debt?.toNumber().toFixed(2) || '0'}
+            label="Aggregated Debt of all your Open Positions."
+          />
+          <StatBox
+            title="APY"
+            isLoading={false}
+            value="14%"
+            label="Aggregated APY from all your positions."
+          />
         </Flex>
         <AssetsList />
         <Positions />
