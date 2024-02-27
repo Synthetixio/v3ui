@@ -10,6 +10,7 @@ import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { constants } from 'ethers';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -220,12 +221,13 @@ export const ManageStatsUi: FC<{
                 fontFamily="heading"
                 lineHeight="24px"
               >
-                Minimum{' '}
-                {currency(collateralType.issuanceRatioD18, {
-                  style: 'percent',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
+                  ? 'N/A'
+                  : `Minimum ${currency(collateralType.issuanceRatioD18, {
+                      style: 'percent',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}`}
               </Text>
             </>
           ) : (
@@ -246,7 +248,6 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
   const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
-
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,

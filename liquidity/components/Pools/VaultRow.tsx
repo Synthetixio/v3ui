@@ -43,7 +43,12 @@ function VaultRowUi({
                 '-'
               )}
             </Text>
-            <Text fontSize="xs" color="gray.500" data-testid="collateral-amount">
+            <Text
+              fontSize="xs"
+              color="gray.500"
+              data-testid="collateral-amount"
+              whiteSpace="nowrap"
+            >
               {liquidityPosition?.collateralAmount.gt(0) && (
                 <Amount value={liquidityPosition.collateralAmount} />
               )}{' '}

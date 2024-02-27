@@ -197,7 +197,11 @@ export const NETWORKS: Network[] = [
   },
 ];
 
-export const deploymentsWithERC7412: string[] = ['84531-andromeda', '84532-andromeda'];
+export const deploymentsWithERC7412: string[] = [
+  '8453-andromeda',
+  '84531-andromeda',
+  '84532-andromeda',
+];
 
 export const DEFAULT_NETWORK =
   NETWORKS.find(

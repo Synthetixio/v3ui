@@ -15,6 +15,7 @@ import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../components/CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -164,11 +165,16 @@ export const DepositUi: FC<{
 
 export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
+  const { network } = useNetwork();
   const params = useParams();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
-  const { data: tokenBalance } = useTokenBalance(collateralType?.tokenAddress);
+  const { data: tokenBalance } = useTokenBalance(
+    network?.preset === 'andromeda' && network.id === 8453
+      ? '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      : collateralType?.tokenAddress
+  );
 
   const { data: ethBalance } = useEthBalance();
 

@@ -27,6 +27,7 @@ import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -93,7 +94,8 @@ const ManageActionUi: FC<{
   manageAction?: ManageAction;
   onSubmit: (e: FormEvent) => void;
   liquidityPosition?: LiquidityPosition;
-}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition }) => {
+  chainId?: number;
+}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, chainId }) => {
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
@@ -108,9 +110,15 @@ const ManageActionUi: FC<{
         <ActionButton onClick={setActiveAction} action="undelegate" activeAction={manageAction}>
           <ArrowUpIcon w="15px" h="15px" mr={1} /> Remove Collateral
         </ActionButton>
-        <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
-          <BorrowIcon mr={1} /> Borrow snxUSD
-        </ActionButton>
+        {chainId === 8453 ? (
+          <ActionButton onClick={() => {}} action="borrow">
+            Borrow sUSD isn&apos;t available
+          </ActionButton>
+        ) : (
+          <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
+            <BorrowIcon mr={1} /> Borrow snxUSD
+          </ActionButton>
+        )}
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
@@ -123,6 +131,7 @@ const ManageActionUi: FC<{
 
 export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
+  const { network } = useNetwork();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -191,6 +200,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
       <ManageActionUi
         liquidityPosition={liquidityPosition}
         onSubmit={onSubmit}
+        chainId={network?.id}
         setActiveAction={(action) => {
           setCollateralChange(wei(0));
           setDebtChange(wei(0));
