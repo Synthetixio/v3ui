@@ -27,10 +27,7 @@ export const useTokenBalance = (address?: string) => {
         const balance =
           network?.id === 8453 && network.preset === 'andromeda'
             ? wei(await contract.balanceOf(activeWallet?.address), await contract.decimals())
-            : BalanceSchema.parse(
-                await contract.balanceOf(activeWallet?.address),
-                await contract.decimals()
-              );
+            : BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
         return balance;
       }
     },
