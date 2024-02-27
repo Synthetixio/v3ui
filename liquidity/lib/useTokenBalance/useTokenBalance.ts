@@ -26,8 +26,11 @@ export const useTokenBalance = (address?: string) => {
         const contract = new ethers.Contract(tokenAddress, abi, provider);
         const balance =
           network?.id === 8453 && network.preset === 'andromeda'
-            ? wei(await contract.balanceOf(activeWallet?.address), 6)
-            : BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+            ? wei(await contract.balanceOf(activeWallet?.address), await contract.decimals())
+            : BalanceSchema.parse(
+                await contract.balanceOf(activeWallet?.address),
+                await contract.decimals()
+              );
         return balance;
       }
     },

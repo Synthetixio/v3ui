@@ -34,16 +34,22 @@ export function Amount({
     <Tooltip
       label={
         <>
-          {prefix}
-          {preciseValue}
-          {suffix}
+          {isMaxUint ? (
+            'You cannot borrow sUSD against this collateral'
+          ) : (
+            <>
+              {prefix}
+              {preciseValue}
+              {suffix}
+            </>
+          )}
         </>
       }
       isDisabled={formattedValue === preciseValue}
     >
       <span data-testid={testid}>
         {prefix}
-        {isMaxUint ? 'Unlimited' : formattedValue}
+        {isMaxUint ? 'N/A' : formattedValue}
         {!isMaxUint && suffix}
       </span>
     </Tooltip>
