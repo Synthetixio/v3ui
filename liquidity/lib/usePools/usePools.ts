@@ -26,51 +26,27 @@ export function usePools() {
     queryKey: [`${network?.id}-${network?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
-      const isBase = network?.name === 'base';
-      const [preferredPoolIdRaw, approvedPoolIdsRaw] = !isBase
-        ? // @ts-ignore TODO: remove eventually when types are aligned
-          await CoreProxy.callStatic.multicall([
-            CoreProxy.interface.encodeFunctionData('getPreferredPool'),
-            CoreProxy.interface.encodeFunctionData('getApprovedPools'),
-          ])
-        : await Promise.all([
-            CoreProxy.callStatic.getPreferredPool(),
-            CoreProxy.callStatic.getApprovedPools(),
-          ]);
 
-      const [preferredPoolId] = isBase
-        ? [Number(preferredPoolIdRaw.toString())]
-        : CoreProxy.interface.decodeFunctionResult('getPreferredPool', preferredPoolIdRaw);
-      const [approvedPoolIds] = isBase
-        ? [approvedPoolIdsRaw]
-        : CoreProxy.interface.decodeFunctionResult('getApprovedPools', approvedPoolIdsRaw);
+      const [prefferedPoolId, approvedPoolIds] = await Promise.all([
+        CoreProxy.callStatic.getPreferredPool(),
+        CoreProxy.callStatic.getApprovedPools(),
+      ]);
 
       const incompletePools = [
         {
-          id: preferredPoolId,
+          id: prefferedPoolId,
           isPreferred: true,
         },
       ].concat(
         approvedPoolIds.map((id: ethers.BigNumber) => ({
-          id,
+          id: id,
           isPreferred: false,
         }))
       );
 
-      const poolNamesRaw = !isBase
-        ? // @ts-ignore TODO: remove eventually when types are aligned
-          await CoreProxy.callStatic.multicall(
-            incompletePools.map(({ id }) =>
-              CoreProxy.interface.encodeFunctionData('getPoolName', [id])
-            )
-          )
-        : await Promise.all(incompletePools.map(async ({ id }) => await CoreProxy.getPoolName(id)));
-
-      const poolNames = isBase
-        ? poolNamesRaw
-        : poolNamesRaw.map(
-            (bytes: string) => CoreProxy.interface.decodeFunctionResult('getPoolName', bytes)[0]
-          );
+      const poolNames = await Promise.all(
+        incompletePools.map(async ({ id }) => await CoreProxy.getPoolName(id))
+      );
 
       const poolsRaw = incompletePools.map(({ id, isPreferred }, i) => ({
         id,
@@ -78,11 +54,7 @@ export function usePools() {
         name: poolNames[i],
       }));
 
-      const pools = isBase
-        ? poolsRaw.map((pool) => ({ ...pool, id: pool.id.toString() }))
-        : PoolsSchema.parse(poolsRaw);
-
-      return pools;
+      return PoolsSchema.parse(poolsRaw);
     },
   });
 }
