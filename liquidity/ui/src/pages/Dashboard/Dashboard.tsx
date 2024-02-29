@@ -3,12 +3,11 @@ import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import Wei from '@synthetixio/wei';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { AssetsList } from '../../components';
-import Positions from '../../components/Positions/Positions';
-import { StatBox } from '../../components/Stats';
+import { AssetsList, PositionsList, StatBox } from '../../components';
 
 export function Dashboard() {
   const [params] = useSearchParams();
+
   const { data: positions, isLoading } = useLiquidityPositions({
     accountId: params.get('accountId') || '',
   });
@@ -22,7 +21,6 @@ export function Dashboard() {
         <title>Synthetix V3 - Dashboard</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
-
       <Flex flexDir="column">
         <Heading color="gray.50" fontSize="1.5rem">
           Dashboard
@@ -54,7 +52,7 @@ export function Dashboard() {
           />
         </Flex>
         <AssetsList />
-        <Positions />
+        <PositionsList />
       </Flex>
     </>
   );
