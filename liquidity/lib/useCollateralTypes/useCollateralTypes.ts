@@ -8,6 +8,7 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -28,8 +29,6 @@ export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
 const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
-
-const isBaseAndromeda = (id?: number, preset?: string) => id === 8453 && preset === 'andromeda';
 
 async function loadSymbols({
   Multicall3,

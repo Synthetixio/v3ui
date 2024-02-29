@@ -6382,6 +6382,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/isBaseAndromeda@workspace:*, @snx-v3/isBaseAndromeda@workspace:liquidity/lib/isBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/isBaseAndromeda@workspace:liquidity/lib/isBaseAndromeda"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/liquidity-cypress@workspace:liquidity/cypress":
   version: 0.0.0-use.local
   resolution: "@snx-v3/liquidity-cypress@workspace:liquidity/cypress"
@@ -6743,6 +6749,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCollateralTypes@workspace:liquidity/lib/useCollateralTypes"
   dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
