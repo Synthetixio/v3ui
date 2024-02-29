@@ -8,6 +8,7 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -84,16 +85,29 @@ export function useCollateralTypes(includeDelegationOff = false) {
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = await loadCollateralTypes({ CoreProxy, Multicall3 });
+      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
+        (collateralType) => ({
+          ...collateralType,
+          symbol:
+            collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
+              ? 'USDC'
+              : collateralType.symbol,
+          displaySymbol:
+            collateralType.displaySymbol === 'sUSDC' &&
+            isBaseAndromeda(network?.id, network?.preset)
+              ? 'USDC'
+              : collateralType.symbol,
+        })
+      );
       if (includeDelegationOff) {
         return collateralTypes;
       }
 
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
-      return collateralTypes.filter((x) => {
-        return x.minDelegationD18.lt(constants.MaxUint256);
-      });
+      return collateralTypes.filter((collateralType) =>
+        collateralType.minDelegationD18.lt(constants.MaxUint256)
+      );
     },
     // one hour in ms
     staleTime: 60 * 60 * 1000,

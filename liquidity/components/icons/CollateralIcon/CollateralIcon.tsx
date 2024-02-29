@@ -32,6 +32,7 @@ export const CollateralIcon = ({
     case 'WBTC':
       return <BitcoinIcon {...props} />;
     case 'sUSDC':
+    case 'USDC':
       return <SUSDCIcon {...props} />;
     default:
       return <UnknownIcon {...props} />;
