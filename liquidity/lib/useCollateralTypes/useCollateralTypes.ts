@@ -29,6 +29,8 @@ export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 const SymbolSchema = z.string();
 const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
 
+const isBaseAndromeda = (id?: number, preset?: string) => id === 8453 && preset === 'andromeda';
+
 async function loadSymbols({
   Multicall3,
   tokenConfigs,
@@ -88,15 +90,12 @@ export function useCollateralTypes(includeDelegationOff = false) {
         (collateralType) => ({
           ...collateralType,
           symbol:
-            collateralType.symbol === 'sUSDC' &&
-            network?.id === 8453 &&
-            network?.preset === 'andromeda'
+            collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
               ? 'USDC'
               : collateralType.symbol,
           displaySymbol:
             collateralType.displaySymbol === 'sUSDC' &&
-            network?.id === 8453 &&
-            network?.preset === 'andromeda'
+            isBaseAndromeda(network?.id, network?.preset)
               ? 'USDC'
               : collateralType.symbol,
         })
