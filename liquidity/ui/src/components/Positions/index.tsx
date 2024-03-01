@@ -1,3 +1,2 @@
-export * from './Positions';
-export * from './PositionRow';
-export * from './PositionTableHeader';
+export * from './PositionsTable';
+export * from './PositionsList';

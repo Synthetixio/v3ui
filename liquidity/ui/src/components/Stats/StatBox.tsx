@@ -38,7 +38,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
         <Skeleton
           isLoaded={!isLoading}
           height="24px"
-          maxWidth={isLoading ? '40%' : 'initial'}
+          minWidth={isLoading ? '40%' : 'initial'}
           startColor="gray.700"
           endColor="navy.800"
         >

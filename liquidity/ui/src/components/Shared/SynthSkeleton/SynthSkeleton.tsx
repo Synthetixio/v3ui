@@ -1,4 +1,4 @@
-import { Skeleton, SkeletonProps } from '@chakra-ui/react';
+import { Skeleton, SkeletonCircle, SkeletonProps } from '@chakra-ui/react';
 
 interface SynthSkeletonProps extends SkeletonProps {
   children: React.ReactNode;
@@ -6,8 +6,16 @@ interface SynthSkeletonProps extends SkeletonProps {
 
 export const SynthSkeleton = ({ children, ...props }: SynthSkeletonProps) => {
   return (
-    <Skeleton {...props} startColor="gray.700" endColor="navy.800">
+    <Skeleton startColor="gray.700" endColor="navy.800" {...props}>
       {children}
     </Skeleton>
+  );
+};
+
+export const SynthCircle = ({ children, ...props }: SkeletonProps) => {
+  return (
+    <SkeletonCircle startColor="gray.700" endColor="navy.800" {...props}>
+      {children}
+    </SkeletonCircle>
   );
 };
