@@ -3,6 +3,7 @@ import { TableContainer, Table, Heading, Tooltip, Flex, Tbody, Td, Tr } from '@c
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { AssetRowLoading } from '.';
 
 interface Asset {
   token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
@@ -58,7 +59,11 @@ const mockAssets: Asset[] = [
   },
 ];
 
-export const AssetsTable = () => {
+interface AssetsTableProps {
+  isLoading: boolean;
+}
+
+export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
   const { network } = useNetwork();
 
   return (
@@ -93,35 +98,44 @@ export const AssetsTable = () => {
             <Td height="0px" border="none" px={0} pt={0} pb={5} />
             <Td height="0px" border="none" px={0} pt={0} pb={5} />
           </Tr>
-          {mockAssets.map(
-            (
-              {
-                token,
-                name,
-                accountBalance,
-                accountBalance$,
-                delegatedBalance,
-                delegatedBalance$,
-                walletBalance,
-                walletBalance$,
-              },
-              index
-            ) => {
-              return (
-                <AssetsRow
-                  key={token}
-                  token={token}
-                  name={name}
-                  walletBalance={walletBalance}
-                  walletBalance$={walletBalance$}
-                  accountBalance={accountBalance}
-                  accountBalance$={accountBalance$}
-                  delegatedBalance={delegatedBalance}
-                  delegatedBalance$={delegatedBalance$}
-                  final={index === mockAssets.length - 1}
-                />
-              );
-            }
+          {isLoading ? (
+            <>
+              <AssetRowLoading />
+              <AssetRowLoading />
+            </>
+          ) : (
+            <>
+              {mockAssets.map(
+                (
+                  {
+                    token,
+                    name,
+                    accountBalance,
+                    accountBalance$,
+                    delegatedBalance,
+                    delegatedBalance$,
+                    walletBalance,
+                    walletBalance$,
+                  },
+                  index
+                ) => {
+                  return (
+                    <AssetsRow
+                      key={token}
+                      token={token}
+                      name={name}
+                      walletBalance={walletBalance}
+                      walletBalance$={walletBalance$}
+                      accountBalance={accountBalance}
+                      accountBalance$={accountBalance$}
+                      delegatedBalance={delegatedBalance}
+                      delegatedBalance$={delegatedBalance$}
+                      final={index === mockAssets.length - 1}
+                    />
+                  );
+                }
+              )}
+            </>
           )}
         </Tbody>
       </Table>

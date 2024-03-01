@@ -11,14 +11,14 @@ export default function PositionsRowLoading() {
             <TokenIcon symbol="SNX" />
           </SkeletonCircle>
           <Flex flexDirection="column" ml={3}>
-            <Skeleton>
+            <Skeleton height="1rem" mb={1} width="70%">
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                SNX
+                sUSDC
               </Text>
             </Skeleton>
-            <Skeleton>
+            <Skeleton height="0.75rem">
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                Synthetix Network Token
+                Synthetic USDC
               </Text>
             </Skeleton>
           </Flex>
@@ -26,12 +26,12 @@ export default function PositionsRowLoading() {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               $100,000,00
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               100,000 SNX
             </Text>
@@ -40,7 +40,7 @@ export default function PositionsRowLoading() {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" width="80%">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               15%
             </Text>
@@ -49,12 +49,12 @@ export default function PositionsRowLoading() {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              $50,000
+              $5,000
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               22%
             </Text>
@@ -63,38 +63,40 @@ export default function PositionsRowLoading() {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              $100,000,000
+              $100,000
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              200,000 SNX
+              200 SNX
             </Text>
           </Skeleton>
         </Flex>
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" mb={1} width="70%">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              $20,000,000
+              $20,000
             </Text>
           </Skeleton>
-          <Text color="cyan.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-            Claim Credit
-          </Text>
+          <Skeleton height="0.75rem">
+            <Text color="cyan.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+              Claim Credit
+            </Text>
+          </Skeleton>
         </Flex>
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               5000%
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem">
             <Badge colorScheme="green" border="1px solid" bg="green.900">
               HEALTHY
             </Badge>
@@ -111,6 +113,7 @@ export default function PositionsRowLoading() {
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
+            disabled
           >
             Manage
           </Button>

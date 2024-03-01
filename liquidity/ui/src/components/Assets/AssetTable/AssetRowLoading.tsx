@@ -11,12 +11,12 @@ export const AssetRowLoading = () => {
             <TokenIcon symbol="SNX" />
           </SkeletonCircle>
           <Flex flexDirection="column" ml={3}>
-            <Skeleton>
+            <Skeleton height="1rem" width="40%" mb={1}>
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
                 SNX
               </Text>
             </Skeleton>
-            <Skeleton>
+            <Skeleton height="0.75rem" width="70%">
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
                 Synthetix Network Token
               </Text>
@@ -26,12 +26,12 @@ export const AssetRowLoading = () => {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" width="40%" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               $1,500.00
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem" width="70%">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               750.00 SNX
             </Text>
@@ -40,12 +40,12 @@ export const AssetRowLoading = () => {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" width="40%" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               $2,000.00
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem" width="70%">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               1,000.00 SNX
             </Text>
@@ -54,12 +54,12 @@ export const AssetRowLoading = () => {
       </Td>
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Skeleton>
+          <Skeleton height="1rem" width="40%" mb={1}>
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               $2,000.00
             </Text>
           </Skeleton>
-          <Skeleton>
+          <Skeleton height="0.75rem" width="70%">
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               1,000.00 SNX
             </Text>
@@ -77,6 +77,7 @@ export const AssetRowLoading = () => {
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
+            disabled
           >
             Withdraw
           </Button>
