@@ -124,7 +124,11 @@
     "last 1 Opera version"
   ],
   "depcheck": {
-    "ignorePatterns": ["dist"],
-    "ignoreMatches": ["process"]
+    "ignorePatterns": [
+      "dist"
+    ],
+    "ignoreMatches": [
+      "process"
+    ]
   }
 }
