@@ -57,7 +57,6 @@
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/usePoolConfiguration": "workspace:*",
     "@snx-v3/usePoolData": "workspace:*",
-    "@snx-v3/usePools": "workspace:*",
     "@snx-v3/useRewards": "workspace:^",
     "@snx-v3/useTeleport": "workspace:*",
     "@snx-v3/useTokenBalance": "workspace:*",
@@ -125,11 +124,7 @@
     "last 1 Opera version"
   ],
   "depcheck": {
-    "ignorePatterns": [
-      "dist"
-    ],
-    "ignoreMatches": [
-      "process"
-    ]
+    "ignorePatterns": ["dist"],
+    "ignoreMatches": ["process"]
   }
 }
