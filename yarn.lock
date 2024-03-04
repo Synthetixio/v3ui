@@ -1460,7 +1460,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.22.5, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.4, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.4, @babel/runtime@npm:^7.8.4":
   version: 7.23.8
   resolution: "@babel/runtime@npm:7.23.8"
   dependencies:
@@ -6500,12 +6500,10 @@ __metadata:
     ethers: "npm:^5.7.2"
     framer-motion: "npm:^10.16.5"
     html-webpack-plugin: "npm:^5.5.3"
-    i18next: "npm:^23.7.6"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-helmet: "npm:^6.1.0"
-    react-i18next: "npm:^13.4.1"
     react-refresh: "npm:^0.14.0"
     react-router-dom: "npm:^6.18.0"
     stream-browserify: "npm:^3.0.0"
@@ -16523,15 +16521,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-parse-stringify@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "html-parse-stringify@npm:3.0.1"
-  dependencies:
-    void-elements: "npm:3.1.0"
-  checksum: 8743b76cc50e46d1956c1ad879d18eb9613b0d2d81e24686d633f9f69bb26b84676f64a926973de793cca479997017a63219278476d617b6c42d68246d7c07fe
-  languageName: node
-  linkType: hard
-
 "html-webpack-plugin@npm:^5.5.3":
   version: 5.5.3
   resolution: "html-webpack-plugin@npm:5.5.3"
@@ -16775,15 +16764,6 @@ __metadata:
   version: 1.0.0
   resolution: "hyperlinker@npm:1.0.0"
   checksum: fdcf08c72dde534e127cfc40e4c28de5106c58b58f0191d117a8a78802aeeff98dd870a2ee1ac7ee877861b9d0bd7b515a8d0759f1e319ea3162d3c210dbea7c
-  languageName: node
-  linkType: hard
-
-"i18next@npm:^23.7.6":
-  version: 23.7.6
-  resolution: "i18next@npm:23.7.6"
-  dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-  checksum: ae16654e08e10c38d4d17c6a28ae7cb4ac894f03bccfa7ae1637b6c6705937009d5f625f9cd0c3b664bec1acaa7116e5dda7a5e9fbbf41bf97260b49da2875e7
   languageName: node
   linkType: hard
 
@@ -22661,24 +22641,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^13.4.1":
-  version: 13.4.1
-  resolution: "react-i18next@npm:13.4.1"
-  dependencies:
-    "@babel/runtime": "npm:^7.22.5"
-    html-parse-stringify: "npm:^3.0.1"
-  peerDependencies:
-    i18next: ">= 23.2.3"
-    react: ">= 16.8.0"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: f563e44a2e6e19a6bbe6bf211392b54c51e85620cf6adecae889917d34cc9b7a8bb73d696b4804f791cddee9b283570ad052e13d3e99685cde502815ecc6eb6f
-  languageName: node
-  linkType: hard
-
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -26409,13 +26371,6 @@ __metadata:
     typescript:
       optional: true
   checksum: 2007a8a674301d790b3172a0a84bd1659f76332ac13a78d695f7cee0602388103a07b2d6a3fc46b4f27582f8b506f7c1f90f13c5e21e464daffc6cccb14fbc3a
-  languageName: node
-  linkType: hard
-
-"void-elements@npm:3.1.0":
-  version: 3.1.0
-  resolution: "void-elements@npm:3.1.0"
-  checksum: 0390f818107fa8fce55bb0a5c3f661056001c1d5a2a48c28d582d4d847347c2ab5b7f8272314cac58acf62345126b6b09bea623a185935f6b1c3bbce0dfd7f7f
   languageName: node
   linkType: hard
 
