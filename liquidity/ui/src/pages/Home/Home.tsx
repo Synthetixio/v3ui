@@ -1,50 +1,58 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { Flex } from '@chakra-ui/react';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { usePools } from '@snx-v3/usePools';
-import { useParams } from '@snx-v3/useParams';
+import { Flex, Heading } from '@chakra-ui/react';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { Welcome } from '../../components/Shared/Welcome';
-import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
+import Wei from '@synthetixio/wei';
+import { Helmet } from 'react-helmet';
+import { useSearchParams } from 'react-router-dom';
+import { AssetsList, PositionsList, StatBox } from '../../components';
 
 export function Home() {
-  const { accountId } = useParams();
+  const [params] = useSearchParams();
 
-  const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
-  const { data: pools, isLoading: isPoolsLoading } = usePools();
+  const { data: positions, isLoading } = useLiquidityPositions({
+    accountId: params.get('accountId') || '',
+  });
 
-  const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
-    useLiquidityPositions({ accountId });
-
-  const isLoading = collateralTypesLoading || isPoolsLoading || liquidityPositionLoading;
-
-  const { totalCollateral, totalDebt } =
-    Object.values(liquidityPositionsById || []).reduce(
-      (acc, val) => {
-        acc.totalCollateral = acc.totalCollateral + val.collateralValue.toNumber();
-        acc.totalDebt = acc.totalDebt + val.debt.toNumber();
-        return acc;
-      },
-      { totalCollateral: 0, totalDebt: 0 }
-    ) || {};
+  const debt =
+    positions && Object.values(positions).reduce((prev, cur) => prev.add(cur.debt), new Wei(0));
 
   return (
     <>
       <Helmet>
-        <title>Synthetix V3</title>
-        <meta name="description" content="Synthetix V3" />
+        <title>Synthetix V3 - Dashboard</title>
+        <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
-      <Flex height="100%" flexDirection="column">
-        <Welcome />
-        <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} isLoading={isLoading} />
-        <PoolsList
-          pools={pools}
-          isLoading={isLoading}
-          collateralTypes={collateralTypes}
-          liquidityPositionsById={liquidityPositionsById}
-        />
-        <AvailableCollateral />
+      <Flex flexDir="column">
+        <Heading color="gray.50" fontSize="1.5rem">
+          Dashboard
+        </Heading>
+        <Flex w="100%" gap="4" mt={6}>
+          <StatBox
+            title="Total Assets"
+            isLoading={true}
+            value="TODO"
+            label="All assets in your Wallet and in your Synthetix Account."
+          />
+          <StatBox
+            title="Total Delegated"
+            isLoading={false}
+            value="TODO"
+            label="All assets in your Account that have been Delegated to a Pool."
+          />
+          <StatBox
+            title="Total Debt"
+            isLoading={isLoading}
+            value={debt?.toNumber().toFixed(2) || '0'}
+            label="Aggregated Debt of all your Open Positions."
+          />
+          <StatBox
+            title="APY"
+            isLoading={false}
+            value="14%"
+            label="Aggregated APY from all your positions."
+          />
+        </Flex>
+        <AssetsList />
+        <PositionsList />
       </Flex>
     </>
   );
