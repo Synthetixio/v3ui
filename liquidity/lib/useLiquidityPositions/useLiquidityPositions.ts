@@ -16,6 +16,7 @@ export type LiquidityPositionType = {
   id: `${string}-${string}`;
   accountId: string;
   poolId: string;
+  isPreferred: boolean;
   poolName: string;
   collateralAmount: Wei;
   collateralPrice: Wei;
@@ -68,7 +69,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       }
 
       const positionCallsAndDataNested = await Promise.all(
-        pools.map(async ({ id: poolId, name: poolName }) =>
+        pools.map(async ({ id: poolId, name: poolName, isPreferred }) =>
           Promise.all(
             collateralTypes.map(async (collateralType) => {
               const { calls, decoder } = await loadPosition({
@@ -77,7 +78,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
                 poolId,
                 tokenAddress: collateralType.tokenAddress,
               });
-              return { calls, decoder, poolName, collateralType, poolId };
+              return { calls, decoder, poolName, collateralType, poolId, isPreferred };
             })
           )
         )
@@ -117,7 +118,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
 
           const positions = positionData.map(({ debt, collateral }, index) => {
-            const { poolName, collateralType, poolId } = positionCallsAndData[index];
+            const { poolName, collateralType, poolId, isPreferred } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
             const collateralAmount = collateral.amount;
             const collateralPrice = pricesByAddress?.[collateralType.tokenAddress].price;
@@ -137,6 +138,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               collateralType,
               cRatio,
               debt,
+              isPreferred,
             };
           });
           return keyBy('id', positions);

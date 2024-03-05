@@ -16,57 +16,20 @@ import PositionTableHeader from './PositionTableHeader';
 import PositionsRowLoading from './PositionsRowLoading';
 import { Link, generatePath } from 'react-router-dom';
 import { useWallet } from '@snx-v3/useBlockchain';
-
-const mockPositions: {
-  symbol: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  token: string;
-  name: string;
-  delegated$: Wei;
-  delegated: Wei;
-  apy: number;
-  pnl: number;
-  pnlPercentage: number;
-  borrowed: Wei;
-  borrowed$: Wei;
-  debt: Wei;
-  cRatio: number;
-}[] = [
-  {
-    token: 'sUSDC',
-    symbol: 'USDC',
-    name: 'Synthetic USDC',
-    delegated$: new Wei(1000),
-    delegated: new Wei(1000),
-    apy: 16.4,
-    pnl: 500,
-    pnlPercentage: -25.04,
-    borrowed: new Wei(0),
-    borrowed$: new Wei(0),
-    debt: new Wei(2000),
-    cRatio: Infinity,
-  },
-  {
-    token: 'ETH',
-    symbol: 'ETH',
-    name: 'Synthetic ETH',
-    delegated$: new Wei(10),
-    delegated: new Wei(12),
-    apy: 19.4,
-    pnl: 1500,
-    pnlPercentage: 25.04,
-    borrowed: new Wei(100),
-    borrowed$: new Wei(1002),
-    debt: new Wei(-420),
-    cRatio: 200,
-  },
-];
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 
 interface PositionsTableInterface {
   isLoading: boolean;
+  positionsByKey?: Record<`${string}-${string}`, LiquidityPositionType>;
 }
 
-export const PositionsTable = ({ isLoading }: PositionsTableInterface) => {
+export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInterface) => {
   const { activeWallet, connect } = useWallet();
+  const positionsIds = !!positionsByKey
+    ? (Object.keys(positionsByKey) as `${string}-${string}`[])
+    : [];
+  const positions = positionsByKey && positionsIds.map((id) => positionsByKey[id]);
+
   return (
     <TableContainer
       maxW="100%"
@@ -136,11 +99,11 @@ export const PositionsTable = ({ isLoading }: PositionsTableInterface) => {
                 </>
               ) : (
                 <>
-                  {mockPositions.map((position, index) => (
+                  {positions?.map((position, index) => (
                     <PositionRow
-                      key={position.token.concat(index.toString())}
+                      key={position.poolName.concat(index.toString())}
                       {...position}
-                      final={index === mockPositions.length - 1}
+                      final={index === positions.length - 1}
                     />
                   ))}
                 </>
