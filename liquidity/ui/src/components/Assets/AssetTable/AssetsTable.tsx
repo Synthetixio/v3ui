@@ -1,8 +1,19 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { TableContainer, Table, Heading, Tooltip, Flex, Tbody, Td, Tr } from '@chakra-ui/react';
+import {
+  TableContainer,
+  Table,
+  Heading,
+  Tooltip,
+  Flex,
+  Tbody,
+  Td,
+  Tr,
+  Text,
+  Button,
+} from '@chakra-ui/react';
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
 
 interface Asset {
@@ -65,6 +76,7 @@ interface AssetsTableProps {
 
 export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
   const { network } = useNetwork();
+  const { activeWallet, connect } = useWallet();
 
   return (
     <TableContainer
@@ -88,57 +100,73 @@ export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
-      <Table variant="simple">
-        <AssetTableHeader />
-        <Tbody>
-          <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-          </Tr>
-          {isLoading ? (
-            <>
-              <AssetRowLoading />
-              <AssetRowLoading />
-            </>
-          ) : (
-            <>
-              {mockAssets.map(
-                (
-                  {
-                    token,
-                    name,
-                    accountBalance,
-                    accountBalance$,
-                    delegatedBalance,
-                    delegatedBalance$,
-                    walletBalance,
-                    walletBalance$,
-                  },
-                  index
-                ) => {
-                  return (
-                    <AssetsRow
-                      key={token}
-                      token={token}
-                      name={name}
-                      walletBalance={walletBalance}
-                      walletBalance$={walletBalance$}
-                      accountBalance={accountBalance}
-                      accountBalance$={accountBalance$}
-                      delegatedBalance={delegatedBalance}
-                      delegatedBalance$={delegatedBalance$}
-                      final={index === mockAssets.length - 1}
-                    />
-                  );
-                }
-              )}
-            </>
-          )}
-        </Tbody>
-      </Table>
+      {!activeWallet?.address ? (
+        <Flex w="100%" justifyContent="space-between">
+          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4">
+            Please connect wallet to view assets
+          </Text>
+          <Button
+            size="sm"
+            onClick={() => {
+              connect();
+            }}
+          >
+            Connect Wallet
+          </Button>
+        </Flex>
+      ) : (
+        <Table variant="simple">
+          <AssetTableHeader />
+          <Tbody>
+            <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+            </Tr>
+            {isLoading ? (
+              <>
+                <AssetRowLoading />
+                <AssetRowLoading />
+              </>
+            ) : (
+              <>
+                {mockAssets.map(
+                  (
+                    {
+                      token,
+                      name,
+                      accountBalance,
+                      accountBalance$,
+                      delegatedBalance,
+                      delegatedBalance$,
+                      walletBalance,
+                      walletBalance$,
+                    },
+                    index
+                  ) => {
+                    return (
+                      <AssetsRow
+                        key={token}
+                        token={token}
+                        name={name}
+                        walletBalance={walletBalance}
+                        walletBalance$={walletBalance$}
+                        accountBalance={accountBalance}
+                        accountBalance$={accountBalance$}
+                        delegatedBalance={delegatedBalance}
+                        delegatedBalance$={delegatedBalance$}
+                        final={index === mockAssets.length - 1}
+                      />
+                    );
+                  }
+                )}
+              </>
+            )}
+          </Tbody>
+        </Table>
+      )}
     </TableContainer>
   );
 };

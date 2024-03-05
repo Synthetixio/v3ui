@@ -18,7 +18,7 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>Synthetix V3 - Dashboard</title>
+        <title>Synthetix V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column">
@@ -28,7 +28,7 @@ export function Home() {
         <Flex w="100%" gap="4" mt={6}>
           <StatBox
             title="Total Assets"
-            isLoading={true}
+            isLoading={false}
             value="TODO"
             label="All assets in your Wallet and in your Synthetix Account."
           />
