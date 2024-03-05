@@ -84,6 +84,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         )
       );
       const positionCallsAndData = positionCallsAndDataNested.flat();
+
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         network,
         collateralAddresses: collateralTypes.map((x) => x.tokenAddress),
@@ -91,6 +92,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       });
 
       const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
+
       const collateralPriceCalls = await fetchPriceUpdates(
         collateralPriceUpdates,
         network.isTestnet
