@@ -9,7 +9,7 @@ export function Home() {
   const [params] = useSearchParams();
 
   const { data: positions, isLoading } = useLiquidityPositions({
-    accountId: params.get('accountId') || '',
+    accountId: params.get('accountId') || undefined,
   });
 
   const debt =
@@ -41,7 +41,7 @@ export function Home() {
           <StatBox
             title="Total Debt"
             isLoading={isLoading}
-            value={debt?.toNumber().toFixed(2) || '0'}
+            value={debt?.toNumber().toFixed(2) || '-'}
             label="Aggregated Debt of all your Open Positions."
           />
           <StatBox
