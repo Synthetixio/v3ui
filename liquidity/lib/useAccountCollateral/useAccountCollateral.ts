@@ -70,7 +70,7 @@ export function useAccountCollateral({
 
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 
-  return useQuery({
+  const query = useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
@@ -101,6 +101,8 @@ export function useAccountCollateral({
       }));
     },
   });
+
+  return { ...query, isLoading: query.isLoading || collateralTypes.isLoading };
 }
 
 export function useAccountSpecificCollateral(accountId?: string, collateralAddress?: string) {

@@ -15,20 +15,17 @@ import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
-import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
-import { useTokenBalances } from '@snx-v3/useTokenBalance';
+import { Asset } from '..';
 
 interface AssetsTableProps {
   isLoading: boolean;
-  accountCollaterals?: AccountCollateralType[];
+  assets?: Asset[];
 }
 
-export const AssetsTable = ({ isLoading, accountCollaterals }: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
-  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
-    accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
-  );
+
   return (
     <TableContainer
       maxW="100%"
@@ -47,7 +44,7 @@ export const AssetsTable = ({ isLoading, accountCollaterals }: AssetsTableProps)
         <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
           Assets
         </Heading>
-        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`}>
+        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`} p="3">
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
@@ -76,32 +73,30 @@ export const AssetsTable = ({ isLoading, accountCollaterals }: AssetsTableProps)
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading && tokenBalancesIsLoading ? (
+            {isLoading || !assets ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
               </>
             ) : (
               <>
-                {accountCollaterals &&
-                  userTokenBalances &&
-                  accountCollaterals.map((collateral, index) => {
-                    return (
-                      <AssetsRow
-                        key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
-                        token={collateral.symbol || ''}
-                        name={collateral.displaySymbol || ''}
-                        walletBalance={userTokenBalances[index]!.toNumber()}
-                        // TODO @dev fetch prices
-                        walletBalance$={userTokenBalances[index]!.toNumber()}
-                        accountBalance={collateral.availableCollateral.toNumber()}
-                        accountBalance$={collateral.availableCollateral.toNumber()}
-                        delegatedBalance={collateral.totalAssigned.toNumber()}
-                        delegatedBalance$={collateral.totalAssigned.toNumber()}
-                        final={index === accountCollaterals.length - 1}
-                      />
-                    );
-                  })}
+                {assets?.map((asset, index) => {
+                  const { collateral, balance, price } = asset;
+                  return (
+                    <AssetsRow
+                      key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
+                      token={collateral.symbol || ''}
+                      name={collateral.displaySymbol || ''}
+                      walletBalance={balance!.toNumber()}
+                      walletBalance$={balance.mul(price).toNumber()}
+                      accountBalance={collateral.availableCollateral.toNumber()}
+                      accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
+                      delegatedBalance={collateral.totalAssigned.toNumber()}
+                      delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      final={index === assets.length - 1}
+                    />
+                  );
+                })}
               </>
             )}
           </Tbody>

@@ -50,11 +50,11 @@ export async function loadPrices({
 export const useCollateralPrices = () => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: collateralData } = useCollateralTypes();
+  const { data: collateralData, isLoading: isCollateralTypesLoading } = useCollateralTypes();
 
   const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
 
-  return useQuery({
+  const query = useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
     queryKey: [`${network?.id}-${network?.preset}`, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
@@ -77,4 +77,6 @@ export const useCollateralPrices = () => {
       }, {});
     },
   });
+
+  return { ...query, isLoading: isCollateralTypesLoading || query.isLoading };
 };
