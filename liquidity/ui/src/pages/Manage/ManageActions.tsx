@@ -115,7 +115,7 @@ const ManageActionUi: FC<{
         </ActionButton>
         {isBaseAndromeda(network?.id, network?.preset) ? (
           <ActionButton disabled action="borrow">
-            Borrow sUSD isn&apos;t available
+            Claim isn&apos;t available
           </ActionButton>
         ) : (
           <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
