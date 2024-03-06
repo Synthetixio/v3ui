@@ -6,6 +6,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork, Network } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -20,7 +21,7 @@ export async function loadPrices({
 }) {
   const calls = await Promise.all(
     collateralAddresses.map((address) => {
-      if (network.preset === 'andromeda' && network.id === 84531) {
+      if (isBaseAndromeda(network?.id, network?.preset)) {
         // For new deployment we have new ABI
         // 'function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)'
         // @ts-ignore TODO: remove eventually when types are aligned

@@ -27,7 +27,8 @@ import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -40,11 +41,12 @@ type ManageAction = z.infer<typeof ManageActionSchema>;
 
 const ActionButton: FC<
   PropsWithChildren<{
-    onClick: (action: ManageAction) => void;
+    onClick?: (action: ManageAction) => void;
     action: ManageAction;
     activeAction?: string;
+    disabled?: boolean;
   }>
-> = ({ children, action, activeAction, onClick }) => (
+> = ({ children, action, activeAction, onClick, disabled }) => (
   <BorderBox
     as={Button}
     fontWeight="700"
@@ -57,14 +59,15 @@ const ActionButton: FC<
     _active={{
       bg: 'unset',
     }}
-    cursor="pointer"
+    cursor={disabled ? 'not-allowed' : 'pointer'}
     data-testid="manage action"
     data-action={action}
     data-active={action === activeAction ? 'true' : undefined}
-    onClick={() => onClick(action)}
+    onClick={() => !disabled && onClick?.(action)}
     py={2}
     width="50%"
     textAlign="center"
+    opacity={disabled ? '50%' : '100%'}
   >
     {children}
   </BorderBox>
@@ -94,8 +97,8 @@ const ManageActionUi: FC<{
   manageAction?: ManageAction;
   onSubmit: (e: FormEvent) => void;
   liquidityPosition?: LiquidityPosition;
-  chainId?: number;
-}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, chainId }) => {
+  network: Network | null;
+}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
@@ -110,8 +113,8 @@ const ManageActionUi: FC<{
         <ActionButton onClick={setActiveAction} action="undelegate" activeAction={manageAction}>
           <ArrowUpIcon w="15px" h="15px" mr={1} /> Remove Collateral
         </ActionButton>
-        {chainId === 8453 ? (
-          <ActionButton onClick={() => {}} action="borrow">
+        {isBaseAndromeda(network?.id, network?.preset) ? (
+          <ActionButton disabled action="borrow">
             Borrow sUSD isn&apos;t available
           </ActionButton>
         ) : (
@@ -200,7 +203,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
       <ManageActionUi
         liquidityPosition={liquidityPosition}
         onSubmit={onSubmit}
-        chainId={network?.id}
+        network={network}
         setActiveAction={(action) => {
           setCollateralChange(wei(0));
           setDebtChange(wei(0));

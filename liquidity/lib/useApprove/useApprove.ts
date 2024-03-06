@@ -8,7 +8,7 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 
-const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
+export const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
 
 export const useApprove = (
   {
@@ -71,6 +71,7 @@ export const useApprove = (
 
         await txn.wait();
         dispatch({ type: 'success' });
+        refetchAllowance();
       } catch (error: any) {
         dispatch({ type: 'error', payload: { error } });
         throw error;
