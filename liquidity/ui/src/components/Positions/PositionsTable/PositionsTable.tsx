@@ -1,21 +1,15 @@
-import {
-  Button,
-  Fade,
-  Flex,
-  Heading,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Tr,
-} from '@chakra-ui/react';
-import PositionRow from './PositionsRow';
-import PositionTableHeader from './PositionTableHeader';
-import PositionsRowLoading from './PositionsRowLoading';
+import { Button, Fade, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { Link, generatePath } from 'react-router-dom';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
+import {
+  PositionsNotConnected,
+  PositionRow,
+  PositionTableHeader,
+  PositionsRowLoading,
+  PositionsEmpty,
+  TableDivider,
+} from './';
 
 interface PositionsTableInterface {
   isLoading: boolean;
@@ -23,10 +17,12 @@ interface PositionsTableInterface {
 }
 
 export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInterface) => {
-  const { activeWallet, connect } = useWallet();
+  const { activeWallet } = useWallet();
+
   const positionsIds = !!positionsByKey
     ? (Object.keys(positionsByKey) as `${string}-${string}`[])
     : [];
+
   const positions = positionsByKey && positionsIds.map((id) => positionsByKey[id]);
 
   return (
@@ -44,29 +40,9 @@ export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInte
       bg="navy.700"
     >
       {!activeWallet?.address ? (
-        <Flex w="100%" justifyContent="space-between">
-          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
-            Please connect wallet to view assets
-          </Text>
-          <Button
-            size="sm"
-            onClick={() => {
-              connect();
-            }}
-          >
-            Connect Wallet
-          </Button>
-        </Flex>
-      ) : positionsIds?.length === 0 ? (
-        <Flex justifyContent="space-between" alignItems="baseline" w="100%">
-          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
-            You can open a new position by browsing the different Pools and choosing a vault for
-            collateral type
-          </Text>
-          <Link to="/pools">
-            <Button size="sm">Explore all Pools</Button>
-          </Link>
-        </Flex>
+        <PositionsNotConnected />
+      ) : positionsIds?.length === 0 && !isLoading ? (
+        <PositionsEmpty />
       ) : (
         <>
           <Flex alignItems="center" justifyContent="space-between">
@@ -91,21 +67,9 @@ export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInte
           <Table variant="simple">
             <PositionTableHeader />
             <Tbody>
-              <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-                <Td height="0px" border="none" px={0} pt={0} pb={4} />
-              </Tr>
+              <TableDivider />
               {isLoading ? (
-                <>
-                  <PositionsRowLoading />
-                  <PositionsRowLoading />
-                </>
+                <PositionsRowLoading />
               ) : (
                 <>
                   {positions?.map((position, index) => (

@@ -39,13 +39,14 @@ function toPairs<T>(array: T[]): [T, T][] {
 
 export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => {
   const { data: CoreProxy } = useCoreProxy();
-  const { data: pools } = usePools();
-  const { data: collateralTypes } = useCollateralTypes();
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: pools, isLoading: isPoolsLoading } = usePools();
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+  const { data: collateralPriceUpdates, isLoading: isCollateralPricesLoading } =
+    useAllCollateralPriceIds();
 
   const { network } = useNetwork();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'LiquidityPositions',
@@ -83,6 +84,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           )
         )
       );
+
       const positionCallsAndData = positionCallsAndDataNested.flat();
 
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
@@ -152,4 +154,10 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       collateralPriceUpdates && CoreProxy && collateralTypes?.length && accountId && pools?.length
     ),
   });
+
+  return {
+    ...query,
+    isLoading:
+      query.isLoading || isCollateralPricesLoading || isCollateralTypesLoading || isPoolsLoading,
+  };
 };

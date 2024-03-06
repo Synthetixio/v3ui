@@ -8,13 +8,7 @@ interface PositionRow extends LiquidityPositionType {
 }
 [];
 
-export default function PositionRow({
-  accountId,
-  poolId,
-  collateralType,
-  debt,
-  final,
-}: PositionRow) {
+export function PositionRow({ accountId, poolId, collateralType, debt, final }: PositionRow) {
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType.tokenAddress,
     accountId,
@@ -46,7 +40,7 @@ export default function PositionRow({
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {/* {delegated.toNumber()} */}
-              {` ${collateralType.symbol}`}
+              {collateralType.symbol.toString()}
             </Text>
           </Flex>
         </Fade>

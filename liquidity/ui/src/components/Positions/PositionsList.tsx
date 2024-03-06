@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 export const PositionsList = () => {
   const [params] = useSearchParams();
+
   const { data: positionsByKey, isLoading } = useLiquidityPositions({
     accountId: params.get('accountId') || '',
   });

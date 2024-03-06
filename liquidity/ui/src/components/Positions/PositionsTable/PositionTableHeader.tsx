@@ -1,7 +1,7 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Thead, Tr, Th, Flex, Text, Tooltip } from '@chakra-ui/react';
 
-export default function PositionTableHeader() {
+export function PositionTableHeader() {
   return (
     <Thead>
       <Tr>

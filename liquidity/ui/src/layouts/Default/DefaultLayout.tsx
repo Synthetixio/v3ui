@@ -15,7 +15,7 @@ export const DefaultLayout: FC = () => (
   >
     <Flex flex="1" flexDirection="column">
       <Header />
-      <Container display="flex" flexDir="column" maxW="1024px" flex="1">
+      <Container display="flex" flexDir="column" maxW="1188px" flex="1">
         <Outlet />
       </Container>
     </Flex>
