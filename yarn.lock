@@ -7096,6 +7096,7 @@ __metadata:
   resolution: "@snx-v3/useTokenBalance@workspace:liquidity/lib/useTokenBalance"
   dependencies:
     "@snx-v3/assertAddressType": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
