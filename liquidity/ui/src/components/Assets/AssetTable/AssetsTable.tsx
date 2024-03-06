@@ -18,17 +18,6 @@ import { AssetRowLoading } from '.';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 
-interface Asset {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  name: string;
-  walletBalance: number;
-  walletBalance$: number;
-  accountBalance: number;
-  accountBalance$: number;
-  delegatedBalance: number;
-  delegatedBalance$: number;
-}
-
 interface AssetsTableProps {
   isLoading: boolean;
   accountCollaterals?: AccountCollateralType[];
