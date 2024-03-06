@@ -58,6 +58,16 @@ export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInte
             Connect Wallet
           </Button>
         </Flex>
+      ) : positionsIds?.length === 0 ? (
+        <Flex justifyContent="space-between" alignItems="baseline" w="100%">
+          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
+            You can open a new position by browsing the different Pools and choosing a vault for
+            collateral type
+          </Text>
+          <Link to="/pools">
+            <Button size="sm">Explore all Pools</Button>
+          </Link>
+        </Flex>
       ) : (
         <>
           <Flex alignItems="center" justifyContent="space-between">
