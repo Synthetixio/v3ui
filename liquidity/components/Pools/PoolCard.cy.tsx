@@ -56,6 +56,7 @@ describe('PoolCard Component', () => {
         poolName: 'Spartan Council Pool',
         cRatio: wei(300),
         collateralPrice: wei(1),
+        isPreferred: true,
       },
     };
 

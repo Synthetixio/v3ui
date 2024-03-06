@@ -6154,7 +6154,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Pools@workspace:*, @snx-v3/Pools@workspace:liquidity/components/Pools":
+"@snx-v3/Pools@workspace:liquidity/components/Pools":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Pools@workspace:liquidity/components/Pools"
   dependencies:
@@ -6494,7 +6494,6 @@ __metadata:
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/PoolBox": "workspace:*"
-    "@snx-v3/Pools": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/TrendText": "workspace:*"
@@ -6554,7 +6553,6 @@ __metadata:
     core-js: "npm:^3.33.2"
     crypto-browserify: "npm:^3.12.0"
     css-loader: "npm:^6.8.1"
-    cz-conventional-changelog: "npm:^3.3.0"
     date-fns: "npm:^2.30.0"
     dotenv: "npm:^16.4.3"
     ethers: "npm:^5.7.2"
@@ -23801,6 +23799,7 @@ __metadata:
     armada-cli: "npm:^0.4.0"
     babel-jest: "npm:^29.7.0"
     babel-plugin-module-resolver: "npm:^5.0.0"
+    cz-conventional-changelog: "npm:^3.3.0"
     eslint: "npm:^8.53.0"
     eslint-plugin-import: "npm:^2.29.0"
     eslint-plugin-react: "npm:^7.33.2"
@@ -27169,17 +27168,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"word-wrap@npm:^1.0.3":
+"word-wrap@npm:^1.0.3, word-wrap@npm:~1.2.3":
   version: 1.2.5
   resolution: "word-wrap@npm:1.2.5"
   checksum: 1ec6f6089f205f83037be10d0c4b34c9183b0b63fca0834a5b3cee55dd321429d73d40bb44c8fc8471b5203d6e8f8275717f49a8ff4b2b0ab41d7e1b563e0854
-  languageName: node
-  linkType: hard
-
-"word-wrap@npm:~1.2.3":
-  version: 1.2.3
-  resolution: "word-wrap@npm:1.2.3"
-  checksum: 08a677e1578b9cc367a03d52bc51b6869fec06303f68d29439e4ed647257411f857469990c31066c1874678937dac737c9f8f20d3fd59918fb86b7d926a76b15
   languageName: node
   linkType: hard
 

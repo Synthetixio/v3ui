@@ -9,7 +9,7 @@ export function Home() {
   const [params] = useSearchParams();
 
   const { data: positions, isLoading } = useLiquidityPositions({
-    accountId: params.get('accountId') || '',
+    accountId: params.get('accountId') || undefined,
   });
 
   const debt =
@@ -18,7 +18,7 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>Synthetix V3 - Dashboard</title>
+        <title>Synthetix V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column">
@@ -28,7 +28,7 @@ export function Home() {
         <Flex w="100%" gap="4" mt={6}>
           <StatBox
             title="Total Assets"
-            isLoading={true}
+            isLoading={false}
             value="TODO"
             label="All assets in your Wallet and in your Synthetix Account."
           />
@@ -41,7 +41,7 @@ export function Home() {
           <StatBox
             title="Total Debt"
             isLoading={isLoading}
-            value={debt?.toNumber().toFixed(2) || '0'}
+            value={debt?.toNumber().toFixed(2) || '-'}
             label="Aggregated Debt of all your Open Positions."
           />
           <StatBox
