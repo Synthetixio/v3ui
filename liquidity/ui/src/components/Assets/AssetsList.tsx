@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
 import { AssetsTable } from './AssetTable';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useSearchParams } from 'react-router-dom';
 
 export const AssetsList = () => {
-  const [isLoading, setIsLoading] = useState(true); // TEMP
+  const [params] = useSearchParams();
+  const { data: accountCollaterals, isLoading } = useAccountCollateral({
+    accountId: params.get('accountId') || undefined,
+  });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  }, []);
-
-  return <AssetsTable isLoading={isLoading} />;
+  return <AssetsTable isLoading={isLoading} accountCollaterals={accountCollaterals} />;
 };

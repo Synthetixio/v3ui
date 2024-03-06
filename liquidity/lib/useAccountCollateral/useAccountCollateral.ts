@@ -12,6 +12,8 @@ export type AccountCollateralType = {
   totalAssigned: Wei;
   totalDeposited: Wei;
   totalLocked: Wei;
+  symbol?: string;
+  displaySymbol?: string;
 };
 
 export const loadAccountCollateral = async ({

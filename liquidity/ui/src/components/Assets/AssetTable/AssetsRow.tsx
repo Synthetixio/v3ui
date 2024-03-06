@@ -2,7 +2,7 @@ import { Flex, Td, Tr, Text, Button, Fade } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 
 interface AssetsRowProps {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
+  token: string;
   name: string;
   walletBalance: number;
   walletBalance$: number;

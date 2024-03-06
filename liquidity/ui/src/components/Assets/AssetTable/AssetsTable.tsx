@@ -15,6 +15,8 @@ import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
+import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
+import { useTokenBalances } from '@snx-v3/useTokenBalance';
 
 interface Asset {
   token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
@@ -72,12 +74,15 @@ const mockAssets: Asset[] = [
 
 interface AssetsTableProps {
   isLoading: boolean;
+  accountCollaterals?: AccountCollateralType[];
 }
 
-export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, accountCollaterals }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
-
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
+    accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
+  );
   return (
     <TableContainer
       maxW="100%"
@@ -125,43 +130,32 @@ export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading ? (
+            {isLoading && tokenBalancesIsLoading ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
               </>
             ) : (
               <>
-                {mockAssets.map(
-                  (
-                    {
-                      token,
-                      name,
-                      accountBalance,
-                      accountBalance$,
-                      delegatedBalance,
-                      delegatedBalance$,
-                      walletBalance,
-                      walletBalance$,
-                    },
-                    index
-                  ) => {
+                {accountCollaterals &&
+                  userTokenBalances &&
+                  accountCollaterals.map((collateral, index) => {
                     return (
                       <AssetsRow
-                        key={token}
-                        token={token}
-                        name={name}
-                        walletBalance={walletBalance}
-                        walletBalance$={walletBalance$}
-                        accountBalance={accountBalance}
-                        accountBalance$={accountBalance$}
-                        delegatedBalance={delegatedBalance}
-                        delegatedBalance$={delegatedBalance$}
+                        key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
+                        token={collateral.symbol || ''}
+                        name={collateral.displaySymbol || ''}
+                        walletBalance={userTokenBalances[index]!.toNumber()}
+                        // TODO @dev fetch prices
+                        walletBalance$={userTokenBalances[index]!.toNumber()}
+                        accountBalance={collateral.availableCollateral.toNumber()}
+                        accountBalance$={collateral.availableCollateral.toNumber()}
+                        delegatedBalance={collateral.totalAssigned.toNumber()}
+                        delegatedBalance$={collateral.totalAssigned.toNumber()}
                         final={index === mockAssets.length - 1}
                       />
                     );
-                  }
-                )}
+                  })}
               </>
             )}
           </Tbody>
