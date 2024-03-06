@@ -29,49 +29,6 @@ interface Asset {
   delegatedBalance$: number;
 }
 
-const mockAssets: Asset[] = [
-  {
-    token: 'SNX',
-    name: 'Synthetix',
-    walletBalance: 2000,
-    walletBalance$: 8000,
-    accountBalance: 500,
-    accountBalance$: 2000,
-    delegatedBalance: 10,
-    delegatedBalance$: 40,
-  },
-  {
-    token: 'ETH',
-    name: 'Ethirium',
-    walletBalance: 0.5,
-    walletBalance$: 500,
-    accountBalance: 1,
-    accountBalance$: 1000,
-    delegatedBalance: 0.1,
-    delegatedBalance$: 100,
-  },
-  {
-    token: 'sUSD',
-    name: 'Synthetic USD',
-    walletBalance: 4000,
-    walletBalance$: 4000,
-    accountBalance: 2000,
-    accountBalance$: 2000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-  {
-    token: 'USDC', // TODO: add token icon for synth usdc
-    name: 'sUSDC',
-    walletBalance: 10000,
-    walletBalance$: 10000,
-    accountBalance: 6000,
-    accountBalance$: 6000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-];
-
 interface AssetsTableProps {
   isLoading: boolean;
   accountCollaterals?: AccountCollateralType[];
@@ -152,7 +109,7 @@ export const AssetsTable = ({ isLoading, accountCollaterals }: AssetsTableProps)
                         accountBalance$={collateral.availableCollateral.toNumber()}
                         delegatedBalance={collateral.totalAssigned.toNumber()}
                         delegatedBalance$={collateral.totalAssigned.toNumber()}
-                        final={index === mockAssets.length - 1}
+                        final={index === accountCollaterals.length - 1}
                       />
                     );
                   })}
