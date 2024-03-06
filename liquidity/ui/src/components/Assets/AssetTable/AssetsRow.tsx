@@ -1,8 +1,9 @@
 import { Flex, Td, Tr, Text, Button, Fade } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
+import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 
 interface AssetsRowProps {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
+  token: string;
   name: string;
   walletBalance: number;
   walletBalance$: number;
@@ -45,10 +46,10 @@ export const AssetsRow = ({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${walletBalance$}
+              {formatNumberToUsd(walletBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {walletBalance}
+              {formatNumber(walletBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -58,10 +59,10 @@ export const AssetsRow = ({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${accountBalance$}
+              {formatNumberToUsd(accountBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {accountBalance}
+              {formatNumber(accountBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -71,10 +72,10 @@ export const AssetsRow = ({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${delegatedBalance$}
+              {formatNumberToUsd(delegatedBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {delegatedBalance}
+              {formatNumber(delegatedBalance)}
               {` ${token}`}
             </Text>
           </Flex>
