@@ -10,7 +10,6 @@ import {
   Text,
   Tr,
 } from '@chakra-ui/react';
-import Wei from '@synthetixio/wei';
 import PositionRow from './PositionsRow';
 import PositionTableHeader from './PositionTableHeader';
 import PositionsRowLoading from './PositionsRowLoading';

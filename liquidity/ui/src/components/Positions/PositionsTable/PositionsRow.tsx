@@ -1,6 +1,5 @@
 import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
-import Wei from '@synthetixio/wei';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
