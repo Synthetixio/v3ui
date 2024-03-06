@@ -46,7 +46,7 @@ export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInte
     >
       {!activeWallet?.address ? (
         <Flex w="100%" justifyContent="space-between">
-          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4">
+          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
             Please connect wallet to view assets
           </Text>
           <Button
