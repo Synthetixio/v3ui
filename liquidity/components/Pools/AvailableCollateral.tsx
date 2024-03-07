@@ -137,6 +137,10 @@ export function AvailableCollateral() {
 
   const isLoading = isAccountCollateralsLoading || isAccountCollateralDateLoading;
 
+  console.log({
+    accountCollateralsData,
+    accountCollateralUnlockDate,
+  });
   return (
     <AvailableCollateralUi
       accountCollaterals={accountCollateralsData || []}

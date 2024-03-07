@@ -88,6 +88,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: collateralTypes.map((x) => x.tokenAddress),
         CoreProxy,
+        network,
       });
 
       const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
