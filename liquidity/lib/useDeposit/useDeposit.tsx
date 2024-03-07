@@ -91,11 +91,13 @@ export const useDeposit = ({
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );
+
         const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
           callsPromise,
           getGasPrice({ provider }),
           collateralPriceCallsPromise,
         ]);
+
         const allCalls = collateralPriceCalls.concat(calls);
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useDeposit');
