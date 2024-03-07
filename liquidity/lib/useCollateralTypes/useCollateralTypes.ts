@@ -10,6 +10,9 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
+const USDCBaseAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const sUSDCBaseAddress = '0xC74eA762cF06c9151cE074E6a569a5945b6302E7';
+
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
   issuanceRatioD18: ZodBigNumber.transform((x) => wei(x)),
@@ -50,16 +53,39 @@ async function loadSymbols({
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
+  isBaseAndromedaNetwork,
 }: {
   CoreProxy: CoreProxyType;
   Multicall3: Multicall3Type;
+  isBaseAndromedaNetwork?: boolean;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
   const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
+  if (
+    tokenConfigs.some((config) => {
+      return config.tokenAddress === sUSDCBaseAddress && isBaseAndromedaNetwork;
+    })
+  ) {
+    const sUSDConfig = tokenConfigs.find((config) => config.tokenAddress === sUSDCBaseAddress);
+    if (sUSDConfig) {
+      (tokenConfigs as any[]).push({
+        tokenAddress: USDCBaseAddress,
+        depositingEnabled: sUSDConfig.depositingEnabled,
+        issuanceRatioD18: sUSDConfig.issuanceRatioD18,
+        liquidationRatioD18: sUSDConfig.liquidationRatioD18,
+        liquidationRewardD18: sUSDConfig.liquidationRewardD18,
+        minDelegationD18: sUSDConfig.minDelegationD18,
+        oracleNodeId: sUSDConfig.oracleNodeId,
+        symbol: 'USDC',
+        displaySymbol: 'USDC',
+      });
+    }
+  }
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
 
   return tokenConfigs.map((config, i) => ({
@@ -85,20 +111,17 @@ export function useCollateralTypes(includeDelegationOff = false) {
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
-        (collateralType) => ({
-          ...collateralType,
-          symbol:
-            collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
-              ? 'USDC'
-              : collateralType.symbol,
-          displaySymbol:
-            collateralType.displaySymbol === 'sUSDC' &&
-            isBaseAndromeda(network?.id, network?.preset)
-              ? 'USDC'
-              : collateralType.symbol,
+      const collateralTypes = (
+        await loadCollateralTypes({
+          CoreProxy,
+          Multicall3,
+          isBaseAndromedaNetwork: isBaseAndromeda(network?.id, network?.preset),
         })
-      );
+      ).map((collateralType) => ({
+        ...collateralType,
+        symbol: collateralType.symbol,
+        displaySymbol: collateralType.symbol,
+      }));
       if (includeDelegationOff) {
         return collateralTypes;
       }

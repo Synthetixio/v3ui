@@ -15,66 +15,14 @@ import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
-
-interface Asset {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  name: string;
-  walletBalance: number;
-  walletBalance$: number;
-  accountBalance: number;
-  accountBalance$: number;
-  delegatedBalance: number;
-  delegatedBalance$: number;
-}
-
-const mockAssets: Asset[] = [
-  {
-    token: 'SNX',
-    name: 'Synthetix',
-    walletBalance: 2000,
-    walletBalance$: 8000,
-    accountBalance: 500,
-    accountBalance$: 2000,
-    delegatedBalance: 10,
-    delegatedBalance$: 40,
-  },
-  {
-    token: 'ETH',
-    name: 'Ethirium',
-    walletBalance: 0.5,
-    walletBalance$: 500,
-    accountBalance: 1,
-    accountBalance$: 1000,
-    delegatedBalance: 0.1,
-    delegatedBalance$: 100,
-  },
-  {
-    token: 'sUSD',
-    name: 'Synthetic USD',
-    walletBalance: 4000,
-    walletBalance$: 4000,
-    accountBalance: 2000,
-    accountBalance$: 2000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-  {
-    token: 'USDC', // TODO: add token icon for synth usdc
-    name: 'sUSDC',
-    walletBalance: 10000,
-    walletBalance$: 10000,
-    accountBalance: 6000,
-    accountBalance$: 6000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-];
+import { Asset } from '..';
 
 interface AssetsTableProps {
   isLoading: boolean;
+  assets?: Asset[];
 }
 
-export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
 
@@ -96,7 +44,7 @@ export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
         <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
           Assets
         </Heading>
-        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`}>
+        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`} p="3">
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
@@ -125,43 +73,30 @@ export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading ? (
+            {isLoading || !assets ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
               </>
             ) : (
               <>
-                {mockAssets.map(
-                  (
-                    {
-                      token,
-                      name,
-                      accountBalance,
-                      accountBalance$,
-                      delegatedBalance,
-                      delegatedBalance$,
-                      walletBalance,
-                      walletBalance$,
-                    },
-                    index
-                  ) => {
-                    return (
-                      <AssetsRow
-                        key={token}
-                        token={token}
-                        name={name}
-                        walletBalance={walletBalance}
-                        walletBalance$={walletBalance$}
-                        accountBalance={accountBalance}
-                        accountBalance$={accountBalance$}
-                        delegatedBalance={delegatedBalance}
-                        delegatedBalance$={delegatedBalance$}
-                        final={index === mockAssets.length - 1}
-                      />
-                    );
-                  }
-                )}
+                {assets?.map((asset, index) => {
+                  const { collateral, balance, price } = asset;
+                  return (
+                    <AssetsRow
+                      key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
+                      token={collateral.symbol || ''}
+                      name={collateral.displaySymbol || ''}
+                      walletBalance={balance!.toNumber()}
+                      walletBalance$={balance.mul(price).toNumber()}
+                      accountBalance={collateral.availableCollateral.toNumber()}
+                      accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
+                      delegatedBalance={collateral.totalAssigned.toNumber()}
+                      delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      final={index === assets.length - 1}
+                    />
+                  );
+                })}
               </>
             )}
           </Tbody>

@@ -29,7 +29,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
           {title}
         </Text>
         {label && (
-          <Tooltip label={label} p={2} mt={1}>
+          <Tooltip label={label} p={3} mt={1}>
             <InfoIcon w="10px" h="10px" />
           </Tooltip>
         )}
