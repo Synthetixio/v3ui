@@ -26,6 +26,8 @@ import { ContractError } from '@snx-v3/ContractError';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useWithdrawBaseAndromeda } from '../../lib/useWithdrawBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
@@ -122,6 +124,11 @@ export function WithdrawModal({
     collateralTypeAddress: accountCollateral?.tokenAddress,
     accountCollateral,
   });
+  const { exec: execWithdrawBaseAndromeda } = useWithdrawBaseAndromeda({
+    accountId: params.accountId,
+    collateralTypeAddress: accountCollateral?.tokenAddress,
+    accountCollateral,
+  });
 
   const queryClient = useQueryClient();
 
@@ -135,7 +142,11 @@ export function WithdrawModal({
     services: {
       [ServiceNames.withdraw]: async () => {
         try {
-          await execWithdraw();
+          if (isBaseAndromeda(network?.id, network?.preset)) {
+            await execWithdrawBaseAndromeda();
+          } else {
+            await execWithdraw();
+          }
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
           });

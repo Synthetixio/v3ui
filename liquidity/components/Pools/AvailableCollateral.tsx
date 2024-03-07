@@ -25,6 +25,8 @@ import { AvailableCollateralRow } from './';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { formatTimeToUnlock, unlockDateString } from '@snx-v3/formatters';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export function AvailableCollateralUi({
   accountCollaterals,
@@ -40,6 +42,7 @@ export function AvailableCollateralUi({
   isLoading: boolean;
   AvailableCollateralRow: typeof AvailableCollateralRow;
 }) {
+  const { network } = useNetwork();
   return (
     <BorderBox p={4} mt={8} flexDir="column">
       <Heading fontSize="2xl" mb="2">
@@ -98,13 +101,19 @@ export function AvailableCollateralUi({
                 </Tr>
               ) : (
                 <>
-                  {accountCollaterals?.map((accountCollateral) => (
-                    <AvailableCollateralRow
-                      key={accountCollateral.tokenAddress}
-                      accountCollateralUnlockDate={unlockDate}
-                      accountCollateral={accountCollateral}
-                    />
-                  ))}
+                  {accountCollaterals
+                    .filter(
+                      (accountCollateral) =>
+                        !isBaseAndromeda(network?.id, network?.preset) ||
+                        accountCollateral.symbol === 'USDC'
+                    )
+                    ?.map((accountCollateral) => (
+                      <AvailableCollateralRow
+                        key={accountCollateral.tokenAddress}
+                        accountCollateralUnlockDate={unlockDate}
+                        accountCollateral={accountCollateral}
+                      />
+                    ))}
                 </>
               )}
             </Tbody>

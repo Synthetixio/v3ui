@@ -58,7 +58,7 @@ function makeMulticall(
       target: call.to,
       callData: call.data,
       value: call.value || ethers.BigNumber.from(0),
-      requireSuccess: true,
+      allowFailure: false,
     })),
   ]);
 
