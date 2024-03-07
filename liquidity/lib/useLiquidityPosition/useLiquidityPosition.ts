@@ -111,13 +111,14 @@ export const useLiquidityPosition = ({
         CoreProxy,
         network,
       });
+     
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
         CoreProxy,
         accountId,
         poolId,
         tokenAddress,
       });
-
+    
       const { calls: accountCollateralCalls, decoder: accountCollateralDecoder } =
         await loadAccountCollateral({
           accountId,

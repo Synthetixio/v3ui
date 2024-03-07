@@ -240,6 +240,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
         ) : null}
         {txnModalOpen === 'deposit' ? (
           <DepositModal
+            availableCollateral={liquidityPosition?.accountCollateral.availableCollateral}
             currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
             collateralChange={collateralChange}
             onClose={() => {

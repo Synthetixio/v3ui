@@ -233,12 +233,16 @@ export const DepositModal: DepositModalProps = ({
     ? BASE_USDC
     : collateralType?.tokenAddress;
 
+  const collateralNeeded = collateralChange.sub(availableCollateral);
+
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
-    amount: isBaseAndromeda(network?.id, network?.preset)
-      ? //Base USDC is 6 decimals
-        utils.parseUnits(collateralChange.toString(), 6)
-      : collateralChange.toBN(),
+    amount: collateralNeeded.gt(0)
+      ? isBaseAndromeda(network?.id, network?.preset)
+        ? //Base USDC is 6 decimals
+          utils.parseUnits(collateralNeeded.toString(), 6)
+        : collateralNeeded.toBN()
+      : 0,
     spender: isBaseAndromeda(network?.id, network?.preset)
       ? SpotProxy?.address
       : CoreProxy?.address,
