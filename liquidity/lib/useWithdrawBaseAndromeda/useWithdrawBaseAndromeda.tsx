@@ -56,7 +56,7 @@ export const useWithdrawBaseAndromeda = ({
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const amount = accountCollateral?.availableCollateral.div(10).toBN();
+        const amount = accountCollateral?.availableCollateral.toBN();
         const populatedTxnPromised = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
           collateralTypeAddress,
