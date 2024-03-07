@@ -15,7 +15,7 @@ import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
-import { Asset } from '..';
+import { Asset } from '../../../pages/Home';
 
 interface AssetsTableProps {
   isLoading: boolean;
