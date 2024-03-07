@@ -111,14 +111,14 @@ export const useLiquidityPosition = ({
         CoreProxy,
         network,
       });
-     
+
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
         CoreProxy,
         accountId,
         poolId,
         tokenAddress,
       });
-    
+
       const { calls: accountCollateralCalls, decoder: accountCollateralDecoder } =
         await loadAccountCollateral({
           accountId,
@@ -130,9 +130,11 @@ export const useLiquidityPosition = ({
         collateralPriceUpdates,
         network.isTestnet
       ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
-      const allCalls = collateralPriceCalls.concat(
-        priceCalls.concat(positionCalls).concat(accountCollateralCalls)
-      );
+
+      const allCalls = collateralPriceCalls
+        .concat(priceCalls)
+        .concat(positionCalls)
+        .concat(accountCollateralCalls);
 
       return await erc7412Call(
         network,

@@ -99,29 +99,36 @@ const ManageActionUi: FC<{
   liquidityPosition?: LiquidityPosition;
   network: Network | null;
 }> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
+  const debt = Number(liquidityPosition?.debt?.toString());
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="deposit" activeAction={manageAction}>
           <ArrowDownIcon w="15px" h="15px" mr={1} /> Add Collateral
         </ActionButton>
-        <ActionButton onClick={setActiveAction} action="repay" activeAction={manageAction}>
-          <DollarCircle mr={1} /> Repay snxUSD
+        <ActionButton
+          disabled={debt < 0}
+          onClick={setActiveAction}
+          action="repay"
+          activeAction={manageAction}
+        >
+          <DollarCircle mr={1} /> Repay {isBase ? '' : 'snxUSD'}
         </ActionButton>
       </Flex>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="undelegate" activeAction={manageAction}>
           <ArrowUpIcon w="15px" h="15px" mr={1} /> Remove Collateral
         </ActionButton>
-        {isBaseAndromeda(network?.id, network?.preset) ? (
-          <ActionButton disabled action="borrow">
-            Claim isn&apos;t available
-          </ActionButton>
-        ) : (
-          <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
-            <BorrowIcon mr={1} /> Borrow snxUSD
-          </ActionButton>
-        )}
+        <ActionButton
+          disabled={debt > 0}
+          onClick={setActiveAction}
+          action="borrow"
+          activeAction={manageAction}
+        >
+          <BorrowIcon mr={1} /> {isBase ? 'Claim' : 'Borrow snxUSD'}
+        </ActionButton>
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>

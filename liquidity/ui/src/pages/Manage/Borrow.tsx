@@ -10,25 +10,30 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const BorrowUi: FC<{
   debtChange: Wei;
   maxDebt: Wei;
   setDebtChange: (val: Wei) => void;
 }> = ({ debtChange, setDebtChange, maxDebt }) => {
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        Borrow snxUSD
+        {isBase ? 'Claim USDC' : 'Borrow snxUSD'}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Take an interest-free loan of snxUSD against your collateral. This increases your debt and
-        decreases your C-Ratio.
+        Take an interest-free loan of {isBase ? 'USDC' : 'snxUSD'} against your collateral. This
+        increases your debt and decreases your C-Ratio.
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
-          snxUSD
+
+          {isBase ? 'USDC' : 'snxUSD'}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           <NumberInput
@@ -53,13 +58,13 @@ const BorrowUi: FC<{
               }}
             >
               <Text>Max:</Text>
-              <Amount value={maxDebt} /> snxUSD
+              <Amount value={maxDebt} /> {isBase ? 'USDC' : 'snxUSD'}
             </Flex>
           </Flex>
         </Flex>
       </BorderBox>
       <Button data-testid="borrow submit" type="submit">
-        Borrow snxUSD
+        {isBase ? 'Claim USDC' : 'Borrow snxUSD'}
       </Button>
     </Flex>
   );

@@ -28,6 +28,10 @@ import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useRepayBaseAndromeda } from '../../lib/useRepayBaseAndromeda';
+import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { parseUnits } from '@snx-v3/format';
+import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -126,16 +130,35 @@ export const RepayModal: React.FC<{
     availableUSDCollateral: availableCollateral,
     balance,
   });
+  const { exec: execRepayBaseAndromeda, settle: settleRepayBaseAndromeda } = useRepayBaseAndromeda({
+    accountId: params.accountId,
+    poolId: params.poolId,
+    collateralTypeAddress: collateralType?.tokenAddress,
+    debtChange,
+    availableUSDCollateral: availableCollateral,
+    balance,
+  });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
+  const { data: SpotProxy } = useSpotMarketProxy();
+
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
+  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
+    ? BASE_USDC
+    : USDProxy?.address;
+
   const { approve, requireApproval } = useApprove({
-    contractAddress: USDProxy?.address,
-    amount: amountToDeposit.toBN(),
-    spender: CoreProxy?.address,
+    contractAddress: collateralAddress,
+    amount: isBaseAndromeda(network?.id, network?.preset)
+      ? //Base USDC is 6 decimals
+        parseUnits(amountToDeposit.toString(), 6)
+      : amountToDeposit.toBN(),
+    spender: isBaseAndromeda(network?.id, network?.preset)
+      ? SpotProxy?.address
+      : CoreProxy?.address,
   });
 
   const [state, send] = useMachine(RepayMachine, {
@@ -172,7 +195,11 @@ export const RepayModal: React.FC<{
         try {
           toast.closeAll();
           toast({ title: 'Repaying...' });
-          await execRepay();
+          if (isBaseAndromeda(network?.id, network?.preset)) {
+            await execRepayBaseAndromeda();
+          } else {
+            await execRepay();
+          }
 
           await Promise.all([
             queryClient.invalidateQueries({
@@ -240,6 +267,7 @@ export const RepayModal: React.FC<{
       }}
       onClose={() => {
         settleRepay();
+        settleRepayBaseAndromeda();
         onClose();
       }}
       isOpen={isOpen}

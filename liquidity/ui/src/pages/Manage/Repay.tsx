@@ -9,6 +9,8 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
+import { isBaseAndromeda, sUSDC } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -20,19 +22,22 @@ export const RepayUi: FC<{
 }> = ({ debtChange, setDebtChange, max, currentDebt, snxUSDBalance, availableUSDCollateral }) => {
   const totalUsdBalance =
     snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        Repay snxUSD
+        Repay {isBase ? 'USDC' : 'snxUSD'}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Pay down your position’s debt with snxUSD. This decreases your debt and increases your
-        C-Ratio.
+        Pay down your position’s debt with {isBase ? 'USDC' : 'snxUSD'}. This decreases your debt
+        and increases your C-Ratio.
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
-          snxUSD
+          {isBase ? 'USDC' : 'snxUSD'}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           <NumberInput
@@ -104,7 +109,7 @@ export const RepayUi: FC<{
         type="submit"
         isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >
-        Repay snxUSD
+        Repay {isBase ? 'USDC' : 'snxUSD'}
       </Button>
     </Flex>
   );
@@ -113,7 +118,6 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { data: USDProxy } = useUSDProxy();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
-
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0.01);
