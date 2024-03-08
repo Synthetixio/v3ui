@@ -2,6 +2,7 @@ import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
+import { Link } from 'react-router-dom';
 
 export function Pools() {
   const { data: pools } = usePools();
@@ -66,7 +67,10 @@ export function Pools() {
                   Synthetix USDC
                 </Text>
               </Flex>
-              <Button>Deposit</Button>
+              {/* TODO @dev put in collateral symbol once available */}
+              <Link to={`/deposit/${'USDC'}/${pool.id}`}>
+                <Button>Deposit</Button>
+              </Link>
             </Flex>
           </Flex>
         ))}
