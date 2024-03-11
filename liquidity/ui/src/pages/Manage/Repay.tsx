@@ -9,7 +9,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
-import { isBaseAndromeda, sUSDC } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const RepayUi: FC<{
