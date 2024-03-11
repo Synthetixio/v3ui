@@ -6805,6 +6805,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useEthBalance@workspace:*, @snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance"
@@ -6999,6 +7020,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useRewards@workspace:^, @snx-v3/useRewards@workspace:liquidity/lib/useRewards":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRewards@workspace:liquidity/lib/useRewards"
@@ -7013,6 +7056,17 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -7109,6 +7163,26 @@ __metadata:
 "@snx-v3/useWithdraw@workspace:*, @snx-v3/useWithdraw@workspace:liquidity/lib/useWithdraw":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useWithdraw@workspace:liquidity/lib/useWithdraw"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
