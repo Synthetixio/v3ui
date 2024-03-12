@@ -47,17 +47,9 @@ export const useWithdrawBaseAndromeda = ({
       const walletAddress = await signer.getAddress();
 
       try {
-        console.log({
-          amount: amount.toString(),
-        });
         dispatch({ type: 'prompting' });
 
         const gasPricesPromised = getGasPrice({ provider });
-
-        console.log({
-          sUSDC: usdcCollateral.availableCollateral.toString(),
-          sUSDCAddress: usdcCollateral.tokenAddress,
-        });
 
         const withdraw_sUSDC = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
@@ -65,21 +57,11 @@ export const useWithdrawBaseAndromeda = ({
           usdcCollateral?.availableCollateral.toBN()
         );
 
-        console.log({
-          accountId: accountId,
-          sUSD: snxUSDCollateral.availableCollateral.toString(),
-          sUSDAddress: snxUSDCollateral.tokenAddress,
-        });
-
         const withdraw_SUSD = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
           snxUSDCollateral.tokenAddress,
           snxUSDCollateral?.availableCollateral.toBN()
         );
-
-        console.log({
-          buy_SUSD_Amount: snxUSDCollateral.availableCollateral.toString(),
-        });
 
         const buy_SUSD = SpotProxy.populateTransaction.buy(
           USDC_BASE_MARKET,
