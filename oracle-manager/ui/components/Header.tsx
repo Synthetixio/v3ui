@@ -21,8 +21,8 @@ export const Header: FC = () => {
           <GitHubIcon />
           {isWalletConnected && (
             <NetworkSelect
-              id={currentNetwork.id}
-              name={currentNetwork.name}
+              id={currentNetwork?.id || ''}
+              name={currentNetwork?.name || ''}
               setNetwork={(netowork) => setNetwork(netowork.id)}
             />
           )}
