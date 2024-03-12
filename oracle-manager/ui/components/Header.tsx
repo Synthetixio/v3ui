@@ -58,7 +58,8 @@ export const Header: FC = () => {
                     <NetworkIcon networkId={currentNetwork?.id} />
                     <>
                       <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                        {currentNetwork?.name}
+                        {currentNetwork?.name.charAt(0).toUpperCase() +
+                          currentNetwork?.name.slice(1)}
                       </Text>
                       {isOpen ? (
                         <ChevronUpIcon color="cyan" />
@@ -92,10 +93,22 @@ export const Header: FC = () => {
                         Optimism Goerli
                       </Text>
                     </MenuItem>
+                    <MenuItem onClick={() => setNetwork(11155420)}>
+                      <OptimismIcon />
+                      <Text variant="nav" ml={2}>
+                        Optimism Sepolia
+                      </Text>
+                    </MenuItem>
                     <MenuItem onClick={() => setNetwork(84531)}>
                       <BaseIcon />
                       <Text variant="nav" ml={2}>
                         Base Goerli
+                      </Text>
+                    </MenuItem>
+                    <MenuItem onClick={() => setNetwork(8453)}>
+                      <BaseIcon />
+                      <Text variant="nav" ml={2}>
+                        Base
                       </Text>
                     </MenuItem>
                   </MenuList>

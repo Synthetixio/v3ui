@@ -3045,12 +3045,6 @@
         "internalType": "uint256",
         "name": "depositedCollateralValue",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "reportedDebt",
-        "type": "uint256"
       }
     ],
     "name": "MarketUsdDeposited",
@@ -3099,12 +3093,6 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "depositedCollateralValue",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "reportedDebt",
         "type": "uint256"
       }
     ],
