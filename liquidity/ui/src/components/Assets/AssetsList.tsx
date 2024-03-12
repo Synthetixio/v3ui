@@ -1,9 +1,9 @@
-import { AssetsTable } from './AssetTable';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import Wei from '@synthetixio/wei';
 import { useSearchParams } from 'react-router-dom';
+import Wei from '@synthetixio/wei';
+import { AssetsTable } from './AssetTable';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
@@ -34,7 +34,7 @@ export interface Asset {
   price: Wei | undefined;
 }
 
-function calculateAssets(
+export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
   userTokenBalances?: Wei[] | undefined,
   collateralPrices?: Record<string, Wei | undefined>
