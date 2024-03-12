@@ -1,7 +1,9 @@
 {
   "name": "root",
   "version": "3.0.0",
-  "workspaces": ["**/*"],
+  "workspaces": [
+    "**/*"
+  ],
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -81,7 +83,10 @@
     }
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx}": ["prettier --check", "eslint"]
+    "**/*.{js,ts,tsx}": [
+      "prettier --check",
+      "eslint"
+    ]
   },
   "packageManager": "yarn@4.0.2"
 }
