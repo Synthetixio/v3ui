@@ -5,6 +5,7 @@ import type { AccountProxy as AccountProxy10Main } from './10-main/AccountProxy'
 import type { AccountProxy as AccountProxy11155111Main } from './11155111-main/AccountProxy';
 import type { AccountProxy as AccountProxy13370Main } from './13370-main/AccountProxy';
 import type { AccountProxy as AccountProxy420Main } from './420-main/AccountProxy';
+import type { AccountProxy as AccountProxy421614Main } from './421614-main/AccountProxy';
 import type { AccountProxy as AccountProxy5Main } from './5-main/AccountProxy';
 import type { AccountProxy as AccountProxy8453Andromeda } from './8453-andromeda/AccountProxy';
 import type { AccountProxy as AccountProxy84531Andromeda } from './84531-andromeda/AccountProxy';
@@ -17,6 +18,7 @@ export type AccountProxyType =
   | AccountProxy11155111Main
   | AccountProxy13370Main
   | AccountProxy420Main
+  | AccountProxy421614Main
   | AccountProxy5Main
   | AccountProxy8453Andromeda
   | AccountProxy84531Andromeda
@@ -35,6 +37,8 @@ export async function importAccountProxy(chainId: number, preset: string = 'main
       return import('./13370-main/AccountProxy');
     case '420-main':
       return import('./420-main/AccountProxy');
+    case '421614-main':
+      return import('./421614-main/AccountProxy');
     case '5-main':
       return import('./5-main/AccountProxy');
     case '8453-andromeda':

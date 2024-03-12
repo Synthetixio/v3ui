@@ -195,6 +195,19 @@ export const NETWORKS: Network[] = [
     publicRpcUrl: 'https://sepolia.optimism.io/',
     isTestnet: true,
   },
+  {
+    id: 421614,
+    preset: 'arbthetix',
+    hexId: `0x${Number(421614).toString(16)}`,
+    token: 'ETH',
+    name: 'arbitrum-sepolia',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://arbitrum-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Arbitrum Sepolia',
+    isSupported: true,
+    publicRpcUrl: 'https://sepolia.arbiscan.io/',
+    isTestnet: true,
+  },
 ];
 
 export const deploymentsWithERC7412: string[] = [

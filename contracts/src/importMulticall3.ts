@@ -5,6 +5,7 @@ import type { Multicall3 as Multicall310Main } from './10-main/Multicall3';
 import type { Multicall3 as Multicall311155111Main } from './11155111-main/Multicall3';
 import type { Multicall3 as Multicall313370Main } from './13370-main/Multicall3';
 import type { Multicall3 as Multicall3420Main } from './420-main/Multicall3';
+import type { Multicall3 as Multicall3421614Main } from './421614-main/Multicall3';
 import type { Multicall3 as Multicall35Main } from './5-main/Multicall3';
 import type { Multicall3 as Multicall38453Andromeda } from './8453-andromeda/Multicall3';
 import type { Multicall3 as Multicall384531Andromeda } from './84531-andromeda/Multicall3';
@@ -17,6 +18,7 @@ export type Multicall3Type =
   | Multicall311155111Main
   | Multicall313370Main
   | Multicall3420Main
+  | Multicall3421614Main
   | Multicall35Main
   | Multicall38453Andromeda
   | Multicall384531Andromeda
@@ -35,6 +37,8 @@ export async function importMulticall3(chainId: number, preset: string = 'main')
       return import('./13370-main/Multicall3');
     case '420-main':
       return import('./420-main/Multicall3');
+    case '421614-main':
+      return import('./421614-main/Multicall3');
     case '5-main':
       return import('./5-main/Multicall3');
     case '8453-andromeda':
