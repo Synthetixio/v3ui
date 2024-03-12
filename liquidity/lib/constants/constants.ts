@@ -19,6 +19,7 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
 export const SESSION_STORAGE_KEYS = {
   TERMS_CONDITIONS_ACCEPTED: 'TERMS_CONDITIONS_ACCEPTED',
 };
+
 export const offchainMainnetEndpoint =
   process.env.PYTH_MAINNET_ENDPOINT || 'https://hermes.pyth.network';
 export const offchainTestnetEndpoint =

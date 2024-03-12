@@ -29,6 +29,7 @@ export async function loadPrices({
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
+
   if (calls.length === 0) return { calls: [], decoder: () => [] };
 
   const decoder = (multicallEncoded: string | string[]) => {
@@ -71,6 +72,7 @@ export const useCollateralPrices = () => {
         decoder,
         'useCollateralPrices'
       );
+
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         acc[address] = prices[i];
         return acc;
