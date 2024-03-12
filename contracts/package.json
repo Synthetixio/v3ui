@@ -22,7 +22,7 @@
     "start:base-goerli": "cannon run synthetix-omnibus:latest@main --chain-id 84531 --provider-url https://goerli.base.org",
     "start:base-goerli-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84531 --provider-url https://goerli.base.org",
     "start:base-sepolia-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84532 --provider-url https://sepolia.base.org",
-    "start:arbitrum-sepolia": "cannon run synthetix-omnibus:latest@andromeda --chain-id 421614 --provider-url https://sepolia-rollup.arbitrum.io/rpc",
+    "start:arbitrum-sepolia": "cannon run synthetix-omnibus:latest@arbthetix --chain-id 421614 --provider-url https://sepolia-rollup.arbitrum.io/rpc",
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {

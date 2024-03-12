@@ -5,7 +5,7 @@ import type { CoreProxy as CoreProxy10Main } from './10-main/CoreProxy';
 import type { CoreProxy as CoreProxy11155111Main } from './11155111-main/CoreProxy';
 import type { CoreProxy as CoreProxy13370Main } from './13370-main/CoreProxy';
 import type { CoreProxy as CoreProxy420Main } from './420-main/CoreProxy';
-import type { CoreProxy as CoreProxy421614Main } from './421614-main/CoreProxy';
+import type { CoreProxy as CoreProxy421614Arbthetix } from './421614-arbthetix/CoreProxy';
 import type { CoreProxy as CoreProxy5Main } from './5-main/CoreProxy';
 import type { CoreProxy as CoreProxy8453Andromeda } from './8453-andromeda/CoreProxy';
 import type { CoreProxy as CoreProxy84531Andromeda } from './84531-andromeda/CoreProxy';
@@ -18,7 +18,7 @@ export type CoreProxyType =
   | CoreProxy11155111Main
   | CoreProxy13370Main
   | CoreProxy420Main
-  | CoreProxy421614Main
+  | CoreProxy421614Arbthetix
   | CoreProxy5Main
   | CoreProxy8453Andromeda
   | CoreProxy84531Andromeda
@@ -37,8 +37,8 @@ export async function importCoreProxy(chainId: number, preset: string = 'main') 
       return import('./13370-main/CoreProxy');
     case '420-main':
       return import('./420-main/CoreProxy');
-    case '421614-main':
-      return import('./421614-main/CoreProxy');
+    case '421614-arbthetix':
+      return import('./421614-arbthetix/CoreProxy');
     case '5-main':
       return import('./5-main/CoreProxy');
     case '8453-andromeda':
