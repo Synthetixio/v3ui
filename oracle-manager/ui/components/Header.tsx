@@ -1,20 +1,10 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import {
-  Button,
-  Divider,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from '@chakra-ui/react';
-import { EthereumIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
+import { Button, Divider, Flex } from '@chakra-ui/react';
 import { useIsConnected, useWallet, useNetwork, NetworkIcon } from '@snx-v3/useBlockchain';
 import { FC } from 'react';
 import { shortAddress } from '../utils/addresses';
 import { GitHubIcon } from './GitHubIcon';
 import { useConnectWallet } from '@web3-onboard/react';
+import NetworkSelect from './NetworkSelect';
 
 export const Header: FC = () => {
   const isWalletConnected = useIsConnected();
@@ -45,76 +35,11 @@ export const Header: FC = () => {
         <Flex alignItems="center" gap="2">
           <GitHubIcon />
           {isWalletConnected && (
-            <Menu>
-              {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    as={Button}
-                    ml={2}
-                    variant="outline"
-                    colorScheme="gray"
-                    sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
-                  >
-                    <NetworkIcon networkId={currentNetwork?.id} />
-                    <>
-                      <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                        {currentNetwork?.name.charAt(0).toUpperCase() +
-                          currentNetwork?.name.slice(1)}
-                      </Text>
-                      {isOpen ? (
-                        <ChevronUpIcon color="cyan" />
-                      ) : (
-                        <ChevronDownIcon color="cyan.500" />
-                      )}
-                    </>
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem onClick={() => setNetwork(1)}>
-                      <EthereumIcon />
-                      <Text variant="nav" ml={2}>
-                        Ethereum Mainnet
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(5)}>
-                      <EthereumIcon />
-                      <Text variant="nav" ml={2}>
-                        Goerli
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(10)}>
-                      <OptimismIcon />
-                      <Text variant="nav" ml={2}>
-                        Optimism
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(420)}>
-                      <OptimismIcon />
-                      <Text variant="nav" ml={2}>
-                        Optimism Goerli
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(11155420)}>
-                      <OptimismIcon />
-                      <Text variant="nav" ml={2}>
-                        Optimism Sepolia
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(84531)}>
-                      <BaseIcon />
-                      <Text variant="nav" ml={2}>
-                        Base Goerli
-                      </Text>
-                    </MenuItem>
-                    <MenuItem onClick={() => setNetwork(8453)}>
-                      <BaseIcon />
-                      <Text variant="nav" ml={2}>
-                        Base
-                      </Text>
-                    </MenuItem>
-                  </MenuList>
-                </>
-              )}
-            </Menu>
+            <NetworkSelect
+              id={currentNetwork.id}
+              name={currentNetwork.name}
+              setNetwork={(netowork) => setNetwork(netowork.id)}
+            />
           )}
 
           {isWalletConnected ? (
