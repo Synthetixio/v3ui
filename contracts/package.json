@@ -6,7 +6,11 @@
   "description": "peripheral smart contracts for frontend",
   "version": "3.1.0",
   "main": "./build/index.js",
-  "files": ["build", "deployments", "src"],
+  "files": [
+    "build",
+    "deployments",
+    "src"
+  ],
   "scripts": {
     "fetch-cannon-state": "./fetch-cannon-state.sh",
     "upgrade-contracts": "node ./codegen.js",
@@ -38,7 +42,9 @@
     "typescript": "^5.2.2"
   },
   "depcheck": {
-    "ignoreMatches": ["solc"]
+    "ignoreMatches": [
+      "solc"
+    ]
   },
   "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }
