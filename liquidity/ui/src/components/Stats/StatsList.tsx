@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Flex } from '@chakra-ui/react';
 import { formatNumberToUsd } from '@snx-v3/formatters';
-import Wei from '@synthetixio/wei';
 import { StatBox } from './StatBox';
 import { useSearchParams } from 'react-router-dom';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';

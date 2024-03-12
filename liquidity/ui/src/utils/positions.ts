@@ -1,21 +1,10 @@
-type DebtPosition = Record<
-  `${string}-${string}`,
-  {
-    id: string;
-    accountId: string;
-    poolId: string;
-    poolName: string;
-    collateralPrice: string;
-    collateralAmount: string;
-    collateralValue: string;
-    collateralType: string;
-    cRatio: string;
-    debt: string;
-    isPreferred: boolean;
-  }
->;
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 
-export function calculateDebt(positions: DebtPosition[]) {
+import Wei from '@synthetixio/wei';
+
+type DebtPositions = Record<`${string}-${string}`, LiquidityPositionType>;
+
+export function calculateDebt(positions: DebtPositions | undefined) {
   return (
     positions && Object.values(positions).reduce((prev, cur) => prev.add(cur.debt), new Wei(0))
   );

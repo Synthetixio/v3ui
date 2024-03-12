@@ -29,15 +29,5 @@ export const AssetsList = () => {
   const isLoading =
     isAccountCollateralsLoading || tokenBalancesIsLoading || isCollateralPricesLoading;
 
-  // console.log(
-  //   'Assets:',
-  //   'Is account collateral loading',
-  //   isAccountCollateralsLoading,
-  //   'Token balances loading',
-  //   tokenBalancesIsLoading,
-  //   'collateral prices loading',
-  //   isCollateralPricesLoading
-  // );
-
   return <AssetsTable isLoading={isLoading} assets={assets} />;
 };
