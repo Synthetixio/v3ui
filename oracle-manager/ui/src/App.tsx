@@ -74,7 +74,7 @@ export const App: FC = () => {
               onClick={() => {
                 navigate(
                   '/node/' +
-                    (isWalletConnected ? network?.id.toString() : currentNetwork.toString()) +
+                    (isWalletConnected ? network?.id.toString() : currentNetwork.id.toString()) +
                     '/' +
                     getValues('search').trim()
                 );

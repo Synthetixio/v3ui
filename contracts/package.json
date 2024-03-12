@@ -6,11 +6,7 @@
   "description": "peripheral smart contracts for frontend",
   "version": "3.1.0",
   "main": "./build/index.js",
-  "files": [
-    "build",
-    "deployments",
-    "src"
-  ],
+  "files": ["build", "deployments", "src"],
   "scripts": {
     "fetch-cannon-state": "./fetch-cannon-state.sh",
     "upgrade-contracts": "node ./codegen.js",
@@ -26,6 +22,7 @@
     "start:base-goerli": "cannon run synthetix-omnibus:latest@main --chain-id 84531 --provider-url https://goerli.base.org",
     "start:base-goerli-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84531 --provider-url https://goerli.base.org",
     "start:base-sepolia-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84532 --provider-url https://sepolia.base.org",
+    "start:arbitrum-sepolia": "cannon run synthetix-omnibus:latest@arbthetix --chain-id 421614 --provider-url https://sepolia-rollup.arbitrum.io/rpc",
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
@@ -41,9 +38,7 @@
     "typescript": "^5.2.2"
   },
   "depcheck": {
-    "ignoreMatches": [
-      "solc"
-    ]
+    "ignoreMatches": ["solc"]
   },
   "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
 }

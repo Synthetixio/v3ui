@@ -9,7 +9,6 @@ import {
   decodeBytesByNodeType,
   getNodeModuleContract,
   nodeInformationByNodeIds,
-  resolveNetworkIdToInfuraPrefix,
 } from '../utils/contracts';
 import { OracleNodeTypes } from '../utils/types';
 import { providers } from 'ethers';
