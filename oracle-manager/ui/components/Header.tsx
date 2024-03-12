@@ -1,5 +1,5 @@
 import { Button, Divider, Flex } from '@chakra-ui/react';
-import { useIsConnected, useWallet, useNetwork, NetworkIcon } from '@snx-v3/useBlockchain';
+import { useIsConnected, useWallet, useNetwork } from '@snx-v3/useBlockchain';
 import { FC } from 'react';
 import { shortAddress } from '../utils/addresses';
 import { GitHubIcon } from './GitHubIcon';

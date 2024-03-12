@@ -53,7 +53,6 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
           );
           const hashedId = hashId(node, node.parents.map(findParentNode));
           const nodeFromChain = await contract.getNode(hashedId);
-          console.log(nodeFromChain, hashedId);
           if (nodeFromChain[0] > 0) {
             const nodeID = await contract.getNodeId(
               nodeFromChain[0],

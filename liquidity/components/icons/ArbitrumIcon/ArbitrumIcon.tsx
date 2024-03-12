@@ -1,15 +1,6 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-interface ArbitrumIcon extends IconProps {
-  color?: string;
-}
-
-export const ArbitrumIcon = ({
-  width = '24px',
-  height = '24px',
-  color = '#00D1FF',
-  ...props
-}: ArbitrumIcon) => {
+export const ArbitrumIcon = ({ width = '24px', height = '24px', ...props }: IconProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 42 42" {...props}>
       <circle cx="21" cy="21" r="21" fill="#2D374B" />
