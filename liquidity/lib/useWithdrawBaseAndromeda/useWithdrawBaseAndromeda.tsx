@@ -1,9 +1,9 @@
-import { useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
-import { BigNumber } from 'ethers';
+import { BigNumber, constants, utils } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -13,16 +13,15 @@ import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythP
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
-import { utils } from 'ethers';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
-  collateralTypeAddress,
-  accountCollateral,
+  usdcCollateral,
+  snxUSDCollateral,
 }: {
+  usdcCollateral: AccountCollateralWithSymbol;
+  snxUSDCollateral: AccountCollateralWithSymbol;
   accountId?: string;
-  collateralTypeAddress?: string;
-  accountCollateral: AccountCollateralWithSymbol;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -34,40 +33,68 @@ export const useWithdrawBaseAndromeda = ({
   const signer = useSigner();
   const provider = useProvider();
 
+  const amount = useMemo(
+    () => snxUSDCollateral.availableCollateral.add(usdcCollateral.availableCollateral),
+    [snxUSDCollateral.availableCollateral, usdcCollateral.availableCollateral]
+  );
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (
-        !(
-          CoreProxy &&
-          SpotProxy &&
-          collateralTypeAddress &&
-          accountCollateral?.availableCollateral &&
-          collateralPriceIds
-        )
-      )
-        return;
-      if (accountCollateral?.availableCollateral.eq(0)) return;
+      if (!(CoreProxy && SpotProxy && amount.gt(0) && collateralPriceIds && accountId)) return;
+
       const walletAddress = await signer.getAddress();
 
       try {
+        console.log({
+          amount: amount.toString(),
+        });
         dispatch({ type: 'prompting' });
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const amount = accountCollateral?.availableCollateral.toBN();
-        const populatedTxnPromised = CoreProxy.populateTransaction.withdraw(
+        console.log({
+          sUSDC: usdcCollateral.availableCollateral.toString(),
+          sUSDCAddress: usdcCollateral.tokenAddress,
+        });
+
+        const withdraw_sUSDC = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
-          collateralTypeAddress,
-          amount
+          usdcCollateral.tokenAddress,
+          usdcCollateral?.availableCollateral.toBN()
+        );
+
+        console.log({
+          accountId: accountId,
+          sUSD: snxUSDCollateral.availableCollateral.toString(),
+          sUSDAddress: snxUSDCollateral.tokenAddress,
+        });
+
+        const withdraw_SUSD = CoreProxy.populateTransaction.withdraw(
+          BigNumber.from(accountId),
+          snxUSDCollateral.tokenAddress,
+          snxUSDCollateral?.availableCollateral.toBN()
+        );
+
+        console.log({
+          buy_SUSD_Amount: snxUSDCollateral.availableCollateral.toString(),
+        });
+
+        const buy_SUSD = SpotProxy.populateTransaction.buy(
+          USDC_BASE_MARKET,
+          snxUSDCollateral.availableCollateral.toBN(),
+          snxUSDCollateral.availableCollateral.toBN(),
+          constants.AddressZero
         );
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
           USDC_BASE_MARKET,
-          amount,
+          amount.toBN(),
           //2% slippage
-          Number(utils.formatUnits(amount.mul(98).div(100).toString(), 12).toString())
+          Number(
+            utils.formatUnits(amount.toBN().mul(98).div(100).toString(), 12).toString()
+          ).toFixed()
         );
 
         const collateralPriceCallsPromise = fetchPriceUpdates(
@@ -76,13 +103,27 @@ export const useWithdrawBaseAndromeda = ({
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
         );
-        const [gasPrices, populatedTxn, withdrawTxn, collateralPriceCalls] = await Promise.all([
+        const [
+          gasPrices,
+          withdraw_sUSDC_Txn,
+          withdraw_SUSD_Txn,
+          buy_SUSD_Txn,
+          unwrapTxn,
+          collateralPriceCalls,
+        ] = await Promise.all([
           gasPricesPromised,
-          populatedTxnPromised,
+          withdraw_sUSDC,
+          withdraw_SUSD,
+          buy_SUSD,
           unwrapTxnPromised,
           collateralPriceCallsPromise,
         ]);
-        const allCalls = collateralPriceCalls.concat([populatedTxn, withdrawTxn]);
+        const allCalls = collateralPriceCalls.concat([
+          withdraw_sUSDC_Txn,
+          withdraw_SUSD_Txn,
+          buy_SUSD_Txn,
+          unwrapTxn,
+        ]);
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw');
 
