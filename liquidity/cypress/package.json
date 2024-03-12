@@ -23,5 +23,9 @@
     "react-router-dom": "^6.18.0",
     "ts-node": "^10.9.1"
   },
-  "depcheck": { "ignoreMatches": ["ts-node"] }
+  "depcheck": {
+    "ignoreMatches": [
+      "ts-node"
+    ]
+  }
 }
