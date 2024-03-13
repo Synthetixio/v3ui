@@ -11,6 +11,8 @@ import Wei, { wei } from '@synthetixio/wei';
 import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { constants } from 'ethers';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -56,6 +58,7 @@ export const ManageStatsUi: FC<{
   newDebt,
   hasChanges,
 }) => {
+  const { network } = useNetwork();
   // const performanceLast24h = wei(0.25);
   // const isPositive = performanceLast24h.gte(0);
   return (
@@ -190,51 +193,53 @@ export const ManageStatsUi: FC<{
           </Flex>
         </Flex> */}
       </BorderBox>
-      <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>
-        <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
-          C-RATIO
-        </Text>
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          data-testid="manage stats collateral"
-        >
-          {liquidityPosition && collateralType ? (
-            <>
-              <ChangeStat
-                // TODO, need a function to burn to target so dust debt not left over
-                value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
-                newValue={newCratio}
-                formatFn={(val: Wei) =>
-                  currency(val, {
-                    style: 'percent',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                }
-                hasChanges={hasChanges}
-              />
-              <Text
-                fontWeight="400"
-                color="gray.500"
-                fontSize="md"
-                fontFamily="heading"
-                lineHeight="24px"
-              >
-                {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
-                  ? 'N/A'
-                  : `Minimum ${currency(collateralType.issuanceRatioD18, {
+      {!isBaseAndromeda(network?.id, network?.preset) && (
+        <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>
+          <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
+            C-RATIO
+          </Text>
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            data-testid="manage stats collateral"
+          >
+            {liquidityPosition && collateralType ? (
+              <>
+                <ChangeStat
+                  // TODO, need a function to burn to target so dust debt not left over
+                  value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
+                  newValue={newCratio}
+                  formatFn={(val: Wei) =>
+                    currency(val, {
                       style: 'percent',
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}`}
-              </Text>
-            </>
-          ) : (
-            <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
-          )}
-        </Flex>
-      </BorderBox>
+                    })
+                  }
+                  hasChanges={hasChanges}
+                />
+                <Text
+                  fontWeight="400"
+                  color="gray.500"
+                  fontSize="md"
+                  fontFamily="heading"
+                  lineHeight="24px"
+                >
+                  {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
+                    ? 'N/A'
+                    : `Minimum ${currency(collateralType.issuanceRatioD18, {
+                        style: 'percent',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}`}
+                </Text>
+              </>
+            ) : (
+              <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
+            )}
+          </Flex>
+        </BorderBox>
+      )}
     </Flex>
   );
 };

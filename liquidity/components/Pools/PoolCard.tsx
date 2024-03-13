@@ -5,6 +5,8 @@ import { LiquidityPositionsById } from '@snx-v3/useLiquidityPositions';
 import { Link, generatePath } from 'react-router-dom';
 import { VaultRow } from './';
 import { PoolType } from '@snx-v3/usePools';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 interface PoolcardProps {
   pool: PoolType;
@@ -13,6 +15,7 @@ interface PoolcardProps {
 }
 
 export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: PoolcardProps) => {
+  const { network } = useNetwork();
   return (
     <BorderBox p={4} mt={8} flexDir="column">
       <Flex
@@ -56,15 +59,20 @@ export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: Pool
               <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
                 Debt
               </Th>
-              <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                C-Ratio
-              </Th>
-              <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                Issuance Ratio
-              </Th>
-              <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                Liquidation Ratio
-              </Th>
+              {!isBaseAndromeda(network?.id, network?.preset) && (
+                <>
+                  <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
+                    C-Ratio
+                  </Th>
+                  <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
+                    Issuance Ratio
+                  </Th>
+                  <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
+                    Liquidation Ratio
+                  </Th>
+                </>
+              )}
+
               <Th color="gray.500" fontSize="xs" lineHeight="4" pb="2" textTransform="initial"></Th>
             </Tr>
           </Thead>

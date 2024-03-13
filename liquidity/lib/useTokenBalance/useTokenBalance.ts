@@ -4,9 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useWallet } from '@snx-v3/useBlockchain';
 import { ethers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
-export const abi = ['function balanceOf(address) view returns (uint256)'];
+export const abi = [
+  'function balanceOf(address) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+];
 
 export const useTokenBalance = (address?: string) => {
   const { activeWallet } = useWallet();
@@ -24,10 +28,10 @@ export const useTokenBalance = (address?: string) => {
     queryFn: async () => {
       if (activeWallet?.address && tokenAddress && provider) {
         const contract = new ethers.Contract(tokenAddress, abi, provider);
-        const balance =
-          network?.id === 8453 && network.preset === 'andromeda'
-            ? wei(await contract.balanceOf(activeWallet?.address), await contract.decimals())
-            : BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+        const balance = isBaseAndromeda(network?.id, network?.preset)
+          ? wei(await contract.balanceOf(activeWallet?.address), await contract.decimals())
+          : BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+
         return balance;
       }
     },

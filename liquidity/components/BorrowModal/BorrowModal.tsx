@@ -20,12 +20,13 @@ import { PropsWithChildren, useCallback, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useBorrow } from '@snx-v3/useBorrow';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useBorrow } from '@snx-v3/useBorrow';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -64,6 +65,9 @@ export const BorrowModalUi: React.FC<{
   txnStatus: TransactionStatus;
   execBorrow: () => void;
 }> = ({ onClose, isOpen, debtChange, txnStatus, execBorrow }) => {
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay width="100%" height="100%" />
@@ -94,7 +98,8 @@ export const BorrowModalUi: React.FC<{
               <StepIcon txnStatus={txnStatus}>1</StepIcon>
             </Flex>
             <Text>
-              Borrow <Amount value={debtChange} suffix={` snxUSD`} />
+              {isBase ? 'Claim' : 'Borrow'}{' '}
+              <Amount value={debtChange} suffix={isBase ? ' USDC' : ' snxUSD'} />
             </Text>
           </Flex>
           <Button
