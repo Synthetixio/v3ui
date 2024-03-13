@@ -9,10 +9,10 @@ import {
   decodeBytesByNodeType,
   getNodeModuleContract,
   nodeInformationByNodeIds,
-  resolveNetworkIdToInfuraPrefix,
 } from '../utils/contracts';
 import { OracleNodeTypes } from '../utils/types';
 import { providers } from 'ethers';
+import { NETWORKS } from '@snx-v3/useBlockchain';
 
 let x = 0;
 let y = 0;
@@ -23,9 +23,7 @@ export const RegisteredNode: FC = () => {
   const nodeID = param?.nodeId;
   const networkParam = param?.network ? Number(param.network) : undefined;
   const provider = new providers.JsonRpcProvider(
-    `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
-      process.env.NEXT_PUBLIC_INFURA_KEY
-    }`
+    NETWORKS.filter((network) => network.id === networkParam)[0].rpcUrl()
   );
   const fetchNode = async (id: string) => {
     if (networkParam) {

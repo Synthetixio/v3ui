@@ -1,6 +1,6 @@
 // !!! DO NOT EDIT !!! Automatically generated file
 
-export const address = '0xA4fE63F8ea9657990eA8E05Ebfa5C19a7D4d7337';
+export const address = '0x7E8F2bFA3F3412B618aeb89A02406f7caE675f2b';
 export const abi = [
   'error ImplementationIsSterile(address implementation)',
   'error NoChange()',

@@ -1,6 +1,6 @@
 // !!! DO NOT EDIT !!! Automatically generated file
 
-export const address = '0xE6C5f05C415126E6b81FCc3619f65Db2fCAd58D0';
+export const address = '0x73dCc1A03fbBf084298F60B529D4B806Dc5E2B33';
 export const abi = [
   'error FeatureUnavailable(bytes32 which)',
   'error InvalidAccountId(uint128 accountId)',
