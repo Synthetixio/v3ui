@@ -27,7 +27,10 @@ export const RegisteredNode: FC = () => {
   );
   const fetchNode = async (id: string) => {
     if (networkParam) {
-      const contract = getNodeModuleContract(provider, networkParam);
+      const contract = await getNodeModuleContract(
+        provider,
+        NETWORKS.find((network) => network.id === networkParam)!
+      );
       const node = await contract.getNode(id);
       const nodeParams = decodeBytesByNodeType(node.nodeType, node.parameters);
       if (node.nodeType === 0) return;
