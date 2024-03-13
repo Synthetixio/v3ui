@@ -51,12 +51,8 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
       return <EthereumIcon w="24px" h="24px" {...props} />;
     case 10:
       return <OptimismIcon w="24px" h="24px" {...props} />;
-    case 5:
-      return <EthereumIcon w="24px" h="24px" {...props} />;
     case 11155111:
       return <EthereumIcon w="24px" h="24px" {...props} />;
-    case 420:
-      return <OptimismIcon w="24px" h="24px" {...props} />;
     case 84531:
       return <BaseIcon w="24px" h="24px" {...props} />;
     case 84532:
@@ -115,19 +111,6 @@ export const NETWORKS: Network[] = [
     isTestnet: false,
   },
   {
-    id: 5,
-    preset: 'main',
-    hexId: `0x${Number(5).toString(16)}`,
-    token: 'ETH',
-    name: 'goerli',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Goerli Testnet',
-    isSupported: true,
-    publicRpcUrl: 'https://ethereum-goerli.publicnode.com',
-    isTestnet: true,
-  },
-  {
     id: 11155111,
     preset: 'main',
     hexId: `0x${Number(11155111).toString(16)}`,
@@ -138,19 +121,6 @@ export const NETWORKS: Network[] = [
     label: 'Sepolia Testnet',
     isSupported: true,
     publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
-    isTestnet: true,
-  },
-  {
-    id: 420,
-    preset: 'main',
-    hexId: `0x${Number(420).toString(16)}`,
-    token: 'ETH',
-    name: 'optimism-goerli',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://optimism-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Optimistic Goerli',
-    isSupported: true,
-    publicRpcUrl: 'https://goerli.optimism.io',
     isTestnet: true,
   },
   {

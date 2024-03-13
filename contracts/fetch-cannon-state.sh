@@ -10,7 +10,7 @@ yarn cannon inspect synthetix-omnibus:latest@main --chain-id 11155111 --json > .
 
 # Optimism
 yarn cannon inspect synthetix-omnibus:latest@main --chain-id 10 --json > ./cannon/10-main.json
-yarn cannon inspect synthetix-omnibus:latest@main --chain-id 420 --json > ./cannon/420-main.json
+yarn cannon inspect synthetix-omnibus:latest@main --chain-id 11155420 --json > ./cannon/11155420-main.json
 
 # Base
 yarn cannon inspect synthetix-omnibus:latest@andromeda --chain-id 8453 --json > ./cannon/8453-andromeda.json

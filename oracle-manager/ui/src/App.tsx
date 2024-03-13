@@ -98,7 +98,7 @@ export const App: FC = () => {
             colorScheme="gray"
             mr="16px"
             isDisabled={!isWalletConnected}
-            onClick={() => {
+            onClick={async () => {
               if (nodes.every((node) => node.isRegistered)) {
                 toast({
                   title: 'All nodes are already registered',
@@ -107,7 +107,7 @@ export const App: FC = () => {
                   isClosable: true,
                 });
               } else if (signer && network?.id && !!contract) {
-                const oracleManagerContract = getNodeModuleContract(signer, network.id);
+                const oracleManagerContract = await getNodeModuleContract(signer, network);
                 const data = nodes
                   .slice()
                   .filter((node) => !node.isRegistered)
