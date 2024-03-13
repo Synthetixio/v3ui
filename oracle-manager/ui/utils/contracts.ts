@@ -1,5 +1,5 @@
 // Has to be imported cause yarn deps is dumb
-// eslint-disable-line
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as OracleManager from '@synthetixio/v3-contracts/build/1-main/OracleManagerProxy';
 import { Contract, providers, utils } from 'ethers';
 import { Node } from './types';
