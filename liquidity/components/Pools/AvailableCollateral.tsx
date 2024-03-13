@@ -26,7 +26,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { formatTimeToUnlock, unlockDateString } from '@snx-v3/formatters';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { BaseAndromedaAvailableCollateral } from './BaseAndromedaAvailableCollateral';
 
 export function AvailableCollateralUi({
@@ -35,6 +35,7 @@ export function AvailableCollateralUi({
   unlockDateString,
   unlockDate,
   isLoading,
+  network,
 }: {
   accountCollaterals: AccountCollateralWithSymbol[];
   timeToUnlock?: string;
@@ -42,8 +43,8 @@ export function AvailableCollateralUi({
   unlockDate?: Date;
   isLoading: boolean;
   AvailableCollateralRow: typeof AvailableCollateralRow;
+  network?: Network | null;
 }) {
-  const { network } = useNetwork();
   return (
     <BorderBox p={4} mt={8} flexDir="column">
       <Heading fontSize="2xl" mb="2">
@@ -126,6 +127,7 @@ export function AvailableCollateralUi({
 
 export function AvailableCollateral() {
   const { accountId } = useParams();
+  const { network } = useNetwork();
   const { data: accountCollateralsData, isLoading: isAccountCollateralsLoading } =
     useAccountCollateral({ accountId, includeDelegationOff: true });
 
@@ -154,6 +156,7 @@ export function AvailableCollateral() {
       unlockDate={accountCollateralUnlockDate}
       isLoading={isLoading}
       AvailableCollateralRow={AvailableCollateralRow}
+      network={network}
     />
   );
 }
