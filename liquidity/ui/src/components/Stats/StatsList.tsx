@@ -1,13 +1,18 @@
+import { useMemo } from 'react';
 import { Flex } from '@chakra-ui/react';
 import { formatNumberToUsd } from '@snx-v3/formatters';
-import Wei from '@synthetixio/wei';
 import { StatBox } from './StatBox';
 import { useSearchParams } from 'react-router-dom';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import { calculateAssets } from '../Assets';
+import {
+  calculateAssets,
+  calculateTotalAssets,
+  calculateTotalAssetsDelegated,
+} from '../../utils/assets';
+import { calculateDebt } from '../../utils/positions';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
@@ -28,28 +33,14 @@ export const StatsList = () => {
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
-  const assets = calculateAssets(accountCollaterals, userTokenBalances, collateralPrices);
+  const assets = useMemo(
+    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
+    [accountCollaterals, userTokenBalances, collateralPrices]
+  );
 
-  const debt =
-    positions && Object.values(positions).reduce((prev, cur) => prev.add(cur.debt), new Wei(0));
-
-  const totalDelegated = assets
-    ?.map((asset) => asset.collateral.totalAssigned.mul(asset.price))
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
-    .toNumber()
-    .toFixed(2);
-
-  const totalAssets = assets
-    ?.map((asset) => {
-      const assigned = asset.collateral.totalAssigned.mul(asset.price);
-      const deposited = asset.collateral.totalDeposited.mul(asset.price);
-      const wallet = asset.balance.mul(asset.price);
-      // if already assigned to pool, we dont add it
-      return assigned !== deposited ? assigned.add(wallet) : assigned.add(wallet).add(deposited);
-    })
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
-    .toNumber()
-    .toFixed(2);
+  const debt = calculateDebt(positions);
+  const totalAssets = calculateTotalAssets(assets);
+  const totalDelegated = calculateTotalAssetsDelegated(assets);
 
   const isLoading =
     isAccountCollateralsLoading ||

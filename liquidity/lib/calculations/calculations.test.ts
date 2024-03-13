@@ -10,6 +10,7 @@ describe('calculateSevenDaysPnlGrowth', () => {
     expect(calculateSevenDaysPnlGrowth()).toBe(undefined);
     expect(calculateSevenDaysPnlGrowth([])).toBe(undefined);
   });
+
   test('return undefined for percentage when the pnl 7days ago is missing or 0', () => {
     expect(calculateSevenDaysPnlGrowth([{ pnl: wei(100) }] as any)).toEqual({
       value: wei(100),
@@ -21,18 +22,21 @@ describe('calculateSevenDaysPnlGrowth', () => {
       percentage: undefined,
     });
   });
+
   test('calculate positive growth', () => {
     expect(calculateSevenDaysPnlGrowth([{ pnl: wei(100) }, { pnl: wei(50) }] as any)).toEqual({
       value: wei(50),
       percentage: wei(1),
     });
   });
+
   test('calculate negative growth', () => {
     expect(calculateSevenDaysPnlGrowth([{ pnl: wei(50) }, { pnl: wei(100) }] as any)).toEqual({
       value: wei(-50),
       percentage: wei(-0.5),
     });
   });
+
   test('last week negative this week more negative', () => {
     expect(
       calculateSevenDaysPnlGrowth([{ pnl: wei(-5008.54) }, { pnl: wei(-569.21) }] as any)
@@ -47,6 +51,7 @@ describe('calculatePoolPerformanceLifetime', () => {
   test('returns 0 when there is no configurations', () => {
     expect(calculatePoolPerformanceLifetime({ configurations: [] } as any)).toEqual(wei(0));
   });
+
   test('returns lifetime performance', () => {
     expect(
       calculatePoolPerformanceLifetime({
@@ -55,6 +60,7 @@ describe('calculatePoolPerformanceLifetime', () => {
     ).toEqual(wei(100));
   });
 });
+
 describe('calculatePoolPerformanceSevenDays', () => {
   test('returns 0 when there is no configurations', () => {
     expect(calculatePoolPerformanceSevenDays({ configurations: [] } as any)).toEqual({
@@ -62,6 +68,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: undefined,
     });
   });
+
   test('handles market_snapshots_by_week[1] (last week) missing ', () => {
     expect(
       calculatePoolPerformanceSevenDays({
@@ -74,6 +81,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: undefined,
     });
   });
+
   test('handles market_snapshots_by_week[1] (last week) having 0 pnl', () => {
     expect(
       calculatePoolPerformanceSevenDays({
@@ -91,6 +99,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: undefined,
     });
   });
+
   test('calculates 7days positive growth', () => {
     expect(
       calculatePoolPerformanceSevenDays({
@@ -108,6 +117,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: wei(1),
     });
   });
+
   test('calculates 7days negative growth', () => {
     expect(
       calculatePoolPerformanceSevenDays({
@@ -125,6 +135,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: wei(-0.5),
     });
   });
+
   test('handles improving pnl that still is negative', () => {
     expect(
       calculatePoolPerformanceSevenDays({
@@ -142,6 +153,7 @@ describe('calculatePoolPerformanceSevenDays', () => {
       growthPercentage: wei(0.5),
     });
   });
+
   test('handles 0 growth', () => {
     expect(
       calculatePoolPerformanceSevenDays({
