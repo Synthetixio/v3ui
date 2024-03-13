@@ -65,9 +65,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
       ]);
 
       await settleRepay();
-    } catch (error) {
-      console.log('error', error);
-    }
+    } catch (error) {}
   }, [approve, execRepay, network?.id, network?.preset, queryClient, requireApproval, settleRepay]);
 
   return (
