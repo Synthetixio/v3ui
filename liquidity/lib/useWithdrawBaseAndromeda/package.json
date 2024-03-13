@@ -6,6 +6,7 @@
   "dependencies": {
     "@snx-v3/fetchPythPrices": "workspace:*",
     "@snx-v3/isBaseAndromeda": "workspace:*",
+    "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/txnReducer": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useAllCollateralPriceIds": "workspace:*",
