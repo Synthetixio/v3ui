@@ -12,7 +12,7 @@ async function getOwner() {
     case 5:
       return '0x48914229dedd5a9922f44441ffccfc2cb7856ee9';
     case 10:
-      return '0x6330D5F08f51057F36F46d6751eCDc0c65Ef7E9e'; // ImportableRewardEscrowV2
+      return '0x5Fc9B8d2B7766f061bD84a41255fD1A76Fd1FAa2'; // ImportableRewardEscrowV2
     case 420:
       return '0x48914229dedd5a9922f44441ffccfc2cb7856ee9';
     default:
