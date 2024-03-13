@@ -8,6 +8,7 @@
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
+    "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/useApprove": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCollateralTypes": "workspace:*",
@@ -20,6 +21,7 @@
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
     "@xstate/react": "^3.2.2",
+    "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "xstate": "^4.38.3"

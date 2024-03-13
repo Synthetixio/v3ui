@@ -25,11 +25,15 @@ export async function getSnx({ address, amount }) {
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
 
   const owner = await getOwner();
+
   //  const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, provider);
   //  const owner = await coreProxy.owner();
   //  console.log('getSnx', { owner });
   await setEthBalance({ address: owner, balance: 1000 });
 
+  console.log({
+    tokenAddress: config.tokenAddress,
+  });
   const erc20 = new ethers.Contract(
     config.tokenAddress,
     [
@@ -53,6 +57,9 @@ export async function getSnx({ address, amount }) {
   const ownerBalance = parseFloat(ethers.utils.formatUnits(await erc20.balanceOf(owner)));
   console.log('getSnx', { owner, ownerBalance });
 
+  console.log({
+    amount: ethers.utils.parseEther(`${amount}`).toString(),
+  });
   await provider.send('anvil_impersonateAccount', [owner]);
   const signer = provider.getSigner(owner);
   const transferTx = await erc20

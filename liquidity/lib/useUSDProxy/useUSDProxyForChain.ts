@@ -8,7 +8,7 @@ export function useUSDProxyForChain(network?: Network) {
   const withSigner = false;
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'USDProxy', { withSigner }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'USDProxyForChain', { withSigner }],
     queryFn: async function () {
       if (network && provider) {
         const { address, abi } = await importUSDProxy(network.id, network.preset);
