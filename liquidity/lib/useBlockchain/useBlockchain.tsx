@@ -1,6 +1,13 @@
 import { ethers } from 'ethers';
 import React from 'react';
-import { BaseIcon, EthereumIcon, FailedIcon, LogoIcon, OptimismIcon } from '@snx-v3/icons';
+import {
+  BaseIcon,
+  EthereumIcon,
+  FailedIcon,
+  LogoIcon,
+  OptimismIcon,
+  ArbitrumIcon,
+} from '@snx-v3/icons';
 import { INFURA_KEY as DEFAULT_INFURA_KEY } from '@snx-v3/constants';
 import SynthetixIcon from './SynthetixIcon.svg';
 import SynthetixLogo from './SynthetixLogo.svg';
@@ -60,6 +67,8 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
       return <BaseIcon w="24px" h="24px" {...props} />;
     case 11155420:
       return <OptimismIcon w="24px" h="24px" {...props} />;
+    case 421614:
+      return <ArbitrumIcon w="24px" h="24px" {...props} />;
     default:
       return <FailedIcon w="24px" h="24px" {...props} />;
   }
@@ -193,6 +202,19 @@ export const NETWORKS: Network[] = [
     label: 'Optimism Sepolia',
     isSupported: false,
     publicRpcUrl: 'https://sepolia.optimism.io/',
+    isTestnet: true,
+  },
+  {
+    id: 421614,
+    preset: 'arbthetix',
+    hexId: `0x${Number(421614).toString(16)}`,
+    token: 'ETH',
+    name: 'arbitrum-sepolia',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://arbitrum-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Arbitrum Sepolia',
+    isSupported: true,
+    publicRpcUrl: 'https://sepolia.arbiscan.io/',
     isTestnet: true,
   },
 ];

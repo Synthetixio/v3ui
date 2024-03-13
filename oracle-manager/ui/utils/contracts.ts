@@ -1,32 +1,14 @@
 import { Contract, providers, utils } from 'ethers';
-
 import * as OracleManagerProxy1 from '@synthetixio/v3-contracts/build/1-main/OracleManagerProxy';
 import * as OracleManagerProxy5 from '@synthetixio/v3-contracts/build/5-main/OracleManagerProxy';
 import * as OracleManagerProxy10 from '@synthetixio/v3-contracts/build/10-main/OracleManagerProxy';
 import * as OracleManagerProxy420 from '@synthetixio/v3-contracts/build/420-main/OracleManagerProxy';
 import * as OracleManagerProxy11155111 from '@synthetixio/v3-contracts/build/11155111-main/OracleManagerProxy';
 import * as OracleManagerProxy84531Andromeda from '@synthetixio/v3-contracts/build/84531-andromeda/OracleManagerProxy';
+import * as OracleManagerProxy8453Andromeda from '@synthetixio/v3-contracts/build/8453-andromeda/OracleManagerProxy';
+import * as OracleManagerProxy421614Arbthetix from '@synthetixio/v3-contracts/build/421614-arbthetix/OracleManagerProxy';
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
-
-export function resolveNetworkIdToInfuraPrefix(networkId?: number) {
-  switch (networkId) {
-    case 1:
-      return 'mainnet';
-    case 5:
-      return 'goerli';
-    case 10:
-      return 'optimism-mainnet';
-    case 420:
-      return 'optimism-goerli';
-    case 84531:
-      return 'base-goerli';
-    case 11155111:
-      return 'sepolia';
-    default:
-      return 'mainnet';
-  }
-}
 
 export function encodeBytesByNodeType(id: number, parameters: any[]) {
   switch (id) {
@@ -48,7 +30,10 @@ export function encodeBytesByNodeType(id: number, parameters: any[]) {
     case 7:
       return utils.defaultAbiCoder.encode(['uint'], parameters);
     case 8:
-      return utils.defaultAbiCoder.encode(['int'], parameters);
+      return utils.defaultAbiCoder.encode(
+        ['int'],
+        parameters.map((p) => p.toString())
+      );
     default:
       return '';
   }
@@ -162,6 +147,19 @@ export const getNodeModuleContract = (
       return new Contract(
         OracleManagerProxy11155111.address,
         OracleManagerProxy11155111.abi,
+        signerOrProvider
+      );
+    case 8453: {
+      return new Contract(
+        OracleManagerProxy8453Andromeda.address,
+        OracleManagerProxy8453Andromeda.abi,
+        signerOrProvider
+      );
+    }
+    case 421614:
+      return new Contract(
+        OracleManagerProxy421614Arbthetix.address,
+        OracleManagerProxy421614Arbthetix.abi,
         signerOrProvider
       );
     default:
