@@ -28,6 +28,7 @@ import { UniswapForm } from './UniswapForm';
 import { PriceDeviationCircuitBreakerForm } from './PriceDeviationCircuitBreakerForm';
 import { hashId } from '../utils/contracts';
 import { ConstantForm } from './ConstantForm';
+import { PythOffchainLookupForm } from './PythOffchainLookupForm';
 
 export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: Node }> = ({
   isOpen,
@@ -36,7 +37,7 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
 }) => {
   const { register, watch, getValues, setValue } = useForm({
     defaultValues: {
-      oracleNodeType: node?.type,
+      type: node?.type,
       nodeParents: node?.parents || [],
       nodeParameters: node?.parameters || [],
       nodeLabel: node?.data.label || '',
@@ -46,16 +47,7 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
   const [pendingNodeId, setPendingNodeID] = useState('');
   const [nodes, setNodes] = useRecoilState(nodesState);
   const toast = useToast();
-  useEffect(() => {
-    if (node?.type) {
-      setValue('oracleNodeType', node?.type);
-      setValue('nodeParents', node?.parents);
-      setValue('nodeParameters', node?.parameters);
-      setValue('nodeLabel', node?.data.label);
-    }
-  }, [node?.type, setValue, node?.parents, node?.data.label, node?.parameters]);
-
-  const type = watch('oracleNodeType');
+  const type = !watch('type') ? node?.type : watch('type');
   const parameters = watch('nodeParameters');
   const parents = watch('nodeParents');
 
@@ -91,6 +83,18 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
           }}
         />
       );
+    if (type === 'pythOffchainLookup') {
+      return (
+        <PythOffchainLookupForm
+          pythAddress={node?.parameters[0]}
+          priceId={node?.parameters[1]}
+          stalenessTolerance={node?.parameters[2]}
+          getValuesFromForm={(pythAddress, priceId, stalenessTolerance) => {
+            setValue('nodeParameters', [pythAddress, priceId, stalenessTolerance]);
+          }}
+        />
+      );
+    }
     if (type === 'externalNode')
       return (
         <ExternalNodeForm
@@ -200,7 +204,7 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
         <ModalBody>
           <Flex flexDir="column" gap="2">
             {!node && (
-              <Select {...register('oracleNodeType')}>
+              <Select {...register('type')}>
                 <option value="" selected disabled hidden>
                   Choose Node Type
                 </option>
@@ -271,15 +275,15 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
                       .filter((s) => s.id !== node.id)
                       .concat({
                         ...node,
-                        typeId: typeToTypeId(getValues('oracleNodeType')!),
-                        type: getValues('oracleNodeType')!,
+                        typeId: typeToTypeId(getValues('type')!),
+                        type: getValues('type')!,
                         parents: getValues('nodeParents'),
                         parameters: getValues('nodeParameters'),
                         data: { label: getValues('nodeLabel') || '' },
                         id: hashId(
                           {
                             ...node,
-                            type: getValues('oracleNodeType')!,
+                            type: getValues('type')!,
                             parents: getValues('nodeParents'),
                             parameters: getValues('nodeParameters'),
                           },
@@ -290,8 +294,8 @@ export const NodeFormModule: FC<{ isOpen: boolean; onClose: () => void; node?: N
                   onClose();
                 } else if (!node) {
                   const newNode = {
-                    type: getValues('oracleNodeType')!,
-                    typeId: typeToTypeId(getValues('oracleNodeType')!),
+                    type: getValues('type')!,
+                    typeId: typeToTypeId(getValues('type')!),
                     parents: getValues('nodeParents'),
                     parameters: getValues('nodeParameters'),
                     data: { label: getValues('nodeLabel') || '' },
@@ -346,5 +350,7 @@ function typeToTypeId(type: OracleNodeTypes) {
       return ORACLE_NODE_TYPES[2].nodeType;
     case 'constant':
       return ORACLE_NODE_TYPES[7].nodeType;
+    case 'pythOffchainLookup':
+      return ORACLE_NODE_TYPES[8].nodeType;
   }
 }

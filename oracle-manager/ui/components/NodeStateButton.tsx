@@ -19,7 +19,6 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodeId, setNodeId] = useState('');
   const [price, setPrice] = useState('0');
   const [time, setTime] = useState(new Date());
-
   const [_, connect] = useConnectWallet();
   const signer = useSigner();
   const isWalletConnected = useIsConnected();
@@ -47,10 +46,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
     const fetchNodeState = async () => {
       if (network?.id) {
         try {
-          const contract = getNodeModuleContract(
-            networkParam ? provider : signer!,
-            networkParam ? networkParam : network.id
-          );
+          const contract = await getNodeModuleContract(networkParam ? provider : signer!, network);
           const hashedId = hashId(node, node.parents.map(findParentNode));
           const nodeFromChain = await contract.getNode(hashedId);
           if (nodeFromChain[0] > 0) {
@@ -137,7 +133,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
       try {
         setIsLoading(true);
         if (network?.id && signer) {
-          const contract = getNodeModuleContract(signer, network.id);
+          const contract = await getNodeModuleContract(signer, network);
           const tx: providers.TransactionResponse = await contract.registerNode(
             node.typeId,
             encodeBytesByNodeType(node.typeId, node.parameters),

@@ -126,4 +126,15 @@ export const ORACLE_NODE_TYPES: {
     numberOfParents: 0,
     parameters: [{ type: 'number', name: 'Constant Value' }],
   },
+  {
+    label: 'Pyth Offchain Lookup',
+    value: 'pythOffchainLookup',
+    nodeType: 9,
+    numberOfParents: 0,
+    parameters: [
+      { type: 'string', name: 'Pyth Address' },
+      { type: 'string', name: 'Price Id' },
+      { type: 'number', name: 'Staleness Tolerance' },
+    ],
+  },
 ];
