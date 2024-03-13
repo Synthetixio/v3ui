@@ -23,13 +23,11 @@ export const useRepayBaseAndromeda = ({
   poolId,
   collateralTypeAddress,
   debtChange,
-  balance,
   availableUSDCollateral,
 }: {
   accountId?: string;
   poolId?: string;
   collateralTypeAddress?: string;
-  balance?: Wei;
   availableUSDCollateral?: Wei;
   debtChange: Wei;
 }) => {
@@ -47,6 +45,7 @@ export const useRepayBaseAndromeda = ({
   const mutation = useMutation({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
+
       if (
         !(
           CoreProxy &&
@@ -60,7 +59,7 @@ export const useRepayBaseAndromeda = ({
       ) {
         return;
       }
-      if (!balance) return;
+
       if (!availableUSDCollateral) return;
       if (debtChange.eq(0)) return;
       const debtChangeAbs = debtChange.abs();

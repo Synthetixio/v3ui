@@ -136,7 +136,6 @@ export const RepayModal: React.FC<{
     collateralTypeAddress: collateralType?.tokenAddress,
     debtChange,
     availableUSDCollateral: availableCollateral,
-    balance,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });

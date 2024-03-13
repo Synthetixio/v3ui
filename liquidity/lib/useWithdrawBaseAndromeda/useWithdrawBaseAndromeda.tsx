@@ -13,6 +13,7 @@ import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythP
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
+import { notNil } from '@snx-v3/tsHelpers';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
@@ -51,24 +52,30 @@ export const useWithdrawBaseAndromeda = ({
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const withdraw_sUSDC = CoreProxy.populateTransaction.withdraw(
-          BigNumber.from(accountId),
-          usdcCollateral.tokenAddress,
-          usdcCollateral?.availableCollateral.toBN()
-        );
+        const withdraw_sUSDC = usdcCollateral?.availableCollateral.gt(0)
+          ? CoreProxy.populateTransaction.withdraw(
+              BigNumber.from(accountId),
+              usdcCollateral.tokenAddress,
+              usdcCollateral?.availableCollateral.toBN()
+            )
+          : undefined;
 
-        const withdraw_SUSD = CoreProxy.populateTransaction.withdraw(
-          BigNumber.from(accountId),
-          snxUSDCollateral.tokenAddress,
-          snxUSDCollateral?.availableCollateral.toBN()
-        );
+        const withdraw_sUSD = snxUSDCollateral?.availableCollateral.gt(0)
+          ? CoreProxy.populateTransaction.withdraw(
+              BigNumber.from(accountId),
+              snxUSDCollateral.tokenAddress,
+              snxUSDCollateral?.availableCollateral.toBN()
+            )
+          : undefined;
 
-        const buy_SUSD = SpotProxy.populateTransaction.buy(
-          USDC_BASE_MARKET,
-          snxUSDCollateral.availableCollateral.toBN(),
-          snxUSDCollateral.availableCollateral.toBN(),
-          constants.AddressZero
-        );
+        const buy_SUSD = snxUSDCollateral.availableCollateral.gt(0)
+          ? SpotProxy.populateTransaction.buy(
+              USDC_BASE_MARKET,
+              snxUSDCollateral.availableCollateral.toBN(),
+              snxUSDCollateral.availableCollateral.toBN(),
+              constants.AddressZero
+            )
+          : undefined;
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
           USDC_BASE_MARKET,
@@ -95,17 +102,14 @@ export const useWithdrawBaseAndromeda = ({
         ] = await Promise.all([
           gasPricesPromised,
           withdraw_sUSDC,
-          withdraw_SUSD,
+          withdraw_sUSD,
           buy_SUSD,
           unwrapTxnPromised,
           collateralPriceCallsPromise,
         ]);
-        const allCalls = collateralPriceCalls.concat([
-          withdraw_sUSDC_Txn,
-          withdraw_SUSD_Txn,
-          buy_SUSD_Txn,
-          unwrapTxn,
-        ]);
+        const allCalls = collateralPriceCalls.concat(
+          [withdraw_sUSDC_Txn, withdraw_SUSD_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil)
+        );
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw');
 

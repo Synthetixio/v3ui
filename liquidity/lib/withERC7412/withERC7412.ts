@@ -53,6 +53,7 @@ function makeMulticall(
   multiCallAbi: string[]
 ): TransactionRequest {
   const multicallInterface = new ethers.utils.Interface(multiCallAbi);
+
   const encodedData = multicallInterface.encodeFunctionData('aggregate3Value', [
     calls.map((call) => ({
       target: call.to,

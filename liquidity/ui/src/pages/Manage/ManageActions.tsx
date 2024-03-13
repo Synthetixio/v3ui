@@ -29,6 +29,7 @@ import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { RepayAllDebt } from './RepayAllDebt';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -73,10 +74,14 @@ const ActionButton: FC<
   </BorderBox>
 );
 
-const Action: FC<{ manageAction: ManageAction; liquidityPosition?: LiquidityPosition }> = ({
-  manageAction,
-  liquidityPosition,
-}) => {
+const Action: FC<{
+  manageAction: ManageAction;
+  liquidityPosition?: LiquidityPosition;
+  network: Network | null;
+}> = ({ manageAction, liquidityPosition, network }) => {
+  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
+    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
+  }
   switch (manageAction) {
     case 'borrow':
       return <Borrow liquidityPosition={liquidityPosition} />;
@@ -132,7 +137,11 @@ const ManageActionUi: FC<{
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
-          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
+          <Action
+            manageAction={manageAction}
+            liquidityPosition={liquidityPosition}
+            network={network}
+          />
         </Flex>
       ) : null}
     </Box>
