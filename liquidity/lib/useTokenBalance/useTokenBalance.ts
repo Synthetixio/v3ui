@@ -7,7 +7,6 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
-
 export const abi = [
   'function balanceOf(address) view returns (uint256)',
   'function decimals() view returns (uint8)',
