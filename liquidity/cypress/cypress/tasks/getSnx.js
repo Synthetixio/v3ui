@@ -12,7 +12,7 @@ async function getOwner() {
     case 5:
       return '0x48914229dedd5a9922f44441ffccfc2cb7856ee9';
     case 10:
-      return '0x6330D5F08f51057F36F46d6751eCDc0c65Ef7E9e'; // ImportableRewardEscrowV2
+      return '0x5Fc9B8d2B7766f061bD84a41255fD1A76Fd1FAa2'; // ImportableRewardEscrowV2
     case 420:
       return '0x48914229dedd5a9922f44441ffccfc2cb7856ee9';
     default:
@@ -25,11 +25,15 @@ export async function getSnx({ address, amount }) {
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
 
   const owner = await getOwner();
+
   //  const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, provider);
   //  const owner = await coreProxy.owner();
   //  console.log('getSnx', { owner });
   await setEthBalance({ address: owner, balance: 1000 });
 
+  console.log({
+    tokenAddress: config.tokenAddress,
+  });
   const erc20 = new ethers.Contract(
     config.tokenAddress,
     [
@@ -53,6 +57,9 @@ export async function getSnx({ address, amount }) {
   const ownerBalance = parseFloat(ethers.utils.formatUnits(await erc20.balanceOf(owner)));
   console.log('getSnx', { owner, ownerBalance });
 
+  console.log({
+    amount: ethers.utils.parseEther(`${amount}`).toString(),
+  });
   await provider.send('anvil_impersonateAccount', [owner]);
   const signer = provider.getSigner(owner);
   const transferTx = await erc20

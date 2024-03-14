@@ -20,6 +20,8 @@ import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
 import React, { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -51,6 +53,7 @@ export const UndelegateUi: FC<{
   }, [max, setCollateralChange]);
 
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
+
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
@@ -148,6 +151,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const poolConfiguration = usePoolConfiguration(params.poolId);
+  const { network } = useNetwork();
 
   if (!collateralType) return null;
   const collateralPrice = liquidityPosition?.collateralPrice;
@@ -166,12 +170,19 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   function maxUndelegate() {
     if (!liquidityPosition || !collateralType) return undefined;
     const { collateralAmount, collateralValue } = liquidityPosition;
+
+    if (isBaseAndromeda(network?.id, network?.preset)) {
+      return collateralAmount;
+    }
+
     // if debt is negative it's actually credit, which means we can undelegate all collateral
     if (newDebt.lte(0)) return collateralAmount;
 
     const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
-    // If you're below issuance ratio, you can't withdraw anything
-    if (collateralValue < minCollateralRequired) return wei(0);
+
+    if (collateralValue < minCollateralRequired)
+      // If you're below issuance ratio, you can't withdraw anything
+      return wei(0);
 
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
     return Wei.min(collateralAmount, maxWithdrawable);

@@ -16,6 +16,7 @@ interface CustomNode {
 export type OracleNodeTypes =
   | 'chainLink'
   | 'pyth'
+  | 'pythOffchainLookup'
   | 'reducer'
   | 'externalNode'
   | 'stalenessCircuitBreaker'

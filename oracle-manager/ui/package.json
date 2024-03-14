@@ -13,7 +13,6 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@snx-v3/icons": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useMulticall3": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",

@@ -165,7 +165,7 @@ export const usePoolData = (poolId?: string) => {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'Pool', { pool: poolId }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'PoolData', { pool: poolId }],
     queryFn: async () => {
       if (!poolId || !network) throw Error('No poolId or network');
       const poolData = await getPoolData(network?.name, poolId);

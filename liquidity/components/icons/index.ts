@@ -15,3 +15,4 @@ export * from './ArrowLeft';
 export * from './CCIP';
 export * from './BaseIcon';
 export * from './BitcoinIcon';
+export * from './ArbitrumIcon';
