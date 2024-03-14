@@ -6,6 +6,12 @@ import { TokenIcon } from '../../components/TokenIcon';
 import { InfoIcon } from '@chakra-ui/icons';
 import PositionOverview from '../../components/PositionOverview/PositionOverview';
 import { ReactNode } from 'react';
+import Wei from '@synthetixio/wei';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { LiquidityPositionInput } from '../../components/LiquidityPositionInput';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useTokenBalances } from '@snx-v3/useTokenBalance';
 
 function DepositUi({
   isFirstDeposit,
@@ -13,12 +19,14 @@ function DepositUi({
   collateralSymbol,
   poolName,
   PositionOverview,
+  LiquidityPositionInput,
 }: {
   isFirstDeposit: boolean;
   isLoading: boolean;
   collateralSymbol?: string;
   poolName?: string;
   PositionOverview: ReactNode;
+  LiquidityPositionInput: ReactNode;
 }) {
   return (
     <Flex height="100%" flexDirection="column" w="100%" p="6">
@@ -54,7 +62,10 @@ function DepositUi({
           </Flex>
         </Flex>
       </Flex>
-      {PositionOverview}
+      <Flex w="100%" gap="6">
+        {PositionOverview}
+        {LiquidityPositionInput}
+      </Flex>
     </Flex>
   );
 }
@@ -68,22 +79,84 @@ export function Deposit() {
     { accountId }
   );
 
-  const isLoading = isPoolLoading && isLiquidityPositionsLoading;
+  const { data: accountCollaterals, isLoading: isAccountCollateralLoading } = useAccountCollateral({
+    accountId,
+  });
+
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
+    accountCollaterals
+      ?.filter((collateral) => collateral.symbol === collateralSymbol)
+      .map((collateral) => collateral.tokenAddress) || []
+  );
+
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+
+  const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
+
+  const isLoading =
+    isPoolLoading &&
+    isLiquidityPositionsLoading &&
+    isCollateralPricesLoading &&
+    isCollateralTypesLoading &&
+    isAccountCollateralLoading &&
+    tokenBalancesIsLoading;
+
+  const collateralTypeAddress = collateralTypes?.find(
+    (collateral) => collateral.symbol === collateralSymbol
+  )?.tokenAddress;
+
+  const parsedColalteralSymbol = collateralSymbol === 'USDC' ? 'sUSDC' : collateralSymbol;
+  const zeroWei = new Wei(0);
+  const isFirstTimeDepositing = !liquidityPosition;
+
+  const cRatio = liquidityPosition
+    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`]?.cRatio
+    : zeroWei;
+
+  const debt = liquidityPosition
+    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].debt
+    : zeroWei;
+  const debt$ =
+    !!collateralPrices && !!collateralTypeAddress
+      ? collateralPrices[collateralTypeAddress]!.mul(debt)
+      : zeroWei;
+  const balance$ = accountCollaterals
+    ? {
+        deposited: accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
+          ?.availableCollateral,
+        // TODO fix it
+        wallet: userTokenBalances ? userTokenBalances[0] : zeroWei,
+      }
+    : { deposited: zeroWei, wallet: zeroWei };
+  const collateralValue = liquidityPosition
+    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralValue
+    : zeroWei;
+  const collateralAmount = liquidityPosition
+    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralAmount
+    : zeroWei;
 
   return (
     <DepositUi
       isLoading={isLoading}
-      isFirstDeposit={!liquidityPosition}
+      isFirstDeposit={isFirstTimeDepositing}
       collateralSymbol={collateralSymbol}
       poolName={pool?.name}
+      LiquidityPositionInput={
+        <LiquidityPositionInput
+          title={isFirstTimeDepositing ? 'Open LiquidityPosition' : 'TODO'}
+          collateralSymbol={collateralSymbol || ''}
+          balance={balance$}
+        />
+      }
       PositionOverview={
         <PositionOverview
-          collateralType={collateralSymbol || ''}
-          currentCollateral={
-            liquidityPosition
-              ? liquidityPosition[`${poolId}-${collateralSymbol}`].collateralAmount.toString()
-              : '00.00'
-          }
+          collateralType={collateralSymbol || '?'}
+          debt$={debt$.toNumber().toFixed(2)}
+          borrowed="TODO"
+          collateralValue={collateralValue.toNumber().toFixed(2)}
+          poolPnl="TODO"
+          currentCollateral={collateralAmount.toNumber().toFixed(2)}
+          cRatio={cRatio.toNumber().toFixed(2)}
         />
       }
     />
