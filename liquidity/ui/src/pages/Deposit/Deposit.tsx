@@ -12,6 +12,7 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { LiquidityPositionInput } from '../../components/LiquidityPositionInput';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
+import { useAccounts } from '@snx-v3/useAccounts';
 
 function DepositUi({
   isFirstDeposit,
@@ -29,43 +30,48 @@ function DepositUi({
   LiquidityPositionInput: ReactNode;
 }) {
   return (
-    <Flex height="100%" flexDirection="column" w="100%" p="6">
-      <Flex gap="4" alignItems="center" mb="6">
-        <TokenIcon symbol={collateralSymbol || ''} width={42} height={42} />
-        <Flex justifyContent="space-between" w="100%">
-          <Skeleton
-            isLoaded={!isLoading}
-            height="48px"
-            minWidth={isLoading ? '40%' : 'initial'}
-            startColor="gray.700"
-            endColor="navy.800"
-          >
-            <Fade in>
-              <Heading fontSize="24px" color="white">
-                {isFirstDeposit ? 'Open ' + collateralSymbol + ' Liquidity Position' : 'TODO'}
-              </Heading>
-              <Text fontWeight={700} color="white">
-                {poolName}
+    <Flex flexDir="column" gap="6">
+      <Flex height="100%" flexDirection="column" w="100%" p="6">
+        <Flex gap="4" alignItems="center" mb="6">
+          <TokenIcon symbol={collateralSymbol || ''} width={42} height={42} />
+          <Flex justifyContent="space-between" w="100%">
+            <Skeleton
+              isLoaded={!isLoading}
+              height="48px"
+              minWidth={isLoading ? '40%' : 'initial'}
+              startColor="gray.700"
+              endColor="navy.800"
+            >
+              <Fade in>
+                <Heading fontSize="24px" color="white">
+                  {isFirstDeposit
+                    ? 'Open ' + collateralSymbol + ' Liquidity Position'
+                    : collateralSymbol + ' Liquidity Position'}
+                </Heading>
+                <Text fontWeight={700} color="white">
+                  {poolName}
+                </Text>
+              </Fade>
+            </Skeleton>
+            <Flex flexDir="column" alignItems="flex-end">
+              <Text fontSize="14px" color="gray.500" fontWeight={500}>
+                Estimated APY{' '}
+                <Tooltip label="TODO" p="3">
+                  <InfoIcon w="12px" h="12px" />
+                </Tooltip>
               </Text>
-            </Fade>
-          </Skeleton>
-          <Flex flexDir="column" alignItems="flex-end">
-            <Text fontSize="14px" color="gray.500" fontWeight={500}>
-              Estimated APY{' '}
-              <Tooltip label="TODO" p="3">
-                <InfoIcon w="12px" h="12px" />
-              </Tooltip>
-            </Text>
-            <Text fontSize="24px" fontWeight={800}>
-              TODO%
-            </Text>
+              <Text fontSize="24px" fontWeight={800}>
+                TODO%
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
+        <Flex w="100%" gap="6">
+          {PositionOverview}
+          {LiquidityPositionInput}
+        </Flex>
       </Flex>
-      <Flex w="100%" gap="6">
-        {PositionOverview}
-        {LiquidityPositionInput}
-      </Flex>
+      <Heading>REWARDS</Heading>
     </Flex>
   );
 }
@@ -75,11 +81,13 @@ export function Deposit() {
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
 
-  const { data: liquidityPosition, isLoading: isLiquidityPositionsLoading } = useLiquidityPositions(
+  const { data: userAccounts, isLoading: userAccountsIsLoading } = useAccounts();
+
+  const { data: liquidityPosition, isLoading: liquidityPositionsIsLoading } = useLiquidityPositions(
     { accountId }
   );
 
-  const { data: accountCollaterals, isLoading: isAccountCollateralLoading } = useAccountCollateral({
+  const { data: accountCollaterals, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
   });
 
@@ -89,17 +97,18 @@ export function Deposit() {
       .map((collateral) => collateral.tokenAddress) || []
   );
 
-  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+  const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
 
-  const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
+  const { data: collateralPrices, isLoading: collateralPricesIsLoading } = useCollateralPrices();
 
   const isLoading =
     isPoolLoading &&
-    isLiquidityPositionsLoading &&
-    isCollateralPricesLoading &&
-    isCollateralTypesLoading &&
-    isAccountCollateralLoading &&
-    tokenBalancesIsLoading;
+    liquidityPositionsIsLoading &&
+    collateralPricesIsLoading &&
+    collateralTypesIsLoading &&
+    accountCollateralIsLoading &&
+    tokenBalancesIsLoading &&
+    userAccountsIsLoading;
 
   const collateralTypeAddress = collateralTypes?.find(
     (collateral) => collateral.symbol === collateralSymbol
@@ -113,17 +122,20 @@ export function Deposit() {
     ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`]?.cRatio
     : zeroWei;
 
+  const priceForCollateral =
+    !!collateralPrices && !!collateralTypeAddress
+      ? collateralPrices[collateralTypeAddress]!
+      : zeroWei;
+
   const debt = liquidityPosition
     ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].debt
     : zeroWei;
-  const debt$ =
-    !!collateralPrices && !!collateralTypeAddress
-      ? collateralPrices[collateralTypeAddress]!.mul(debt)
-      : zeroWei;
+  const debt$ = debt.mul(priceForCollateral);
   const balance$ = accountCollaterals
     ? {
-        deposited: accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
-          ?.availableCollateral,
+        deposited:
+          accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
+            ?.availableCollateral || zeroWei,
         // TODO fix it
         wallet: userTokenBalances ? userTokenBalances[0] : zeroWei,
       }
@@ -143,9 +155,11 @@ export function Deposit() {
       poolName={pool?.name}
       LiquidityPositionInput={
         <LiquidityPositionInput
-          title={isFirstTimeDepositing ? 'Open LiquidityPosition' : 'TODO'}
+          title={isFirstTimeDepositing ? 'Open LiquidityPosition' : 'Manage Debt'}
           collateralSymbol={collateralSymbol || ''}
           balance={balance$}
+          price={priceForCollateral}
+          userHasAccounts={!!userAccounts?.length}
         />
       }
       PositionOverview={

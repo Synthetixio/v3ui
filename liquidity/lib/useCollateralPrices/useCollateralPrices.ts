@@ -42,8 +42,13 @@ export async function loadPrices({
 
         return PriceSchema.parse(pricesEncoded);
       });
+    } else {
+      const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+        'getCollateralPrice',
+        multicallEncoded
+      )[0];
+      return [PriceSchema.parse(pricesEncoded)];
     }
-    throw Error('Expected array got: ' + typeof multicallEncoded);
   };
   return { calls, decoder };
 }
