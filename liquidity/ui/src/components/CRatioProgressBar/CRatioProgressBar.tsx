@@ -1,6 +1,27 @@
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon, TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { Box, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { FC } from 'react';
+
+export const getHealthVariant = ({
+  targetCratioPercentage,
+  liquidationCratioPercentage,
+  currentCRatioPercentage,
+  targetThreshold = 0.01,
+}: {
+  liquidationCratioPercentage: number | undefined;
+  targetCratioPercentage: number | undefined;
+  currentCRatioPercentage: number | undefined;
+  targetThreshold: number | undefined;
+}) => {
+  if (!liquidationCratioPercentage || !targetCratioPercentage || !currentCRatioPercentage)
+    return 'success';
+  if (currentCRatioPercentage === 0) return 'success';
+  const currentCRatioPercentageWithThresHold = currentCRatioPercentage * (1 + targetThreshold);
+  // You can claim rewards when you below target but within the targetThreshold, the threshold does NOT apply to the liquidationRatio
+  if (currentCRatioPercentage < liquidationCratioPercentage) return 'error';
+  if (currentCRatioPercentageWithThresHold < targetCratioPercentage) return 'warning';
+  return 'success';
+};
 
 const LineWithText: FC<{ left: number; text: string; tooltipText: string }> = ({
   left,
@@ -56,7 +77,7 @@ export const CRatioProgressBarUi: FC<{
   liquidationCratioPercentage,
   currentCRatioPercentage,
   newCratioPercentage,
-  // targetThreshold,
+  targetThreshold,
   isLoading,
 }) => {
   const maxRatioShown = Math.min(
@@ -67,20 +88,18 @@ export const CRatioProgressBarUi: FC<{
   );
   const scaleFactor = maxRatioShown / 100;
 
-  const variant = '0';
-  // getHealthVariant({
-  //   targetCratioPercentage,
-  //   liquidationCratioPercentage,
-  //   currentCRatioPercentage,
-  //   targetThreshold,
-  // });
-  const newVariant = '0';
-  // getHealthVariant({
-  //   targetCratioPercentage,
-  //   liquidationCratioPercentage,
-  //   currentCRatioPercentage: newCratioPercentage,
-  //   targetThreshold,
-  // });
+  const variant = getHealthVariant({
+    targetCratioPercentage,
+    liquidationCratioPercentage,
+    currentCRatioPercentage,
+    targetThreshold,
+  });
+  const newVariant = getHealthVariant({
+    targetCratioPercentage,
+    liquidationCratioPercentage,
+    currentCRatioPercentage: newCratioPercentage,
+    targetThreshold,
+  });
 
   const newCratioPercentageWithDefault = newCratioPercentage || 0;
   const highlightedProgressCRatio =
@@ -168,7 +187,7 @@ export const CRatioProgressBarUi: FC<{
       >
         {currentCRatioPercentage > 0 && !isLoading && (
           <>
-            {/* <TriangleDownIcon
+            <TriangleDownIcon
               data-testid="current c-ration triangle"
               position="absolute"
               right={0}
@@ -183,7 +202,7 @@ export const CRatioProgressBarUi: FC<{
               bottom={0}
               transform="translate(50%,100%)"
               color={newCratioPercentage !== undefined ? newVariant : variant}
-            /> */}
+            />
           </>
         )}
       </Box>
@@ -191,17 +210,29 @@ export const CRatioProgressBarUi: FC<{
   );
 };
 
-export const CRatioProgressBar: FC<{ newCratioPercentage?: number }> = ({
+export const CRatioProgressBar: FC<{
+  liquidationCratioPercentage: number;
+  targetCratioPercentage: number;
+  currentCRatioPercentage: number;
+  targetThreshold: number;
+  newCratioPercentage: number;
+  isLoading: boolean;
+}> = ({
   newCratioPercentage,
+  targetThreshold,
+  currentCRatioPercentage,
+  targetCratioPercentage,
+  liquidationCratioPercentage,
+  isLoading,
 }) => {
-  // const { data: debtData } = useDebtData();
-  return <>{newCratioPercentage}</>;
-  // <CRatioProgressBarUi
-  //   liquidationCratioPercentage={debtData?.liquidationRatioPercentage.toNumber() || 0}
-  //   targetCratioPercentage={debtData?.targetCRatioPercentage.toNumber() || 0}
-  //   currentCRatioPercentage={debtData?.currentCRatioPercentage.toNumber() || 0}
-  //   targetThreshold={debtData?.targetThreshold.toNumber() || 0}
-  //   newCratioPercentage={newCratioPercentage}
-  //   isLoading={false}
-  // />
+  return (
+    <CRatioProgressBarUi
+      liquidationCratioPercentage={liquidationCratioPercentage}
+      targetCratioPercentage={targetCratioPercentage}
+      currentCRatioPercentage={currentCRatioPercentage}
+      targetThreshold={targetThreshold}
+      newCratioPercentage={newCratioPercentage}
+      isLoading={isLoading}
+    />
+  );
 };
