@@ -84,19 +84,33 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column">
-            <Button
-              variant="unstyled"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-              height="1.75rem"
-              fontWeight={700}
-              borderWidth="1px"
-              borderColor="gray.900"
-              borderRadius="4px"
-              _hover={{ bg: 'gray.900' }}
-            >
-              Withdraw
-            </Button>
+            {!walletBalance && !accountBalance && !delegatedBalance ? (
+              <Button
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+              >
+                Deposit
+              </Button>
+            ) : (
+              <Button
+                variant="unstyled"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                _hover={{ bg: 'gray.900' }}
+              >
+                Withdraw
+              </Button>
+            )}
           </Flex>
         </Fade>
       </Td>
