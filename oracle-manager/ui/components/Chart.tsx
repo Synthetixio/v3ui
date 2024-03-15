@@ -26,6 +26,7 @@ import { StalenessFallbackReducerNode } from './StalenessFallbackReducerNode';
 import { UniswapNode } from './UniswapNode';
 import { ConstantNode } from './ConstantNode';
 import { useLocation } from 'react-router-dom';
+import { PythOffchainLookupNode } from './PythOffchainLookupNode';
 
 const NODE_TYPES = {
   [ORACLE_NODE_TYPES[0].value]: ChainLinkNode,
@@ -36,6 +37,7 @@ const NODE_TYPES = {
   [ORACLE_NODE_TYPES[1].value]: ExternalNode,
   [ORACLE_NODE_TYPES[5].value]: StalenessFallbackReducerNode,
   [ORACLE_NODE_TYPES[7].value]: ConstantNode,
+  [ORACLE_NODE_TYPES[8].value]: PythOffchainLookupNode,
 };
 
 export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }) => {

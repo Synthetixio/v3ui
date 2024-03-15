@@ -6,10 +6,6 @@ import {
   Flex,
   Heading,
   Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
   useColorMode,
   useDisclosure,
@@ -24,35 +20,14 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/contracts';
 import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@chakra-ui/icons';
+import { SearchIcon } from '@chakra-ui/icons';
 import { providers } from 'ethers';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { EthereumIcon, FailedIcon, OptimismIcon, BaseIcon } from '@snx-v3/icons';
-
-const activeIcon = (currentNetwork: number) => {
-  switch (currentNetwork) {
-    case 1:
-      return { icon: <EthereumIcon />, name: 'Ethereum' };
-    case 10:
-      return { icon: <OptimismIcon />, name: 'Optimism' };
-    case 5:
-      return { icon: <EthereumIcon />, name: 'Goerli Testnet' };
-    case 420:
-      return { icon: <OptimismIcon />, name: 'Optimistic Goerli' };
-    case 84531:
-      return {
-        icon: <BaseIcon />,
-        name: 'Base Goerli',
-      };
-    default:
-      return { icon: <FailedIcon w="24px" h="24px" />, name: 'Unsupported Network' };
-  }
-};
+import NetworkSelect from '../components/NetworkSelect';
 
 export const App: FC = () => {
-  const [currentNetwork, setNetwork] = useState(1);
+  const [currentNetwork, setNetwork] = useState({ id: 1, name: 'Ethereum' });
   const [nodes, setNodes] = useRecoilState(nodesState);
-  const { name, icon } = activeIcon(currentNetwork);
   const { colorMode, toggleColorMode } = useColorMode();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,65 +58,11 @@ export const App: FC = () => {
           <Flex w="100%">
             <Input placeholder="Enter Node ID" maxW="230px" {...register('search')} mr="16px" />
             {!isWalletConnected && (
-              <Menu>
-                {({ isOpen }) => (
-                  <>
-                    <MenuButton
-                      as={Button}
-                      pr="6"
-                      variant="outline"
-                      colorScheme="gray"
-                      sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
-                      minW="150px"
-                      mr="8px"
-                    >
-                      {icon}
-                      <>
-                        <Text variant="nav" fontSize="sm" fontWeight={700} ml={1.5} mr={2}>
-                          {name}
-                        </Text>
-                        {isOpen ? (
-                          <ChevronUpIcon color="cyan" />
-                        ) : (
-                          <ChevronDownIcon color="cyan.500" />
-                        )}
-                      </>
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => setNetwork(1)}>
-                        <EthereumIcon />
-                        <Text variant="nav" ml={2}>
-                          Ethereum Mainnet
-                        </Text>
-                      </MenuItem>
-                      <MenuItem onClick={() => setNetwork(5)}>
-                        <EthereumIcon />
-                        <Text variant="nav" ml={2}>
-                          Goerli
-                        </Text>
-                      </MenuItem>
-                      <MenuItem onClick={() => setNetwork(10)}>
-                        <OptimismIcon />
-                        <Text variant="nav" ml={2}>
-                          Optimism
-                        </Text>
-                      </MenuItem>
-                      <MenuItem onClick={() => setNetwork(420)}>
-                        <OptimismIcon />
-                        <Text variant="nav" ml={2}>
-                          Optimism Goerli
-                        </Text>
-                      </MenuItem>
-                      <MenuItem onClick={() => setNetwork(84531)}>
-                        <BaseIcon />
-                        <Text variant="nav" ml={2}>
-                          Base Goerli
-                        </Text>
-                      </MenuItem>
-                    </MenuList>
-                  </>
-                )}
-              </Menu>
+              <NetworkSelect
+                id={currentNetwork.id}
+                name={currentNetwork.name}
+                setNetwork={(network) => setNetwork({ id: network.id, name: network.name })}
+              />
             )}
             <Button
               variant="outline"
@@ -153,7 +74,7 @@ export const App: FC = () => {
               onClick={() => {
                 navigate(
                   '/node/' +
-                    (isWalletConnected ? network?.id.toString() : currentNetwork.toString()) +
+                    (isWalletConnected ? network?.id.toString() : currentNetwork.id.toString()) +
                     '/' +
                     getValues('search').trim()
                 );
@@ -177,7 +98,7 @@ export const App: FC = () => {
             colorScheme="gray"
             mr="16px"
             isDisabled={!isWalletConnected}
-            onClick={() => {
+            onClick={async () => {
               if (nodes.every((node) => node.isRegistered)) {
                 toast({
                   title: 'All nodes are already registered',
@@ -186,7 +107,7 @@ export const App: FC = () => {
                   isClosable: true,
                 });
               } else if (signer && network?.id && !!contract) {
-                const oracleManagerContract = getNodeModuleContract(signer, network.id);
+                const oracleManagerContract = await getNodeModuleContract(signer, network);
                 const data = nodes
                   .slice()
                   .filter((node) => !node.isRegistered)

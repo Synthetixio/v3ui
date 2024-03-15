@@ -52,7 +52,7 @@ export const useAllCollateralPriceIds = () => {
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
 
-    queryKey: [`${network?.id}-${network?.preset}`, 'Collateral Price IDs'],
+    queryKey: [`${network?.id}-${network?.preset}`, 'AllCollateralPriceIds'],
 
     queryFn: async () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {

@@ -1,9 +1,10 @@
-import { AssetsTable } from './AssetTable';
-import { AccountCollateralType, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useMemo } from 'react';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import Wei from '@synthetixio/wei';
 import { useSearchParams } from 'react-router-dom';
+import { AssetsTable } from './AssetTable';
+import { calculateAssets } from '../../utils/assets';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
@@ -20,35 +21,13 @@ export const AssetsList = () => {
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
-  const assets = calculateAssets(accountCollaterals, userTokenBalances, collateralPrices);
+  const assets = useMemo(
+    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
+    [accountCollaterals, userTokenBalances, collateralPrices]
+  );
 
   const isLoading =
     isAccountCollateralsLoading || tokenBalancesIsLoading || isCollateralPricesLoading;
 
   return <AssetsTable isLoading={isLoading} assets={assets} />;
 };
-
-export interface Asset {
-  collateral: AccountCollateralType;
-  balance: Wei;
-  price: Wei | undefined;
-}
-
-function calculateAssets(
-  accountCollaterals?: AccountCollateralType[],
-  userTokenBalances?: Wei[] | undefined,
-  collateralPrices?: Record<string, Wei | undefined>
-): Asset[] | undefined {
-  if (!accountCollaterals || !userTokenBalances || !collateralPrices) return;
-
-  return accountCollaterals.map((collateral, index) => {
-    const balance = userTokenBalances[index];
-    const price = collateralPrices[collateral.tokenAddress];
-
-    return {
-      collateral,
-      balance,
-      price,
-    };
-  });
-}

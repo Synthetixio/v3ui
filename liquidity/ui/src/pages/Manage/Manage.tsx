@@ -34,6 +34,7 @@ export const ManageUi: FC<{
           justifyContent="center"
           alignItems="center"
           borderRadius="100%"
+          display="flex"
         >
           <CollateralIcon
             symbol={collateralType?.symbol}

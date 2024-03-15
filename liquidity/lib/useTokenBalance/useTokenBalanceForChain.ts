@@ -13,7 +13,7 @@ export const useTokenBalanceForChain = (address?: string, network?: Network) => 
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
-      'TokenBalance',
+      'TokenBalanceForChain',
       { accountAddress: activeWallet?.address },
       { tokenAddress },
     ],

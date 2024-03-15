@@ -61,12 +61,14 @@ export const abi = [
   'event FactoryInitialized(uint128 globalPerpsMarketId)',
   'event MarketCreated(uint128 indexed perpsMarketId, string marketName, string marketSymbol)',
   'function createMarket(uint128 requestedMarketId, string marketName, string marketSymbol) returns (uint128)',
-  'function initializeFactory(address synthetix, address spotMarket, string marketName) returns (uint128)',
+  'function initializeFactory(address synthetix, address spotMarket) returns (uint128)',
+  'function interestRate() view returns (uint128)',
   'function minimumCredit(uint128 perpsMarketId) view returns (uint256)',
   'function name(uint128 perpsMarketId) view returns (string)',
   'function reportedDebt(uint128 perpsMarketId) view returns (uint256)',
   'function setPerpsMarketName(string marketName)',
   'function supportsInterface(bytes4 interfaceId) view returns (bool)',
+  'function utilizationRate() view returns (uint256 rate, uint256 delegatedCollateral, uint256 lockedCredit)',
   'error AccountLiquidatable(uint128 accountId)',
   'error AccountNotFound(uint128 accountId)',
   'error InsufficientCollateral(uint128 synthMarketId, uint256 collateralAmount, uint256 withdrawAmount)',
@@ -85,7 +87,8 @@ export const abi = [
   'function getAccountOpenPositions(uint128 accountId) view returns (uint256[])',
   'function getAvailableMargin(uint128 accountId) view returns (int256 availableMargin)',
   'function getCollateralAmount(uint128 accountId, uint128 synthMarketId) view returns (uint256)',
-  'function getOpenPosition(uint128 accountId, uint128 marketId) view returns (int256 totalPnl, int256 accruedFunding, int128 positionSize)',
+  'function getOpenPosition(uint128 accountId, uint128 marketId) view returns (int256 totalPnl, int256 accruedFunding, int128 positionSize, uint256 owedInterest)',
+  'function getOpenPositionSize(uint128 accountId, uint128 marketId) view returns (int128 positionSize)',
   'function getRequiredMargins(uint128 accountId) view returns (uint256 requiredInitialMargin, uint256 requiredMaintenanceMargin, uint256 maxLiquidationReward)',
   'function getWithdrawableMargin(uint128 accountId) view returns (int256 withdrawableMargin)',
   'function modifyCollateral(uint128 accountId, uint128 synthMarketId, int256 amountDelta)',
@@ -105,14 +108,18 @@ export const abi = [
   'error InvalidSettlementStrategy(uint256 settlementStrategyId)',
   'error MaxOpenInterestReached(uint128 marketId, uint256 maxMarketSize, int256 newSideSize)',
   'error MaxPositionsPerAccountReached(uint128 maxPositionsPerAccount)',
+  'error MaxUSDOpenInterestReached(uint128 marketId, uint256 maxMarketValue, int256 newSideSize, uint256 price)',
   'error OverflowInt256ToInt128()',
   'error ZeroSizeOrder()',
   'event OrderCommitted(uint128 indexed marketId, uint128 indexed accountId, uint8 orderType, int128 sizeDelta, uint256 acceptablePrice, uint256 commitmentTime, uint256 expectedPriceTime, uint256 settlementTime, uint256 expirationTime, bytes32 indexed trackingCode, address sender)',
   'event PreviousOrderExpired(uint128 indexed marketId, uint128 indexed accountId, int128 sizeDelta, uint256 acceptablePrice, uint256 commitmentTime, bytes32 indexed trackingCode)',
   'function commitOrder(tuple(uint128 marketId, uint128 accountId, int128 sizeDelta, uint128 settlementStrategyId, uint256 acceptablePrice, bytes32 trackingCode, address referrer) commitment) returns (tuple(uint256 commitmentTime, tuple(uint128 marketId, uint128 accountId, int128 sizeDelta, uint128 settlementStrategyId, uint256 acceptablePrice, bytes32 trackingCode, address referrer) request) retOrder, uint256 fees)',
   'function computeOrderFees(uint128 marketId, int128 sizeDelta) view returns (uint256 orderFees, uint256 fillPrice)',
+  'function computeOrderFeesWithPrice(uint128 marketId, int128 sizeDelta, uint256 price) view returns (uint256 orderFees, uint256 fillPrice)',
   'function getOrder(uint128 accountId) view returns (tuple(uint256 commitmentTime, tuple(uint128 marketId, uint128 accountId, int128 sizeDelta, uint128 settlementStrategyId, uint256 acceptablePrice, bytes32 trackingCode, address referrer) request) order)',
+  'function getSettlementRewardCost(uint128 marketId, uint128 settlementStrategyId) view returns (uint256)',
   'function requiredMarginForOrder(uint128 accountId, uint128 marketId, int128 sizeDelta) view returns (uint256 requiredMargin)',
+  'function requiredMarginForOrderWithPrice(uint128 accountId, uint128 marketId, int128 sizeDelta, uint256 price) view returns (uint256 requiredMargin)',
   'error InsufficientAccountMargin(uint256 leftover)',
   'error OrderNotValid()',
   'error OverflowInt128ToUint128()',
@@ -121,7 +128,8 @@ export const abi = [
   'error SettlementWindowExpired(uint256 timestamp, uint256 settlementTime, uint256 settlementExpiration)',
   'error SettlementWindowNotOpen(uint256 timestamp, uint256 settlementTime)',
   'event CollateralDeducted(uint256 account, uint128 synthMarketId, uint256 amount)',
-  'event MarketUpdated(uint128 marketId, uint256 price, int256 skew, uint256 size, int256 sizeDelta, int256 currentFundingRate, int256 currentFundingVelocity)',
+  'event InterestCharged(uint128 indexed accountId, uint256 interest)',
+  'event MarketUpdated(uint128 marketId, uint256 price, int256 skew, uint256 size, int256 sizeDelta, int256 currentFundingRate, int256 currentFundingVelocity, uint128 interestRate)',
   'event OrderSettled(uint128 indexed marketId, uint128 indexed accountId, uint256 fillPrice, int256 pnl, int256 accruedFunding, int128 sizeDelta, int128 newSize, uint256 totalFees, uint256 referralFees, uint256 collectedFees, uint256 settlementReward, bytes32 indexed trackingCode, address settler)',
   'function settleOrder(uint128 accountId)',
   'error AcceptablePriceNotExceeded(uint256 fillPrice, uint256 acceptablePrice)',
@@ -143,6 +151,7 @@ export const abi = [
   'function setFeatureFlagAllowAll(bytes32 feature, bool allowAll)',
   'function setFeatureFlagDenyAll(bytes32 feature, bool denyAll)',
   'error NotEligibleForLiquidation(uint128 accountId)',
+  'event AccountFlaggedForLiquidation(uint128 indexed accountId, int256 availableMargin, uint256 requiredMaintenanceMargin, uint256 liquidationReward, uint256 flagReward)',
   'event AccountLiquidationAttempt(uint128 indexed accountId, uint256 reward, bool fullLiquidation)',
   'event PositionLiquidated(uint128 indexed accountId, uint128 indexed marketId, uint256 amountLiquidated, int128 currentPositionSize)',
   'function canLiquidate(uint128 accountId) view returns (bool isEligible)',
@@ -158,6 +167,7 @@ export const abi = [
   'event MarketPriceDataUpdated(uint128 indexed marketId, bytes32 feedId, uint256 strictStalenessTolerance)',
   'event MaxLiquidationParametersSet(uint128 indexed marketId, uint256 maxLiquidationLimitAccumulationMultiplier, uint256 maxSecondsInLiquidationWindow, uint256 maxLiquidationPd, address endorsedLiquidator)',
   'event MaxMarketSizeSet(uint128 indexed marketId, uint256 maxMarketSize)',
+  'event MaxMarketValueSet(uint128 indexed marketId, uint256 maxMarketValue)',
   'event OrderFeesSet(uint128 indexed marketId, uint256 makerFeeRatio, uint256 takerFeeRatio)',
   'event SettlementStrategyAdded(uint128 indexed marketId, tuple(uint8 strategyType, uint256 settlementDelay, uint256 settlementWindowDuration, address priceVerificationContract, bytes32 feedId, uint256 settlementReward, bool disabled, uint256 commitmentPriceDelay) strategy, uint256 indexed strategyId)',
   'event SettlementStrategySet(uint128 indexed marketId, uint256 indexed strategyId, tuple(uint8 strategyType, uint256 settlementDelay, uint256 settlementWindowDuration, address priceVerificationContract, bytes32 feedId, uint256 settlementReward, bool disabled, uint256 commitmentPriceDelay) strategy)',
@@ -167,6 +177,7 @@ export const abi = [
   'function getLockedOiRatio(uint128 marketId) view returns (uint256)',
   'function getMaxLiquidationParameters(uint128 marketId) view returns (uint256 maxLiquidationLimitAccumulationMultiplier, uint256 maxSecondsInLiquidationWindow, uint256 maxLiquidationPd, address endorsedLiquidator)',
   'function getMaxMarketSize(uint128 marketId) view returns (uint256 maxMarketSize)',
+  'function getMaxMarketValue(uint128 marketId) view returns (uint256 maxMarketValue)',
   'function getOrderFees(uint128 marketId) view returns (uint256 makerFee, uint256 takerFee)',
   'function getPriceData(uint128 perpsMarketId) view returns (bytes32 feedId, uint256 strictStalenessTolerance)',
   'function getSettlementStrategy(uint128 marketId, uint256 strategyId) view returns (tuple(uint8 strategyType, uint256 settlementDelay, uint256 settlementWindowDuration, address priceVerificationContract, bytes32 feedId, uint256 settlementReward, bool disabled, uint256 commitmentPriceDelay) settlementStrategy)',
@@ -175,14 +186,18 @@ export const abi = [
   'function setLockedOiRatio(uint128 marketId, uint256 lockedOiRatioD18)',
   'function setMaxLiquidationParameters(uint128 marketId, uint256 maxLiquidationLimitAccumulationMultiplier, uint256 maxSecondsInLiquidationWindow, uint256 maxLiquidationPd, address endorsedLiquidator)',
   'function setMaxMarketSize(uint128 marketId, uint256 maxMarketSize)',
+  'function setMaxMarketValue(uint128 marketId, uint256 maxMarketValue)',
   'function setOrderFees(uint128 marketId, uint256 makerFeeRatio, uint256 takerFeeRatio)',
   'function setSettlementStrategy(uint128 marketId, uint256 strategyId, tuple(uint8 strategyType, uint256 settlementDelay, uint256 settlementWindowDuration, address priceVerificationContract, bytes32 feedId, uint256 settlementReward, bool disabled, uint256 commitmentPriceDelay) strategy)',
   'function setSettlementStrategyEnabled(uint128 marketId, uint256 strategyId, bool enabled)',
   'function updatePriceData(uint128 perpsMarketId, bytes32 feedId, uint256 strictStalenessTolerance)',
   'error InvalidFeeCollectorInterface(address invalidFeeCollector)',
+  'error InvalidInterestRateParameters(uint128 lowUtilizationInterestRateGradient, uint128 highUtilizationInterestRateGradient)',
   'error InvalidReferrerShareRatio(uint256 shareRatioD18)',
   'event CollateralConfigurationSet(uint128 indexed synthMarketId, uint256 maxCollateralAmount)',
   'event FeeCollectorSet(address feeCollector)',
+  'event InterestRateParametersSet(uint256 lowUtilizationInterestRateGradient, uint256 interestRateGradientBreakpoint, uint256 highUtilizationInterestRateGradient)',
+  'event InterestRateUpdated(uint128 indexed superMarketId, uint128 interestRate)',
   'event KeeperCostNodeIdUpdated(bytes32 keeperCostNodeId)',
   'event KeeperRewardGuardsSet(uint256 minKeeperRewardUsd, uint256 minKeeperProfitRatioD18, uint256 maxKeeperRewardUsd, uint256 maxKeeperScalingRatioD18)',
   'event PerAccountCapsSet(uint128 maxPositionsPerAccount, uint128 maxCollateralsPerAccount)',
@@ -190,6 +205,7 @@ export const abi = [
   'event SynthDeductionPrioritySet(uint128[] newSynthDeductionPriority)',
   'function getCollateralConfiguration(uint128 synthMarketId) view returns (uint256 maxCollateralAmount)',
   'function getFeeCollector() view returns (address feeCollector)',
+  'function getInterestRateParameters() view returns (uint128 lowUtilizationInterestRateGradient, uint128 interestRateGradientBreakpoint, uint128 highUtilizationInterestRateGradient)',
   'function getKeeperCostNodeId() view returns (bytes32 keeperCostNodeId)',
   'function getKeeperRewardGuards() view returns (uint256 minKeeperRewardUsd, uint256 minKeeperProfitRatioD18, uint256 maxKeeperRewardUsd, uint256 maxKeeperScalingRatioD18)',
   'function getMarkets() view returns (uint256[] marketIds)',
@@ -199,10 +215,12 @@ export const abi = [
   'function getSynthDeductionPriority() view returns (uint128[])',
   'function setCollateralConfiguration(uint128 synthMarketId, uint256 maxCollateralAmount)',
   'function setFeeCollector(address feeCollector)',
+  'function setInterestRateParameters(uint128 lowUtilizationInterestRateGradient, uint128 interestRateGradientBreakpoint, uint128 highUtilizationInterestRateGradient)',
   'function setKeeperRewardGuards(uint256 minKeeperRewardUsd, uint256 minKeeperProfitRatioD18, uint256 maxKeeperRewardUsd, uint256 maxKeeperScalingRatioD18)',
   'function setPerAccountCaps(uint128 maxPositionsPerAccount, uint128 maxCollateralsPerAccount)',
   'function setSynthDeductionPriority(uint128[] newSynthDeductionPriority)',
   'function totalGlobalCollateralValue() view returns (uint256 totalCollateralValue)',
+  'function updateInterestRate()',
   'function updateKeeperCostNodeId(bytes32 keeperCostNodeId)',
   'function updateReferrerShare(address referrer, uint256 shareRatioD18)',
 ];
@@ -362,17 +380,20 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'simulateUpgradeTo(address)': FunctionFragment;
     'upgradeTo(address)': FunctionFragment;
     'createMarket(uint128,string,string)': FunctionFragment;
-    'initializeFactory(address,address,string)': FunctionFragment;
+    'initializeFactory(address,address)': FunctionFragment;
+    'interestRate()': FunctionFragment;
     'minimumCredit(uint128)': FunctionFragment;
     'name(uint128)': FunctionFragment;
     'reportedDebt(uint128)': FunctionFragment;
     'setPerpsMarketName(string)': FunctionFragment;
     'supportsInterface(bytes4)': FunctionFragment;
+    'utilizationRate()': FunctionFragment;
     'getAccountCollateralIds(uint128)': FunctionFragment;
     'getAccountOpenPositions(uint128)': FunctionFragment;
     'getAvailableMargin(uint128)': FunctionFragment;
     'getCollateralAmount(uint128,uint128)': FunctionFragment;
     'getOpenPosition(uint128,uint128)': FunctionFragment;
+    'getOpenPositionSize(uint128,uint128)': FunctionFragment;
     'getRequiredMargins(uint128)': FunctionFragment;
     'getWithdrawableMargin(uint128)': FunctionFragment;
     'modifyCollateral(uint128,uint128,int256)': FunctionFragment;
@@ -389,8 +410,11 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'skew(uint128)': FunctionFragment;
     'commitOrder((uint128,uint128,int128,uint128,uint256,bytes32,address))': FunctionFragment;
     'computeOrderFees(uint128,int128)': FunctionFragment;
+    'computeOrderFeesWithPrice(uint128,int128,uint256)': FunctionFragment;
     'getOrder(uint128)': FunctionFragment;
+    'getSettlementRewardCost(uint128,uint128)': FunctionFragment;
     'requiredMarginForOrder(uint128,uint128,int128)': FunctionFragment;
+    'requiredMarginForOrderWithPrice(uint128,uint128,int128,uint256)': FunctionFragment;
     'settleOrder(uint128)': FunctionFragment;
     'cancelOrder(uint128)': FunctionFragment;
     'addToFeatureFlagAllowlist(bytes32,address)': FunctionFragment;
@@ -415,6 +439,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'getLockedOiRatio(uint128)': FunctionFragment;
     'getMaxLiquidationParameters(uint128)': FunctionFragment;
     'getMaxMarketSize(uint128)': FunctionFragment;
+    'getMaxMarketValue(uint128)': FunctionFragment;
     'getOrderFees(uint128)': FunctionFragment;
     'getPriceData(uint128)': FunctionFragment;
     'getSettlementStrategy(uint128,uint256)': FunctionFragment;
@@ -423,12 +448,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'setLockedOiRatio(uint128,uint256)': FunctionFragment;
     'setMaxLiquidationParameters(uint128,uint256,uint256,uint256,address)': FunctionFragment;
     'setMaxMarketSize(uint128,uint256)': FunctionFragment;
+    'setMaxMarketValue(uint128,uint256)': FunctionFragment;
     'setOrderFees(uint128,uint256,uint256)': FunctionFragment;
     'setSettlementStrategy(uint128,uint256,(uint8,uint256,uint256,address,bytes32,uint256,bool,uint256))': FunctionFragment;
     'setSettlementStrategyEnabled(uint128,uint256,bool)': FunctionFragment;
     'updatePriceData(uint128,bytes32,uint256)': FunctionFragment;
     'getCollateralConfiguration(uint128)': FunctionFragment;
     'getFeeCollector()': FunctionFragment;
+    'getInterestRateParameters()': FunctionFragment;
     'getKeeperCostNodeId()': FunctionFragment;
     'getKeeperRewardGuards()': FunctionFragment;
     'getMarkets()': FunctionFragment;
@@ -438,10 +465,12 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'getSynthDeductionPriority()': FunctionFragment;
     'setCollateralConfiguration(uint128,uint256)': FunctionFragment;
     'setFeeCollector(address)': FunctionFragment;
+    'setInterestRateParameters(uint128,uint128,uint128)': FunctionFragment;
     'setKeeperRewardGuards(uint256,uint256,uint256,uint256)': FunctionFragment;
     'setPerAccountCaps(uint128,uint128)': FunctionFragment;
     'setSynthDeductionPriority(uint128[])': FunctionFragment;
     'totalGlobalCollateralValue()': FunctionFragment;
+    'updateInterestRate()': FunctionFragment;
     'updateKeeperCostNodeId(bytes32)': FunctionFragment;
     'updateReferrerShare(address,uint256)': FunctionFragment;
   };
@@ -474,16 +503,19 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
       | 'upgradeTo'
       | 'createMarket'
       | 'initializeFactory'
+      | 'interestRate'
       | 'minimumCredit'
       | 'name'
       | 'reportedDebt'
       | 'setPerpsMarketName'
       | 'supportsInterface'
+      | 'utilizationRate'
       | 'getAccountCollateralIds'
       | 'getAccountOpenPositions'
       | 'getAvailableMargin'
       | 'getCollateralAmount'
       | 'getOpenPosition'
+      | 'getOpenPositionSize'
       | 'getRequiredMargins'
       | 'getWithdrawableMargin'
       | 'modifyCollateral'
@@ -500,8 +532,11 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
       | 'skew'
       | 'commitOrder'
       | 'computeOrderFees'
+      | 'computeOrderFeesWithPrice'
       | 'getOrder'
+      | 'getSettlementRewardCost'
       | 'requiredMarginForOrder'
+      | 'requiredMarginForOrderWithPrice'
       | 'settleOrder'
       | 'cancelOrder'
       | 'addToFeatureFlagAllowlist'
@@ -526,6 +561,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
       | 'getLockedOiRatio'
       | 'getMaxLiquidationParameters'
       | 'getMaxMarketSize'
+      | 'getMaxMarketValue'
       | 'getOrderFees'
       | 'getPriceData'
       | 'getSettlementStrategy'
@@ -534,12 +570,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
       | 'setLockedOiRatio'
       | 'setMaxLiquidationParameters'
       | 'setMaxMarketSize'
+      | 'setMaxMarketValue'
       | 'setOrderFees'
       | 'setSettlementStrategy'
       | 'setSettlementStrategyEnabled'
       | 'updatePriceData'
       | 'getCollateralConfiguration'
       | 'getFeeCollector'
+      | 'getInterestRateParameters'
       | 'getKeeperCostNodeId'
       | 'getKeeperRewardGuards'
       | 'getMarkets'
@@ -549,10 +587,12 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
       | 'getSynthDeductionPriority'
       | 'setCollateralConfiguration'
       | 'setFeeCollector'
+      | 'setInterestRateParameters'
       | 'setKeeperRewardGuards'
       | 'setPerAccountCaps'
       | 'setSynthDeductionPriority'
       | 'totalGlobalCollateralValue'
+      | 'updateInterestRate'
       | 'updateKeeperCostNodeId'
       | 'updateReferrerShare'
   ): FunctionFragment;
@@ -612,15 +652,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     functionFragment: 'createMarket',
     values: [BigNumberish, string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: 'initializeFactory',
-    values: [string, string, string]
-  ): string;
+  encodeFunctionData(functionFragment: 'initializeFactory', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'interestRate', values?: undefined): string;
   encodeFunctionData(functionFragment: 'minimumCredit', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'name', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'reportedDebt', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'setPerpsMarketName', values: [string]): string;
   encodeFunctionData(functionFragment: 'supportsInterface', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'utilizationRate', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getAccountCollateralIds', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getAccountOpenPositions', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getAvailableMargin', values: [BigNumberish]): string;
@@ -630,6 +669,10 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'getOpenPosition',
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'getOpenPositionSize',
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'getRequiredMargins', values: [BigNumberish]): string;
@@ -660,10 +703,22 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     functionFragment: 'computeOrderFees',
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: 'computeOrderFeesWithPrice',
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: 'getOrder', values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: 'getSettlementRewardCost',
+    values: [BigNumberish, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: 'requiredMarginForOrder',
     values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'requiredMarginForOrderWithPrice',
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'settleOrder', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'cancelOrder', values: [BigNumberish]): string;
@@ -710,6 +765,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'getMaxMarketSize', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getMaxMarketValue', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getOrderFees', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getPriceData', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -737,6 +793,10 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: 'setMaxMarketValue',
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: 'setOrderFees',
     values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
@@ -757,6 +817,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: 'getFeeCollector', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getInterestRateParameters', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getKeeperCostNodeId', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getKeeperRewardGuards', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getMarkets', values?: undefined): string;
@@ -770,6 +831,10 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'setFeeCollector', values: [string]): string;
   encodeFunctionData(
+    functionFragment: 'setInterestRateParameters',
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: 'setKeeperRewardGuards',
     values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
@@ -782,6 +847,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     values: [BigNumberish[]]
   ): string;
   encodeFunctionData(functionFragment: 'totalGlobalCollateralValue', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'updateInterestRate', values?: undefined): string;
   encodeFunctionData(functionFragment: 'updateKeeperCostNodeId', values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'updateReferrerShare',
@@ -814,16 +880,19 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'createMarket', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'initializeFactory', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'interestRate', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'minimumCredit', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'reportedDebt', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setPerpsMarketName', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'supportsInterface', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'utilizationRate', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getAccountCollateralIds', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getAccountOpenPositions', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getAvailableMargin', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralAmount', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getOpenPosition', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getOpenPositionSize', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getRequiredMargins', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getWithdrawableMargin', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'modifyCollateral', data: BytesLike): Result;
@@ -840,8 +909,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'skew', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'commitOrder', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'computeOrderFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'computeOrderFeesWithPrice', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getOrder', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getSettlementRewardCost', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'requiredMarginForOrder', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'requiredMarginForOrderWithPrice',
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: 'settleOrder', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'cancelOrder', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'addToFeatureFlagAllowlist', data: BytesLike): Result;
@@ -866,6 +941,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getLockedOiRatio', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMaxLiquidationParameters', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMaxMarketSize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMaxMarketValue', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getOrderFees', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getPriceData', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getSettlementStrategy', data: BytesLike): Result;
@@ -874,12 +950,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'setLockedOiRatio', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setMaxLiquidationParameters', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setMaxMarketSize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setMaxMarketValue', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setOrderFees', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSettlementStrategy', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSettlementStrategyEnabled', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'updatePriceData', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollateralConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getFeeCollector', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getInterestRateParameters', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getKeeperCostNodeId', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getKeeperRewardGuards', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarkets', data: BytesLike): Result;
@@ -889,10 +967,12 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getSynthDeductionPriority', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setCollateralConfiguration', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setFeeCollector', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setInterestRateParameters', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setKeeperRewardGuards', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setPerAccountCaps', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSynthDeductionPriority', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'totalGlobalCollateralValue', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'updateInterestRate', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'updateKeeperCostNodeId', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'updateReferrerShare', data: BytesLike): Result;
 
@@ -910,7 +990,8 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'OrderCommitted(uint128,uint128,uint8,int128,uint256,uint256,uint256,uint256,uint256,bytes32,address)': EventFragment;
     'PreviousOrderExpired(uint128,uint128,int128,uint256,uint256,bytes32)': EventFragment;
     'CollateralDeducted(uint256,uint128,uint256)': EventFragment;
-    'MarketUpdated(uint128,uint256,int256,uint256,int256,int256,int256)': EventFragment;
+    'InterestCharged(uint128,uint256)': EventFragment;
+    'MarketUpdated(uint128,uint256,int256,uint256,int256,int256,int256,uint128)': EventFragment;
     'OrderSettled(uint128,uint128,uint256,int256,int256,int128,int128,uint256,uint256,uint256,uint256,bytes32,address)': EventFragment;
     'OrderCancelled(uint128,uint128,uint256,uint256,int128,uint256,bytes32,address)': EventFragment;
     'FeatureFlagAllowAllSet(bytes32,bool)': EventFragment;
@@ -918,6 +999,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'FeatureFlagAllowlistRemoved(bytes32,address)': EventFragment;
     'FeatureFlagDeniersReset(bytes32,address[])': EventFragment;
     'FeatureFlagDenyAllSet(bytes32,bool)': EventFragment;
+    'AccountFlaggedForLiquidation(uint128,int256,uint256,uint256,uint256)': EventFragment;
     'AccountLiquidationAttempt(uint128,uint256,bool)': EventFragment;
     'PositionLiquidated(uint128,uint128,uint256,int128)': EventFragment;
     'FundingParametersSet(uint128,uint256,uint256)': EventFragment;
@@ -926,11 +1008,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
     'MarketPriceDataUpdated(uint128,bytes32,uint256)': EventFragment;
     'MaxLiquidationParametersSet(uint128,uint256,uint256,uint256,address)': EventFragment;
     'MaxMarketSizeSet(uint128,uint256)': EventFragment;
+    'MaxMarketValueSet(uint128,uint256)': EventFragment;
     'OrderFeesSet(uint128,uint256,uint256)': EventFragment;
     'SettlementStrategyAdded(uint128,(uint8,uint256,uint256,address,bytes32,uint256,bool,uint256),uint256)': EventFragment;
     'SettlementStrategySet(uint128,uint256,(uint8,uint256,uint256,address,bytes32,uint256,bool,uint256))': EventFragment;
     'CollateralConfigurationSet(uint128,uint256)': EventFragment;
     'FeeCollectorSet(address)': EventFragment;
+    'InterestRateParametersSet(uint256,uint256,uint256)': EventFragment;
+    'InterestRateUpdated(uint128,uint128)': EventFragment;
     'KeeperCostNodeIdUpdated(bytes32)': EventFragment;
     'KeeperRewardGuardsSet(uint256,uint256,uint256,uint256)': EventFragment;
     'PerAccountCapsSet(uint128,uint128)': EventFragment;
@@ -951,6 +1036,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'OrderCommitted'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PreviousOrderExpired'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'CollateralDeducted'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'InterestCharged'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'MarketUpdated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'OrderSettled'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'OrderCancelled'): EventFragment;
@@ -959,6 +1045,7 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'FeatureFlagAllowlistRemoved'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'FeatureFlagDeniersReset'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'FeatureFlagDenyAllSet'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AccountFlaggedForLiquidation'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'AccountLiquidationAttempt'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PositionLiquidated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'FundingParametersSet'): EventFragment;
@@ -967,11 +1054,14 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'MarketPriceDataUpdated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'MaxLiquidationParametersSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'MaxMarketSizeSet'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'MaxMarketValueSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'OrderFeesSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'SettlementStrategyAdded'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'SettlementStrategySet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'CollateralConfigurationSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'FeeCollectorSet'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'InterestRateParametersSet'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'InterestRateUpdated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'KeeperCostNodeIdUpdated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'KeeperRewardGuardsSet'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PerAccountCapsSet'): EventFragment;
@@ -1137,6 +1227,14 @@ export type CollateralDeductedEvent = TypedEvent<
 
 export type CollateralDeductedEventFilter = TypedEventFilter<CollateralDeductedEvent>;
 
+export interface InterestChargedEventObject {
+  accountId: BigNumber;
+  interest: BigNumber;
+}
+export type InterestChargedEvent = TypedEvent<[BigNumber, BigNumber], InterestChargedEventObject>;
+
+export type InterestChargedEventFilter = TypedEventFilter<InterestChargedEvent>;
+
 export interface MarketUpdatedEventObject {
   marketId: BigNumber;
   price: BigNumber;
@@ -1145,9 +1243,10 @@ export interface MarketUpdatedEventObject {
   sizeDelta: BigNumber;
   currentFundingRate: BigNumber;
   currentFundingVelocity: BigNumber;
+  interestRate: BigNumber;
 }
 export type MarketUpdatedEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
   MarketUpdatedEventObject
 >;
 
@@ -1262,6 +1361,21 @@ export type FeatureFlagDenyAllSetEvent = TypedEvent<
 
 export type FeatureFlagDenyAllSetEventFilter = TypedEventFilter<FeatureFlagDenyAllSetEvent>;
 
+export interface AccountFlaggedForLiquidationEventObject {
+  accountId: BigNumber;
+  availableMargin: BigNumber;
+  requiredMaintenanceMargin: BigNumber;
+  liquidationReward: BigNumber;
+  flagReward: BigNumber;
+}
+export type AccountFlaggedForLiquidationEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
+  AccountFlaggedForLiquidationEventObject
+>;
+
+export type AccountFlaggedForLiquidationEventFilter =
+  TypedEventFilter<AccountFlaggedForLiquidationEvent>;
+
 export interface AccountLiquidationAttemptEventObject {
   accountId: BigNumber;
   reward: BigNumber;
@@ -1357,6 +1471,17 @@ export type MaxMarketSizeSetEvent = TypedEvent<[BigNumber, BigNumber], MaxMarket
 
 export type MaxMarketSizeSetEventFilter = TypedEventFilter<MaxMarketSizeSetEvent>;
 
+export interface MaxMarketValueSetEventObject {
+  marketId: BigNumber;
+  maxMarketValue: BigNumber;
+}
+export type MaxMarketValueSetEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  MaxMarketValueSetEventObject
+>;
+
+export type MaxMarketValueSetEventFilter = TypedEventFilter<MaxMarketValueSetEvent>;
+
 export interface OrderFeesSetEventObject {
   marketId: BigNumber;
   makerFeeRatio: BigNumber;
@@ -1411,6 +1536,29 @@ export interface FeeCollectorSetEventObject {
 export type FeeCollectorSetEvent = TypedEvent<[string], FeeCollectorSetEventObject>;
 
 export type FeeCollectorSetEventFilter = TypedEventFilter<FeeCollectorSetEvent>;
+
+export interface InterestRateParametersSetEventObject {
+  lowUtilizationInterestRateGradient: BigNumber;
+  interestRateGradientBreakpoint: BigNumber;
+  highUtilizationInterestRateGradient: BigNumber;
+}
+export type InterestRateParametersSetEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber],
+  InterestRateParametersSetEventObject
+>;
+
+export type InterestRateParametersSetEventFilter = TypedEventFilter<InterestRateParametersSetEvent>;
+
+export interface InterestRateUpdatedEventObject {
+  superMarketId: BigNumber;
+  interestRate: BigNumber;
+}
+export type InterestRateUpdatedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  InterestRateUpdatedEventObject
+>;
+
+export type InterestRateUpdatedEventFilter = TypedEventFilter<InterestRateUpdatedEvent>;
 
 export interface KeeperCostNodeIdUpdatedEventObject {
   keeperCostNodeId: string;
@@ -1618,9 +1766,10 @@ export interface PerpsMarketProxy extends BaseContract {
     initializeFactory(
       synthetix: string,
       spotMarket: string,
-      marketName: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    interestRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     minimumCredit(perpsMarketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -1634,6 +1783,16 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<ContractTransaction>;
 
     supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<[boolean]>;
+
+    utilizationRate(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        rate: BigNumber;
+        delegatedCollateral: BigNumber;
+        lockedCredit: BigNumber;
+      }
+    >;
 
     getAccountCollateralIds(
       accountId: BigNumberish,
@@ -1661,12 +1820,19 @@ export interface PerpsMarketProxy extends BaseContract {
       marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
         totalPnl: BigNumber;
         accruedFunding: BigNumber;
         positionSize: BigNumber;
+        owedInterest: BigNumber;
       }
     >;
+
+    getOpenPositionSize(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { positionSize: BigNumber }>;
 
     getRequiredMargins(
       accountId: BigNumberish,
@@ -1742,15 +1908,36 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
 
+    computeOrderFeesWithPrice(
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
+
     getOrder(
       accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[AsyncOrder.DataStructOutput] & { order: AsyncOrder.DataStructOutput }>;
 
+    getSettlementRewardCost(
+      marketId: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     requiredMarginForOrder(
       accountId: BigNumberish,
       marketId: BigNumberish,
       sizeDelta: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { requiredMargin: BigNumber }>;
+
+    requiredMarginForOrderWithPrice(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { requiredMargin: BigNumber }>;
 
@@ -1886,6 +2073,11 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { maxMarketSize: BigNumber }>;
 
+    getMaxMarketValue(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { maxMarketValue: BigNumber }>;
+
     getOrderFees(
       marketId: BigNumberish,
       overrides?: CallOverrides
@@ -1944,6 +2136,12 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    setMaxMarketValue(
+      marketId: BigNumberish,
+      maxMarketValue: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     setOrderFees(
       marketId: BigNumberish,
       makerFeeRatio: BigNumberish,
@@ -1978,6 +2176,16 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<[BigNumber] & { maxCollateralAmount: BigNumber }>;
 
     getFeeCollector(overrides?: CallOverrides): Promise<[string] & { feeCollector: string }>;
+
+    getInterestRateParameters(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        lowUtilizationInterestRateGradient: BigNumber;
+        interestRateGradientBreakpoint: BigNumber;
+        highUtilizationInterestRateGradient: BigNumber;
+      }
+    >;
 
     getKeeperCostNodeId(
       overrides?: CallOverrides
@@ -2027,6 +2235,13 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    setInterestRateParameters(
+      lowUtilizationInterestRateGradient: BigNumberish,
+      interestRateGradientBreakpoint: BigNumberish,
+      highUtilizationInterestRateGradient: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     setKeeperRewardGuards(
       minKeeperRewardUsd: BigNumberish,
       minKeeperProfitRatioD18: BigNumberish,
@@ -2049,6 +2264,8 @@ export interface PerpsMarketProxy extends BaseContract {
     totalGlobalCollateralValue(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { totalCollateralValue: BigNumber }>;
+
+    updateInterestRate(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
     updateKeeperCostNodeId(
       keeperCostNodeId: BytesLike,
@@ -2184,9 +2401,10 @@ export interface PerpsMarketProxy extends BaseContract {
   initializeFactory(
     synthetix: string,
     spotMarket: string,
-    marketName: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  interestRate(overrides?: CallOverrides): Promise<BigNumber>;
 
   minimumCredit(perpsMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2200,6 +2418,16 @@ export interface PerpsMarketProxy extends BaseContract {
   ): Promise<ContractTransaction>;
 
   supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
+
+  utilizationRate(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      rate: BigNumber;
+      delegatedCollateral: BigNumber;
+      lockedCredit: BigNumber;
+    }
+  >;
 
   getAccountCollateralIds(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber[]>;
 
@@ -2218,12 +2446,19 @@ export interface PerpsMarketProxy extends BaseContract {
     marketId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
       totalPnl: BigNumber;
       accruedFunding: BigNumber;
       positionSize: BigNumber;
+      owedInterest: BigNumber;
     }
   >;
+
+  getOpenPositionSize(
+    accountId: BigNumberish,
+    marketId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getRequiredMargins(
     accountId: BigNumberish,
@@ -2289,15 +2524,36 @@ export interface PerpsMarketProxy extends BaseContract {
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
 
+  computeOrderFeesWithPrice(
+    marketId: BigNumberish,
+    sizeDelta: BigNumberish,
+    price: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
+
   getOrder(
     accountId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<AsyncOrder.DataStructOutput>;
 
+  getSettlementRewardCost(
+    marketId: BigNumberish,
+    settlementStrategyId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   requiredMarginForOrder(
     accountId: BigNumberish,
     marketId: BigNumberish,
     sizeDelta: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  requiredMarginForOrderWithPrice(
+    accountId: BigNumberish,
+    marketId: BigNumberish,
+    sizeDelta: BigNumberish,
+    price: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -2425,6 +2681,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
   getMaxMarketSize(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+  getMaxMarketValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
   getOrderFees(
     marketId: BigNumberish,
     overrides?: CallOverrides
@@ -2479,6 +2737,12 @@ export interface PerpsMarketProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  setMaxMarketValue(
+    marketId: BigNumberish,
+    maxMarketValue: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   setOrderFees(
     marketId: BigNumberish,
     makerFeeRatio: BigNumberish,
@@ -2513,6 +2777,16 @@ export interface PerpsMarketProxy extends BaseContract {
   ): Promise<BigNumber>;
 
   getFeeCollector(overrides?: CallOverrides): Promise<string>;
+
+  getInterestRateParameters(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      lowUtilizationInterestRateGradient: BigNumber;
+      interestRateGradientBreakpoint: BigNumber;
+      highUtilizationInterestRateGradient: BigNumber;
+    }
+  >;
 
   getKeeperCostNodeId(overrides?: CallOverrides): Promise<string>;
 
@@ -2555,6 +2829,13 @@ export interface PerpsMarketProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  setInterestRateParameters(
+    lowUtilizationInterestRateGradient: BigNumberish,
+    interestRateGradientBreakpoint: BigNumberish,
+    highUtilizationInterestRateGradient: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   setKeeperRewardGuards(
     minKeeperRewardUsd: BigNumberish,
     minKeeperProfitRatioD18: BigNumberish,
@@ -2575,6 +2856,8 @@ export interface PerpsMarketProxy extends BaseContract {
   ): Promise<ContractTransaction>;
 
   totalGlobalCollateralValue(overrides?: CallOverrides): Promise<BigNumber>;
+
+  updateInterestRate(overrides?: Overrides & { from?: string }): Promise<ContractTransaction>;
 
   updateKeeperCostNodeId(
     keeperCostNodeId: BytesLike,
@@ -2704,9 +2987,10 @@ export interface PerpsMarketProxy extends BaseContract {
     initializeFactory(
       synthetix: string,
       spotMarket: string,
-      marketName: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    interestRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     minimumCredit(perpsMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2717,6 +3001,16 @@ export interface PerpsMarketProxy extends BaseContract {
     setPerpsMarketName(marketName: string, overrides?: CallOverrides): Promise<void>;
 
     supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<boolean>;
+
+    utilizationRate(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        rate: BigNumber;
+        delegatedCollateral: BigNumber;
+        lockedCredit: BigNumber;
+      }
+    >;
 
     getAccountCollateralIds(
       accountId: BigNumberish,
@@ -2741,12 +3035,19 @@ export interface PerpsMarketProxy extends BaseContract {
       marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
         totalPnl: BigNumber;
         accruedFunding: BigNumber;
         positionSize: BigNumber;
+        owedInterest: BigNumber;
       }
     >;
+
+    getOpenPositionSize(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getRequiredMargins(
       accountId: BigNumberish,
@@ -2820,15 +3121,36 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
 
+    computeOrderFeesWithPrice(
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber] & { orderFees: BigNumber; fillPrice: BigNumber }>;
+
     getOrder(
       accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<AsyncOrder.DataStructOutput>;
 
+    getSettlementRewardCost(
+      marketId: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     requiredMarginForOrder(
       accountId: BigNumberish,
       marketId: BigNumberish,
       sizeDelta: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    requiredMarginForOrderWithPrice(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2943,6 +3265,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
     getMaxMarketSize(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getMaxMarketValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
     getOrderFees(
       marketId: BigNumberish,
       overrides?: CallOverrides
@@ -2997,6 +3321,12 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setMaxMarketValue(
+      marketId: BigNumberish,
+      maxMarketValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setOrderFees(
       marketId: BigNumberish,
       makerFeeRatio: BigNumberish,
@@ -3031,6 +3361,16 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     getFeeCollector(overrides?: CallOverrides): Promise<string>;
+
+    getInterestRateParameters(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        lowUtilizationInterestRateGradient: BigNumber;
+        interestRateGradientBreakpoint: BigNumber;
+        highUtilizationInterestRateGradient: BigNumber;
+      }
+    >;
 
     getKeeperCostNodeId(overrides?: CallOverrides): Promise<string>;
 
@@ -3070,6 +3410,13 @@ export interface PerpsMarketProxy extends BaseContract {
 
     setFeeCollector(feeCollector: string, overrides?: CallOverrides): Promise<void>;
 
+    setInterestRateParameters(
+      lowUtilizationInterestRateGradient: BigNumberish,
+      interestRateGradientBreakpoint: BigNumberish,
+      highUtilizationInterestRateGradient: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setKeeperRewardGuards(
       minKeeperRewardUsd: BigNumberish,
       minKeeperProfitRatioD18: BigNumberish,
@@ -3090,6 +3437,8 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<void>;
 
     totalGlobalCollateralValue(overrides?: CallOverrides): Promise<BigNumber>;
+
+    updateInterestRate(overrides?: CallOverrides): Promise<void>;
 
     updateKeeperCostNodeId(keeperCostNodeId: BytesLike, overrides?: CallOverrides): Promise<void>;
 
@@ -3240,14 +3589,21 @@ export interface PerpsMarketProxy extends BaseContract {
       amount?: null
     ): CollateralDeductedEventFilter;
 
-    'MarketUpdated(uint128,uint256,int256,uint256,int256,int256,int256)'(
+    'InterestCharged(uint128,uint256)'(
+      accountId?: BigNumberish | null,
+      interest?: null
+    ): InterestChargedEventFilter;
+    InterestCharged(accountId?: BigNumberish | null, interest?: null): InterestChargedEventFilter;
+
+    'MarketUpdated(uint128,uint256,int256,uint256,int256,int256,int256,uint128)'(
       marketId?: null,
       price?: null,
       skew?: null,
       size?: null,
       sizeDelta?: null,
       currentFundingRate?: null,
-      currentFundingVelocity?: null
+      currentFundingVelocity?: null,
+      interestRate?: null
     ): MarketUpdatedEventFilter;
     MarketUpdated(
       marketId?: null,
@@ -3256,7 +3612,8 @@ export interface PerpsMarketProxy extends BaseContract {
       size?: null,
       sizeDelta?: null,
       currentFundingRate?: null,
-      currentFundingVelocity?: null
+      currentFundingVelocity?: null,
+      interestRate?: null
     ): MarketUpdatedEventFilter;
 
     'OrderSettled(uint128,uint128,uint256,int256,int256,int128,int128,uint256,uint256,uint256,uint256,bytes32,address)'(
@@ -3356,6 +3713,21 @@ export interface PerpsMarketProxy extends BaseContract {
       denyAll?: null
     ): FeatureFlagDenyAllSetEventFilter;
 
+    'AccountFlaggedForLiquidation(uint128,int256,uint256,uint256,uint256)'(
+      accountId?: BigNumberish | null,
+      availableMargin?: null,
+      requiredMaintenanceMargin?: null,
+      liquidationReward?: null,
+      flagReward?: null
+    ): AccountFlaggedForLiquidationEventFilter;
+    AccountFlaggedForLiquidation(
+      accountId?: BigNumberish | null,
+      availableMargin?: null,
+      requiredMaintenanceMargin?: null,
+      liquidationReward?: null,
+      flagReward?: null
+    ): AccountFlaggedForLiquidationEventFilter;
+
     'AccountLiquidationAttempt(uint128,uint256,bool)'(
       accountId?: BigNumberish | null,
       reward?: null,
@@ -3452,6 +3824,15 @@ export interface PerpsMarketProxy extends BaseContract {
       maxMarketSize?: null
     ): MaxMarketSizeSetEventFilter;
 
+    'MaxMarketValueSet(uint128,uint256)'(
+      marketId?: BigNumberish | null,
+      maxMarketValue?: null
+    ): MaxMarketValueSetEventFilter;
+    MaxMarketValueSet(
+      marketId?: BigNumberish | null,
+      maxMarketValue?: null
+    ): MaxMarketValueSetEventFilter;
+
     'OrderFeesSet(uint128,uint256,uint256)'(
       marketId?: BigNumberish | null,
       makerFeeRatio?: null,
@@ -3496,6 +3877,26 @@ export interface PerpsMarketProxy extends BaseContract {
 
     'FeeCollectorSet(address)'(feeCollector?: null): FeeCollectorSetEventFilter;
     FeeCollectorSet(feeCollector?: null): FeeCollectorSetEventFilter;
+
+    'InterestRateParametersSet(uint256,uint256,uint256)'(
+      lowUtilizationInterestRateGradient?: null,
+      interestRateGradientBreakpoint?: null,
+      highUtilizationInterestRateGradient?: null
+    ): InterestRateParametersSetEventFilter;
+    InterestRateParametersSet(
+      lowUtilizationInterestRateGradient?: null,
+      interestRateGradientBreakpoint?: null,
+      highUtilizationInterestRateGradient?: null
+    ): InterestRateParametersSetEventFilter;
+
+    'InterestRateUpdated(uint128,uint128)'(
+      superMarketId?: BigNumberish | null,
+      interestRate?: null
+    ): InterestRateUpdatedEventFilter;
+    InterestRateUpdated(
+      superMarketId?: BigNumberish | null,
+      interestRate?: null
+    ): InterestRateUpdatedEventFilter;
 
     'KeeperCostNodeIdUpdated(bytes32)'(keeperCostNodeId?: null): KeeperCostNodeIdUpdatedEventFilter;
     KeeperCostNodeIdUpdated(keeperCostNodeId?: null): KeeperCostNodeIdUpdatedEventFilter;
@@ -3656,9 +4057,10 @@ export interface PerpsMarketProxy extends BaseContract {
     initializeFactory(
       synthetix: string,
       spotMarket: string,
-      marketName: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    interestRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     minimumCredit(perpsMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -3673,6 +4075,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
     supportsInterface(interfaceId: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
+    utilizationRate(overrides?: CallOverrides): Promise<BigNumber>;
+
     getAccountCollateralIds(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getAccountOpenPositions(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -3686,6 +4090,12 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     getOpenPosition(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOpenPositionSize(
       accountId: BigNumberish,
       marketId: BigNumberish,
       overrides?: CallOverrides
@@ -3743,12 +4153,33 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    computeOrderFeesWithPrice(
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getOrder(accountId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getSettlementRewardCost(
+      marketId: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     requiredMarginForOrder(
       accountId: BigNumberish,
       marketId: BigNumberish,
       sizeDelta: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    requiredMarginForOrderWithPrice(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3846,6 +4277,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
     getMaxMarketSize(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getMaxMarketValue(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
     getOrderFees(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getPriceData(perpsMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -3894,6 +4327,12 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    setMaxMarketValue(
+      marketId: BigNumberish,
+      maxMarketValue: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     setOrderFees(
       marketId: BigNumberish,
       makerFeeRatio: BigNumberish,
@@ -3929,6 +4368,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
     getFeeCollector(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getInterestRateParameters(overrides?: CallOverrides): Promise<BigNumber>;
+
     getKeeperCostNodeId(overrides?: CallOverrides): Promise<BigNumber>;
 
     getKeeperRewardGuards(overrides?: CallOverrides): Promise<BigNumber>;
@@ -3954,6 +4395,13 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    setInterestRateParameters(
+      lowUtilizationInterestRateGradient: BigNumberish,
+      interestRateGradientBreakpoint: BigNumberish,
+      highUtilizationInterestRateGradient: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     setKeeperRewardGuards(
       minKeeperRewardUsd: BigNumberish,
       minKeeperProfitRatioD18: BigNumberish,
@@ -3974,6 +4422,8 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     totalGlobalCollateralValue(overrides?: CallOverrides): Promise<BigNumber>;
+
+    updateInterestRate(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
 
     updateKeeperCostNodeId(
       keeperCostNodeId: BytesLike,
@@ -4113,9 +4563,10 @@ export interface PerpsMarketProxy extends BaseContract {
     initializeFactory(
       synthetix: string,
       spotMarket: string,
-      marketName: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    interestRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minimumCredit(
       perpsMarketId: BigNumberish,
@@ -4139,6 +4590,8 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    utilizationRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getAccountCollateralIds(
       accountId: BigNumberish,
       overrides?: CallOverrides
@@ -4161,6 +4614,12 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getOpenPosition(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getOpenPositionSize(
       accountId: BigNumberish,
       marketId: BigNumberish,
       overrides?: CallOverrides
@@ -4239,12 +4698,33 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    computeOrderFeesWithPrice(
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getOrder(accountId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getSettlementRewardCost(
+      marketId: BigNumberish,
+      settlementStrategyId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     requiredMarginForOrder(
       accountId: BigNumberish,
       marketId: BigNumberish,
       sizeDelta: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    requiredMarginForOrderWithPrice(
+      accountId: BigNumberish,
+      marketId: BigNumberish,
+      sizeDelta: BigNumberish,
+      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4366,6 +4846,11 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getMaxMarketValue(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getOrderFees(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPriceData(
@@ -4417,6 +4902,12 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    setMaxMarketValue(
+      marketId: BigNumberish,
+      maxMarketValue: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     setOrderFees(
       marketId: BigNumberish,
       makerFeeRatio: BigNumberish,
@@ -4452,6 +4943,8 @@ export interface PerpsMarketProxy extends BaseContract {
 
     getFeeCollector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getInterestRateParameters(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getKeeperCostNodeId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getKeeperRewardGuards(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -4477,6 +4970,13 @@ export interface PerpsMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    setInterestRateParameters(
+      lowUtilizationInterestRateGradient: BigNumberish,
+      interestRateGradientBreakpoint: BigNumberish,
+      highUtilizationInterestRateGradient: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     setKeeperRewardGuards(
       minKeeperRewardUsd: BigNumberish,
       minKeeperProfitRatioD18: BigNumberish,
@@ -4497,6 +4997,8 @@ export interface PerpsMarketProxy extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     totalGlobalCollateralValue(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    updateInterestRate(overrides?: Overrides & { from?: string }): Promise<PopulatedTransaction>;
 
     updateKeeperCostNodeId(
       keeperCostNodeId: BytesLike,

@@ -27,7 +27,9 @@ import { Deposit } from './Deposit';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { RepayAllDebt } from './RepayAllDebt';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -40,11 +42,12 @@ type ManageAction = z.infer<typeof ManageActionSchema>;
 
 const ActionButton: FC<
   PropsWithChildren<{
-    onClick: (action: ManageAction) => void;
+    onClick?: (action: ManageAction) => void;
     action: ManageAction;
     activeAction?: string;
+    disabled?: boolean;
   }>
-> = ({ children, action, activeAction, onClick }) => (
+> = ({ children, action, activeAction, onClick, disabled }) => (
   <BorderBox
     as={Button}
     fontWeight="700"
@@ -57,23 +60,28 @@ const ActionButton: FC<
     _active={{
       bg: 'unset',
     }}
-    cursor="pointer"
+    cursor={disabled ? 'not-allowed' : 'pointer'}
     data-testid="manage action"
     data-action={action}
     data-active={action === activeAction ? 'true' : undefined}
-    onClick={() => onClick(action)}
+    onClick={() => !disabled && onClick?.(action)}
     py={2}
     width="50%"
     textAlign="center"
+    opacity={disabled ? '50%' : '100%'}
   >
     {children}
   </BorderBox>
 );
 
-const Action: FC<{ manageAction: ManageAction; liquidityPosition?: LiquidityPosition }> = ({
-  manageAction,
-  liquidityPosition,
-}) => {
+const Action: FC<{
+  manageAction: ManageAction;
+  liquidityPosition?: LiquidityPosition;
+  network: Network | null;
+}> = ({ manageAction, liquidityPosition, network }) => {
+  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
+    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
+  }
   switch (manageAction) {
     case 'borrow':
       return <Borrow liquidityPosition={liquidityPosition} />;
@@ -94,35 +102,46 @@ const ManageActionUi: FC<{
   manageAction?: ManageAction;
   onSubmit: (e: FormEvent) => void;
   liquidityPosition?: LiquidityPosition;
-  chainId?: number;
-}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, chainId }) => {
+  network: Network | null;
+}> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
+  const debt = Number(liquidityPosition?.debt?.toString());
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="deposit" activeAction={manageAction}>
           <ArrowDownIcon w="15px" h="15px" mr={1} /> Add Collateral
         </ActionButton>
-        <ActionButton onClick={setActiveAction} action="repay" activeAction={manageAction}>
-          <DollarCircle mr={1} /> Repay snxUSD
+        <ActionButton
+          disabled={debt < 0}
+          onClick={setActiveAction}
+          action="repay"
+          activeAction={manageAction}
+        >
+          <DollarCircle mr={1} /> Repay {isBase ? '' : 'snxUSD'}
         </ActionButton>
       </Flex>
       <Flex mt={2} gap={2}>
         <ActionButton onClick={setActiveAction} action="undelegate" activeAction={manageAction}>
           <ArrowUpIcon w="15px" h="15px" mr={1} /> Remove Collateral
         </ActionButton>
-        {chainId === 8453 ? (
-          <ActionButton onClick={() => {}} action="borrow">
-            Borrow sUSD isn&apos;t available
-          </ActionButton>
-        ) : (
-          <ActionButton onClick={setActiveAction} action="borrow" activeAction={manageAction}>
-            <BorrowIcon mr={1} /> Borrow snxUSD
-          </ActionButton>
-        )}
+        <ActionButton
+          disabled={debt > 0}
+          onClick={setActiveAction}
+          action="borrow"
+          activeAction={manageAction}
+        >
+          <BorrowIcon mr={1} /> {isBase ? 'Claim' : 'Borrow snxUSD'}
+        </ActionButton>
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
-          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
+          <Action
+            manageAction={manageAction}
+            liquidityPosition={liquidityPosition}
+            network={network}
+          />
         </Flex>
       ) : null}
     </Box>
@@ -200,7 +219,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
       <ManageActionUi
         liquidityPosition={liquidityPosition}
         onSubmit={onSubmit}
-        chainId={network?.id}
+        network={network}
         setActiveAction={(action) => {
           setCollateralChange(wei(0));
           setDebtChange(wei(0));
@@ -237,6 +256,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
         ) : null}
         {txnModalOpen === 'deposit' ? (
           <DepositModal
+            availableCollateral={liquidityPosition?.accountCollateral.availableCollateral}
             currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
             collateralChange={collateralChange}
             onClose={() => {

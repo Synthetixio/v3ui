@@ -43,8 +43,8 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
           endColor="navy.800"
         >
           <Fade in>
-            <Text fontSize="24px" lineHeight="24px" fontWeight={800} color="white">
-              {value || 'Place'}
+            <Text fontSize="24px" lineHeight="24px" fontWeight={800}>
+              {value || '—'}
             </Text>
           </Fade>
         </Skeleton>

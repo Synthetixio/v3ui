@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { wei, Wei } from '@synthetixio/wei';
 
 type MarketSnapshotByWeek = z.infer<typeof MarketSnapshotByWeekSchema>;
+
 export const calculateSevenDaysPnlGrowth = (marketSnapshots?: MarketSnapshotByWeek[]) => {
   if (!marketSnapshots || marketSnapshots.length === 0) return undefined;
   const end = marketSnapshots[0].pnl;
