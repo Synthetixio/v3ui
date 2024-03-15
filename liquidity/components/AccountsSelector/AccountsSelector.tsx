@@ -52,7 +52,7 @@ interface AccountsSelectorUiProps {
   isLoading: boolean;
   accountId?: string;
   createAccount: () => void;
-  accounts: string[] | undefined;
+  accounts?: string[] | undefined;
 }
 
 export function AccountsSelectorUi({
