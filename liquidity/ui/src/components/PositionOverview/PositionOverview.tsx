@@ -1,13 +1,15 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
+import { CRatioProgressBar } from '../CRatioProgressBar';
 
-export default function PositionOverview({
+export function PositionOverview({
   currentCollateral,
   collateralType,
   collateralValue,
   debt$,
   poolPnl,
   borrowed,
+  isLoading,
 }: {
   currentCollateral: string;
   collateralType: string;
@@ -16,6 +18,7 @@ export default function PositionOverview({
   poolPnl: string;
   borrowed: string;
   cRatio: string;
+  isLoading: boolean;
 }) {
   return (
     <Flex
@@ -90,8 +93,17 @@ export default function PositionOverview({
             </Text>
           </Text>
         </Flex>
-        {/* <CRatioBar /> */}
       </Flex>
+      <Box px="4" py="6" border="1px solid" borderColor="gray.900" rounded="base" mt="4">
+        <CRatioProgressBar
+          currentCRatioPercentage={0}
+          liquidationCratioPercentage={150}
+          newCratioPercentage={0}
+          targetCratioPercentage={500}
+          targetThreshold={1}
+          isLoading={isLoading}
+        />
+      </Box>
     </Flex>
   );
 }

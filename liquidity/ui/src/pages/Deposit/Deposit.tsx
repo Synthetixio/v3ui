@@ -4,7 +4,7 @@ import { Fade, Flex, Heading, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { usePool } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
 import { InfoIcon } from '@chakra-ui/icons';
-import PositionOverview from '../../components/PositionOverview/PositionOverview';
+import { PositionOverview } from '../../components/PositionOverview';
 import { ReactNode } from 'react';
 import Wei from '@synthetixio/wei';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
@@ -171,6 +171,7 @@ export function Deposit() {
           poolPnl="TODO"
           currentCollateral={collateralAmount.toNumber().toFixed(2)}
           cRatio={cRatio.toNumber().toFixed(2)}
+          isLoading={isLoading}
         />
       }
     />
