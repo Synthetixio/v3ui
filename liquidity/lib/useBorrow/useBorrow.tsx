@@ -73,7 +73,7 @@ export const useBorrow = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'borrow');
+        const erc7412Tx = await withERC7412(network, allCalls, 'borrow', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

@@ -95,7 +95,7 @@ export const useRepay = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useRepay');
+        const erc7412Tx = await withERC7412(network, allCalls, 'useRepay', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
