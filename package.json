@@ -6,6 +6,7 @@
   ],
   "private": true,
   "scripts": {
+    "check:ci": "yarn && yarn lint:fix && yarn typecheck && yarn deps && yarn dedupe",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "pretty": "prettier . --check",

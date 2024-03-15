@@ -5,6 +5,7 @@ import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useSearchParams } from 'react-router-dom';
 import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
@@ -21,13 +22,18 @@ export const AssetsList = () => {
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+
   const assets = useMemo(
     () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
     [accountCollaterals, userTokenBalances, collateralPrices]
   );
 
   const isLoading =
-    isAccountCollateralsLoading || tokenBalancesIsLoading || isCollateralPricesLoading;
+    isAccountCollateralsLoading ||
+    tokenBalancesIsLoading ||
+    isCollateralPricesLoading ||
+    isCollateralTypesLoading;
 
-  return <AssetsTable isLoading={isLoading} assets={assets} />;
+  return <AssetsTable isLoading={isLoading} assets={assets} collateralTypes={collateralTypes} />;
 };

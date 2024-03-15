@@ -16,13 +16,15 @@ import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading } from '.';
 import { Asset } from '../../../utils/assets';
+import { CollateralType } from '@snx-v3/useCollateralTypes';
 
 interface AssetsTableProps {
   isLoading: boolean;
   assets?: Asset[];
+  collateralTypes?: CollateralType[];
 }
 
-export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
 
@@ -73,12 +75,12 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading || !assets ? (
+            {isLoading && !assets ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
               </>
-            ) : (
+            ) : !!assets?.length ? (
               <>
                 {assets?.map((asset, index) => {
                   const { collateral, balance, price } = asset;
@@ -94,6 +96,25 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
                       delegatedBalance={collateral.totalAssigned.toNumber()}
                       delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
                       final={index === assets.length - 1}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {collateralTypes?.map((collateral, index) => {
+                  return (
+                    <AssetsRow
+                      key={collateral.tokenAddress}
+                      token={collateral.symbol}
+                      name={collateral.displaySymbol}
+                      walletBalance={0.0}
+                      walletBalance$={0.0}
+                      accountBalance={0.0}
+                      accountBalance$={0.0}
+                      delegatedBalance={0.0}
+                      delegatedBalance$={0.0}
+                      final={index === collateralTypes.length - 1}
                     />
                   );
                 })}
