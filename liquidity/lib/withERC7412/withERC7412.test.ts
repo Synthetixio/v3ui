@@ -1,5 +1,5 @@
 import { wei } from '@synthetixio/wei';
-import { validatePosition } from './validatePosition';
+import { validatePosition } from '../validatePosition';
 test('handles undefined values', () => {
   const result = validatePosition({
     issuanceRatioD18: undefined,
