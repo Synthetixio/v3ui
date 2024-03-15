@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAccountProxy } from '@snx-v3/useAccountProxy';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useConnectWallet } from '@web3-onboard/react';
@@ -41,6 +41,8 @@ export function useAccounts() {
 
 export function useCreateAccount() {
   const { data: CoreProxy } = useCoreProxy();
+  const { network } = useNetwork();
+  const client = useQueryClient();
 
   return useMutation({
     mutationFn: async function () {
@@ -48,6 +50,10 @@ export function useCreateAccount() {
         if (!CoreProxy) throw new Error('CoreProxy undefined');
         const tx = await CoreProxy['createAccount()']();
         const res = await tx.wait();
+
+        await client.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
+        });
 
         let newAccountId: string | undefined;
 

@@ -5905,10 +5905,12 @@ __metadata:
   resolution: "@snx-v3/AccountsSelector@workspace:liquidity/components/AccountsSelector"
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     react: "npm:^18.2.0"
+    react-router-dom: "npm:^6.18.0"
   languageName: unknown
   linkType: soft
 

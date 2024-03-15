@@ -45,8 +45,12 @@ export function BaseAndromedaAvailableCollateral({
     () =>
       !accountCollateralUnlockDate ||
       accountCollateralUnlockDate.getTime() > Date.now() ||
-      usdcCollateral?.availableCollateral.eq(0),
-    [accountCollateralUnlockDate, usdcCollateral?.availableCollateral]
+      snxUSDCollateral?.availableCollateral.add(usdcCollateral?.availableCollateral).eq(0),
+    [
+      accountCollateralUnlockDate,
+      snxUSDCollateral?.availableCollateral,
+      usdcCollateral?.availableCollateral,
+    ]
   );
 
   return (
@@ -139,6 +143,16 @@ function WithdrawModal({
 
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
+            exact: false,
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateral'],
+            exact: false,
+          });
+          await queryClient.invalidateQueries({
+            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
+            exact: false,
           });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
