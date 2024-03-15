@@ -52,14 +52,15 @@ interface AccountsSelectorUiProps {
   isLoading: boolean;
   accountId?: string;
   createAccount: () => void;
+  accounts: string[] | undefined;
 }
 
 export function AccountsSelectorUi({
   accountId,
   isLoading,
   createAccount,
+  accounts,
 }: AccountsSelectorUiProps) {
-  const { data: accounts } = useAccounts();
   const { onCopy } = useClipboard(accountId || '');
 
   return (
@@ -162,6 +163,7 @@ export function AccountsSelector() {
       isLoading={isLoading}
       createAccount={createAccount}
       accountId={params.accountId}
+      accounts={accounts}
     />
   );
 }

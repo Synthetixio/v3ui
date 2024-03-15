@@ -72,7 +72,7 @@ export const useWithdrawBaseAndromeda = ({
           ? SpotProxy.populateTransaction.buy(
               USDC_BASE_MARKET,
               snxUSDCollateral.availableCollateral.toBN(),
-              snxUSDCollateral.availableCollateral.toBN(),
+              0,
               constants.AddressZero
             )
           : undefined;
