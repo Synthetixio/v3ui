@@ -150,6 +150,10 @@ function WithdrawModal({
             queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateral'],
             exact: false,
           });
+          await queryClient.invalidateQueries({
+            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
+            exact: false,
+          });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
