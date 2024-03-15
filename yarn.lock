@@ -5955,6 +5955,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useBorrow": "workspace:*"
@@ -5999,6 +6000,7 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -6011,6 +6013,7 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     "@xstate/react": "npm:^3.2.2"
+    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
     xstate: "npm:^4.38.3"
@@ -6104,21 +6107,28 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
+    "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useContractErrorParser": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
     "@web3-onboard/injected-wallets": "npm:^2.10.11"
     "@web3-onboard/react": "npm:^2.8.13"
+    "@xstate/react": "npm:^3.2.2"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
   languageName: unknown
@@ -6133,6 +6143,8 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/format": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -6449,6 +6461,7 @@ __metadata:
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
@@ -6537,7 +6550,6 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
-    "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
@@ -6807,6 +6819,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/format": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useEthBalance@workspace:*, @snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance"
@@ -7001,6 +7037,31 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/format": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useRewards@workspace:^, @snx-v3/useRewards@workspace:liquidity/lib/useRewards":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRewards@workspace:liquidity/lib/useRewards"
@@ -7015,6 +7076,17 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -7040,6 +7112,7 @@ __metadata:
   resolution: "@snx-v3/useTokenBalance@workspace:liquidity/lib/useTokenBalance"
   dependencies:
     "@snx-v3/assertAddressType": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -7113,6 +7186,28 @@ __metadata:
   resolution: "@snx-v3/useWithdraw@workspace:liquidity/lib/useWithdraw"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"

@@ -13,23 +13,10 @@ export function useAccountCollateralUnlockDate({ accountId }: { accountId?: stri
     queryFn: async function () {
       if (!CoreProxy || !accountId) throw new Error('Core Proxy or account id is not defined');
 
-      const [getAccountLastInteraction, getConfigUintAccountTimeoutWithdraw] =
-        // @ts-ignore TODO: remove eventually when types are aligned
-        await CoreProxy.callStatic.multicall([
-          CoreProxy.interface.encodeFunctionData('getAccountLastInteraction', [accountId]),
-          CoreProxy.interface.encodeFunctionData('getConfigUint', [
-            ethers.utils.formatBytes32String('accountTimeoutWithdraw'),
-          ]),
-        ]);
-
-      const [lastInteraction] = CoreProxy.interface.decodeFunctionResult(
-        'getAccountLastInteraction',
-        getAccountLastInteraction
-      );
-      const [accountTimeoutWithdraw] = CoreProxy.interface.decodeFunctionResult(
-        'getConfigUint',
-        getConfigUintAccountTimeoutWithdraw
-      );
+      const [lastInteraction, accountTimeoutWithdraw] = await Promise.all([
+        CoreProxy.getAccountLastInteraction(accountId),
+        CoreProxy.getConfigUint(ethers.utils.formatBytes32String('accountTimeoutWithdraw')),
+      ]);
 
       const collateralUnlock = lastInteraction.add(accountTimeoutWithdraw);
 

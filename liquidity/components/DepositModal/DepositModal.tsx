@@ -12,7 +12,7 @@ import {
 import { FC, useCallback, useEffect, useMemo } from 'react';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-
+import { utils } from 'ethers';
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
@@ -29,6 +29,9 @@ import { ContractError } from '@snx-v3/ContractError';
 import { usePool } from '@snx-v3/usePools';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useDepositBaseAndromeda } from '../../lib/useDepositBaseAndromeda';
+import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -223,12 +226,26 @@ export const DepositModal: DepositModalProps = ({
   const queryClient = useQueryClient();
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
+  const { data: SpotProxy } = useSpotMarketProxy();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
+  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
+    ? BASE_USDC
+    : collateralType?.tokenAddress;
+
+  const collateralNeeded = collateralChange.sub(availableCollateral);
+
   const { approve, requireApproval } = useApprove({
-    contractAddress: collateralType?.tokenAddress,
-    amount: collateralChange.toBN(),
-    spender: CoreProxy?.address,
+    contractAddress: collateralAddress,
+    amount: collateralNeeded.gt(0)
+      ? isBaseAndromeda(network?.id, network?.preset)
+        ? //Base USDC is 6 decimals
+          utils.parseUnits(collateralNeeded.toString(), 6)
+        : collateralNeeded.toBN()
+      : 0,
+    spender: isBaseAndromeda(network?.id, network?.preset)
+      ? SpotProxy?.address
+      : CoreProxy?.address,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -248,7 +265,16 @@ export const DepositModal: DepositModalProps = ({
     accountId: params.accountId,
     newAccountId,
     poolId: params.poolId,
-    collateralTypeAddress: collateralType?.tokenAddress,
+    collateralTypeAddress: collateralAddress,
+    collateralChange,
+    currentCollateral,
+    availableCollateral: availableCollateral || wei(0),
+  });
+  const { exec: depositBaseAndromeda } = useDepositBaseAndromeda({
+    accountId: params.accountId,
+    newAccountId,
+    poolId: params.poolId,
+    collateralTypeAddress: collateralAddress,
     collateralChange,
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
@@ -316,7 +342,11 @@ export const DepositModal: DepositModalProps = ({
               : 'Creating your account and depositing collateral',
             description: '',
           });
-          await execDeposit();
+          if (isBaseAndromeda(network?.id, network?.preset)) {
+            await depositBaseAndromeda();
+          } else {
+            await execDeposit();
+          }
 
           await Promise.all([
             queryClient.invalidateQueries({

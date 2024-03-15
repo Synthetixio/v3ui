@@ -144,8 +144,8 @@ export const abi = [
   'error NotEnoughLiquidity(uint128 marketId, uint256 amount)',
   'event MarketRegistered(address indexed market, uint128 indexed marketId, address indexed sender)',
   'event MarketSystemFeePaid(uint128 indexed marketId, uint256 feeAmount)',
-  'event MarketUsdDeposited(uint128 indexed marketId, address indexed target, uint256 amount, address indexed market, int128 creditCapacity, int128 netIssuance, uint256 depositedCollateralValue, uint256 reportedDebt)',
-  'event MarketUsdWithdrawn(uint128 indexed marketId, address indexed target, uint256 amount, address indexed market, int128 creditCapacity, int128 netIssuance, uint256 depositedCollateralValue, uint256 reportedDebt)',
+  'event MarketUsdDeposited(uint128 indexed marketId, address indexed target, uint256 amount, address indexed market, int128 creditCapacity, int128 netIssuance, uint256 depositedCollateralValue)',
+  'event MarketUsdWithdrawn(uint128 indexed marketId, address indexed target, uint256 amount, address indexed market, int128 creditCapacity, int128 netIssuance, uint256 depositedCollateralValue)',
   'event SetMarketMinLiquidityRatio(uint128 indexed marketId, uint256 minLiquidityRatio)',
   'event SetMinDelegateTime(uint128 indexed marketId, uint32 minDelegateTime)',
   'function depositMarketUsd(uint128 marketId, address target, uint256 amount) returns (uint256 feeAmount)',
@@ -1152,8 +1152,8 @@ export interface CoreProxyInterface extends utils.Interface {
     'MaximumMarketCollateralConfigured(uint128,address,uint256,address)': EventFragment;
     'MarketRegistered(address,uint128,address)': EventFragment;
     'MarketSystemFeePaid(uint128,uint256)': EventFragment;
-    'MarketUsdDeposited(uint128,address,uint256,address,int128,int128,uint256,uint256)': EventFragment;
-    'MarketUsdWithdrawn(uint128,address,uint256,address,int128,int128,uint256,uint256)': EventFragment;
+    'MarketUsdDeposited(uint128,address,uint256,address,int128,int128,uint256)': EventFragment;
+    'MarketUsdWithdrawn(uint128,address,uint256,address,int128,int128,uint256)': EventFragment;
     'SetMarketMinLiquidityRatio(uint128,uint256)': EventFragment;
     'SetMinDelegateTime(uint128,uint32)': EventFragment;
     'PoolApprovedAdded(uint256)': EventFragment;
@@ -1599,10 +1599,9 @@ export interface MarketUsdDepositedEventObject {
   creditCapacity: BigNumber;
   netIssuance: BigNumber;
   depositedCollateralValue: BigNumber;
-  reportedDebt: BigNumber;
 }
 export type MarketUsdDepositedEvent = TypedEvent<
-  [BigNumber, string, BigNumber, string, BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, string, BigNumber, string, BigNumber, BigNumber, BigNumber],
   MarketUsdDepositedEventObject
 >;
 
@@ -1616,10 +1615,9 @@ export interface MarketUsdWithdrawnEventObject {
   creditCapacity: BigNumber;
   netIssuance: BigNumber;
   depositedCollateralValue: BigNumber;
-  reportedDebt: BigNumber;
 }
 export type MarketUsdWithdrawnEvent = TypedEvent<
-  [BigNumber, string, BigNumber, string, BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, string, BigNumber, string, BigNumber, BigNumber, BigNumber],
   MarketUsdWithdrawnEventObject
 >;
 
@@ -4234,15 +4232,14 @@ export interface CoreProxy extends BaseContract {
       feeAmount?: null
     ): MarketSystemFeePaidEventFilter;
 
-    'MarketUsdDeposited(uint128,address,uint256,address,int128,int128,uint256,uint256)'(
+    'MarketUsdDeposited(uint128,address,uint256,address,int128,int128,uint256)'(
       marketId?: BigNumberish | null,
       target?: string | null,
       amount?: null,
       market?: string | null,
       creditCapacity?: null,
       netIssuance?: null,
-      depositedCollateralValue?: null,
-      reportedDebt?: null
+      depositedCollateralValue?: null
     ): MarketUsdDepositedEventFilter;
     MarketUsdDeposited(
       marketId?: BigNumberish | null,
@@ -4251,19 +4248,17 @@ export interface CoreProxy extends BaseContract {
       market?: string | null,
       creditCapacity?: null,
       netIssuance?: null,
-      depositedCollateralValue?: null,
-      reportedDebt?: null
+      depositedCollateralValue?: null
     ): MarketUsdDepositedEventFilter;
 
-    'MarketUsdWithdrawn(uint128,address,uint256,address,int128,int128,uint256,uint256)'(
+    'MarketUsdWithdrawn(uint128,address,uint256,address,int128,int128,uint256)'(
       marketId?: BigNumberish | null,
       target?: string | null,
       amount?: null,
       market?: string | null,
       creditCapacity?: null,
       netIssuance?: null,
-      depositedCollateralValue?: null,
-      reportedDebt?: null
+      depositedCollateralValue?: null
     ): MarketUsdWithdrawnEventFilter;
     MarketUsdWithdrawn(
       marketId?: BigNumberish | null,
@@ -4272,8 +4267,7 @@ export interface CoreProxy extends BaseContract {
       market?: string | null,
       creditCapacity?: null,
       netIssuance?: null,
-      depositedCollateralValue?: null,
-      reportedDebt?: null
+      depositedCollateralValue?: null
     ): MarketUsdWithdrawnEventFilter;
 
     'SetMarketMinLiquidityRatio(uint128,uint256)'(

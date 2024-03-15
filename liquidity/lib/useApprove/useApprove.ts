@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { useAllowance } from '@snx-v3/useAllowance';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { useMutation } from '@tanstack/react-query';
 import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
@@ -8,7 +8,7 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 
-const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
+export const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
 
 export const useApprove = (
   {
@@ -17,7 +17,7 @@ export const useApprove = (
     spender,
   }: {
     contractAddress?: string;
-    amount: BigNumber;
+    amount: BigNumberish;
     spender?: string;
   },
   eventHandlers?: {
@@ -71,6 +71,7 @@ export const useApprove = (
 
         await txn.wait();
         dispatch({ type: 'success' });
+        refetchAllowance();
       } catch (error: any) {
         dispatch({ type: 'error', payload: { error } });
         throw error;

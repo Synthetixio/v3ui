@@ -2,17 +2,12 @@ import { Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { providers, utils } from 'ethers';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useConnectWallet } from '@web3-onboard/react';
-import {
-  encodeBytesByNodeType,
-  getNodeModuleContract,
-  hashId,
-  resolveNetworkIdToInfuraPrefix,
-} from '../utils/contracts';
+import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/contracts';
 import { Node } from '../utils/types';
 import { useRecoilState } from 'recoil';
 import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
-import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { NETWORKS, useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
 
 let interval: any;
@@ -24,7 +19,6 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodeId, setNodeId] = useState('');
   const [price, setPrice] = useState('0');
   const [time, setTime] = useState(new Date());
-
   const [_, connect] = useConnectWallet();
   const signer = useSigner();
   const isWalletConnected = useIsConnected();
@@ -35,9 +29,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
 
   const networkParam = param?.network ? Number(param.network) : undefined;
   const provider = new providers.JsonRpcProvider(
-    `https://${resolveNetworkIdToInfuraPrefix(networkParam)}.infura.io/v3/${
-      process.env.NEXT_PUBLIC_INFURA_KEY
-    }`
+    NETWORKS.filter((network) => network.id === (networkParam || 1))[0].rpcUrl()
   );
   const findParentNode = useCallback(
     (parentId: string) => {
@@ -54,10 +46,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
     const fetchNodeState = async () => {
       if (network?.id) {
         try {
-          const contract = getNodeModuleContract(
-            networkParam ? provider : signer!,
-            networkParam ? networkParam : network.id
-          );
+          const contract = await getNodeModuleContract(networkParam ? provider : signer!, network);
           const hashedId = hashId(node, node.parents.map(findParentNode));
           const nodeFromChain = await contract.getNode(hashedId);
           if (nodeFromChain[0] > 0) {
@@ -144,7 +133,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
       try {
         setIsLoading(true);
         if (network?.id && signer) {
-          const contract = getNodeModuleContract(signer, network.id);
+          const contract = await getNodeModuleContract(signer, network);
           const tx: providers.TransactionResponse = await contract.registerNode(
             node.typeId,
             encodeBytesByNodeType(node.typeId, node.parameters),
