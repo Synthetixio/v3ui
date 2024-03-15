@@ -56,7 +56,7 @@ export const CRatioProgressBarUi: FC<{
   liquidationCratioPercentage,
   currentCRatioPercentage,
   newCratioPercentage,
-  targetThreshold,
+  // targetThreshold,
   isLoading,
 }) => {
   const maxRatioShown = Math.min(

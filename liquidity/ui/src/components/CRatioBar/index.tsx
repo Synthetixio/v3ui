@@ -1,1 +1,1 @@
-export * from './CRatioBar.tsx';
+export * from './CRatioBar';

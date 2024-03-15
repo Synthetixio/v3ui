@@ -5,7 +5,6 @@ export default function PositionOverview({
   currentCollateral,
   collateralType,
   collateralValue,
-  cRatio,
   debt$,
   poolPnl,
   borrowed,
