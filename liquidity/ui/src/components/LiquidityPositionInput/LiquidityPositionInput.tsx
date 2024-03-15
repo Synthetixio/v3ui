@@ -42,6 +42,8 @@ export function LiquidityPositionInput({
       </Text>
       <Flex border="1px solid" borderColor="gray.900" rounded="base" justifyContent="space-between">
         <Flex p="2" flexDir="column" gap="1" w="100%">
+          {/* TODO @dev
+          make a select out of it and if changed, change the route */}
           <TokenIcon symbol={collateralSymbol} />
           <Text fontSize="12px" display="flex" color="gray.500">
             Balance: {balance.deposited.add(balance.wallet).toNumber().toFixed(2)}{' '}
