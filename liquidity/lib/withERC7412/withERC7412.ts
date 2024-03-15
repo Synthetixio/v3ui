@@ -8,6 +8,8 @@ import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';
+import { Hex } from 'viem';
+import * as viem from 'viem';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -59,6 +61,8 @@ function makeMulticall(
       target: call.to,
       callData: call.data,
       value: call.value || ethers.BigNumber.from(0),
+      requireSuccess: true,
+      allowFailure: false,
     })),
   ]);
 
@@ -173,7 +177,8 @@ const getDefaultFromAddress = (chainName: string) => {
 export const withERC7412 = async (
   network: Network,
   tx: TransactionRequest | TransactionRequest[],
-  logLabel?: string
+  logLabel?: string,
+  abi?: any
 ): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
@@ -264,6 +269,16 @@ export const withERC7412 = async (
         }
         txToUpdate.value = requiredFee;
       } else {
+        const parsedError = parseTxError(error);
+        if (parsedError && abi) {
+          try {
+            const errorResult = viem.decodeErrorResult({
+              abi,
+              data: parsedError,
+            });
+            console.log('error: ', errorResult.errorName, errorResult.args);
+          } catch (_error) {}
+        }
         throw error;
       }
     }
@@ -307,4 +322,26 @@ export async function erc7412Call<T>(
   }
 
   return decode(res);
+}
+
+function parseTxError(error: any): Hex | undefined {
+  try {
+    if (error.cause?.data) {
+      return error.cause?.data;
+    }
+    if (error.cause?.cause?.data) {
+      return error.cause?.cause?.data;
+    }
+    if (error.cause?.cause?.cause?.data) {
+      return error.cause?.cause?.cause?.data;
+    }
+    if (error.cause?.cause?.error?.data) {
+      return error.cause?.cause?.error?.data;
+    }
+    if (error.cause?.cause?.cause?.error?.data) {
+      return error.cause?.cause?.cause?.error?.data;
+    }
+  } catch (err) {
+    console.error('exception error parser:', err);
+  }
 }

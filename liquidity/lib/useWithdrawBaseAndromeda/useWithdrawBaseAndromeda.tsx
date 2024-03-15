@@ -14,6 +14,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
@@ -27,6 +28,7 @@ export const useWithdrawBaseAndromeda = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
+  const { data: UsdProxy } = useUSDProxy();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
   const { network } = useNetwork();
 
@@ -68,6 +70,13 @@ export const useWithdrawBaseAndromeda = ({
             )
           : undefined;
 
+        const sUSDCApproval = snxUSDCollateral.availableCollateral.gt(0)
+          ? UsdProxy?.populateTransaction.approve(
+              SpotProxy.address,
+              snxUSDCollateral.availableCollateral.toBN()
+            )
+          : undefined;
+
         const buy_SUSD = snxUSDCollateral.availableCollateral.gt(0)
           ? SpotProxy.populateTransaction.buy(
               USDC_BASE_MARKET,
@@ -96,6 +105,7 @@ export const useWithdrawBaseAndromeda = ({
           gasPrices,
           withdraw_sUSDC_Txn,
           withdraw_SUSD_Txn,
+          sUSDCApproval_Txn,
           buy_SUSD_Txn,
           unwrapTxn,
           collateralPriceCalls,
@@ -103,15 +113,22 @@ export const useWithdrawBaseAndromeda = ({
           gasPricesPromised,
           withdraw_sUSDC,
           withdraw_sUSD,
+          sUSDCApproval,
           buy_SUSD,
           unwrapTxnPromised,
           collateralPriceCallsPromise,
         ]);
         const allCalls = collateralPriceCalls.concat(
-          [withdraw_sUSDC_Txn, withdraw_SUSD_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil)
+          [
+            withdraw_sUSDC_Txn,
+            withdraw_SUSD_Txn,
+            sUSDCApproval_Txn,
+            buy_SUSD_Txn,
+            unwrapTxn,
+          ].filter(notNil)
         );
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw');
+        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
