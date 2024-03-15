@@ -8,8 +8,8 @@ import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
 import { withMemoryCache } from './withMemoryCache';
-import { Hex } from 'viem';
 import * as viem from 'viem';
+import { parseTxError } from '../parser';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
@@ -322,26 +322,4 @@ export async function erc7412Call<T>(
   }
 
   return decode(res);
-}
-
-function parseTxError(error: any): Hex | undefined {
-  try {
-    if (error.cause?.data) {
-      return error.cause?.data;
-    }
-    if (error.cause?.cause?.data) {
-      return error.cause?.cause?.data;
-    }
-    if (error.cause?.cause?.cause?.data) {
-      return error.cause?.cause?.cause?.data;
-    }
-    if (error.cause?.cause?.error?.data) {
-      return error.cause?.cause?.error?.data;
-    }
-    if (error.cause?.cause?.cause?.error?.data) {
-      return error.cause?.cause?.cause?.error?.data;
-    }
-  } catch (err) {
-    console.error('exception error parser:', err);
-  }
 }

@@ -6587,6 +6587,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/parser@workspace:liquidity/lib/parser":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/parser@workspace:liquidity/lib/parser"
+  dependencies:
+    viem: "npm:^2.8.9"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/tsHelpers@workspace:*, @snx-v3/tsHelpers@workspace:liquidity/lib/tsHelpers":
   version: 0.0.0-use.local
   resolution: "@snx-v3/tsHelpers@workspace:liquidity/lib/tsHelpers"
@@ -7269,6 +7277,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
     viem: "npm:^2.8.9"
     zod: "npm:^3.22.4"
