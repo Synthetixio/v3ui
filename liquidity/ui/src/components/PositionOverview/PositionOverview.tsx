@@ -1,6 +1,5 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
-import { CRatioBar } from '../CRatioBar';
 
 export default function PositionOverview({
   currentCollateral,
@@ -92,7 +91,7 @@ export default function PositionOverview({
             </Text>
           </Text>
         </Flex>
-        <CRatioBar />
+        {/* <CRatioBar /> */}
       </Flex>
     </Flex>
   );
