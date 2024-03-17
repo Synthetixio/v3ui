@@ -14,7 +14,7 @@ import {
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { AssetRowLoading } from '.';
+import { AssetRowLoading, AssetsEmpty } from '.';
 import { Asset } from '../../../utils/assets';
 
 interface AssetsTableProps {
@@ -62,6 +62,8 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
             Connect Wallet
           </Button>
         </Flex>
+      ) : assets?.length === 0 && !isLoading ? (
+        <AssetsEmpty />
       ) : (
         <Table variant="simple">
           <AssetTableHeader />
@@ -73,7 +75,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading || !assets ? (
+            {isLoading ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />

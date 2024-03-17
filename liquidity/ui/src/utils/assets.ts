@@ -12,7 +12,7 @@ export function calculateAssets(
   userTokenBalances?: Wei[] | undefined,
   collateralPrices?: Record<string, Wei | undefined>
 ): Asset[] | undefined {
-  if (!accountCollaterals || !userTokenBalances || !collateralPrices) return;
+  if (!accountCollaterals || !userTokenBalances || !collateralPrices) return [];
 
   return accountCollaterals.map((collateral, index) => {
     const balance = userTokenBalances[index];
