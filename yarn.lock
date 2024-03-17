@@ -6126,7 +6126,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/PoolBox@workspace:*, @snx-v3/PoolBox@workspace:liquidity/components/PoolBox":
+"@snx-v3/PoolBox@workspace:liquidity/components/PoolBox":
   version: 0.0.0-use.local
   resolution: "@snx-v3/PoolBox@workspace:liquidity/components/PoolBox"
   dependencies:
@@ -6505,7 +6505,6 @@ __metadata:
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
-    "@snx-v3/PoolBox": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/TrendText": "workspace:*"

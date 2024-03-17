@@ -44,7 +44,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
         >
           <Fade in>
             <Text fontSize="24px" lineHeight="24px" fontWeight={800}>
-              {value || '—'}
+              {value || '$00.00'}
             </Text>
           </Fade>
         </Skeleton>

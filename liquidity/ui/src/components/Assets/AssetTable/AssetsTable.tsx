@@ -48,6 +48,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
+      {/* Not connected state */}
       {!activeWallet?.address ? (
         <Flex w="100%" justifyContent="space-between">
           <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
@@ -62,7 +63,8 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
             Connect Wallet
           </Button>
         </Flex>
-      ) : assets?.length === 0 && !isLoading ? (
+      ) : // Empty State
+      assets?.length === 0 && !isLoading ? (
         <AssetsEmpty />
       ) : (
         <Table variant="simple">
