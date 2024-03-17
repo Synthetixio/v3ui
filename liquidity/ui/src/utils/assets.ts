@@ -1,4 +1,5 @@
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
+import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei from '@synthetixio/wei';
 
 export interface Asset {
@@ -10,20 +11,40 @@ export interface Asset {
 export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
   userTokenBalances?: Wei[] | undefined,
-  collateralPrices?: Record<string, Wei | undefined>
+  collateralPrices?: Record<string, Wei | undefined>,
+  collateralTypes?: CollateralType[]
 ): Asset[] | undefined {
-  if (!accountCollaterals || !userTokenBalances || !collateralPrices) return [];
+  if (!accountCollaterals && !userTokenBalances && !collateralPrices) return;
 
-  return accountCollaterals.map((collateral, index) => {
-    const balance = userTokenBalances[index];
-    const price = collateralPrices[collateral.tokenAddress];
+  // Empty state
+  if (collateralTypes && !accountCollaterals) {
+    return collateralTypes.map((collateral) => ({
+      collateral: {
+        tokenAddress: collateral.tokenAddress,
+        symbol: collateral.symbol,
+        displaySymbol: collateral.displaySymbol,
+        availableCollateral: new Wei(0),
+        totalDeposited: new Wei(0),
+        totalAssigned: new Wei(0),
+        totalLocked: new Wei(0),
+      },
+      balance: new Wei(0),
+      price: new Wei(0),
+    }));
+  }
 
-    return {
-      collateral,
-      balance,
-      price,
-    };
-  });
+  if (userTokenBalances && collateralPrices) {
+    return accountCollaterals?.map((collateral, index) => {
+      const balance = userTokenBalances[index];
+      const price = collateralPrices[collateral.tokenAddress];
+
+      return {
+        collateral,
+        balance,
+        price,
+      };
+    });
+  }
 }
 
 export function calculateTotalAssets(assets?: Asset[]) {

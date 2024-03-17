@@ -64,7 +64,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
           </Button>
         </Flex>
       ) : // Empty State
-      assets?.length === 0 && !isLoading ? (
+      assets && assets.length === 0 && !isLoading ? (
         <AssetsEmpty />
       ) : (
         <Table variant="simple">
@@ -77,7 +77,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading ? (
+            {isLoading || !assets ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
