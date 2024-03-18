@@ -65,6 +65,8 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
       return <OptimismIcon w="24px" h="24px" {...props} />;
     case 421614:
       return <ArbitrumIcon w="24px" h="24px" {...props} />;
+    case 42161:
+      return <ArbitrumIcon w="24px" h="24px" {...props} />;
     default:
       return <FailedIcon w="24px" h="24px" {...props} />;
   }
@@ -186,6 +188,19 @@ export const NETWORKS: Network[] = [
     isSupported: true,
     publicRpcUrl: 'https://sepolia.arbiscan.io/',
     isTestnet: true,
+  },
+  {
+    id: 42161,
+    preset: 'arbthetix',
+    hexId: `0x${Number(42161).toString(16)}`,
+    token: 'ETH',
+    name: 'arbitrum',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Arbitrum',
+    isSupported: true,
+    publicRpcUrl: 'https://arbiscan.io/',
+    isTestnet: false,
   },
 ];
 

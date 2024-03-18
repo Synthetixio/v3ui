@@ -20,6 +20,7 @@ yarn cannon inspect synthetix-omnibus:latest@main --chain-id 84531 --json > ./ca
 
 # Arbitrum
 yarn cannon inspect synthetix-omnibus:latest@arbthetix --chain-id 421614 --json > ./cannon/421614-arbthetix.json
+yarn cannon inspect synthetix-omnibus:latest@arbthetix --chain-id 42161 --json > ./cannon/42161-arbthetix.json
 
 # Local
 yarn cannon inspect synthetix-local:latest@main --chain-id 13370 --json > ./cannon/13370-main.json
