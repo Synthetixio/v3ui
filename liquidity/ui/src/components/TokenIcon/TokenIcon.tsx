@@ -11,6 +11,8 @@ export const TokenIcon = ({ symbol, width = 30, height = 30, ...props }: TokenIc
     switch (symbol) {
       case 'sUSDC':
         return 'sUSD';
+      case 'snxUSD':
+        return 'sUSD';
       default:
         return symbol;
     }

@@ -87,6 +87,7 @@ export function useAccountCollateral({
         tokenAddresses,
         CoreProxy,
       });
+
       const data = await erc7412Call(
         network,
         CoreProxy.provider,

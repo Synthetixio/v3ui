@@ -25,8 +25,8 @@ export const AssetsList = () => {
   const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
 
   const assets = useMemo(
-    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
-    [accountCollaterals, userTokenBalances, collateralPrices]
+    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices, collateralTypes),
+    [accountCollaterals, userTokenBalances, collateralPrices, collateralTypes]
   );
 
   const isLoading =
@@ -35,5 +35,5 @@ export const AssetsList = () => {
     isCollateralPricesLoading ||
     isCollateralTypesLoading;
 
-  return <AssetsTable isLoading={isLoading} assets={assets} collateralTypes={collateralTypes} />;
+  return <AssetsTable isLoading={isLoading} assets={assets} />;
 };

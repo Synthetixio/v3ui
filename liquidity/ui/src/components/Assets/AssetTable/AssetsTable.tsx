@@ -14,17 +14,15 @@ import {
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { AssetRowLoading } from '.';
+import { AssetRowLoading, AssetsEmpty } from '.';
 import { Asset } from '../../../utils/assets';
-import { CollateralType } from '@snx-v3/useCollateralTypes';
 
 interface AssetsTableProps {
   isLoading: boolean;
   assets?: Asset[];
-  collateralTypes?: CollateralType[];
 }
 
-export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
 
@@ -50,6 +48,7 @@ export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableP
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
+      {/* Not connected state */}
       {!activeWallet?.address ? (
         <Flex w="100%" justifyContent="space-between">
           <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
@@ -64,6 +63,9 @@ export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableP
             Connect Wallet
           </Button>
         </Flex>
+      ) : // Empty State
+      assets && assets.length === 0 && !isLoading ? (
+        <AssetsEmpty />
       ) : (
         <Table variant="simple">
           <AssetTableHeader />
@@ -75,15 +77,16 @@ export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableP
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
               <Td height="0px" border="none" px={0} pt={0} pb={5} />
             </Tr>
-            {isLoading && !assets ? (
+            {isLoading || !assets ? (
               <>
                 <AssetRowLoading />
                 <AssetRowLoading />
               </>
-            ) : !!assets?.length ? (
+            ) : (
               <>
                 {assets?.map((asset, index) => {
                   const { collateral, balance, price } = asset;
+
                   return (
                     <AssetsRow
                       key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
@@ -96,25 +99,6 @@ export const AssetsTable = ({ isLoading, assets, collateralTypes }: AssetsTableP
                       delegatedBalance={collateral.totalAssigned.toNumber()}
                       delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
                       final={index === assets.length - 1}
-                    />
-                  );
-                })}
-              </>
-            ) : (
-              <>
-                {collateralTypes?.map((collateral, index) => {
-                  return (
-                    <AssetsRow
-                      key={collateral.tokenAddress}
-                      token={collateral.symbol}
-                      name={collateral.displaySymbol}
-                      walletBalance={0.0}
-                      walletBalance$={0.0}
-                      accountBalance={0.0}
-                      accountBalance$={0.0}
-                      delegatedBalance={0.0}
-                      delegatedBalance$={0.0}
-                      final={index === collateralTypes.length - 1}
                     />
                   );
                 })}
