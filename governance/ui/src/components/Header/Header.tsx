@@ -34,7 +34,6 @@ const activeIcon = (currentNetwork: Network | null) => {
       return { icon: <BaseIcon />, name: 'Base' };
     case 84532:
       return { icon: <BaseIcon />, name: 'Base Sepolia' };
-
     default:
       return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
   }

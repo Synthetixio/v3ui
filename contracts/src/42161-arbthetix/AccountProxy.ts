@@ -1,6 +1,6 @@
 // !!! DO NOT EDIT !!! Automatically generated file
 
-export const address = '0x01C2f64ABd46AF20950736f3C3e1a9cfc5c36c82';
+export const address = '0x6e29bE5d3772f9eEeE9a5FEa5DEDDA7F81292b5a';
 export const abi = [
   'error ImplementationIsSterile(address implementation)',
   'error NoChange()',
@@ -76,7 +76,7 @@ import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export interface PerpsAccountProxyInterface extends utils.Interface {
+export interface AccountProxyInterface extends utils.Interface {
   functions: {
     'acceptOwnership()': FunctionFragment;
     'getImplementation()': FunctionFragment;
@@ -298,12 +298,12 @@ export type TransferEvent = TypedEvent<[string, string, BigNumber], TransferEven
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface PerpsAccountProxy extends BaseContract {
+export interface AccountProxy extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: PerpsAccountProxyInterface;
+  interface: AccountProxyInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

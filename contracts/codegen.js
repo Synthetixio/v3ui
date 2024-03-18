@@ -288,7 +288,6 @@ async function run() {
         const [chainIdString, preset] = path.basename(name, '.json').split('-');
         const chainId = parseInt(chainIdString);
         const cannonState = JSON.parse(await fs.readFile(`${__dirname}/cannon/${name}`));
-        console.log('cannonState: ', cannonState);
         if (chainId === 13370) {
           return codegenLocal({ chainId, preset, cannonState });
         }

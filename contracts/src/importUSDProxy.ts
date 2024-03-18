@@ -4,8 +4,7 @@ import type { USDProxy as USDProxy1Main } from './1-main/USDProxy';
 import type { USDProxy as USDProxy10Main } from './10-main/USDProxy';
 import type { USDProxy as USDProxy11155111Main } from './11155111-main/USDProxy';
 import type { USDProxy as USDProxy13370Main } from './13370-main/USDProxy';
-import type { USDProxy as USDProxy420Main } from './420-main/USDProxy';
-import type { USDProxy as USDProxy421614Arbthetix } from './421614-arbthetix/USDProxy';
+import type { USDProxy as USDProxy42161Arbthetix } from './42161-arbthetix/USDProxy';
 import type { USDProxy as USDProxy5Main } from './5-main/USDProxy';
 import type { USDProxy as USDProxy8453Andromeda } from './8453-andromeda/USDProxy';
 import type { USDProxy as USDProxy84531Andromeda } from './84531-andromeda/USDProxy';
@@ -17,8 +16,7 @@ export type USDProxyType =
   | USDProxy10Main
   | USDProxy11155111Main
   | USDProxy13370Main
-  | USDProxy420Main
-  | USDProxy421614Arbthetix
+  | USDProxy42161Arbthetix
   | USDProxy5Main
   | USDProxy8453Andromeda
   | USDProxy84531Andromeda
@@ -35,10 +33,8 @@ export async function importUSDProxy(chainId: number, preset: string = 'main') {
       return import('./11155111-main/USDProxy');
     case '13370-main':
       return import('./13370-main/USDProxy');
-    case '420-main':
-      return import('./420-main/USDProxy');
-    case '421614-arbthetix':
-      return import('./421614-arbthetix/USDProxy');
+    case '42161-arbthetix':
+      return import('./42161-arbthetix/USDProxy');
     case '5-main':
       return import('./5-main/USDProxy');
     case '8453-andromeda':
