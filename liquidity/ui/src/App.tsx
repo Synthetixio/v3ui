@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
-import { ChakraProvider, extendTheme, useColorMode } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  ComponentMultiStyleConfig,
+  extendTheme,
+  useColorMode,
+} from '@chakra-ui/react';
 import { Fonts, theme } from '@synthetixio/v3-theme';
 import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -35,59 +40,61 @@ function ColorMode() {
   return null;
 }
 
+const Progress: ComponentMultiStyleConfig = {
+  parts: ['filledTrack', 'track'],
+  baseStyle: {
+    track: {
+      overflow: 'unset',
+      bg: 'whiteAlpha.100',
+    },
+  },
+  variants: {
+    error: (props) => ({
+      filledTrack: {
+        boxShadow: `0px 0px 15px ${props.theme.colors.error}`,
+        bg: 'error',
+      },
+    }),
+    warning: (props) => ({
+      filledTrack: {
+        boxShadow: `0px 0px 15px ${props.theme.colors.warning}`,
+        bg: 'warning',
+      },
+    }),
+    success: (props) => ({
+      filledTrack: {
+        bg: 'success',
+        boxShadow: `0px 0px 15px ${props.theme.colors.success}`,
+      },
+    }),
+    'update-error': () => ({
+      filledTrack: {
+        bg: 'red.700',
+      },
+    }),
+    'update-warning': () => ({
+      filledTrack: {
+        bg: 'orange.700',
+      },
+    }),
+    'update-success': () => ({
+      filledTrack: {
+        bg: 'green.700',
+      },
+    }),
+    white: {
+      filledTrack: {
+        bg: 'white',
+        borderRadius: 'full',
+      },
+    },
+  },
+};
+
 const extendedTheme = extendTheme({
   ...theme,
   components: {
-    Progress: {
-      parts: ['filledTrack', 'track'],
-      baseStyle: {
-        track: {
-          overflow: 'unset',
-          bg: 'whiteAlpha.100',
-        },
-      },
-      variants: {
-        error: (props) => ({
-          filledTrack: {
-            boxShadow: `0px 0px 15px ${props.theme.colors.error}`,
-            bg: 'error',
-          },
-        }),
-        warning: (props) => ({
-          filledTrack: {
-            boxShadow: `0px 0px 15px ${props.theme.colors.warning}`,
-            bg: 'warning',
-          },
-        }),
-        success: (props) => ({
-          filledTrack: {
-            bg: 'success',
-            boxShadow: `0px 0px 15px ${props.theme.colors.success}`,
-          },
-        }),
-        'update-error': () => ({
-          filledTrack: {
-            bg: 'red.700',
-          },
-        }),
-        'update-warning': () => ({
-          filledTrack: {
-            bg: 'orange.700',
-          },
-        }),
-        'update-success': () => ({
-          filledTrack: {
-            bg: 'green.700',
-          },
-        }),
-        white: {
-          filledTrack: {
-            bg: 'white',
-            borderRadius: 'full',
-          },
-        },
-      },
-    },
+    Progress,
   },
 });
 
