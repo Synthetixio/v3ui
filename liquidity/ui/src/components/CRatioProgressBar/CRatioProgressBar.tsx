@@ -1,5 +1,7 @@
-import { InfoIcon, TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { Box, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { TriangleDownIcon, TriangleUpIcon, InfoIcon } from '@chakra-ui/icons';
+import { Box, Flex, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import Wei from '@synthetixio/wei';
+import { constants } from 'ethers';
 import { FC } from 'react';
 
 export const getHealthVariant = ({
@@ -114,108 +116,137 @@ export const CRatioProgressBarUi: FC<{
       : newCratioPercentageWithDefault;
 
   return (
-    <Box
-      position="relative"
-      height="100px"
-      width="full"
-      data-testid="c ratio progressbar"
-      overflowX="hidden"
-    >
-      <>
-        <LineWithText
-          left={!isLoading ? liquidationCratioPercentage / scaleFactor : 33}
-          text={
-            !isLoading ? `Liquidation < ${liquidationCratioPercentage.toFixed(0)}%` : 'Liquidation'
-          }
-          tooltipText="You may be flagged for liquidation"
-        />
-        <LineWithText
-          left={!isLoading ? targetCratioPercentage / scaleFactor : 66}
-          text={!isLoading ? `Target ${targetCratioPercentage.toFixed(0)}%` : 'Target'}
-          tooltipText="Required to claim rewards"
-        />
-      </>
-
-      <Skeleton
-        variant={variant}
-        top={0}
-        bottom={0}
-        height="12px"
-        position="absolute"
-        margin="auto"
-        width="100%"
-        isLoaded={!isLoading}
+    <Flex flexDir="column" gap="2">
+      <Text color="gray.500">
+        C-Ratio{' '}
+        <Tooltip label="TODO" p="3">
+          <InfoIcon w="12px" h="12px" />
+        </Tooltip>
+      </Text>
+      {!currentCRatioPercentage ? (
+        <Text color="gray.500" fontWeight={800} fontSize="20px">
+          N/A
+        </Text>
+      ) : (
+        <Flex gap="1" alignItems="center">
+          <Text color="gray.500" fontWeight={800} fontSize="20px">
+            N/A &rarr;
+          </Text>
+          {currentCRatioPercentage === new Wei(constants.MaxUint256).toNumber() ? (
+            <>
+              <Text color="white" fontWeight={800} fontSize="20px">
+                Infinite %
+              </Text>
+            </>
+          ) : (
+            currentCRatioPercentage
+          )}
+        </Flex>
+      )}
+      <Box
+        position="relative"
+        height="100px"
+        width="full"
+        data-testid="c ratio progressbar"
+        overflowX="hidden"
       >
-        {newCratioPercentage !== undefined ? (
-          <Progress
-            data-testId="non highlighted progress bar"
-            variant={newCratioPercentage === 0 ? 'white' : 'update-' + newVariant}
-            top={0}
-            bottom={0}
-            height="12px"
-            position="absolute"
-            margin="auto"
-            width="100%"
-            value={newCratioPercentage === 0 ? 0 : nonHighLightedProgressCRatio / scaleFactor}
+        <>
+          <LineWithText
+            left={!isLoading ? liquidationCratioPercentage / scaleFactor : 33}
+            text={
+              !isLoading
+                ? `Liquidation < ${liquidationCratioPercentage.toFixed(0)}%`
+                : 'Liquidation'
+            }
+            tooltipText="You may be flagged for liquidation"
           />
-        ) : null}
-        <Progress
-          variant={newCratioPercentage !== undefined ? newVariant : variant}
+          <LineWithText
+            left={!isLoading ? targetCratioPercentage / scaleFactor : 66}
+            text={!isLoading ? `Target ${targetCratioPercentage.toFixed(0)}%` : 'Target'}
+            tooltipText="Required to claim rewards"
+          />
+        </>
+        <Skeleton
+          variant={variant}
           top={0}
           bottom={0}
           height="12px"
           position="absolute"
           margin="auto"
           width="100%"
-          data-testId="highlighted progress bar"
-          display={newCratioPercentage === 0 ? 'none' : 'block'}
-          value={highlightedProgressCRatio / scaleFactor}
-        />
-      </Skeleton>
-      <Box
-        bg={variant}
-        height="12px"
-        position="absolute"
-        left={`${
-          (newCratioPercentage !== undefined ? newCratioPercentage : currentCRatioPercentage) /
-          scaleFactor
-        }%`}
-        top={0}
-        bottom={0}
-        margin="auto"
-        display={newCratioPercentage === 0 ? 'none' : 'block'}
-      >
-        {currentCRatioPercentage > 0 && !isLoading && (
-          <>
-            <TriangleDownIcon
-              data-testid="current c-ration triangle"
-              position="absolute"
-              right={0}
+          isLoaded={!isLoading}
+        >
+          {newCratioPercentage !== undefined ? (
+            <Progress
+              data-testId="non highlighted progress bar"
+              variant={newCratioPercentage === 0 ? 'white' : 'update-' + newVariant}
               top={0}
-              transform="translate(50%,-100%)"
-              color={newCratioPercentage !== undefined ? newVariant : variant}
-            />
-            <TriangleUpIcon
-              data-testid="current c-ration triangle"
-              position="absolute"
-              right={0}
               bottom={0}
-              transform="translate(50%,100%)"
-              color={newCratioPercentage !== undefined ? newVariant : variant}
+              height="12px"
+              position="absolute"
+              margin="auto"
+              width="100%"
+              value={newCratioPercentage === 0 ? 0 : nonHighLightedProgressCRatio / scaleFactor}
             />
-          </>
-        )}
+          ) : null}
+          <Progress
+            variant={newCratioPercentage !== undefined ? newVariant : variant}
+            top={0}
+            bottom={0}
+            height="12px"
+            position="absolute"
+            margin="auto"
+            width="100%"
+            data-testId="highlighted progress bar"
+            display={newCratioPercentage === 0 ? 'none' : 'block'}
+            value={highlightedProgressCRatio / scaleFactor}
+          />
+        </Skeleton>
+        <Box
+          bg={variant}
+          height="12px"
+          position="absolute"
+          left={`${
+            (newCratioPercentage !== undefined ? newCratioPercentage : currentCRatioPercentage) /
+            scaleFactor
+          }%`}
+          top={0}
+          bottom={0}
+          margin="auto"
+          display={newCratioPercentage === 0 ? 'none' : 'block'}
+        >
+          {currentCRatioPercentage > 0 && !isLoading && (
+            <>
+              <TriangleDownIcon
+                data-testid="current c-ration triangle"
+                position="absolute"
+                right={0}
+                top={0}
+                transform="translate(50%,-100%)"
+                color={newCratioPercentage !== undefined ? newVariant : variant}
+              />
+              <TriangleUpIcon
+                data-testid="current c-ration triangle"
+                position="absolute"
+                right={0}
+                bottom={0}
+                transform="translate(50%,100%)"
+                color={newCratioPercentage !== undefined ? newVariant : variant}
+              />
+            </>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 
 export const CRatioProgressBar: FC<{
-  liquidationCratioPercentage: number;
-  targetCratioPercentage: number;
-  currentCRatioPercentage: number;
+  liquidationCratioPercentage?: number;
+  targetCratioPercentage?: number;
+  currentCRatioPercentage?: number;
   targetThreshold: number;
-  newCratioPercentage: number;
+  newCratioPercentage?: number;
   isLoading: boolean;
 }> = ({
   newCratioPercentage,
@@ -227,9 +258,9 @@ export const CRatioProgressBar: FC<{
 }) => {
   return (
     <CRatioProgressBarUi
-      liquidationCratioPercentage={liquidationCratioPercentage}
-      targetCratioPercentage={targetCratioPercentage}
-      currentCRatioPercentage={currentCRatioPercentage}
+      liquidationCratioPercentage={liquidationCratioPercentage || 100}
+      targetCratioPercentage={targetCratioPercentage || 100}
+      currentCRatioPercentage={currentCRatioPercentage || 0}
       targetThreshold={targetThreshold}
       newCratioPercentage={newCratioPercentage}
       isLoading={isLoading}

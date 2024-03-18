@@ -5983,7 +5983,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Balance@workspace:*, @snx-v3/Balance@workspace:liquidity/components/Balance":
+"@snx-v3/Balance@workspace:liquidity/components/Balance":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Balance@workspace:liquidity/components/Balance"
   dependencies:
@@ -6494,7 +6494,6 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
     "@snx-v3/AccountsSelector": "workspace:*"
     "@snx-v3/Amount": "workspace:*"
-    "@snx-v3/Balance": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
     "@snx-v3/BorrowModal": "workspace:*"
     "@snx-v3/CollateralTypeSelector": "workspace:*"
@@ -6502,7 +6501,6 @@ __metadata:
     "@snx-v3/DepositModal": "workspace:*"
     "@snx-v3/HomeLink": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
-    "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
@@ -6538,7 +6536,6 @@ __metadata:
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
-    "@snx-v3/useTeleport": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
@@ -6557,7 +6554,6 @@ __metadata:
     "@web3-onboard/react": "npm:^2.8.13"
     "@web3-onboard/trezor": "npm:^2.4.3"
     "@web3-onboard/walletconnect": "npm:^2.5.3"
-    "@xstate/react": "npm:^3.2.2"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
     bn.js: "npm:^5.2.1"
@@ -6578,6 +6574,7 @@ __metadata:
     react-i18next: "npm:^13.4.1"
     react-refresh: "npm:^0.14.0"
     react-router-dom: "npm:^6.18.0"
+    recoil: "npm:^0.7.7"
     stream-browserify: "npm:^3.0.0"
     style-loader: "npm:^3.3.3"
     terser-webpack-plugin: "npm:^5.3.9"
@@ -6585,7 +6582,6 @@ __metadata:
     webpack-bundle-analyzer: "npm:^4.10.0"
     webpack-cli: "npm:^5.1.4"
     webpack-dev-server: "npm:^4.15.1"
-    xstate: "npm:^4.38.3"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
@@ -7145,7 +7141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useTeleport@workspace:*, @snx-v3/useTeleport@workspace:liquidity/lib/useTeleport":
+"@snx-v3/useTeleport@workspace:liquidity/lib/useTeleport":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTeleport@workspace:liquidity/lib/useTeleport"
   dependencies:
