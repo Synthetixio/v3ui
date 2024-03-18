@@ -13,17 +13,11 @@ import {
 
 interface PositionsTableInterface {
   isLoading: boolean;
-  positionsByKey?: Record<`${string}-${string}`, LiquidityPositionType>;
+  positions?: LiquidityPositionType[];
 }
 
-export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInterface) => {
+export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface) => {
   const { activeWallet } = useWallet();
-
-  const positionsIds = !!positionsByKey
-    ? (Object.keys(positionsByKey) as `${string}-${string}`[])
-    : [];
-
-  const positions = positionsByKey && positionsIds.map((id) => positionsByKey[id]);
 
   return (
     <TableContainer
@@ -41,7 +35,7 @@ export const PositionsTable = ({ isLoading, positionsByKey }: PositionsTableInte
     >
       {!activeWallet?.address ? (
         <PositionsNotConnected />
-      ) : positionsIds?.length === 0 && !isLoading ? (
+      ) : positions?.length === 0 && !isLoading ? (
         <PositionsEmpty />
       ) : (
         <>
