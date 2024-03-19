@@ -1,0 +1,9 @@
+{
+  "name": "@snx-v3/parser",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "viem": "^2.8.9"
+  }
+}

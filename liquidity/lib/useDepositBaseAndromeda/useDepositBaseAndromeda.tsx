@@ -121,7 +121,12 @@ export const useDepositBaseAndromeda = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useDepositBaseAndromeda');
+        const erc7412Tx = await withERC7412(
+          network,
+          allCalls,
+          'useDepositBaseAndromeda',
+          CoreProxy.interface
+        );
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
