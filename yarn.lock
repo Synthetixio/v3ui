@@ -6538,6 +6538,7 @@ __metadata:
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
@@ -7140,7 +7141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
+"@snx-v3/useSpotMarketProxy@workspace:*, @snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
   dependencies:
