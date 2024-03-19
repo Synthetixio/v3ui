@@ -7608,19 +7608,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@synthetixio/router@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "@synthetixio/router@npm:3.3.0"
+"@synthetixio/router@npm:^3.3.7":
+  version: 3.3.7
+  resolution: "@synthetixio/router@npm:3.3.7"
   dependencies:
     "@ethersproject/keccak256": "npm:^5.7.0"
     debug: "npm:^4.3.4"
     mustache: "npm:^4.2.0"
   peerDependencies:
-    "@usecannon/builder": ^2.0.0
-    ethers: ^5.0.0
     hardhat: ^2.0.0
     solc: ^0.8.17
-  checksum: 110518dec69f323bcb793dbeb2a2a02c40e18c23d02738ccbc8784e25add2ea503ef2d16e8dc74e2df5124017903830b75040769cf5ff0d099f337914f8ceec9
+  checksum: f79d119b249c556ca083e4654ca633c179085f9948933ecbb9aaadced83a5fae74dd6b7c91ac7edd702895fe98d65a7d397d7635d2ce6a059a413101c46e2ecb
   languageName: node
   linkType: hard
 
@@ -7639,7 +7637,7 @@ __metadata:
     "@ethersproject/abi": "npm:^5.7.0"
     "@ethersproject/providers": "npm:^5.7.2"
     "@typechain/ethers-v5": "npm:^11.1.2"
-    "@usecannon/cli": "npm:2.10.7"
+    "@usecannon/cli": "npm:2.11.21"
     debug: "npm:^4.3.4"
     ethers: "npm:^5.7.2"
     prettier: "npm:^3.1.0"
@@ -9109,12 +9107,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@usecannon/builder@npm:^2.10.7":
-  version: 2.10.7
-  resolution: "@usecannon/builder@npm:2.10.7"
+"@usecannon/builder@npm:2.11.21":
+  version: 2.11.21
+  resolution: "@usecannon/builder@npm:2.11.21"
   dependencies:
-    "@synthetixio/router": "npm:^3.3.0"
-    axios: "npm:^1.6.2"
+    "@synthetixio/router": "npm:^3.3.7"
+    axios: "npm:^1.6.7"
+    axios-retry: "npm:^4.0.0"
     buffer: "npm:^6.0.3"
     debug: "npm:^4.3.4"
     form-data: "npm:^4.0.0"
@@ -9123,25 +9122,24 @@ __metadata:
     promise-events: "npm:^0.2.4"
     typedoc-plugin-markdown: "npm:^3.17.1"
     typestub-ipfs-only-hash: "npm:^4.0.0"
+    viem: "npm:^2.6.1"
     zod: "npm:^3.22.4"
-  peerDependencies:
-    ethers: ">=5.6.0 < 6.0.0"
-  checksum: b39f240e112f08a248a136f622dda71fd6473d9ca6b4c7f5932e49b290127b8012b236f806e70c8746c82315c2989c90c041ecbd0c888cbf7ad715d4f1873479
+  checksum: 955c53e945bcde59b4a9db96de55336307d6c12a1be58e256a05075d6039444f4c3f30e8836c6a7a4b3efb958f938f1a525cb9843ba66f9123b540abca309e9d
   languageName: node
   linkType: hard
 
-"@usecannon/cli@npm:2.10.7":
-  version: 2.10.7
-  resolution: "@usecannon/cli@npm:2.10.7"
+"@usecannon/cli@npm:2.11.21":
+  version: 2.11.21
+  resolution: "@usecannon/cli@npm:2.11.21"
   dependencies:
     "@iarna/toml": "npm:^3.0.0"
     "@synthetixio/wei": "npm:^2.74.1"
-    "@usecannon/builder": "npm:^2.10.7"
+    "@usecannon/builder": "npm:2.11.21"
+    abitype: "npm:^1.0.0"
     chalk: "npm:^4.1.2"
     commander: "npm:^9.5.0"
     debug: "npm:^4.3.4"
     eth-provider: "npm:^0.13.6"
-    ethers: "npm:^5.7.1"
     fastq: "npm:^1.15.0"
     fs-extra: "npm:^10.1.0"
     lodash: "npm:^4.17.21"
@@ -9151,11 +9149,12 @@ __metadata:
     table: "npm:^6.8.0"
     tildify: "npm:2.0.0"
     untildify: "npm:^4.0.0"
+    viem: "npm:^2.6.1"
     znv: "npm:^0.4.0"
     zod: "npm:^3.22.4"
   bin:
     cannon: bin/cannon.js
-  checksum: b4ffca89548c4639c70c41642bf5a0b6c0e51134d1a60c4fca6f8654beeb7d9bb49b0fcee5b6b0abc37d27c8d5cbd2f32443922605dffc9fd35acfc6e043813f
+  checksum: d7011f0f0c22eff8b81e5e9c9bd2f3e131a31c96e17c428c31cb41dd85cc04ea2862fdd1ef43780a31bde430cc0e997bb0f10c4fb4db8dea04633508b682e214
   languageName: node
   linkType: hard
 
@@ -10329,6 +10328,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abitype@npm:^1.0.0":
+  version: 1.0.2
+  resolution: "abitype@npm:1.0.2"
+  peerDependencies:
+    typescript: ">=5.0.4"
+    zod: ^3 >=3.22.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+    zod:
+      optional: true
+  checksum: d80d10521e42732df96c6ba42d42dbfe6214d3328990a618195d9986a42584040eaa54fb861adce5ccd50df0ffdfbb4928505ed7d6468893cf64509bf4138a0a
+  languageName: node
+  linkType: hard
+
 "abort-controller@npm:^3.0.0":
   version: 3.0.0
   resolution: "abort-controller@npm:3.0.0"
@@ -11106,6 +11120,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios-retry@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "axios-retry@npm:4.0.0"
+  dependencies:
+    is-retry-allowed: "npm:^2.2.0"
+  peerDependencies:
+    axios: 0.x || 1.x
+  checksum: 40c72837540a768dd7d7e98b0243395f46a59b623e5e37a7bdd164ba748404783fe68c6284c793b8cdd6e51b006560ed093a3db50587fb13f1e192df26803c96
+  languageName: node
+  linkType: hard
+
 "axios-retry@npm:~3.3.0":
   version: 3.3.1
   resolution: "axios-retry@npm:3.3.1"
@@ -11145,14 +11170,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.3.4, axios@npm:^1.6.0, axios@npm:^1.6.2":
-  version: 1.6.5
-  resolution: "axios@npm:1.6.5"
+"axios@npm:^1.3.4, axios@npm:^1.6.0, axios@npm:^1.6.7":
+  version: 1.6.8
+  resolution: "axios@npm:1.6.8"
   dependencies:
-    follow-redirects: "npm:^1.15.4"
+    follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 465489d9bf8f039b9adbc8103b6299d6a5e26de77b27f0e4173d814d39bca8f4b4659d94e09ee40461aedccd8c2452f1e2b3edace1c9f81220060d2974ff9dc7
+  checksum: 3f9a79eaf1d159544fca9576261ff867cbbff64ed30017848e4210e49f3b01e97cf416390150e6fdf6633f336cd43dc1151f890bbd09c3c01ad60bb0891eee63
   languageName: node
   linkType: hard
 
@@ -15669,13 +15694,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.12.1, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.4":
-  version: 1.15.5
-  resolution: "follow-redirects@npm:1.15.5"
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.12.1, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.6":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: d467f13c1c6aa734599b8b369cd7a625b20081af358f6204ff515f6f4116eb440de9c4e0c49f10798eeb0df26c95dd05d5e0d9ddc5786ab1a8a8abefe92929b4
+  checksum: 70c7612c4cab18e546e36b991bbf8009a1a41cf85354afe04b113d1117569abf760269409cb3eb842d9f7b03d62826687086b081c566ea7b1e6613cf29030bf7
   languageName: node
   linkType: hard
 
@@ -26807,9 +26832,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.8.9":
-  version: 2.8.9
-  resolution: "viem@npm:2.8.9"
+"viem@npm:^2.6.1, viem@npm:^2.8.9":
+  version: 2.8.13
+  resolution: "viem@npm:2.8.13"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.0"
     "@noble/curves": "npm:1.2.0"
@@ -26824,7 +26849,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 11969b762340a917e6f63359f70f13aeffefda3947fc701517301a5e25354cd43d7fac7e585970c4294656c120ebf21cb8ae1fefc6667e8757c9ece7de2a361b
+  checksum: 2674514bbc100b8eef2fcf8326028ea63be497c64eb4e8bd9a284734b6d601881aa104d3bf557952ef1bc440cc9c003c9863777894168a1f0668103013f1b67a
   languageName: node
   linkType: hard
 
