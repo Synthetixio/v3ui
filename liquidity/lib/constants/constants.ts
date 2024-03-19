@@ -11,7 +11,7 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
   switch (networkName) {
     case 'base-sepolia':
       return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-sepolia-andromeda/version/v1/api';
-    case 'base-mainnet':
+    case 'base':
       return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-mainnet-andromeda/version/v1/api';
     default:
       return `https://api.thegraph.com/subgraphs/name/snx-v3/${networkName}`;
@@ -21,7 +21,9 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
 export const SESSION_STORAGE_KEYS = {
   TERMS_CONDITIONS_ACCEPTED: 'TERMS_CONDITIONS_ACCEPTED',
 };
+
 export const offchainMainnetEndpoint =
   process.env.PYTH_MAINNET_ENDPOINT || 'https://hermes.pyth.network';
+
 export const offchainTestnetEndpoint =
   process.env.PYTH_TESTNET_ENDPOINT || 'https://hermes.pyth.network';

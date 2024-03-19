@@ -62,6 +62,7 @@ export const DepositModalUi: FC<{
     state.matches(State.approve) || state.matches(State.deposit) || state.matches(State.wrap);
 
   const isWETH = collateralType?.symbol === 'WETH';
+
   const stepNumbers = {
     wrap: isWETH ? 1 : 0,
     approve: isWETH ? 2 : 1,
@@ -270,6 +271,7 @@ export const DepositModal: DepositModalProps = ({
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
   });
+
   const { exec: depositBaseAndromeda } = useDepositBaseAndromeda({
     accountId: params.accountId,
     newAccountId,
@@ -279,6 +281,7 @@ export const DepositModal: DepositModalProps = ({
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
   });
+
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
   const [state, send] = useMachine(DepositMachine, {
@@ -343,6 +346,7 @@ export const DepositModal: DepositModalProps = ({
             description: '',
           });
           if (isBaseAndromeda(network?.id, network?.preset)) {
+            console.log('Deposit Base Andromeda');
             await depositBaseAndromeda();
           } else {
             await execDeposit();
