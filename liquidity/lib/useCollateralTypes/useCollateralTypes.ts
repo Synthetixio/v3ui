@@ -87,7 +87,6 @@ export function useCollateralTypes(includeDelegationOff = false) {
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
         (collateralType) => {
-          console.log('Collateral Type', collateralType);
           return {
             ...collateralType,
             symbol:

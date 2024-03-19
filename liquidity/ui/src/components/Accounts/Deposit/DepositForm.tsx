@@ -297,15 +297,11 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
     collateralType?.tokenAddress
   );
 
-  console.log('Account Collateral', accountCollateral?.availableCollateral.toString());
-
   const { data: tokenBalance } = useTokenBalance(
     isBaseAndromeda(network?.id, network?.preset)
       ? getUSDCAddress(network?.id)
       : collateralType?.tokenAddress
   );
-
-  console.log('Token Balance', tokenBalance);
 
   return (
     <DepositFormUi
