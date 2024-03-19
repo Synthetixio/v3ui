@@ -1,5 +1,5 @@
 export const isBaseAndromeda = (id?: number | string, preset?: string) =>
-  id?.toString() === '8453' && preset === 'andromeda';
+  (id?.toString() === '8453' || '84532') && preset === 'andromeda';
 
 export const BASE_USDC = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
