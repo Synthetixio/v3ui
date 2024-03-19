@@ -23,7 +23,6 @@ import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useAllowance } from '@snx-v3/useAllowance';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { useWallet } from '@snx-v3/useBlockchain';
 
 function DepositUi({
   isFirstDeposit,
@@ -90,7 +89,6 @@ function DepositUi({
 export function Deposit() {
   const { poolId, accountId, collateralSymbol } = useParams();
   const [amountToDeposit] = useRecoilState(depositState);
-  const { activeWallet } = useWallet();
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
@@ -114,7 +112,6 @@ export function Deposit() {
         (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
       )
       .map((collateral) => collateral.tokenAddress) || [
-      // max maybe find address by collateralSymbol?
       '0x434Aa3FDb11798EDaB506D4a5e48F70845a66219',
     ]
   );

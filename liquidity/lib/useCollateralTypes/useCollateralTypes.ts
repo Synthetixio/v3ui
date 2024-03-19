@@ -65,7 +65,7 @@ async function loadCollateralTypes({
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
-
+  console.log(tokenConfigs);
   if (
     tokenConfigs.some((config) => {
       return config.tokenAddress === sUSDCBaseAddress && isBaseAndromedaNetwork;

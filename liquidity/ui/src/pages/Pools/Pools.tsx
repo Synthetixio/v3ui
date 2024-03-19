@@ -1,16 +1,24 @@
-import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, Image, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
 import { Link } from 'react-router-dom';
+import { useGetPoolCollateralConfiguration } from '@snx-v3/usePoolCollateralConfiguration';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export function Pools() {
-  const { data: pools } = usePools();
+  const { data: pools, isLoading: poolsIsLoading } = usePools();
+  const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
+  const { data: poolCollateralConfigs, isLoading: poolCollateralConfigsIsLoading } =
+    useGetPoolCollateralConfiguration(pools?.map((pool) => pool.id) || []);
+
+  const isLoading = collateralTypesIsLoading && poolCollateralConfigsIsLoading && poolsIsLoading;
+
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
       <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'}>
-        {pools?.map((pool) => (
+        {pools?.map((pool, index) => (
           <Flex
             key={pool.id}
             flexDir="column"
@@ -58,19 +66,27 @@ export function Pools() {
             </Flex>
             <Divider />
             <Flex mt={4}>
-              <TokenIcon symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                  sUSDC
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  Synthetix USDC
-                </Text>
-              </Flex>
-              {/* TODO @dev put in collateral symbol once available */}
-              <Link to={`/deposit/${'USDC'}/${pool.id}`}>
-                <Button>Deposit</Button>
-              </Link>
+              {poolCollateralConfigs?.map((configs) => (
+                <>
+                  <TokenIcon symbol="USDC" />
+                  <Flex flexDirection="column" ml={3} mr="auto">
+                    <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                      sUSDC
+                    </Text>
+                    <Text
+                      color="gray.500"
+                      fontFamily="heading"
+                      fontSize="0.75rem"
+                      lineHeight="1rem"
+                    >
+                      Synthetix USDC
+                    </Text>
+                  </Flex>
+                  <Link to={`/deposit/${'USDC'}/collateralAddress/${pool.id}`}>
+                    <Button>Deposit</Button>
+                  </Link>
+                </>
+              ))}
             </Flex>
           </Flex>
         ))}
