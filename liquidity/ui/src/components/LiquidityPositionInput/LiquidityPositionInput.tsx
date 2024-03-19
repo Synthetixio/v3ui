@@ -2,7 +2,8 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { Button, Divider, Flex, Heading, Input, Text, Tooltip } from '@chakra-ui/react';
 import { TokenIcon } from '../TokenIcon';
 import Wei from '@synthetixio/wei';
-import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { depositState } from '../../state/deposit';
 
 export function LiquidityPositionInput({
   title,
@@ -17,7 +18,7 @@ export function LiquidityPositionInput({
   price: Wei;
   userHasAccounts: boolean;
 }) {
-  const [balanceToDeposit, setBalanceToDeposit] = useState(new Wei(0));
+  const [amountToDeposit, setAmountToDeposit] = useRecoilState(depositState);
   return (
     <Flex
       flexDir="column"
@@ -46,7 +47,17 @@ export function LiquidityPositionInput({
           make a select out of it and if changed, change the route */}
           <TokenIcon symbol={collateralSymbol} />
           <Text fontSize="12px" display="flex" color="gray.500">
-            Balance: {balance.deposited.add(balance.wallet).toNumber().toFixed(2)}{' '}
+            <Tooltip
+              label={
+                <>
+                  <Text>Account Available: {balance.deposited.toNumber().toFixed(2)}</Text>
+                  <Text>Wallet Balance: {balance.wallet.toNumber().toFixed(2)}</Text>
+                </>
+              }
+            >
+              Balance:&nbsp;
+            </Tooltip>
+            {balance.deposited.add(balance.wallet).toNumber().toFixed(2)}
             <Text
               color="cyan.500"
               fontSize="12px"
@@ -56,7 +67,7 @@ export function LiquidityPositionInput({
               onClick={() => {
                 const node = document.getElementById('input-deposit') as HTMLInputElement;
                 node.value = balance.deposited.add(balance.wallet).toNumber().toFixed(2);
-                setBalanceToDeposit(balance.deposited.add(balance.wallet));
+                setAmountToDeposit(balance.deposited.add(balance.wallet));
               }}
             >
               Max
@@ -75,18 +86,16 @@ export function LiquidityPositionInput({
             overflow="scroll"
             fontWeight={700}
             onChange={(e) => {
-              setBalanceToDeposit(
-                new Wei(e.target.value ? e.target.value : 0, balance.deposited.p)
-              );
+              setAmountToDeposit(new Wei(e.target.value ? e.target.value : 0, balance.deposited.p));
             }}
           />
           <Text fontSize="12px" color="gray.500">
-            ${balanceToDeposit.mul(price).toNumber().toFixed(2)}
+            ${amountToDeposit.mul(price).toNumber().toFixed(2)}
           </Text>
         </Flex>
       </Flex>
-      <Button isDisabled={balanceToDeposit.eq(0)}>
-        {balanceToDeposit.eq(0) ? 'Enter Amount' : userHasAccounts ? 'TODO' : 'Create Account'}
+      <Button isDisabled={amountToDeposit.eq(0)}>
+        {amountToDeposit.eq(0) ? 'Enter Amount' : userHasAccounts ? 'TODO' : 'Create Account'}
       </Button>
     </Flex>
   );

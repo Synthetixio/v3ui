@@ -13,6 +13,9 @@ import { LiquidityPositionInput } from '../../components/LiquidityPositionInput'
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useAccounts } from '@snx-v3/useAccounts';
+import { useRecoilState } from 'recoil';
+import { depositState } from '../../state/deposit';
+import { constants } from 'ethers';
 
 function DepositUi({
   isFirstDeposit,
@@ -78,6 +81,7 @@ function DepositUi({
 
 export function Deposit() {
   const { poolId, accountId, collateralSymbol } = useParams();
+  const [amountToDeposit] = useRecoilState(depositState);
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
 
@@ -93,7 +97,9 @@ export function Deposit() {
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
     accountCollaterals
-      ?.filter((collateral) => collateral.symbol === collateralSymbol)
+      ?.filter(
+        (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
+      )
       .map((collateral) => collateral.tokenAddress) || []
   );
 
@@ -110,9 +116,9 @@ export function Deposit() {
     tokenBalancesIsLoading &&
     userAccountsIsLoading;
 
-  const collateralTypeAddress = collateralTypes?.find(
-    (collateral) => collateral.symbol === collateralSymbol
-  )?.tokenAddress;
+  const collateralType = collateralTypes?.find(
+    (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
+  );
 
   const parsedColalteralSymbol = collateralSymbol === 'USDC' ? 'sUSDC' : collateralSymbol;
   const zeroWei = new Wei(0);
@@ -123,8 +129,8 @@ export function Deposit() {
     : zeroWei;
 
   const priceForCollateral =
-    !!collateralPrices && !!collateralTypeAddress
-      ? collateralPrices[collateralTypeAddress]!
+    !!collateralPrices && !!collateralType
+      ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
 
   const debt = liquidityPosition
@@ -134,15 +140,18 @@ export function Deposit() {
   const balance$ = accountCollaterals
     ? {
         deposited:
-          accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
-            ?.availableCollateral || zeroWei,
+          accountCollaterals.find(
+            (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
+          )?.availableCollateral || zeroWei,
         // TODO fix it
         wallet: userTokenBalances ? userTokenBalances[0] : zeroWei,
       }
     : { deposited: zeroWei, wallet: zeroWei };
+
   const collateralValue = liquidityPosition
     ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralValue
     : zeroWei;
+
   const collateralAmount = liquidityPosition
     ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralAmount
     : zeroWei;
@@ -170,8 +179,15 @@ export function Deposit() {
           collateralValue={collateralValue.toNumber().toFixed(2)}
           poolPnl="TODO"
           currentCollateral={collateralAmount.toNumber().toFixed(2)}
-          cRatio={cRatio.toNumber().toFixed(2)}
+          cRatio={
+            cRatio.eq(0) && amountToDeposit.gt(0)
+              ? new Wei(constants.MaxUint256).toNumber()
+              : cRatio.toNumber()
+          }
+          liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
+          targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
+          priceOfToDeposit={priceForCollateral}
         />
       }
     />

@@ -1,6 +1,9 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { CRatioProgressBar } from '../CRatioProgressBar';
+import { useRecoilState } from 'recoil';
+import { depositState } from '../../state/deposit';
+import Wei from '@synthetixio/wei';
 
 export function PositionOverview({
   currentCollateral,
@@ -10,6 +13,10 @@ export function PositionOverview({
   poolPnl,
   borrowed,
   isLoading,
+  priceOfToDeposit,
+  cRatio,
+  liquidationCratioPercentage,
+  targetCratioPercentage,
 }: {
   currentCollateral: string;
   collateralType: string;
@@ -17,9 +24,13 @@ export function PositionOverview({
   debt$: string;
   poolPnl: string;
   borrowed: string;
-  cRatio: string;
+  cRatio?: number;
+  liquidationCratioPercentage?: number;
+  targetCratioPercentage?: number;
   isLoading: boolean;
+  priceOfToDeposit: Wei;
 }) {
+  const [amountToDeposit] = useRecoilState(depositState);
   return (
     <Flex
       rounded="base"
@@ -28,7 +39,7 @@ export function PositionOverview({
       p="6"
       bg="navy.700"
       flexDir="column"
-      w="100%"
+      minW="710px"
     >
       <Heading fontSize="20px" mb="4">
         Overview
@@ -49,11 +60,27 @@ export function PositionOverview({
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Text>
-          <Text color="gray.500" fontSize="20px" fontWeight={800}>
-            {currentCollateral} {collateralType}
+          <Text color="gray.500" fontSize="20px" fontWeight={800} display="flex" gap="1">
+            {currentCollateral} {collateralType}{' '}
+            {amountToDeposit.gt(0) && (
+              <>
+                &rarr;
+                <Text color="white" fontSize="20px" fontWeight={800}>
+                  {amountToDeposit.toNumber().toFixed(2)} {collateralType}
+                </Text>
+              </>
+            )}
           </Text>
-          <Text color="gray.500" fontSize="16px">
-            ${collateralValue}
+          <Text color="gray.500" fontSize="16px" display="flex" gap="1">
+            ${collateralValue}{' '}
+            {amountToDeposit.gt(0) && (
+              <>
+                &rarr;
+                <Text color="white" fontSize="16px">
+                  {amountToDeposit.mul(priceOfToDeposit).toNumber().toFixed(2)} {collateralType}
+                </Text>
+              </>
+            )}
           </Text>
         </Flex>
         <Flex
@@ -96,10 +123,10 @@ export function PositionOverview({
       </Flex>
       <Box px="4" py="6" border="1px solid" borderColor="gray.900" rounded="base" mt="4">
         <CRatioProgressBar
-          currentCRatioPercentage={0}
-          liquidationCratioPercentage={150}
-          newCratioPercentage={0}
-          targetCratioPercentage={500}
+          currentCRatioPercentage={cRatio}
+          liquidationCratioPercentage={liquidationCratioPercentage}
+          newCratioPercentage={cRatio}
+          targetCratioPercentage={targetCratioPercentage}
           targetThreshold={1}
           isLoading={isLoading}
         />
