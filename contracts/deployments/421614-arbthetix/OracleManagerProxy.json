@@ -284,6 +284,22 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "oracleContract",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "oracleQuery",
+        "type": "bytes"
+      }
+    ],
+    "name": "OracleDataRequired",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "OverflowInt256ToUint256",
     "type": "error"
