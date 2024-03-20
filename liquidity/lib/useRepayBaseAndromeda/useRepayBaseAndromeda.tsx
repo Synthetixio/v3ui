@@ -73,11 +73,7 @@ export const useRepayBaseAndromeda = ({
 
         // USDC => sUSDC
         const wrap = amountToDeposit.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(
-              USDC_BASE_MARKET,
-              usdcAmount,
-              amountToDeposit.toBN()
-            )
+          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
           : undefined;
 
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
