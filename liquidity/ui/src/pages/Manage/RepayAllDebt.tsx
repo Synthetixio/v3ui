@@ -63,6 +63,9 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         queryClient.invalidateQueries({
           queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         }),
+        queryClient.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate'],
+        }),
       ]);
 
       await settleRepay();
