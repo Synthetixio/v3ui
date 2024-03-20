@@ -105,7 +105,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         CoreProxy.provider,
         allCalls,
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          if (!Array.isArray(encoded)) throw Error('Expected array');
           if (!singlePositionDecoder) return {};
           const pricesByAddress = keyBy(
             'address',
@@ -117,9 +117,10 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           const positionsEncoded =
             encoded.length % 2 === 0 ? encoded : encoded.slice(priceCalls.length);
           const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
-
           const positions = positionData.map(({ debt, collateral }, index) => {
-            const { poolName, collateralType, poolId } = positionCallsAndData[index];
+            const { poolName, collateralType, poolId } = positionCallsAndData[index]
+              ? positionCallsAndData[index]
+              : positionCallsAndData[index - 1];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
             const collateralAmount = collateral.amount;
             const collateralPrice = pricesByAddress?.[collateralType.tokenAddress].price;
