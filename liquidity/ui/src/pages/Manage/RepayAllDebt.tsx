@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { wei } from '@synthetixio/wei';
-import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useRepayBaseAndromeda } from '../../../../lib/useRepayBaseAndromeda';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -23,6 +23,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
   const currentDebt = debtExists ? liquidityPosition.debt : wei(0);
 
   const { data: SpotMarketProxy } = useSpotMarketProxy();
+
   const {
     exec: execRepay,
     settle: settleRepay,
@@ -40,7 +41,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     requireApproval,
     isLoading: approvalLoading,
   } = useApprove({
-    contractAddress: BASE_USDC,
+    contractAddress: getUSDCAddress(network?.id),
     amount: parseUnits(currentDebt.toString(), 6),
     spender: SpotMarketProxy?.address,
   });
@@ -61,6 +62,9 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         }),
         queryClient.invalidateQueries({
           queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate'],
         }),
       ]);
 

@@ -16,7 +16,7 @@ import { CollateralAlert } from '../../components/CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -171,8 +171,11 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
+
   const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset) ? BASE_USDC : collateralType?.tokenAddress
+    isBaseAndromeda(network?.id, network?.preset)
+      ? getUSDCAddress(network?.id)
+      : collateralType?.tokenAddress
   );
 
   const { data: ethBalance } = useEthBalance();
