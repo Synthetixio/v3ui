@@ -95,7 +95,7 @@ export const useRepayBaseAndromeda = ({
           ? SpotMarketProxy.populateTransaction.sell(
               USDC_BASE_MARKET,
               amountToDeposit.toBN(),
-              amountToDeposit.toBN(),
+              0,
               ethers.constants.AddressZero
             )
           : undefined;
