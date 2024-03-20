@@ -97,9 +97,8 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         onClick={submit}
         data-testid="repay"
       >
-        Repay USDC $<Amount value={currentDebt} data-testid="current debt" /> 
-
-        {sufficientBalance ? '' : "(Isufficient Balance)"}
+        Repay USDC $<Amount value={currentDebt} data-testid="current debt" />
+        {sufficientBalance ? '' : '(Isufficient Balance)'}
       </Button>
     </Flex>
   );
