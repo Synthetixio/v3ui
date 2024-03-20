@@ -109,7 +109,6 @@ export const useLiquidityPosition = ({
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: [tokenAddress],
         CoreProxy,
-        network,
       });
 
       const { calls: positionCalls, decoder: positionDecoder } = await loadPosition({
