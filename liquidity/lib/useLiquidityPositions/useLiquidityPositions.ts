@@ -82,7 +82,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           )
         )
       );
-
       const positionCallsAndData = positionCallsAndDataNested.flat();
 
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
@@ -114,13 +113,17 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               address: collateralTypes[i].tokenAddress,
             }))
           );
+          const encodedFiltered = encoded.filter(
+            (e) => e !== '0x0000000000000000000000000000000000000000000000000000000000000000'
+          );
           const positionsEncoded =
-            encoded.length % 2 === 0 ? encoded : encoded.slice(priceCalls.length);
+            encodedFiltered.length % 2 === 0
+              ? encodedFiltered
+              : encodedFiltered.slice(priceCalls.length);
+
           const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
           const positions = positionData.map(({ debt, collateral }, index) => {
-            const { poolName, collateralType, poolId } = positionCallsAndData[index]
-              ? positionCallsAndData[index]
-              : positionCallsAndData[index - 1];
+            const { poolName, collateralType, poolId } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
             const collateralAmount = collateral.amount;
             const collateralPrice = pricesByAddress?.[collateralType.tokenAddress].price;
