@@ -6,11 +6,12 @@ import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useRepayBaseAndromeda } from '../../../../lib/useRepayBaseAndromeda';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
 import { useSpotMarketProxy } from '../../../../lib/useSpotMarketProxy';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
 
 export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: LiquidityPosition }) => {
   const { network } = useNetwork();
@@ -23,6 +24,15 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
   const currentDebt = debtExists ? liquidityPosition.debt : wei(0);
 
   const { data: SpotMarketProxy } = useSpotMarketProxy();
+  const { data: tokenBalance } = useTokenBalance(
+    isBaseAndromeda(network?.id, network?.preset)
+      ? getUSDCAddress(network?.id)
+      : liquidityPosition.tokenAddress
+  );
+  const sufficientBalance = useMemo(
+    () => Number(tokenBalance?.toString()) >= currentDebt.toNumber(),
+    [currentDebt, tokenBalance]
+  );
 
   const {
     exec: execRepay,
@@ -42,7 +52,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     isLoading: approvalLoading,
   } = useApprove({
     contractAddress: getUSDCAddress(network?.id),
-    amount: parseUnits(currentDebt.toString(), 6),
+    amount: parseUnits(currentDebt.toString(), 6).add(1),
     spender: SpotMarketProxy?.address,
   });
 
@@ -81,8 +91,15 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         Your account currently has a positive debt. This amount must be paid to initiate collateral
         withdrawal.
       </Text>
-      <Button isLoading={isLoading || approvalLoading} onClick={submit} data-testid="repay">
-        Repay USDC $<Amount value={currentDebt} data-testid="current debt" />
+      <Button
+        isDisabled={!sufficientBalance}
+        isLoading={isLoading || approvalLoading}
+        onClick={submit}
+        data-testid="repay"
+      >
+        Repay USDC $<Amount value={currentDebt} data-testid="current debt" /> 
+
+        {sufficientBalance ? '' : "(Isufficient Balance)"}
       </Button>
     </Flex>
   );
