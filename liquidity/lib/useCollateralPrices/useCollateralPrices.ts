@@ -21,12 +21,6 @@ export async function loadPrices({
 }) {
   const calls = await Promise.all(
     collateralAddresses.map((address) => {
-      if (isBaseAndromeda(network.id, network.preset)) {
-        // For new deployment we have new ABI
-        // 'function getCollateralPrice(address collateralType, uint256 collateralAmount) view returns (uint256)'
-        // @ts-ignore TODO: remove eventually when types are aligned
-        return CoreProxy.populateTransaction.getCollateralPrice(address, 1);
-      }
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
