@@ -346,7 +346,6 @@ export const DepositModal: DepositModalProps = ({
             description: '',
           });
           if (isBaseAndromeda(network?.id, network?.preset)) {
-            console.log('Deposit Base Andromeda');
             await depositBaseAndromeda();
           } else {
             await execDeposit();
@@ -366,6 +365,9 @@ export const DepositModal: DepositModalProps = ({
               : Promise.resolve(),
             queryClient.invalidateQueries({
               queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
             }),
             !params.accountId
               ? queryClient.invalidateQueries({

@@ -15,7 +15,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { USDC_BASE_MARKET, getUSDCAddress, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 
 export const useDepositBaseAndromeda = ({
