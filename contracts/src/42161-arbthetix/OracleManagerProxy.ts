@@ -1,6 +1,6 @@
 // !!! DO NOT EDIT !!! Automatically generated file
 
-export const address = '0x12aE0D5CD26f212bFE242DA78139d463019f7a73';
+export const address = '0xCD4cbBe3a36D145072cDDB89B0AE966761E416F9';
 export const abi = [
   'error ImplementationIsSterile(address implementation)',
   'error NoChange()',
@@ -26,6 +26,7 @@ export const abi = [
   'error InvalidParameter(string parameter, string reason)',
   'error InvalidPrice(int256 price)',
   'error NodeNotRegistered(bytes32 nodeId)',
+  'error OracleDataRequired(address oracleContract, bytes oracleQuery)',
   'error OverflowInt256ToUint256()',
   'error OverflowInt56ToInt24()',
   'error OverflowUint256ToInt256()',
