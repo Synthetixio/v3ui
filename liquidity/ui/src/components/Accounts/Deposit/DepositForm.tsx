@@ -30,7 +30,7 @@ import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert } from '../../CollateralAlert';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useConnectWallet } from '@web3-onboard/react';
-import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export function DepositFormUi({
   collateralType,
@@ -291,12 +291,16 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const { network } = useNetwork();
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
+
   const { data: accountCollateral } = useAccountSpecificCollateral(
     params.accountId,
     collateralType?.tokenAddress
   );
+
   const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset) ? BASE_USDC : collateralType?.tokenAddress
+    isBaseAndromeda(network?.id, network?.preset)
+      ? getUSDCAddress(network?.id)
+      : collateralType?.tokenAddress
   );
 
   return (

@@ -124,19 +124,6 @@ export const NETWORKS: Network[] = [
     isTestnet: true,
   },
   {
-    id: 84531,
-    preset: 'andromeda',
-    hexId: `0x${Number(84531).toString(16)}`,
-    token: 'ETH',
-    name: 'base-goerli',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://base-goerli.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base Goerli (Andromeda)',
-    isSupported: false, // hidden by default but if wallet switched to Base Goerli it will be visible
-    publicRpcUrl: 'https://goerli.base.org',
-    isTestnet: true,
-  },
-  {
     id: 84532,
     preset: 'andromeda',
     hexId: `0x${Number(84532).toString(16)}`,
@@ -144,7 +131,7 @@ export const NETWORKS: Network[] = [
     name: 'base-sepolia',
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base Sepolia (Andromeda)',
+    label: 'Base Sepolia',
     isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
     publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,

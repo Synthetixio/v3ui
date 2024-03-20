@@ -86,19 +86,22 @@ export function useCollateralTypes(includeDelegationOff = false) {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
-        (collateralType) => ({
-          ...collateralType,
-          symbol:
-            collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
-              ? 'USDC'
-              : collateralType.symbol,
-          displaySymbol:
-            collateralType.displaySymbol === 'sUSDC' &&
-            isBaseAndromeda(network?.id, network?.preset)
-              ? 'USDC'
-              : collateralType.symbol,
-        })
+        (collateralType) => {
+          return {
+            ...collateralType,
+            symbol:
+              collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
+                ? 'USDC'
+                : collateralType.symbol,
+            displaySymbol:
+              collateralType.displaySymbol === 'sUSDC' &&
+              isBaseAndromeda(network?.id, network?.preset)
+                ? 'USDC'
+                : collateralType.symbol,
+          };
+        }
       );
+
       if (includeDelegationOff) {
         return collateralTypes;
       }
