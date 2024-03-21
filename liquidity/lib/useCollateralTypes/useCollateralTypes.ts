@@ -111,6 +111,7 @@ export function useCollateralTypes(includeDelegationOff = false) {
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
+
       const collateralTypes = (
         await loadCollateralTypes({
           CoreProxy,
@@ -122,6 +123,7 @@ export function useCollateralTypes(includeDelegationOff = false) {
         symbol: collateralType.symbol,
         displaySymbol: collateralType.symbol,
       }));
+
       if (includeDelegationOff) {
         return collateralTypes;
       }

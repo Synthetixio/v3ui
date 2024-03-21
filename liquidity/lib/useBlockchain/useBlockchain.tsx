@@ -65,6 +65,8 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
       return <OptimismIcon w="24px" h="24px" {...props} />;
     case 421614:
       return <ArbitrumIcon w="24px" h="24px" {...props} />;
+    case 42161:
+      return <ArbitrumIcon w="24px" h="24px" {...props} />;
     default:
       return <FailedIcon w="24px" h="24px" {...props} />;
   }
@@ -131,7 +133,7 @@ export const NETWORKS: Network[] = [
     name: 'base-sepolia',
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base Sepolia (Andromeda)',
+    label: 'Base Sepolia',
     isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
     publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,
@@ -174,12 +176,26 @@ export const NETWORKS: Network[] = [
     publicRpcUrl: 'https://sepolia.arbiscan.io/',
     isTestnet: true,
   },
+  {
+    id: 42161,
+    preset: 'arbthetix',
+    hexId: `0x${Number(42161).toString(16)}`,
+    token: 'ETH',
+    name: 'arbitrum',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Arbitrum',
+    isSupported: true,
+    publicRpcUrl: 'https://arbiscan.io/',
+    isTestnet: false,
+  },
 ];
 
 export const deploymentsWithERC7412: string[] = [
   '8453-andromeda',
   '84531-andromeda',
   '84532-andromeda',
+  '42161-arbthetix',
 ];
 
 export const DEFAULT_NETWORK =

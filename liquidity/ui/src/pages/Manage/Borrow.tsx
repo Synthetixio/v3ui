@@ -12,6 +12,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
 
 const BorrowUi: FC<{
   debtChange: Wei;
@@ -31,8 +32,7 @@ const BorrowUi: FC<{
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-          <DollarCircle />
-
+          {isBase ? <SUSDCIcon /> : <DollarCircle />}
           {isBase ? 'USDC' : 'snxUSD'}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
