@@ -8,10 +8,7 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-
-const USDCBaseAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-const sUSDCBaseAddress = '0xC74eA762cF06c9151cE074E6a569a5945b6302E7';
+import { getUSDCAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -26,12 +23,16 @@ const CollateralConfigurationSchema = z.object({
 const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
+  name: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
-const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
+const ERC20Interface = new utils.Interface([
+  'function symbol() view returns (string)',
+  'function name() view returns (string)',
+]);
 
 async function loadSymbols({
   Multicall3,
@@ -50,13 +51,36 @@ async function loadSymbols({
   );
 }
 
+async function loadNames({
+  Multicall3,
+  tokenConfigs,
+}: {
+  Multicall3: Multicall3Type;
+  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
+}) {
+  try {
+    const calls = tokenConfigs.map((tokenConfig) => ({
+      target: tokenConfig.tokenAddress,
+      callData: ERC20Interface.encodeFunctionData('name'),
+    }));
+    const multicallResult = await Multicall3.callStatic.aggregate(calls);
+    return multicallResult.returnData.map((bytes: string) =>
+      SymbolSchema.parse(ERC20Interface.decodeFunctionResult('name', bytes)[0])
+    );
+  } catch {
+    return '';
+  }
+}
+
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
   isBaseAndromedaNetwork,
+  networkId,
 }: {
   CoreProxy: CoreProxyType;
   Multicall3: Multicall3Type;
+  networkId?: number;
   isBaseAndromedaNetwork?: boolean;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
@@ -68,13 +92,15 @@ async function loadCollateralTypes({
 
   if (
     tokenConfigs.some((config) => {
-      return config.tokenAddress === sUSDCBaseAddress && isBaseAndromedaNetwork;
+      return config.tokenAddress === getsUSDCAddress(networkId) && isBaseAndromedaNetwork;
     })
   ) {
-    const sUSDConfig = tokenConfigs.find((config) => config.tokenAddress === sUSDCBaseAddress);
+    const sUSDConfig = tokenConfigs.find(
+      (config) => config.tokenAddress === getsUSDCAddress(networkId)
+    );
     if (sUSDConfig) {
       (tokenConfigs as any[]).push({
-        tokenAddress: USDCBaseAddress,
+        tokenAddress: getUSDCAddress(networkId),
         depositingEnabled: sUSDConfig.depositingEnabled,
         issuanceRatioD18: sUSDConfig.issuanceRatioD18,
         liquidationRatioD18: sUSDConfig.liquidationRatioD18,
@@ -83,11 +109,12 @@ async function loadCollateralTypes({
         oracleNodeId: sUSDConfig.oracleNodeId,
         symbol: 'USDC',
         displaySymbol: 'USDC',
+        name: 'USDC Coin',
       });
     }
   }
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
-
+  const names = await loadNames({ Multicall3, tokenConfigs });
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
     issuanceRatioD18: config.issuanceRatioD18,
@@ -98,6 +125,7 @@ async function loadCollateralTypes({
     tokenAddress: config.tokenAddress,
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
+    name: names[i],
   }));
 }
 
@@ -117,6 +145,7 @@ export function useCollateralTypes(includeDelegationOff = false) {
           CoreProxy,
           Multicall3,
           isBaseAndromedaNetwork: isBaseAndromeda(network?.id, network?.preset),
+          networkId: network?.id,
         })
       ).map((collateralType) => ({
         ...collateralType,

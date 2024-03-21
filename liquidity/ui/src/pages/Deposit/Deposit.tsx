@@ -22,7 +22,6 @@ import { useDeposit } from '@snx-v3/useDeposit';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useAllowance } from '@snx-v3/useAllowance';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
 
 function DepositUi({
   isFirstDeposit,
@@ -87,12 +86,11 @@ function DepositUi({
 }
 
 export function Deposit() {
-  const { poolId, accountId, collateralSymbol } = useParams();
+  const { poolId, accountId, collateralSymbol, collateralAddress } = useParams();
   const [amountToDeposit] = useRecoilState(depositState);
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
-  const { data: multicall3 } = useMulticall3();
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
 
@@ -111,9 +109,7 @@ export function Deposit() {
       ?.filter(
         (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
       )
-      .map((collateral) => collateral.tokenAddress) || [
-      '0x434Aa3FDb11798EDaB506D4a5e48F70845a66219',
-    ]
+      .map((collateral) => collateral.tokenAddress) || [collateralAddress || '']
   );
 
   const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
@@ -166,7 +162,7 @@ export function Deposit() {
           )?.availableCollateral || zeroWei,
         wallet: userTokenBalances ? userTokenBalances[0] : zeroWei,
       }
-    : { deposited: userTokenBalances[0], wallet: zeroWei };
+    : { deposited: !!userTokenBalances ? userTokenBalances[0] : zeroWei, wallet: zeroWei };
 
   const collateralValue = liquidityPosition
     ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralValue

@@ -1,24 +1,21 @@
-import { Button, Divider, Flex, Heading, Image, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
 import { Link } from 'react-router-dom';
-import { useGetPoolCollateralConfiguration } from '@snx-v3/usePoolCollateralConfiguration';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export function Pools() {
   const { data: pools, isLoading: poolsIsLoading } = usePools();
   const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
-  const { data: poolCollateralConfigs, isLoading: poolCollateralConfigsIsLoading } =
-    useGetPoolCollateralConfiguration(pools?.map((pool) => pool.id) || []);
 
-  const isLoading = collateralTypesIsLoading && poolCollateralConfigsIsLoading && poolsIsLoading;
+  const isLoading = collateralTypesIsLoading && poolsIsLoading;
 
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
       <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'}>
-        {pools?.map((pool, index) => (
+        {pools?.map((pool) => (
           <Flex
             key={pool.id}
             flexDir="column"
@@ -65,13 +62,13 @@ export function Pools() {
               <Image src="/pools.svg" mr="50%" mb={4} />
             </Flex>
             <Divider />
-            <Flex mt={4}>
-              {poolCollateralConfigs?.map((configs) => (
-                <>
-                  <TokenIcon symbol="USDC" />
+            <Flex mt={4} flexDir="column" gap="3">
+              {collateralTypes?.map((type) => (
+                <Flex key={type.tokenAddress.concat(type.symbol)}>
+                  <TokenIcon symbol={type.symbol} />
                   <Flex flexDirection="column" ml={3} mr="auto">
                     <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                      sUSDC
+                      {type.displaySymbol}
                     </Text>
                     <Text
                       color="gray.500"
@@ -79,13 +76,13 @@ export function Pools() {
                       fontSize="0.75rem"
                       lineHeight="1rem"
                     >
-                      Synthetix USDC
+                      {type.name}
                     </Text>
                   </Flex>
-                  <Link to={`/deposit/${'USDC'}/collateralAddress/${pool.id}`}>
+                  <Link to={`/deposit/${type.symbol}/${type.tokenAddress}/${pool.id}`}>
                     <Button>Deposit</Button>
                   </Link>
-                </>
+                </Flex>
               ))}
             </Flex>
           </Flex>

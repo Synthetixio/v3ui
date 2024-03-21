@@ -19,7 +19,10 @@ export const Router = () => {
             path="/positions/:collateralSymbol/:collateralAddress/:poolId"
             element={<Manage />}
           />
-          <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
+          <Route
+            path="/deposit/:collateralSymbol/:collateralAddress/:poolId"
+            element={<Deposit />}
+          />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
           <Route path="/playground" element={<Playground />} />
