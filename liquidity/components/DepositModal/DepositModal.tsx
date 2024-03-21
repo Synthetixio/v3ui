@@ -29,7 +29,7 @@ import { ContractError } from '@snx-v3/ContractError';
 import { usePool } from '@snx-v3/usePools';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useDepositBaseAndromeda } from '../../lib/useDepositBaseAndromeda';
 import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
 
@@ -62,6 +62,7 @@ export const DepositModalUi: FC<{
     state.matches(State.approve) || state.matches(State.deposit) || state.matches(State.wrap);
 
   const isWETH = collateralType?.symbol === 'WETH';
+
   const stepNumbers = {
     wrap: isWETH ? 1 : 0,
     approve: isWETH ? 2 : 1,
@@ -230,7 +231,7 @@ export const DepositModal: DepositModalProps = ({
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? BASE_USDC
+    ? getUSDCAddress(network?.id)
     : collateralType?.tokenAddress;
 
   const collateralNeeded = collateralChange.sub(availableCollateral);
@@ -270,6 +271,7 @@ export const DepositModal: DepositModalProps = ({
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
   });
+
   const { exec: depositBaseAndromeda } = useDepositBaseAndromeda({
     accountId: params.accountId,
     newAccountId,
@@ -279,6 +281,7 @@ export const DepositModal: DepositModalProps = ({
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
   });
+
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
   const [state, send] = useMachine(DepositMachine, {
@@ -362,6 +365,9 @@ export const DepositModal: DepositModalProps = ({
               : Promise.resolve(),
             queryClient.invalidateQueries({
               queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
             }),
             !params.accountId
               ? queryClient.invalidateQueries({

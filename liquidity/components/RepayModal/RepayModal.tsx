@@ -29,7 +29,7 @@ import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useRepayBaseAndromeda } from '../../lib/useRepayBaseAndromeda';
-import { BASE_USDC, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
 
@@ -130,6 +130,7 @@ export const RepayModal: React.FC<{
     availableUSDCollateral: availableCollateral,
     balance,
   });
+
   const { exec: execRepayBaseAndromeda, settle: settleRepayBaseAndromeda } = useRepayBaseAndromeda({
     accountId: params.accountId,
     poolId: params.poolId,
@@ -146,7 +147,7 @@ export const RepayModal: React.FC<{
   const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? BASE_USDC
+    ? getUSDCAddress(network?.id)
     : USDProxy?.address;
 
   const { approve, requireApproval } = useApprove({
@@ -239,6 +240,7 @@ export const RepayModal: React.FC<{
     },
   });
   const needToDeposit = amountToDeposit.gt(0);
+
   useEffect(() => {
     send(Events.SET_REQUIRE_APPROVAL, { requireApproval: requireApproval && needToDeposit });
   }, [needToDeposit, requireApproval, send]);
@@ -255,7 +257,9 @@ export const RepayModal: React.FC<{
     }
     send(Events.RUN);
   }, [onClose, send, state]);
+
   if (!params.poolId || !params.accountId || !collateralType) return null;
+
   return (
     <RepayModalUi
       state={state}

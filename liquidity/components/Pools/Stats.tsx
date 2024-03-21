@@ -85,7 +85,7 @@ export const Stats = ({ totalDebt, totalCollateral, isLoading }: StatsProps) => 
           textAlign="center"
           fontWeight="400"
         >
-          Total Earnings Lifetime
+          Total Lifetime Earnings
         </Text>
         <Flex justifyContent="center">
           {isLoading ? (
