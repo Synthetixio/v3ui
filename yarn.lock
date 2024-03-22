@@ -6211,7 +6211,6 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
-    "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6528,13 +6527,13 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useMarketNamesById": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/usePoolCollateralConfiguration": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
@@ -6882,7 +6881,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
+"@snx-v3/useDepositBaseAndromeda@workspace:*, @snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda"
   dependencies:
@@ -7031,18 +7030,6 @@ __metadata:
   dependencies:
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/usePoolCollateralConfiguration@workspace:*, @snx-v3/usePoolCollateralConfiguration@workspace:liquidity/lib/usePoolCollateralConfiguration":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePoolCollateralConfiguration@workspace:liquidity/lib/usePoolCollateralConfiguration"
-  dependencies:
-    "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 

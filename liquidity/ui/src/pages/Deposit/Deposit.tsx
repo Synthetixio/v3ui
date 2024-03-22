@@ -18,7 +18,7 @@ import { depositState } from '../../state/deposit';
 import { constants, utils } from 'ethers';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';

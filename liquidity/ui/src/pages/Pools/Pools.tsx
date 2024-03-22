@@ -6,10 +6,8 @@ import { Link } from 'react-router-dom';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export function Pools() {
-  const { data: pools, isLoading: poolsIsLoading } = usePools();
-  const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
-
-  const isLoading = collateralTypesIsLoading && poolsIsLoading;
+  const { data: pools } = usePools();
+  const { data: collateralTypes } = useCollateralTypes();
 
   return (
     <Flex flexDir="column">

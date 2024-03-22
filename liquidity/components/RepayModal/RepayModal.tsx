@@ -21,7 +21,6 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useApprove } from '@snx-v3/useApprove';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useMachine } from '@xstate/react';
 import type { StateFrom } from 'xstate';
