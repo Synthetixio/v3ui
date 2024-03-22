@@ -120,7 +120,6 @@ export const RepayModal: React.FC<{
   const { data: USDProxy } = useUSDProxy();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: balance } = useTokenBalance(USDProxy?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,
@@ -128,7 +127,6 @@ export const RepayModal: React.FC<{
     collateralTypeAddress: collateralType?.tokenAddress,
     debtChange,
     availableUSDCollateral: availableCollateral,
-    balance,
   });
 
   const { exec: execRepayBaseAndromeda, settle: settleRepayBaseAndromeda } = useRepayBaseAndromeda({

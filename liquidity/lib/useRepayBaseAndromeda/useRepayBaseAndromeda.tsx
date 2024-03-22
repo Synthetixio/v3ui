@@ -73,7 +73,7 @@ export const useRepayBaseAndromeda = ({
 
         // USDC => sUSDC
         const wrap = amountToDeposit.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
+          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 1)
           : undefined;
 
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
@@ -112,7 +112,7 @@ export const useRepayBaseAndromeda = ({
               amountToDeposit.toBN() // only deposit what's needed
             );
 
-        const burn = CoreProxy.populateTransaction.burnUsd(
+        const burn = await CoreProxy.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
@@ -120,7 +120,7 @@ export const useRepayBaseAndromeda = ({
         );
 
         const callsPromise = Promise.all(
-          [wrap, sUSDC_Approval, sell, sUSD_Approval, deposit, burn].filter(notNil)
+          [sUSDC_Approval, wrap, sell, sUSD_Approval, deposit, burn].filter(notNil)
         );
 
         const walletAddress = await signer.getAddress();

@@ -15,7 +15,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getUSDCAddress, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 
 export const useDepositBaseAndromeda = ({
@@ -80,14 +80,12 @@ export const useDepositBaseAndromeda = ({
         const amountD18 = amount.toBN();
 
         // Wrap USDC to sUSDC
-
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const wrap = amount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;
-
-        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const sUSDCApproval = amount.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)

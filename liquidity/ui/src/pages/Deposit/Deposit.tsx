@@ -15,12 +15,12 @@ import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { useRecoilState } from 'recoil';
 import { depositState } from '../../state/deposit';
-import { constants } from 'ethers';
-import { useApprove } from '@snx-v3/useApprove';
-import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
-import { useDeposit } from '@snx-v3/useDeposit';
+import { constants, utils } from 'ethers';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
-import { useAllowance } from '@snx-v3/useAllowance';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
+import { useApprove } from '@snx-v3/useApprove';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 
 function DepositUi({
@@ -88,9 +88,7 @@ function DepositUi({
 export function Deposit() {
   const { poolId, accountId, collateralSymbol, collateralAddress } = useParams();
   const [amountToDeposit] = useRecoilState(depositState);
-
-  const { data: CoreProxy } = useCoreProxy();
-  const { data: SpotMarketProxy } = useSpotMarketProxy();
+  const { network } = useNetwork();
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
 
@@ -106,11 +104,12 @@ export function Deposit() {
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
     accountCollaterals
-      ?.filter(
-        (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
-      )
+      ?.filter((collateral) => collateral.symbol === collateralSymbol)
       .map((collateral) => collateral.tokenAddress) || [collateralAddress || '']
   );
+
+  const { data: CoreProxy } = useCoreProxy();
+  const { data: SpotProxy } = useSpotMarketProxy();
 
   const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
 
@@ -120,11 +119,6 @@ export function Deposit() {
     (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
   );
 
-  const { data: allowance, isLoading: allowanceIsLoading } = useAllowance({
-    contractAddress: collateralType?.tokenAddress || '',
-    spender: SpotMarketProxy?.address,
-  });
-
   const isLoading =
     isPoolLoading &&
     liquidityPositionsIsLoading &&
@@ -132,75 +126,83 @@ export function Deposit() {
     collateralTypesIsLoading &&
     accountCollateralIsLoading &&
     tokenBalancesIsLoading &&
-    allowanceIsLoading &&
     userAccountsIsLoading;
 
-  const parsedColalteralSymbol = collateralSymbol === 'USDC' ? 'sUSDC' : collateralSymbol;
+  const parsedCollateralSymbol =
+    collateralSymbol === 'USDC' || collateralSymbol === 'fUSD' ? 'sUSDC' : collateralSymbol;
+  const position = liquidityPosition
+    ? liquidityPosition[`${poolId}-${parsedCollateralSymbol}`]
+    : undefined;
+
   const zeroWei = new Wei(0);
   const isFirstTimeDepositing = !liquidityPosition;
 
-  const cRatio = liquidityPosition
-    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`]?.cRatio
-    : zeroWei;
+  const cRatio = position ? position?.cRatio : zeroWei;
 
   const priceForCollateral =
     !!collateralPrices && !!collateralType
       ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
 
-  const debt = liquidityPosition
-    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].debt
-    : zeroWei;
+  const debt = position ? position.debt : zeroWei;
 
   const debt$ = debt.mul(priceForCollateral);
+
+  const userTokeBalance = userTokenBalances ? userTokenBalances[0] : zeroWei;
 
   const balance$ = accountCollaterals
     ? {
         deposited:
-          accountCollaterals.find(
-            (collateral) => collateral.symbol === collateralSymbol || collateral.symbol === 'sUSDC'
-          )?.availableCollateral || zeroWei,
-        wallet: userTokenBalances ? userTokenBalances[0] : zeroWei,
+          accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
+            ?.availableCollateral || zeroWei,
+        wallet: userTokeBalance,
       }
-    : { deposited: !!userTokenBalances ? userTokenBalances[0] : zeroWei, wallet: zeroWei };
+    : { deposited: userTokeBalance, wallet: zeroWei };
 
-  const collateralValue = liquidityPosition
-    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralValue
-    : zeroWei;
+  const collateralValue = position ? position.collateralValue : zeroWei;
 
-  const collateralAmount = liquidityPosition
-    ? liquidityPosition[`${poolId}-${parsedColalteralSymbol}`].collateralAmount
-    : zeroWei;
+  const collateralAmount = position ? position.collateralAmount : zeroWei;
 
-  const approveMutation = useApprove({
-    amount: amountToDeposit.toBN(),
-    contractAddress: collateralType?.tokenAddress,
-    spender: CoreProxy?.address,
+  const { approve, requireApproval } = useApprove({
+    contractAddress: collateralAddress,
+    amount: amountToDeposit.gt(0)
+      ? isBaseAndromeda(network?.id, network?.preset)
+        ? //Base USDC is 6 decimals
+          utils.parseUnits(amountToDeposit.toString(), 6)
+        : amountToDeposit.toBN()
+      : 0,
+    spender: isBaseAndromeda(network?.id, network?.preset)
+      ? SpotProxy?.address
+      : CoreProxy?.address,
   });
 
-  const depositMutation = useDeposit({
-    accountId,
-    newAccountId: (Math.floor(Math.random() * 1_000_000) + 1).toString(),
-    collateralChange: amountToDeposit,
-    currentCollateral: balance$.deposited,
-    availableCollateral: balance$.deposited,
-    collateralTypeAddress: collateralType?.tokenAddress,
-    poolId,
-  });
-  const depositBaseAndromedaMutation = useDepositBaseAndromeda({
-    accountId,
-    newAccountId: (Math.floor(Math.random() * 1_000_000) + 1).toString(),
-    collateralChange: amountToDeposit,
-    currentCollateral: balance$.deposited,
-    availableCollateral: balance$.deposited,
-    collateralTypeAddress: collateralType?.tokenAddress,
-    poolId,
-  });
+  // const depositMutation = useDeposit({
+  //   accountId,
+  //   newAccountId: (Math.floor(Math.random() * 1_000_000) + 1).toString(),
+  //   collateralChange: amountToDeposit,
+  //   currentCollateral: balance$.deposited,
+  //   availableCollateral: balance$.deposited,
+  //   collateralTypeAddress: collateralAddress,
+  //   poolId,
+  // });
+  const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } =
+    useDepositBaseAndromeda({
+      accountId,
+      newAccountId: '1337',
+      poolId: poolId,
+      collateralTypeAddress: collateralAddress,
+      collateralChange: amountToDeposit,
+      currentCollateral: position ? position.collateralAmount : zeroWei,
+      availableCollateral: zeroWei,
+    });
 
   const handleButtonClick = async (action: 'createPosition' | 'createAccount') => {
     if (action === 'createPosition') {
-      if (allowance?.lt(amountToDeposit)) {
-        await approveMutation.approve(true);
+      if (requireApproval) {
+        await approve(false);
+      }
+      if (isBaseAndromeda(network?.id, network?.preset)) {
+        await depositBaseAndromeda();
       }
     }
   };
@@ -222,9 +224,7 @@ export function Deposit() {
           nextCRatio={cRatio.eq(0) && amountToDeposit.gt(0) ? 'Infinite' : cRatio.toString()}
           deposited={collateralValue.toNumber().toFixed(2)}
           onButtonClick={handleButtonClick}
-          spendingLimit={allowance || zeroWei}
-          approveIsLoading={approveMutation.isLoading}
-          depositIsLoading={depositMutation.isLoading || depositBaseAndromedaMutation.isLoading}
+          depositIsLoading={depositBaseAndromedaIsLoading}
         />
       }
       PositionOverview={

@@ -26,8 +26,6 @@ export function LiquidityPositionInput({
   nextCRatio,
   deposited,
   onButtonClick,
-  spendingLimit,
-  approveIsLoading,
   depositIsLoading,
 }: {
   title: string;
@@ -39,8 +37,6 @@ export function LiquidityPositionInput({
   nextCRatio: string;
   deposited: string;
   onButtonClick: (action: 'createPosition' | 'createAccount') => void;
-  spendingLimit: Wei;
-  approveIsLoading: boolean;
   depositIsLoading: boolean;
 }) {
   const [amountToDeposit, setAmountToDeposit] = useRecoilState(depositState);
@@ -175,36 +171,6 @@ export function LiquidityPositionInput({
       ) : txs === 'position' ? (
         <>
           <Flex flexDir="column" gap="6">
-            <Flex
-              bg="rgba(0,0,0,0.3)"
-              border="1px solid"
-              borderColor={spendingLimit.gte(amountToDeposit) ? 'green.600' : 'gray.900'}
-              rounded="base"
-              px="3"
-              py="4"
-              gap="2"
-            >
-              <Flex
-                rounded="50%"
-                minW="40px"
-                minH="40px"
-                bg={spendingLimit.gte(amountToDeposit) ? 'green.600' : 'gray.900'}
-                justifyContent="center"
-                alignItems="center"
-                fontWeight={700}
-                color="white"
-              >
-                {approveIsLoading ? <Spinner colorScheme="cyan" /> : 1}
-              </Flex>
-              <Flex flexDir="column">
-                <Text color="white" fontWeight={700}>
-                  Approve {collateralSymbol} transfer
-                </Text>
-                <Text fontSize="12px" color="gray.500">
-                  You must approve your {collateralSymbol} transfer before depositing.
-                </Text>
-              </Flex>
-            </Flex>
             <Flex
               bg="rgba(0,0,0,0.3)"
               border="1px solid"
