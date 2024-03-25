@@ -8,7 +8,7 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { getUSDCAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -76,11 +76,9 @@ async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
   isBaseAndromedaNetwork,
-  networkId,
 }: {
   CoreProxy: CoreProxyType;
   Multicall3: Multicall3Type;
-  networkId?: number;
   isBaseAndromedaNetwork?: boolean;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
@@ -90,29 +88,6 @@ async function loadCollateralTypes({
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
-  if (
-    tokenConfigs.some((config) => {
-      return config.tokenAddress === getsUSDCAddress(networkId) && isBaseAndromedaNetwork;
-    })
-  ) {
-    const sUSDConfig = tokenConfigs.find(
-      (config) => config.tokenAddress === getsUSDCAddress(networkId)
-    );
-    if (sUSDConfig) {
-      (tokenConfigs as any[]).push({
-        tokenAddress: getUSDCAddress(networkId),
-        depositingEnabled: sUSDConfig.depositingEnabled,
-        issuanceRatioD18: sUSDConfig.issuanceRatioD18,
-        liquidationRatioD18: sUSDConfig.liquidationRatioD18,
-        liquidationRewardD18: sUSDConfig.liquidationRewardD18,
-        minDelegationD18: sUSDConfig.minDelegationD18,
-        oracleNodeId: sUSDConfig.oracleNodeId,
-        symbol: 'USDC',
-        displaySymbol: 'USDC',
-        name: 'USDC Coin',
-      });
-    }
-  }
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
   const names = await loadNames({ Multicall3, tokenConfigs });
   return tokenConfigs.map((config, i) => ({
@@ -123,9 +98,14 @@ async function loadCollateralTypes({
     minDelegationD18: config.minDelegationD18,
     oracleNodeId: config.oracleNodeId,
     tokenAddress: config.tokenAddress,
-    symbol: symbols[i],
-    displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
-    name: names[i],
+    symbol: isBaseAndromedaNetwork && symbols[i] === 'sUSDC' ? 'USDC' : symbols[i],
+    displaySymbol:
+      symbols[i] === 'WETH'
+        ? 'ETH'
+        : isBaseAndromedaNetwork && symbols[i] === 'sUSDC'
+          ? 'USDC'
+          : symbols[i],
+    name: isBaseAndromedaNetwork && symbols[i] === 'sUSDC' ? 'Synthetic USD Coin' : names[i],
   }));
 }
 
@@ -145,7 +125,6 @@ export function useCollateralTypes(includeDelegationOff = false) {
           CoreProxy,
           Multicall3,
           isBaseAndromedaNetwork: isBaseAndromeda(network?.id, network?.preset),
-          networkId: network?.id,
         })
       ).map((collateralType) => ({
         ...collateralType,

@@ -11,7 +11,6 @@ export function PositionOverview({
   collateralValue,
   debt$,
   poolPnl,
-  borrowed,
   isLoading,
   priceOfToDeposit,
   cRatio,
@@ -23,7 +22,6 @@ export function PositionOverview({
   collateralValue: string;
   debt$: string;
   poolPnl: string;
-  borrowed: string;
   cRatio?: number;
   liquidationCratioPercentage?: number;
   targetCratioPercentage?: number;
@@ -108,15 +106,6 @@ export function PositionOverview({
             </Tooltip>
             <Text color="gray.500" fontSize="20px" fontWeight={800}>
               {poolPnl}
-            </Text>
-          </Text>
-          <Text color="gray.500" fontSize="12px" display="flex" alignItems="center" gap="2">
-            Borrowed{' '}
-            <Tooltip label="TODO" p="3">
-              <InfoIcon w="12px" h="12px" />
-            </Tooltip>
-            <Text color="gray.500" fontSize="20px" fontWeight={800}>
-              {borrowed}
             </Text>
           </Text>
         </Flex>

@@ -1,4 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon, CheckIcon } from '@chakra-ui/icons';
 import {
   Alert,
   Button,
@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   Input,
+  Link,
   Spinner,
   Text,
   Tooltip,
@@ -24,9 +25,12 @@ export function LiquidityPositionInput({
   userHasAccounts,
   currentCRatio,
   nextCRatio,
-  deposited,
+  deposited = new Wei(0),
   onButtonClick,
   depositIsLoading,
+  approveIsLoading,
+  requireApprove,
+  completedAllSteps,
 }: {
   title: string;
   collateralSymbol: string;
@@ -35,9 +39,12 @@ export function LiquidityPositionInput({
   userHasAccounts: boolean;
   currentCRatio: string;
   nextCRatio: string;
-  deposited: string;
+  deposited?: Wei;
   onButtonClick: (action: 'createPosition' | 'createAccount') => void;
   depositIsLoading: boolean;
+  approveIsLoading: boolean;
+  requireApprove: boolean;
+  completedAllSteps: boolean;
 }) {
   const [amountToDeposit, setAmountToDeposit] = useRecoilState(depositState);
   const [txs, setTxs] = useState<'account' | 'position' | null>(null);
@@ -56,7 +63,42 @@ export function LiquidityPositionInput({
         {title}
       </Heading>
       <Divider />
-      {!txs ? (
+      {completedAllSteps ? (
+        <Flex flexDir="column" gap="6">
+          <Text color="white" fontSize="14px">
+            Your position has been successfully opened, read more about it in the Synthetix V3
+            Documentation.
+          </Text>
+          <Alert colorScheme="green" rounded="base">
+            <Flex bg="green.500" p="1" rounded="full" mr="2">
+              <CheckIcon w="12px" h="12px" color="green.900" />
+            </Flex>
+            Position successfully Opened
+          </Alert>
+          <Flex w="100%" p="3" bg="gray.900" flexDir="column">
+            <Flex justifyContent="space-between">
+              <Text color="white" fontWeight={700} fontSize="12px">
+                Total {collateralSymbol}
+              </Text>
+              <Text color="white" fontWeight={700} fontSize="12px">
+                {deposited.toNumber().toFixed(2)} &rarr;
+                {deposited.add(amountToDeposit).toNumber().toFixed(2)}
+              </Text>
+            </Flex>
+            <Flex justifyContent="space-between">
+              <Text color="white" fontWeight={700} fontSize="12px">
+                C-ratio
+              </Text>
+              <Text color="white" fontWeight={700} fontSize="12px">
+                {currentCRatio === '0.0' ? 'N/A' : currentCRatio} &rarr; {nextCRatio}
+              </Text>
+            </Flex>
+          </Flex>
+          <Link href="/">
+            <Button w="100%">Continue</Button>
+          </Link>
+        </Flex>
+      ) : !txs ? (
         <>
           <Text fontSize="14px" color="gray.50">
             Deposit Collateral{' '}
@@ -71,8 +113,6 @@ export function LiquidityPositionInput({
             justifyContent="space-between"
           >
             <Flex p="2" flexDir="column" gap="1" w="100%">
-              {/* TODO @dev
-          make a select out of it and if changed, change the route */}
               <TokenIcon symbol={collateralSymbol} />
               <Text fontSize="12px" display="flex" color="gray.500">
                 <Tooltip
@@ -93,9 +133,10 @@ export function LiquidityPositionInput({
                   ml="2"
                   cursor="pointer"
                   onClick={() => {
+                    const sumedUp = balance.deposited.add(balance.wallet);
+                    setAmountToDeposit(sumedUp);
                     const node = document.getElementById('input-deposit') as HTMLInputElement;
-                    node.value = balance.deposited.add(balance.wallet).toNumber().toFixed(2);
-                    setAmountToDeposit(balance.deposited.add(balance.wallet));
+                    node.value = sumedUp.toNumber().toFixed(2);
                   }}
                 >
                   Max
@@ -140,7 +181,8 @@ export function LiquidityPositionInput({
                     Total {collateralSymbol}
                   </Text>
                   <Text color="white" fontWeight={700} fontSize="12px">
-                    {deposited} &rarr; {amountToDeposit.toNumber().toFixed(2)}
+                    {deposited.toNumber().toFixed(2)} &rarr;
+                    {deposited.add(amountToDeposit).toNumber().toFixed(2)}
                   </Text>
                 </Flex>
                 <Flex justifyContent="space-between">
@@ -171,6 +213,37 @@ export function LiquidityPositionInput({
       ) : txs === 'position' ? (
         <>
           <Flex flexDir="column" gap="6">
+            <Flex
+              bg="rgba(0,0,0,0.3)"
+              border="1px solid"
+              borderColor={requireApprove ? 'gray.900' : 'green.500'}
+              rounded="base"
+              px="3"
+              py="4"
+              gap="2"
+              alignItems="center"
+            >
+              <Flex
+                rounded="50%"
+                minW="40px"
+                minH="40px"
+                bg={requireApprove ? 'gray.900' : 'green.500'}
+                justifyContent="center"
+                alignItems="center"
+                fontWeight={700}
+                color="white"
+              >
+                {approveIsLoading ? <Spinner colorScheme="cyan" /> : 1}
+              </Flex>
+              <Flex flexDir="column">
+                <Text color="white" fontWeight={700}>
+                  Approve {collateralSymbol} transfer
+                </Text>
+                <Text fontSize="12px" color="gray.500">
+                  You must approve your {collateralSymbol} transfer before depositing.
+                </Text>
+              </Flex>
+            </Flex>
             <Flex
               bg="rgba(0,0,0,0.3)"
               border="1px solid"
