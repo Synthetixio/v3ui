@@ -15,8 +15,14 @@ export const Router = () => {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route element={<DefaultLayout />}>
-          <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
-          <Route path="/deposit/:collateralSymbol/:poolId" element={<Deposit />} />
+          <Route
+            path="/positions/:collateralSymbol/:collateralAddress/:poolId"
+            element={<Manage />}
+          />
+          <Route
+            path="/deposit/:collateralSymbol/:collateralAddress/:poolId"
+            element={<Deposit />}
+          />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
           <Route path="/playground" element={<Playground />} />

@@ -143,6 +143,7 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
       parseError
     );
     // If we cant parse it, throw the original error
+    console.error(error);
     throw error;
   }
 };
