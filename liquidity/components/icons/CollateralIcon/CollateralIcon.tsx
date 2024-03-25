@@ -24,6 +24,7 @@ export const CollateralIcon = ({
       return <EthereumIcon {...props} />;
     case 'SNX':
     case 'fSNX':
+    case 'fwSNX':
       return <SNXIcon fill={fill} color={color} {...props} />;
     case 'OP':
       return <OptimismIcon {...props} />;
@@ -36,6 +37,7 @@ export const CollateralIcon = ({
     case 'sUSDC':
     case 'USDC':
     case 'USDh':
+    case 'fUSDC':
       return <SUSDCIcon {...props} />;
     case 'ARB':
       return <ArbitrumIcon {...props} />;

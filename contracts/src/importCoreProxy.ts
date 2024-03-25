@@ -7,8 +7,6 @@ import type { CoreProxy as CoreProxy13370Main } from './13370-main/CoreProxy';
 import type { CoreProxy as CoreProxy42161Arbthetix } from './42161-arbthetix/CoreProxy';
 import type { CoreProxy as CoreProxy421614Arbthetix } from './421614-arbthetix/CoreProxy';
 import type { CoreProxy as CoreProxy8453Andromeda } from './8453-andromeda/CoreProxy';
-import type { CoreProxy as CoreProxy84531Andromeda } from './84531-andromeda/CoreProxy';
-import type { CoreProxy as CoreProxy84531Main } from './84531-main/CoreProxy';
 import type { CoreProxy as CoreProxy84532Andromeda } from './84532-andromeda/CoreProxy';
 
 export type CoreProxyType =
@@ -19,8 +17,6 @@ export type CoreProxyType =
   | CoreProxy42161Arbthetix
   | CoreProxy421614Arbthetix
   | CoreProxy8453Andromeda
-  | CoreProxy84531Andromeda
-  | CoreProxy84531Main
   | CoreProxy84532Andromeda;
 
 export async function importCoreProxy(chainId: number, preset: string = 'main') {
@@ -39,10 +35,6 @@ export async function importCoreProxy(chainId: number, preset: string = 'main') 
       return import('./421614-arbthetix/CoreProxy');
     case '8453-andromeda':
       return import('./8453-andromeda/CoreProxy');
-    case '84531-andromeda':
-      return import('./84531-andromeda/CoreProxy');
-    case '84531-main':
-      return import('./84531-main/CoreProxy');
     case '84532-andromeda':
       return import('./84532-andromeda/CoreProxy');
     default:

@@ -106,7 +106,7 @@ export const useDepositBaseAndromeda = ({
           BigNumber.from(id),
           BigNumber.from(poolId),
           sUSDC_ADDRESS,
-          currentCollateral.add(collateralChange).toBN(),
+          currentCollateral.toBN().add(collateralChange.toBN()),
           wei(1).toBN()
         );
 

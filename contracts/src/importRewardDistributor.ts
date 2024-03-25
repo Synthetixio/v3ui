@@ -5,8 +5,6 @@ import type { RewardDistributor as RewardDistributor10Main } from './10-main/Rew
 import type { RewardDistributor as RewardDistributor11155111Main } from './11155111-main/RewardDistributor';
 import type { RewardDistributor as RewardDistributor13370Main } from './13370-main/RewardDistributor';
 import type { RewardDistributor as RewardDistributor8453Andromeda } from './8453-andromeda/RewardDistributor';
-import type { RewardDistributor as RewardDistributor84531Andromeda } from './84531-andromeda/RewardDistributor';
-import type { RewardDistributor as RewardDistributor84531Main } from './84531-main/RewardDistributor';
 import type { RewardDistributor as RewardDistributor84532Andromeda } from './84532-andromeda/RewardDistributor';
 
 export type RewardDistributorType =
@@ -15,8 +13,6 @@ export type RewardDistributorType =
   | RewardDistributor11155111Main
   | RewardDistributor13370Main
   | RewardDistributor8453Andromeda
-  | RewardDistributor84531Andromeda
-  | RewardDistributor84531Main
   | RewardDistributor84532Andromeda;
 
 export async function importRewardDistributor(chainId: number, preset: string = 'main') {
@@ -31,10 +27,6 @@ export async function importRewardDistributor(chainId: number, preset: string = 
       return import('./13370-main/RewardDistributor');
     case '8453-andromeda':
       return import('./8453-andromeda/RewardDistributor');
-    case '84531-andromeda':
-      return import('./84531-andromeda/RewardDistributor');
-    case '84531-main':
-      return import('./84531-main/RewardDistributor');
     case '84532-andromeda':
       return import('./84532-andromeda/RewardDistributor');
     default:
