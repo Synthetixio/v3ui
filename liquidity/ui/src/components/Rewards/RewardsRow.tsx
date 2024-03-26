@@ -52,6 +52,7 @@ export const RewardsRow = ({
   const { txnStatus, txnHash } = txnState;
 
   const frequencyString = convertSecondsToDisplayString(frequency);
+
   const claimButtonLabel = () => {
     if (claimableAmount > 0) {
       return 'Claim';
@@ -61,6 +62,10 @@ export const RewardsRow = ({
     }
     return 'Claimed';
   };
+
+  // Note adjustment will need to be made for decimals
+  const totalAmount = total / 1e18;
+
   return (
     <>
       <RewardsModal
@@ -84,8 +89,7 @@ export const RewardsRow = ({
                   fontWeight={500}
                   lineHeight="20px"
                 >
-                  <Amount value={wei(readOnly ? total : projectedAmount)} />
-
+                  <Amount value={wei(readOnly ? totalAmount : projectedAmount)} />
                   {` ${symbol}`}
                 </Text>
               </Tooltip>
