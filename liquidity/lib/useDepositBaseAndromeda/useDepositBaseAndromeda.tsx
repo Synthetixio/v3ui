@@ -77,7 +77,7 @@ export const useDepositBaseAndromeda = ({
 
         const amount = collateralChange.sub(availableCollateral);
         const usdcAmount = amount.gt(0) ? parseUnits(amount.toString(), 6) : BigNumber.from(0);
-        const amountD18 = amount.toBN();
+        const amountD18 = parseUnits(amount.toString(), 18);
 
         // Wrap USDC to sUSDC
 
@@ -106,7 +106,7 @@ export const useDepositBaseAndromeda = ({
           BigNumber.from(id),
           BigNumber.from(poolId),
           sUSDC_ADDRESS,
-          currentCollateral.toBN().add(collateralChange.toBN()),
+          currentCollateral.toBN().add(amountD18),
           wei(1).toBN()
         );
 
