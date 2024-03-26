@@ -6073,12 +6073,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/PoolBox@workspace:liquidity/components/PoolBox"
   dependencies:
-    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/BorderBox": "workspace:*"
-    "@snx-v3/TrendText": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
-    "@snx-v3/format": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
@@ -6174,7 +6171,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/TrendText@workspace:*, @snx-v3/TrendText@workspace:liquidity/components/TrendText":
+"@snx-v3/TrendText@workspace:liquidity/components/TrendText":
   version: 0.0.0-use.local
   resolution: "@snx-v3/TrendText@workspace:liquidity/components/TrendText"
   dependencies:
