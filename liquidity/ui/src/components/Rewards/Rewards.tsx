@@ -112,7 +112,6 @@ export const Rewards = ({
                     address={item.distributorAddress}
                     readOnly={readOnly}
                     total={item.total}
-                    decimals={item.decimals}
                   />
                 ))}
               </Tbody>

@@ -18,7 +18,6 @@ interface RewardsRowInterface {
   address: string;
   readOnly: boolean;
   total: number;
-  decimals: number;
 }
 
 export const RewardsRow = ({
@@ -31,7 +30,6 @@ export const RewardsRow = ({
   address,
   readOnly,
   total,
-  decimals,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
@@ -111,13 +109,13 @@ export const RewardsRow = ({
               <Amount value={wei(claimableAmount)} />
               {` ${symbol}`}
             </Text>
-            {lifetimeClaimed > 0 ? (
+            {lifetimeClaimed > 0 && (
               <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                 <Tooltip label="Total claimed over lifetime">Lifetime: &nbsp;</Tooltip>
-                <Amount value={wei(lifetimeClaimed.toString(), decimals, true)} />
+                <Amount value={wei(lifetimeClaimed.toString(), 18, true)} />
                 {symbol}
               </Text>
-            ) : null}
+            )}
           </Fade>
         </Td>
         {!readOnly && (
