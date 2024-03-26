@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { InfoOutlineIcon } from '@chakra-ui/icons';
 import {
   Flex,
   Table,
@@ -11,22 +10,13 @@ import {
   Thead,
   Tr,
   Tbody,
-  Tooltip,
   Skeleton,
-  TextProps,
 } from '@chakra-ui/react';
-import { logMarket, PoolType, usePoolData } from '@snx-v3/usePoolData';
-import {
-  calculateSevenDaysPnlGrowth,
-  calculatePoolPerformanceSevenDays,
-  calculatePoolPerformanceLifetime,
-} from '@snx-v3/calculations';
+import { PoolType, usePoolData } from '@snx-v3/usePoolData';
 import { formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { useMarketNamesById } from '@snx-v3/useMarketNamesById';
-import { TrendText } from '@snx-v3/TrendText';
 import { BorderBox } from '@snx-v3/BorderBox';
-import Wei from '@synthetixio/wei';
 
 const StyledTh: FC<TableCellProps> = (props) => (
   <Th
@@ -72,34 +62,6 @@ const LoadingRow = () => (
   </Tr>
 );
 
-interface TotalValueProps extends TextProps {
-  value?: Wei;
-  isLoading: boolean;
-  formatter?: (val: string | number) => string;
-}
-
-const TotalValue: FC<TotalValueProps> = ({
-  value,
-  isLoading,
-  formatter = formatNumberToUsd,
-  ...props
-}) => {
-  if (isLoading) return <Skeleton w={16} h={8} mt={1} />;
-  if (!value) return <>-</>;
-  return (
-    <TrendText
-      value={value}
-      display="flex"
-      alignItems="center"
-      fontSize="2xl"
-      fontWeight="800"
-      {...props}
-    >
-      {formatter(value.toNumber())}{' '}
-    </TrendText>
-  );
-};
-
 export function MarketSectionUi({
   poolData,
   marketNamesById,
@@ -111,9 +73,6 @@ export function MarketSectionUi({
   poolId?: string;
   poolDataFetched: boolean;
 }) {
-  const sevenDaysPerformance = calculatePoolPerformanceSevenDays(poolData);
-  const lifeTimePerformance = calculatePoolPerformanceLifetime(poolData);
-
   if (poolDataFetched && !poolData) {
     return (
       <BorderBox padding={4}>
@@ -126,46 +85,7 @@ export function MarketSectionUi({
       <Text fontSize="xl" fontWeight={700}>
         Markets
       </Text>
-      <Flex mt={4} gap={4} flexDirection={{ base: 'column', sm: 'row' }}>
-        <BorderBox paddingY={2} paddingX={4} flexGrow="1" flexDirection="column">
-          <Text
-            fontSize="md"
-            color="white"
-            display="flex"
-            gap={1}
-            alignItems="center"
-            fontWeight={700}
-          >
-            Last 7 Days{' '}
-            <Tooltip label="Market's performance in the last seven days">
-              <InfoOutlineIcon w="10px" h="10px" />
-            </Tooltip>
-          </Text>
-          <TotalValue value={sevenDaysPerformance?.value} isLoading={!poolDataFetched} />
-          <TotalValue
-            value={sevenDaysPerformance?.growthPercentage}
-            isLoading={!poolDataFetched}
-            fontSize="md"
-            formatter={formatPercent}
-          />
-        </BorderBox>
-        <BorderBox paddingY={2} paddingX={4} flexGrow="1" flexDirection="column">
-          <Text
-            fontWeight={700}
-            fontSize="md"
-            color="white"
-            display="flex"
-            gap={1}
-            alignItems="center"
-          >
-            Performance Lifetime
-            <Tooltip label="Market's lifetime performance">
-              <InfoOutlineIcon w="10px" h="10px" />
-            </Tooltip>
-          </Text>
-          <TotalValue value={lifeTimePerformance} isLoading={!poolDataFetched} />
-        </BorderBox>
-      </Flex>
+
       <Flex>
         <TableContainer w="100%">
           <Table variant="simple">
@@ -173,8 +93,8 @@ export function MarketSectionUi({
               <Tr>
                 <StyledTh>Market</StyledTh>
                 <StyledTh>Pool Allocation</StyledTh>
-                <StyledTh>Last 7 Days</StyledTh>
-                <StyledTh>Lifetime</StyledTh>
+                <StyledTh>Total Deposited</StyledTh>
+                <StyledTh>Total Withdrawn</StyledTh>
               </Tr>
             </Thead>
             <Tbody>
@@ -190,14 +110,9 @@ export function MarketSectionUi({
               ) : (
                 poolData?.configurations.map(({ id, market, weight }, i) => {
                   const isLastItem = i + 1 === poolData.configurations.length;
-                  const growth = calculateSevenDaysPnlGrowth(market.market_snapshots_by_week);
+
                   return (
-                    <Tr
-                      onClick={() => logMarket(market)}
-                      key={id}
-                      data-testid="pool market"
-                      data-market={id}
-                    >
+                    <Tr key={id} data-testid="pool market" data-market={id}>
                       <StyledTd isLastItem={isLastItem}>
                         <Text fontSize="sm" display="block" data-testid="market name">
                           {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
@@ -212,101 +127,22 @@ export function MarketSectionUi({
                             <Text display="block">
                               {formatPercent(weight.div(poolData.total_weight).toNumber())}
                             </Text>
-                            {/* TODO, figure out max debt. See notion ticket "Pool page market max debt" */}
-                            {/*
-                            <Flex flexWrap="wrap" maxW="135px">
-                              <Text mr={1}>Max Debt:</Text>
-                              <Text>
-                                {max_debt_share_value.gt(Number.MAX_SAFE_INTEGER)
-                                  ? 'Unlimited'
-                                  : formatNumberToUsd(max_debt_share_value.toNumber())}
-                              </Text>
-                            </Flex>
-                            */}
                           </>
                         ) : (
                           '-'
                         )}
                       </StyledTd>
+                      {/* Total Deposited */}
                       <StyledTd isLastItem={isLastItem} data-testid="market growth">
-                        {growth ? (
-                          <>
-                            <Tooltip
-                              hasArrow
-                              label={
-                                <Flex
-                                  flexDirection="column"
-                                  alignItems="flex-start"
-                                  textAlign="left"
-                                >
-                                  <Text>
-                                    Last 7 days calculated by <br /> &quot;this week&apos;s
-                                    pnl&quot; - &quot;last week&apos;s pnl&quot;
-                                  </Text>
-                                  <Text>
-                                    Last Week PnL:{' '}
-                                    {formatNumberToUsd(
-                                      market.market_snapshots_by_week[1]?.pnl.toNumber() || 0
-                                    )}
-                                  </Text>
-                                  <Text>
-                                    This Week PnL:{' '}
-                                    {formatNumberToUsd(
-                                      market.market_snapshots_by_week[0]?.pnl.toNumber() || 0
-                                    )}
-                                  </Text>
-                                </Flex>
-                              }
-                            >
-                              <Text fontSize="sm" display="block" color="gray.50">
-                                {formatNumberToUsd(growth.value.toNumber())}
-                              </Text>
-                            </Tooltip>
-                            {growth.percentage ? (
-                              <TrendText
-                                fontSize="xs"
-                                value={growth.percentage}
-                                display="block"
-                                data-testid="market growth percentage"
-                              >
-                                {formatPercent(growth.percentage.toNumber())}
-                              </TrendText>
-                            ) : null}
-                          </>
-                        ) : (
-                          '-'
-                        )}
+                        <Text fontSize="sm" display="block" color="gray.50">
+                          {formatNumberToUsd(market.usd_deposited.toNumber())}
+                        </Text>
                       </StyledTd>
+                      {/* Total Withdrawn */}
                       <StyledTd isLastItem={isLastItem}>
-                        <Tooltip
-                          hasArrow
-                          label={
-                            <Flex flexDirection="column" alignItems="flex-start" textAlign="left">
-                              <Text color="gray.50">
-                                Withdrawn: {formatNumberToUsd(market.usd_withdrawn.toNumber())}
-                              </Text>
-                              <Text color="gray.50">
-                                Deposited: {formatNumberToUsd(market.usd_deposited.toNumber())}{' '}
-                              </Text>
-                              <Text color="gray.50">
-                                Reported Debt: {formatNumberToUsd(market.reported_debt.toNumber())}
-                              </Text>
-                              <Text color="gray.50">
-                                Net Issuance <br /> (withdrawn - deposited):{' '}
-                                {formatNumberToUsd(market.net_issuance.toNumber())}
-                              </Text>
-
-                              <Text color="gray.50">
-                                PnL <br /> (reported debt + net issuance) * -1:{' '}
-                                {formatNumberToUsd(market.pnl.toNumber())}
-                              </Text>
-                            </Flex>
-                          }
-                        >
-                          <Text color="gray.50" data-testid="market pnl">
-                            {formatNumberToUsd(market.pnl.toNumber())}
-                          </Text>
-                        </Tooltip>
+                        <Text fontSize="sm" display="block" color="gray.50">
+                          {formatNumberToUsd(market.usd_withdrawn.toNumber())}
+                        </Text>
                       </StyledTd>
                     </Tr>
                   );
@@ -322,6 +158,8 @@ export function MarketSectionUi({
 export const MarketSection = () => {
   const params = useParams();
   const { data: poolData, isFetched: poolDataFetched } = usePoolData(params.poolId);
+
+  console.log('Pool data', poolData);
 
   const marketIdsAndAddresses = poolData?.configurations.map(({ market }) => ({
     marketId: market.id,

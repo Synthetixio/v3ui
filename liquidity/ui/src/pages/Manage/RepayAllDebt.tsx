@@ -24,11 +24,11 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
   const currentDebt = debtExists ? liquidityPosition.debt : wei(0);
 
   const { data: SpotMarketProxy } = useSpotMarketProxy();
+
   const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset)
-      ? getUSDCAddress(network?.id)
-      : liquidityPosition.tokenAddress
+    isBase ? getUSDCAddress(network?.id) : liquidityPosition.tokenAddress
   );
+
   const sufficientBalance = useMemo(
     () => Number(tokenBalance?.toString()) >= currentDebt.toNumber(),
     [currentDebt, tokenBalance]
@@ -78,7 +78,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         }),
       ]);
 
-      await settleRepay();
+      settleRepay();
     } catch (error) {}
   }, [approve, execRepay, network?.id, network?.preset, queryClient, requireApproval, settleRepay]);
 
@@ -98,7 +98,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
         data-testid="repay"
       >
         Repay USDC $<Amount value={currentDebt} data-testid="current debt" />
-        {sufficientBalance ? '' : ' (Isufficient Balance)'}
+        {sufficientBalance ? '' : '(Insufficient Balance)'}
       </Button>
     </Flex>
   );

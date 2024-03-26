@@ -72,6 +72,7 @@ export const PoolBox = () => {
   const { poolId } = useParams();
 
   const { data: poolData } = usePoolData(poolId);
+
   const sevenDaysPoolPerformance = calculatePoolPerformanceSevenDays(poolData);
 
   const { data: pool } = usePool(poolId);
