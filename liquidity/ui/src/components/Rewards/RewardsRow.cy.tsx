@@ -25,6 +25,7 @@ describe('RewardsRow', () => {
       address: '0x123456789abcdef',
       readOnly: false,
       total: 200,
+      decimals: 18,
     };
 
     cy.mount(

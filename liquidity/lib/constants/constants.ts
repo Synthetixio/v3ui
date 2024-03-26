@@ -11,7 +11,6 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
   switch (networkName) {
     case 'arbitrum':
       return `https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-arbitrum-mainnet/version/v1/api`;
-
     case 'base-sepolia':
       return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-sepolia-andromeda/version/v1/api';
     case 'base':

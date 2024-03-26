@@ -205,14 +205,25 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
     const cRatioIsCloseToLiqRatio = cRatio.mul(0.9).lt(collateralType.liquidationRatioD18);
 
     if (cRatioIsCloseToLiqRatio) {
-      queryParams.set('manageAction', 'repay');
+      queryParams.set(
+        'manageAction',
+        isBaseAndromeda(network?.id, network?.preset) ? 'deposit' : 'repay'
+      );
       navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
       return;
     }
 
     queryParams.set('manageAction', 'deposit');
     navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
-  }, [collateralType, liquidityPosition, location.pathname, location.search, navigate]);
+  }, [
+    collateralType,
+    liquidityPosition,
+    location.pathname,
+    location.search,
+    navigate,
+    network?.id,
+    network?.preset,
+  ]);
 
   return (
     <>

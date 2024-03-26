@@ -5,6 +5,8 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { RewardsModal } from './RewardsModal';
 import { truncateAddress, convertSecondsToDisplayString } from '@snx-v3/formatters';
+import { Amount } from '@snx-v3/Amount';
+import { wei } from '@synthetixio/wei';
 
 interface RewardsRowInterface {
   symbol: string;
@@ -48,15 +50,18 @@ export const RewardsRow = ({
   const { txnStatus, txnHash } = txnState;
 
   const frequencyString = convertSecondsToDisplayString(frequency);
+
   const claimButtonLabel = () => {
-    if (claimableAmount > 0) {
+    if (claimableAmount > 0 || !hasClaimed) {
       return 'Claim';
     }
-    if (!hasClaimed) {
-      return 'Claim';
-    }
+
     return 'Claimed';
   };
+
+  // Note adjustment will need to be made for decimals
+  const totalAmount = total / 1e18;
+
   return (
     <>
       <RewardsModal
@@ -80,7 +85,7 @@ export const RewardsRow = ({
                   fontWeight={500}
                   lineHeight="20px"
                 >
-                  {readOnly ? total : projectedAmount}
+                  <Amount value={wei(readOnly ? totalAmount : projectedAmount)} />
                   {` ${symbol}`}
                 </Text>
               </Tooltip>
@@ -101,19 +106,16 @@ export const RewardsRow = ({
               fontWeight={500}
               lineHeight="20px"
             >
-              {claimableAmount}
+              <Amount value={wei(claimableAmount)} />
               {` ${symbol}`}
             </Text>
-            {lifetimeClaimed > 0 ? (
-              <Tooltip label="Total claimed over lifetime">
-                <Text
-                  color="gray.500"
-                  fontSize="12px"
-                  fontFamily="heading"
-                  lineHeight="16px"
-                >{`Lifetime: ${lifetimeClaimed} ${symbol}`}</Text>
-              </Tooltip>
-            ) : null}
+            {lifetimeClaimed > 0 && (
+              <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
+                <Tooltip label="Total claimed over lifetime">Lifetime: &nbsp;</Tooltip>
+                <Amount value={wei(lifetimeClaimed.toString(), 18, true)} />
+                {symbol}
+              </Text>
+            )}
           </Fade>
         </Td>
         {!readOnly && (

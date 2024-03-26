@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useQuery } from '@tanstack/react-query';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { z } from 'zod';
@@ -121,33 +120,10 @@ const PoolsDataDocument = gql`
   }
 `;
 
-export const logMarket = (market: z.infer<typeof MarketSchema>) => {
-  console.log('Market:');
-  console.table({
-    market: market.id,
-    usd_deposited: market.usd_deposited.toNumber(),
-    usd_withdrawn: market.usd_withdrawn.toNumber(),
-    net_issuance: market.net_issuance.toNumber(),
-    reported_debt: market.reported_debt.toNumber(),
-    pnl: market.pnl.toNumber(),
-    updated_at: new Date(Number(market.updated_at) * 1000),
-  });
-  console.log('Snapshots:');
-  console.table(
-    market.market_snapshots_by_week.map((s) => ({
-      ...s,
-      pnl: s.pnl.toNumber(),
-      usd_deposited: s.usd_deposited.toNumber(),
-      usd_withdrawn: s.usd_withdrawn.toNumber(),
-      net_issuance: s.net_issuance.toNumber(),
-      reported_debt: s.reported_debt.toNumber(),
-      updated_at: new Date(Number(s.updated_at) * 1000),
-    }))
-  );
-};
-
 const getPoolData = async (chainName: string, id: string) => {
-  const res = await fetch(getSubgraphUrl(chainName), {
+  const url = getSubgraphUrl(chainName);
+
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify({ query: PoolsDataDocument, variables: { id } }),
   });
@@ -169,9 +145,11 @@ export const usePoolData = (poolId?: string) => {
     queryFn: async () => {
       if (!poolId || !network) throw Error('No poolId or network');
       const poolData = await getPoolData(network?.name, poolId);
+
       if (!poolData.data.pool) {
         throw Error(`Pool ${poolId} not found`);
       }
+
       return poolData.data.pool;
     },
     enabled: Boolean(poolId && parseInt(poolId) > 0),

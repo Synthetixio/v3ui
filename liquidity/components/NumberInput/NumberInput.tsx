@@ -57,6 +57,7 @@ export function NumberInput({
   );
 
   const ref = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (!ref.current) {
       return;

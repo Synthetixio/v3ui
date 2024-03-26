@@ -7,8 +7,6 @@ import type { OracleManagerProxy as OracleManagerProxy13370Main } from './13370-
 import type { OracleManagerProxy as OracleManagerProxy42161Arbthetix } from './42161-arbthetix/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy421614Arbthetix } from './421614-arbthetix/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy8453Andromeda } from './8453-andromeda/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxy84531Andromeda } from './84531-andromeda/OracleManagerProxy';
-import type { OracleManagerProxy as OracleManagerProxy84531Main } from './84531-main/OracleManagerProxy';
 import type { OracleManagerProxy as OracleManagerProxy84532Andromeda } from './84532-andromeda/OracleManagerProxy';
 
 export type OracleManagerProxyType =
@@ -19,8 +17,6 @@ export type OracleManagerProxyType =
   | OracleManagerProxy42161Arbthetix
   | OracleManagerProxy421614Arbthetix
   | OracleManagerProxy8453Andromeda
-  | OracleManagerProxy84531Andromeda
-  | OracleManagerProxy84531Main
   | OracleManagerProxy84532Andromeda;
 
 export async function importOracleManagerProxy(chainId: number, preset: string = 'main') {
@@ -39,10 +35,6 @@ export async function importOracleManagerProxy(chainId: number, preset: string =
       return import('./421614-arbthetix/OracleManagerProxy');
     case '8453-andromeda':
       return import('./8453-andromeda/OracleManagerProxy');
-    case '84531-andromeda':
-      return import('./84531-andromeda/OracleManagerProxy');
-    case '84531-main':
-      return import('./84531-main/OracleManagerProxy');
     case '84532-andromeda':
       return import('./84532-andromeda/OracleManagerProxy');
     default:

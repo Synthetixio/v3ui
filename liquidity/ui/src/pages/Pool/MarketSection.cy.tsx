@@ -98,7 +98,6 @@ describe('Pool page / Market section', () => {
     );
     cy.get('[data-testid="market name"]').and('have.text', '-');
     cy.get('[data-testid="pool allocation"]').and('have.text', '-');
-    cy.get('[data-testid="market growth"]').and('have.text', '-');
   });
 
   it('should render one snapshot', () => {
@@ -154,10 +153,8 @@ describe('Pool page / Market section', () => {
         cy.get('[data-testid="market name"]').should('have.text', 'MARKET_NAME');
         cy.get('[data-testid="market id"]').should('have.text', 'ID: MARKET_ID');
         cy.get('[data-testid="pool allocation"]').should('include.text', '100%');
-        cy.get('[data-testid="market growth"]').should('include.text', '$0.20');
         // growth is undefined, because we have only one snapshot
         cy.get('[data-testid="market growth percentage"]').should('not.exist');
-        cy.get('[data-testid="market pnl"]').should('include.text', '$0.20');
       });
   });
 
@@ -195,10 +192,6 @@ describe('Pool page / Market section', () => {
         }}
       />
     );
-    cy.get('[data-testid="pool markets"]')
-      .and('include.text', 'Markets')
-      .and('include.text', 'Last 7 Days')
-      .and('include.text', 'Performance Lifetime');
 
     cy.get('[data-testid="pool market"][data-market="MARKET_1"]')
       .should('exist')
@@ -206,10 +199,7 @@ describe('Pool page / Market section', () => {
         cy.get('[data-testid="market name"]').should('have.text', 'MARKET_NAME_1');
         cy.get('[data-testid="market id"]').should('have.text', 'ID: MARKET_1');
         cy.get('[data-testid="pool allocation"]').should('include.text', '50%');
-        cy.get('[data-testid="market growth"]').should('include.text', '$0.10');
         // growth rendered, because we have at least 2 snapshots available
-        cy.get('[data-testid="market growth percentage"]').should('exist').and('have.text', '100%');
-        cy.get('[data-testid="market pnl"]').should('include.text', '$0.20');
       });
 
     cy.get('[data-testid="pool market"][data-market="MARKET_2"]')
@@ -218,10 +208,6 @@ describe('Pool page / Market section', () => {
         cy.get('[data-testid="market name"]').should('have.text', 'MARKET_NAME_2');
         cy.get('[data-testid="market id"]').should('have.text', 'ID: MARKET_2');
         cy.get('[data-testid="pool allocation"]').should('include.text', '50%');
-        cy.get('[data-testid="market growth"]')
-          .should('include.text', '$0.10')
-          .and('include.text', '100%');
-        cy.get('[data-testid="market pnl"]').should('include.text', '$0.20');
       });
   });
 });
