@@ -140,6 +140,7 @@ export const RepayModal: React.FC<{
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
+
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
 

@@ -29,7 +29,6 @@
     "@snx-v3/Pools": "workspace:*",
     "@snx-v3/RepayModal": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
-    "@snx-v3/TrendText": "workspace:*",
     "@snx-v3/UndelegateModal": "workspace:*",
     "@snx-v3/WithdrawIncrease": "workspace:*",
     "@snx-v3/calculations": "workspace:*",
