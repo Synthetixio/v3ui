@@ -180,7 +180,7 @@ function OpenLiquidityPosition({
               </Text>
               <Text color="white" fontWeight={700} fontSize="12px">
                 {currentCollateral.toNumber().toFixed(2)} &rarr;
-                {deposited.add(amountToDeposit).toNumber().toFixed(2)}
+                {currentCollateral.add(amountToDeposit).toNumber().toFixed(2)}
               </Text>
             </Flex>
             <Flex justifyContent="space-between">
@@ -197,7 +197,7 @@ function OpenLiquidityPosition({
       <Button
         isDisabled={amountToDeposit.eq(0)}
         onClick={() => {
-          if (userHasAccount) setCurrentStep('openPosition');
+          if (userHasAccount) setCurrentStep('signTransactions');
           else setCurrentStep('createAccount');
         }}
       >
