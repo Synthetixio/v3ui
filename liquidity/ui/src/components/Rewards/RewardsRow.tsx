@@ -54,12 +54,10 @@ export const RewardsRow = ({
   const frequencyString = convertSecondsToDisplayString(frequency);
 
   const claimButtonLabel = () => {
-    if (claimableAmount > 0) {
+    if (claimableAmount > 0 || !hasClaimed) {
       return 'Claim';
     }
-    if (!hasClaimed) {
-      return 'Claim';
-    }
+
     return 'Claimed';
   };
 
