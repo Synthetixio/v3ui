@@ -40,6 +40,7 @@ export const RepayUi: FC<{
           {isBase ? 'USDC' : 'snxUSD'}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
+          {/* TODO Figure out why repay is causing issues */}
           <NumberInput
             InputProps={{
               isRequired: true,
@@ -114,13 +115,15 @@ export const RepayUi: FC<{
     </Flex>
   );
 };
+
 export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
+
   const { data: USDProxy } = useUSDProxy();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
   const { data: balance } = useTokenBalance(USDProxy?.address);
 
-  const debtExists = liquidityPosition?.debt.gt(0.01);
+  const debtExists = liquidityPosition?.debt.gt(0);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
 
   return (

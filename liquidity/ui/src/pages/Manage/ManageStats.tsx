@@ -59,8 +59,7 @@ export const ManageStatsUi: FC<{
   hasChanges,
 }) => {
   const { network } = useNetwork();
-  // const performanceLast24h = wei(0.25);
-  // const isPositive = performanceLast24h.gte(0);
+
   return (
     <Flex direction="column">
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
@@ -139,14 +138,13 @@ export const ManageStatsUi: FC<{
           <Flex width="100%" data-testid="manage stats debt">
             {liquidityPosition && collateralType ? (
               <ChangeStat
-                // TODO, need a function to burn to target so dust debt not left over
-                value={liquidityPosition.debt.lt(0.01) ? wei(0) : liquidityPosition.debt}
+                value={liquidityPosition.debt}
                 newValue={newDebt}
                 formatFn={(val: Wei) =>
                   currency(val, {
                     currency: 'USD',
                     style: 'currency',
-                    maximumFractionDigits: 2,
+                    maximumFractionDigits: 8,
                   })
                 }
                 hasChanges={hasChanges}
@@ -156,42 +154,6 @@ export const ManageStatsUi: FC<{
             )}
           </Flex>
         </Flex>
-        {/* TODO: Historical Debt Performance */}
-        {/* <Flex flexDirection="column" alignItems="flex-end" data-testid="manage stats collateral">
-          <Text fontFamily="heading" color="gray.50" fontSize="16px" fontWeight={700}>
-            Performance Last 24h
-          </Text>
-          <Flex>
-            <Text
-              fontWeight="800"
-              color={isPositive ? 'green.500' : 'red.500'}
-              fontSize="24px"
-              fontFamily="heading"
-              lineHeight="32px"
-            >
-              {isPositive ? '+' : ''}
-              {currency(wei(0.23), {
-                currency: 'USD',
-                style: 'currency',
-              })}
-            </Text>
-            <Text
-              fontWeight="600"
-              color={isPositive ? 'green.500' : 'red.500'}
-              fontSize="18px"
-              fontFamily="heading"
-              lineHeight="28px"
-              ml={1}
-            >
-              {isPositive ? '+' : '-'}
-              {currency(wei(0.23), {
-                style: 'percent',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </Text>
-          </Flex>
-        </Flex> */}
       </BorderBox>
       {!isBaseAndromeda(network?.id, network?.preset) && (
         <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>

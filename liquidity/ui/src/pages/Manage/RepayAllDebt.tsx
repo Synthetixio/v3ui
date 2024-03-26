@@ -18,6 +18,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const params = useParams();
   const [searchParams] = useSearchParams();
+
   const queryClient = useQueryClient();
 
   const debtExists = liquidityPosition.debt.gt(0.01);

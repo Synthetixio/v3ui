@@ -155,11 +155,10 @@ export function MarketSectionUi({
     </BorderBox>
   );
 }
+
 export const MarketSection = () => {
   const params = useParams();
   const { data: poolData, isFetched: poolDataFetched } = usePoolData(params.poolId);
-
-  console.log('Pool data', poolData);
 
   const marketIdsAndAddresses = poolData?.configurations.map(({ market }) => ({
     marketId: market.id,
