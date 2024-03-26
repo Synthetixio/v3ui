@@ -75,7 +75,7 @@ export function PositionOverview({
               <>
                 &rarr;
                 <Text color="white" fontSize="16px">
-                  {amountToDeposit.mul(priceOfToDeposit).toNumber().toFixed(2)} {collateralType}
+                  ${amountToDeposit.mul(priceOfToDeposit).toNumber().toFixed(2)}
                 </Text>
               </>
             )}

@@ -12,15 +12,21 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { LiquidityPositionInput } from '../../components/LiquidityPositionInput';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import { useAccounts } from '@snx-v3/useAccounts';
+import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useRecoilState } from 'recoil';
 import { depositState } from '../../state/deposit';
 import { constants, utils } from 'ethers';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useApprove } from '@snx-v3/useApprove';
+
+export type TransactionSteps =
+  | 'openPosition'
+  | 'createAccount'
+  | 'signTransactions'
+  | 'accountCreated'
+  | 'positionCreated'
+  | null;
 
 export function DepositUi({
   isFirstDeposit,
@@ -85,10 +91,9 @@ export function DepositUi({
 }
 
 export function DepositBaseAndromeda() {
-  const [positionCreated, setPositionCreated] = useState(false);
+  const [currentStep, setCurrentStep] = useState<TransactionSteps>('openPosition');
   const { poolId, accountId, collateralSymbol, collateralAddress } = useParams();
   const [amountToDeposit] = useRecoilState(depositState);
-  const { network } = useNetwork();
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
 
@@ -104,8 +109,7 @@ export function DepositBaseAndromeda() {
 
   const userTokenAddresses = accountCollaterals
     ?.filter((collateral) => collateral.symbol === collateralSymbol)
-    .map((collateral) => collateral.tokenAddress)
-    .concat(getUSDCAddress(network?.id)) || [''];
+    .map((collateral) => collateral.tokenAddress) || [''];
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
     useTokenBalances(userTokenAddresses);
@@ -148,6 +152,11 @@ export function DepositBaseAndromeda() {
     : { deposited: userTokeBalance, wallet: zeroWei };
 
   const {
+    mutation: { mutateAsync: createAccount, isPending: createAccountIsLoading },
+    getTransactionCost: { data: accountTransactionCost },
+  } = useCreateAccount();
+
+  const {
     approve,
     requireApproval,
     isLoading: approveIsLoading,
@@ -170,6 +179,11 @@ export function DepositBaseAndromeda() {
       availableCollateral: zeroWei,
     });
 
+  const handleCreateAccount = async () => {
+    await createAccount();
+    setCurrentStep('accountCreated');
+  };
+
   const handleButtonClick = async (action: 'createPosition' | 'createAccount') => {
     if (action === 'createPosition') {
       if (requireApproval) {
@@ -177,9 +191,9 @@ export function DepositBaseAndromeda() {
       }
       try {
         await depositBaseAndromeda();
-        setPositionCreated(true);
+        setCurrentStep('positionCreated');
       } catch {
-        setPositionCreated(false);
+        setCurrentStep('openPosition');
       }
     }
   };
@@ -201,25 +215,22 @@ export function DepositBaseAndromeda() {
       poolName={pool?.name}
       LiquidityPositionInput={
         <LiquidityPositionInput
-          title={
-            positionCreated
-              ? 'Position successfully Opened'
-              : isFirstTimeDepositing
-                ? 'Open LiquidityPosition'
-                : 'Manage Debt'
-          }
           collateralSymbol={collateralSymbol || ''}
           balance={balance$}
           price={priceForCollateral}
-          userHasAccounts={!!userAccounts?.length}
+          // fix it once done testing, !!userAccounts?
+          userHasAccount={!userAccounts?.length}
           currentCRatio="Infinite"
-          nextCRatio="Infinite"
-          deposited={position?.debt}
-          onButtonClick={handleButtonClick}
+          currentCollateral={position?.debt}
+          signTransaction={handleButtonClick}
           depositIsLoading={depositBaseAndromedaIsLoading}
           approveIsLoading={approveIsLoading}
           requireApprove={requireApproval}
-          completedAllSteps={positionCreated}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          createAccount={handleCreateAccount}
+          createAccountIsLoading={createAccountIsLoading}
+          createAccountTransactionCost={accountTransactionCost}
         />
       }
       PositionOverview={
