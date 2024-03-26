@@ -5,6 +5,8 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { RewardsModal } from './RewardsModal';
 import { truncateAddress, convertSecondsToDisplayString } from '@snx-v3/formatters';
+import { Amount } from '@snx-v3/Amount';
+import { wei } from '@synthetixio/wei';
 
 interface RewardsRowInterface {
   symbol: string;
@@ -16,6 +18,7 @@ interface RewardsRowInterface {
   address: string;
   readOnly: boolean;
   total: number;
+  decimals: number;
 }
 
 export const RewardsRow = ({
@@ -28,6 +31,7 @@ export const RewardsRow = ({
   address,
   readOnly,
   total,
+  decimals,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
@@ -80,7 +84,8 @@ export const RewardsRow = ({
                   fontWeight={500}
                   lineHeight="20px"
                 >
-                  {readOnly ? total : projectedAmount}
+                  <Amount value={wei(readOnly ? total : projectedAmount)} />
+
                   {` ${symbol}`}
                 </Text>
               </Tooltip>
@@ -101,18 +106,15 @@ export const RewardsRow = ({
               fontWeight={500}
               lineHeight="20px"
             >
-              {claimableAmount}
+              <Amount value={wei(claimableAmount)} />
               {` ${symbol}`}
             </Text>
             {lifetimeClaimed > 0 ? (
-              <Tooltip label="Total claimed over lifetime">
-                <Text
-                  color="gray.500"
-                  fontSize="12px"
-                  fontFamily="heading"
-                  lineHeight="16px"
-                >{`Lifetime: ${lifetimeClaimed} ${symbol}`}</Text>
-              </Tooltip>
+              <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
+                <Tooltip label="Total claimed over lifetime">Lifetime: &nbsp;</Tooltip>
+                <Amount value={wei(lifetimeClaimed.toString(), decimals, true)} />
+                {symbol}
+              </Text>
             ) : null}
           </Fade>
         </Td>
