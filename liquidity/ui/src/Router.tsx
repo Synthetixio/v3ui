@@ -4,13 +4,17 @@ import { Spinner } from '@chakra-ui/react';
 import { DefaultLayout } from './layouts/Default';
 import { Home } from './pages/Home';
 import { Manage } from './pages/Manage';
-import { Deposit } from './pages/Deposit';
+import { DepositBaseAndromeda } from './pages/Deposit';
 import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { NotFoundPage } from './pages/404';
 import { Pools } from './pages/Pools';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const Router = () => {
+  const { network } = useNetwork();
+
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
@@ -21,7 +25,13 @@ export const Router = () => {
           />
           <Route
             path="/deposit/:collateralSymbol/:collateralAddress/:poolId"
-            element={<Deposit />}
+            element={
+              isBaseAndromeda(network?.id, network?.preset) ? (
+                <DepositBaseAndromeda />
+              ) : (
+                <DepositBaseAndromeda />
+              )
+            }
           />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />

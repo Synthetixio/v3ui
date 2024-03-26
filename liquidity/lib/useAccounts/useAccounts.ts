@@ -5,6 +5,8 @@ import { useConnectWallet } from '@web3-onboard/react';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useGasPrice } from '@snx-v3/useGasPrice';
+import { wei } from '@synthetixio/wei';
 
 export function useAccounts() {
   const { activeWallet } = useWallet();
@@ -43,38 +45,59 @@ export function useCreateAccount() {
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const client = useQueryClient();
-
-  return useMutation({
-    mutationFn: async function () {
-      try {
-        if (!CoreProxy) throw new Error('CoreProxy undefined');
-        const tx = await CoreProxy['createAccount()']();
-        const res = await tx.wait();
-
-        await client.invalidateQueries({
-          queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
-        });
-
-        let newAccountId: string | undefined;
-
-        res.logs.forEach((log: any) => {
-          if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
-            const accountId = CoreProxy.interface.decodeEventLog(
-              'AccountCreated',
-              log.data,
-              log.topics
-            )?.accountId;
-            newAccountId = accountId?.toString();
+  const { data: gasPrices } = useGasPrice();
+  return {
+    getTransactionCost: useQuery({
+      enabled: !!gasPrices,
+      queryKey: ['Transaction-Cost-Account'],
+      queryFn: async () => {
+        const gasUnits = await CoreProxy?.estimateGas['createAccount()']();
+        if (gasPrices) {
+          if ('baseFeePerGas' in gasPrices?.average && gasUnits) {
+            const { coins } = await (
+              await fetch('https://coins.llama.fi/prices/current/coingecko:ethereum?searchWidth=4h')
+            ).json();
+            return (
+              wei(gasPrices?.average.baseFeePerGas.mul(gasUnits), 18).toNumber() *
+              coins['coingecko:ethereum'].price
+            ).toFixed(2);
           }
-        });
+        }
+        return '0.00';
+      },
+    }),
+    mutation: useMutation({
+      mutationFn: async function () {
+        try {
+          if (!CoreProxy) throw new Error('CoreProxy undefined');
+          const tx = await CoreProxy['createAccount()']();
+          const res = await tx.wait();
 
-        return [newAccountId];
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    },
-  });
+          await client.invalidateQueries({
+            queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
+          });
+
+          let newAccountId: string | undefined;
+
+          res.logs.forEach((log: any) => {
+            if (log.topics[0] === CoreProxy.interface.getEventTopic('AccountCreated')) {
+              const accountId = CoreProxy.interface.decodeEventLog(
+                'AccountCreated',
+                log.data,
+                log.topics
+              )?.accountId;
+              newAccountId = accountId?.toString();
+            }
+          });
+
+          return [newAccountId];
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+      },
+    }),
+  };
 }
 
 export function useAccountUrlSync() {
