@@ -220,7 +220,6 @@ export const RepayModal: React.FC<{
             status: 'success',
             duration: 5000,
           });
-          location.reload();
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
