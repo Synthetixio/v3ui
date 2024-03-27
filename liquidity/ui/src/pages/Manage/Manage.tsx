@@ -13,13 +13,16 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 
 export const ManageUi: FC<{
   collateralType?: CollateralType;
   isLoading: boolean;
   rewards?: RewardsType;
   liquidityPosition?: LiquidityPosition;
-}> = ({ collateralType, isLoading, rewards, liquidityPosition }) => {
+  network?: Network | null;
+}> = ({ collateralType, isLoading, rewards, liquidityPosition, network }) => {
   return (
     <Box mb={12}>
       <WithdrawIncrease />
@@ -56,8 +59,11 @@ export const ManageUi: FC<{
         </Heading>
       </Flex>
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
-        Deposit your collateral to borrow snxUSD and contribute to the network collateral. If
-        you&apos;ve never staked on Synthetix V3 before, please read through this{' '}
+        {isBaseAndromeda(network?.id, network?.preset)
+          ? 'Deposit to '
+          : 'Deposit your collateral to borrow snxUSD and '}
+        contribute to the network collateral. If you&apos;ve never staked on Synthetix V3 before,
+        please read through this{' '}
         <Link
           fontWeight="600"
           color="cyan.500"
@@ -113,6 +119,7 @@ export const Manage = () => {
     poolId,
   });
 
+  const { network } = useNetwork();
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   return (
@@ -122,6 +129,7 @@ export const Manage = () => {
         collateralType={collateralType}
         rewards={rewardsData}
         liquidityPosition={liquidityPosition}
+        network={network}
       />
     </ManagePositionProvider>
   );
