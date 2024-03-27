@@ -24,6 +24,7 @@ describe('PoolCard Component', () => {
       oracleNodeId: '1',
       minDelegationD18: wei(1, 2, true),
       displaySymbol: 'SNX',
+      name: 'Synthetix Network Token',
     },
   ];
 
@@ -56,6 +57,7 @@ describe('PoolCard Component', () => {
         poolName: 'Spartan Council Pool',
         cRatio: wei(300),
         collateralPrice: wei(1),
+        isPreferred: true,
       },
     };
 

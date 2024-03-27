@@ -1,48 +1,32 @@
 import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
-import Wei from '@synthetixio/wei';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
-export default function PositionRow({
-  symbol,
-  token,
-  name,
-  delegated$,
-  delegated,
-  apy,
-  pnl,
-  pnlPercentage,
-  borrowed,
-  borrowed$,
-  debt,
-  cRatio,
-  final,
-}: {
-  token: string;
-  symbol: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  name: string;
-  delegated$: Wei;
-  delegated: Wei;
-  apy: number;
-  pnl: number;
-  pnlPercentage: number;
-  borrowed: Wei;
-  borrowed$: Wei;
-  debt: Wei;
-  cRatio: number;
-  final: boolean; // Used for hiding bottom border
-}) {
+interface PositionRow extends LiquidityPositionType {
+  final: boolean;
+}
+[];
+
+export function PositionRow({ accountId, poolId, collateralType, debt, final }: PositionRow) {
+  const { data: liquidityPosition } = useLiquidityPosition({
+    tokenAddress: collateralType.tokenAddress,
+    accountId,
+    poolId,
+  });
+
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
         <Fade in>
           <Flex alignItems="center">
-            <TokenIcon symbol={symbol} />
+            <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {token}
+                {collateralType.displaySymbol}
               </Text>
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                {name}
+                {collateralType.symbol}
               </Text>
             </Flex>
           </Flex>
@@ -52,11 +36,11 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${delegated$.toNumber().toLocaleString()}
+              {liquidityPosition?.collateralAmount.toNumber().toLocaleString()}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {delegated.toNumber()}
-              {` ${token}`}
+              {/* {delegated.toNumber()} */}
+              {collateralType.symbol.toString()}
             </Text>
           </Flex>
         </Fade>
@@ -65,7 +49,7 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {apy}%
+              TODO%
             </Text>
           </Flex>
         </Fade>
@@ -74,10 +58,10 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${pnl.toLocaleString('us-EN')}
+              ${liquidityPosition?.debt.toNumber().toLocaleString()}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {pnlPercentage}%
+              {liquidityPosition?.debt.toNumber().toLocaleString()}
             </Text>
           </Flex>
         </Fade>
@@ -86,10 +70,10 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {borrowed$.eq(0) ? 'N/A' : `$${borrowed$.toNumber().toLocaleString()}`}
+              {/* {borrowed$.eq(0) ? 'N/A' : `$${borrowed$.toNumber().toLocaleString()}`} */}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {borrowed.toNumber()} {token}
+              {/* {borrowed.toNumber()} {token} */}
             </Text>
           </Flex>
         </Fade>
@@ -98,7 +82,7 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {debt.toNumber().toLocaleString()}
+              ${debt.toNumber().toLocaleString()}
             </Text>
             <Text color="cyan.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
@@ -110,7 +94,7 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {cRatio === Infinity ? 'Infinite' : cRatio}%
+              {/* {cRatio === Infinity ? 'Infinite' : cRatio}% */}
             </Text>
             <Badge colorScheme="green" border="1px solid" bg="green.900">
               HEALTHY

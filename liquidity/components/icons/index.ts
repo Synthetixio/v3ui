@@ -16,3 +16,5 @@ export * from './CCIP';
 export * from './BaseIcon';
 export * from './BitcoinIcon';
 export * from './ArbitrumIcon';
+export * from './TriangleUpIcon';
+export * from './TriangleDownIcon';

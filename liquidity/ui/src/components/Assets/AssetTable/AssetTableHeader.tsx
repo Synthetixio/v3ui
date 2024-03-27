@@ -21,7 +21,10 @@ export const AssetTableHeader = () => {
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
               Wallet Balance{' '}
             </Text>
-            <Tooltip label="Assets currently in your wallet that can be deposited to your Synthetix Account, and utilized as collateral by delegating them to a pool">
+            <Tooltip
+              label="Assets currently in your wallet that can be deposited to your Synthetix Account, and utilized as collateral by delegating them to a pool"
+              p="3"
+            >
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Flex>
@@ -31,7 +34,10 @@ export const AssetTableHeader = () => {
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
               Account Balance
             </Text>
-            <Tooltip label="Assets deposited in your account. These assets are available to be delegated to a pool">
+            <Tooltip
+              label="Assets deposited in your account. These assets are available to be delegated to a pool"
+              p="3"
+            >
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Flex>
@@ -41,7 +47,7 @@ export const AssetTableHeader = () => {
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
               Delegated
             </Text>
-            <Tooltip label="Assets used as collateral in a Position">
+            <Tooltip label="Assets used as collateral in a Position" p="3">
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Flex>

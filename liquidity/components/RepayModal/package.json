@@ -18,7 +18,6 @@
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/useRepay": "workspace:*",
-    "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useUSDProxy": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",

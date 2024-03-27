@@ -29,7 +29,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
           {title}
         </Text>
         {label && (
-          <Tooltip label={label} p={2} mt={1}>
+          <Tooltip label={label} p={3} mt={1}>
             <InfoIcon w="10px" h="10px" />
           </Tooltip>
         )}
@@ -44,7 +44,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
         >
           <Fade in>
             <Text fontSize="24px" lineHeight="24px" fontWeight={800}>
-              {value || 'Place'}
+              {value || '$0.00'}
             </Text>
           </Fade>
         </Skeleton>

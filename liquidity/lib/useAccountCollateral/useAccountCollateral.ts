@@ -12,6 +12,8 @@ export type AccountCollateralType = {
   totalAssigned: Wei;
   totalDeposited: Wei;
   totalLocked: Wei;
+  symbol?: string;
+  displaySymbol?: string;
 };
 
 export const loadAccountCollateral = async ({
@@ -68,7 +70,7 @@ export function useAccountCollateral({
 
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
 
-  return useQuery({
+  const query = useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
@@ -85,6 +87,7 @@ export function useAccountCollateral({
         tokenAddresses,
         CoreProxy,
       });
+
       const data = await erc7412Call(
         network,
         CoreProxy.provider,
@@ -99,6 +102,8 @@ export function useAccountCollateral({
       }));
     },
   });
+
+  return { ...query, isLoading: query.isLoading || collateralTypes.isLoading };
 }
 
 export function useAccountSpecificCollateral(accountId?: string, collateralAddress?: string) {

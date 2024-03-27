@@ -143,6 +143,7 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
       parseError
     );
     // If we cant parse it, throw the original error
+    console.error(error);
     throw error;
   }
 };
@@ -165,6 +166,7 @@ const getDefaultFromAddress = (chainName: string) => {
     case 'optimism-mainnet':
     case 'optimism-goerli':
     case 'base-goerli':
+    case 'base-sepolia':
     case 'base':
     case 'base-sepolia':
       return '0x4200000000000000000000000000000000000006';

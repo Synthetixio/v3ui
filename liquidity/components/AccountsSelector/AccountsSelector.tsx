@@ -123,9 +123,7 @@ export function AccountsSelector() {
   } = useAccounts();
 
   const {
-    mutate: createAccount,
-    isPending: isCreateAccountLoading,
-    data: createAccountData,
+    mutation: { mutate: createAccount, isPending: isCreateAccountLoading, data: createAccountData },
   } = useCreateAccount();
 
   const navigate = useNavigate();

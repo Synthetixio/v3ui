@@ -21,6 +21,7 @@ export async function loadPrices({
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
+
   if (calls.length === 0) return { calls: [], decoder: () => [] };
 
   const decoder = (multicallEncoded: string | string[]) => {
@@ -33,8 +34,13 @@ export async function loadPrices({
 
         return PriceSchema.parse(pricesEncoded);
       });
+    } else {
+      const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+        'getCollateralPrice',
+        multicallEncoded
+      )[0];
+      return [PriceSchema.parse(pricesEncoded)];
     }
-    throw Error('Expected array got: ' + typeof multicallEncoded);
   };
   return { calls, decoder };
 }
@@ -42,11 +48,11 @@ export async function loadPrices({
 export const useCollateralPrices = () => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: collateralData } = useCollateralTypes();
+  const { data: collateralData, isLoading: isCollateralTypesLoading } = useCollateralTypes();
 
   const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
 
-  return useQuery({
+  const query = useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
     queryKey: [`${network?.id}-${network?.preset}`, 'CollateralPrices', { collateralAddresses }],
     queryFn: async () => {
@@ -63,10 +69,13 @@ export const useCollateralPrices = () => {
         decoder,
         'useCollateralPrices'
       );
+
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         acc[address] = prices[i];
         return acc;
       }, {});
     },
   });
+
+  return { ...query, isLoading: isCollateralTypesLoading || query.isLoading };
 };

@@ -19,13 +19,11 @@ export const useRepay = ({
   poolId,
   collateralTypeAddress,
   debtChange,
-  balance,
   availableUSDCollateral,
 }: {
   accountId?: string;
   poolId?: string;
   collateralTypeAddress?: string;
-  balance?: Wei;
   availableUSDCollateral?: Wei;
   debtChange: Wei;
 }) => {
@@ -54,12 +52,10 @@ export const useRepay = ({
       ) {
         return;
       }
-      if (!balance) return;
       if (!availableUSDCollateral) return;
       if (debtChange.eq(0)) return;
       const debtChangeAbs = debtChange.abs();
       const amountToDeposit = debtChangeAbs.sub(availableUSDCollateral);
-
       try {
         dispatch({ type: 'prompting' });
 
