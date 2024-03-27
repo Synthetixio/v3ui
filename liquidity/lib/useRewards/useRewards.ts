@@ -117,39 +117,38 @@ export function useRewards(
         }),
       ]);
 
-      const distributorResult = distributors.map(
-        ({ id: address, total_distributed, rewards_distributions }, i) => {
-          const name = ifaceRD.decodeFunctionResult(
-            'name',
-            distributorReturnData[i * 2]
-          )[0] as string;
-          const token = ifaceRD.decodeFunctionResult(
-            'token',
-            distributorReturnData[i * 2 + 1]
-          )[0] as string;
+      const distributorResult = distributors.map(({ id: address, rewards_distributions }, i) => {
+        const name = ifaceRD.decodeFunctionResult(
+          'name',
+          distributorReturnData[i * 2]
+        )[0] as string;
+        const token = ifaceRD.decodeFunctionResult(
+          'token',
+          distributorReturnData[i * 2 + 1]
+        )[0] as string;
 
-          let duration = 0;
-          if (rewards_distributions.length > 0) {
-            duration = parseInt(rewards_distributions[0].duration);
-          }
+        let duration = 0;
 
-          const lifetimeClaimed = historicalData[i].data.rewardsClaimeds.reduce(
-            (acc: number, item: { amount: string; id: string }) => {
-              return (acc += parseInt(item.amount));
-            },
-            0
-          );
-
-          return {
-            address,
-            name: name,
-            token: token,
-            duration,
-            total: total_distributed,
-            lifetimeClaimed,
-          };
+        if (rewards_distributions.length > 0) {
+          duration = parseInt(rewards_distributions[0].duration);
         }
-      );
+
+        const lifetimeClaimed = historicalData[i].data.rewardsClaimeds.reduce(
+          (acc: number, item: { amount: string; id: string }) => {
+            return (acc += parseInt(item.amount));
+          },
+          0
+        );
+
+        return {
+          address,
+          name: name,
+          token: token,
+          duration,
+          total: rewards_distributions[0].amount, // Take the latest amount
+          lifetimeClaimed,
+        };
+      });
 
       const { returnData: ercReturnData } = await Multicall3.callStatic.aggregate(
         distributorResult.flatMap(({ token }) => [
@@ -234,23 +233,6 @@ export function useRewards(
       const sortedBalances = [...balances].sort(
         (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
       );
-
-      // TODO: Fix issue with multicall
-      // const calls = distributorResult
-      //   .filter((item) => item.amount.gt(0))
-      //   .map(({ address }) => ({
-      //     target: CoreProxy.address,
-      //     callData: CoreProxy.interface.encodeFunctionData('claimRewards', [
-      //       BigNumber.from(accountId),
-      //       BigNumber.from(poolId),
-      //       collateralAddress,
-      //       address,
-      //     ]),
-      //   }));
-      // const response = await Multicall3.callStatic.aggregate(calls);
-      // const decoded = response.map(
-      //   (bytes: BytesLike) => CoreProxy.interface.decodeFunctionResult('claimRewards', bytes)[0]
-      // );
 
       return RewardsResponseSchema.parse(sortedBalances);
     },

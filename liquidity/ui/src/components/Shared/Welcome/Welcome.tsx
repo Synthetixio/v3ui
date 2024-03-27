@@ -8,8 +8,7 @@ export const Welcome = () => (
         <Box>
           This is an experimental prototype for Synthetix V3.{' '}
           <Text fontWeight="bold" display="inline">
-            Any incentives (including voting power) are exclusively determined based on
-            participation in{' '}
+            Governance voting power is still exclusively determined based on participation in{' '}
             <Link textDecoration="underline" href="https://staking.synthetix.io">
               Synthetix V2
             </Link>

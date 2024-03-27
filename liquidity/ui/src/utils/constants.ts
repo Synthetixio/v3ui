@@ -1,0 +1,3 @@
+export const LOCAL_STORAGE_KEYS = {
+  SHOW_TESTNETS: 'SHOW_TESTNETS',
+};

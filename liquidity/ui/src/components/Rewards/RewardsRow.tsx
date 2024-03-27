@@ -22,7 +22,6 @@ interface RewardsRowInterface {
 
 export const RewardsRow = ({
   symbol,
-  projectedAmount,
   frequency,
   claimableAmount,
   lifetimeClaimed,
@@ -85,7 +84,7 @@ export const RewardsRow = ({
                   fontWeight={500}
                   lineHeight="20px"
                 >
-                  <Amount value={wei(readOnly ? totalAmount : projectedAmount)} />
+                  <Amount value={wei(totalAmount)} />
                   {` ${symbol}`}
                 </Text>
               </Tooltip>
