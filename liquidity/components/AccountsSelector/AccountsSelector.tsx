@@ -90,20 +90,24 @@ export function AccountsSelectorUi({
           </Fade>
         )}
 
-        <MenuList fontSize="xs" bg="black" py={0} border="1px solid rgba(255,255,255,0.33)">
-          {accounts?.map((accountId) => <AccountMenuItem key={accountId} accountId={accountId} />)}
+        {!!accounts?.length && (
+          <MenuList fontSize="xs" bg="black" py={0} border="1px solid rgba(255,255,255,0.33)">
+            {accounts?.map((accountId) => (
+              <AccountMenuItem key={accountId} accountId={accountId} />
+            ))}
 
-          <MenuItem
-            _hover={{ bg: 'whiteAlpha.200' }}
-            _focus={{ bg: 'whiteAlpha.200' }}
-            _active={{ bg: 'whiteAlpha.200' }}
-            onClick={createAccount}
-          >
-            <Text fontWeight="semibold" px="2">
-              Create new account
-            </Text>
-          </MenuItem>
-        </MenuList>
+            <MenuItem
+              _hover={{ bg: 'whiteAlpha.200' }}
+              _focus={{ bg: 'whiteAlpha.200' }}
+              _active={{ bg: 'whiteAlpha.200' }}
+              onClick={createAccount}
+            >
+              <Text fontWeight="semibold" px="2">
+                Create new account
+              </Text>
+            </MenuItem>
+          </MenuList>
+        )}
       </Menu>
     </>
   );

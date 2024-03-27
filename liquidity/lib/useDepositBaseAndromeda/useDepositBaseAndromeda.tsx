@@ -15,7 +15,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { USDC_BASE_MARKET, sUSDC } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 
 export const useDepositBaseAndromeda = ({
@@ -77,13 +77,18 @@ export const useDepositBaseAndromeda = ({
 
         const amount = collateralChange.sub(availableCollateral);
         const usdcAmount = amount.gt(0) ? parseUnits(amount.toString(), 6) : BigNumber.from(0);
-        const amountD18 = amount.toBN();
+        const amountD18 = parseUnits(amount.toString(), 18);
+
+        // Wrap USDC to sUSDC
+
+        const sUSDC_ADDRESS = getsUSDCAddress(network.id);
 
         const wrap = amount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;
 
-        const sUSDC_Contract = new ethers.Contract(sUSDC, approveAbi, signer);
+        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
+
         const sUSDCApproval = amount.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)
           : undefined;
@@ -92,7 +97,7 @@ export const useDepositBaseAndromeda = ({
         const deposit = amount.gt(0)
           ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
-              sUSDC,
+              sUSDC_ADDRESS,
               amountD18 // only deposit what's needed
             )
           : undefined;
@@ -100,25 +105,28 @@ export const useDepositBaseAndromeda = ({
         const delegate = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(id),
           BigNumber.from(poolId),
-          sUSDC,
-          currentCollateral.add(collateralChange).toBN(),
+          sUSDC_ADDRESS,
+          currentCollateral.toBN().add(amountD18),
           wei(1).toBN()
         );
 
         const callsPromise = Promise.all(
           [wrap, sUSDCApproval, createAccount, deposit, delegate].filter(notNil)
         );
+
         const collateralPriceCallsPromise = fetchPriceUpdates(
           collateralPriceUpdates,
           network?.isTestnet
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );
+
         const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
           callsPromise,
           getGasPrice({ provider }),
           collateralPriceCallsPromise,
         ]);
+
         const allCalls = collateralPriceCalls.concat(calls);
 
         const erc7412Tx = await withERC7412(

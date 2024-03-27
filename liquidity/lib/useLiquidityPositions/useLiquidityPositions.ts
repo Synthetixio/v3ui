@@ -84,13 +84,11 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           )
         )
       );
-
       const positionCallsAndData = positionCallsAndDataNested.flat();
 
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: collateralTypes.map((x) => x.tokenAddress),
         CoreProxy,
-        network,
       });
 
       const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
@@ -108,7 +106,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         CoreProxy.provider,
         allCalls,
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          if (!Array.isArray(encoded)) throw Error('Expected array');
           if (!singlePositionDecoder) return {};
           const pricesByAddress = keyBy(
             'address',
@@ -117,10 +115,15 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               address: collateralTypes[i].tokenAddress,
             }))
           );
+          const encodedFiltered = encoded.filter(
+            (e) => e !== '0x0000000000000000000000000000000000000000000000000000000000000000'
+          );
           const positionsEncoded =
-            encoded.length % 2 === 0 ? encoded : encoded.slice(priceCalls.length);
-          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
+            encodedFiltered.length % 2 === 0
+              ? encodedFiltered
+              : encodedFiltered.slice(priceCalls.length);
 
+          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
           const positions = positionData.map(({ debt, collateral }, index) => {
             const { poolName, collateralType, poolId, isPreferred } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually

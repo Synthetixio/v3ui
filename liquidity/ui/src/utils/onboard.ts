@@ -8,8 +8,8 @@ import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 
 // LP App Supported Networks
-// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, OPTIMISM, OPTIMISM SEPOLIA
-const supportedNetworks = [1, 11155111, 8453, 84532, 10, 11155420];
+// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, OPTIMISM, OPTIMISM SEPOLIA, ARBITRUM, ARBITRUM SEPOLIA
+const supportedNetworks = [1, 11155111, 8453, 84532, 10, 11155420, 42161, 421614];
 
 // Filter networks to only supported ones
 export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
@@ -27,12 +27,12 @@ export const onboard = init({
       email: 'info@synthetix.io',
     }),
     ledgerModule({
-      projectId: process.env.WC_PROJECT_ID ?? '',
+      projectId: 'a4aa25aa9a6ed6fd4c3b11c0cedc4b7c',
       walletConnectVersion: 2,
     }),
     walletConnectModule({
       version: 2,
-      projectId: process.env.WC_PROJECT_ID,
+      projectId: 'a4aa25aa9a6ed6fd4c3b11c0cedc4b7c',
     }),
     // gnosisModule(),
     coinbaseModule(),

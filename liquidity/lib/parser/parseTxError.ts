@@ -17,6 +17,9 @@ export function parseTxError(error: any): Hex | undefined {
     if (error.cause?.cause?.cause?.error?.data) {
       return error.cause?.cause?.cause?.error?.data;
     }
+    if (error?.error?.error?.data) {
+      return error?.error?.error?.data;
+    }
   } catch (err) {
     console.error('exception error parser:', err);
   }

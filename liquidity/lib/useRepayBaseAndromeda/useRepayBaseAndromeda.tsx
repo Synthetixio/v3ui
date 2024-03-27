@@ -14,7 +14,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET, sUSDC } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { approveAbi } from '@snx-v3/useApprove';
 
@@ -73,14 +73,12 @@ export const useRepayBaseAndromeda = ({
 
         // USDC => sUSDC
         const wrap = amountToDeposit.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(
-              USDC_BASE_MARKET,
-              usdcAmount,
-              amountToDeposit.toBN()
-            )
+          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
           : undefined;
 
-        const sUSDC_Contract = new ethers.Contract(sUSDC, approveAbi, signer);
+        const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
+
         const sUSDC_Approval = amountToDeposit.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(
               SpotMarketProxy.address,
@@ -93,13 +91,14 @@ export const useRepayBaseAndromeda = ({
           ? SpotMarketProxy.populateTransaction.sell(
               USDC_BASE_MARKET,
               amountToDeposit.toBN(),
-              amountToDeposit.toBN(),
+              0,
               ethers.constants.AddressZero
             )
           : undefined;
 
         // approve sUSD to Core
         const sUSD_Contract = new ethers.Contract(UsdProxy.address, approveAbi, signer);
+
         const sUSD_Approval = amountToDeposit.gt(0)
           ? sUSD_Contract.populateTransaction.approve(CoreProxy.address, amountToDeposit.toBN())
           : undefined;
@@ -123,7 +122,9 @@ export const useRepayBaseAndromeda = ({
         const callsPromise = Promise.all(
           [wrap, sUSDC_Approval, sell, sUSD_Approval, deposit, burn].filter(notNil)
         );
+
         const walletAddress = await signer.getAddress();
+
         const collateralPriceCallsPromise = fetchPriceUpdates(
           collateralPriceIds,
           network.isTestnet

@@ -114,7 +114,6 @@ export function useAccountUrlSync() {
     ) {
       // We have fetched accounts but there are none, remove account id from url
       if (accountId) {
-        queryParams.delete('accountId');
         navigate(
           {
             pathname: location.pathname,
