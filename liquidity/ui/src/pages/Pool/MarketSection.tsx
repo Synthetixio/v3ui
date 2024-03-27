@@ -13,7 +13,7 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import { PoolType, usePoolData } from '@snx-v3/usePoolData';
-import { formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
+import { formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { useMarketNamesById } from '@snx-v3/useMarketNamesById';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -93,8 +93,8 @@ export function MarketSectionUi({
               <Tr>
                 <StyledTh>Market</StyledTh>
                 <StyledTh>Pool Allocation</StyledTh>
-                <StyledTh>Total Deposited</StyledTh>
-                <StyledTh>Total Withdrawn</StyledTh>
+                {/* <StyledTh>Total Deposited</StyledTh>
+                <StyledTh>Total Withdrawn</StyledTh> */}
               </Tr>
             </Thead>
             <Tbody>
@@ -133,17 +133,17 @@ export function MarketSectionUi({
                         )}
                       </StyledTd>
                       {/* Total Deposited */}
-                      <StyledTd isLastItem={isLastItem} data-testid="market growth">
+                      {/* <StyledTd isLastItem={isLastItem} data-testid="market growth">
                         <Text fontSize="sm" display="block" color="gray.50">
                           {formatNumberToUsd(market.usd_deposited.toNumber())}
                         </Text>
-                      </StyledTd>
+                      </StyledTd> */}
                       {/* Total Withdrawn */}
-                      <StyledTd isLastItem={isLastItem}>
+                      {/* <StyledTd isLastItem={isLastItem}>
                         <Text fontSize="sm" display="block" color="gray.50">
                           {formatNumberToUsd(market.usd_withdrawn.toNumber())}
                         </Text>
-                      </StyledTd>
+                      </StyledTd> */}
                     </Tr>
                   );
                 })
