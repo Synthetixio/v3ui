@@ -1,11 +1,8 @@
 import { useParams } from '@snx-v3/useParams';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { Fade, Flex, Heading, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { usePool } from '@snx-v3/usePools';
-import { TokenIcon } from '../../components/TokenIcon';
-import { InfoIcon } from '@chakra-ui/icons';
 import { PositionOverview } from '../../components/PositionOverview';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import Wei from '@synthetixio/wei';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -14,14 +11,14 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useRecoilState } from 'recoil';
-import { depositState } from '../../state/deposit';
+import { depositState } from '../../state/amount';
 import { constants, utils } from 'ethers';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { ManagePositionHeader } from '../../components/ManagePositionHeader';
+import { PositionHeader } from '../../components/PositionHeader';
 
 export type TransactionSteps =
   | 'openPosition'
@@ -157,7 +154,7 @@ export function DepositBaseAndromeda() {
     userAccountsIsLoading;
 
   return (
-    <ManagePositionHeader
+    <PositionHeader
       title={
         !position
           ? 'Open ' + collateralSymbol + ' Liquidity Position'
@@ -173,7 +170,7 @@ export function DepositBaseAndromeda() {
           price={priceForCollateral}
           userHasAccount={!!userAccounts?.length}
           currentCRatio="Infinite"
-          currentCollateral={position?.debt}
+          currentCollateral={position?.collateralAmount}
           signTransaction={handleButtonClick}
           depositIsLoading={depositBaseAndromedaIsLoading}
           approveIsLoading={approveIsLoading}
@@ -190,10 +187,12 @@ export function DepositBaseAndromeda() {
           collateralType={collateralSymbol || '?'}
           debt={debt$.toNumber().toFixed(2)}
           collateralValue={
-            position ? position.debt.mul(priceForCollateral).toNumber().toFixed(2) : '0.00'
+            position
+              ? position.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
+              : '0.00'
           }
           poolPnl="$00.00"
-          currentCollateral={position ? position.debt : zeroWei}
+          currentCollateral={position ? position.collateralAmount : zeroWei}
           cRatio={maxUInt.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { TokenIcon } from '../TokenIcon';
 import { InfoIcon } from '@chakra-ui/icons';
 
-export function ManagePositionHeader({
+export function PositionHeader({
   isLoading,
   collateralSymbol,
   poolName,

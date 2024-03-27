@@ -16,7 +16,7 @@ import {
 import { TokenIcon } from '../TokenIcon';
 import Wei from '@synthetixio/wei';
 import { useRecoilState } from 'recoil';
-import { depositState } from '../../state/deposit';
+import { depositState } from '../../state/amount';
 import { TransactionSteps } from '../../pages/Deposit';
 import { Dispatch, SetStateAction } from 'react';
 

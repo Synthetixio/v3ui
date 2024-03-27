@@ -2,7 +2,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { CRatioProgressBar } from '../CRatioProgressBar';
 import { useRecoilState } from 'recoil';
-import { depositState } from '../../state/deposit';
+import { depositState } from '../../state/amount';
 import Wei from '@synthetixio/wei';
 
 export function PositionOverview({
