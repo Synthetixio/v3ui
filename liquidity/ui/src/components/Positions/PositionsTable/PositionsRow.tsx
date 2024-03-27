@@ -2,6 +2,7 @@ import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useNavigate } from 'react-router-dom';
 
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
@@ -9,6 +10,7 @@ interface PositionRow extends LiquidityPositionType {
 [];
 
 export function PositionRow({ accountId, poolId, collateralType, debt, final }: PositionRow) {
+  const navigate = useNavigate();
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType.tokenAddress,
     accountId,
@@ -112,6 +114,9 @@ export function PositionRow({ accountId, poolId, collateralType, debt, final }: 
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
+            onClick={() => {
+              navigate(`/repay/${collateralType.symbol}/${collateralType.tokenAddress}/${poolId}`);
+            }}
           >
             Manage
           </Button>
