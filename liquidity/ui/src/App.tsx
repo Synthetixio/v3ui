@@ -39,6 +39,7 @@ function ColorMode() {
 const extendedTheme = extendTheme({
   ...theme,
   components: {
+    ...theme.components,
     Progress,
   },
 });

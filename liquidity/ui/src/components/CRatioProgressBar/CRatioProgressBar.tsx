@@ -1,7 +1,5 @@
 import { TriangleDownIcon, TriangleUpIcon, InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
-import Wei from '@synthetixio/wei';
-import { constants } from 'ethers';
 import { FC } from 'react';
 
 export const getHealthVariant = ({
@@ -86,7 +84,7 @@ export const CRatioProgressBarUi: FC<{
     Math.max(targetCratioPercentage, currentCRatioPercentage) * 1.1,
     // If the c-ratio is bigger than 2.5x the target ratio the target and liquidation labels will overlap due to the big scale difference.
     // So when this is the case we opt not to show the current c-ratio arrows and set maxRatioShown to target * 2.5.
-    targetCratioPercentage * 2.5
+    targetCratioPercentage * 1.1
   );
   const scaleFactor = maxRatioShown / 100;
 
@@ -115,6 +113,8 @@ export const CRatioProgressBarUi: FC<{
       ? currentCRatioPercentage
       : newCratioPercentageWithDefault;
 
+  const ratioIsMaxUInt = (ratio: number) => ratio > Number.MAX_SAFE_INTEGER;
+
   return (
     <Flex flexDir="column" gap="2">
       <Text color="gray.500">
@@ -130,9 +130,9 @@ export const CRatioProgressBarUi: FC<{
       ) : (
         <Flex gap="1" alignItems="center">
           <Text color="gray.500" fontWeight={800} fontSize="20px">
-            N/A &rarr;
+            {ratioIsMaxUInt(currentCRatioPercentage) ? 'Infinite' : 'N/A'} &rarr;
           </Text>
-          {currentCRatioPercentage === new Wei(constants.MaxUint256).toNumber() ? (
+          {ratioIsMaxUInt(currentCRatioPercentage) ? (
             <>
               <Text color="white" fontWeight={800} fontSize="20px">
                 Infinite %
@@ -152,7 +152,11 @@ export const CRatioProgressBarUi: FC<{
       >
         <>
           <LineWithText
-            left={!isLoading ? liquidationCratioPercentage / scaleFactor : 33}
+            left={
+              !isLoading && liquidationCratioPercentage > 10
+                ? liquidationCratioPercentage / scaleFactor
+                : 10
+            }
             text={
               !isLoading
                 ? `Liquidation < ${liquidationCratioPercentage.toFixed(0)}%`
@@ -162,7 +166,15 @@ export const CRatioProgressBarUi: FC<{
           />
           <LineWithText
             left={!isLoading ? targetCratioPercentage / scaleFactor : 66}
-            text={!isLoading ? `Target ${targetCratioPercentage.toFixed(0)}%` : 'Target'}
+            text={
+              !isLoading
+                ? `Target ${
+                    ratioIsMaxUInt(targetCratioPercentage)
+                      ? 'Infinite'
+                      : targetCratioPercentage.toFixed(0)
+                  }%`
+                : 'Target'
+            }
             tooltipText="Required to claim rewards"
           />
         </>

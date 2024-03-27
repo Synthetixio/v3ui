@@ -3,9 +3,12 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
 import { Link } from 'react-router-dom';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export function Pools() {
   const { data: pools } = usePools();
+  const { data: collateralTypes } = useCollateralTypes();
+
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
@@ -57,20 +60,28 @@ export function Pools() {
               <Image src="/pools.svg" mr="50%" mb={4} />
             </Flex>
             <Divider />
-            <Flex mt={4}>
-              <TokenIcon symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                  sUSDC
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  Synthetix USDC
-                </Text>
-              </Flex>
-              {/* TODO @dev put in collateral symbol once available */}
-              <Link to={`/deposit/${'USDC'}/${pool.id}`}>
-                <Button>Deposit</Button>
-              </Link>
+            <Flex mt={4} flexDir="column" gap="3">
+              {collateralTypes?.map((type) => (
+                <Flex key={type.tokenAddress.concat(type.symbol)}>
+                  <TokenIcon symbol={type.symbol} />
+                  <Flex flexDirection="column" ml={3} mr="auto">
+                    <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                      {type.displaySymbol}
+                    </Text>
+                    <Text
+                      color="gray.500"
+                      fontFamily="heading"
+                      fontSize="0.75rem"
+                      lineHeight="1rem"
+                    >
+                      {type.name}
+                    </Text>
+                  </Flex>
+                  <Link to={`/deposit/${type.symbol}/${type.tokenAddress}/${pool.id}`}>
+                    <Button>Deposit</Button>
+                  </Link>
+                </Flex>
+              ))}
             </Flex>
           </Flex>
         ))}

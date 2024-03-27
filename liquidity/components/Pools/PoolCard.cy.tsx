@@ -24,6 +24,7 @@ describe('PoolCard Component', () => {
       oracleNodeId: '1',
       minDelegationD18: wei(1, 2, true),
       displaySymbol: 'SNX',
+      name: 'Synthetix Network Token',
     },
   ];
 

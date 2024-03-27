@@ -25,7 +25,6 @@ interface AssetsTableProps {
 export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
-
   return (
     <TableContainer
       maxW="100%"

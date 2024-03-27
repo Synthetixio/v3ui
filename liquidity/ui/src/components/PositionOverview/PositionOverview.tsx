@@ -9,21 +9,19 @@ export function PositionOverview({
   currentCollateral,
   collateralType,
   collateralValue,
-  debt$,
+  debt,
   poolPnl,
-  borrowed,
   isLoading,
   priceOfToDeposit,
   cRatio,
   liquidationCratioPercentage,
   targetCratioPercentage,
 }: {
-  currentCollateral: string;
+  currentCollateral: Wei;
   collateralType: string;
   collateralValue: string;
-  debt$: string;
+  debt: string;
   poolPnl: string;
-  borrowed: string;
   cRatio?: number;
   liquidationCratioPercentage?: number;
   targetCratioPercentage?: number;
@@ -61,12 +59,12 @@ export function PositionOverview({
             </Tooltip>
           </Text>
           <Text color="gray.500" fontSize="20px" fontWeight={800} display="flex" gap="1">
-            {currentCollateral} {collateralType}{' '}
+            {currentCollateral.toNumber().toFixed(2)} {collateralType}{' '}
             {amountToDeposit.gt(0) && (
               <>
                 &rarr;
                 <Text color="white" fontSize="20px" fontWeight={800}>
-                  {amountToDeposit.toNumber().toFixed(2)} {collateralType}
+                  {currentCollateral.add(amountToDeposit).toNumber().toFixed(2)} {collateralType}
                 </Text>
               </>
             )}
@@ -77,7 +75,11 @@ export function PositionOverview({
               <>
                 &rarr;
                 <Text color="white" fontSize="16px">
-                  {amountToDeposit.mul(priceOfToDeposit).toNumber().toFixed(2)} {collateralType}
+                  $
+                  {currentCollateral
+                    .add(amountToDeposit.mul(priceOfToDeposit))
+                    .toNumber()
+                    .toFixed(2)}
                 </Text>
               </>
             )}
@@ -99,7 +101,7 @@ export function PositionOverview({
             </Tooltip>
           </Text>
           <Text color="gray.500" fontSize="14px">
-            ${debt$}
+            ${debt}
           </Text>
           <Text color="gray.500" fontSize="12px" display="flex" alignItems="center" gap="2">
             Pool PNL{' '}
@@ -108,15 +110,6 @@ export function PositionOverview({
             </Tooltip>
             <Text color="gray.500" fontSize="20px" fontWeight={800}>
               {poolPnl}
-            </Text>
-          </Text>
-          <Text color="gray.500" fontSize="12px" display="flex" alignItems="center" gap="2">
-            Borrowed{' '}
-            <Tooltip label="TODO" p="3">
-              <InfoIcon w="12px" h="12px" />
-            </Tooltip>
-            <Text color="gray.500" fontSize="20px" fontWeight={800}>
-              {borrowed}
             </Text>
           </Text>
         </Flex>

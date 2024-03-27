@@ -80,14 +80,12 @@ export const useDepositBaseAndromeda = ({
         const amountD18 = parseUnits(amount.toString(), 18);
 
         // Wrap USDC to sUSDC
-
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const wrap = amount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;
-
-        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const sUSDCApproval = amount.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)
