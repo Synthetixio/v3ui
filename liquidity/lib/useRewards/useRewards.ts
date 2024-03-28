@@ -33,6 +33,7 @@ type RewardsInterface = {
   rewards_distributions: {
     amount: string;
     duration: string;
+    created_at: string;
   }[];
 }[];
 
@@ -140,12 +141,20 @@ export function useRewards(
           0
         );
 
+        // See if it is still active (i.e rewards are still being emitted)
+        const { duration: distribution_duration, created_at } = rewards_distributions[0];
+
+        const expiry = parseInt(distribution_duration) + parseInt(created_at);
+
+        // const total =
+        const hasExpired = new Date().getTime() / 1000 > expiry;
+
         return {
           address,
           name: name,
           token: token,
           duration,
-          total: rewards_distributions[0].amount, // Take the latest amount
+          total: hasExpired ? '0' : rewards_distributions[0].amount, // Take the latest amount
           lifetimeClaimed,
         };
       });

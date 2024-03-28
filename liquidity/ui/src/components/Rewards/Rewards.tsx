@@ -32,7 +32,7 @@ export const Rewards = ({
   const empty = rewards && rewards.length === 0;
 
   return (
-    <BorderBox bg="navy.700" py={4} px={6} flexDir="column" {...props}>
+    <BorderBox bg="navy.700" py={4} px={4} flexDir="column" {...props}>
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
         REWARDS
       </Text>
@@ -61,7 +61,7 @@ export const Rewards = ({
                   px={4}
                   py={3}
                 >
-                  Estimated Rate
+                  Active Rewards
                   <Tooltip label="Estimated rewards based on your position size">
                     <InfoIcon ml={1} mb="1px" />
                   </Tooltip>

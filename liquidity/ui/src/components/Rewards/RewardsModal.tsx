@@ -149,7 +149,7 @@ export const RewardsModal = ({
             >
               <Link
                 variant="outline"
-                href={etherscanLink({ chain: network?.name || '', address: txnHash })}
+                href={etherscanLink({ chain: network?.name || '', address: txnHash, isTx: true })}
                 fontFamily="heading"
                 color="cyan.500"
                 fontWeight={700}
