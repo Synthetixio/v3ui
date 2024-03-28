@@ -56,6 +56,7 @@ const RewardDistributorSchema = z.object({
       z.object({
         amount: z.string(),
         duration: z.string(),
+        created_at: z.string(),
       })
     )
     .default([]),
@@ -87,9 +88,10 @@ const PoolsDataDocument = gql`
       registered_distributors(where: { isActive: true }) {
         id
         total_distributed
-        rewards_distributions(orderBy: duration, orderDirection: desc) {
+        rewards_distributions(orderBy: created_at, orderDirection: desc) {
           amount
           duration
+          created_at
         }
       }
       total_weight
