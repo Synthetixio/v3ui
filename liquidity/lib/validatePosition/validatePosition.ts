@@ -31,7 +31,7 @@ export const validatePosition = ({
 
   const isValid =
     (newCRatio.gte(targetCRatio) || newCRatio.lte(0)) &&
-    (newDebt.eq(0) || newCollateralAmount.gt(0));
+    (newDebt.lte(0) || newCollateralAmount.gt(0));
 
   return {
     isValid,
