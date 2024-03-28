@@ -8,15 +8,19 @@ import { PoolBox } from '@snx-v3/PoolBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 
 function DepositUi({
   collateralDisplaySymbol,
   PoolBox,
   DepositForm,
+  network,
 }: {
   collateralDisplaySymbol?: string;
   DepositForm: FC;
   PoolBox: FC;
+  network?: Network | null;
 }) {
   return (
     <Flex height="100%" flexDirection="column">
@@ -44,8 +48,11 @@ function DepositUi({
             </Flex>
           </Flex>
           <Text color="gray.500" fontSize="sm">
-            Deposit your collateral to borrow snxUSD and contribute to the network collateral. If
-            you have never staked on Synthetix before, please review{' '}
+            {isBaseAndromeda(network?.id, network?.preset)
+              ? 'Deposit to '
+              : 'Deposit your collateral to borrow snxUSD and '}
+            contribute to the network collateral. If you have never staked on Synthetix before,
+            please review{' '}
             <Link color="cyan.500" href="https://docs.synthetix.io/" target="_blank">
               the documentation
             </Link>
@@ -80,12 +87,14 @@ export function Deposit() {
   const params = useParams();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { network } = useNetwork();
 
   return (
     <DepositUi
       collateralDisplaySymbol={collateralType?.displaySymbol}
       DepositForm={DepositForm}
       PoolBox={PoolBox}
+      network={network}
     />
   );
 }
