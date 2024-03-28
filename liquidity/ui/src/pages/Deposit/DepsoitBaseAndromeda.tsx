@@ -11,7 +11,7 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useRecoilState } from 'recoil';
-import { depositState } from '../../state/amount';
+import { amountState } from '../../state/amount';
 import { constants, utils } from 'ethers';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
@@ -31,7 +31,7 @@ export type TransactionSteps =
 export function DepositBaseAndromeda() {
   const [currentStep, setCurrentStep] = useState<TransactionSteps>('openPosition');
   const { poolId, accountId, collateralSymbol, collateralAddress } = useParams();
-  const [amountToDeposit] = useRecoilState(depositState);
+  const [amountToDeposit, setAmountToDeposit] = useRecoilState(amountState);
   const { network } = useNetwork();
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
@@ -139,6 +139,7 @@ export function DepositBaseAndromeda() {
         await depositBaseAndromeda();
         setCurrentStep('positionCreated');
       } catch {
+        setAmountToDeposit(zeroWei);
         setCurrentStep('openPosition');
       }
     }

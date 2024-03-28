@@ -14,7 +14,12 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
 import Wei from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
+import { useBorrow } from '@snx-v3/useBorrow';
+import { useRecoilState } from 'recoil';
+import { amountState } from '../../state/amount';
+import { InfoIcon } from '@chakra-ui/icons';
+import { CheckIcon } from '@snx-v3/Multistep';
 
 const ACTIONS = [
   {
@@ -117,10 +122,10 @@ function ManageInputUi({
   title: string;
   inputSubline: string;
   buttonText: string;
-  handleButtonClick: (collateral: Wei) => void;
+  handleButtonClick: () => void;
   children?: ReactNode;
 }) {
-  const [amount, setAmount] = useState(new Wei(0));
+  const [amount, setAmount] = useRecoilState(amountState);
   return (
     <Flex flexDir="column">
       <Text fontSize="14px" fontWeight={700} color="white">
@@ -169,7 +174,7 @@ function ManageInputUi({
         </Flex>
       </Flex>
       {children}
-      <Button onClick={() => handleButtonClick(amount)}>{buttonText}</Button>
+      <Button onClick={() => handleButtonClick()}>{buttonText}</Button>
     </Flex>
   );
 }
@@ -183,7 +188,6 @@ function PositionAction({
   poolId,
   collateralAddress,
   accountId,
-  distributorAddress,
 }: {
   tab: number;
   tabAction: string | null;
@@ -193,11 +197,17 @@ function PositionAction({
   poolId?: string;
   collateralAddress?: string;
   accountId?: string;
-  distributorAddress?: string;
 }) {
-  const handleButtonClick = async (collateral: Wei) => {
-    console.log(collateral.toString());
-    await claimRewards();
+  const [amount] = useRecoilState(amountState);
+  const { exec: mintUSD, isLoading } = useBorrow({
+    accountId,
+    debtChange: amount,
+    collateralTypeAddress: collateralAddress,
+    poolId,
+  });
+
+  const handleButtonClick = async () => {
+    await mintUSD();
   };
   if (tab === 1) {
     if (tabAction === 'claim') {
@@ -210,11 +220,25 @@ function PositionAction({
           inputSubline="Max Claim"
           title="Claim Profit"
           handleButtonClick={handleButtonClick}
+          steps={['signTransaction', 'success']}
         >
-          <Alert colorScheme="green" my="2">
-            Positive market performance has credited your position. Claim up to $
-            {debt.abs().mul(price).toNumber().toFixed(2)} without accruing debt.
-          </Alert>
+          {amount.eq(0) ? (
+            <Alert colorScheme="cyan" rounded="base" my="2">
+              <Flex rounded="full" mr="2">
+                <InfoIcon w="20px" h="20px" color="cyan.500" />
+              </Flex>
+              As a security precaution, claimed assets can only be withdrawn to your wallet after 24
+              hs since your previous account activity.
+            </Alert>
+          ) : (
+            <Alert colorScheme="green" rounded="base" my="2">
+              <Flex bg="green.500" p="1" rounded="full" mr="2">
+                <CheckIcon w="12px" h="12px" color="green.900" />
+              </Flex>
+              Positive market performance has credited your position. Claim up to $
+              {debt.abs().mul(price).toNumber().toFixed(2)} without accruing debt.
+            </Alert>
+          )}
         </ManageInputUi>
       );
     }
@@ -320,7 +344,6 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         accountId={accountId}
         collateralAddress={collateralAddress}
         poolId={poolId}
-        distributorAddress={}
       />
     </Flex>
   );

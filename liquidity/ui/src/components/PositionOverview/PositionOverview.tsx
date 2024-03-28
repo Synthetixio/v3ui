@@ -2,7 +2,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { CRatioProgressBar } from '../CRatioProgressBar';
 import { useRecoilState } from 'recoil';
-import { depositState } from '../../state/amount';
+import { amountState } from '../../state/amount';
 import Wei from '@synthetixio/wei';
 
 export function PositionOverview({
@@ -28,7 +28,7 @@ export function PositionOverview({
   isLoading: boolean;
   priceOfToDeposit: Wei;
 }) {
-  const [amountToDeposit] = useRecoilState(depositState);
+  const [amountToDeposit] = useRecoilState(amountState);
   return (
     <Flex
       rounded="base"
