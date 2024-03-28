@@ -27,8 +27,10 @@ const BorrowUi: FC<{
         {isBase ? 'Claim USDC' : 'Borrow snxUSD'}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Take an interest-free loan of {isBase ? 'USDC' : 'snxUSD'} against your collateral. This
-        increases your debt and decreases your C-Ratio.
+        {isBase
+          ? 'Claim USDC fees you have earned from providing liquidity. These will be available in 24h for withdrawal.'
+          : `Take an interest-free loan of snxUSD against your collateral. This
+              increases your debt and decreases your C-Ratio.`}
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
