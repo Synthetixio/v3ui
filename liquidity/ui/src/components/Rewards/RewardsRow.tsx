@@ -90,12 +90,10 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    <Amount value={wei(totalAmount)} />
-                    {` ${symbol}`}
+                    <Amount value={wei(totalAmount)} suffix={symbol} />
                   </Text>
                 </Tooltip>
               </Link>
-
               {frequencyString && totalAmount > 0 && (
                 <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                   {frequencyString}
