@@ -135,12 +135,11 @@ export function useRewards(
             duration = parseInt(rewards_distributions[0].duration);
           }
 
-          const lifetimeClaimed = historicalData[i].data.rewardsClaimeds.reduce(
-            (acc: number, item: { amount: string; id: string }) => {
-              return (acc += parseInt(item.amount));
-            },
-            0
-          );
+          const lifetimeClaimed: number = historicalData[i].data.rewardsClaimeds
+            .reduce((acc: Wei, item: { amount: string; id: string }) => {
+              return acc.add(wei(item.amount, 18, true));
+            }, wei(0))
+            .toNumber();
 
           // See if it is still active (i.e rewards are still being emitted)
           const { duration: distribution_duration, created_at } = rewards_distributions[0];
@@ -152,8 +151,8 @@ export function useRewards(
 
           return {
             address,
-            name: name,
-            token: token,
+            name,
+            token,
             duration,
             total: hasExpired ? '0' : rewards_distributions[0].amount, // Take the latest amount
             lifetimeClaimed,
@@ -203,7 +202,7 @@ export function useRewards(
             ercReturnData[i * 4 + 3]
           );
 
-          const total = parseInt(item.total);
+          const total = wei(item.total, 18, true).toNumber();
 
           return {
             ...item,
