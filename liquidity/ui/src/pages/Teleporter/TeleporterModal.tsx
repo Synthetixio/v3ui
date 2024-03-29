@@ -83,8 +83,8 @@ export const TeleporterModalUi: FC<{
               <>
                 {state.matches(State.success) ? (
                   <Text>
-                    Teleport for <Amount value={amount} suffix={` snxUSD`} /> to {toNetworkName}{' '}
-                    executed. Check{' '}
+                    Teleport for <Amount showTooltip value={amount} suffix={` snxUSD`} /> to{' '}
+                    {toNetworkName} executed. Check{' '}
                     <Link
                       color="cyan.500"
                       href={`https://ccip.chain.link/tx/${txnHash}`}
