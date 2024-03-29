@@ -61,9 +61,6 @@ export const RewardsRow = ({
     return 'Claimed';
   };
 
-  // Note adjustment will need to be made for decimals
-  const totalAmount = total / 1e18;
-
   const link = etherscanLink({ chain: network?.name || 'mainnet', address });
 
   return (
@@ -90,11 +87,11 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    <Amount value={wei(totalAmount)} suffix={symbol} />
+                    <Amount showTooltip={false} value={wei(total)} suffix={` ${symbol}`} />
                   </Text>
                 </Tooltip>
               </Link>
-              {frequencyString && totalAmount > 0 && (
+              {frequencyString && total > 0 && (
                 <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                   {frequencyString}
                 </Text>
@@ -117,7 +114,7 @@ export const RewardsRow = ({
             {lifetimeClaimed > 0 && (
               <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                 <Tooltip label="Total claimed over lifetime">Lifetime: &nbsp;</Tooltip>
-                <Amount value={wei(lifetimeClaimed.toString(), 18, true)} />
+                <Amount value={wei(lifetimeClaimed)} />
                 {symbol}
               </Text>
             )}
