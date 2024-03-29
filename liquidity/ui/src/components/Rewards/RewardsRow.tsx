@@ -90,7 +90,7 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    <Amount value={wei(totalAmount)} suffix={symbol} />
+                    <Amount value={wei(totalAmount)} suffix={` ${symbol}`} />
                   </Text>
                 </Tooltip>
               </Link>
