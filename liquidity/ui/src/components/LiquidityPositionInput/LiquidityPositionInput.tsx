@@ -1,4 +1,4 @@
-import { InfoIcon, CheckIcon } from '@chakra-ui/icons';
+import { InfoIcon } from '@chakra-ui/icons';
 import {
   Alert,
   Button,
@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   Input,
-  Link,
   ListItem,
   Spinner,
   Text,
@@ -20,69 +19,7 @@ import { amountState } from '../../state/amount';
 import { TransactionSteps } from '../../pages/Deposit';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { SignTransaction } from '../ManagePosition';
-
-function stepToTitle(title: TransactionSteps) {
-  switch (title) {
-    case 'accountCreated':
-      return 'Account successfully Created';
-    case 'openPosition':
-      return 'Open Liquidity Position';
-    case 'createAccount':
-      return 'Create Account';
-    case 'positionCreated':
-      return 'Position successfully Opened';
-    default:
-      return 'Open Liquidity Position';
-  }
-}
-
-function LiquidityPositionCreated({
-  collateralSymbol,
-  currentCollateral,
-  currentCRatio,
-}: {
-  collateralSymbol: string;
-  currentCollateral: Wei;
-  currentCRatio: string;
-}) {
-  const [amountToDeposit] = useRecoilState(amountState);
-  return (
-    <Flex flexDir="column" gap="6">
-      <Text color="white" fontSize="14px">
-        Your position has been successfully opened, read more about it in the Synthetix V3
-        Documentation.
-      </Text>
-      <Alert colorScheme="green" rounded="base">
-        <Flex bg="green.500" p="1" rounded="full" mr="2">
-          <CheckIcon w="12px" h="12px" color="green.900" />
-        </Flex>
-        Position successfully Opened
-      </Alert>
-      <Flex w="100%" p="3" bg="gray.900" flexDir="column">
-        <Flex justifyContent="space-between">
-          <Text color="white" fontWeight={700} fontSize="12px">
-            Total {collateralSymbol}
-          </Text>
-          <Text color="white" fontWeight={700} fontSize="12px">
-            {currentCollateral.toNumber().toFixed(2)} &rarr;
-            {currentCollateral.add(amountToDeposit).toNumber().toFixed(2)}
-          </Text>
-        </Flex>
-        <Flex justifyContent="space-between">
-          <Text color="white" fontWeight={700} fontSize="12px">
-            C-ratio
-          </Text>
-          <Text color="white" fontWeight={700} fontSize="12px">
-            {currentCRatio === '0.0' ? 'N/A' : currentCRatio} &rarr; Infinite
-          </Text>
-        </Flex>
-      </Flex>
-      <Link href="/">
-        <Button w="100%">Continue</Button>
-      </Link>
-    </Flex>
-  );
-}
+import { LiquidityPositionUpdated } from '../ManagePosition';
 
 function OpenLiquidityPosition({
   collateralSymbol,
@@ -223,6 +160,10 @@ function CreateLiquidiyAccount({
 }) {
   return (
     <Flex flexDir="column" gap="6" alignItems="center">
+      <Heading color="gray.50" fontSize="20px">
+        Create Liquidity Account
+      </Heading>
+      <Divider />
       <Text color="white" fontSize="14px">
         In order to open a position on Synthetix Liquidity, you need an Account. It’s a one time
         action needed that you won’t have to reproduce for the next positions. Accounts are
@@ -265,6 +206,10 @@ function LiquidityAccountCreated({
   }, []);
   return (
     <Flex flexDir="column" gap="6">
+      <Heading color="gray.50" fontSize="20px">
+        Create Liquidity Account
+      </Heading>
+      <Divider />
       <Text color="white" fontSize="14px">
         Your account position has been successfully created, read more about it in the Synthetix V3
         Documentation.
@@ -321,15 +266,13 @@ export function LiquidityPositionInput({
       p="6"
       gap="6"
     >
-      <Heading color="gray.50" fontSize="20px">
-        {stepToTitle(currentStep)}
-      </Heading>
-      <Divider />
       {currentStep === 'positionCreated' && (
-        <LiquidityPositionCreated
-          collateralSymbol={collateralSymbol}
+        <LiquidityPositionUpdated
           currentCRatio={currentCRatio}
-          currentCollateral={currentCollateral}
+          debt={currentCollateral}
+          header="Position successfully Opened"
+          subline="Your position has been successfully opened, read more about it in the Synthetix V3 Documentation."
+          alertText="Position successfully Opened"
         />
       )}
       {currentStep === 'openPosition' && (
@@ -346,6 +289,7 @@ export function LiquidityPositionInput({
       )}
       {currentStep === 'signTransactions' && (
         <SignTransaction
+          header="Open Liquidity Position"
           transactions={[
             {
               done: requireApprove,

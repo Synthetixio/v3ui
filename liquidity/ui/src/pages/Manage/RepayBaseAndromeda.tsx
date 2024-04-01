@@ -46,7 +46,7 @@ export const RepayBaseAndromeda = () => {
       PositionOverview={
         <PositionOverview
           collateralType={collateralSymbol || '?'}
-          debt={position?.debt.toNumber().toFixed(2) || '0.00'}
+          debt={position?.debt.mul(priceForCollateral) || zeroWei}
           collateralValue={
             position
               ? position.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)

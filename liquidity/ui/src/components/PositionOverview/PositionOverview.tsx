@@ -1,9 +1,10 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
+import { Badge, Box, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { CRatioProgressBar } from '../CRatioProgressBar';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import Wei from '@synthetixio/wei';
+import { useLocation } from 'react-router-dom';
 
 export function PositionOverview({
   currentCollateral,
@@ -20,7 +21,7 @@ export function PositionOverview({
   currentCollateral: Wei;
   collateralType: string;
   collateralValue: string;
-  debt: string;
+  debt: Wei;
   poolPnl: string;
   cRatio?: number;
   liquidationCratioPercentage?: number;
@@ -29,6 +30,7 @@ export function PositionOverview({
   priceOfToDeposit: Wei;
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
+  const { pathname } = useLocation();
   return (
     <Flex
       rounded="base"
@@ -100,8 +102,20 @@ export function PositionOverview({
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Text>
-          <Text color="gray.500" fontSize="14px">
-            ${debt}
+          <Text
+            color={debt.eq(0) ? 'gray.500' : 'white'}
+            fontSize="20px"
+            fontWeight={debt.eq(0) ? 400 : 700}
+            display="flex"
+            alignItems="center"
+            gap="2"
+          >
+            ${debt.toNumber().toFixed(2)}
+            {pathname.includes('repay') && debt.lt(0) && (
+              <Badge variant="outline" colorScheme="green" bg="green.900">
+                CREDIT AVAILABLE
+              </Badge>
+            )}
           </Text>
           <Text color="gray.500" fontSize="12px" display="flex" alignItems="center" gap="2">
             Pool PNL{' '}

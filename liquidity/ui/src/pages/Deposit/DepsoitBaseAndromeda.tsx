@@ -186,7 +186,7 @@ export function DepositBaseAndromeda() {
       PositionOverview={
         <PositionOverview
           collateralType={collateralSymbol || '?'}
-          debt={debt$.toNumber().toFixed(2)}
+          debt={debt$}
           collateralValue={
             position
               ? position.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
