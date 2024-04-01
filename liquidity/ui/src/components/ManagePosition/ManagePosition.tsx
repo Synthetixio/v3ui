@@ -23,6 +23,10 @@ import { CheckIcon } from '@snx-v3/Multistep';
 import { SignTransaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
 import { ACTIONS } from './actions';
+import { useRepayBaseAndromeda } from '../../../../lib/useRepayBaseAndromeda';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 function ManageInputUi({
   collateralSymbol,
@@ -45,7 +49,7 @@ function ManageInputUi({
 }) {
   const [amount, setAmount] = useRecoilState(amountState);
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" gap="3">
       <Text fontSize="14px" fontWeight={700} color="white">
         {title}
       </Text>
@@ -108,6 +112,7 @@ function PositionAction({
   accountId,
   setStep,
   step,
+  USDCBalance,
 }: {
   tab: number;
   tabAction: string | null;
@@ -119,6 +124,7 @@ function PositionAction({
   accountId?: string;
   step: string;
   setStep: Dispatch<SetStateAction<string>>;
+  USDCBalance?: Wei;
 }) {
   const [amount] = useRecoilState(amountState);
   const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
@@ -128,76 +134,141 @@ function PositionAction({
     poolId,
   });
 
+  const { exec: repayBaseAndromeda, isLoading: repayBaseAndromedaIsLoading } =
+    useRepayBaseAndromeda({
+      accountId,
+      poolId,
+      debtChange: amount,
+      availableUSDCollateral: USDCBalance,
+      collateralTypeAddress: collateralAddress,
+    });
+
   const handleManageInputButtonClick = () => {
     setStep('signTransaction');
   };
 
   const handleSignTransactionClick = async () => {
-    try {
-      await mintUSD();
-      setStep('done');
-    } catch (error) {
-      console.error(error);
+    if (tabAction === 'claim') {
+      try {
+        await mintUSD();
+        setStep('done');
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (tabAction === 'repay') {
+      try {
+        await repayBaseAndromeda();
+
+        setStep('done');
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
   if (tab === 1) {
-    if (tabAction === 'claim' && !step) {
-      return (
-        <ManageInputUi
-          collateralSymbol={collateralSymbol}
-          collateral={debt.abs()}
-          price={price}
-          buttonText="Claim"
-          inputSubline="Max Claim"
-          title="Claim Profit"
-          handleButtonClick={handleManageInputButtonClick}
-        >
-          {amount.gt(0) ? (
-            <Alert colorScheme="cyan" rounded="base" my="2">
-              <Flex rounded="full" mr="2">
-                <InfoIcon w="20px" h="20px" color="cyan.500" />
-              </Flex>
-              As a security precaution, claimed assets can only be withdrawn to your wallet after 24
-              hs since your previous account activity.
-            </Alert>
-          ) : (
-            <Alert colorScheme="green" rounded="base" my="2">
-              <Flex bg="green.500" p="1" rounded="full" mr="2">
-                <CheckIcon w="12px" h="12px" color="green.900" />
-              </Flex>
-              Positive market performance has credited your position. Claim up to $
-              {debt.abs().mul(price).toNumber().toFixed(2)} without accruing debt.
-            </Alert>
-          )}
-        </ManageInputUi>
-      );
-    } else if (step === 'signTransaction') {
-      return (
-        <SignTransaction
-          actionButtonClick={handleSignTransactionClick}
-          buttonText="Execute Transaction"
-          header="Manage Debt"
-          transactions={[
-            {
-              loading: mintUSDIsLoading,
-              done: false,
-              title: 'Minting snxUSD against your credit',
-              subline:
-                'This transaction will mint snxUSD against your position that you can claim in 24hrs.',
-            },
-          ]}
-        />
-      );
+    if (tabAction === 'claim') {
+      if (!step) {
+        return (
+          <ManageInputUi
+            collateralSymbol={collateralSymbol}
+            collateral={debt.abs()}
+            price={price}
+            buttonText="Claim"
+            inputSubline="Max Claim"
+            title="Claim Profit"
+            handleButtonClick={handleManageInputButtonClick}
+          >
+            {amount.gt(0) ? (
+              <Alert colorScheme="cyan" rounded="base" my="2">
+                <Flex rounded="full" mr="2">
+                  <InfoIcon w="20px" h="20px" color="cyan.500" />
+                </Flex>
+                As a security precaution, claimed assets can only be withdrawn to your wallet after
+                24 hs since your previous account activity.
+              </Alert>
+            ) : (
+              <Alert colorScheme="green" rounded="base" my="2">
+                <Flex bg="green.500" p="1" rounded="full" mr="2">
+                  <CheckIcon w="12px" h="12px" color="green.900" />
+                </Flex>
+                Positive market performance has credited your position. Claim up to $
+                {debt.abs().mul(price).toNumber().toFixed(2)} without accruing debt.
+              </Alert>
+            )}
+          </ManageInputUi>
+        );
+      }
+      if (step === 'signTransaction') {
+        return (
+          <SignTransaction
+            actionButtonClick={handleSignTransactionClick}
+            buttonText="Execute Transaction"
+            header="Manage Debt"
+            transactions={[
+              {
+                loading: repayBaseAndromedaIsLoading,
+                done: false,
+                title: 'Minting snxUSD against your credit',
+                subline:
+                  'This transaction will mint snxUSD against your position that you can claim in 24hrs.',
+              },
+            ]}
+          />
+        );
+      } else if (step === 'done') {
+        return (
+          <LiquidityPositionUpdated
+            alertText="Position successfully Opened"
+            header="Position successfully Updated"
+            currentCRatio="Infinite"
+            debt={debt}
+            subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
+          />
+        );
+      }
     }
-    return (
-      <LiquidityPositionUpdated
-        alertText="Position successfully Opened"
-        header="Position successfully Updated"
-        currentCRatio="Infinite"
-        debt={debt}
-        subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
-      />
-    );
+    if (tabAction === 'repay') {
+      if (!step) {
+        return (
+          <ManageInputUi
+            collateralSymbol={collateralSymbol}
+            collateral={debt.abs()}
+            price={price}
+            buttonText="Repay"
+            inputSubline="Debt"
+            title="Repay"
+            handleButtonClick={handleManageInputButtonClick}
+          />
+        );
+      }
+      if (step === 'signTransaction') {
+        return (
+          <SignTransaction
+            actionButtonClick={handleSignTransactionClick}
+            buttonText="Execute Transaction"
+            header="Manage Debt"
+            transactions={[
+              {
+                loading: mintUSDIsLoading,
+                done: false,
+                title: 'Repay your debt',
+                subline: 'This will eventually swap your collateral to sUSDC and repay the debt.',
+              },
+            ]}
+          />
+        );
+      } else if (step === 'done') {
+        return (
+          <LiquidityPositionUpdated
+            alertText="Position successfully Opened"
+            header="Position successfully Updated"
+            currentCRatio="Infinite"
+            debt={debt}
+            subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
+          />
+        );
+      }
+    }
   }
 }
 
@@ -208,6 +279,9 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
+  const { network } = useNetwork();
+  const { data: USDCBalance } = useTokenBalance(getUSDCAddress(network?.id));
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   return (
     <Flex
       rounded="base"
@@ -254,8 +328,8 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
             </TabPanel>
             <TabPanel px="0">
               <Flex flexDir="column">
-                <Flex justifyContent="space-between">
-                  {ACTIONS.map((action) => (
+                <Flex justifyContent={isBase ? 'space-evenly' : 'space-between'}>
+                  {ACTIONS.filter((action) => action.title !== 'Borrow' && isBase).map((action) => (
                     <Flex
                       w="135px"
                       h="84px"
@@ -303,6 +377,7 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
+        USDCBalance={USDCBalance}
       />
     </Flex>
   );

@@ -927,11 +927,6 @@
         "internalType": "contract ISpotMarketSystem",
         "name": "spotMarket",
         "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "marketName",
-        "type": "string"
       }
     ],
     "name": "initializeFactory",
@@ -943,6 +938,19 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "interestRate",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1029,6 +1037,29 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "utilizationRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "delegatedCollateral",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lockedCredit",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1336,6 +1367,35 @@
         "name": "accruedFunding",
         "type": "int256"
       },
+      {
+        "internalType": "int128",
+        "name": "positionSize",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "owedInterest",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getOpenPositionSize",
+    "outputs": [
       {
         "internalType": "int128",
         "name": "positionSize",
@@ -1748,6 +1808,32 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxMarketValue",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int256",
+        "name": "newSideSize",
+        "type": "int256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxUSDOpenInterestReached",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "OverflowInt256ToInt128",
     "type": "error"
@@ -2016,6 +2102,40 @@
     "inputs": [
       {
         "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int128",
+        "name": "sizeDelta",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "computeOrderFeesWithPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "orderFees",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fillPrice",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
         "name": "accountId",
         "type": "uint128"
       }
@@ -2084,6 +2204,30 @@
     "inputs": [
       {
         "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "settlementStrategyId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getSettlementRewardCost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
         "name": "accountId",
         "type": "uint128"
       },
@@ -2099,6 +2243,40 @@
       }
     ],
     "name": "requiredMarginForOrder",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "requiredMargin",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int128",
+        "name": "sizeDelta",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "requiredMarginForOrderWithPrice",
     "outputs": [
       {
         "internalType": "uint256",
@@ -2212,6 +2390,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "name": "InterestCharged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "uint128",
         "name": "marketId",
@@ -2252,6 +2449,12 @@
         "internalType": "int256",
         "name": "currentFundingVelocity",
         "type": "int256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "interestRate",
+        "type": "uint128"
       }
     ],
     "name": "MarketUpdated",
@@ -2746,6 +2949,43 @@
       },
       {
         "indexed": false,
+        "internalType": "int256",
+        "name": "availableMargin",
+        "type": "int256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requiredMaintenanceMargin",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "liquidationReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "flagReward",
+        "type": "uint256"
+      }
+    ],
+    "name": "AccountFlaggedForLiquidation",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "reward",
         "type": "uint256"
@@ -3086,6 +3326,25 @@
       }
     ],
     "name": "MaxMarketSizeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxMarketValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxMarketValueSet",
     "type": "event"
   },
   {
@@ -3456,6 +3715,25 @@
         "type": "uint128"
       }
     ],
+    "name": "getMaxMarketValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxMarketValue",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
     "name": "getOrderFees",
     "outputs": [
       {
@@ -3701,6 +3979,24 @@
       },
       {
         "internalType": "uint256",
+        "name": "maxMarketValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxMarketValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
         "name": "makerFeeRatio",
         "type": "uint256"
       },
@@ -3840,6 +4136,22 @@
   {
     "inputs": [
       {
+        "internalType": "uint128",
+        "name": "lowUtilizationInterestRateGradient",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "highUtilizationInterestRateGradient",
+        "type": "uint128"
+      }
+    ],
+    "name": "InvalidInterestRateParameters",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "shareRatioD18",
         "type": "uint256"
@@ -3878,6 +4190,50 @@
       }
     ],
     "name": "FeeCollectorSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lowUtilizationInterestRateGradient",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interestRateGradientBreakpoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "highUtilizationInterestRateGradient",
+        "type": "uint256"
+      }
+    ],
+    "name": "InterestRateParametersSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint128",
+        "name": "superMarketId",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "interestRate",
+        "type": "uint128"
+      }
+    ],
+    "name": "InterestRateUpdated",
     "type": "event"
   },
   {
@@ -4002,6 +4358,29 @@
         "internalType": "address",
         "name": "feeCollector",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getInterestRateParameters",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "lowUtilizationInterestRateGradient",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "interestRateGradientBreakpoint",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "highUtilizationInterestRateGradient",
+        "type": "uint128"
       }
     ],
     "stateMutability": "view",
@@ -4158,6 +4537,29 @@
   {
     "inputs": [
       {
+        "internalType": "uint128",
+        "name": "lowUtilizationInterestRateGradient",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "interestRateGradientBreakpoint",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "highUtilizationInterestRateGradient",
+        "type": "uint128"
+      }
+    ],
+    "name": "setInterestRateParameters",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "minKeeperRewardUsd",
         "type": "uint256"
@@ -4225,6 +4627,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "updateInterestRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
