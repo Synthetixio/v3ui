@@ -130,7 +130,7 @@ export function DepositBaseAndromeda() {
     setCurrentStep('accountCreated');
   };
 
-  const handleButtonClick = async (action: 'createPosition' | 'createAccount') => {
+  const handleButtonClick = async (action: string) => {
     if (action === 'createPosition') {
       if (requireApproval) {
         await approve(false);
