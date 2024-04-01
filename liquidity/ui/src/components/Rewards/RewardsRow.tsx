@@ -39,8 +39,7 @@ export const RewardsRow = ({
     poolId || '',
     collateralData?.tokenAddress || '',
     accountId,
-    address,
-    claimableAmount
+    address
   );
 
   const onClick = () => {

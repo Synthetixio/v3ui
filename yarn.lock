@@ -6005,7 +6005,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/BorrowModal@workspace:*, @snx-v3/BorrowModal@workspace:liquidity/components/BorrowModal":
+"@snx-v3/BorrowModal@workspace:liquidity/components/BorrowModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/BorrowModal@workspace:liquidity/components/BorrowModal"
   dependencies:
@@ -6190,7 +6190,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/RepayModal@workspace:*, @snx-v3/RepayModal@workspace:liquidity/components/RepayModal":
+"@snx-v3/RepayModal@workspace:liquidity/components/RepayModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/RepayModal@workspace:liquidity/components/RepayModal"
   dependencies:
@@ -6238,7 +6238,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/UndelegateModal@workspace:*, @snx-v3/UndelegateModal@workspace:liquidity/components/UndelegateModal":
+"@snx-v3/UndelegateModal@workspace:liquidity/components/UndelegateModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/UndelegateModal@workspace:liquidity/components/UndelegateModal"
   dependencies:
@@ -6493,19 +6493,14 @@ __metadata:
     "@snx-v3/AccountsSelector": "workspace:*"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
-    "@snx-v3/BorrowModal": "workspace:*"
     "@snx-v3/CollateralTypeSelector": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/DepositModal": "workspace:*"
     "@snx-v3/HomeLink": "workspace:*"
-    "@snx-v3/ManagePositionContext": "workspace:*"
+    "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
-    "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
-    "@snx-v3/UndelegateModal": "workspace:*"
-    "@snx-v3/WithdrawIncrease": "workspace:*"
-    "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/etherscanLink": "workspace:*"
     "@snx-v3/format": "workspace:*"
@@ -6518,6 +6513,7 @@ __metadata:
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useBorrow": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -6530,16 +6526,13 @@ __metadata:
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useMarketNamesById": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
-    "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
-    "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6581,7 +6574,6 @@ __metadata:
     webpack-bundle-analyzer: "npm:^4.10.0"
     webpack-cli: "npm:^5.1.4"
     webpack-dev-server: "npm:^4.15.1"
-    zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
 
@@ -7031,7 +7023,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/usePoolConfiguration@workspace:*, @snx-v3/usePoolConfiguration@workspace:liquidity/lib/usePoolConfiguration":
+"@snx-v3/usePoolConfiguration@workspace:liquidity/lib/usePoolConfiguration":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePoolConfiguration@workspace:liquidity/lib/usePoolConfiguration"
   dependencies:
@@ -7299,7 +7291,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/validatePosition@workspace:*, @snx-v3/validatePosition@workspace:liquidity/lib/validatePosition":
+"@snx-v3/validatePosition@workspace:liquidity/lib/validatePosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/validatePosition@workspace:liquidity/lib/validatePosition"
   dependencies:

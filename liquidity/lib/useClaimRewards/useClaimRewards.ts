@@ -9,8 +9,7 @@ export function useClaimRewards(
   poolId?: string,
   collateralAddress?: string,
   accountId?: string,
-  distributorAddress?: string,
-  amount?: number
+  distributorAddress?: string
 ) {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
@@ -20,7 +19,6 @@ export function useClaimRewards(
   const mutation = useMutation({
     mutationFn: async function () {
       try {
-        if (!amount) return;
         if (!poolId || !collateralAddress || !accountId || !distributorAddress || !network)
           throw new Error('Parameters Undefined');
         if (!CoreProxy) throw new Error('CoreProxy undefined');
