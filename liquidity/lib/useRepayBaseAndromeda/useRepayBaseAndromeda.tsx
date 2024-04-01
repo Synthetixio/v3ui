@@ -118,7 +118,6 @@ export const useRepayBaseAndromeda = ({
           collateralTypeAddress,
           debtChangeAbs.toBN()
         );
-
         const callsPromise = Promise.all(
           [wrap, sUSDC_Approval, sell, sUSD_Approval, deposit, burn].filter(notNil)
         );

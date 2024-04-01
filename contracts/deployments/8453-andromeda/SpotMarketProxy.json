@@ -591,6 +591,54 @@
     "inputs": [
       {
         "internalType": "uint128",
+        "name": "synthMarketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getNominatedMarketOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "marketOwner",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "synthMarketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getPriceData",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "buyFeedId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sellFeedId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strictPriceStalenessTolerance",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
         "name": "marketId",
         "type": "uint128"
       }
@@ -1294,6 +1342,25 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getMarketSkew",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "marketSkew",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -2858,6 +2925,30 @@
     ],
     "name": "WrapperSet",
     "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getWrapper",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "wrapCollateralType",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxWrappableAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
