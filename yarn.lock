@@ -6701,6 +6701,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useBlockchain@workspace:*, @snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain"
@@ -6888,6 +6898,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGasSpeed@workspace:liquidity/lib/useGasSpeed"
   dependencies:
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL"
+  dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
