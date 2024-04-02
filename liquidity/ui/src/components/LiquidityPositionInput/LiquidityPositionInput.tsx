@@ -265,6 +265,7 @@ export function LiquidityPositionInput({
       w="100%"
       p="6"
       gap="6"
+      h="fit-content"
     >
       {currentStep === 'positionCreated' && (
         <LiquidityPositionUpdated

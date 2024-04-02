@@ -26,11 +26,12 @@ import { useEffect } from 'react';
 
 function AccountMenuItem({ accountId }: { accountId: string }) {
   const params = useParams();
+  const { pathname } = useLocation();
 
   return (
     <RouterLink
       to={{
-        pathname: generatePath('/'),
+        pathname: pathname,
         search: accountId ? createSearchParams({ accountId }).toString() : '',
       }}
     >
