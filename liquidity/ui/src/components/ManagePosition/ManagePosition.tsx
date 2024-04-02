@@ -24,6 +24,9 @@ import { SignTransaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
 import { ACTIONS } from './actions';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
+import { useRepay } from '@snx-v3/useRepay';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 function ManageInputUi({
   collateralSymbol,
@@ -123,12 +126,21 @@ function PositionAction({
   setStep: Dispatch<SetStateAction<string>>;
   USDCBalance?: Wei;
 }) {
+  const { network } = useNetwork();
   const [amount] = useRecoilState(amountState);
   const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
     accountId,
     debtChange: amount,
     collateralTypeAddress: collateralAddress,
     poolId,
+  });
+
+  const { exec: repay, isLoading: repayIsLoading } = useRepay({
+    accountId,
+    poolId,
+    debtChange: amount,
+    availableUSDCollateral: USDCBalance,
+    collateralTypeAddress: collateralAddress,
   });
 
   const { exec: repayBaseAndromeda, isLoading: repayBaseAndromedaIsLoading } =
@@ -154,7 +166,7 @@ function PositionAction({
       }
     } else if (tabAction === 'repay') {
       try {
-        await repayBaseAndromeda();
+        isBaseAndromeda(network?.id, network?.preset) ? await repayBaseAndromeda() : await repay();
 
         setStep('done');
       } catch (error) {
@@ -203,7 +215,7 @@ function PositionAction({
             header="Manage Debt"
             transactions={[
               {
-                loading: repayBaseAndromedaIsLoading,
+                loading: repayBaseAndromedaIsLoading || repayIsLoading,
                 done: false,
                 title: 'Minting snxUSD against your credit',
                 subline:

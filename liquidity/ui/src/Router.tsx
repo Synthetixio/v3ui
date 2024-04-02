@@ -10,7 +10,7 @@ import { NotFoundPage } from './pages/404';
 import { Pools } from './pages/Pools';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { RepayBaseAndromeda, Repay } from './pages/Manage';
+import { Repay } from './pages/Manage';
 
 export const Router = () => {
   const { network } = useNetwork();
@@ -25,12 +25,7 @@ export const Router = () => {
               isBaseAndromeda(network?.id, network?.preset) ? <DepositBaseAndromeda /> : <Deposit />
             }
           />
-          <Route
-            path="/repay/:collateralSymbol/:collateralAddress/:poolId"
-            element={
-              isBaseAndromeda(network?.id, network?.preset) ? <RepayBaseAndromeda /> : <Repay />
-            }
-          />
+          <Route path="/repay/:collateralSymbol/:collateralAddress/:poolId" element={<Repay />} />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
           <Route path="/playground" element={<Playground />} />

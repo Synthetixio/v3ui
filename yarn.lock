@@ -6519,6 +6519,7 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useDeposit": "workspace:*"
     "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
@@ -6528,11 +6529,14 @@ __metadata:
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/useRepay": "workspace:*"
+    "@snx-v3/useRepayBaseAndromeda": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
+    "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -7089,7 +7093,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
+"@snx-v3/useRepayBaseAndromeda@workspace:*, @snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda"
   dependencies:

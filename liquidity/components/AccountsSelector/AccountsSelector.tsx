@@ -10,13 +10,7 @@ import {
   Flex,
   MenuButton,
 } from '@chakra-ui/react';
-import {
-  createSearchParams,
-  generatePath,
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { createSearchParams, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { prettyString } from '@snx-v3/format';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
