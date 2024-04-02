@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 
-interface Transaction {
+export interface Transaction {
   loading: boolean;
   done: boolean;
   title: string;

@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { CheckIcon } from '@snx-v3/Multistep';
 import Wei from '@synthetixio/wei';
+import { useEffect } from 'react';
 
 export function LiquidityPositionUpdated({
   debt,
@@ -17,7 +18,10 @@ export function LiquidityPositionUpdated({
   subline: string;
   alertText: string;
 }) {
-  const [amountToDeposit] = useRecoilState(amountState);
+  const [amountToDeposit, setAmountToDeposit] = useRecoilState(amountState);
+  useEffect(() => {
+    setAmountToDeposit(new Wei(0));
+  }, [setAmountToDeposit]);
   return (
     <Flex flexDir="column" gap="6">
       <Heading color="gray.50" fontSize="20px">

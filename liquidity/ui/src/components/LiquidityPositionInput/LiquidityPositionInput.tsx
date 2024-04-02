@@ -17,9 +17,10 @@ import Wei from '@synthetixio/wei';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { TransactionSteps } from '../../pages/Deposit';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { SignTransaction } from '../ManagePosition';
 import { LiquidityPositionUpdated } from '../ManagePosition';
+import { Transaction } from '../ManagePosition';
 
 function OpenLiquidityPosition({
   collateralSymbol,
@@ -198,12 +199,6 @@ function LiquidityAccountCreated({
 }: {
   setCurrentStep: Dispatch<SetStateAction<TransactionSteps>>;
 }) {
-  const [, setAmountToDeposit] = useRecoilState(amountState);
-  useEffect(() => {
-    // reset amount so after reopening we dont have old state
-    setAmountToDeposit(new Wei(0));
-    // eslint-disable-next-line
-  }, []);
   return (
     <Flex flexDir="column" gap="6">
       <Heading color="gray.50" fontSize="20px">
@@ -230,14 +225,12 @@ export function LiquidityPositionInput({
   currentCRatio,
   currentCollateral = new Wei(0),
   signTransaction,
-  depositIsLoading,
-  approveIsLoading,
-  requireApprove,
   createAccount,
   createAccountIsLoading,
   createAccountTransactionCost,
   currentStep,
   setCurrentStep,
+  transactions,
 }: {
   collateralSymbol: string;
   balance: { deposited: Wei; wallet: Wei };
@@ -246,14 +239,12 @@ export function LiquidityPositionInput({
   currentCRatio: string;
   currentCollateral?: Wei;
   signTransaction: (action: string) => void;
-  depositIsLoading: boolean;
-  approveIsLoading: boolean;
-  requireApprove: boolean;
   createAccount: () => void;
   createAccountIsLoading: boolean;
   createAccountTransactionCost?: string;
   currentStep: TransactionSteps;
   setCurrentStep: Dispatch<SetStateAction<TransactionSteps>>;
+  transactions: Transaction[];
 }) {
   return (
     <Flex
@@ -265,6 +256,7 @@ export function LiquidityPositionInput({
       w="100%"
       p="6"
       gap="6"
+      h="fit-content"
     >
       {currentStep === 'positionCreated' && (
         <LiquidityPositionUpdated
@@ -290,20 +282,7 @@ export function LiquidityPositionInput({
       {currentStep === 'signTransactions' && (
         <SignTransaction
           header="Open Liquidity Position"
-          transactions={[
-            {
-              done: requireApprove,
-              loading: approveIsLoading,
-              title: `Approve ${collateralSymbol} transfer`,
-              subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
-            },
-            {
-              done: true,
-              loading: depositIsLoading,
-              title: `Delegate ${collateralSymbol}`,
-              subline: `This step will transfer your ${collateralSymbol} to Synthetix as well as delegating to the selected Pool.`,
-            },
-          ]}
+          transactions={transactions}
           actionButtonClick={(action) => signTransaction(action)}
           buttonText="Execute Transaction"
         />

@@ -1,14 +1,13 @@
 import { Heading, Flex } from '@chakra-ui/react';
 import { PositionsTable } from './PositionsTable';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { useSearchParams } from 'react-router-dom';
 import { calculatePositions } from '../../utils';
+import { useParams } from '@snx-v3/useParams';
 
 export const PositionsList = () => {
-  const [params] = useSearchParams();
-
+  const { accountId } = useParams();
   const { data: positionsByKey, isLoading } = useLiquidityPositions({
-    accountId: params.get('accountId') || '',
+    accountId,
   });
 
   const positions = calculatePositions(positionsByKey);

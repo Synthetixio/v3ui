@@ -23,10 +23,10 @@ import { CheckIcon } from '@snx-v3/Multistep';
 import { SignTransaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
 import { ACTIONS } from './actions';
-import { useRepayBaseAndromeda } from '../../../../lib/useRepayBaseAndromeda';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
+import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 function ManageInputUi({
   collateralSymbol,
@@ -126,12 +126,21 @@ function PositionAction({
   setStep: Dispatch<SetStateAction<string>>;
   USDCBalance?: Wei;
 }) {
+  const { network } = useNetwork();
   const [amount] = useRecoilState(amountState);
   const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
     accountId,
     debtChange: amount,
     collateralTypeAddress: collateralAddress,
     poolId,
+  });
+
+  const { exec: repay, isLoading: repayIsLoading } = useRepay({
+    accountId,
+    poolId,
+    debtChange: amount,
+    availableUSDCollateral: USDCBalance,
+    collateralTypeAddress: collateralAddress,
   });
 
   const { exec: repayBaseAndromeda, isLoading: repayBaseAndromedaIsLoading } =
@@ -157,7 +166,7 @@ function PositionAction({
       }
     } else if (tabAction === 'repay') {
       try {
-        await repayBaseAndromeda();
+        isBaseAndromeda(network?.id, network?.preset) ? await repayBaseAndromeda() : await repay();
 
         setStep('done');
       } catch (error) {
@@ -206,7 +215,7 @@ function PositionAction({
             header="Manage Debt"
             transactions={[
               {
-                loading: repayBaseAndromedaIsLoading,
+                loading: repayBaseAndromedaIsLoading || repayIsLoading,
                 done: false,
                 title: 'Minting snxUSD against your credit',
                 subline:
@@ -279,9 +288,7 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
-  const { network } = useNetwork();
-  const { data: USDCBalance } = useTokenBalance(getUSDCAddress(network?.id));
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   return (
     <Flex
       rounded="base"
@@ -291,6 +298,7 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
       bg="navy.700"
       flexDir="column"
       minW="512px"
+      h="fit-content"
     >
       {!step && (
         <Tabs isFitted defaultIndex={tabParsed}>
@@ -328,8 +336,8 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
             </TabPanel>
             <TabPanel px="0">
               <Flex flexDir="column">
-                <Flex justifyContent={isBase ? 'space-evenly' : 'space-between'}>
-                  {ACTIONS.filter((action) => action.title !== 'Borrow' && isBase).map((action) => (
+                <Flex justifyContent="space-between">
+                  {ACTIONS.map((action) => (
                     <Flex
                       w="135px"
                       h="84px"
@@ -377,7 +385,6 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
-        USDCBalance={USDCBalance}
       />
     </Flex>
   );

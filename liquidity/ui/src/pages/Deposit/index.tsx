@@ -1,1 +1,2 @@
-export * from './DepsoitBaseAndromeda';
+export * from './DepositBaseAndromeda';
+export * from './Deposit';

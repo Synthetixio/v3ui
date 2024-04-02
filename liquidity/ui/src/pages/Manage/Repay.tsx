@@ -9,7 +9,7 @@ import Wei from '@synthetixio/wei';
 import { constants } from 'ethers';
 import { ManagePosition } from '../../components/ManagePosition';
 
-export const RepayBaseAndromeda = () => {
+export const Repay = () => {
   const { poolId, accountId, collateralSymbol } = useParams();
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
