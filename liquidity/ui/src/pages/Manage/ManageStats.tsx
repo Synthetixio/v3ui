@@ -89,7 +89,7 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <Flex width="100%" data-testid="manage stats debt">
+          <Flex width="100%">
             {liquidityPosition && aprData ? (
               <Flex
                 gap={1}
