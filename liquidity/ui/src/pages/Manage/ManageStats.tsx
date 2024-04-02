@@ -13,6 +13,7 @@ import { calculateCRatio } from '@snx-v3/calculations';
 import { constants } from 'ethers';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useApr } from '@snx-v3/useApr';
 
 const ChangeStat: FC<{
   value: Wei;
@@ -212,9 +213,13 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
+  const { data: aprData } = useApr();
+  console.log('APR', aprData);
+
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
   const cRatio = calculateCRatio(liquidityPosition?.debt || wei(0), collateralValue);
+
   const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,

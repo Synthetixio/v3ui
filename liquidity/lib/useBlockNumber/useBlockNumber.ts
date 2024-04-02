@@ -9,5 +9,6 @@ export const useBlockNumber = () => {
     queryFn: async () => {
       return await provider?.getBlockNumber();
     },
+    enabled: !!provider,
   });
 };

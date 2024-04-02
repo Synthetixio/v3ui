@@ -6701,6 +6701,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useApr@workspace:liquidity/lib/useApr":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
+  dependencies:
+    "@snx-v3/useGetPNL": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
@@ -6902,7 +6912,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL":
+"@snx-v3/useGetPNL@workspace:*, @snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL"
   dependencies:

@@ -1,0 +1,12 @@
+{
+  "name": "@snx-v3/useApr",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.2",
+  "dependencies": {
+    "@snx-v3/useGetPNL": "workspace:*",
+    "@tanstack/react-query": "^5.8.3",
+    "date-fns": "^2.30.0",
+    "react": "^18.2.0"
+  }
+}
