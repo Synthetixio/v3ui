@@ -1,11 +1,11 @@
 import { getSubgraphUrl } from '@snx-v3/constants';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
 import { useGetPNL } from '@snx-v3/useGetPNL';
 import { useQuery } from '@tanstack/react-query';
 import { wei } from '@synthetixio/wei';
 import { addSeconds, isAfter, isBefore, subDays } from 'date-fns';
-import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { Contract } from 'ethers';
 
 const PoolsDistributorDocument = `query GetPoolDistributors {
     pool(id: "1") {
@@ -37,12 +37,14 @@ export function useApr() {
   const { data: pnlData } = useGetPNL();
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
+  const provider = useProvider();
 
   return useQuery({
     queryKey: ['apr', network?.id],
     queryFn: async () => {
-      if (!CoreProxy) throw 'Missing data required for useApr';
+      if (!CoreProxy || !provider || !pnlData) throw 'Missing data required for useApr';
       // Get rewards for the last week
+      const { pnls } = pnlData;
       const url = getSubgraphUrl(network?.name);
 
       const { data: returnData } = await fetch(url, {
@@ -54,7 +56,7 @@ export function useApr() {
 
       const activeRewards: { index: number; amount: number; distributor: string }[] = [];
 
-      //  Check if they are active
+      // Check if they are active
       returnData.pool.registered_distributors.map((distributor: DistributorInterface) => {
         const { id } = distributor;
 
@@ -89,22 +91,56 @@ export function useApr() {
       // TODO: Get the collateral price by looking up
       // the address from the subgraph
       const snxDistributor = '0x45063dcd92f56138686810eacb1b510c941d6593';
-      const usdcDistributor = '0xe92bcd40849be5a5eb90065402e508af4b28263b';
+      const abi = ['function latestAnswer() view returns (int256)'];
 
-      const snxContract = '0x22e6966B799c4D5B13BE962E1D117b56327FDa66';
-      console.log('SNX Contract', snxContract);
-      try {
-        const snxPrice = await CoreProxy.getCollateralPrice(snxContract);
-      } catch (error) {
-        console.log('Error getting SNX price', error);
-      }
+      // TODO: Move this into a hook for each network
+      const snxBaseAggregator = new Contract(
+        '0xe3971Ed6F1A5903321479Ef3148B5950c0612075',
+        abi,
+        provider
+      );
 
-      console.log('SNX Price', snxPrice);
+      const snxPrice = wei(await snxBaseAggregator.latestAnswer(), 18, true);
+
       // Sort by index and get average price for non stable collateral
+      const rewardsToAmounts = activeRewards
+        .map((reward) => {
+          return {
+            ...reward,
+            amountUSD:
+              reward.distributor === snxDistributor
+                ? reward.amount * snxPrice.div(8).toNumber()
+                : reward.amount,
+          };
+        })
+        .sort((a, b) => a.index - b.index);
 
-      console.log('Active rewards', activeRewards);
+      const rewardsUSDPerDay: number[] = [];
 
-      return pnlData;
+      rewardsToAmounts.forEach((reward) => {
+        if (!rewardsUSDPerDay[reward.index]) {
+          rewardsUSDPerDay[reward.index] = 0;
+        }
+
+        rewardsUSDPerDay[reward.index] += reward.amountUSD;
+      });
+
+      const pnlsPercentWithRewards = pnls.map((pnl, i) => {
+        const { pnlValue, collateralAmount } = pnl;
+        const rewards = rewardsUSDPerDay[i];
+        // Add the amounts from rewards to the pnls from the vault
+        // Divide by collateral amount to get the percentage
+        const pnlPercent = pnlValue.add(rewards).div(collateralAmount).mul(100);
+
+        return pnlPercent;
+      });
+
+      const weeklyAprLP = pnlsPercentWithRewards.reduce((acc, pnl) => acc + pnl.toNumber(), 0);
+      const dailyAverageApr = weeklyAprLP / pnlsPercentWithRewards.length;
+
+      return {
+        apr: dailyAverageApr * 365,
+      };
     },
     enabled: !!pnlData,
   });

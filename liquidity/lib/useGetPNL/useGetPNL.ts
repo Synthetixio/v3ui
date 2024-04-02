@@ -11,7 +11,7 @@ const BLOCKS = (60 * 60 * 24) / 2;
 
 interface PnlData {
   pnlValue: Wei;
-  pnlPercent: Wei;
+  collateralAmount: Wei;
 }
 
 export const useGetPNL = () => {
@@ -97,16 +97,12 @@ export const useGetPNL = () => {
         const currentDebt = wei(data.debt, 18, true);
 
         const pnlValue = previousDebt.sub(currentDebt);
-        const pnlPercent = pnlValue.div(data.amount).mul(100);
+        const collateralAmount = wei(data.amount, 18, true);
 
-        pnls.push({ pnlValue: pnlValue, pnlPercent });
+        pnls.push({ pnlValue, collateralAmount });
       });
 
-      const weeklyApr = pnls.reduce((acc, pnl) => acc + pnl.pnlPercent.toNumber(), 0);
-      const dailyAverageApr = weeklyApr / pnls.length;
-
       return {
-        apr: dailyAverageApr * 365,
         pnls,
       };
     },

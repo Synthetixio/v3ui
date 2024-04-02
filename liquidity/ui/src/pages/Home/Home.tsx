@@ -7,17 +7,20 @@ import { useParams } from '@snx-v3/useParams';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { Welcome } from '../../components/Shared/Welcome';
 import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
+import { useApr } from '@snx-v3/useApr';
 
 export function Home() {
   const { accountId } = useParams();
 
   const { data: collateralTypes = [], isLoading: collateralTypesLoading } = useCollateralTypes();
   const { data: pools, isLoading: isPoolsLoading } = usePools();
+  const { data: aprData, isLoading: isAprLoading } = useApr();
 
   const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
     useLiquidityPositions({ accountId });
 
-  const isLoading = collateralTypesLoading || isPoolsLoading || liquidityPositionLoading;
+  const isLoading =
+    collateralTypesLoading || isPoolsLoading || liquidityPositionLoading || isAprLoading;
 
   const { totalCollateral, totalDebt } =
     Object.values(liquidityPositionsById || []).reduce(
@@ -43,6 +46,7 @@ export function Home() {
           isLoading={isLoading}
           collateralTypes={collateralTypes}
           liquidityPositionsById={liquidityPositionsById}
+          apr={aprData?.apr || 0}
         />
         <AvailableCollateral />
       </Flex>

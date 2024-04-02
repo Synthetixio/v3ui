@@ -12,9 +12,10 @@ interface PoolcardProps {
   pool: PoolType;
   collateralTypes?: CollateralType[];
   liquidityPositionsById?: LiquidityPositionsById;
+  apr: number;
 }
 
-export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: PoolcardProps) => {
+export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById, apr }: PoolcardProps) => {
   const { network } = useNetwork();
   return (
     <BorderBox p={4} mt={8} flexDir="column">
@@ -59,7 +60,7 @@ export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: Pool
               <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
                 Debt
               </Th>
-              {!isBaseAndromeda(network?.id, network?.preset) && (
+              {!isBaseAndromeda(network?.id, network?.preset) ? (
                 <>
                   <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
                     C-Ratio
@@ -71,8 +72,11 @@ export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: Pool
                     Liquidation Ratio
                   </Th>
                 </>
+              ) : (
+                <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
+                  APY
+                </Th>
               )}
-
               <Th color="gray.500" fontSize="xs" lineHeight="4" pb="2" textTransform="initial"></Th>
             </Tr>
           </Thead>
@@ -85,6 +89,7 @@ export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById }: Pool
                     collateralType={c}
                     poolId={pool.id}
                     liquidityPosition={liquidityPositionsById?.[`${pool.id}-${c.symbol}`]}
+                    apr={apr}
                   />
                 ))}
             </>

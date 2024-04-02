@@ -7,6 +7,7 @@
     "@snx-v3/useGetPNL": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "date-fns": "^2.30.0",
+    "ethers": "^5.7.2",
     "react": "^18.2.0"
   }
 }

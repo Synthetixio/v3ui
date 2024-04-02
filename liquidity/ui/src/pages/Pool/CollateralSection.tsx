@@ -7,6 +7,7 @@ import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useApr } from '@snx-v3/useApr';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -24,7 +25,8 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   collateralPriceByAddress?: Record<string, Wei | undefined>;
-}> = ({ vaultsData, collateralPriceByAddress }) => {
+  apr?: number;
+}> = ({ vaultsData, collateralPriceByAddress, apr }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -74,6 +76,28 @@ export const CollateralSectionUi: FC<{
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
               {formatNumberToUsd(totalDebt.toNumber())}
+            </Text>
+          )}
+        </Flex>
+        <Flex
+          justifyContent="space-between"
+          flexDirection={{ base: 'row', md: 'column', lg: 'row' }}
+        >
+          <Text
+            display="flex"
+            alignItems="center"
+            fontWeight={700}
+            fontSize="md"
+            gap={1}
+            color="white"
+          >
+            APY
+          </Text>
+          {apr === undefined ? (
+            <Skeleton w={16} h={6} />
+          ) : (
+            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
+              {apr.toFixed(2)}%
             </Text>
           )}
         </Flex>
@@ -203,11 +227,13 @@ export const CollateralSection = () => {
 
   const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
   const { data: collateralPriceByAddress } = useCollateralPrices();
+  const { data: aprData } = useApr();
 
   return (
     <CollateralSectionUi
       vaultsData={vaultsData}
       collateralPriceByAddress={collateralPriceByAddress}
+      apr={aprData?.apr}
     />
   );
 };

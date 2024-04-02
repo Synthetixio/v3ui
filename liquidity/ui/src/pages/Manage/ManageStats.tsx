@@ -49,6 +49,7 @@ export const ManageStatsUi: FC<{
   cRatio: Wei;
   collateralValue: Wei;
   hasChanges: boolean;
+  aprData?: number;
 }> = ({
   liquidityPosition,
   collateralType,
@@ -58,11 +59,54 @@ export const ManageStatsUi: FC<{
   newCratio,
   newDebt,
   hasChanges,
+  aprData,
 }) => {
   const { network } = useNetwork();
 
   return (
     <Flex direction="column">
+      <BorderBox
+        py={4}
+        px={6}
+        flexDirection="row"
+        bg="navy.700"
+        justifyContent="space-between"
+        mb={4}
+      >
+        <Flex flexDirection="column" justifyContent="space-between" width="100%">
+          <Flex alignItems="center" mb="4px">
+            <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
+              APY
+            </Text>
+            <Tooltip
+              label="APY is a combination of past week pool performance and rewards."
+              textAlign="start"
+              py={2}
+              px={3}
+            >
+              <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
+                <InfoIcon color="white" height="9px" width="9px" />
+              </Flex>
+            </Tooltip>
+          </Flex>
+          <Flex width="100%" data-testid="manage stats debt">
+            {liquidityPosition && aprData ? (
+              <Flex
+                gap={1}
+                color="gray.50"
+                fontSize="2xl"
+                fontWeight="800"
+                alignItems="center"
+                lineHeight="32px"
+              >
+                <Text>{aprData.toFixed(2)}%</Text>
+              </Flex>
+            ) : (
+              <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
+            )}
+          </Flex>
+        </Flex>
+      </BorderBox>
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
         <Flex alignItems="center" mb="4px">
           <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
@@ -214,7 +258,6 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: aprData } = useApr();
-  console.log('APR', aprData);
 
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
@@ -239,6 +282,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
       collateralType={collateralType}
       cRatio={cRatio}
       collateralValue={collateralValue}
+      aprData={aprData?.apr}
     />
   );
 };
