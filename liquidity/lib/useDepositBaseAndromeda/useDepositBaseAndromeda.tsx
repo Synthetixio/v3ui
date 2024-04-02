@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
@@ -77,7 +77,7 @@ export const useDepositBaseAndromeda = ({
 
         const amount = collateralChange.sub(availableCollateral);
         const usdcAmount = amount.gt(0) ? parseUnits(amount.toString(), 6) : BigNumber.from(0);
-        const amountD18 = parseUnits(amount.toString(), 18);
+        const amountD18 = amount.toBN();
 
         // Wrap USDC to sUSDC
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
@@ -104,7 +104,7 @@ export const useDepositBaseAndromeda = ({
           BigNumber.from(id),
           BigNumber.from(poolId),
           sUSDC_ADDRESS,
-          currentCollateral.toBN().add(amountD18),
+          currentCollateral.toBN().add(collateralChange.toBN()),
           wei(1).toBN()
         );
 

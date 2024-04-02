@@ -34,7 +34,6 @@ export const loadPosition = async ({
     CoreProxy.populateTransaction.getPositionCollateral(accountId, poolId, tokenAddress),
     CoreProxy.populateTransaction.getPositionDebt(accountId, poolId, tokenAddress),
   ]);
-
   const decoder = (multicallEncoded: string | string[]) => {
     if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
       const decodedCollateral = CoreProxy.interface.decodeFunctionResult(

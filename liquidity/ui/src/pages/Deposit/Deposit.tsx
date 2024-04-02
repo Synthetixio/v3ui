@@ -12,12 +12,12 @@ import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
-import { constants, utils } from 'ethers';
 import { useApprove } from '@snx-v3/useApprove';
 import { PositionHeader } from '../../components/PositionHeader';
 import { useDeposit } from '@snx-v3/useDeposit';
 import { TransactionSteps } from './DepositBaseAndromeda';
 import { useEthBalance } from '@snx-v3/useEthBalance';
+import { useWrapEth } from '@snx-v3/useWrapEth';
 
 export function Deposit() {
   const [currentStep, setCurrentStep] = useState<TransactionSteps>('openPosition');
@@ -50,10 +50,9 @@ export function Deposit() {
     !!collateralPrices && !!collateralType
       ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
-  const maxUInt = new Wei(constants.MaxUint256);
   const debt = position ? position.debt : zeroWei;
   const debt$ = debt.mul(priceForCollateral);
-  const userTokeBalance =
+  const userTokeBalanceCombined =
     userTokenBalances && ethBalance
       ? userTokenBalances
           .concat(collateralSymbol === 'WETH' ? ethBalance : zeroWei)
@@ -69,14 +68,15 @@ export function Deposit() {
         deposited:
           accountCollaterals.find((collateral) => collateral.symbol === collateralSymbol)
             ?.availableCollateral || zeroWei,
-        wallet: userTokeBalance,
+        wallet: userTokeBalanceCombined,
       }
-    : { deposited: userTokeBalance, wallet: zeroWei };
+    : { deposited: userTokeBalanceCombined, wallet: zeroWei };
   const {
     mutation: { mutateAsync: createAccount, isPending: createAccountIsLoading },
     getTransactionCost: { data: accountTransactionCost },
   } = useCreateAccount();
 
+  const { exec: wrapEth, isLoading: wrapEthIsLoading, wethBalance } = useWrapEth();
   const {
     approve,
     requireApproval,
@@ -92,7 +92,7 @@ export function Deposit() {
     poolId,
     collateralTypeAddress: collateralAddress,
     collateralChange: amountToDeposit,
-    currentCollateral: position ? position.debt : zeroWei,
+    currentCollateral: position ? position.collateralAmount : zeroWei,
     availableCollateral: balance$.deposited,
   });
 
@@ -102,17 +102,21 @@ export function Deposit() {
   };
 
   const handleButtonClick = async (action: string) => {
-    if (action === 'createPosition') {
-      if (requireApproval) {
-        await approve(false);
-      }
-      try {
+    try {
+      if (action === 'createPosition') {
+        if (requireWrapping) {
+          await wrapEth(amountToDeposit);
+        }
+        if (requireApproval) {
+          await approve(false);
+        }
+
         await deposit();
         setCurrentStep('positionCreated');
-      } catch {
-        setAmountToDeposit(zeroWei);
-        setCurrentStep('openPosition');
       }
+    } catch {
+      setAmountToDeposit(zeroWei);
+      setCurrentStep('openPosition');
     }
   };
 
@@ -124,8 +128,35 @@ export function Deposit() {
     accountCollateralIsLoading &&
     tokenBalancesIsLoading &&
     userAccountsIsLoading &&
-    ethBalanceIsLoading;
+    ethBalanceIsLoading &&
+    wrapEthIsLoading;
+  const requireWrapping = amountToDeposit.gt(wethBalance || zeroWei);
+  const basicTransactions = [
+    {
+      done: !requireApproval,
+      loading: approveIsLoading,
+      subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
+      title: `Approve ${collateralSymbol} transfer`,
+    },
+    {
+      done: false,
+      loading: depositIsLoading,
+      subline: `This step will transfer your ${collateralSymbol} to Synthetix as well as delegating to the selected Pool.`,
+      title: `Delegate ${collateralSymbol} transfer`,
+    },
+  ];
 
+  const transactions = requireWrapping
+    ? [
+        {
+          done: false,
+          loading: wrapEthIsLoading,
+          title: 'Wrapping your ETH',
+          subline:
+            'This will wrap your ETH to WETH and will allow us to deposit it into the Synthetix v3 protocol',
+        },
+      ].concat(basicTransactions)
+    : basicTransactions;
   return (
     <PositionHeader
       title={
@@ -142,17 +173,15 @@ export function Deposit() {
           balance={balance$}
           price={priceForCollateral}
           userHasAccount={!!userAccounts?.length}
-          currentCRatio="Infinite"
+          currentCRatio={position?.cRatio.toString() || 'N/A'}
           currentCollateral={position?.collateralAmount}
           signTransaction={handleButtonClick}
-          depositIsLoading={depositIsLoading}
-          approveIsLoading={approveIsLoading}
-          requireApprove={requireApproval}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           createAccount={handleCreateAccount}
           createAccountIsLoading={createAccountIsLoading}
           createAccountTransactionCost={accountTransactionCost}
+          transactions={transactions}
         />
       }
       PositionOverview={
@@ -166,7 +195,7 @@ export function Deposit() {
           }
           poolPnl="$00.00"
           currentCollateral={position ? position.collateralAmount : zeroWei}
-          cRatio={maxUInt.toNumber()}
+          cRatio={position?.cRatio.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

@@ -121,7 +121,7 @@ export function DepositBaseAndromeda() {
       poolId,
       collateralTypeAddress: collateralAddress,
       collateralChange: amountToDeposit,
-      currentCollateral: position ? position.debt : zeroWei,
+      currentCollateral: position ? position.collateralAmount : zeroWei,
       availableCollateral: balance$.deposited,
     });
 
@@ -138,7 +138,8 @@ export function DepositBaseAndromeda() {
       try {
         await depositBaseAndromeda();
         setCurrentStep('positionCreated');
-      } catch {
+      } catch (error) {
+        console.error(error);
         setAmountToDeposit(zeroWei);
         setCurrentStep('openPosition');
       }
@@ -173,14 +174,25 @@ export function DepositBaseAndromeda() {
           currentCRatio="Infinite"
           currentCollateral={position?.collateralAmount}
           signTransaction={handleButtonClick}
-          depositIsLoading={depositBaseAndromedaIsLoading}
-          approveIsLoading={approveIsLoading}
-          requireApprove={requireApproval}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           createAccount={handleCreateAccount}
           createAccountIsLoading={createAccountIsLoading}
           createAccountTransactionCost={accountTransactionCost}
+          transactions={[
+            {
+              done: !requireApproval,
+              loading: approveIsLoading,
+              subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
+              title: `Approve ${collateralSymbol} transfer`,
+            },
+            {
+              done: false,
+              loading: depositBaseAndromedaIsLoading,
+              subline: `This step will transfer your ${collateralSymbol} to Synthetix as well as delegating to the selected Pool.`,
+              title: `Delegate ${collateralSymbol} transfer`,
+            },
+          ]}
         />
       }
       PositionOverview={
