@@ -65,6 +65,7 @@ export const App: FC = () => {
               />
             )}
             <Button
+              ml="2"
               variant="outline"
               colorScheme="gray"
               p="2"
