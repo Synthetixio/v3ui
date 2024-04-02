@@ -28,14 +28,14 @@ describe('PoolCard Component', () => {
   ];
 
   it('renders pool name and "Pool Info" button', () => {
-    cy.mount(<PoolCard pool={pool} />);
+    cy.mount(<PoolCard apr={0} pool={pool} />);
 
     cy.get('h2').should('contain', 'Spartan Council Pool');
     cy.get('a').should('contain', 'Pool Info');
   });
 
   it('renders a table with collateral information', () => {
-    cy.mount(<PoolCard pool={pool} collateralTypes={collateralTypes} />);
+    cy.mount(<PoolCard apr={0} pool={pool} collateralTypes={collateralTypes} />);
 
     cy.get('table').should('exist');
 
@@ -62,6 +62,7 @@ describe('PoolCard Component', () => {
     cy.mount(
       <Web3OnboardProvider web3Onboard={onboard}>
         <PoolCard
+          apr={0}
           pool={pool}
           collateralTypes={collateralTypes}
           liquidityPositionsById={liquidityPositionsById}

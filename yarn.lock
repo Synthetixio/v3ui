@@ -6463,6 +6463,7 @@ __metadata:
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
@@ -6701,11 +6702,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useApr@workspace:liquidity/lib/useApr":
+"@snx-v3/useApr@workspace:*, @snx-v3/useApr@workspace:liquidity/lib/useApr":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGetPNL": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     date-fns: "npm:^2.30.0"
     ethers: "npm:^5.7.2"
@@ -6921,6 +6926,8 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
   languageName: unknown
