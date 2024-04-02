@@ -1,14 +1,28 @@
 import { useEffect } from 'react';
-import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  MenuOptionGroup,
+  Switch,
+  Text,
+} from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 
 import { networks } from '../../utils/onboard';
+import { useLocalStorage } from '../../hooks';
+import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 
 export function NetworkController() {
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
+
+  const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
 
   useEffect(() => {
     // Check if wallet preference is stored in local storage
@@ -64,6 +78,7 @@ export function NetworkController() {
             </MenuButton>
             <MenuList>
               {networks.map(({ id, label }) => {
+                if ((id === 84532 || id === 11155111) && !showTestnets) return null;
                 return (
                   <MenuItem key={`${id}`} onClick={() => setNetwork(id)}>
                     <NetworkIcon networkId={id} />
@@ -73,6 +88,21 @@ export function NetworkController() {
                   </MenuItem>
                 );
               })}
+              <MenuOptionGroup>
+                <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
+                  <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
+                    Show Testnets
+                  </Text>
+                  <Switch
+                    mr={2}
+                    size="sm"
+                    color="gray.900"
+                    colorScheme="gray"
+                    isChecked={showTestnets}
+                    onChange={() => setShowTestnets(!showTestnets)}
+                  />
+                </Flex>
+              </MenuOptionGroup>
             </MenuList>
           </>
         )}
