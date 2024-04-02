@@ -97,7 +97,7 @@ export const CollateralSectionUi: FC<{
           {isLoading ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
-            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
+            <Text fontWeight={700} fontSize="xl" color="white">
               {`${apr?.toFixed(2) || '-'}%`}
             </Text>
           )}
