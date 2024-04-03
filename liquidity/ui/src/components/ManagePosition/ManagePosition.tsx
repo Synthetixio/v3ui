@@ -27,6 +27,7 @@ import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 function ManageInputUi({
   collateralSymbol,
@@ -106,6 +107,7 @@ function PositionAction({
   tabAction,
   price,
   collateralSymbol,
+  collateralAmount = new Wei(0),
   debt,
   poolId,
   collateralAddress,
@@ -120,6 +122,7 @@ function PositionAction({
   collateralSymbol: string;
   debt: Wei;
   poolId?: string;
+  collateralAmount?: Wei;
   collateralAddress?: string;
   accountId?: string;
   step: string;
@@ -128,6 +131,7 @@ function PositionAction({
 }) {
   const { network } = useNetwork();
   const [amount] = useRecoilState(amountState);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
     accountId,
     debtChange: amount,
@@ -166,7 +170,7 @@ function PositionAction({
       }
     } else if (tabAction === 'repay') {
       try {
-        isBaseAndromeda(network?.id, network?.preset) ? await repayBaseAndromeda() : await repay();
+        isBase ? await repayBaseAndromeda() : await repay();
 
         setStep('done');
       } catch (error) {
@@ -174,6 +178,32 @@ function PositionAction({
       }
     }
   };
+  if (tab === 0) {
+    if (tabAction === 'remove')
+      if (!step) {
+        return (
+          <ManageInputUi
+            collateralSymbol={collateralSymbol}
+            collateral={isBase ? debt.abs() : collateralAmount}
+            price={price}
+            buttonText="Withdraw"
+            inputSubline="Deposited"
+            title="Remove Collateral"
+            handleButtonClick={handleManageInputButtonClick}
+          >
+            {amount.gt(0) && (
+              <Alert colorScheme="cyan" rounded="base" my="2">
+                <Flex rounded="full" mr="2">
+                  <InfoIcon w="20px" h="20px" color="cyan.500" />
+                </Flex>
+                As a security precaution, claimed assets can only be withdrawn to your wallet after
+                24 hs since your previous account activity.
+              </Alert>
+            )}
+          </ManageInputUi>
+        );
+      }
+  }
   if (tab === 1) {
     if (tabAction === 'claim') {
       if (!step) {
@@ -288,6 +318,11 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
+  const { data: liqudityPosition } = useLiquidityPosition({
+    accountId,
+    poolId,
+    tokenAddress: collateralAddress,
+  });
 
   return (
     <Flex
@@ -419,6 +454,7 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
+        collateralAmount={liqudityPosition?.collateralAmount}
       />
     </Flex>
   );
