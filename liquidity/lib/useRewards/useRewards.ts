@@ -217,6 +217,7 @@ export function useRewards(
 
         // TODO: Refactor this to use a view function
         const balances: RewardsResponseArray = [];
+
         for (const item of result) {
           try {
             const response = await CoreProxy.callStatic.claimRewards(

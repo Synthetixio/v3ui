@@ -63,6 +63,7 @@ export const useCollateralPrices = () => {
         decoder,
         'useCollateralPrices'
       );
+
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         acc[address] = prices[i];
         return acc;
