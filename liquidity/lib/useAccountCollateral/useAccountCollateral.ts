@@ -99,7 +99,7 @@ export function useAccountCollateral({
       return data.map((x) => ({
         ...x,
         symbol: collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.symbol ?? '',
-      }));
+      })) as AccountCollateralWithSymbol[];
     },
   });
 

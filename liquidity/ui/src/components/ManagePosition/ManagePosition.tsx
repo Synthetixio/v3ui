@@ -27,9 +27,8 @@ import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useWithdraw } from '@snx-v3/useWithdraw';
-import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
 function ManageInputUi({
   collateralSymbol,
@@ -358,10 +357,8 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
-  const { data: liqudityPosition } = useLiquidityPosition({
+  const { data: accountCollateral } = useAccountCollateral({
     accountId,
-    poolId,
-    tokenAddress: collateralAddress,
   });
 
   return (
@@ -494,7 +491,9 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
-        availableCollateral={liqudityPosition?.collateralAmount}
+        availableCollateral={
+          accountCollateral?.filter((collateral) => collateral.symbol === collateralSymbol)[0]
+        }
       />
     </Flex>
   );
