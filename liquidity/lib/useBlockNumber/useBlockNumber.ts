@@ -1,13 +1,14 @@
-import { useProvider } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
 const BLOCKS = (60 * 60 * 24) / 2;
 
 export const useBlockNumber = () => {
   const provider = useProvider();
+  const { network } = useNetwork();
 
   return useQuery({
-    queryKey: ['block-number'],
+    queryKey: ['block-number', network?.id],
     queryFn: async () => {
       if (!provider) throw 'Missing data required for useBlockNumber';
       const block = await provider.getBlockNumber();
