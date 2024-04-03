@@ -28,7 +28,7 @@ export const useGetPnl = () => {
 
       const returnValues = await Promise.all(
         blocks.map((block: number) => {
-          return Multicall3.callStatic.aggregate(
+          return Multicall3.connect(network!.rpcUrl()).callStatic.aggregate(
             [
               {
                 target: CoreProxy.address,
