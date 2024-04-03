@@ -26,8 +26,9 @@ export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   collateralPriceByAddress?: Record<string, Wei | undefined>;
   apr?: number;
-  isLoading: boolean;
-}> = ({ vaultsData, collateralPriceByAddress, apr, isLoading }) => {
+  isLoading?: boolean;
+  isAprLoading?: boolean;
+}> = ({ vaultsData, collateralPriceByAddress, apr, isLoading, isAprLoading }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -94,7 +95,7 @@ export const CollateralSectionUi: FC<{
           >
             APY
           </Text>
-          {isLoading ? (
+          {isAprLoading ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white">
@@ -232,14 +233,13 @@ export const CollateralSection = () => {
   const { data: collateralPriceByAddress, isLoading: isCollateralLoading } = useCollateralPrices();
   const { data: aprData, isLoading: isAprLoading } = useApr();
 
-  const isLoading = isVaultsDataLoading || isCollateralLoading || isAprLoading;
-
   return (
     <CollateralSectionUi
       vaultsData={vaultsData}
       collateralPriceByAddress={collateralPriceByAddress}
       apr={aprData?.combinedApr}
-      isLoading={isLoading}
+      isLoading={isVaultsDataLoading || isCollateralLoading}
+      isAprLoading={isAprLoading}
     />
   );
 };

@@ -1,3 +1,4 @@
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
 import { useGetPnl } from '@snx-v3/useGetPnl';
 import { useRewardsApr } from '@snx-v3/useRewardsApr';
@@ -56,6 +57,7 @@ export function useApr() {
         combinedApr,
       };
     },
-    enabled: !!pnlData && !!rewardsAprData,
+    enabled: !!pnlData && !!rewardsAprData && isBaseAndromeda(network?.id, network?.preset),
+    staleTime: 60000,
   });
 }

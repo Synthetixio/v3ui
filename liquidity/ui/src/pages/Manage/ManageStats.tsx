@@ -23,7 +23,7 @@ const ChangeStat: FC<{
 }> = ({ formatFn, value, newValue, hasChanges }) => {
   return (
     <Flex
-      gap={1}
+      gap={4}
       color="gray.50"
       fontSize="2xl"
       fontWeight="800"
@@ -32,9 +32,10 @@ const ChangeStat: FC<{
     >
       <Text>{formatFn(value)}</Text>
       {hasChanges && !value.eq(newValue) ? (
-        <Text>
-          <ArrowForwardIcon /> {formatFn(newValue)}
-        </Text>
+        <>
+          <ArrowForwardIcon />
+          <Text>{formatFn(newValue)}</Text>
+        </>
       ) : null}
     </Flex>
   );
@@ -65,48 +66,56 @@ export const ManageStatsUi: FC<{
 
   return (
     <Flex direction="column">
-      <BorderBox
-        py={4}
-        px={6}
-        flexDirection="row"
-        bg="navy.700"
-        justifyContent="space-between"
-        mb={4}
-      >
-        <Flex flexDirection="column" justifyContent="space-between" width="100%">
-          <Flex alignItems="center" mb="4px">
-            <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-              APY
-            </Text>
-            <Tooltip
-              label="APY is a combination of past week pool performance and rewards."
-              textAlign="start"
-              py={2}
-              px={3}
-            >
-              <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-                <InfoIcon color="white" height="9px" width="9px" />
-              </Flex>
-            </Tooltip>
-          </Flex>
-          <Flex width="100%">
-            {liquidityPosition && aprData ? (
-              <Flex
-                gap={1}
-                color="gray.50"
-                fontSize="2xl"
-                fontWeight="800"
-                alignItems="center"
-                lineHeight="32px"
+      {isBaseAndromeda(network?.id, network?.preset) && (
+        <BorderBox
+          py={4}
+          px={6}
+          flexDirection="row"
+          bg="navy.700"
+          justifyContent="space-between"
+          mb={4}
+        >
+          <Flex flexDirection="column" justifyContent="space-between" width="100%">
+            <Flex alignItems="center" mb="4px">
+              <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
+                APY
+              </Text>
+              <Tooltip
+                label="APY is a combination of past week pool performance and rewards."
+                textAlign="start"
+                py={2}
+                px={3}
               >
-                <Text>{aprData.toFixed(2)}%</Text>
-              </Flex>
-            ) : (
-              <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
-            )}
+                <Flex
+                  height="12px"
+                  width="12px"
+                  ml="4px"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <InfoIcon color="white" height="9px" width="9px" />
+                </Flex>
+              </Tooltip>
+            </Flex>
+            <Flex width="100%">
+              {liquidityPosition && aprData ? (
+                <Flex
+                  gap={1}
+                  color="gray.50"
+                  fontSize="2xl"
+                  fontWeight="800"
+                  alignItems="center"
+                  lineHeight="32px"
+                >
+                  <Text>{aprData.toFixed(2)}%</Text>
+                </Flex>
+              ) : (
+                <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
+              )}
+            </Flex>
           </Flex>
-        </Flex>
-      </BorderBox>
+        </BorderBox>
+      )}
       <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
         <Flex alignItems="center" mb="4px">
           <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
