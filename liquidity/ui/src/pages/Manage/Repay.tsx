@@ -11,6 +11,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { RepayAllDebt } from './RepayAllDebt';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -118,6 +119,7 @@ export const RepayUi: FC<{
 
 export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
+  const { network } = useNetwork();
 
   const { data: USDProxy } = useUSDProxy();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
@@ -125,6 +127,10 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
 
   const debtExists = liquidityPosition?.debt.gt(0);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
+
+  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
+    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
+  }
 
   return (
     <RepayUi
