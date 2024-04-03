@@ -7124,6 +7124,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGetPnl": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    date-fns: "npm:^2.30.0"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"

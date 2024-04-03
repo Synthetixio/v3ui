@@ -1,0 +1,17 @@
+{
+  "name": "@snx-v3/useRewardsApr",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.2",
+  "dependencies": {
+    "@snx-v3/constants": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useCoreProxy": "workspace:*",
+    "@snx-v3/useGetPnl": "workspace:*",
+    "@synthetixio/wei": "^2.74.4",
+    "@tanstack/react-query": "^5.8.3",
+    "date-fns": "^2.30.0",
+    "ethers": "^5.7.2",
+    "react": "^18.2.0"
+  }
+}

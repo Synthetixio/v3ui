@@ -238,7 +238,7 @@ export const CollateralSection = () => {
     <CollateralSectionUi
       vaultsData={vaultsData}
       collateralPriceByAddress={collateralPriceByAddress}
-      apr={aprData?.apr}
+      apr={aprData?.combinedApr}
       isLoading={isLoading}
     />
   );

@@ -282,7 +282,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
       collateralType={collateralType}
       cRatio={cRatio}
       collateralValue={collateralValue}
-      aprData={aprData?.apr}
+      aprData={aprData?.combinedApr}
     />
   );
 };

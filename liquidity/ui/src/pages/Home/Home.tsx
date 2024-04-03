@@ -46,7 +46,7 @@ export function Home() {
           isLoading={isLoading}
           collateralTypes={collateralTypes}
           liquidityPositionsById={liquidityPositionsById}
-          apr={aprData?.apr || 0}
+          apr={aprData?.combinedApr || 0}
         />
         <AvailableCollateral />
       </Flex>
