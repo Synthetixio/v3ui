@@ -22,7 +22,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { CheckIcon } from '@snx-v3/Multistep';
 import { SignTransaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
-import { ACTIONS } from './actions';
+import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -332,12 +332,46 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <p>implement me</p>
+              <Flex flexDir="column">
+                <Flex justifyContent="space-between">
+                  {COLLATERALACTIONS.map((action) => (
+                    <Flex
+                      w="135px"
+                      h="84px"
+                      justifyContent="center"
+                      key={action.title.concat('-tab-actions')}
+                      border="1px solid"
+                      flexDir="column"
+                      alignItems="center"
+                      borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
+                      rounded="base"
+                      cursor="pointer"
+                      onClick={() => {
+                        queryParams.set('tabAction', action.link);
+                        navigate({
+                          pathname,
+                          search: queryParams.toString(),
+                        });
+                      }}
+                    >
+                      {action.icon(tabAction === action.link ? 'cyan' : 'white')}
+                      <Text
+                        fontSize="14px"
+                        fontWeight={700}
+                        mt="2"
+                        color={tabAction === action.link ? 'cyan.500' : 'white'}
+                      >
+                        {action.title}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
+              </Flex>
             </TabPanel>
             <TabPanel px="0">
               <Flex flexDir="column">
                 <Flex justifyContent="space-between">
-                  {ACTIONS.map((action) => (
+                  {DEBTACTIONS.map((action) => (
                     <Flex
                       w="135px"
                       h="84px"

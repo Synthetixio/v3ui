@@ -6948,6 +6948,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
   dependencies:
+    "@snx-v3/calculations": "workspace:*"
     "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"

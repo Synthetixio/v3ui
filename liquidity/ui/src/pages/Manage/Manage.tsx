@@ -1,42 +1,40 @@
 import { useParams } from '@snx-v3/useParams';
+import { ManagePosition } from '../../components/ManagePosition';
 import { PositionHeader } from '../../components/PositionHeader';
-import { usePool } from '@snx-v3/usePools';
 import { PositionOverview } from '../../components/PositionOverview';
+import { usePool } from '@snx-v3/usePools';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import Wei from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
-import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import Wei from '@synthetixio/wei';
-import { constants } from 'ethers';
-import { ManagePosition } from '../../components/ManagePosition';
 
-export const Repay = () => {
-  const { poolId, accountId, collateralSymbol } = useParams();
-  const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
+export function Manage() {
+  const { collateralSymbol, poolId, collateralAddress, accountId } = useParams();
+
+  const { data: pool, isLoading: poolIsLoading } = usePool(poolId);
+  const { data: liquidityPosition, isLoading: liquidityPositionIsLoading } = useLiquidityPosition({
+    tokenAddress: collateralAddress,
+    accountId,
+    poolId,
+  });
   const { data: collateralTypes, isLoading: collateralTypesIsLoading } = useCollateralTypes();
-  const { data: liquidityPosition, isLoading: liquidityPositionsIsLoading } = useLiquidityPositions(
-    { accountId }
-  );
   const { data: collateralPrices, isLoading: collateralPricesIsLoading } = useCollateralPrices();
 
+  const zeroWei = new Wei(0);
   const collateralType = collateralTypes?.find(
     (collateral) => collateral.symbol === collateralSymbol
   );
-
-  const zeroWei = new Wei(0);
-  const position = liquidityPosition && liquidityPosition[`${poolId}-${collateralSymbol}`];
-  const debt = position?.debt || zeroWei;
   const priceForCollateral =
     !!collateralPrices && !!collateralType
       ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
+  const debt = liquidityPosition ? liquidityPosition.debt : zeroWei;
 
-  const maxUInt = new Wei(constants.MaxUint256);
   const isLoading =
-    isPoolLoading &&
-    collateralPricesIsLoading &&
+    poolIsLoading &&
+    liquidityPositionIsLoading &&
     collateralTypesIsLoading &&
-    liquidityPositionsIsLoading;
-
+    collateralPricesIsLoading;
   return (
     <PositionHeader
       title={`${collateralSymbol} Liquditiy Position`}
@@ -46,15 +44,15 @@ export const Repay = () => {
       PositionOverview={
         <PositionOverview
           collateralType={collateralSymbol || '?'}
-          debt={position?.debt.mul(priceForCollateral) || zeroWei}
+          debt={liquidityPosition?.debt.mul(priceForCollateral) || zeroWei}
           collateralValue={
-            position
-              ? position.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
+            liquidityPosition
+              ? liquidityPosition.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
               : '0.00'
           }
           poolPnl="$00.00"
-          currentCollateral={position ? position.collateralAmount : zeroWei}
-          cRatio={maxUInt.toNumber()}
+          currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : zeroWei}
+          cRatio={liquidityPosition?.cRatio.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
@@ -64,4 +62,4 @@ export const Repay = () => {
       ManagePosition={<ManagePosition debt={debt} price={priceForCollateral}></ManagePosition>}
     />
   );
-};
+}
