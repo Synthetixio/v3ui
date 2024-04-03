@@ -46,6 +46,7 @@ export function useApr() {
       const aprRewards = dailyAverageAprRewards * 365;
       const combinedApr = (dailyAverageAprLp + dailyAverageAprRewards) * 365;
 
+      // Leave for debugging purposes
       console.log('aprPnl', aprPnl, 'aprRewards', aprRewards);
 
       return {
