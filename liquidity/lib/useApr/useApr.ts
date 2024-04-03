@@ -47,6 +47,7 @@ export function useApr() {
       const combinedApr = (dailyAverageAprLp + dailyAverageAprRewards) * 365;
 
       // Leave for debugging purposes
+      // eslint-disable-next-line no-console
       console.log('aprPnl', aprPnl, 'aprRewards', aprRewards);
 
       return {
