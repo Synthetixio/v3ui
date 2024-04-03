@@ -28,10 +28,12 @@ import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useWithdraw } from '@snx-v3/useWithdraw';
+import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 
 function ManageInputUi({
   collateralSymbol,
-  collateral,
+  collateral = new Wei(0),
   price,
   title,
   inputSubline,
@@ -40,7 +42,7 @@ function ManageInputUi({
   children,
 }: {
   collateralSymbol: string;
-  collateral: Wei;
+  collateral?: Wei;
   price: Wei;
   title: string;
   inputSubline: string;
@@ -107,7 +109,7 @@ function PositionAction({
   tabAction,
   price,
   collateralSymbol,
-  collateralAmount = new Wei(0),
+  availableCollateral,
   debt,
   poolId,
   collateralAddress,
@@ -122,7 +124,7 @@ function PositionAction({
   collateralSymbol: string;
   debt: Wei;
   poolId?: string;
-  collateralAmount?: Wei;
+  availableCollateral?: AccountCollateralWithSymbol;
   collateralAddress?: string;
   accountId?: string;
   step: string;
@@ -156,6 +158,12 @@ function PositionAction({
       collateralTypeAddress: collateralAddress,
     });
 
+  const { exec: withdraw, isLoading: withdrawIsLoading } = useWithdraw({
+    accountId,
+    accountCollateral: availableCollateral,
+    collateralTypeAddress: collateralAddress,
+  });
+
   const handleManageInputButtonClick = () => {
     setStep('signTransaction');
   };
@@ -177,6 +185,9 @@ function PositionAction({
         console.error(error);
       }
     }
+    if (tabAction === 'remove') {
+      await withdraw(amount.toBN());
+    }
   };
   if (tab === 0) {
     if (tabAction === 'remove')
@@ -184,7 +195,7 @@ function PositionAction({
         return (
           <ManageInputUi
             collateralSymbol={collateralSymbol}
-            collateral={isBase ? debt.abs() : collateralAmount}
+            collateral={isBase ? debt.abs() : availableCollateral?.availableCollateral}
             price={price}
             buttonText="Withdraw"
             inputSubline="Deposited"
@@ -203,6 +214,35 @@ function PositionAction({
           </ManageInputUi>
         );
       }
+    if (step === 'signTransaction') {
+      return (
+        <SignTransaction
+          actionButtonClick={handleSignTransactionClick}
+          buttonText="Execute Transaction"
+          header="Manage Debt"
+          transactions={[
+            {
+              loading: withdrawIsLoading,
+              done: false,
+              title: 'Withdraw',
+              subline:
+                'This transaction will undelegate your position that you can claim in 24hrs.',
+            },
+          ]}
+        />
+      );
+    } else if (step === 'done') {
+      return (
+        <LiquidityPositionUpdated
+          alertText="Collateral successfully Updated"
+          header="Collateral successfully Updated"
+          currentCRatio="Infinite"
+          // TODO @dev
+          debt={debt}
+          subline="Your Collateral has been updated, read more baout in the Synthetix V3 Documentation"
+        />
+      );
+    }
   }
   if (tab === 1) {
     if (tabAction === 'claim') {
@@ -454,7 +494,7 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
-        collateralAmount={liqudityPosition?.collateralAmount}
+        availableCollateral={liqudityPosition?.collateralAmount}
       />
     </Flex>
   );
