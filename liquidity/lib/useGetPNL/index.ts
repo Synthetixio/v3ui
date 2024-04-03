@@ -1,1 +1,1 @@
-export * from './useGetPNL';
+export * from './useGetPnl';

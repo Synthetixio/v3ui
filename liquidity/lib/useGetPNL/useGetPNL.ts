@@ -14,7 +14,7 @@ interface PnlData {
   collateralAmount: Wei;
 }
 
-export const useGetPNL = () => {
+export const useGetPnl = () => {
   const { data: block } = useBlockNumber();
 
   const { data: CoreProxy } = useCoreProxy();
@@ -43,7 +43,7 @@ export const useGetPNL = () => {
   return useQuery({
     queryKey: ['pnl', blocks.join(',')],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3) throw 'Missing data required for useGetPNL';
+      if (!CoreProxy || !Multicall3) throw 'Missing data required for useGetPnl';
 
       const returnValues = await Promise.all(
         blocks.map((block) => {

@@ -6709,7 +6709,7 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useGetPNL": "workspace:*"
+    "@snx-v3/useGetPnl": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     date-fns: "npm:^2.30.0"
@@ -6919,9 +6919,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetPNL@workspace:*, @snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL":
+"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPNL":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/useGetPNL@workspace:liquidity/lib/useGetPNL"
+  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPNL"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"

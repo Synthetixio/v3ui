@@ -1,6 +1,6 @@
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
-import { useGetPNL } from '@snx-v3/useGetPNL';
+import { useGetPnl } from '@snx-v3/useGetPnl';
 import { useQuery } from '@tanstack/react-query';
 import { wei } from '@synthetixio/wei';
 import { addSeconds, isAfter, isBefore, subDays } from 'date-fns';
@@ -34,7 +34,7 @@ interface DistributorInterface {
 }
 
 export function useApr() {
-  const { data: pnlData } = useGetPNL();
+  const { data: pnlData } = useGetPnl();
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const provider = useProvider();

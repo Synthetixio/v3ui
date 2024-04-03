@@ -7,7 +7,7 @@
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
-    "@snx-v3/useGetPNL": "workspace:*",
+    "@snx-v3/useGetPnl": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
     "date-fns": "^2.30.0",

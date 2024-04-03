@@ -1,5 +1,5 @@
 {
-  "name": "@snx-v3/useGetPNL",
+  "name": "@snx-v3/useGetPnl",
   "private": true,
   "main": "index.ts",
   "version": "0.0.2",
