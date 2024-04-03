@@ -5,6 +5,7 @@ import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import Wei, { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { providers } from 'ethers';
 
 interface PnlData {
   pnlValue: Wei;
@@ -28,7 +29,9 @@ export const useGetPnl = () => {
 
       const returnValues = await Promise.all(
         blocks.map((block: number) => {
-          return Multicall3.connect(network!.rpcUrl()).callStatic.aggregate(
+          return Multicall3.connect(
+            new providers.JsonRpcBatchProvider(network?.rpcUrl())
+          ).callStatic.aggregate(
             [
               {
                 target: CoreProxy.address,

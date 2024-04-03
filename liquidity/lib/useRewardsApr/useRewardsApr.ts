@@ -4,7 +4,7 @@ import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { addSeconds, isAfter, isBefore, subDays } from 'date-fns';
-import { Contract } from 'ethers';
+import { Contract, providers } from 'ethers';
 
 const PoolsDistributorDocument = `query GetPoolDistributors {
   pool(id: "1") {
@@ -66,7 +66,7 @@ export function useRewardsApr() {
         const snxBaseAggregator = new Contract(
           '0xe3971Ed6F1A5903321479Ef3148B5950c0612075',
           abi,
-          provider
+          new providers.JsonRpcBatchProvider(network?.rpcUrl())
         );
 
         const url = getSubgraphUrl(network?.name);
