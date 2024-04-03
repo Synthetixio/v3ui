@@ -100,7 +100,7 @@ export function useApr() {
         provider
       );
 
-      const snxPrice = wei(await snxBaseAggregator.latestAnswer(), 18, true);
+      const snxPrice = wei(await snxBaseAggregator.latestAnswer(), 8, true);
 
       // Sort by index and get average price for non stable collateral
       const rewardsToAmounts = activeRewards
@@ -109,7 +109,7 @@ export function useApr() {
             ...reward,
             amountUSD:
               reward.distributor === snxDistributor
-                ? reward.amount * snxPrice.div(8).toNumber()
+                ? reward.amount * snxPrice.toNumber()
                 : reward.amount,
           };
         })

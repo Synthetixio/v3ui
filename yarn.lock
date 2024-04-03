@@ -6919,9 +6919,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPNL":
+"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPNL"
+  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"

@@ -1,13 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useBlockNumber } from '../useBlockNumber';
-import { useMemo } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import Wei, { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-
-const BLOCKS = (60 * 60 * 24) / 2;
 
 interface PnlData {
   pnlValue: Wei;
@@ -22,31 +19,15 @@ export const useGetPnl = () => {
 
   const { network } = useNetwork();
 
-  const blocks = useMemo(() => {
-    if (!block) {
-      return [];
-    }
-
-    // We take the last 8 blocks as the PnL is calculated between two blocks
-    return [
-      block - BLOCKS * 8,
-      block - BLOCKS * 7,
-      block - BLOCKS * 6,
-      block - BLOCKS * 5,
-      block - BLOCKS * 4,
-      block - BLOCKS * 3,
-      block - BLOCKS * 2,
-      block - BLOCKS,
-    ];
-  }, [block]);
+  const blocks = block?.lastPeriodBlocks;
 
   return useQuery({
-    queryKey: ['pnl', blocks.join(',')],
+    queryKey: ['pnl', blocks?.join(',')],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3) throw 'Missing data required for useGetPnl';
+      if (!CoreProxy || !Multicall3 || !blocks) throw 'Missing data required for useGetPnl';
 
       const returnValues = await Promise.all(
-        blocks.map((block) => {
+        blocks.map((block: number) => {
           return Multicall3.callStatic.aggregate(
             [
               {
