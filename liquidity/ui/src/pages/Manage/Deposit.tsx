@@ -27,7 +27,6 @@ export const DepositUi: FC<{
     collateral?: Wei;
   };
   tokenBalance?: Wei;
-
   displaySymbol: string;
   symbol: string;
   setCollateralChange: (val: Wei) => void;
