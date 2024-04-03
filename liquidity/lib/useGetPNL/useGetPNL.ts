@@ -94,6 +94,7 @@ export const useGetPNL = () => {
         }
 
         const previousDebt = wei(decoded[i - 1].debt, 18, true);
+        // Take the previous collateral amount
         const collateralAmount = wei(decoded[i - 1].amount, 18, true);
         const currentDebt = wei(data.debt, 18, true);
 
