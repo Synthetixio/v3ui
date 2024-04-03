@@ -29,7 +29,6 @@ import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { RepayAllDebt } from './RepayAllDebt';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -77,11 +76,7 @@ const ActionButton: FC<
 const Action: FC<{
   manageAction: ManageAction;
   liquidityPosition?: LiquidityPosition;
-  network: Network | null;
-}> = ({ manageAction, liquidityPosition, network }) => {
-  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
-    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
-  }
+}> = ({ manageAction, liquidityPosition }) => {
   switch (manageAction) {
     case 'borrow':
       return <Borrow liquidityPosition={liquidityPosition} />;
@@ -137,11 +132,7 @@ const ManageActionUi: FC<{
       </Flex>
       {manageAction ? (
         <Flex direction="column" mt={6}>
-          <Action
-            manageAction={manageAction}
-            liquidityPosition={liquidityPosition}
-            network={network}
-          />
+          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
         </Flex>
       ) : null}
     </Box>
@@ -160,6 +151,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
     useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const { isValid } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
@@ -173,16 +165,18 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   const parsedActionParam = ManageActionSchema.safeParse(params.manageAction);
   const parsedAction = parsedActionParam.success ? parsedActionParam.data : null;
 
+  const isFormValid = isBase ? true : isValid;
+
   const onSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
       const form = e.target as HTMLFormElement;
-      if (!form.reportValidity() || !isValid) {
+      if (!form.reportValidity() || !isFormValid) {
         return;
       }
       setTxnModalOpen(parsedAction);
     },
-    [isValid, parsedAction]
+    [isFormValid, parsedAction]
   );
 
   useEffect(() => {
