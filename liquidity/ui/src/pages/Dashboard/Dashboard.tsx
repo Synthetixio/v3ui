@@ -45,10 +45,10 @@ export function Dashboard() {
             label="Aggregated Debt of all your Open Positions."
           />
           <StatBox
-            title="APY"
+            title="APR"
             isLoading={false}
             value="14%"
-            label="Aggregated APY from all your positions."
+            label="Aggregated APR from all your positions."
           />
         </Flex>
         <AssetsList />
