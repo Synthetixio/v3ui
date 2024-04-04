@@ -11,6 +11,9 @@ export function useApr() {
   const { data: pnlData } = useGetPnl();
   const { data: rewardsAprData } = useRewardsApr();
 
+  console.log('pnlData', pnlData);
+  console.log('rewardsAprData', rewardsAprData);
+
   return useQuery({
     queryKey: ['apr', network?.id],
     queryFn: async () => {
