@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useGetPnl } from '@snx-v3/useGetPnl';
