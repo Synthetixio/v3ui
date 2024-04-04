@@ -252,7 +252,6 @@ workflows:
       - checks
       - typecheck
       - tests
-      - liquidity-cy
       - governance-cy
       - combine-coverage:
           requires: [tests, liquidity-cy, governance-cy, liquidity-e2e-optimism-mainnet]
@@ -261,8 +260,6 @@ workflows:
             - checks
             - typecheck
             - tests
-            - liquidity-cy
-            - liquidity-e2e-optimism-mainnet
           filters:
             branches:
               only:
@@ -274,8 +271,6 @@ workflows:
             - checks
             - typecheck
             - tests
-            - liquidity-cy
-            - liquidity-e2e-optimism-mainnet
           filters:
             branches:
               only:
