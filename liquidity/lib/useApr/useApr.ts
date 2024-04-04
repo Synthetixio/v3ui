@@ -47,10 +47,6 @@ export function useApr() {
       const aprRewards = dailyAverageAprRewards * 365;
       const combinedApr = (dailyAverageAprLp + dailyAverageAprRewards) * 365;
 
-      // Leave for debugging purposes
-      // eslint-disable-next-line no-console
-      console.log('aprPnl', aprPnl, 'aprRewards', aprRewards);
-
       return {
         aprPnl,
         aprRewards,
