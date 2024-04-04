@@ -86,7 +86,7 @@ function VaultRowUi({
         </>
       ) : (
         <Td>
-          <Text>{apr?.toFixed(2)}%</Text>
+          <Text>{apr?.toFixed(2) || '-'}%</Text>
         </Td>
       )}
       <Td textAlign="end">
@@ -132,7 +132,7 @@ export type VaultRowProps = {
   collateralType: CollateralType;
   poolId: string;
   liquidityPosition?: LiquidityPositionType;
-  apr: number;
+  apr?: number;
 };
 
 export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition, apr }) => {
