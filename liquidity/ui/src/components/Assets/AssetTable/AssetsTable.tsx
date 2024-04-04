@@ -97,6 +97,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
                       accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
                       delegatedBalance={collateral.totalAssigned.toNumber()}
                       delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      collateralAddress={collateral.tokenAddress}
                       final={index === assets.length - 1}
                     />
                   );
