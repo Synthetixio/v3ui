@@ -32,6 +32,7 @@ export const useBlockNumber = () => {
         ];
       };
 
+      // eslint-disable-next-line no-console
       console.log('blocks', blocks());
 
       return {
