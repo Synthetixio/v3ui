@@ -93,7 +93,7 @@ export const CollateralSectionUi: FC<{
             gap={1}
             color="white"
           >
-            APY
+            APR
           </Text>
           {isAprLoading ? (
             <Skeleton mt={1} w={16} h={6} />

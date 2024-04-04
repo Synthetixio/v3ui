@@ -19,15 +19,16 @@ export const useBlockNumber = () => {
         }
 
         // We take the last 8 blocks as the PnL is calculated between two blocks
+        // Interim take last 6 periods (last 7 blocks)
         return [
-          block - BLOCKS * 8,
-          block - BLOCKS * 7,
+          // block - BLOCKS * 7,
           block - BLOCKS * 6,
           block - BLOCKS * 5,
           block - BLOCKS * 4,
           block - BLOCKS * 3,
           block - BLOCKS * 2,
           block - BLOCKS,
+          block,
         ];
       };
 

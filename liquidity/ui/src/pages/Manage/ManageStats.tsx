@@ -78,10 +78,10 @@ export const ManageStatsUi: FC<{
           <Flex flexDirection="column" justifyContent="space-between" width="100%">
             <Flex alignItems="center" mb="4px">
               <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-                APY
+                APR
               </Text>
               <Tooltip
-                label="APY is a combination of past week pool performance and rewards."
+                label="APR is a combination of past week pool performance and rewards."
                 textAlign="start"
                 py={2}
                 px={3}

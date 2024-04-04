@@ -74,7 +74,7 @@ export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById, apr }:
                 </>
               ) : (
                 <Th color="gray.500" fontSize="xs" lineHeight="4" pb="3" textTransform="initial">
-                  APY
+                  APR
                 </Th>
               )}
               <Th color="gray.500" fontSize="xs" lineHeight="4" pb="2" textTransform="initial"></Th>
