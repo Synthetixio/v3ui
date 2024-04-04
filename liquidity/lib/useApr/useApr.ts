@@ -1,5 +1,5 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
+import { useNetwork } from '@snx-v3/useBlockchain';
 import { useGetPnl } from '@snx-v3/useGetPnl';
 import { useRewardsApr } from '@snx-v3/useRewardsApr';
 import { wei } from '@synthetixio/wei';
@@ -7,14 +7,14 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useApr() {
   const { network } = useNetwork();
-  const provider = useProvider();
+
   const { data: pnlData } = useGetPnl();
   const { data: rewardsAprData } = useRewardsApr();
 
   return useQuery({
     queryKey: ['apr', network?.id],
     queryFn: async () => {
-      if (!provider || !pnlData || !rewardsAprData) throw 'Missing data required for useApr';
+      if (!pnlData || !rewardsAprData) throw 'Missing data required for useApr';
       // PNLS for the last week
       const { pnls } = pnlData;
 

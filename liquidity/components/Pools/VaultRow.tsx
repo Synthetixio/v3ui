@@ -86,7 +86,7 @@ function VaultRowUi({
         </>
       ) : (
         <Td>
-          <Text>{apr?.toFixed(2) || '-'}%</Text>
+          <Text>{apr ? apr.toFixed(2) : '-'}%</Text>
         </Td>
       )}
       <Td textAlign="end">
