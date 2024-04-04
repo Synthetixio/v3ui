@@ -1,11 +1,7 @@
-import { useState, lazy, Suspense } from 'react';
 import { Amount } from '@snx-v3/Amount';
 import { Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
-import { safeImport } from '@synthetixio/safe-import';
-
-const WithdrawModal = lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
 
 function AvailableCollateralRowUi({
   accountCollateral,
@@ -14,8 +10,6 @@ function AvailableCollateralRowUi({
   accountCollateral: AccountCollateralWithSymbol;
   isDisabled: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <Tr data-testid="available collateral row">
       <Td>
@@ -34,23 +28,10 @@ function AvailableCollateralRowUi({
       </Td>
       <Td textAlign="end">
         <Fade in>
-          <Button
-            data-testid="withdraw-button"
-            isDisabled={isDisabled}
-            onClick={() => setIsOpen(true)}
-          >
+          <Button data-testid="withdraw-button" isDisabled={isDisabled}>
             Withdraw
           </Button>
         </Fade>
-        <Suspense fallback={null}>
-          {isOpen ? (
-            <WithdrawModal
-              accountCollateral={accountCollateral}
-              onClose={() => setIsOpen(false)}
-              isOpen={isOpen}
-            />
-          ) : null}
-        </Suspense>
       </Td>
     </Tr>
   );

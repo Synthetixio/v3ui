@@ -19,7 +19,7 @@ export const useWithdraw = ({
 }: {
   accountId?: string;
   collateralTypeAddress?: string;
-  accountCollateral: AccountCollateralWithSymbol;
+  accountCollateral?: AccountCollateralWithSymbol;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -31,7 +31,7 @@ export const useWithdraw = ({
   const provider = useProvider();
 
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (customWithdrawAmount: BigNumber) => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
       if (
@@ -54,7 +54,9 @@ export const useWithdraw = ({
         const populatedTxnPromised = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
           collateralTypeAddress,
-          accountCollateral?.availableCollateral.toBN()
+          customWithdrawAmount.gt(0)
+            ? customWithdrawAmount
+            : accountCollateral?.availableCollateral.toBN()
         );
 
         const collateralPriceCallsPromise = fetchPriceUpdates(

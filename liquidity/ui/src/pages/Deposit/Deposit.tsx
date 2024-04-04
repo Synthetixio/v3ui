@@ -1,5 +1,4 @@
 import { useParams } from '@snx-v3/useParams';
-import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { usePool } from '@snx-v3/usePools';
 import { PositionOverview } from '../../components/PositionOverview';
 import { useState } from 'react';
@@ -18,6 +17,7 @@ import { useDeposit } from '@snx-v3/useDeposit';
 import { TransactionSteps } from './DepositBaseAndromeda';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import { useWrapEth } from '@snx-v3/useWrapEth';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export function Deposit() {
   const [currentStep, setCurrentStep] = useState<TransactionSteps>('openPosition');
@@ -26,9 +26,11 @@ export function Deposit() {
 
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: userAccounts, isLoading: userAccountsIsLoading } = useAccounts();
-  const { data: liquidityPosition, isLoading: liquidityPositionsIsLoading } = useLiquidityPositions(
-    { accountId }
-  );
+  const { data: liquidityPosition, isLoading: liquidityPositionsIsLoading } = useLiquidityPosition({
+    accountId,
+    tokenAddress: collateralAddress,
+    poolId,
+  });
   const { data: accountCollaterals, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
   });
@@ -45,12 +47,11 @@ export function Deposit() {
   );
 
   const zeroWei = new Wei(0);
-  const position = liquidityPosition && liquidityPosition[`${poolId}-${collateralSymbol}`];
   const priceForCollateral =
     !!collateralPrices && !!collateralType
       ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
-  const debt = position ? position.debt : zeroWei;
+  const debt = liquidityPosition ? liquidityPosition.debt : zeroWei;
   const debt$ = debt.mul(priceForCollateral);
   const userTokeBalanceCombined =
     userTokenBalances && ethBalance
@@ -92,7 +93,7 @@ export function Deposit() {
     poolId,
     collateralTypeAddress: collateralAddress,
     collateralChange: amountToDeposit,
-    currentCollateral: position ? position.collateralAmount : zeroWei,
+    currentCollateral: liquidityPosition ? liquidityPosition.collateralAmount : zeroWei,
     availableCollateral: balance$.deposited,
   });
 
@@ -160,7 +161,7 @@ export function Deposit() {
   return (
     <PositionHeader
       title={
-        !position
+        !liquidityPosition
           ? 'Open ' + collateralSymbol + ' Liquidity Position'
           : collateralSymbol + ' Liquidity Position'
       }
@@ -173,8 +174,8 @@ export function Deposit() {
           balance={balance$}
           price={priceForCollateral}
           userHasAccount={!!userAccounts?.length}
-          currentCRatio={position?.cRatio.toString() || 'N/A'}
-          currentCollateral={position?.collateralAmount}
+          currentCRatio={liquidityPosition?.cRatio.toString() || 'N/A'}
+          currentCollateral={liquidityPosition?.collateralAmount}
           signTransaction={handleButtonClick}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
@@ -189,13 +190,13 @@ export function Deposit() {
           collateralType={collateralSymbol || '?'}
           debt={debt$}
           collateralValue={
-            position
-              ? position.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
+            liquidityPosition
+              ? liquidityPosition.collateralValue.mul(priceForCollateral).toNumber().toFixed(2)
               : '0.00'
           }
           poolPnl="$00.00"
-          currentCollateral={position ? position.collateralAmount : zeroWei}
-          cRatio={position?.cRatio.toNumber()}
+          currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : zeroWei}
+          cRatio={liquidityPosition?.cRatio.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

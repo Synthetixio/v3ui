@@ -22,15 +22,17 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { CheckIcon } from '@snx-v3/Multistep';
 import { SignTransaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
-import { ACTIONS } from './actions';
+import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useWithdraw } from '@snx-v3/useWithdraw';
+import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
 function ManageInputUi({
   collateralSymbol,
-  collateral,
+  collateral = new Wei(0),
   price,
   title,
   inputSubline,
@@ -39,7 +41,7 @@ function ManageInputUi({
   children,
 }: {
   collateralSymbol: string;
-  collateral: Wei;
+  collateral?: Wei;
   price: Wei;
   title: string;
   inputSubline: string;
@@ -106,6 +108,7 @@ function PositionAction({
   tabAction,
   price,
   collateralSymbol,
+  availableCollateral,
   debt,
   poolId,
   collateralAddress,
@@ -120,6 +123,7 @@ function PositionAction({
   collateralSymbol: string;
   debt: Wei;
   poolId?: string;
+  availableCollateral?: AccountCollateralWithSymbol;
   collateralAddress?: string;
   accountId?: string;
   step: string;
@@ -128,6 +132,7 @@ function PositionAction({
 }) {
   const { network } = useNetwork();
   const [amount] = useRecoilState(amountState);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
     accountId,
     debtChange: amount,
@@ -152,6 +157,12 @@ function PositionAction({
       collateralTypeAddress: collateralAddress,
     });
 
+  const { exec: withdraw, isLoading: withdrawIsLoading } = useWithdraw({
+    accountId,
+    accountCollateral: availableCollateral,
+    collateralTypeAddress: collateralAddress,
+  });
+
   const handleManageInputButtonClick = () => {
     setStep('signTransaction');
   };
@@ -166,14 +177,72 @@ function PositionAction({
       }
     } else if (tabAction === 'repay') {
       try {
-        isBaseAndromeda(network?.id, network?.preset) ? await repayBaseAndromeda() : await repay();
+        isBase ? await repayBaseAndromeda() : await repay();
 
         setStep('done');
       } catch (error) {
         console.error(error);
       }
     }
+    if (tabAction === 'remove') {
+      await withdraw(amount.toBN());
+    }
   };
+  if (tab === 0) {
+    if (tabAction === 'remove')
+      if (!step) {
+        return (
+          <ManageInputUi
+            collateralSymbol={collateralSymbol}
+            collateral={isBase ? debt.abs() : availableCollateral?.availableCollateral}
+            price={price}
+            buttonText="Withdraw"
+            inputSubline="Deposited"
+            title="Remove Collateral"
+            handleButtonClick={handleManageInputButtonClick}
+          >
+            {amount.gt(0) && (
+              <Alert colorScheme="cyan" rounded="base" my="2">
+                <Flex rounded="full" mr="2">
+                  <InfoIcon w="20px" h="20px" color="cyan.500" />
+                </Flex>
+                As a security precaution, claimed assets can only be withdrawn to your wallet after
+                24 hs since your previous account activity.
+              </Alert>
+            )}
+          </ManageInputUi>
+        );
+      }
+    if (step === 'signTransaction') {
+      return (
+        <SignTransaction
+          actionButtonClick={handleSignTransactionClick}
+          buttonText="Execute Transaction"
+          header="Manage Debt"
+          transactions={[
+            {
+              loading: withdrawIsLoading,
+              done: false,
+              title: 'Withdraw',
+              subline:
+                'This transaction will undelegate your position that you can claim in 24hrs.',
+            },
+          ]}
+        />
+      );
+    } else if (step === 'done') {
+      return (
+        <LiquidityPositionUpdated
+          alertText="Collateral successfully Updated"
+          header="Collateral successfully Updated"
+          currentCRatio="Infinite"
+          // TODO @dev
+          debt={debt}
+          subline="Your Collateral has been updated, read more baout in the Synthetix V3 Documentation"
+        />
+      );
+    }
+  }
   if (tab === 1) {
     if (tabAction === 'claim') {
       if (!step) {
@@ -288,6 +357,9 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
+  const { data: accountCollateral } = useAccountCollateral({
+    accountId,
+  });
 
   return (
     <Flex
@@ -332,12 +404,46 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <p>implement me</p>
+              <Flex flexDir="column">
+                <Flex justifyContent="space-between">
+                  {COLLATERALACTIONS.map((action) => (
+                    <Flex
+                      w="135px"
+                      h="84px"
+                      justifyContent="center"
+                      key={action.title.concat('-tab-actions')}
+                      border="1px solid"
+                      flexDir="column"
+                      alignItems="center"
+                      borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
+                      rounded="base"
+                      cursor="pointer"
+                      onClick={() => {
+                        queryParams.set('tabAction', action.link);
+                        navigate({
+                          pathname,
+                          search: queryParams.toString(),
+                        });
+                      }}
+                    >
+                      {action.icon(tabAction === action.link ? 'cyan' : 'white')}
+                      <Text
+                        fontSize="14px"
+                        fontWeight={700}
+                        mt="2"
+                        color={tabAction === action.link ? 'cyan.500' : 'white'}
+                      >
+                        {action.title}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
+              </Flex>
             </TabPanel>
             <TabPanel px="0">
               <Flex flexDir="column">
                 <Flex justifyContent="space-between">
-                  {ACTIONS.map((action) => (
+                  {DEBTACTIONS.map((action) => (
                     <Flex
                       w="135px"
                       h="84px"
@@ -385,6 +491,9 @@ export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
         poolId={poolId}
         setStep={setStep}
         step={step}
+        availableCollateral={
+          accountCollateral?.filter((collateral) => collateral.symbol === collateralSymbol)[0]
+        }
       />
     </Flex>
   );

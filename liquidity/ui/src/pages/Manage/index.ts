@@ -1,1 +1,1 @@
-export * from './Repay';
+export * from './Manage';
