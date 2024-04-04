@@ -92,8 +92,7 @@ export const useGetPnl = () => {
           pnls,
         };
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log('Error fetching pnl', error);
+        console.error('Error fetching pnl', error);
         return { pnls: [] };
       }
     },

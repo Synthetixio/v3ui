@@ -16,9 +16,6 @@ export function Home() {
   const { data: pools, isLoading: isPoolsLoading } = usePools();
   const { data: aprData, isLoading: isAprLoading } = useApr();
 
-  // eslint-disable-next-line no-console
-  console.log('APR', aprData);
-
   const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
     useLiquidityPositions({ accountId });
 

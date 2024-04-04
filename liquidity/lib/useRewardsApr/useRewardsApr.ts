@@ -140,8 +140,7 @@ export function useRewardsApr() {
         // Remove first entry
         return finalRewards.slice(1, blocks.length).map(({ amountUSD }) => amountUSD);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log('Error fetching rewards', error);
+        console.error('Error fetching rewards', error);
         return [];
       }
     },

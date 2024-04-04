@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useGetPnl } from '@snx-v3/useGetPnl';
@@ -11,9 +10,6 @@ export function useApr() {
 
   const { data: pnlData } = useGetPnl();
   const { data: rewardsAprData } = useRewardsApr();
-
-  console.log('pnlData', pnlData);
-  console.log('rewardsAprData', rewardsAprData);
 
   return useQuery({
     queryKey: ['apr', network?.id],
