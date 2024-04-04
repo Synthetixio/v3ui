@@ -74,19 +74,6 @@ export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
 
 export const NETWORKS: Network[] = [
   {
-    id: 1,
-    preset: 'main',
-    hexId: `0x${Number(1).toString(16)}`,
-    token: 'ETH',
-    name: 'mainnet',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Ethereum',
-    isSupported: true,
-    publicRpcUrl: 'https://ethereum.publicnode.com',
-    isTestnet: false,
-  },
-  {
     id: 8453,
     preset: 'andromeda',
     hexId: `0x${Number(8453).toString(16)}`,
@@ -97,6 +84,19 @@ export const NETWORKS: Network[] = [
     label: 'Base',
     isSupported: false,
     publicRpcUrl: 'https://base.publicnode.com',
+    isTestnet: false,
+  },
+  {
+    id: 1,
+    preset: 'main',
+    hexId: `0x${Number(1).toString(16)}`,
+    token: 'ETH',
+    name: 'mainnet',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Ethereum',
+    isSupported: true,
+    publicRpcUrl: 'https://ethereum.publicnode.com',
     isTestnet: false,
   },
   {
