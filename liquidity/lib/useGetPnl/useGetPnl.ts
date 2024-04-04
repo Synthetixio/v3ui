@@ -96,6 +96,6 @@ export const useGetPnl = () => {
         return { pnls: [] };
       }
     },
-    enabled: Boolean(block && CoreProxy && Multicall3),
+    enabled: Boolean(block && CoreProxy && Multicall3 && network),
   });
 };
