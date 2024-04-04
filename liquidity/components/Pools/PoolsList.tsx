@@ -7,7 +7,7 @@ interface PoolsListProps {
   pools?: PoolType[];
   collateralTypes?: CollateralType[];
   liquidityPositionsById?: LiquidityPositionsById;
-  apr: number;
+  apr?: number;
   isLoading: boolean;
 }
 

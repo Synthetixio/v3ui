@@ -12,7 +12,7 @@ interface PoolcardProps {
   pool: PoolType;
   collateralTypes?: CollateralType[];
   liquidityPositionsById?: LiquidityPositionsById;
-  apr: number;
+  apr?: number;
 }
 
 export const PoolCard = ({ pool, collateralTypes, liquidityPositionsById, apr }: PoolcardProps) => {
