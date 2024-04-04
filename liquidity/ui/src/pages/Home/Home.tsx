@@ -16,6 +16,8 @@ export function Home() {
   const { data: pools, isLoading: isPoolsLoading } = usePools();
   const { data: aprData, isLoading: isAprLoading } = useApr();
 
+  console.log('APR', aprData);
+
   const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
     useLiquidityPositions({ accountId });
 
@@ -46,7 +48,7 @@ export function Home() {
           isLoading={isLoading}
           collateralTypes={collateralTypes}
           liquidityPositionsById={liquidityPositionsById}
-          apr={aprData?.combinedApr || 0}
+          apr={aprData?.combinedApr}
         />
         <AvailableCollateral />
       </Flex>

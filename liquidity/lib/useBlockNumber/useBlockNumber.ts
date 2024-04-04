@@ -32,6 +32,8 @@ export const useBlockNumber = () => {
         ];
       };
 
+      console.log('blocks', blocks());
+
       return {
         currentBlock: block,
         lastPeriodBlocks: blocks(),
