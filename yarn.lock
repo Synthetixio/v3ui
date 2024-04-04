@@ -6396,6 +6396,7 @@ __metadata:
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
+    "@snx-v3/useUndelegate": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/useWithdraw": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
@@ -7063,7 +7064,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useUndelegate@workspace:liquidity/lib/useUndelegate":
+"@snx-v3/useUndelegate@workspace:*, @snx-v3/useUndelegate@workspace:liquidity/lib/useUndelegate":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useUndelegate@workspace:liquidity/lib/useUndelegate"
   dependencies:

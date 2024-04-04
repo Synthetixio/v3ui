@@ -28,7 +28,8 @@ import { useRepay } from '@snx-v3/useRepay';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useWithdraw } from '@snx-v3/useWithdraw';
-import { AccountCollateralWithSymbol, useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
+import { useUndelegate } from '@snx-v3/useUndelegate';
 
 function ManageInputUi({
   collateralSymbol,
@@ -108,6 +109,7 @@ function PositionAction({
   tabAction,
   price,
   collateralSymbol,
+  currentCollateral,
   availableCollateral,
   debt,
   poolId,
@@ -123,6 +125,7 @@ function PositionAction({
   collateralSymbol: string;
   debt: Wei;
   poolId?: string;
+  currentCollateral: Wei;
   availableCollateral?: AccountCollateralWithSymbol;
   collateralAddress?: string;
   accountId?: string;
@@ -163,31 +166,46 @@ function PositionAction({
     collateralTypeAddress: collateralAddress,
   });
 
+  const { exec: undelegate, isLoading: undelegateIsLoading } = useUndelegate({
+    accountId,
+    poolId,
+    collateralTypeAddress: collateralAddress,
+    collateralChange: amount.mul(-1),
+    currentCollateral,
+  });
+
   const handleManageInputButtonClick = () => {
     setStep('signTransaction');
   };
 
   const handleSignTransactionClick = async () => {
-    if (tabAction === 'claim') {
-      try {
-        await mintUSD();
-        setStep('done');
-      } catch (error) {
-        console.error(error);
-      }
-    } else if (tabAction === 'repay') {
-      try {
-        isBase ? await repayBaseAndromeda() : await repay();
+    try {
+      if (tab === 1) {
+        if (tabAction === 'claim') {
+          await mintUSD();
+          setStep('done');
+        } else if (tabAction === 'repay') {
+          try {
+            isBase ? await repayBaseAndromeda() : await repay();
 
+            setStep('done');
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      } else if (tab === 1) {
+        if (tabAction === 'remove') {
+          await withdraw(amount.toBN());
+        }
+      } else if (tab === 2) {
+        await undelegate();
         setStep('done');
-      } catch (error) {
-        console.error(error);
       }
-    }
-    if (tabAction === 'remove') {
-      await withdraw(amount.toBN());
+    } catch (error) {
+      console.error(error);
     }
   };
+
   if (tab === 0) {
     if (tabAction === 'remove')
       if (!step) {
@@ -200,17 +218,7 @@ function PositionAction({
             inputSubline="Deposited"
             title="Remove Collateral"
             handleButtonClick={handleManageInputButtonClick}
-          >
-            {amount.gt(0) && (
-              <Alert colorScheme="cyan" rounded="base" my="2">
-                <Flex rounded="full" mr="2">
-                  <InfoIcon w="20px" h="20px" color="cyan.500" />
-                </Flex>
-                As a security precaution, claimed assets can only be withdrawn to your wallet after
-                24 hs since your previous account activity.
-              </Alert>
-            )}
-          </ManageInputUi>
+          />
         );
       }
     if (step === 'signTransaction') {
@@ -348,153 +356,215 @@ function PositionAction({
       }
     }
   }
+  if (tab === 2) {
+    if (step === 'close') {
+      return (
+        <ManageInputUi
+          collateralSymbol={collateralSymbol}
+          collateral={currentCollateral}
+          price={price}
+          buttonText="Close Position"
+          inputSubline="Deposited"
+          title="Remove Collateral"
+          handleButtonClick={handleManageInputButtonClick}
+        />
+      );
+    } else if (step === 'signTransaction') {
+      return (
+        <SignTransaction
+          actionButtonClick={handleSignTransactionClick}
+          buttonText="Execute Transaction"
+          header="Manage Debt"
+          transactions={[
+            {
+              loading: undelegateIsLoading,
+              done: false,
+              title: 'Undelegate Collateral',
+              subline: 'This will remove the collateral from the pool.',
+            },
+          ]}
+        />
+      );
+    } else if (step === 'done') {
+      return (
+        <LiquidityPositionUpdated
+          alertText="Position successfully Opened"
+          header="Position successfully Updated"
+          currentCRatio="Infinite"
+          debt={debt}
+          subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
+        />
+      );
+    }
+  }
 }
 
-export function ManagePosition({ debt, price }: { debt: Wei; price: Wei }) {
+export function ManagePosition({
+  debt,
+  price,
+  currentCollateral,
+  availableCollateral,
+}: {
+  debt: Wei;
+  price: Wei;
+  currentCollateral: Wei;
+  availableCollateral?: AccountCollateralWithSymbol;
+}) {
   const [step, setStep] = useState('');
   const [queryParams] = useSearchParams();
   const { collateralSymbol, tab, tabAction, collateralAddress, poolId, accountId } = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tabParsed = tab ? Number(tab) : 0;
-  const { data: accountCollateral } = useAccountCollateral({
-    accountId,
-  });
+  const tabActionParsed = tabAction || 'repay';
 
   return (
-    <Flex
-      rounded="base"
-      border="1px solid"
-      borderColor="gray.900"
-      p="6"
-      bg="navy.700"
-      flexDir="column"
-      minW="512px"
-      h="fit-content"
-    >
-      {!step && (
-        <Tabs isFitted defaultIndex={tabParsed}>
-          <TabList>
-            <Tab
-              color="white"
-              fontWeight={700}
-              onClick={() => {
-                queryParams.set('tab', '0');
-                navigate({
-                  pathname,
-                  search: queryParams.toString(),
-                });
-              }}
-            >
-              Manage Collateral
-            </Tab>
-            <Tab
-              color="white"
-              fontWeight={700}
-              onClick={() => {
-                queryParams.set('tab', '1');
-                navigate({
-                  pathname,
-                  search: queryParams.toString(),
-                });
-              }}
-            >
-              Manage Debt
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Flex flexDir="column">
-                <Flex justifyContent="space-between">
-                  {COLLATERALACTIONS.map((action) => (
-                    <Flex
-                      w="135px"
-                      h="84px"
-                      justifyContent="center"
-                      key={action.title.concat('-tab-actions')}
-                      border="1px solid"
-                      flexDir="column"
-                      alignItems="center"
-                      borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
-                      rounded="base"
-                      cursor="pointer"
-                      onClick={() => {
-                        queryParams.set('tabAction', action.link);
-                        navigate({
-                          pathname,
-                          search: queryParams.toString(),
-                        });
-                      }}
-                    >
-                      {action.icon(tabAction === action.link ? 'cyan' : 'white')}
-                      <Text
-                        fontSize="14px"
-                        fontWeight={700}
-                        mt="2"
-                        color={tabAction === action.link ? 'cyan.500' : 'white'}
+    <Flex flexDir="column" alignItems="center" gap="4">
+      <Flex
+        rounded="base"
+        border="1px solid"
+        borderColor="gray.900"
+        p="6"
+        bg="navy.700"
+        flexDir="column"
+        minW="512px"
+        h="fit-content"
+      >
+        {!step && (
+          <Tabs isFitted defaultIndex={tabParsed}>
+            <TabList>
+              <Tab
+                color="white"
+                fontWeight={700}
+                onClick={() => {
+                  queryParams.set('tab', '0');
+                  navigate({
+                    pathname,
+                    search: queryParams.toString(),
+                  });
+                }}
+              >
+                Manage Collateral
+              </Tab>
+              <Tab
+                color="white"
+                fontWeight={700}
+                onClick={() => {
+                  queryParams.set('tab', '1');
+                  navigate({
+                    pathname,
+                    search: queryParams.toString(),
+                  });
+                }}
+              >
+                Manage Debt
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Flex flexDir="column">
+                  <Flex justifyContent="space-between">
+                    {COLLATERALACTIONS.map((action) => (
+                      <Flex
+                        w="135px"
+                        h="84px"
+                        justifyContent="center"
+                        key={action.title.concat('-tab-actions')}
+                        border="1px solid"
+                        flexDir="column"
+                        alignItems="center"
+                        borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
+                        rounded="base"
+                        cursor="pointer"
+                        onClick={() => {
+                          queryParams.set('tabAction', action.link);
+                          navigate({
+                            pathname,
+                            search: queryParams.toString(),
+                          });
+                        }}
                       >
-                        {action.title}
-                      </Text>
-                    </Flex>
-                  ))}
+                        {action.icon(tabAction === action.link ? 'cyan' : 'white')}
+                        <Text
+                          fontSize="14px"
+                          fontWeight={700}
+                          mt="2"
+                          color={tabAction === action.link ? 'cyan.500' : 'white'}
+                        >
+                          {action.title}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Flex>
                 </Flex>
-              </Flex>
-            </TabPanel>
-            <TabPanel px="0">
-              <Flex flexDir="column">
-                <Flex justifyContent="space-between">
-                  {DEBTACTIONS.map((action) => (
-                    <Flex
-                      w="135px"
-                      h="84px"
-                      justifyContent="center"
-                      key={action.title.concat('-tab-actions')}
-                      border="1px solid"
-                      flexDir="column"
-                      alignItems="center"
-                      borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
-                      rounded="base"
-                      cursor="pointer"
-                      onClick={() => {
-                        queryParams.set('tabAction', action.link);
-                        navigate({
-                          pathname,
-                          search: queryParams.toString(),
-                        });
-                      }}
-                    >
-                      {action.icon(tabAction === action.link ? 'cyan' : 'white')}
-                      <Text
-                        fontSize="14px"
-                        fontWeight={700}
-                        mt="2"
-                        color={tabAction === action.link ? 'cyan.500' : 'white'}
+              </TabPanel>
+              <TabPanel px="0">
+                <Flex flexDir="column">
+                  <Flex justifyContent="space-between">
+                    {DEBTACTIONS.map((action) => (
+                      <Flex
+                        w="135px"
+                        h="84px"
+                        justifyContent="center"
+                        key={action.title.concat('-tab-actions')}
+                        border="1px solid"
+                        flexDir="column"
+                        alignItems="center"
+                        borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
+                        rounded="base"
+                        cursor="pointer"
+                        onClick={() => {
+                          queryParams.set('tabAction', action.link);
+                          navigate({
+                            pathname,
+                            search: queryParams.toString(),
+                          });
+                        }}
                       >
-                        {action.title}
-                      </Text>
-                    </Flex>
-                  ))}
+                        {action.icon(tabAction === action.link ? 'cyan' : 'white')}
+                        <Text
+                          fontSize="14px"
+                          fontWeight={700}
+                          mt="2"
+                          color={tabAction === action.link ? 'cyan.500' : 'white'}
+                        >
+                          {action.title}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Flex>
                 </Flex>
-              </Flex>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        )}
+        <PositionAction
+          tab={tabParsed}
+          tabAction={tabActionParsed}
+          debt={debt}
+          collateralSymbol={collateralSymbol || 'USDC'}
+          price={price}
+          accountId={accountId}
+          collateralAddress={collateralAddress}
+          poolId={poolId}
+          setStep={setStep}
+          step={step}
+          availableCollateral={availableCollateral}
+          currentCollateral={currentCollateral}
+        />
+      </Flex>
+      {tabParsed !== 2 && (
+        <Button
+          variant="ghost"
+          onClick={() => {
+            queryParams.set('tab', '2');
+            setStep('close');
+            navigate({ pathname, search: queryParams.toString() });
+          }}
+        >
+          Close Position
+        </Button>
       )}
-      <PositionAction
-        tab={tabParsed}
-        tabAction={tabAction || 'repay'}
-        debt={debt}
-        collateralSymbol={collateralSymbol || 'USDC'}
-        price={price}
-        accountId={accountId}
-        collateralAddress={collateralAddress}
-        poolId={poolId}
-        setStep={setStep}
-        step={step}
-        availableCollateral={
-          accountCollateral?.filter((collateral) => collateral.symbol === collateralSymbol)[0]
-        }
-      />
     </Flex>
   );
 }

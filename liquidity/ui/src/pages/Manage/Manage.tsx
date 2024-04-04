@@ -7,11 +7,13 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
 export function Manage() {
   const { collateralSymbol, poolId, collateralAddress, accountId } = useParams();
 
   const { data: pool, isLoading: poolIsLoading } = usePool(poolId);
+  const { data: accountCollaterals } = useAccountCollateral({ accountId });
   const { data: liquidityPosition, isLoading: liquidityPositionIsLoading } = useLiquidityPosition({
     tokenAddress: collateralAddress,
     accountId,
@@ -59,7 +61,16 @@ export function Manage() {
           priceOfToDeposit={priceForCollateral}
         />
       }
-      ManagePosition={<ManagePosition debt={debt} price={priceForCollateral}></ManagePosition>}
+      ManagePosition={
+        <ManagePosition
+          debt={debt}
+          price={priceForCollateral}
+          availableCollateral={
+            accountCollaterals?.filter((collateral) => collateral.symbol === collateralSymbol)[0]
+          }
+          currentCollateral={liquidityPosition?.collateralAmount || zeroWei}
+        ></ManagePosition>
+      }
     />
   );
 }
