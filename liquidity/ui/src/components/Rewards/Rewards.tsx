@@ -62,7 +62,7 @@ export const Rewards = ({
                   py={3}
                 >
                   Active Rewards
-                  <Tooltip label="Estimated rewards based on your position size">
+                  <Tooltip label="Total rewards active for the Pool">
                     <InfoIcon ml={1} mb="1px" />
                   </Tooltip>
                 </Th>

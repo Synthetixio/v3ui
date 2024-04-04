@@ -35,7 +35,7 @@ describe('AvailableCollateral Component', () => {
       />
     );
 
-    cy.get('h2').should('contain', 'Available Collateral');
+    cy.get('h2').should('contain', 'Collateral Withdrawal');
     cy.get('[data-testid="available-collateral"]').should('exist').should('contain', '100 SNX');
   });
 
