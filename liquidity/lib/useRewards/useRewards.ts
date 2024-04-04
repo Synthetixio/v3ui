@@ -58,7 +58,7 @@ export function useRewards(
   distributors?: RewardsInterface,
   poolId?: string,
   collateralAddress?: string,
-  accountId?: string
+  accountId: string = '1'
 ) {
   const { network } = useNetwork();
   const { data: Multicall3 } = useMulticall3();
