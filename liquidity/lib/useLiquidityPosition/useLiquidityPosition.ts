@@ -64,6 +64,7 @@ export type LiquidityPosition = {
   accountCollateral: AccountCollateralType;
   usdCollateral: AccountCollateralType;
   tokenAddress: string;
+  cRatio: Wei;
 };
 
 export const useLiquidityPosition = ({

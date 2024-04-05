@@ -1,5 +1,5 @@
 import { useParams } from '@snx-v3/useParams';
-import { ManagePosition } from '../../components/ManagePosition';
+import { FirstTimeDeposit, ManagePosition } from '../../components/ManagePosition';
 import { PositionHeader } from '../../components/PositionHeader';
 import { PositionOverview } from '../../components/PositionOverview';
 import { usePool } from '@snx-v3/usePools';
@@ -8,8 +8,61 @@ import Wei from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { FirstTimeDepositBaseAndromeda } from '../../components/ManagePosition';
+import { Spinner } from '@chakra-ui/react';
 
 export function Manage() {
+  const { network } = useNetwork();
+  const { collateralSymbol, poolId, collateralAddress, accountId } = useParams();
+  const { data: liquidityPosition, isLoading: liquidityPositionIsLoading } = useLiquidityPosition({
+    tokenAddress: collateralAddress,
+    accountId,
+    poolId,
+  });
+
+  if (liquidityPositionIsLoading) return <Spinner colorScheme="cyan" />;
+
+  // first time depositing for pool for Andromeda
+  if (
+    (liquidityPosition?.debt.eq(0) &&
+      isBaseAndromeda(network?.id, network?.preset) &&
+      collateralAddress) ||
+    (!liquidityPosition && collateralAddress)
+  ) {
+    return (
+      <FirstTimeDepositBaseAndromeda
+        liquidityPosition={liquidityPosition}
+        collateralSymbol={collateralSymbol}
+        poolId={poolId}
+        collateralAddress={collateralAddress}
+        networkId={network?.id}
+        accountId={accountId}
+      />
+    );
+  }
+  // first time depositing for pool
+  if (
+    liquidityPosition?.debt.eq(0) &&
+    !isBaseAndromeda(network?.id, network?.preset) &&
+    collateralAddress
+  ) {
+    return (
+      <FirstTimeDeposit
+        liquidityPosition={liquidityPosition}
+        collateralSymbol={collateralSymbol}
+        poolId={poolId}
+        collateralAddress={collateralAddress}
+        accountId={accountId}
+        networkId={network?.id}
+      />
+    );
+  }
+  return <>not found {JSON.stringify(liquidityPosition)}</>;
+}
+
+export function ManageTest() {
   const { collateralSymbol, poolId, collateralAddress, accountId } = useParams();
 
   const { data: pool, isLoading: poolIsLoading } = usePool(poolId);
@@ -31,12 +84,13 @@ export function Manage() {
       ? collateralPrices[collateralType.tokenAddress]!
       : zeroWei;
   const debt = liquidityPosition ? liquidityPosition.debt : zeroWei;
-
+  const isFirstTimeDepositing = !liquidityPosition;
   const isLoading =
     poolIsLoading &&
     liquidityPositionIsLoading &&
     collateralTypesIsLoading &&
     collateralPricesIsLoading;
+
   return (
     <PositionHeader
       title={`${collateralSymbol} Liquditiy Position`}
@@ -68,8 +122,9 @@ export function Manage() {
           availableCollateral={
             accountCollaterals?.filter((collateral) => collateral.symbol === collateralSymbol)[0]
           }
+          isFirstTimeDepositing={isFirstTimeDepositing}
           currentCollateral={liquidityPosition?.collateralAmount || zeroWei}
-        ></ManagePosition>
+        />
       }
     />
   );

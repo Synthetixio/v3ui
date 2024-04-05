@@ -77,7 +77,7 @@ export function Pools() {
                       {type.name}
                     </Text>
                   </Flex>
-                  <Link to={`/deposit/${type.symbol}/${type.tokenAddress}/${pool.id}`}>
+                  <Link to={`/manage/${type.symbol}/${type.tokenAddress}/${pool.id}`}>
                     <Button>Deposit</Button>
                   </Link>
                 </Flex>

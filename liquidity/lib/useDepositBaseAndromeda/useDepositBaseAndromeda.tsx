@@ -63,7 +63,6 @@ export const useDepositBaseAndromeda = ({
         return;
       }
       if (collateralChange.eq(0)) return;
-
       try {
         dispatch({ type: 'prompting' });
         const walletAddress = await signer.getAddress();

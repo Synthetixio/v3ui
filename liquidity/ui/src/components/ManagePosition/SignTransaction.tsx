@@ -1,10 +1,17 @@
 import { Button, Divider, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
+import Wei from '@synthetixio/wei';
+import { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 export interface Transaction {
   loading: boolean;
   done: boolean;
   title: string;
   subline: string;
+  exec:
+    | UseMutateAsyncFunction<any>
+    | UseMutateAsyncFunction<void, Error, boolean, void>
+    | ((amount: Wei) => Promise<void>);
+  var?: Wei | boolean;
 }
 
 export function SignTransaction({
@@ -20,7 +27,15 @@ export function SignTransaction({
 }) {
   return (
     <>
-      <Flex flexDir="column" gap="6">
+      <Flex
+        flexDir="column"
+        gap="6"
+        border="1px solid"
+        borderColor="gray.900"
+        rounded="base"
+        p="6"
+        h="fit-content"
+      >
         <Heading color="gray.50" fontSize="20px">
           {header}
         </Heading>

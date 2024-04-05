@@ -8,7 +8,6 @@ export function PositionHeader({
   collateralSymbol,
   poolName,
   PositionOverview,
-  LiquidityPositionInput,
   ManagePosition,
   title,
 }: {
@@ -16,8 +15,7 @@ export function PositionHeader({
   collateralSymbol?: string;
   poolName?: string;
   PositionOverview: ReactNode;
-  LiquidityPositionInput?: ReactNode;
-  ManagePosition?: ReactNode;
+  ManagePosition: ReactNode;
   title: string;
 }) {
   return (
@@ -57,7 +55,7 @@ export function PositionHeader({
         </Flex>
         <Flex w="100%" gap="6" justifyContent="center">
           {PositionOverview}
-          {LiquidityPositionInput ? LiquidityPositionInput : ManagePosition}
+          {ManagePosition}
         </Flex>
       </Flex>
       <Heading>REWARDS</Heading>

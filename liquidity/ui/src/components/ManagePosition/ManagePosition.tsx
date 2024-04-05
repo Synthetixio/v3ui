@@ -1,422 +1,62 @@
-import {
-  Alert,
-  Button,
-  Flex,
-  Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from '@chakra-ui/react';
+import { Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { TokenIcon } from '../TokenIcon';
 import Wei from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
-import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
-import { useBorrow } from '@snx-v3/useBorrow';
-import { useRecoilState } from 'recoil';
-import { amountState } from '../../state/amount';
-import { InfoIcon } from '@chakra-ui/icons';
-import { CheckIcon } from '@snx-v3/Multistep';
-import { SignTransaction } from './SignTransaction';
-import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
+import { useState } from 'react';
 import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
-import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
-import { useRepay } from '@snx-v3/useRepay';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useWithdraw } from '@snx-v3/useWithdraw';
 import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
-import { useUndelegate } from '@snx-v3/useUndelegate';
+import { PositionAction } from './PositionActions';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { Transaction } from './SignTransaction';
 
-function ManageInputUi({
-  collateralSymbol,
-  collateral = new Wei(0),
-  price,
-  title,
-  inputSubline,
-  buttonText,
-  handleButtonClick,
-  children,
-}: {
-  collateralSymbol: string;
-  collateral?: Wei;
-  price: Wei;
-  title: string;
-  inputSubline: string;
-  buttonText: string;
-  handleButtonClick: () => void;
-  children?: ReactNode;
-}) {
-  const [amount, setAmount] = useRecoilState(amountState);
-  return (
-    <Flex flexDir="column" gap="3">
-      <Text fontSize="14px" fontWeight={700} color="white">
-        {title}
-      </Text>
-      <Flex border="1px solid" borderColor="gray.900" rounded="base" justifyContent="space-between">
-        <Flex p="2" flexDir="column" gap="1" w="100%">
-          <TokenIcon symbol={collateralSymbol} />
-          <Text fontSize="12px" display="flex" color="gray.500">
-            {inputSubline}:&nbsp;
-            {collateral.toNumber().toFixed(2)}
-            <Text
-              color="cyan.500"
-              fontSize="12px"
-              fontWeight={700}
-              ml="2"
-              cursor="pointer"
-              onClick={() => {
-                setAmount(collateral);
-                const node = document.getElementById('input-deposit') as HTMLInputElement;
-                node.value = collateral.toNumber().toFixed(2);
-              }}
-            >
-              Max
-            </Text>
-          </Text>
-        </Flex>
-        <Flex p="2" flexDir="column" alignItems="end" justifyContent="end">
-          <Input
-            id="input-deposit"
-            variant="unstyled"
-            placeholder="00.00"
-            textAlign="end"
-            fontSize="24px"
-            color="white"
-            type="number"
-            overflow="scroll"
-            fontWeight={700}
-            onChange={(e) => {
-              setAmount(new Wei(e.target.value ? e.target.value : 0, collateral.p));
-            }}
-          />
-          <Text fontSize="12px" color="gray.500">
-            ${amount.mul(price).toNumber().toFixed(2)}
-          </Text>
-        </Flex>
-      </Flex>
-      {children}
-      <Button onClick={() => handleButtonClick()}>{buttonText}</Button>
-    </Flex>
-  );
-}
-
-function PositionAction({
-  tab,
-  tabAction,
-  price,
-  collateralSymbol,
-  currentCollateral,
-  availableCollateral,
-  debt,
-  poolId,
-  collateralAddress,
-  accountId,
-  setStep,
-  step,
-  USDCBalance,
-}: {
-  tab: number;
-  tabAction: string | null;
-  price: Wei;
-  collateralSymbol: string;
-  debt: Wei;
-  poolId?: string;
-  currentCollateral: Wei;
-  availableCollateral?: AccountCollateralWithSymbol;
-  collateralAddress?: string;
-  accountId?: string;
-  step: string;
-  setStep: Dispatch<SetStateAction<string>>;
-  USDCBalance?: Wei;
-}) {
-  const { network } = useNetwork();
-  const [amount] = useRecoilState(amountState);
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { exec: mintUSD, isLoading: mintUSDIsLoading } = useBorrow({
-    accountId,
-    debtChange: amount,
-    collateralTypeAddress: collateralAddress,
-    poolId,
-  });
-
-  const { exec: repay, isLoading: repayIsLoading } = useRepay({
-    accountId,
-    poolId,
-    debtChange: amount,
-    availableUSDCollateral: USDCBalance,
-    collateralTypeAddress: collateralAddress,
-  });
-
-  const { exec: repayBaseAndromeda, isLoading: repayBaseAndromedaIsLoading } =
-    useRepayBaseAndromeda({
-      accountId,
-      poolId,
-      debtChange: amount,
-      availableUSDCollateral: USDCBalance,
-      collateralTypeAddress: collateralAddress,
-    });
-
-  const { exec: withdraw, isLoading: withdrawIsLoading } = useWithdraw({
-    accountId,
-    accountCollateral: availableCollateral,
-    collateralTypeAddress: collateralAddress,
-  });
-
-  const { exec: undelegate, isLoading: undelegateIsLoading } = useUndelegate({
-    accountId,
-    poolId,
-    collateralTypeAddress: collateralAddress,
-    collateralChange: amount.mul(-1),
-    currentCollateral,
-  });
-
-  const handleManageInputButtonClick = () => {
-    setStep('signTransaction');
-  };
-
-  const handleSignTransactionClick = async () => {
-    try {
-      if (tab === 1) {
-        if (tabAction === 'claim') {
-          await mintUSD();
-          setStep('done');
-        } else if (tabAction === 'repay') {
-          try {
-            isBase ? await repayBaseAndromeda() : await repay();
-
-            setStep('done');
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      } else if (tab === 1) {
-        if (tabAction === 'remove') {
-          await withdraw(amount.toBN());
-        }
-      } else if (tab === 2) {
-        await undelegate();
-        setStep('done');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (tab === 0) {
-    if (tabAction === 'remove')
-      if (!step) {
-        return (
-          <ManageInputUi
-            collateralSymbol={collateralSymbol}
-            collateral={isBase ? debt.abs() : availableCollateral?.availableCollateral}
-            price={price}
-            buttonText="Withdraw"
-            inputSubline="Deposited"
-            title="Remove Collateral"
-            handleButtonClick={handleManageInputButtonClick}
-          />
-        );
-      }
-    if (step === 'signTransaction') {
-      return (
-        <SignTransaction
-          actionButtonClick={handleSignTransactionClick}
-          buttonText="Execute Transaction"
-          header="Manage Debt"
-          transactions={[
-            {
-              loading: withdrawIsLoading,
-              done: false,
-              title: 'Withdraw',
-              subline:
-                'This transaction will undelegate your position that you can claim in 24hrs.',
-            },
-          ]}
-        />
-      );
-    } else if (step === 'done') {
-      return (
-        <LiquidityPositionUpdated
-          alertText="Collateral successfully Updated"
-          header="Collateral successfully Updated"
-          currentCRatio="Infinite"
-          // TODO @dev
-          debt={debt}
-          subline="Your Collateral has been updated, read more baout in the Synthetix V3 Documentation"
-        />
-      );
-    }
-  }
-  if (tab === 1) {
-    if (tabAction === 'claim') {
-      if (!step) {
-        return (
-          <ManageInputUi
-            collateralSymbol={collateralSymbol}
-            collateral={debt.abs()}
-            price={price}
-            buttonText="Claim"
-            inputSubline="Max Claim"
-            title="Claim Profit"
-            handleButtonClick={handleManageInputButtonClick}
-          >
-            {amount.gt(0) ? (
-              <Alert colorScheme="cyan" rounded="base" my="2">
-                <Flex rounded="full" mr="2">
-                  <InfoIcon w="20px" h="20px" color="cyan.500" />
-                </Flex>
-                As a security precaution, claimed assets can only be withdrawn to your wallet after
-                24 hs since your previous account activity.
-              </Alert>
-            ) : (
-              <Alert colorScheme="green" rounded="base" my="2">
-                <Flex bg="green.500" p="1" rounded="full" mr="2">
-                  <CheckIcon w="12px" h="12px" color="green.900" />
-                </Flex>
-                Positive market performance has credited your position. Claim up to $
-                {debt.abs().mul(price).toNumber().toFixed(2)} without accruing debt.
-              </Alert>
-            )}
-          </ManageInputUi>
-        );
-      }
-      if (step === 'signTransaction') {
-        return (
-          <SignTransaction
-            actionButtonClick={handleSignTransactionClick}
-            buttonText="Execute Transaction"
-            header="Manage Debt"
-            transactions={[
-              {
-                loading: repayBaseAndromedaIsLoading || repayIsLoading,
-                done: false,
-                title: 'Minting snxUSD against your credit',
-                subline:
-                  'This transaction will mint snxUSD against your position that you can claim in 24hrs.',
-              },
-            ]}
-          />
-        );
-      } else if (step === 'done') {
-        return (
-          <LiquidityPositionUpdated
-            alertText="Position successfully Opened"
-            header="Position successfully Updated"
-            currentCRatio="Infinite"
-            debt={debt}
-            subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
-          />
-        );
-      }
-    }
-    if (tabAction === 'repay') {
-      if (!step) {
-        return (
-          <ManageInputUi
-            collateralSymbol={collateralSymbol}
-            collateral={debt.abs()}
-            price={price}
-            buttonText="Repay"
-            inputSubline="Debt"
-            title="Repay"
-            handleButtonClick={handleManageInputButtonClick}
-          />
-        );
-      }
-      if (step === 'signTransaction') {
-        return (
-          <SignTransaction
-            actionButtonClick={handleSignTransactionClick}
-            buttonText="Execute Transaction"
-            header="Manage Debt"
-            transactions={[
-              {
-                loading: mintUSDIsLoading,
-                done: false,
-                title: 'Repay your debt',
-                subline: 'This will eventually swap your collateral to sUSDC and repay the debt.',
-              },
-            ]}
-          />
-        );
-      } else if (step === 'done') {
-        return (
-          <LiquidityPositionUpdated
-            alertText="Position successfully Opened"
-            header="Position successfully Updated"
-            currentCRatio="Infinite"
-            debt={debt}
-            subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
-          />
-        );
-      }
-    }
-  }
-  if (tab === 2) {
-    if (step === 'close') {
-      return (
-        <ManageInputUi
-          collateralSymbol={collateralSymbol}
-          collateral={currentCollateral}
-          price={price}
-          buttonText="Close Position"
-          inputSubline="Deposited"
-          title="Remove Collateral"
-          handleButtonClick={handleManageInputButtonClick}
-        />
-      );
-    } else if (step === 'signTransaction') {
-      return (
-        <SignTransaction
-          actionButtonClick={handleSignTransactionClick}
-          buttonText="Execute Transaction"
-          header="Manage Debt"
-          transactions={[
-            {
-              loading: undelegateIsLoading,
-              done: false,
-              title: 'Undelegate Collateral',
-              subline: 'This will remove the collateral from the pool.',
-            },
-          ]}
-        />
-      );
-    } else if (step === 'done') {
-      return (
-        <LiquidityPositionUpdated
-          alertText="Position successfully Opened"
-          header="Position successfully Updated"
-          currentCRatio="Infinite"
-          debt={debt}
-          subline="Your debt has been updated, read more baout in the Synthetix V3 Documentation"
-        />
-      );
-    }
-  }
-}
+export type Step =
+  | 'remove'
+  | 'signTransaction'
+  | 'done'
+  | 'firstDeposit'
+  | 'close'
+  | 'repay'
+  | 'createAccount'
+  | 'accountCreated';
 
 export function ManagePosition({
-  debt,
-  price,
-  currentCollateral,
+  liquidityPostion,
+  walletBalance,
+  accountBalance,
   availableCollateral,
+  transactions,
 }: {
-  debt: Wei;
-  price: Wei;
-  currentCollateral: Wei;
+  liquidityPostion?: LiquidityPosition;
+  walletBalance: Wei;
+  accountBalance: Wei;
   availableCollateral?: AccountCollateralWithSymbol;
+  transactions: Transaction[];
 }) {
-  const [step, setStep] = useState('');
+  const [step, setStep] = useState<Step | undefined>(undefined);
   const [queryParams] = useSearchParams();
-  const { collateralSymbol, tab, tabAction, collateralAddress, poolId, accountId } = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { collateralSymbol, tab, tabAction, collateralAddress, poolId, accountId } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
-  const tabActionParsed = tabAction || 'repay';
+  const tabActionParsed = tabAction || 'deposit';
+  const collateralSymbolParsed = collateralSymbol || '?';
+
+  if (liquidityPostion?.debt.eq(0) || !liquidityPostion) {
+    return (
+      <PositionAction
+        collateralSymbol={collateralSymbolParsed}
+        liquidityPostion={liquidityPostion}
+        setStep={setStep}
+        step={step}
+        tab={tabParsed}
+        tabAction={tabActionParsed}
+        accountId={accountId}
+        walletBalance={walletBalance}
+        accountBalance={accountBalance}
+        transactions={transactions}
+      />
+    );
+  }
 
   return (
     <Flex flexDir="column" alignItems="center" gap="4">
@@ -541,16 +181,16 @@ export function ManagePosition({
         <PositionAction
           tab={tabParsed}
           tabAction={tabActionParsed}
-          debt={debt}
+          debt={liquidityPostion?.debt || new Wei(0)}
           collateralSymbol={collateralSymbol || 'USDC'}
-          price={price}
+          price={liquidityPostion?.collateralPrice || new Wei(0)}
           accountId={accountId}
           collateralAddress={collateralAddress}
           poolId={poolId}
           setStep={setStep}
           step={step}
           availableCollateral={availableCollateral}
-          currentCollateral={currentCollateral}
+          currentCollateral={liquidityPostion?.collateralAmount || new Wei(0)}
         />
       </Flex>
       {tabParsed !== 2 && (
