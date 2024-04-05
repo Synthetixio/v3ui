@@ -44,9 +44,8 @@ export function Manage() {
   }
   // first time depositing for pool
   if (
-    liquidityPosition?.debt.eq(0) &&
-    !isBaseAndromeda(network?.id, network?.preset) &&
-    collateralAddress
+    (liquidityPosition?.debt.eq(0) && collateralAddress) ||
+    (!liquidityPosition && collateralAddress)
   ) {
     return (
       <FirstTimeDeposit

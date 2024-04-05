@@ -96,7 +96,7 @@ export function FirstTimeDepositBaseAndromeda({
               title: `Approve ${collateralSymbol} transfer`,
               subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
               exec: approve,
-              var: false,
+              arg: false,
             },
             {
               done: false,

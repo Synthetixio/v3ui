@@ -193,8 +193,8 @@ export function PositionAction({
           actionButtonClick={async () => {
             for (let i = 0; i <= transactions.length; i++) {
               if (!transactions[i].done) {
-                if (typeof transactions[i].var !== 'undefined') {
-                  await transactions[i].exec(transactions[i].var);
+                if (typeof transactions[i].arg !== 'undefined') {
+                  await transactions[i].exec(transactions[i].arg);
                 } else {
                   await transactions[i].exec();
                 }

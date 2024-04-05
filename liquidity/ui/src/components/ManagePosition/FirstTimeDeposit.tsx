@@ -39,7 +39,6 @@ export function FirstTimeDeposit({
   const { data: userTokenBalances, isLoading: userTokenBalancesIsLoading } = useTokenBalances([
     collateralAddress,
   ]);
-
   const { data: accountCollateral, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
   });
@@ -53,9 +52,10 @@ export function FirstTimeDeposit({
     contractAddress: getUSDCAddress(networkId),
     spender: CoreProxy?.address,
   });
-  const { exec: wrapEth, isLoading: wrapEthIsLoading, ethBalance } = useWrapEth();
+  const { exec: wrapEth, isLoading: wrapEthIsLoading, ethBalance, wethBalance } = useWrapEth();
   const walletBalance =
-    userTokenBalances?.reduce((cur, prev) => cur.add(prev), ZEROWEI).add(ethBalance) || ZEROWEI;
+    userTokenBalances?.reduce((cur, prev) => cur.add(prev), ZEROWEI).add(ethBalance || ZEROWEI) ||
+    ZEROWEI;
   const accountBalance =
     accountCollateral?.reduce((cur, prev) => {
       if (prev.displaySymbol === collateralSymbol) return cur.add(prev.totalDeposited);
@@ -78,7 +78,7 @@ export function FirstTimeDeposit({
     collateralTypesIsLoading &&
     userTokenBalancesIsLoading &&
     accountCollateralIsLoading;
-
+  // there is a bug when wrapping weth but the allowance query doenst get updated @TODO dev
   return (
     <PositionHeader
       title={'Open ' + collateralSymbol + ' Liquidity Position'}
@@ -92,12 +92,12 @@ export function FirstTimeDeposit({
           accountBalance={accountBalance}
           transactions={[
             {
-              done: false,
+              done: amountToDeposit.lte(wethBalance || ZEROWEI),
               loading: wrapEthIsLoading,
               title: 'Wrap your Eth',
               subline: 'Wrap your Eth so Synthetix can use it.',
               exec: wrapEth,
-              var: amountToDeposit,
+              arg: amountToDeposit,
             },
             {
               done: !requireApproval,
@@ -105,7 +105,7 @@ export function FirstTimeDeposit({
               title: `Approve ${collateralSymbol} transfer`,
               subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
               exec: approve,
-              var: false,
+              arg: false,
             },
             {
               done: false,

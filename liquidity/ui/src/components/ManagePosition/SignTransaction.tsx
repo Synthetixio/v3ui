@@ -1,17 +1,13 @@
 import { Button, Divider, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 import Wei from '@synthetixio/wei';
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 export interface Transaction {
   loading: boolean;
   done: boolean;
   title: string;
   subline: string;
-  exec:
-    | UseMutateAsyncFunction<any>
-    | UseMutateAsyncFunction<void, Error, boolean, void>
-    | ((amount: Wei) => Promise<void>);
-  var?: Wei | boolean;
+  exec: (arg?: any) => Promise<any>;
+  arg?: Wei | boolean;
 }
 
 export function SignTransaction({
