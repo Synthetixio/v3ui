@@ -53,7 +53,15 @@ function DepositUi({
               : 'Deposit your collateral to borrow snxUSD and '}
             contribute to the network collateral. If you have never staked on Synthetix before,
             please review{' '}
-            <Link color="cyan.500" href="https://docs.synthetix.io/" target="_blank">
+            <Link
+              color="cyan.500"
+              href={
+                isBaseAndromeda(network?.id, network?.preset)
+                  ? 'https://docs.synthetix.io/v/v3/for-liquidity-providers/base-lp-guide'
+                  : 'https://docs.synthetix.io/'
+              }
+              target="_blank"
+            >
               the documentation
             </Link>
             .

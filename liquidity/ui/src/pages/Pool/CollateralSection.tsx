@@ -99,7 +99,7 @@ export const CollateralSectionUi: FC<{
             <Skeleton mt={1} w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white">
-              {`${apr?.toFixed(2) || '-'}%`}
+              {`${apr ? apr?.toFixed(2) : '-'}%`}
             </Text>
           )}
         </Flex>

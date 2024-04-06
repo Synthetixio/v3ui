@@ -67,7 +67,11 @@ export const ManageUi: FC<{
         <Link
           fontWeight="600"
           color="cyan.500"
-          href="https://docs.synthetix.io/v/v3/for-liquidity-providers/delegating-collateral"
+          href={
+            isBaseAndromeda(network?.id, network?.preset)
+              ? 'https://docs.synthetix.io/v/v3/for-liquidity-providers/base-lp-guide'
+              : 'https://docs.synthetix.io/v/v3/for-liquidity-providers/delegating-collateral'
+          }
           target="_blank"
         >
           quick introduction
