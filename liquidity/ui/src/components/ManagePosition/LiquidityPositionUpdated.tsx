@@ -1,8 +1,9 @@
-import { Alert, Button, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
+import { Alert, Button, Divider, Flex, Heading, Text } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { CheckIcon } from '@snx-v3/Multistep';
 import Wei from '@synthetixio/wei';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export function LiquidityPositionUpdated({
   debt,
@@ -10,13 +11,23 @@ export function LiquidityPositionUpdated({
   header,
   subline,
   alertText,
+  collateralSymbol,
+  poolId,
+  collateralAddress,
+  isBase,
 }: {
   debt: Wei;
   currentCRatio: string;
   header?: string;
   subline: string;
   alertText: string;
+  collateralSymbol: string;
+  poolId: string;
+  collateralAddress: string;
+  isBase: boolean;
 }) {
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
   const [amountToDeposit] = useRecoilState(amountState);
 
   return (
@@ -53,9 +64,32 @@ export function LiquidityPositionUpdated({
           </Text>
         </Flex>
       </Flex>
-      <Link href="/">
-        <Button w="100%">Continue</Button>
-      </Link>
+
+      <Button
+        w="100%"
+        onClick={() => {
+          if (debt.lt(0)) {
+            if (isBase) {
+              queryParams.set('tabAction', 'claim');
+            } else {
+              queryParams.set('tabAction', 'repay');
+            }
+          } else {
+            if (isBase) {
+              queryParams.set('tabAction', 'repay');
+            } else {
+              queryParams.set('tabAction', 'borrow');
+            }
+          }
+          queryParams.set('tab', '1');
+          navigate({
+            pathname: `manage/${collateralSymbol}/${collateralAddress}/${poolId}`,
+            search: queryParams.toString(),
+          });
+        }}
+      >
+        Continue
+      </Button>
     </Flex>
   );
 }

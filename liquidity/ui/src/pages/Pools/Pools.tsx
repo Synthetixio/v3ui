@@ -2,13 +2,18 @@ import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
-import { Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 
 export function Pools() {
   const { data: pools } = usePools();
   const { data: collateralTypes } = useCollateralTypes();
-
+  const navigate = useNavigate();
+  const [queryParams] = useSearchParams();
+  const { data: liquidityPositon } = useLiquidityPositions({
+    accountId: queryParams.get('accountId') ?? undefined,
+  });
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
@@ -77,9 +82,26 @@ export function Pools() {
                       {type.name}
                     </Text>
                   </Flex>
-                  <Link to={`/manage/${type.symbol}/${type.tokenAddress}/${pool.id}`}>
-                    <Button>Deposit</Button>
-                  </Link>
+
+                  <Button
+                    onClick={() => {
+                      if (
+                        liquidityPositon &&
+                        liquidityPositon[`${pool.id}-${type.displaySymbol}`]
+                      ) {
+                        queryParams.set('tabAction', 'deposit');
+                      } else {
+                        queryParams.set('tabAction', 'firstDeposit');
+                      }
+                      queryParams.set('tab', '0');
+                      navigate({
+                        pathname: `/manage/${type.symbol}/${type.tokenAddress}/${pool.id}`,
+                        search: queryParams.toString(),
+                      });
+                    }}
+                  >
+                    Deposit
+                  </Button>
                 </Flex>
               ))}
             </Flex>

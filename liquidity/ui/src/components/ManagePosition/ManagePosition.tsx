@@ -4,13 +4,13 @@ import Wei from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
 import { useState } from 'react';
 import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
-import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 import { PositionAction } from './PositionActions';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Transaction } from './SignTransaction';
 
 export type Step =
   | 'remove'
+  | 'deposit'
   | 'signTransaction'
   | 'done'
   | 'firstDeposit'
@@ -23,20 +23,20 @@ export function ManagePosition({
   liquidityPostion,
   walletBalance,
   accountBalance,
-  availableCollateral,
   transactions,
+  isBase,
 }: {
   liquidityPostion?: LiquidityPosition;
-  walletBalance: Wei;
-  accountBalance: Wei;
-  availableCollateral?: AccountCollateralWithSymbol;
+  walletBalance?: Wei;
+  accountBalance?: Wei;
   transactions: Transaction[];
+  isBase: boolean;
 }) {
   const [step, setStep] = useState<Step | undefined>(undefined);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { collateralSymbol, tab, tabAction, collateralAddress, poolId, accountId } = useParams();
+  const { collateralSymbol, tab, tabAction, accountId } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
@@ -78,6 +78,7 @@ export function ManagePosition({
                 fontWeight={700}
                 onClick={() => {
                   queryParams.set('tab', '0');
+                  queryParams.set('tabAction', 'deposit');
                   navigate({
                     pathname,
                     search: queryParams.toString(),
@@ -91,6 +92,7 @@ export function ManagePosition({
                 fontWeight={700}
                 onClick={() => {
                   queryParams.set('tab', '1');
+                  queryParams.set('tabAction', 'repay');
                   navigate({
                     pathname,
                     search: queryParams.toString(),
@@ -141,7 +143,10 @@ export function ManagePosition({
               <TabPanel px="0">
                 <Flex flexDir="column">
                   <Flex justifyContent="space-between">
-                    {DEBTACTIONS.map((action) => (
+                    {DEBTACTIONS.filter((action) => {
+                      if (action.title === 'Borrow' && isBase) return false;
+                      return true;
+                    }).map((action) => (
                       <Flex
                         w="135px"
                         h="84px"
@@ -179,18 +184,16 @@ export function ManagePosition({
           </Tabs>
         )}
         <PositionAction
-          tab={tabParsed}
-          tabAction={tabActionParsed}
-          debt={liquidityPostion?.debt || new Wei(0)}
-          collateralSymbol={collateralSymbol || 'USDC'}
-          price={liquidityPostion?.collateralPrice || new Wei(0)}
-          accountId={accountId}
-          collateralAddress={collateralAddress}
-          poolId={poolId}
+          collateralSymbol={collateralSymbolParsed}
+          liquidityPostion={liquidityPostion}
           setStep={setStep}
           step={step}
-          availableCollateral={availableCollateral}
-          currentCollateral={liquidityPostion?.collateralAmount || new Wei(0)}
+          tab={tabParsed}
+          tabAction={tabActionParsed}
+          accountId={accountId}
+          walletBalance={walletBalance}
+          accountBalance={accountBalance}
+          transactions={transactions}
         />
       </Flex>
       {tabParsed !== 2 && (

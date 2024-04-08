@@ -1,29 +1,29 @@
-import { usePool } from '@snx-v3/usePools';
-import { PositionOverview } from '../../components/PositionOverview';
-import Wei from '@synthetixio/wei';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { constants } from 'ethers';
-import { PositionHeader } from '../../components/PositionHeader';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { PositionHeader } from '../PositionHeader';
+import { PositionOverview } from '../PositionOverview';
 import { ManagePosition } from './ManagePosition';
 import { ZEROWEI } from '../../utils/constants';
-import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { usePool } from '@snx-v3/usePools';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
-import { useApprove } from '@snx-v3/useApprove';
-import { useDeposit } from '@snx-v3/useDeposit';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useTokenBalances } from '@snx-v3/useTokenBalance';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
+import { useDeposit } from '@snx-v3/useDeposit';
+import Wei from '@synthetixio/wei';
+import { constants } from 'ethers';
 
-export function FirstTimeDeposit({
+export function Deposit({
   liquidityPosition,
   poolId,
-  collateralSymbol,
   collateralAddress,
+  collateralSymbol,
   accountId,
 }: {
-  liquidityPosition?: LiquidityPosition;
+  liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress: string;
@@ -75,6 +75,7 @@ export function FirstTimeDeposit({
     collateralTypesIsLoading &&
     userTokenBalancesIsLoading &&
     accountCollateralIsLoading;
+  // there is a bug when wrapping weth but the allowance query doenst get updated @TODO dev
 
   const baseTransactions = [
     {
@@ -107,9 +108,10 @@ export function FirstTimeDeposit({
           ...baseTransactions,
         ]
       : baseTransactions;
+
   return (
     <PositionHeader
-      title={'Open ' + collateralSymbol + ' Liquidity Position'}
+      title={collateralSymbol + ' Liquidity Position'}
       isLoading={isLoading}
       collateralSymbol={collateralSymbol}
       poolName={pool?.name}
@@ -118,8 +120,8 @@ export function FirstTimeDeposit({
           liquidityPostion={liquidityPosition}
           walletBalance={walletBalance}
           accountBalance={accountBalance}
-          transactions={transactions}
           isBase={false}
+          transactions={transactions}
         />
       }
       PositionOverview={
@@ -131,7 +133,7 @@ export function FirstTimeDeposit({
           }
           poolPnl="$00.00"
           currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
-          cRatio={amountToDeposit.eq(0) ? 0 : maxUInt.toNumber()}
+          cRatio={amountToDeposit.eq(0) ? liquidityPosition.cRatio.toNumber() : maxUInt.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

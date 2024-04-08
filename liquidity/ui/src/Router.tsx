@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import { Spinner } from '@chakra-ui/react';
 import { DefaultLayout } from './layouts/Default';
 import { Home } from './pages/Home';
-import { DepositBaseAndromeda, Deposit } from './pages/Deposit';
 import { Pool } from './pages/Pool';
 import { Playground } from './pages/Playground';
 import { NotFoundPage } from './pages/404';

@@ -88,6 +88,7 @@ export function FirstTimeDepositBaseAndromeda({
         <ManagePosition
           liquidityPostion={liquidityPosition}
           walletBalance={walletBalance}
+          isBase={true}
           accountBalance={accountBalance}
           transactions={[
             {
