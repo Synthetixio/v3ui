@@ -54,6 +54,10 @@ export const DepositUi: FC<{
     return tokenBalance.add(ethBalance);
   }, [symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
 
+  const maxAmount = useMemo(() => {
+    return combinedTokenBalance?.add(accountCollateral.availableCollateral.toString());
+  }, [accountCollateral.availableCollateral, combinedTokenBalance]);
+
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
@@ -73,14 +77,14 @@ export const DepositUi: FC<{
               <NumberInput
                 InputProps={{
                   'data-testid': 'deposit amount input',
-                  'data-max': combinedTokenBalance?.toString(),
+                  'data-max': maxAmount?.toString(),
                 }}
                 value={collateralChange}
                 onChange={(value) => {
                   setActiveBadge(0);
                   setCollateralChange(value);
                 }}
-                max={combinedTokenBalance}
+                max={maxAmount}
               />
               <Flex
                 flexDirection="column"
@@ -133,9 +137,9 @@ export const DepositUi: FC<{
           </Flex>
         </Flex>
         <PercentBadges
-          disabled={combinedTokenBalance ? combinedTokenBalance.eq(0) : false}
+          disabled={maxAmount ? maxAmount.eq(0) : false}
           onBadgePress={(badgeNum) => {
-            if (!combinedTokenBalance) {
+            if (!maxAmount) {
               return;
             }
             if (activeBadge === badgeNum) {
@@ -144,7 +148,7 @@ export const DepositUi: FC<{
               return;
             }
             setActiveBadge(badgeNum);
-            setCollateralChange(combinedTokenBalance.mul(badgeNum));
+            setCollateralChange(maxAmount.mul(badgeNum));
           }}
           activeBadge={activeBadge}
         />
