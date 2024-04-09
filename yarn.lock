@@ -6363,6 +6363,7 @@ __metadata:
     "@snx-v3/HomeLink": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
+    "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/etherscanLink": "workspace:*"
     "@snx-v3/format": "workspace:*"
@@ -6377,6 +6378,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useBorrow": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
+    "@snx-v3/useClosePosition": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -6654,6 +6656,31 @@ __metadata:
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useClosePosition@workspace:*, @snx-v3/useClosePosition@workspace:liquidity/lib/useClosePosition":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useClosePosition@workspace:liquidity/lib/useClosePosition"
+  dependencies:
+    "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
+    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"

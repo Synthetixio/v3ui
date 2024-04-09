@@ -36,7 +36,7 @@ export function ManagePosition({
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { collateralSymbol, tab, tabAction, accountId } = useParams();
+  const { collateralSymbol, tab, tabAction, accountId, poolId } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
@@ -54,9 +54,27 @@ export function ManagePosition({
         walletBalance={walletBalance}
         accountBalance={accountBalance}
         transactions={transactions}
+        poolId={poolId}
       />
     );
   }
+
+  if (tabAction === 'close')
+    return (
+      <PositionAction
+        collateralSymbol={collateralSymbolParsed}
+        liquidityPostion={liquidityPostion}
+        setStep={setStep}
+        step={step}
+        tab={tabParsed}
+        tabAction={tabActionParsed}
+        accountId={accountId}
+        walletBalance={walletBalance}
+        accountBalance={accountBalance}
+        transactions={transactions}
+        poolId={poolId}
+      />
+    );
 
   return (
     <Flex flexDir="column" alignItems="center" gap="4">
@@ -196,12 +214,12 @@ export function ManagePosition({
           transactions={transactions}
         />
       </Flex>
-      {tabParsed !== 2 && (
+      {tabAction !== 'close' && (
         <Button
           variant="ghost"
           onClick={() => {
-            queryParams.set('tab', '2');
-            setStep('close');
+            queryParams.set('tabAction', 'close');
+            setStep(undefined);
             navigate({ pathname, search: queryParams.toString() });
           }}
         >

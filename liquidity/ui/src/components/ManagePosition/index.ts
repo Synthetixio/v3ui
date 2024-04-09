@@ -10,3 +10,4 @@ export * from './Repay';
 export * from './Claim';
 export * from './ClaimBaseAndromeda';
 export * from './Borrow';
+export * from './ClosePosition';

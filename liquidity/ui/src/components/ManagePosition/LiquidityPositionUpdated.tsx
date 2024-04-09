@@ -29,9 +29,19 @@ export function LiquidityPositionUpdated({
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const [amountToDeposit] = useRecoilState(amountState);
+  const isFirstTimeDeposit = debt.eq(0);
 
   return (
-    <Flex flexDir="column" gap="6">
+    <Flex
+      flexDir="column"
+      gap="6"
+      border={isFirstTimeDeposit ? '1px solid' : ''}
+      borderColor="gray.900"
+      p={isFirstTimeDeposit ? '6' : ''}
+      bg={isFirstTimeDeposit ? 'navy.700' : ''}
+      rounded="base"
+      height="fit-content"
+    >
       <Heading color="gray.50" fontSize="20px">
         {header}
       </Heading>
@@ -83,7 +93,7 @@ export function LiquidityPositionUpdated({
           }
           queryParams.set('tab', '1');
           navigate({
-            pathname: `manage/${collateralSymbol}/${collateralAddress}/${poolId}`,
+            pathname: `/manage/${collateralSymbol}/${collateralAddress}/${poolId}`,
             search: queryParams.toString(),
           });
         }}

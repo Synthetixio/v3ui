@@ -1,5 +1,5 @@
 import Wei from '@synthetixio/wei';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { Button, Flex, Input, Text, Tooltip } from '@chakra-ui/react';
@@ -15,6 +15,7 @@ export function ManageInputUi({
   handleButtonClick,
   children,
   tooltip,
+  inputIsDisabled = false,
 }: {
   collateralSymbol: string;
   collateral?: Wei;
@@ -23,16 +24,30 @@ export function ManageInputUi({
   inputSubline: string;
   buttonText: string;
   handleButtonClick: () => void;
+  inputIsDisabled?: boolean;
   tooltip?: ReactNode;
   children?: ReactNode;
 }) {
   const [amount, setAmount] = useRecoilState(amountState);
+  useEffect(() => {
+    if (inputIsDisabled) {
+      setAmount(collateral);
+      const node = document.getElementById('input-deposit') as HTMLInputElement;
+      node.value = collateral.toNumber().toFixed(2);
+    }
+  }, [inputIsDisabled, setAmount, collateral]);
   return (
     <Flex flexDir="column" gap="3">
       <Text fontSize="14px" fontWeight={700} color="white">
         {title}
       </Text>
-      <Flex border="1px solid" borderColor="gray.900" rounded="base" justifyContent="space-between">
+      <Flex
+        border="1px solid"
+        borderColor="gray.900"
+        rounded="base"
+        justifyContent="space-between"
+        bg="navy.900"
+      >
         <Flex p="2" flexDir="column" gap="1" w="100%">
           <TokenIcon symbol={collateralSymbol} />
           <Text fontSize="12px" display="flex" color="gray.500">
@@ -40,15 +55,17 @@ export function ManageInputUi({
             :&nbsp;
             {collateral.toNumber().toFixed(2)}
             <Text
-              color="cyan.500"
+              color={inputIsDisabled ? 'gray.900' : 'cyan.500'}
               fontSize="12px"
               fontWeight={700}
               ml="2"
-              cursor="pointer"
+              cursor={!inputIsDisabled ? 'pointer' : 'not-allowed'}
               onClick={() => {
-                setAmount(collateral);
-                const node = document.getElementById('input-deposit') as HTMLInputElement;
-                node.value = collateral.toNumber().toFixed(2);
+                if (!inputIsDisabled) {
+                  setAmount(collateral);
+                  const node = document.getElementById('input-deposit') as HTMLInputElement;
+                  node.value = collateral.toNumber().toFixed(2);
+                }
               }}
             >
               Max
@@ -59,13 +76,14 @@ export function ManageInputUi({
           <Input
             id="input-deposit"
             variant="unstyled"
-            placeholder="00.00"
+            placeholder="0.00"
             textAlign="end"
             fontSize="24px"
             color="white"
             type="number"
             overflow="scroll"
             fontWeight={700}
+            isDisabled={inputIsDisabled}
             onChange={(e) => {
               setAmount(new Wei(e.target.value ? e.target.value : 0, collateral.p));
             }}

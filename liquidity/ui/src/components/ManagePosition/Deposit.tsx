@@ -2,7 +2,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { PositionHeader } from '../PositionHeader';
 import { PositionOverview } from '../PositionOverview';
 import { ManagePosition } from './ManagePosition';
-import { ZEROWEI } from '../../utils/constants';
+import { MAXUINT, ZEROWEI } from '../../utils/constants';
 import { usePool } from '@snx-v3/usePools';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
@@ -13,8 +13,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { useDeposit } from '@snx-v3/useDeposit';
-import Wei from '@synthetixio/wei';
-import { constants } from 'ethers';
+import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 
 export function Deposit({
   liquidityPosition,
@@ -22,20 +21,26 @@ export function Deposit({
   collateralAddress,
   collateralSymbol,
   accountId,
+  networkId,
+  isBase,
 }: {
   liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress: string;
   accountId?: string;
+  isBase: boolean;
+  networkId?: number;
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
+  const collateralAddresses = isBase
+    ? [collateralAddress, getUSDCAddress(networkId)]
+    : [collateralAddress];
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
-  const { data: userTokenBalances, isLoading: userTokenBalancesIsLoading } = useTokenBalances([
-    collateralAddress,
-  ]);
+  const { data: userTokenBalances, isLoading: userTokenBalancesIsLoading } =
+    useTokenBalances(collateralAddresses);
   const { data: accountCollateral, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
   });
@@ -58,7 +63,6 @@ export function Deposit({
       if (prev.displaySymbol === collateralSymbol) return cur.add(prev.totalDeposited);
       return cur;
     }, ZEROWEI) || ZEROWEI;
-  const maxUInt = new Wei(constants.MaxUint256);
 
   const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } = useDeposit({
     collateralChange: amountToDeposit,
@@ -127,13 +131,13 @@ export function Deposit({
       PositionOverview={
         <PositionOverview
           collateralType={collateralSymbol || '?'}
-          debt={liquidityPosition?.debt.mul(liquidityPosition?.collateralPrice) || ZEROWEI}
+          debt={liquidityPosition?.debt || ZEROWEI}
           collateralValue={
             liquidityPosition ? liquidityPosition.collateralValue.toNumber().toFixed(2) : '0.00'
           }
-          poolPnl="$00.00"
+          poolPnl="$0.00"
           currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
-          cRatio={amountToDeposit.eq(0) ? liquidityPosition.cRatio.toNumber() : maxUInt.toNumber()}
+          cRatio={isBase ? MAXUINT.toNumber() : liquidityPosition.cRatio.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

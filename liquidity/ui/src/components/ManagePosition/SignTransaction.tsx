@@ -90,18 +90,17 @@ export function SignTransaction({
     );
   }
   return (
-    <>
+    <Flex flexDir="column" gap="6" rounded="base" p="6" h="fit-content">
       {transactions.map((transaction, index) => (
         <Flex
           key={transaction.title.concat(index.toString())}
-          bg="rgba(0,0,0,0.3)"
-          border="1px solid"
-          borderColor={transaction.done ? 'green.500' : 'gray.900'}
           rounded="base"
           px="3"
           py="4"
           gap="2"
           alignItems="center"
+          border="1px solid"
+          borderColor="gray.900"
           mb="4"
         >
           <Flex
@@ -138,6 +137,6 @@ export function SignTransaction({
           {buttonText}
         </Button>
       )}
-    </>
+    </Flex>
   );
 }

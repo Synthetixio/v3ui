@@ -1,6 +1,8 @@
 import { TriangleDownIcon, TriangleUpIcon, InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { FC } from 'react';
+import { useRecoilState } from 'recoil';
+import { amountState } from '../../state/amount';
 
 export const getHealthVariant = ({
   targetCratioPercentage,
@@ -80,6 +82,7 @@ export const CRatioProgressBarUi: FC<{
   targetThreshold,
   isLoading,
 }) => {
+  const [amount] = useRecoilState(amountState);
   const maxRatioShown = Math.min(
     Math.max(targetCratioPercentage, currentCRatioPercentage) * 1.1,
     // If the c-ratio is bigger than 2.5x the target ratio the target and liquidation labels will overlap due to the big scale difference.
@@ -114,7 +117,6 @@ export const CRatioProgressBarUi: FC<{
       : newCratioPercentageWithDefault;
 
   const ratioIsMaxUInt = (ratio: number) => ratio > Number.MAX_SAFE_INTEGER;
-
   return (
     <Flex flexDir="column" gap="2">
       <Text color="gray.500">
@@ -130,16 +132,18 @@ export const CRatioProgressBarUi: FC<{
       ) : (
         <Flex gap="1" alignItems="center">
           <Text color="gray.500" fontWeight={800} fontSize="20px">
-            {ratioIsMaxUInt(currentCRatioPercentage) ? 'Infinite' : 'N/A'} &rarr;
+            {ratioIsMaxUInt(currentCRatioPercentage)
+              ? 'Infinite'
+              : currentCRatioPercentage.toFixed(2)}{' '}
           </Text>
-          {ratioIsMaxUInt(currentCRatioPercentage) ? (
+          {ratioIsMaxUInt(currentCRatioPercentage) && amount.gt(0) ? (
             <>
               <Text color="white" fontWeight={800} fontSize="20px">
-                Infinite %
+                &rarr; Infinite %
               </Text>
             </>
           ) : (
-            currentCRatioPercentage
+            amount.gt(0) && <>&rarr; {newCratioPercentage}</>
           )}
         </Flex>
       )}

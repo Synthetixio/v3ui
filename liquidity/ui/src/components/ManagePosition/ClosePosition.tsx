@@ -4,41 +4,62 @@ import { PositionOverview } from '../PositionOverview';
 import { ManagePosition } from './ManagePosition';
 import { MAXUINT, ZEROWEI } from '../../utils/constants';
 import { usePool } from '@snx-v3/usePools';
-import { useRecoilState } from 'recoil';
-import { amountState } from '../../state/amount';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useClosePosition } from '@snx-v3/useClosePosition';
+import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { Transaction } from './SignTransaction';
 
-export function RepayBaseAndromeda({
+export function ClosePosition({
   liquidityPosition,
-  poolId,
-  collateralAddress,
+  poolId = '',
+  collateralAddress = '',
   collateralSymbol,
   accountId,
+  isBase,
   networkId,
 }: {
   liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
-  collateralAddress: string;
+  collateralAddress?: string;
   accountId?: string;
   networkId?: number;
+  isBase: boolean;
 }) {
-  const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
-  const { data: USDCBalance } = useTokenBalance(getUSDCAddress(networkId));
-  const { exec, isLoading: repayIsLoading } = useRepayBaseAndromeda({
-    debtChange: amountToDeposit,
+  const collateralAddresses = isBase
+    ? [collateralAddress, getUSDCAddress(networkId)]
+    : [collateralAddress];
+  const { data: userTokenBalances } = useTokenBalances(collateralAddresses);
+  const { data: accountBalances } = useAccountCollateral({ accountId });
+
+  const accountCollateral = userTokenBalances
+    ?.concat(accountBalances ? accountBalances?.map((balance) => balance.totalDeposited) : ZEROWEI)
+    .reduce((cur, prev) => cur.add(prev), ZEROWEI);
+
+  const { exec, isLoading: closePositionIsLoading } = useClosePosition({
+    poolId: poolId,
     accountId,
-    availableUSDCollateral: USDCBalance,
+    liquidityPosition,
+    accountCollateral,
     collateralTypeAddress: collateralAddress,
-    poolId,
   });
+
   const isLoading = isPoolLoading && collateralTypesIsLoading;
+
+  const baseTransaction: Transaction[] = [
+    {
+      done: false,
+      loading: closePositionIsLoading,
+      exec,
+      subline: 'lets see',
+      title: 'close position',
+    },
+  ];
 
   return (
     <PositionHeader
@@ -48,30 +69,26 @@ export function RepayBaseAndromeda({
       poolName={pool?.name}
       ManagePosition={
         <ManagePosition
-          isBase={true}
           liquidityPostion={liquidityPosition}
-          transactions={[
-            {
-              done: false,
-              loading: repayIsLoading,
-              exec,
-              subline: 'Repay Debt',
-              title: 'Repay Debt',
-            },
-          ]}
+          isBase={false}
+          transactions={baseTransaction}
         />
       }
       PositionOverview={
         <PositionOverview
           collateralType={collateralSymbol || '?'}
-          debt={liquidityPosition?.debt.mul(liquidityPosition?.collateralPrice) || ZEROWEI}
+          debt={
+            isBase
+              ? liquidityPosition.debt.mul(liquidityPosition.collateralPrice)
+              : liquidityPosition.debt
+          }
+          arithmeticOperations="sub"
           collateralValue={
             liquidityPosition ? liquidityPosition.collateralValue.toNumber().toFixed(2) : '0.00'
           }
-          poolPnl="$0.00"
-          arithmeticOperations="none"
+          poolPnl="$00.00"
           currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
-          cRatio={MAXUINT.toNumber()}
+          cRatio={isBase ? MAXUINT.toNumber() : liquidityPosition.cRatio.toNumber()}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

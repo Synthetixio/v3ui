@@ -1,8 +1,6 @@
 import { usePool } from '@snx-v3/usePools';
 import { PositionOverview } from '../../components/PositionOverview';
-import Wei from '@synthetixio/wei';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { constants } from 'ethers';
 import { PositionHeader } from '../../components/PositionHeader';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ManagePosition } from './ManagePosition';
@@ -58,7 +56,6 @@ export function FirstTimeDeposit({
       if (prev.displaySymbol === collateralSymbol) return cur.add(prev.totalDeposited);
       return cur;
     }, ZEROWEI) || ZEROWEI;
-  const maxUInt = new Wei(constants.MaxUint256);
 
   const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } = useDeposit({
     collateralChange: amountToDeposit,
@@ -131,7 +128,7 @@ export function FirstTimeDeposit({
           }
           poolPnl="$00.00"
           currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
-          cRatio={amountToDeposit.eq(0) ? 0 : maxUInt.toNumber()}
+          cRatio={0}
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}

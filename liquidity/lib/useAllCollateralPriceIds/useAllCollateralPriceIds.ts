@@ -61,7 +61,6 @@ export const useAllCollateralPriceIds = () => {
 
       if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
       const configs = await loadConfigs({ CoreProxy });
-
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
 
       const calls = oracleNodeIds.map((oracleNodeId) => ({

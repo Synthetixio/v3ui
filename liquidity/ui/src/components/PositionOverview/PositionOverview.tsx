@@ -5,6 +5,10 @@ import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import Wei from '@synthetixio/wei';
 import { useLocation } from 'react-router-dom';
+import { calculateCRatio } from '@snx-v3/calculations';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { MAXUINT } from '../../utils/constants';
 
 export function PositionOverview({
   currentCollateral,
@@ -17,6 +21,7 @@ export function PositionOverview({
   cRatio,
   liquidationCratioPercentage,
   targetCratioPercentage,
+  arithmeticOperations = 'add',
 }: {
   currentCollateral: Wei;
   collateralType: string;
@@ -28,9 +33,17 @@ export function PositionOverview({
   targetCratioPercentage?: number;
   isLoading: boolean;
   priceOfToDeposit: Wei;
+  arithmeticOperations?: 'add' | 'sub' | 'none';
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
+  const { network } = useNetwork();
   const { pathname } = useLocation();
+  const nextCRatio = isBaseAndromeda(network?.id, network?.preset)
+    ? MAXUINT.toNumber()
+    : debt.eq(0) && amountToDeposit.gt(0)
+      ? MAXUINT.toNumber()
+      : calculateCRatio(debt.abs(), new Wei(collateralValue).add(amountToDeposit)).toNumber();
+
   return (
     <Flex
       rounded="base"
@@ -64,10 +77,13 @@ export function PositionOverview({
             {currentCollateral.toNumber().toFixed(2)} {collateralType}{' '}
             {amountToDeposit.gt(0) && (
               <>
-                &rarr;
-                <Text color="white" fontSize="20px" fontWeight={800}>
-                  {currentCollateral.add(amountToDeposit).toNumber().toFixed(2)} {collateralType}
-                </Text>
+                {arithmeticOperations !== 'none' && (
+                  <Text color="white" fontSize="20px" fontWeight={800}>
+                    &rarr;{' '}
+                    {currentCollateral[arithmeticOperations](amountToDeposit).toNumber().toFixed(2)}{' '}
+                    {collateralType}
+                  </Text>
+                )}
               </>
             )}
           </Text>
@@ -75,14 +91,14 @@ export function PositionOverview({
             ${collateralValue}{' '}
             {amountToDeposit.gt(0) && (
               <>
-                &rarr;
-                <Text color="white" fontSize="16px">
-                  $
-                  {currentCollateral
-                    .add(amountToDeposit.mul(priceOfToDeposit))
-                    .toNumber()
-                    .toFixed(2)}
-                </Text>
+                {arithmeticOperations !== 'none' && (
+                  <Text color="white" fontSize="16px">
+                    &rarr; $
+                    {currentCollateral[arithmeticOperations](amountToDeposit.mul(priceOfToDeposit))
+                      .toNumber()
+                      .toFixed(2)}
+                  </Text>
+                )}
               </>
             )}
           </Text>
@@ -110,7 +126,7 @@ export function PositionOverview({
             alignItems="center"
             gap="2"
           >
-            ${debt.toNumber().toFixed(2)}
+            ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
             {pathname.includes('repay') && debt.lt(0) && (
               <Badge variant="outline" colorScheme="green" bg="green.900">
                 CREDIT AVAILABLE
@@ -132,7 +148,7 @@ export function PositionOverview({
         <CRatioProgressBar
           currentCRatioPercentage={cRatio}
           liquidationCratioPercentage={liquidationCratioPercentage}
-          newCratioPercentage={cRatio}
+          newCratioPercentage={nextCRatio}
           targetCratioPercentage={targetCratioPercentage}
           targetThreshold={1}
           isLoading={isLoading}
