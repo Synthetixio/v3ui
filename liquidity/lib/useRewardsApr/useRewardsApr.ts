@@ -144,6 +144,6 @@ export function useRewardsApr() {
         return [];
       }
     },
-    enabled: !!block && !!provider,
+    enabled: !!block && !!provider && network?.id === 8453,
   });
 }
