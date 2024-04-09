@@ -77,24 +77,21 @@ export const useDepositBaseAndromeda = ({
 
         const amount = collateralChange.sub(availableCollateral);
         const usdcAmount = amount.gt(0) ? parseUnits(amount.toString(), 6) : BigNumber.from(0);
-        const amountD18 = parseUnits(amount.toString(), 18);
+        const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
         // Wrap USDC to sUSDC
-
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
-
-        const wrap = amount.gt(0)
+        const wrap = usdcAmount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;
 
         const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
-
-        const sUSDCApproval = amount.gt(0)
+        const sUSDCApproval = amountD18.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)
           : undefined;
 
         // optionally deposit if available collateral not enough
-        const deposit = amount.gt(0)
+        const deposit = amountD18.gt(0)
           ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
               sUSDC_ADDRESS,
@@ -106,7 +103,7 @@ export const useDepositBaseAndromeda = ({
           BigNumber.from(id),
           BigNumber.from(poolId),
           sUSDC_ADDRESS,
-          currentCollateral.toBN().add(amountD18),
+          currentCollateral.toBN().add(parseUnits(collateralChange.toString(), 18)).toString(),
           wei(1).toBN()
         );
 
