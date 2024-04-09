@@ -41,6 +41,8 @@ export const abi = [
   'function createSynth(string tokenName, string tokenSymbol, address synthOwner) returns (uint128 synthMarketId)',
   'function getAssociatedSystem(bytes32 id) view returns (address addr, bytes32 kind)',
   'function getMarketOwner(uint128 synthMarketId) view returns (address marketOwner)',
+  'function getNominatedMarketOwner(uint128 synthMarketId) view returns (address marketOwner)',
+  'function getPriceData(uint128 synthMarketId) view returns (bytes32 buyFeedId, bytes32 sellFeedId, uint256 strictPriceStalenessTolerance)',
   'function getSynth(uint128 marketId) view returns (address synthAddress)',
   'function getSynthImpl(uint128 marketId) view returns (address implAddress)',
   'function initOrUpgradeNft(bytes32 id, string name, string symbol, string uri, address impl)',
@@ -69,6 +71,7 @@ export const abi = [
   'function buy(uint128 marketId, uint256 usdAmount, uint256 minAmountReceived, address referrer) returns (uint256 synthAmount, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
   'function buyExactIn(uint128 marketId, uint256 usdAmount, uint256 minAmountReceived, address referrer) returns (uint256 synthAmount, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
   'function buyExactOut(uint128 marketId, uint256 synthAmount, uint256 maxUsdAmount, address referrer) returns (uint256 usdAmountCharged, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
+  'function getMarketSkew(uint128 marketId) view returns (int256 marketSkew)',
   'function quoteBuyExactIn(uint128 marketId, uint256 usdAmount, uint8 stalenessTolerance) view returns (uint256 synthAmount, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
   'function quoteBuyExactOut(uint128 marketId, uint256 synthAmount, uint8 stalenessTolerance) view returns (uint256 usdAmountCharged, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
   'function quoteSellExactIn(uint128 marketId, uint256 synthAmount, uint8 stalenessTolerance) view returns (uint256 returnAmount, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
@@ -109,6 +112,7 @@ export const abi = [
   'event SynthUnwrapped(uint256 indexed synthMarketId, uint256 amountUnwrapped, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees, uint256 feesCollected)',
   'event SynthWrapped(uint256 indexed synthMarketId, uint256 amountWrapped, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees, uint256 feesCollected)',
   'event WrapperSet(uint256 indexed synthMarketId, address indexed wrapCollateralType, uint256 maxWrappableAmount)',
+  'function getWrapper(uint128 marketId) view returns (address wrapCollateralType, uint256 maxWrappableAmount)',
   'function setWrapper(uint128 marketId, address wrapCollateralType, uint256 maxWrappableAmount)',
   'function unwrap(uint128 marketId, uint256 unwrapAmount, uint256 minAmountReceived) returns (uint256 returnCollateralAmount, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
   'function wrap(uint128 marketId, uint256 wrapAmount, uint256 minAmountReceived) returns (uint256 amountToMint, tuple(uint256 fixedFees, uint256 utilizationFees, int256 skewFees, int256 wrapperFees) fees)',
@@ -286,6 +290,8 @@ export interface SpotMarketProxyInterface extends utils.Interface {
     'createSynth(string,string,address)': FunctionFragment;
     'getAssociatedSystem(bytes32)': FunctionFragment;
     'getMarketOwner(uint128)': FunctionFragment;
+    'getNominatedMarketOwner(uint128)': FunctionFragment;
+    'getPriceData(uint128)': FunctionFragment;
     'getSynth(uint128)': FunctionFragment;
     'getSynthImpl(uint128)': FunctionFragment;
     'initOrUpgradeNft(bytes32,string,string,string,address)': FunctionFragment;
@@ -306,6 +312,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
     'buy(uint128,uint256,uint256,address)': FunctionFragment;
     'buyExactIn(uint128,uint256,uint256,address)': FunctionFragment;
     'buyExactOut(uint128,uint256,uint256,address)': FunctionFragment;
+    'getMarketSkew(uint128)': FunctionFragment;
     'quoteBuyExactIn(uint128,uint256,uint8)': FunctionFragment;
     'quoteBuyExactOut(uint128,uint256,uint8)': FunctionFragment;
     'quoteSellExactIn(uint128,uint256,uint8)': FunctionFragment;
@@ -321,6 +328,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
     'getSettlementStrategy(uint128,uint256)': FunctionFragment;
     'setSettlementStrategy(uint128,uint256,(uint8,uint256,uint256,address,bytes32,string,uint256,uint256,uint256,uint256,bool))': FunctionFragment;
     'setSettlementStrategyEnabled(uint128,uint256,bool)': FunctionFragment;
+    'getWrapper(uint128)': FunctionFragment;
     'setWrapper(uint128,address,uint256)': FunctionFragment;
     'unwrap(uint128,uint256,uint256)': FunctionFragment;
     'wrap(uint128,uint256,uint256)': FunctionFragment;
@@ -366,6 +374,8 @@ export interface SpotMarketProxyInterface extends utils.Interface {
       | 'createSynth'
       | 'getAssociatedSystem'
       | 'getMarketOwner'
+      | 'getNominatedMarketOwner'
+      | 'getPriceData'
       | 'getSynth'
       | 'getSynthImpl'
       | 'initOrUpgradeNft'
@@ -386,6 +396,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
       | 'buy'
       | 'buyExactIn'
       | 'buyExactOut'
+      | 'getMarketSkew'
       | 'quoteBuyExactIn'
       | 'quoteBuyExactOut'
       | 'quoteSellExactIn'
@@ -401,6 +412,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
       | 'getSettlementStrategy'
       | 'setSettlementStrategy'
       | 'setSettlementStrategyEnabled'
+      | 'getWrapper'
       | 'setWrapper'
       | 'unwrap'
       | 'wrap'
@@ -444,6 +456,8 @@ export interface SpotMarketProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'createSynth', values: [string, string, string]): string;
   encodeFunctionData(functionFragment: 'getAssociatedSystem', values: [BytesLike]): string;
   encodeFunctionData(functionFragment: 'getMarketOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getNominatedMarketOwner', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPriceData', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getSynth', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getSynthImpl', values: [BigNumberish]): string;
   encodeFunctionData(
@@ -491,6 +505,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
     functionFragment: 'buyExactOut',
     values: [BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
+  encodeFunctionData(functionFragment: 'getMarketSkew', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'quoteBuyExactIn',
     values: [BigNumberish, BigNumberish, BigNumberish]
@@ -545,6 +560,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
     functionFragment: 'setSettlementStrategyEnabled',
     values: [BigNumberish, BigNumberish, boolean]
   ): string;
+  encodeFunctionData(functionFragment: 'getWrapper', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'setWrapper',
     values: [BigNumberish, string, BigNumberish]
@@ -635,6 +651,8 @@ export interface SpotMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'createSynth', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getAssociatedSystem', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMarketOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getNominatedMarketOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPriceData', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getSynth', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getSynthImpl', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'initOrUpgradeNft', data: BytesLike): Result;
@@ -655,6 +673,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'buy', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'buyExactIn', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'buyExactOut', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMarketSkew', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'quoteBuyExactIn', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'quoteBuyExactOut', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'quoteSellExactIn', data: BytesLike): Result;
@@ -670,6 +689,7 @@ export interface SpotMarketProxyInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getSettlementStrategy', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSettlementStrategy', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setSettlementStrategyEnabled', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getWrapper', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setWrapper', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'unwrap', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'wrap', data: BytesLike): Result;
@@ -1276,6 +1296,22 @@ export interface SpotMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { marketOwner: string }>;
 
+    getNominatedMarketOwner(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & { marketOwner: string }>;
+
+    getPriceData(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber] & {
+        buyFeedId: string;
+        sellFeedId: string;
+        strictPriceStalenessTolerance: BigNumber;
+      }
+    >;
+
     getSynth(
       marketId: BigNumberish,
       overrides?: CallOverrides
@@ -1398,6 +1434,11 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    getMarketSkew(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { marketSkew: BigNumber }>;
 
     quoteBuyExactIn(
       marketId: BigNumberish,
@@ -1530,6 +1571,11 @@ export interface SpotMarketProxy extends BaseContract {
       enabled: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    getWrapper(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { wrapCollateralType: string; maxWrappableAmount: BigNumber }>;
 
     setWrapper(
       marketId: BigNumberish,
@@ -1742,6 +1788,19 @@ export interface SpotMarketProxy extends BaseContract {
 
   getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+  getNominatedMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  getPriceData(
+    synthMarketId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, BigNumber] & {
+      buyFeedId: string;
+      sellFeedId: string;
+      strictPriceStalenessTolerance: BigNumber;
+    }
+  >;
+
   getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -1846,6 +1905,8 @@ export interface SpotMarketProxy extends BaseContract {
     referrer: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  getMarketSkew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   quoteBuyExactIn(
     marketId: BigNumberish,
@@ -1972,6 +2033,11 @@ export interface SpotMarketProxy extends BaseContract {
     enabled: boolean,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  getWrapper(
+    marketId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { wrapCollateralType: string; maxWrappableAmount: BigNumber }>;
 
   setWrapper(
     marketId: BigNumberish,
@@ -2163,6 +2229,22 @@ export interface SpotMarketProxy extends BaseContract {
 
     getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+    getNominatedMarketOwner(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getPriceData(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber] & {
+        buyFeedId: string;
+        sellFeedId: string;
+        strictPriceStalenessTolerance: BigNumber;
+      }
+    >;
+
     getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -2267,6 +2349,8 @@ export interface SpotMarketProxy extends BaseContract {
         fees: OrderFees.DataStructOutput;
       }
     >;
+
+    getMarketSkew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     quoteBuyExactIn(
       marketId: BigNumberish,
@@ -2413,6 +2497,11 @@ export interface SpotMarketProxy extends BaseContract {
       enabled: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getWrapper(
+      marketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { wrapCollateralType: string; maxWrappableAmount: BigNumber }>;
 
     setWrapper(
       marketId: BigNumberish,
@@ -3005,6 +3094,13 @@ export interface SpotMarketProxy extends BaseContract {
 
     getMarketOwner(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getNominatedMarketOwner(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPriceData(synthMarketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
     getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
@@ -3106,6 +3202,8 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    getMarketSkew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     quoteBuyExactIn(
       marketId: BigNumberish,
@@ -3212,6 +3310,8 @@ export interface SpotMarketProxy extends BaseContract {
       enabled: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    getWrapper(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     setWrapper(
       marketId: BigNumberish,
@@ -3409,6 +3509,16 @@ export interface SpotMarketProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getNominatedMarketOwner(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPriceData(
+      synthMarketId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getSynth(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSynthImpl(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -3517,6 +3627,8 @@ export interface SpotMarketProxy extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    getMarketSkew(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     quoteBuyExactIn(
       marketId: BigNumberish,
       usdAmount: BigNumberish,
@@ -3622,6 +3734,8 @@ export interface SpotMarketProxy extends BaseContract {
       enabled: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    getWrapper(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setWrapper(
       marketId: BigNumberish,
