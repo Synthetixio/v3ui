@@ -12,8 +12,13 @@ export function useApr(
     queryKey: ['apr', network?.id],
     queryFn: async () => {
       try {
+        const params = new URLSearchParams({
+          poolId,
+          collateralType,
+        });
+
         const response = await fetch(
-          `https://api.synthetix.gateway.fm/api/v1/rewards/yield?poolId=${poolId}&frame=hour&rolling_average_size=5&collateralType=${collateralType}`
+          `https://api.synthetix.gateway.fm/api/v1/rewards/yield?${params.toString()}`
         );
 
         const data = await response.json();
