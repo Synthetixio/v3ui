@@ -128,6 +128,7 @@ export function NetworkController() {
               fontWeight={700}
               fontSize="xs"
               userSelect="none"
+              data-cy="header-wallet-address-display"
             >
               {activeWallet.ens?.name || prettyString(activeWallet.address)}
             </Text>

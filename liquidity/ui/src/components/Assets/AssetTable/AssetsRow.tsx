@@ -50,7 +50,13 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-wallet-balance"
+            >
               {formatNumberToUsd(walletBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -63,7 +69,13 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-account-balance"
+            >
               {formatNumberToUsd(accountBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -76,7 +88,13 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-delegated-balance"
+            >
               {formatNumberToUsd(delegatedBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -98,6 +116,7 @@ export const AssetsRow = ({
                 borderWidth="1px"
                 borderColor="gray.900"
                 borderRadius="4px"
+                data-cy="asset-list-deposit-button"
               >
                 Deposit
               </Button>
