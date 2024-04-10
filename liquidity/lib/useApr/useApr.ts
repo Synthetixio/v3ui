@@ -1,59 +1,37 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useGetPnl } from '@snx-v3/useGetPnl';
-import { useRewardsApr } from '@snx-v3/useRewardsApr';
-import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 
-export function useApr() {
+export function useApr(
+  poolId = '1',
+  collateralType = '0xC74EA762CF06C9151CE074E6A569A5945B6302E7'
+) {
   const { network } = useNetwork();
-
-  const { data: pnlData } = useGetPnl();
-  const { data: rewardsAprData } = useRewardsApr();
 
   return useQuery({
     queryKey: ['apr', network?.id],
     queryFn: async () => {
-      if (!pnlData || !rewardsAprData) throw 'Missing data required for useApr';
-      // PNLS for the last week
-      const { pnls } = pnlData;
+      try {
+        const response = await fetch(
+          `https://api.synthetix.gateway.fm/api/v1/rewards/yield?poolId=${poolId}&frame=hour&rolling_average_size=5&collateralType=${collateralType}`
+        );
 
-      const pnlsPercentWithRewards = pnls.map((pnl, i) => {
-        const { pnlValue, collateralAmount } = pnl;
-        // const rewards = rewardsUSDPerDay[i];
-        const rewardsOnDay = rewardsAprData[i];
+        const data = await response.json();
 
-        // Add the amounts from rewards to the pnls from the vault
-        // Divide by collateral amount to get the percentage
-        const pnlPercent = pnlValue.div(collateralAmount).mul(100);
-        const rewardsPercent = wei(rewardsOnDay).div(collateralAmount).mul(100);
+        const combinedApr =
+          data.rollingAverages.reduce(
+            (acc: number, currentValue: number) => acc + currentValue,
+            0
+          ) / data.rollingAverages.length;
 
         return {
-          pnl: pnlPercent.toNumber(),
-          rewards: rewardsPercent.toNumber(),
+          combinedApr,
         };
-      });
-
-      const weeklyAverageAprLP = pnlsPercentWithRewards.reduce((acc, { pnl }) => acc + pnl, 0);
-      const weeklyAverageAprRewards = pnlsPercentWithRewards.reduce(
-        (acc, { rewards }) => acc + rewards,
-        0
-      );
-
-      const dailyAverageAprLp = weeklyAverageAprLP / pnlsPercentWithRewards.length;
-      const dailyAverageAprRewards = weeklyAverageAprRewards / pnlsPercentWithRewards.length;
-
-      const aprPnl = dailyAverageAprLp * 365;
-      const aprRewards = dailyAverageAprRewards * 365;
-      const combinedApr = (dailyAverageAprLp + dailyAverageAprRewards) * 365;
-
-      return {
-        aprPnl,
-        aprRewards,
-        combinedApr,
-      };
+      } catch (error) {
+        return;
+      }
     },
-    enabled: !!pnlData && !!rewardsAprData && isBaseAndromeda(network?.id, network?.preset),
+    enabled: isBaseAndromeda(network?.id, network?.preset),
     staleTime: 60000,
   });
 }
