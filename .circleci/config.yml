@@ -194,7 +194,10 @@ jobs:
           path: 'governance/cypress/cypress/videos'
           destination: 'videos'
 
-  liqudity-cy:
+  liquidity-e2e:
+    parameters:
+      chain:
+        type: string
     working_directory: /tmp/app
     docker:
       - image: cypress/included:<< pipeline.parameters.cypress-version >>
@@ -208,13 +211,13 @@ jobs:
 
       - run:
           name: Run server localhost:3000
-          working_directory: /tmp/app/governance/ui
-          command: yarn dev:testnet
+          working_directory: /tmp/app/liquidity/ui
+          command: yarn start
           background: true
 
       - run:
           name: Run anvil localhost:8545
-          command: anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY
+          command: anvil --fork-url https://<< parameters.chain >>.infura.io/v3/$INFURA_KEY
           background: true
 
       - run:
@@ -226,22 +229,51 @@ jobs:
           command: wget -q -O - --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 --post-data='{"method":"eth_chainId","params":[],"id":1,"jsonrpc":"2.0"}' --header='Content-Type:application/json' http://localhost:8545
 
       - run:
-          working_directory: /tmp/app/governance/cypress
+          working_directory: /tmp/app/liquidity/cypress
           command: cypress run --e2e --browser chrome
 
       - store_test_results:
-          path: 'governance/cypress/cypress/reports'
+          path: 'liquidity/cypress/cypress/reports'
 
       - store_artifacts:
-          path: 'governance/cypress/.nyc_output'
+          path: 'liquidity/cypress/.nyc_output'
           destination: 'coverage'
 
       - store_artifacts:
-          path: 'governance/cypress/cypress/screenshots'
+          path: 'liquidity/cypress/cypress/screenshots'
           destination: 'screenshots'
 
       - store_artifacts:
-          path: 'governance/cypress/cypress/videos'
+          path: 'liquidity/cypress/cypress/videos'
+          destination: 'videos'
+
+  liquidity-cy:
+    working_directory: /tmp/app
+    docker:
+      - image: cypress/included:<< pipeline.parameters.cypress-version >>
+    environment:
+      NODE_ENV: test
+    steps:
+      - checkout
+      - yarn-install
+
+      - run:
+          working_directory: /tmp/app/liquidity/cypress
+          command: cypress run --component --browser chrome
+
+      - store_test_results:
+          path: 'liquidity/cypress/cypress/reports'
+
+      - store_artifacts:
+          path: 'liquidity/cypress/.nyc_output'
+          destination: 'coverage'
+
+      - store_artifacts:
+          path: 'liquidity/cypress/cypress/screenshots'
+          destination: 'screenshots'
+
+      - store_artifacts:
+          path: 'liquidity/cypress/cypress/videos'
           destination: 'videos'
 
   combine-coverage:
@@ -253,7 +285,10 @@ jobs:
       - yarn-install
       - run: rm -rf /tmp/cov
       - run: yarn download-cci-coverage tests /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-cy /tmp/cov || true
       - run: yarn download-cci-coverage governance-cy /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-base-sepolia /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-sepolia /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
       - run: mkdir -p /tmp/cov/combined
@@ -300,15 +335,25 @@ workflows:
       - checks
       - typecheck
       - tests
-      - governance-cy
       - liquidity-cy
+      - governance-cy
+      - liquidity-e2e:
+          chain: base-sepolia
+          name: liquidity-e2e-base-sepolia
+      - liquidity-e2e:
+          chain: sepolia
+          name: liquidity-e2e-sepolia
       - combine-coverage:
-          requires: [tests, governance-cy]
+          requires:
+            [tests, liquidity-cy, governance-cy, liquidity-e2e-sepolia, liquidity-e2e-base-sepolia]
       - liquidity-armada:
           requires:
             - checks
             - typecheck
             - tests
+            - liquidity-cy
+            - liquidity-e2e-base-sepolia
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:
@@ -320,6 +365,9 @@ workflows:
             - checks
             - typecheck
             - tests
+            - liquidity-cy
+            - liquidity-e2e-base-sepolia
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:
