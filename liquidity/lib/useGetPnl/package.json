@@ -1,15 +1,16 @@
 {
-  "name": "@snx-v3/useApr",
+  "name": "@snx-v3/useGetPnl",
   "private": true,
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
     "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/useGetPnl": "workspace:*",
-    "@snx-v3/useRewardsApr": "workspace:*",
+    "@snx-v3/useCoreProxy": "workspace:*",
+    "@snx-v3/useMulticall3": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
+    "ethers": "^5.7.2",
     "react": "^18.2.0"
   }
 }
