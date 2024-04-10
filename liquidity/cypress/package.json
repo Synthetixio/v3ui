@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.9",
   "scripts": {
-    "start": "anvil --fork-url https://optimism-mainnet.infura.io/v3/$INFURA_KEY",
+    "start": "anvil --fork-url https://base-sepolia.infura.io/v3/$INFURA_KEY",
     "cy": "NODE_ENV=test cypress open --component --browser chrome",
     "cy:check": "NODE_ENV=test cypress run --component --browser chrome",
     "e2e": "NODE_ENV=test cypress open --e2e --browser chrome",
@@ -24,8 +24,6 @@
     "ts-node": "^10.9.1"
   },
   "depcheck": {
-    "ignoreMatches": [
-      "ts-node"
-    ]
+    "ignoreMatches": ["ts-node"]
   }
 }

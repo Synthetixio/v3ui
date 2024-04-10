@@ -10,6 +10,7 @@ export const PositionsNotConnected = () => {
       </Text>
       <Button
         size="sm"
+        data-cy="connect-button-position-table"
         onClick={() => {
           connect();
         }}

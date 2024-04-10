@@ -76,8 +76,7 @@ export function AccountsSelectorUi({
               variant="outline"
               w="100%"
               maxW="180px"
-              data-testid="current account id"
-              data-account-id={accountId}
+              data-cy="create-new-account-menu-item"
               onClick={accountId ? onCopy : createAccount}
             >
               {`${accountId ? `Account #${prettyString(accountId, 3, 3)}` : 'Create Account'} `}
