@@ -53,7 +53,7 @@ export function Pools() {
               </Flex>
               <Flex flexDir="column" mr="auto">
                 <Text fontSize="12px" color="gray.600">
-                  APY{' '}
+                  APR{' '}
                   <Tooltip label="???">
                     <InfoIcon w="12px" h="12px" />
                   </Tooltip>

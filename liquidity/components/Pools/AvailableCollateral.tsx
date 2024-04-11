@@ -48,14 +48,14 @@ export function AvailableCollateralUi({
   return (
     <BorderBox p={4} mt={8} flexDir="column">
       <Heading fontSize="2xl" mb="2">
-        {isLoading ? 'Loading Collateral...' : 'Available Collateral'}
+        {isLoading ? 'Loading Collateral...' : 'Collateral Withdrawal'}
       </Heading>
       {!isLoading && (
         <Fade in>
           <Flex alignItems="center" mb="0">
             <Text color="gray.500">
-              This collateral can be deposited to pools. As a security precaution, this collateral
-              cannot be withdrawn until at least 1 day has elapsed since previous account activity.
+              As a security precaution, collateral cannot be withdrawn until at least 1 day has
+              elapsed since previous account activity.
             </Text>
             <Alert
               ml="auto"

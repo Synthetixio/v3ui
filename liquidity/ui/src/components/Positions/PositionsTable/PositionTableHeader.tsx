@@ -36,7 +36,7 @@ export function PositionTableHeader() {
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-              APY
+              APR
             </Text>
             <Tooltip
               label={

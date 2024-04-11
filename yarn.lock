@@ -6375,6 +6375,7 @@ __metadata:
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useAllowance": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useBorrow": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
@@ -6616,6 +6617,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useApr@workspace:*, @snx-v3/useApr@workspace:liquidity/lib/useApr":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
+  dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useGetPnl": "workspace:*"
+    "@snx-v3/useRewardsApr": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useBlockNumber@workspace:*, @snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useBlockchain@workspace:*, @snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain"
@@ -6832,6 +6857,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl"
+  dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
@@ -7021,6 +7061,21 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useRewardsApr@workspace:*, @snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockNumber": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    date-fns: "npm:^2.30.0"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -27185,10 +27240,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"word-wrap@npm:^1.0.3, word-wrap@npm:~1.2.3":
+"word-wrap@npm:^1.0.3":
   version: 1.2.5
   resolution: "word-wrap@npm:1.2.5"
   checksum: 1ec6f6089f205f83037be10d0c4b34c9183b0b63fca0834a5b3cee55dd321429d73d40bb44c8fc8471b5203d6e8f8275717f49a8ff4b2b0ab41d7e1b563e0854
+  languageName: node
+  linkType: hard
+
+"word-wrap@npm:~1.2.3":
+  version: 1.2.3
+  resolution: "word-wrap@npm:1.2.3"
+  checksum: 08a677e1578b9cc367a03d52bc51b6869fec06303f68d29439e4ed647257411f857469990c31066c1874678937dac737c9f8f20d3fd59918fb86b7d926a76b15
   languageName: node
   linkType: hard
 

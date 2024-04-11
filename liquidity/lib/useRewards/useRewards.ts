@@ -58,7 +58,7 @@ export function useRewards(
   distributors?: RewardsInterface,
   poolId?: string,
   collateralAddress?: string,
-  accountId?: string
+  accountId: string = '69'
 ) {
   const { network } = useNetwork();
   const { data: Multicall3 } = useMulticall3();
@@ -217,6 +217,7 @@ export function useRewards(
 
         // TODO: Refactor this to use a view function
         const balances: RewardsResponseArray = [];
+
         for (const item of result) {
           try {
             const response = await CoreProxy.callStatic.claimRewards(
