@@ -23,7 +23,9 @@ export function LiquidityAccountCreated({ setStep }: { setStep: () => void }) {
       <Alert colorScheme="green" rounded="base">
         Account successfully Created
       </Alert>
-      <Button onClick={setStep}>Continue</Button>
+      <Button onClick={setStep} data-cy="account-created-button">
+        Continue
+      </Button>
     </Flex>
   );
 }

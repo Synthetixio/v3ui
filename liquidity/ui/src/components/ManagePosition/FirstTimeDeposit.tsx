@@ -13,6 +13,7 @@ import { useApprove } from '@snx-v3/useApprove';
 import { useDeposit } from '@snx-v3/useDeposit';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useWrapEth } from '@snx-v3/useWrapEth';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 
 export function FirstTimeDeposit({
   liquidityPosition,
@@ -37,6 +38,7 @@ export function FirstTimeDeposit({
   const { data: accountCollateral, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
   });
+  const { data: collateralPrices } = useCollateralPrices();
   const { data: CoreProxy } = useCoreProxy();
   const {
     approve,
@@ -132,7 +134,7 @@ export function FirstTimeDeposit({
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
-          priceOfToDeposit={liquidityPosition?.collateralPrice || ZEROWEI}
+          price={collateralPrices && collateralPrices[collateralAddress]}
         />
       }
     />

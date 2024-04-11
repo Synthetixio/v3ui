@@ -81,6 +81,7 @@ export function SignTransaction({
               onClick={() => {
                 actionButtonClick('createPosition');
               }}
+              data-cy="sign-transaction-button"
             >
               {buttonText}
             </Button>
@@ -133,6 +134,7 @@ export function SignTransaction({
           onClick={() => {
             actionButtonClick('createPosition');
           }}
+          data-cy="sign-transaction-button"
         >
           {buttonText}
         </Button>

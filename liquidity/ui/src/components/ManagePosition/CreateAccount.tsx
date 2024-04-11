@@ -54,7 +54,7 @@ export function CreateLiquidiyAccount({
       {createAccountIsLoading ? (
         <Spinner colorScheme="cyan" />
       ) : (
-        <Button onClick={createAccount} w="100%">
+        <Button onClick={createAccount} w="100%" data-cy="create-account-button">
           Create Account
         </Button>
       )}

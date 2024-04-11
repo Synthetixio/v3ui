@@ -4,11 +4,13 @@ import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { Button, Flex, Input, Text, Tooltip } from '@chakra-ui/react';
 import { TokenIcon } from '../TokenIcon';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useParams } from '@snx-v3/useParams';
+import { ZEROWEI } from '../../utils/constants';
 
 export function ManageInputUi({
   collateralSymbol,
   collateral = new Wei(0),
-  price,
   title,
   inputSubline,
   buttonText,
@@ -29,6 +31,8 @@ export function ManageInputUi({
   children?: ReactNode;
 }) {
   const [amount, setAmount] = useRecoilState(amountState);
+  const { collateralAddress } = useParams();
+  const { data: collateralPrices } = useCollateralPrices();
   useEffect(() => {
     if (inputIsDisabled) {
       setAmount(collateral);
@@ -50,7 +54,12 @@ export function ManageInputUi({
       >
         <Flex p="2" flexDir="column" gap="1" w="100%">
           <TokenIcon symbol={collateralSymbol} />
-          <Text fontSize="12px" display="flex" color="gray.500">
+          <Text
+            fontSize="12px"
+            display="flex"
+            color="gray.500"
+            data-cy="manage-input-balance-max-button"
+          >
             {tooltip ? <Tooltip label={tooltip}>{inputSubline}</Tooltip> : inputSubline}
             :&nbsp;
             {collateral.toNumber().toFixed(2)}
@@ -84,17 +93,30 @@ export function ManageInputUi({
             overflow="scroll"
             fontWeight={700}
             isDisabled={inputIsDisabled}
+            data-cy="manage-input"
             onChange={(e) => {
               setAmount(new Wei(e.target.value ? e.target.value : 0, collateral.p));
             }}
           />
           <Text fontSize="12px" color="gray.500">
-            ${amount.mul(price).toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
+            $
+            {amount
+              .mul(
+                collateralPrices && collateralAddress
+                  ? collateralPrices[collateralAddress]
+                  : ZEROWEI
+              )
+              .toNumber()
+              .toLocaleString('en-US', { maximumFractionDigits: 2 })}
           </Text>
         </Flex>
       </Flex>
       {children}
-      <Button onClick={() => handleButtonClick()} isDisabled={amount.eq(0)}>
+      <Button
+        onClick={() => handleButtonClick()}
+        isDisabled={amount.eq(0)}
+        data-cy="manage-input-ui-button"
+      >
         {amount.eq(0) ? 'Enter Amount' : buttonText}
       </Button>
     </Flex>

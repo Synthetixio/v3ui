@@ -13,6 +13,7 @@ import { amountState } from '../../state/amount';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 
 export function FirstTimeDepositBaseAndromeda({
   liquidityPosition,
@@ -50,7 +51,7 @@ export function FirstTimeDepositBaseAndromeda({
     contractAddress: getUSDCAddress(networkId),
     spender: SpotMarket?.address,
   });
-
+  const { data: collateralPrices } = useCollateralPrices();
   const walletBalance = userTokenBalances?.reduce((cur, prev) => cur.add(prev), ZEROWEI) || ZEROWEI;
   const accountBalance =
     accountCollateral?.reduce((cur, prev) => {
@@ -74,7 +75,6 @@ export function FirstTimeDepositBaseAndromeda({
     collateralTypesIsLoading &&
     userTokenBalancesIsLoading &&
     accountCollateralIsLoading;
-
   return (
     <PositionHeader
       title={'Open ' + collateralSymbol + ' Liquidity Position'}
@@ -119,7 +119,7 @@ export function FirstTimeDepositBaseAndromeda({
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
-          priceOfToDeposit={liquidityPosition?.collateralPrice || ZEROWEI}
+          price={collateralPrices && collateralPrices[collateralAddress]}
         />
       }
     />

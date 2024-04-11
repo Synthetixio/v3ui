@@ -1,9 +1,8 @@
 import Wei from '@synthetixio/wei';
 import { Step } from './ManagePosition';
-import { Dispatch, SetStateAction } from 'react';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Divider, Flex, Heading, Input, Text } from '@chakra-ui/react';
+import { Alert, Divider, Flex, Heading, Input, Text } from '@chakra-ui/react';
 import { ManageInputUi } from './ManageInputUi';
 import { SignTransaction, Transaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
@@ -13,6 +12,9 @@ import { CreateLiquidiyAccount } from './CreateAccount';
 import { useCreateAccount } from '@snx-v3/useAccounts';
 import { LiquidityAccountCreated } from './AccountCreated';
 import { TokenIcon } from '../TokenIcon';
+import { useRecoilState } from 'recoil';
+import { amountState } from '../../state/amount';
+import { InfoIcon } from '@chakra-ui/icons';
 
 export function PositionAction({
   tab,
@@ -38,7 +40,7 @@ export function PositionAction({
   collateralAddress?: string;
   accountId?: string;
   step: Step | undefined;
-  setStep: Dispatch<SetStateAction<Step | undefined>>;
+  setStep: (step: Step) => void;
   transactions: Transaction[];
 }) {
   const { network } = useNetwork();
@@ -47,8 +49,9 @@ export function PositionAction({
     mutation: { mutateAsync: createAccount, isPending: createAccountIsLoading },
     getTransactionCost: { data: accountTransactionCost },
   } = useCreateAccount();
+  const [amountToDeposit] = useRecoilState(amountState);
   const handleManageInputButtonClick = () => {
-    if (tab === 3 && !step && !accountId) {
+    if (!accountId) {
       setStep('createAccount');
     } else {
       setStep('signTransaction');
@@ -252,7 +255,14 @@ export function PositionAction({
                 </>
               }
               handleButtonClick={handleManageInputButtonClick}
-            />
+            >
+              {amountToDeposit.gt(0) && (
+                <Alert colorScheme="blue" rounded="base">
+                  <InfoIcon w="20px" h="20px" color="cyan.500" mr="4" />
+                  This action will incur timeout for withdrawing collateral
+                </Alert>
+              )}
+            </ManageInputUi>
           </Flex>
         ) : (
           <ManageInputUi
@@ -275,8 +285,9 @@ export function PositionAction({
       if (step === 'createAccount') {
         return (
           <CreateLiquidiyAccount
-            createAccount={() => {
-              createAccount().then(() => setStep('accountCreated'));
+            createAccount={async () => {
+              await createAccount();
+              setStep('accountCreated');
             }}
             createAccountIsLoading={createAccountIsLoading}
             createAccountTransactionCost={accountTransactionCost}
@@ -305,7 +316,7 @@ export function PositionAction({
             }}
             header="Open Liquidity Position"
             transactions={transactions}
-            isFirstDeposit={!!liquidityPostion?.debt.eq(0)}
+            isFirstDeposit={true}
           />
         );
       }
