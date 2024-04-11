@@ -7,6 +7,7 @@ import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useApr } from '@snx-v3/useApr';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -24,7 +25,10 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   collateralPriceByAddress?: Record<string, Wei | undefined>;
-}> = ({ vaultsData, collateralPriceByAddress }) => {
+  apr?: number;
+  isLoading?: boolean;
+  isAprLoading?: boolean;
+}> = ({ vaultsData, collateralPriceByAddress, apr, isLoading, isAprLoading }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -47,7 +51,7 @@ export const CollateralSectionUi: FC<{
           >
             Total TVL
           </Text>
-          {vaultsData === undefined ? (
+          {isLoading ? (
             <Skeleton w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
@@ -69,11 +73,33 @@ export const CollateralSectionUi: FC<{
           >
             Total Debt
           </Text>
-          {vaultsData === undefined ? (
+          {isLoading ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
               {formatNumberToUsd(totalDebt.toNumber())}
+            </Text>
+          )}
+        </Flex>
+        <Flex
+          justifyContent="space-between"
+          flexDirection={{ base: 'row', md: 'column', lg: 'row' }}
+        >
+          <Text
+            display="flex"
+            alignItems="center"
+            fontWeight={700}
+            fontSize="md"
+            gap={1}
+            color="white"
+          >
+            APR
+          </Text>
+          {isAprLoading ? (
+            <Skeleton mt={1} w={16} h={6} />
+          ) : (
+            <Text fontWeight={700} fontSize="xl" color="white">
+              {`${apr ? apr?.toFixed(2) : '-'}%`}
             </Text>
           )}
         </Flex>
@@ -201,13 +227,19 @@ export const CollateralSectionUi: FC<{
 export const CollateralSection = () => {
   const params = useParams();
 
-  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-  const { data: collateralPriceByAddress } = useCollateralPrices();
+  const { data: vaultsData, isLoading: isVaultsDataLoading } = useVaultsData(
+    params.poolId ? parseFloat(params.poolId) : undefined
+  );
+  const { data: collateralPriceByAddress, isLoading: isCollateralLoading } = useCollateralPrices();
+  const { data: aprData, isLoading: isAprLoading } = useApr();
 
   return (
     <CollateralSectionUi
       vaultsData={vaultsData}
       collateralPriceByAddress={collateralPriceByAddress}
+      apr={aprData?.combinedApr}
+      isLoading={isVaultsDataLoading || isCollateralLoading}
+      isAprLoading={isAprLoading}
     />
   );
 };

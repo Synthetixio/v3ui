@@ -23,16 +23,17 @@ export const onboard = init({
   wallets: [
     injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
     trezorModule({
-      appUrl: 'https://governance.synthetix.io',
+      appUrl: 'https://liquidity.synthetix.eth.limo',
       email: 'info@synthetix.io',
     }),
     ledgerModule({
-      projectId: 'a4aa25aa9a6ed6fd4c3b11c0cedc4b7c',
+      projectId: 'd6eac005846a1c3be1f8eea3a294eed9',
       walletConnectVersion: 2,
     }),
     walletConnectModule({
       version: 2,
-      projectId: 'a4aa25aa9a6ed6fd4c3b11c0cedc4b7c',
+      projectId: 'd6eac005846a1c3be1f8eea3a294eed9',
+      dappUrl: 'liquidity.synthetix.eth.limo',
     }),
     // gnosisModule(),
     coinbaseModule(),

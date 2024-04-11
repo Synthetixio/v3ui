@@ -7,6 +7,7 @@ interface PoolsListProps {
   pools?: PoolType[];
   collateralTypes?: CollateralType[];
   liquidityPositionsById?: LiquidityPositionsById;
+  apr?: number;
   isLoading: boolean;
 }
 
@@ -15,6 +16,7 @@ export const PoolsList = ({
   collateralTypes,
   liquidityPositionsById,
   isLoading,
+  apr,
 }: PoolsListProps) => {
   return (
     <>
@@ -28,6 +30,7 @@ export const PoolsList = ({
               pool={pool}
               collateralTypes={collateralTypes}
               liquidityPositionsById={liquidityPositionsById}
+              apr={apr}
             />
           ))}
         </>

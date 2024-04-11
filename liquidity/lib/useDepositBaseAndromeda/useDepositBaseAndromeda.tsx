@@ -90,7 +90,7 @@ export const useDepositBaseAndromeda = ({
           : undefined;
 
         // optionally deposit if available collateral not enough
-        const deposit = amount.gt(0)
+        const deposit = amountD18.gt(0)
           ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
               sUSDC_ADDRESS,

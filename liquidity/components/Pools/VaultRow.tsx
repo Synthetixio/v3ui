@@ -17,12 +17,14 @@ function VaultRowUi({
   poolId,
   isConnected,
   openConnectModal,
+  apr,
 }: {
   collateralType: CollateralType;
   liquidityPosition?: LiquidityPositionType;
   poolId: string;
   isConnected: boolean;
   openConnectModal?: () => void;
+  apr?: number;
 }) {
   const { network } = useNetwork();
   const location = useLocation();
@@ -62,7 +64,7 @@ function VaultRowUi({
       <Td data-testid="debt">
         {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
       </Td>
-      {!isBaseAndromeda(network?.id, network?.preset) && (
+      {!isBaseAndromeda(network?.id, network?.preset) ? (
         <>
           <Td data-testid="c-ratio">
             {cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}
@@ -82,6 +84,10 @@ function VaultRowUi({
             />
           </Td>
         </>
+      ) : (
+        <Td>
+          <Text>{apr ? apr.toFixed(2) : '-'}%</Text>
+        </Td>
       )}
       <Td textAlign="end">
         {isConnected && hasLiquidity ? (
@@ -126,9 +132,10 @@ export type VaultRowProps = {
   collateralType: CollateralType;
   poolId: string;
   liquidityPosition?: LiquidityPositionType;
+  apr?: number;
 };
 
-export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition }) => {
+export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityPosition, apr }) => {
   const isConnected = useIsConnected();
   const [_, connect] = useConnectWallet();
 
@@ -139,6 +146,7 @@ export const VaultRow: FC<VaultRowProps> = ({ collateralType, poolId, liquidityP
       poolId={poolId}
       isConnected={isConnected}
       openConnectModal={() => connect()}
+      apr={apr}
     />
   );
 };
