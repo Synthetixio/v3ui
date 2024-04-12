@@ -24,11 +24,17 @@ export function useApr(
 
         const data = await response.json();
 
+        // Take the past weeks values
+        let samplePeriod;
+        if (data.rollingAverages.length < 7) {
+          samplePeriod = data.rollingAverages;
+        } else {
+          samplePeriod = data.rollingAverages.slice(-7);
+        }
+
         const combinedApr =
-          data.rollingAverages.reduce(
-            (acc: number, currentValue: number) => acc + currentValue,
-            0
-          ) / data.rollingAverages.length;
+          samplePeriod.reduce((acc: number, currentValue: number) => acc + currentValue, 0) /
+          data.rollingAverages.length;
 
         return {
           combinedApr: combinedApr * 365,
