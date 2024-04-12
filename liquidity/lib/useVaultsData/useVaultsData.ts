@@ -40,17 +40,14 @@ export const useVaultsData = (poolId?: number) => {
           )
         )
       );
+
       const debtCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
           CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
         )
       );
 
-      const collateralPriceUpdateCallsP = fetchPriceUpdates([], network.isTestnet).then(
-        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
-      );
-
-      const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
+      const calls = await Promise.all([collateralCallsP, debtCallsP]);
 
       return await erc7412Call(
         network,

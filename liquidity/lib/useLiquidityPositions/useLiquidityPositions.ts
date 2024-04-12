@@ -9,7 +9,6 @@ import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { keyBy } from '@snx-v3/tsHelpers';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;
@@ -80,11 +79,8 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       });
 
       const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
-      const collateralPriceCalls = await fetchPriceUpdates([], network.isTestnet).then(
-        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
-      );
 
-      const allCalls = collateralPriceCalls.concat(priceCalls.concat(positionCalls));
+      const allCalls = priceCalls.concat(positionCalls);
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
 
       return await erc7412Call(

@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -39,9 +38,6 @@ export const usePoolConfiguration = (poolId?: string) => {
         weight: maxDebtShareValueD18,
         maxDebtShareValue: weightD18,
       }));
-      const collateralPriceCalls = await fetchPriceUpdates([], network.isTestnet).then(
-        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
-      );
 
       const calls = await Promise.all(
         markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
@@ -50,7 +46,7 @@ export const usePoolConfiguration = (poolId?: string) => {
       const decoded = await erc7412Call(
         network,
         CoreProxy.provider,
-        collateralPriceCalls.concat(calls),
+        calls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array');
           return encoded.map((x) =>

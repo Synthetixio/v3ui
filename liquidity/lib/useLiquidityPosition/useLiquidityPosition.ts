@@ -8,7 +8,6 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 
 const PositionCollateralSchema = z.object({
@@ -112,14 +111,7 @@ export const useLiquidityPosition = ({
           CoreProxy,
         });
 
-      const collateralPriceCalls = await fetchPriceUpdates([], network.isTestnet).then(
-        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
-      );
-
-      const allCalls = collateralPriceCalls
-        .concat(priceCalls)
-        .concat(positionCalls)
-        .concat(accountCollateralCalls);
+      const allCalls = priceCalls.concat(positionCalls).concat(accountCollateralCalls);
 
       return await erc7412Call(
         network,
