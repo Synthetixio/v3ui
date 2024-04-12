@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -12,6 +12,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useAllowance } from '@snx-v3/useAllowance';
 
 export const useDeposit = ({
   accountId,
@@ -35,7 +36,10 @@ export const useDeposit = ({
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   const { gasSpeed } = useGasSpeed();
-
+  const { data: allowance } = useAllowance({
+    contractAddress: collateralTypeAddress,
+    spender: CoreProxy?.address,
+  });
   const { network } = useNetwork();
   const signer = useSigner();
   const provider = useProvider();

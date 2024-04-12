@@ -62,7 +62,7 @@ export function FirstTimeDeposit({
     }, ZEROWEI) || ZEROWEI;
   const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } = useDeposit({
     collateralChange: amountToDeposit,
-    currentCollateral: ZEROWEI,
+    currentCollateral: liquidityPosition?.collateralAmount || ZEROWEI,
     newAccountId: (Math.floor(Math.random() * (10_000_000 - 10_000 + 1)) + 10_000).toString(),
     accountId,
     poolId,
@@ -82,7 +82,7 @@ export function FirstTimeDeposit({
       title: `Approve ${collateralSymbol} transfer`,
       subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
       exec: approve,
-      arg: true,
+      arg: false,
     },
     {
       done: false,

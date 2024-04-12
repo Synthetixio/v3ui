@@ -28,7 +28,6 @@ export const useApprove = (
 ) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: allowance, refetch: refetchAllowance } = useAllowance({ contractAddress, spender });
-
   const sufficientAllowance = Boolean(allowance?.gte(amount));
 
   const signer = useSigner();
