@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { wei } from '@synthetixio/wei';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getRepayerContract, getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
@@ -54,7 +54,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     contractAddress: getUSDCAddress(network?.id),
     //slippage for approval
     amount: parseUnits(currentDebt.toString(), 6).mul(110).div(100),
-    spender: SpotMarketProxy?.address,
+    spender: getRepayerContract(network?.id),
   });
 
   const submit = useCallback(async () => {
