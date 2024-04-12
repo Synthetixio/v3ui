@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { MAXUINT } from '../../utils/constants';
+import { MAXUINT, ZEROWEI } from '../../utils/constants';
 
 export function PositionOverview({
   currentCollateral,
@@ -17,11 +17,11 @@ export function PositionOverview({
   debt,
   poolPnl,
   isLoading,
-  priceOfToDeposit,
   cRatio,
   liquidationCratioPercentage,
   targetCratioPercentage,
   arithmeticOperations = 'add',
+  price,
 }: {
   currentCollateral: Wei;
   collateralType: string;
@@ -32,8 +32,8 @@ export function PositionOverview({
   liquidationCratioPercentage?: number;
   targetCratioPercentage?: number;
   isLoading: boolean;
-  priceOfToDeposit: Wei;
   arithmeticOperations?: 'add' | 'sub' | 'none';
+  price?: Wei;
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
   const { network } = useNetwork();
@@ -73,12 +73,24 @@ export function PositionOverview({
               <InfoIcon w="12px" h="12px" />
             </Tooltip>
           </Text>
-          <Text color="gray.500" fontSize="20px" fontWeight={800} display="flex" gap="1">
+          <Text
+            color="gray.500"
+            fontSize="20px"
+            fontWeight={800}
+            display="flex"
+            gap="1"
+            data-cy="position-overview-collateral"
+          >
             {currentCollateral.toNumber().toFixed(2)} {collateralType}{' '}
             {amountToDeposit.gt(0) && (
               <>
                 {arithmeticOperations !== 'none' && (
-                  <Text color="white" fontSize="20px" fontWeight={800}>
+                  <Text
+                    color="white"
+                    fontSize="20px"
+                    fontWeight={800}
+                    data-cy="position-overview-collateral-arrow"
+                  >
                     &rarr;{' '}
                     {currentCollateral[arithmeticOperations](amountToDeposit).toNumber().toFixed(2)}{' '}
                     {collateralType}
@@ -94,7 +106,8 @@ export function PositionOverview({
                 {arithmeticOperations !== 'none' && (
                   <Text color="white" fontSize="16px">
                     &rarr; $
-                    {currentCollateral[arithmeticOperations](amountToDeposit.mul(priceOfToDeposit))
+                    {currentCollateral[arithmeticOperations](amountToDeposit)
+                      .mul(price || ZEROWEI)
                       .toNumber()
                       .toFixed(2)}
                   </Text>

@@ -69,6 +69,7 @@ export function NetworkController() {
                 ml={1.5}
                 mr={2}
                 display={{ base: 'none', md: 'initial' }}
+                data-cy="current-selected-network"
               >
                 {activeNetwork?.label || 'Not Connected'}
               </Text>
@@ -127,6 +128,7 @@ export function NetworkController() {
               fontWeight={700}
               fontSize="xs"
               userSelect="none"
+              data-cy="header-wallet-address-display"
             >
               {activeWallet.ens?.name || prettyString(activeWallet.address)}
             </Text>
@@ -152,6 +154,7 @@ export function NetworkController() {
         </Menu>
       ) : (
         <Button
+          data-cy="header-connect-wallet"
           onClick={() => connect()}
           type="button"
           size="sm"

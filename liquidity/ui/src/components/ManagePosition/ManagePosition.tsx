@@ -2,11 +2,11 @@ import { Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@ch
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Wei from '@synthetixio/wei';
 import { useParams } from '@snx-v3/useParams';
-import { useState } from 'react';
 import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 import { PositionAction } from './PositionActions';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Transaction } from './SignTransaction';
+import { useState } from 'react';
 
 export type Step =
   | 'remove'
@@ -15,9 +15,7 @@ export type Step =
   | 'done'
   | 'firstDeposit'
   | 'close'
-  | 'repay'
-  | 'createAccount'
-  | 'accountCreated';
+  | 'repay';
 
 export function ManagePosition({
   liquidityPostion,
@@ -32,14 +30,19 @@ export function ManagePosition({
   transactions: Transaction[];
   isBase: boolean;
 }) {
-  const [step, setStep] = useState<Step | undefined>(undefined);
+  const [stepState, setStepState] = useState<Step | undefined>(undefined);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { collateralSymbol, tab, tabAction, accountId, poolId } = useParams();
+  const { collateralSymbol, tab, tabAction, poolId, step } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
+  const setStep = (step?: Step) => {
+    queryParams.set('step', step || '');
+    navigate({ pathname, search: queryParams.toString() }, { replace: true });
+    setStepState(step);
+  };
 
   if (liquidityPostion?.debt.eq(0) || !liquidityPostion) {
     return (
@@ -47,10 +50,9 @@ export function ManagePosition({
         collateralSymbol={collateralSymbolParsed}
         liquidityPostion={liquidityPostion}
         setStep={setStep}
-        step={step}
+        step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
-        accountId={accountId}
         walletBalance={walletBalance}
         accountBalance={accountBalance}
         transactions={transactions}
@@ -65,10 +67,9 @@ export function ManagePosition({
         collateralSymbol={collateralSymbolParsed}
         liquidityPostion={liquidityPostion}
         setStep={setStep}
-        step={step}
+        step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
-        accountId={accountId}
         walletBalance={walletBalance}
         accountBalance={accountBalance}
         transactions={transactions}
@@ -205,10 +206,9 @@ export function ManagePosition({
           collateralSymbol={collateralSymbolParsed}
           liquidityPostion={liquidityPostion}
           setStep={setStep}
-          step={step}
+          step={stepState}
           tab={tabParsed}
           tabAction={tabActionParsed}
-          accountId={accountId}
           walletBalance={walletBalance}
           accountBalance={accountBalance}
           transactions={transactions}

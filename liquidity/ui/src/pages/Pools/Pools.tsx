@@ -84,6 +84,7 @@ export function Pools() {
                   </Flex>
 
                   <Button
+                    data-cy="pools-deposit-button"
                     onClick={() => {
                       if (
                         liquidityPositon &&

@@ -146,12 +146,5 @@ export function useAccountUrlSync() {
         );
       }
     }
-  }, [
-    accounts.data,
-    accounts.isFetched,
-    navigate,
-    location.pathname,
-    queryParams,
-    wallet?.accounts,
-  ]);
+  }, [navigate, location, accounts.data, accounts.isFetched, wallet?.accounts, queryParams]);
 }

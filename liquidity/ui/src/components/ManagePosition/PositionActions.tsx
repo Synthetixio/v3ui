@@ -1,18 +1,17 @@
 import Wei from '@synthetixio/wei';
 import { Step } from './ManagePosition';
-import { Dispatch, SetStateAction } from 'react';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Divider, Flex, Heading, Input, Text } from '@chakra-ui/react';
+import { Alert, Divider, Flex, Heading, Input, Text } from '@chakra-ui/react';
 import { ManageInputUi } from './ManageInputUi';
 import { SignTransaction, Transaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ZEROWEI } from '../../utils/constants';
-import { CreateLiquidiyAccount } from './CreateAccount';
-import { useCreateAccount } from '@snx-v3/useAccounts';
-import { LiquidityAccountCreated } from './AccountCreated';
 import { TokenIcon } from '../TokenIcon';
+import { useRecoilState } from 'recoil';
+import { amountState } from '../../state/amount';
+import { InfoIcon } from '@chakra-ui/icons';
 
 export function PositionAction({
   tab,
@@ -23,7 +22,6 @@ export function PositionAction({
   poolId = '',
   collateralAddress = '',
   collateralSymbol,
-  accountId,
   setStep,
   step,
   transactions,
@@ -36,24 +34,13 @@ export function PositionAction({
   collateralSymbol: string;
   poolId?: string;
   collateralAddress?: string;
-  accountId?: string;
   step: Step | undefined;
-  setStep: Dispatch<SetStateAction<Step | undefined>>;
+  setStep: (step: Step) => void;
   transactions: Transaction[];
 }) {
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const {
-    mutation: { mutateAsync: createAccount, isPending: createAccountIsLoading },
-    getTransactionCost: { data: accountTransactionCost },
-  } = useCreateAccount();
-  const handleManageInputButtonClick = () => {
-    if (tab === 3 && !step && !accountId) {
-      setStep('createAccount');
-    } else {
-      setStep('signTransaction');
-    }
-  };
+  const [amountToDeposit] = useRecoilState(amountState);
 
   if (tabAction === 'close') {
     if (!step) {
@@ -123,7 +110,7 @@ export function PositionAction({
             buttonText="Remove Collateral"
             inputSubline="Balance"
             title="Remove Collateral"
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         </Flex>
       );
@@ -179,7 +166,7 @@ export function PositionAction({
             buttonText="Remove Collateral"
             inputSubline="Balance"
             title="Remove Collateral"
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         );
       }
@@ -242,7 +229,7 @@ export function PositionAction({
               collateralSymbol={collateralSymbol}
               collateral={walletBalance?.add(accountBalance)}
               price={liquidityPostion?.collateralPrice || ZEROWEI}
-              buttonText={!accountId ? 'Create Account 1/2' : 'Create Account 2/2'}
+              buttonText="Sign Transaction"
               inputSubline="Balance"
               title="Deposit Collateral"
               tooltip={
@@ -251,8 +238,15 @@ export function PositionAction({
                   <Text>Account Balance: {accountBalance?.toNumber().toFixed(2)}</Text>
                 </>
               }
-              handleButtonClick={handleManageInputButtonClick}
-            />
+              handleButtonClick={() => setStep('signTransaction')}
+            >
+              {amountToDeposit.gt(0) && (
+                <Alert colorScheme="blue" rounded="base">
+                  <InfoIcon w="20px" h="20px" color="cyan.500" mr="4" />
+                  This action will incur timeout for withdrawing collateral
+                </Alert>
+              )}
+            </ManageInputUi>
           </Flex>
         ) : (
           <ManageInputUi
@@ -268,30 +262,16 @@ export function PositionAction({
                 <Text>Account Balance: {accountBalance?.toNumber().toFixed(2)}</Text>
               </>
             }
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         );
-      }
-      if (step === 'createAccount') {
-        return (
-          <CreateLiquidiyAccount
-            createAccount={() => {
-              createAccount().then(() => setStep('accountCreated'));
-            }}
-            createAccountIsLoading={createAccountIsLoading}
-            createAccountTransactionCost={accountTransactionCost}
-          />
-        );
-      }
-      if (step === 'accountCreated') {
-        return <LiquidityAccountCreated setStep={() => setStep('signTransaction')} />;
       }
       if (step === 'signTransaction') {
         return (
           <SignTransaction
             buttonText="Execute Transactions"
             actionButtonClick={async () => {
-              for (let i = 0; i <= transactions.length; i++) {
+              for (let i = 0; i < transactions.length; i++) {
                 if (!transactions[i].done) {
                   if (typeof transactions[i].arg !== 'undefined') {
                     await transactions[i].exec(transactions[i].arg);
@@ -305,7 +285,7 @@ export function PositionAction({
             }}
             header="Open Liquidity Position"
             transactions={transactions}
-            isFirstDeposit={!!liquidityPostion?.debt.eq(0)}
+            isFirstDeposit={true}
           />
         );
       }
@@ -337,7 +317,7 @@ export function PositionAction({
             buttonText="Repay"
             inputSubline="Debt"
             title="Repay Debt"
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         );
       }
@@ -390,7 +370,7 @@ export function PositionAction({
             buttonText="Claim"
             inputSubline="Claim"
             title="Claim Debt"
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         );
       }
@@ -443,7 +423,7 @@ export function PositionAction({
             buttonText="Repay"
             inputSubline="Debt"
             title="Repay Debt"
-            handleButtonClick={handleManageInputButtonClick}
+            handleButtonClick={() => setStep('signTransaction')}
           />
         );
       }

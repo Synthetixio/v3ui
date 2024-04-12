@@ -10,7 +10,7 @@ export function Home() {
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column">
-        <Heading color="gray.50" fontSize="1.5rem">
+        <Heading color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
           Dashboard
         </Heading>
         <StatsList />

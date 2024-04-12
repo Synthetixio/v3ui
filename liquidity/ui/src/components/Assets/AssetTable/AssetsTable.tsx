@@ -54,6 +54,7 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
             Please connect wallet to view assets
           </Text>
           <Button
+            data-cy="connect-button-asset-table"
             size="sm"
             onClick={() => {
               connect();
