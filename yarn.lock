@@ -6623,15 +6623,13 @@ __metadata:
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useGetPnl": "workspace:*"
-    "@snx-v3/useRewardsApr": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
+    date-fns: "npm:^2.30.0"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useBlockNumber@workspace:*, @snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
+"@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
   dependencies:
@@ -6857,21 +6855,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl"
-  dependencies:
-    "@snx-v3/isBaseAndromeda": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
@@ -7061,21 +7044,6 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useRewardsApr@workspace:*, @snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr"
-  dependencies:
-    "@snx-v3/constants": "workspace:*"
-    "@snx-v3/useBlockNumber": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    date-fns: "npm:^2.30.0"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -7562,7 +7530,7 @@ __metadata:
     "@ethersproject/abi": "npm:^5.7.0"
     "@ethersproject/providers": "npm:^5.7.2"
     "@typechain/ethers-v5": "npm:^11.1.2"
-    "@usecannon/cli": "npm:2.11.21"
+    "@usecannon/cli": "npm:2.12.1"
     debug: "npm:^4.3.4"
     ethers: "npm:^5.7.2"
     prettier: "npm:^3.1.0"
@@ -9032,9 +9000,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@usecannon/builder@npm:2.11.21":
-  version: 2.11.21
-  resolution: "@usecannon/builder@npm:2.11.21"
+"@usecannon/builder@npm:2.12.1":
+  version: 2.12.1
+  resolution: "@usecannon/builder@npm:2.12.1"
   dependencies:
     "@synthetixio/router": "npm:^3.3.7"
     axios: "npm:^1.6.7"
@@ -9047,19 +9015,19 @@ __metadata:
     promise-events: "npm:^0.2.4"
     typedoc-plugin-markdown: "npm:^3.17.1"
     typestub-ipfs-only-hash: "npm:^4.0.0"
-    viem: "npm:^2.6.1"
+    viem: "npm:^2.9.3"
     zod: "npm:^3.22.4"
-  checksum: 955c53e945bcde59b4a9db96de55336307d6c12a1be58e256a05075d6039444f4c3f30e8836c6a7a4b3efb958f938f1a525cb9843ba66f9123b540abca309e9d
+  checksum: f5f44211e0cb18c866a1fadc6a128e8bc58afa0b4a48abf80b11bc2663134d5e60ecc5a08346186c6cb3e9dcc6f3209936bb0753115b44f156f20fc51c84c78a
   languageName: node
   linkType: hard
 
-"@usecannon/cli@npm:2.11.21":
-  version: 2.11.21
-  resolution: "@usecannon/cli@npm:2.11.21"
+"@usecannon/cli@npm:2.12.1":
+  version: 2.12.1
+  resolution: "@usecannon/cli@npm:2.12.1"
   dependencies:
     "@iarna/toml": "npm:^3.0.0"
     "@synthetixio/wei": "npm:^2.74.1"
-    "@usecannon/builder": "npm:2.11.21"
+    "@usecannon/builder": "npm:2.12.1"
     abitype: "npm:^1.0.0"
     chalk: "npm:^4.1.2"
     commander: "npm:^9.5.0"
@@ -9068,18 +9036,17 @@ __metadata:
     fastq: "npm:^1.15.0"
     fs-extra: "npm:^10.1.0"
     lodash: "npm:^4.17.21"
-    promise-timeout: "npm:^1.3.0"
     prompts: "npm:^2.4.2"
     semver: "npm:^7.3.7"
     table: "npm:^6.8.0"
     tildify: "npm:2.0.0"
     untildify: "npm:^4.0.0"
-    viem: "npm:^2.6.1"
+    viem: "npm:^2.9.3"
     znv: "npm:^0.4.0"
     zod: "npm:^3.22.4"
   bin:
     cannon: bin/cannon.js
-  checksum: d7011f0f0c22eff8b81e5e9c9bd2f3e131a31c96e17c428c31cb41dd85cc04ea2862fdd1ef43780a31bde430cc0e997bb0f10c4fb4db8dea04633508b682e214
+  checksum: a021550cd396b5ab7b5082b837e0b152299c720efbd609554420e7f1bc9d23f1896099bf2440017d55e2e2b6997281467280efb9d6e1225272257c3bccad470f
   languageName: node
   linkType: hard
 
@@ -22515,13 +22482,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise-timeout@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "promise-timeout@npm:1.3.0"
-  checksum: 4faa906ba2f4d966c9cb5d033030f2d0c5c96465650ee42a130497c70c6ddb1a202bff85ef877898ffa0cf2a4ba0ac52228ea2a03b2ddbf4091153294e87d016
-  languageName: node
-  linkType: hard
-
 "promise@npm:^8.0.0":
   version: 8.3.0
   resolution: "promise@npm:8.3.0"
@@ -26726,9 +26686,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.6.1, viem@npm:^2.8.9":
-  version: 2.8.13
-  resolution: "viem@npm:2.8.13"
+"viem@npm:^2.8.9, viem@npm:^2.9.3":
+  version: 2.9.16
+  resolution: "viem@npm:2.9.16"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.0"
     "@noble/curves": "npm:1.2.0"
@@ -26743,7 +26703,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 2674514bbc100b8eef2fcf8326028ea63be497c64eb4e8bd9a284734b6d601881aa104d3bf557952ef1bc440cc9c003c9863777894168a1f0668103013f1b67a
+  checksum: 2085045d94dcd48ea0f537c93b7fbf16d6ccd858d0bac27e4669cbef656b48f815334818334acc7dad6d3fc9a1e82cc473892ea90274c7588148a289ce045e12
   languageName: node
   linkType: hard
 

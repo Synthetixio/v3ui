@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Box, Container, Flex } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
-import Footer from './Footer';
 import Header from './Header';
 
 export const DefaultLayout: FC = () => (
@@ -19,6 +18,5 @@ export const DefaultLayout: FC = () => (
         <Outlet />
       </Container>
     </Flex>
-    <Footer />
   </Box>
 );
