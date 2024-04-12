@@ -1,7 +1,7 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
-import { subDays, getUnixTime } from 'date-fns';
+import { getUnixTime } from 'date-fns';
 
 export function useApr(
   poolId = '1',
@@ -13,17 +13,18 @@ export function useApr(
     queryKey: ['apr', network?.id],
     queryFn: async () => {
       try {
-        const utcZero = new Date().setUTCHours(0, 0, 0, 0);
+        const now = new Date();
+        now.setUTCHours(0, 0, 0, 0);
 
-        const now = getUnixTime(utcZero);
-        const weekAgo = getUnixTime(subDays(utcZero, 7));
+        const to = getUnixTime(now);
+        const from = to - 7 * 24 * 60 * 60;
 
         const params = new URLSearchParams({
           poolId,
           collateralType,
           frame: 'day',
-          fromTimestamp: weekAgo.toString(),
-          toTimestamp: now.toString(),
+          fromTimestamp: from.toString(),
+          toTimestamp: to.toString(),
         });
 
         const response = await fetch(
