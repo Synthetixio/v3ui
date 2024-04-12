@@ -78,7 +78,7 @@ export function Repay({
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
-          priceOfToDeposit={liquidityPosition?.collateralPrice || ZEROWEI}
+          price={liquidityPosition?.collateralPrice || ZEROWEI}
         />
       }
     />

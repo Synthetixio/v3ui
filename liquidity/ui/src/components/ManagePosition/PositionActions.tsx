@@ -22,7 +22,6 @@ export function PositionAction({
   poolId = '',
   collateralAddress = '',
   collateralSymbol,
-  accountId,
   setStep,
   step,
   transactions,
@@ -35,7 +34,6 @@ export function PositionAction({
   collateralSymbol: string;
   poolId?: string;
   collateralAddress?: string;
-  accountId?: string;
   step: Step | undefined;
   setStep: (step: Step) => void;
   transactions: Transaction[];

@@ -34,7 +34,7 @@ export function ManagePosition({
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { collateralSymbol, tab, tabAction, accountId, poolId, step } = useParams();
+  const { collateralSymbol, tab, tabAction, poolId, step } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
@@ -53,7 +53,6 @@ export function ManagePosition({
         step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
-        accountId={accountId}
         walletBalance={walletBalance}
         accountBalance={accountBalance}
         transactions={transactions}
@@ -71,7 +70,6 @@ export function ManagePosition({
         step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
-        accountId={accountId}
         walletBalance={walletBalance}
         accountBalance={accountBalance}
         transactions={transactions}
@@ -211,7 +209,6 @@ export function ManagePosition({
           step={stepState}
           tab={tabParsed}
           tabAction={tabActionParsed}
-          accountId={accountId}
           walletBalance={walletBalance}
           accountBalance={accountBalance}
           transactions={transactions}

@@ -6623,15 +6623,13 @@ __metadata:
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useGetPnl": "workspace:*"
-    "@snx-v3/useRewardsApr": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
+    date-fns: "npm:^2.30.0"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useBlockNumber@workspace:*, @snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
+"@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
   dependencies:
@@ -6857,21 +6855,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetPnl@workspace:*, @snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useGetPnl@workspace:liquidity/lib/useGetPnl"
-  dependencies:
-    "@snx-v3/isBaseAndromeda": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
@@ -7061,21 +7044,6 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useRewardsApr@workspace:*, @snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useRewardsApr@workspace:liquidity/lib/useRewardsApr"
-  dependencies:
-    "@snx-v3/constants": "workspace:*"
-    "@snx-v3/useBlockNumber": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    date-fns: "npm:^2.30.0"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -26718,28 +26686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.8.9":
-  version: 2.8.13
-  resolution: "viem@npm:2.8.13"
-  dependencies:
-    "@adraffy/ens-normalize": "npm:1.10.0"
-    "@noble/curves": "npm:1.2.0"
-    "@noble/hashes": "npm:1.3.2"
-    "@scure/bip32": "npm:1.3.2"
-    "@scure/bip39": "npm:1.2.1"
-    abitype: "npm:1.0.0"
-    isows: "npm:1.0.3"
-    ws: "npm:8.13.0"
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 2674514bbc100b8eef2fcf8326028ea63be497c64eb4e8bd9a284734b6d601881aa104d3bf557952ef1bc440cc9c003c9863777894168a1f0668103013f1b67a
-  languageName: node
-  linkType: hard
-
-"viem@npm:^2.9.3":
+"viem@npm:^2.8.9, viem@npm:^2.9.3":
   version: 2.9.16
   resolution: "viem@npm:2.9.16"
   dependencies:
