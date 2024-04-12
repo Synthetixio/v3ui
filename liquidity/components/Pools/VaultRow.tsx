@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Amount } from '@snx-v3/Amount';
-import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
 import { generatePath, Link, useLocation } from 'react-router-dom';
 import { useConnectWallet } from '@web3-onboard/react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
@@ -86,7 +86,9 @@ function VaultRowUi({
         </>
       ) : (
         <Td>
-          <Text>{apr ? apr.toFixed(2) : '-'}%</Text>
+          <Tooltip label="APR is a combination of past week pool performance and rewards.">
+            <Text>{apr ? apr.toFixed(2) : '-'}%</Text>
+          </Tooltip>
         </Td>
       )}
       <Td textAlign="end">
