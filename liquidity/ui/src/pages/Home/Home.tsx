@@ -5,7 +5,6 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { usePools } from '@snx-v3/usePools';
 import { useParams } from '@snx-v3/useParams';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
-import { Welcome } from '../../components/Shared/Welcome';
 import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
 import { useApr } from '@snx-v3/useApr';
 
@@ -39,7 +38,6 @@ export function Home() {
         <meta name="description" content="Synthetix V3" />
       </Helmet>
       <Flex height="100%" flexDirection="column">
-        <Welcome />
         <Stats totalDebt={totalDebt} totalCollateral={totalCollateral} isLoading={isLoading} />
         <PoolsList
           pools={pools}
