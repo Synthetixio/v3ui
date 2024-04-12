@@ -13,15 +13,17 @@ export function useApr(
     queryKey: ['apr', network?.id],
     queryFn: async () => {
       try {
-        const now = getUnixTime(new Date()).toString();
-        const weekAgo = getUnixTime(subDays(new Date(), 7)).toString();
+        const utcZero = new Date().setUTCHours(0, 0, 0, 0);
+
+        const now = getUnixTime(utcZero);
+        const weekAgo = getUnixTime(subDays(utcZero, 7));
 
         const params = new URLSearchParams({
           poolId,
           collateralType,
           frame: 'day',
-          fromTimestamp: weekAgo,
-          toTimestamp: now,
+          fromTimestamp: weekAgo.toString(),
+          toTimestamp: now.toString(),
         });
 
         const response = await fetch(
