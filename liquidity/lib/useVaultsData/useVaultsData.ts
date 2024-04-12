@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 const VaultCollateralSchema = z
@@ -18,7 +17,6 @@ export const useVaultsData = (poolId?: number) => {
   const { network } = useNetwork();
   const { data: collateralTypes } = useCollateralTypes();
   const { data: CoreProxyContract } = useCoreProxy();
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
     queryKey: [
@@ -30,13 +28,7 @@ export const useVaultsData = (poolId?: number) => {
       },
     ],
     queryFn: async () => {
-      if (
-        !CoreProxyContract ||
-        !collateralTypes ||
-        !poolId ||
-        !collateralPriceUpdates ||
-        !network
-      ) {
+      if (!CoreProxyContract || !collateralTypes || !poolId || !network) {
         throw Error('useVaultsData should not be enabled when missing data');
       }
 
@@ -54,10 +46,9 @@ export const useVaultsData = (poolId?: number) => {
         )
       );
 
-      const collateralPriceUpdateCallsP = fetchPriceUpdates(
-        collateralPriceUpdates,
-        network.isTestnet
-      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
+      const collateralPriceUpdateCallsP = fetchPriceUpdates([], network.isTestnet).then(
+        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
+      );
 
       const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
 
@@ -94,9 +85,7 @@ export const useVaultsData = (poolId?: number) => {
         'useVaultsData'
       );
     },
-    enabled: Boolean(
-      collateralTypes?.length && CoreProxyContract && poolId && collateralPriceUpdates
-    ),
+    enabled: Boolean(collateralTypes?.length && CoreProxyContract && poolId),
   });
 };
 

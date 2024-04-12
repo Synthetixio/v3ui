@@ -8,7 +8,6 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 
@@ -75,7 +74,6 @@ export const useLiquidityPosition = ({
   accountId?: string;
   poolId?: string;
 }) => {
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
   const { network } = useNetwork();
@@ -88,22 +86,11 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
       },
     ],
-    enabled: Boolean(
-      CoreProxy && UsdProxy && poolId && accountId && tokenAddress && collateralPriceUpdates
-    ),
+    enabled: Boolean(CoreProxy && UsdProxy && poolId && accountId && tokenAddress),
     queryFn: async () => {
-      if (
-        !CoreProxy ||
-        !accountId ||
-        !poolId ||
-        !tokenAddress ||
-        !collateralPriceUpdates ||
-        !UsdProxy ||
-        !network
-      ) {
+      if (!CoreProxy || !accountId || !poolId || !tokenAddress || !UsdProxy || !network) {
         throw Error('useLiquidityPosition should not be enabled');
       }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
@@ -125,10 +112,9 @@ export const useLiquidityPosition = ({
           CoreProxy,
         });
 
-      const collateralPriceCalls = await fetchPriceUpdates(
-        collateralPriceUpdates,
-        network.isTestnet
-      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
+      const collateralPriceCalls = await fetchPriceUpdates([], network.isTestnet).then(
+        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
+      );
 
       const allCalls = collateralPriceCalls
         .concat(priceCalls)

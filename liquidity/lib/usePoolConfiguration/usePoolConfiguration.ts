@@ -6,7 +6,6 @@ import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -26,13 +25,12 @@ const isLockedSchema = z.boolean();
 export const usePoolConfiguration = (poolId?: string) => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   return useQuery({
-    enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),
+    enabled: Boolean(CoreProxy && poolId),
     queryKey: [`${network?.id}-${network?.preset}`, 'PoolConfiguration', { poolId }],
     queryFn: async () => {
-      if (!CoreProxy || !poolId || !collateralPriceUpdates || !network) {
+      if (!CoreProxy || !poolId || !network) {
         throw Error('usePoolConfiguration should not be enabled');
       }
       const marketsData = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));
@@ -41,14 +39,14 @@ export const usePoolConfiguration = (poolId?: string) => {
         weight: maxDebtShareValueD18,
         maxDebtShareValue: weightD18,
       }));
-      const collateralPriceCalls = await fetchPriceUpdates(
-        collateralPriceUpdates,
-        network.isTestnet
-      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
+      const collateralPriceCalls = await fetchPriceUpdates([], network.isTestnet).then(
+        (signedData) => priceUpdatesToPopulatedTx('0x', [], signedData)
+      );
 
       const calls = await Promise.all(
         markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
       );
+
       const decoded = await erc7412Call(
         network,
         CoreProxy.provider,
