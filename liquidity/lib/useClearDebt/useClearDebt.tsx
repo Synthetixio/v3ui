@@ -80,7 +80,6 @@ export const useClearDebt = ({
       try {
         dispatch({ type: 'prompting' });
 
-        // USDC => sUSDC
         const depositDebtToRepay = repayer.populateTransaction.depositDebtToRepay(
           CoreProxy.address,
           SpotMarketProxy.address,
