@@ -6,7 +6,7 @@ import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 import { PositionAction } from './PositionActions';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Transaction } from './SignTransaction';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 export type Step =
   | 'remove'
@@ -15,9 +15,7 @@ export type Step =
   | 'done'
   | 'firstDeposit'
   | 'close'
-  | 'repay'
-  | 'createAccount'
-  | 'accountCreated';
+  | 'repay';
 
 export function ManagePosition({
   liquidityPostion,
@@ -32,6 +30,7 @@ export function ManagePosition({
   transactions: Transaction[];
   isBase: boolean;
 }) {
+  const [stepState, setStepState] = useState<Step | undefined>(undefined);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -39,16 +38,11 @@ export function ManagePosition({
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
-  const parsedStep = step ? (step as Step) : undefined;
   const setStep = (step?: Step) => {
     queryParams.set('step', step || '');
-    // TODO @DEV bug, doesnt update url and doenst go to next step
     navigate({ pathname, search: queryParams.toString() }, { replace: true });
+    setStepState(step);
   };
-
-  useEffect(() => {
-    console.log('STEP', step);
-  }, [setStep]);
 
   if (liquidityPostion?.debt.eq(0) || !liquidityPostion) {
     return (
@@ -56,7 +50,7 @@ export function ManagePosition({
         collateralSymbol={collateralSymbolParsed}
         liquidityPostion={liquidityPostion}
         setStep={setStep}
-        step={parsedStep}
+        step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
         accountId={accountId}
@@ -74,7 +68,7 @@ export function ManagePosition({
         collateralSymbol={collateralSymbolParsed}
         liquidityPostion={liquidityPostion}
         setStep={setStep}
-        step={parsedStep}
+        step={stepState}
         tab={tabParsed}
         tabAction={tabActionParsed}
         accountId={accountId}
@@ -214,7 +208,7 @@ export function ManagePosition({
           collateralSymbol={collateralSymbolParsed}
           liquidityPostion={liquidityPostion}
           setStep={setStep}
-          step={parsedStep}
+          step={stepState}
           tab={tabParsed}
           tabAction={tabActionParsed}
           accountId={accountId}

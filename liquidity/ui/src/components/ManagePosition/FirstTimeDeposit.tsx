@@ -49,26 +49,26 @@ export function FirstTimeDeposit({
     contractAddress: collateralAddress,
     spender: CoreProxy?.address,
   });
+
   const { exec: wrapEth, isLoading: wrapEthIsLoading, ethBalance, wethBalance } = useWrapEth();
   const walletBalance =
     userTokenBalances?.reduce((cur, prev) => cur.add(prev), ZEROWEI).add(ethBalance || ZEROWEI) ||
     ZEROWEI;
   const accountBalance =
     accountCollateral?.reduce((cur, prev) => {
-      if (prev.displaySymbol === collateralSymbol) return cur.add(prev.totalDeposited);
+      if (prev.symbol?.toLowerCase() === collateralSymbol?.toLowerCase())
+        return cur.add(prev.totalDeposited);
       return cur;
     }, ZEROWEI) || ZEROWEI;
-
   const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } = useDeposit({
     collateralChange: amountToDeposit,
-    currentCollateral: liquidityPosition?.collateralAmount || ZEROWEI,
-    newAccountId: '1337',
+    currentCollateral: ZEROWEI,
+    newAccountId: (Math.floor(Math.random() * (10_000_000 - 10_000 + 1)) + 10_000).toString(),
     accountId,
     poolId,
     availableCollateral: accountBalance,
     collateralTypeAddress: collateralAddress,
   });
-
   const isLoading =
     isPoolLoading &&
     collateralTypesIsLoading &&
@@ -82,7 +82,7 @@ export function FirstTimeDeposit({
       title: `Approve ${collateralSymbol} transfer`,
       subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
       exec: approve,
-      arg: false,
+      arg: true,
     },
     {
       done: false,
@@ -92,6 +92,7 @@ export function FirstTimeDeposit({
       exec: depositBaseAndromeda,
     },
   ];
+
   const transactions =
     collateralSymbol === 'WETH'
       ? [
@@ -106,6 +107,7 @@ export function FirstTimeDeposit({
           ...baseTransactions,
         ]
       : baseTransactions;
+
   return (
     <PositionHeader
       title={'Open ' + collateralSymbol + ' Liquidity Position'}

@@ -16,15 +16,13 @@ it('Deposit - First Time', () => {
   cy.get('[data-cy="position-overview-collateral"]').contains('0.00 WETH');
   cy.get('[data-cy="position-overview-collateral-arrow"]').contains('1.00 WETH');
   cy.get('[data-cy="manage-input-ui-button"]').click();
-
-  //BUG state is not updating, we stuck in account creation page
-  cy.get('[data-cy="create-account-button"]').click();
+  cy.get('[data-cy="sign-transaction-button"]').click();
   cy.wait(1000);
-  cy.get('[data-cy="account-created-button"]').click();
+  cy.task('mineBlock');
   cy.get('[data-cy="sign-transaction-button"]').click();
-  cy.wait(5000);
-  cy.get('[data-cy="sign-transaction-button"]').click();
-  cy.wait(5000);
+  cy.task('mineBlock');
+  cy.wait(1000);
+  cy.task('mineBlock');
   cy.get('[data-cy="sign-transaction-button"]').click();
   // cy.get('@wallet').then((wallet) => {
   // });
