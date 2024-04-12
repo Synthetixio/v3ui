@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Box, Divider, Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
 import Wei, { wei } from '@synthetixio/wei';
@@ -98,9 +98,11 @@ export const CollateralSectionUi: FC<{
           {isAprLoading ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
-            <Text fontWeight={700} fontSize="xl" color="white">
-              {`${apr ? apr?.toFixed(2) : '-'}%`}
-            </Text>
+            <Tooltip label="APR is a combination of past week pool performance and rewards.">
+              <Text fontWeight={700} fontSize="xl" color="white">
+                {`${apr ? apr?.toFixed(2) : '-'}%`}
+              </Text>
+            </Tooltip>
           )}
         </Flex>
       </BorderBox>

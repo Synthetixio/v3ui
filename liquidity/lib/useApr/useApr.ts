@@ -1,6 +1,7 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
+import { subDays, getUnixTime } from 'date-fns';
 
 export function useApr(
   poolId = '1',
@@ -12,10 +13,15 @@ export function useApr(
     queryKey: ['apr', network?.id],
     queryFn: async () => {
       try {
+        const now = getUnixTime(new Date()).toString();
+        const weekAgo = getUnixTime(subDays(new Date(), 7)).toString();
+
         const params = new URLSearchParams({
           poolId,
           collateralType,
           frame: 'day',
+          fromTimestamp: weekAgo,
+          toTimestamp: now,
         });
 
         const response = await fetch(
@@ -24,17 +30,11 @@ export function useApr(
 
         const data = await response.json();
 
-        // Take the past weeks values
-        let samplePeriod;
-        if (data.rollingAverages.length < 7) {
-          samplePeriod = data.rollingAverages;
-        } else {
-          samplePeriod = data.rollingAverages.slice(-7);
-        }
-
         const combinedApr =
-          samplePeriod.reduce((acc: number, currentValue: number) => acc + currentValue, 0) /
-          data.rollingAverages.length;
+          data.rollingAverages.reduce(
+            (acc: number, currentValue: number) => acc + currentValue,
+            0
+          ) / data.rollingAverages.length;
 
         return {
           combinedApr: combinedApr * 365,
