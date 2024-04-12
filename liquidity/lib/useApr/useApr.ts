@@ -1,6 +1,7 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
+import { subDays } from 'date-fns';
 
 export function useApr(
   poolId = '1',
@@ -15,6 +16,7 @@ export function useApr(
         const params = new URLSearchParams({
           poolId,
           collateralType,
+          frame: 'day',
         });
 
         const response = await fetch(
@@ -24,13 +26,13 @@ export function useApr(
         const data = await response.json();
 
         const combinedApr =
-          data.rollingAverages.reduce(
-            (acc: number, currentValue: number) => acc + currentValue,
-            0
-          ) / data.rollingAverages.length;
+          data.rollingAverages
+            .slice(data.rollingAverages.length - 8, data.rollingAverages.length - 1)
+            .reduce((acc: number, currentValue: number) => acc + currentValue, 0) /
+          data.rollingAverages.length;
 
         return {
-          combinedApr,
+          combinedApr: combinedApr * 365,
         };
       } catch (error) {
         return;
