@@ -8,7 +8,6 @@ import Wei from '@synthetixio/wei';
 import { BigNumber, Contract } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
@@ -16,7 +15,7 @@ import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythP
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
 
-const DEBT_REPAYER_ABI = [
+export const DEBT_REPAYER_ABI = [
   {
     inputs: [
       { internalType: 'contract ISynthetixCore', name: 'synthetixCore', type: 'address' },
@@ -48,7 +47,6 @@ export const useClearDebt = ({
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
-  const { data: UsdProxy } = useUSDProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
 
@@ -67,7 +65,6 @@ export const useClearDebt = ({
           poolId &&
           accountId &&
           collateralTypeAddress &&
-          UsdProxy &&
           SpotMarketProxy &&
           collateralPriceIds
         )
