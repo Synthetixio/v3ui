@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei from '@synthetixio/wei';
-import { BigNumber, Contract, constants } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
@@ -14,7 +14,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { getRepayerContract } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
 
 const DEBT_REPAYER_ABI = [
   {
@@ -38,11 +38,13 @@ export const useClearDebt = ({
   poolId,
   collateralTypeAddress,
   availableUSDCollateral,
+  debt,
 }: {
   accountId?: string;
   poolId?: string;
   collateralTypeAddress?: string;
   availableUSDCollateral?: Wei;
+  debt?: Wei;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -85,14 +87,15 @@ export const useClearDebt = ({
           SpotMarketProxy.address,
           accountId,
           poolId,
-          collateralTypeAddress
+          collateralTypeAddress,
+          USDC_BASE_MARKET
         );
 
         const burn = CoreProxy.populateTransaction.burnUsd(
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
-          constants.MaxUint256
+          debt?.mul(110).div(100).toBN().toString() || '0'
         );
 
         const callsPromise = Promise.all([depositDebtToRepay, burn].filter(notNil));

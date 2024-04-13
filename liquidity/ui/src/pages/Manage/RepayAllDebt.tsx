@@ -41,6 +41,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     poolId: params.poolId,
     collateralTypeAddress: liquidityPosition?.tokenAddress,
     availableUSDCollateral: liquidityPosition.accountCollateral.availableCollateral,
+    debt: currentDebt,
   });
 
   const {
