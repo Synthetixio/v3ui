@@ -2,16 +2,15 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { wei } from '@synthetixio/wei';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getRepayerContract, getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useRepayBaseAndromeda } from '../../../../lib/useRepayBaseAndromeda';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
-import { useSpotMarketProxy } from '../../../../lib/useSpotMarketProxy';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useClearDebt } from '../../../../lib/useClearDebt';
 
 export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: LiquidityPosition }) => {
   const { network } = useNetwork();
@@ -23,8 +22,6 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
 
   const debtExists = liquidityPosition.debt.gt(0.01);
   const currentDebt = debtExists ? liquidityPosition.debt : wei(0);
-
-  const { data: SpotMarketProxy } = useSpotMarketProxy();
 
   const { data: tokenBalance } = useTokenBalance(
     isBase ? getUSDCAddress(network?.id) : liquidityPosition.tokenAddress
@@ -39,12 +36,12 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     exec: execRepay,
     settle: settleRepay,
     isLoading,
-  } = useRepayBaseAndromeda({
+  } = useClearDebt({
     accountId: searchParams.get('accountId') || '',
     poolId: params.poolId,
     collateralTypeAddress: liquidityPosition?.tokenAddress,
-    debtChange: currentDebt,
     availableUSDCollateral: liquidityPosition.accountCollateral.availableCollateral,
+    debt: currentDebt,
   });
 
   const {
@@ -53,8 +50,9 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     isLoading: approvalLoading,
   } = useApprove({
     contractAddress: getUSDCAddress(network?.id),
-    amount: parseUnits(currentDebt.toString(), 6).add(1),
-    spender: SpotMarketProxy?.address,
+    //slippage for approval
+    amount: parseUnits(currentDebt.toString(), 6).mul(110).div(100),
+    spender: getRepayerContract(network?.id),
   });
 
   const submit = useCallback(async () => {
