@@ -36,8 +36,6 @@ target = ["core_sandbox.synthetix.CoreProxy"]
 from = "<%= settings.test_user %>"
 func = "createAccount(uint128)"
 args = ["<%= settings.test_user_account_id %>"]
-extra.test_user_account_id.event = "AccountCreated"
-extra.test_user_account_id.arg = 0
 
 [invoke.mint_10k_box]
 target = ["core_sandbox.box_token.MintableToken"]
@@ -60,7 +58,7 @@ target = ["core_sandbox.synthetix.CoreProxy"]
 from = "<%= settings.test_user %>"
 func = "deposit"
 args = [
-    "<%= extras.test_user_account_id %>",
+    "<%= settings.test_user_account_id %>",
     "<%= imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
     "<%= parseEther('1000') %>",
 ]
@@ -72,7 +70,7 @@ from = "<%= settings.test_user %>"
 func = "delegateCollateral"
 args = [
     # examples of how to debug internal values line by line
-    "<%= /* console.log(extras) || */ extras.test_user_account_id %>",
+    "<%= /* console.log(extras) || */ settings.test_user_account_id %>",
     "<%= /* console.log(imports.core_sandbox.extras) || */imports.core_sandbox.extras.spartan_council_pool_id %>",
     "<%= /* console.log(imports.core_sandbox.imports) || */ imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
     "<%= parseEther('900') %>",
@@ -85,7 +83,7 @@ target = ["core_sandbox.synthetix.CoreProxy"]
 from = "<%= settings.test_user %>"
 func = "mintUsd"
 args = [
-    "<%= extras.test_user_account_id %>",
+    "<%= settings.test_user_account_id %>",
     "<%= imports.core_sandbox.extras.spartan_council_pool_id %>",
     "<%= imports.core_sandbox.imports.box_token.contracts.MintableToken.address %>",
     "<%= parseEther('300') %>",
@@ -97,7 +95,7 @@ target = ["core_sandbox.synthetix.CoreProxy"]
 from = "<%= settings.test_user %>"
 func = "withdraw"
 args = [
-    "<%= extras.test_user_account_id %>",
+    "<%= settings.test_user_account_id %>",
     "<%= imports.core_sandbox.imports.synthetix.contracts.USDProxy.address %>",
     "<%= parseEther('300') %>",
 ]
