@@ -12,7 +12,6 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useAllowance } from '@snx-v3/useAllowance';
 
 export const useDeposit = ({
   accountId,
@@ -36,10 +35,6 @@ export const useDeposit = ({
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
 
   const { gasSpeed } = useGasSpeed();
-  const { data: allowance } = useAllowance({
-    contractAddress: collateralTypeAddress,
-    spender: CoreProxy?.address,
-  });
 
   const { network } = useNetwork();
   const signer = useSigner();
