@@ -6,6 +6,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { isBaseAndromeda, sUSDC } from '@snx-v3/isBaseAndromeda';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -52,6 +53,15 @@ export const useCollateralPrices = () => {
     queryFn: async () => {
       if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0 || !network) {
         throw 'useCollateralPrices missing required data';
+      }
+
+      // Handle Stables usecase
+
+      if (isBaseAndromeda(network?.id, network.preset) && collateralAddresses[0] === sUSDC) {
+        return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address) => {
+          acc[address] = wei(1);
+          return acc;
+        }, {});
       }
 
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });

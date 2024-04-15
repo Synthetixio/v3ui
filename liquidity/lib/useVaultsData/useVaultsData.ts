@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
