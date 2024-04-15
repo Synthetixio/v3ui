@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -40,6 +40,7 @@ export const useDeposit = ({
     contractAddress: collateralTypeAddress,
     spender: CoreProxy?.address,
   });
+
   const { network } = useNetwork();
   const signer = useSigner();
   const provider = useProvider();
@@ -61,7 +62,6 @@ export const useDeposit = ({
         return;
       }
       if (collateralChange.eq(0)) return;
-
       try {
         dispatch({ type: 'prompting' });
         const walletAddress = await signer.getAddress();

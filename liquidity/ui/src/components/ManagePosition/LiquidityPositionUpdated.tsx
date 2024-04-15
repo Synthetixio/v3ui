@@ -3,7 +3,9 @@ import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { CheckIcon } from '@snx-v3/Multistep';
 import Wei from '@synthetixio/wei';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { Step } from './ManagePosition';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function LiquidityPositionUpdated({
   debt,
@@ -11,10 +13,8 @@ export function LiquidityPositionUpdated({
   header,
   subline,
   alertText,
-  collateralSymbol,
-  poolId,
-  collateralAddress,
   isBase,
+  setStep,
 }: {
   debt: Wei;
   currentCRatio: string;
@@ -25,11 +25,12 @@ export function LiquidityPositionUpdated({
   poolId: string;
   collateralAddress: string;
   isBase: boolean;
+  setStep: (step?: Step, providedQueryParams?: URLSearchParams) => void;
 }) {
   const [queryParams] = useSearchParams();
-  const navigate = useNavigate();
   const [amountToDeposit] = useRecoilState(amountState);
   const isFirstTimeDeposit = debt.eq(0);
+  const queryClient = useQueryClient();
 
   return (
     <Flex
@@ -92,11 +93,10 @@ export function LiquidityPositionUpdated({
             }
           }
           queryParams.set('tab', '1');
-          navigate({
-            pathname: `/manage/${collateralSymbol}/${collateralAddress}/${poolId}`,
-            search: queryParams.toString(),
-          });
+          queryClient.clear();
+          setStep(undefined, queryParams);
         }}
+        data-cy="liquidity-position-successfully-button"
       >
         Continue
       </Button>

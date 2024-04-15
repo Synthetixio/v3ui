@@ -34,17 +34,22 @@ export function ManagePosition({
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { collateralSymbol, tab, tabAction, poolId, step } = useParams();
+  const { collateralSymbol, tab, tabAction, poolId, step, collateralAddress } = useParams();
   const tabParsed = tab ? Number(tab) : 0;
   const tabActionParsed = tabAction || 'deposit';
   const collateralSymbolParsed = collateralSymbol || '?';
-  const setStep = (step?: Step) => {
-    queryParams.set('step', step || '');
-    navigate({ pathname, search: queryParams.toString() }, { replace: true });
-    setStepState(step);
+  const setStep = (step?: Step, providedQueryParams?: URLSearchParams) => {
+    const qParams = providedQueryParams || queryParams;
+    if (!step) {
+      qParams.delete('step');
+    } else {
+      qParams.set('step', step);
+    }
+    navigate({ pathname, search: qParams.toString() }, { replace: true });
+    setStepState(step ? step : undefined);
   };
 
-  if (liquidityPostion?.debt.eq(0) || !liquidityPostion) {
+  if (liquidityPostion?.debt.eq(0) || !liquidityPostion || tabAction === 'close') {
     return (
       <PositionAction
         collateralSymbol={collateralSymbolParsed}
@@ -57,25 +62,10 @@ export function ManagePosition({
         accountBalance={accountBalance}
         transactions={transactions}
         poolId={poolId}
+        collateralAddress={collateralAddress}
       />
     );
   }
-
-  if (tabAction === 'close')
-    return (
-      <PositionAction
-        collateralSymbol={collateralSymbolParsed}
-        liquidityPostion={liquidityPostion}
-        setStep={setStep}
-        step={stepState}
-        tab={tabParsed}
-        tabAction={tabActionParsed}
-        walletBalance={walletBalance}
-        accountBalance={accountBalance}
-        transactions={transactions}
-        poolId={poolId}
-      />
-    );
 
   return (
     <Flex flexDir="column" alignItems="center" gap="4">
@@ -212,6 +202,7 @@ export function ManagePosition({
           walletBalance={walletBalance}
           accountBalance={accountBalance}
           transactions={transactions}
+          collateralAddress={collateralAddress}
         />
       </Flex>
       {tabAction !== 'close' && (

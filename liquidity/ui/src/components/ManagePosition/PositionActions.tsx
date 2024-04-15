@@ -35,7 +35,7 @@ export function PositionAction({
   poolId?: string;
   collateralAddress?: string;
   step: Step | undefined;
-  setStep: (step: Step) => void;
+  setStep: (step?: Step, providedQueryParams?: URLSearchParams) => void;
   transactions: Transaction[];
 }) {
   const { network } = useNetwork();
@@ -141,6 +141,7 @@ export function PositionAction({
     if (step === 'done') {
       return (
         <LiquidityPositionUpdated
+          setStep={setStep}
           alertText="Position successfully Closed"
           header="Position successfully Closed"
           currentCRatio="0"
@@ -196,6 +197,7 @@ export function PositionAction({
       if (step === 'done') {
         return (
           <LiquidityPositionUpdated
+            setStep={setStep}
             alertText="Position successfully Opened"
             header="Position successfully Opened"
             currentCRatio="Infinite"
@@ -292,6 +294,7 @@ export function PositionAction({
       if (step === 'done') {
         return (
           <LiquidityPositionUpdated
+            setStep={setStep}
             alertText="Position successfully Opened"
             header="Position successfully Opened"
             currentCRatio="Infinite"
@@ -347,6 +350,7 @@ export function PositionAction({
       if (step === 'done') {
         return (
           <LiquidityPositionUpdated
+            setStep={setStep}
             alertText="Position successfully Opened"
             header="Position successfully Opened"
             currentCRatio="Infinite"
@@ -400,6 +404,7 @@ export function PositionAction({
       if (step === 'done') {
         return (
           <LiquidityPositionUpdated
+            setStep={setStep}
             alertText="Position successfully Opened"
             header="Position successfully Opened"
             currentCRatio="Infinite"
@@ -453,6 +458,7 @@ export function PositionAction({
       if (step === 'done') {
         return (
           <LiquidityPositionUpdated
+            setStep={setStep}
             alertText="Position successfully Opened"
             header="Position successfully Opened"
             currentCRatio="Infinite"

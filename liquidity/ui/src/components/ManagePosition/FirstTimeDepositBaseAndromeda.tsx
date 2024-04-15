@@ -70,6 +70,33 @@ export function FirstTimeDepositBaseAndromeda({
       collateralTypeAddress: collateralAddress,
     });
 
+  const baseTransaction = [
+    {
+      done: false,
+      loading: depositBaseAndromedaIsLoading,
+      title: `Delegate ${collateralSymbol}`,
+      subline: `This step will transfer your ${collateralSymbol} to Synthetix as well as delegating to the selected Pool.`,
+      exec: depositBaseAndromeda,
+    },
+  ];
+
+  const transactions =
+    userTokenBalances && userTokenBalances[0].lt(amountToDeposit)
+      ? requireApproval
+        ? [
+            {
+              done: !requireApproval,
+              loading: approveIsLoading,
+              title: `Approve ${collateralSymbol} transfer`,
+              subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
+              exec: approve,
+              arg: false,
+            },
+            ...baseTransaction,
+          ]
+        : baseTransaction
+      : baseTransaction;
+
   const isLoading =
     isPoolLoading &&
     collateralTypesIsLoading &&
@@ -87,23 +114,7 @@ export function FirstTimeDepositBaseAndromeda({
           walletBalance={walletBalance}
           isBase={true}
           accountBalance={accountBalance}
-          transactions={[
-            {
-              done: !requireApproval,
-              loading: approveIsLoading,
-              title: `Approve ${collateralSymbol} transfer`,
-              subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
-              exec: approve,
-              arg: false,
-            },
-            {
-              done: false,
-              loading: depositBaseAndromedaIsLoading,
-              title: `Delegate ${collateralSymbol}`,
-              subline: `This step will transfer your ${collateralSymbol} to Synthetix as well as delegating to the selected Pool.`,
-              exec: depositBaseAndromeda,
-            },
-          ]}
+          transactions={transactions}
         />
       }
       PositionOverview={
