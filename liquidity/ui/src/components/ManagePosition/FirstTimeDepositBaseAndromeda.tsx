@@ -59,6 +59,7 @@ export function FirstTimeDepositBaseAndromeda({
       return cur;
     }, ZEROWEI) || ZEROWEI;
 
+  const sUSDCBalance = userTokenBalances ? userTokenBalances[0] : ZEROWEI;
   const { exec: depositBaseAndromeda, isLoading: depositBaseAndromedaIsLoading } =
     useDepositBaseAndromeda({
       collateralChange: amountToDeposit,
@@ -66,7 +67,7 @@ export function FirstTimeDepositBaseAndromeda({
       newAccountId: '1337',
       accountId,
       poolId,
-      availableCollateral: accountBalance,
+      availableCollateral: accountBalance.add(sUSDCBalance),
       collateralTypeAddress: collateralAddress,
     });
 
@@ -80,22 +81,21 @@ export function FirstTimeDepositBaseAndromeda({
     },
   ];
 
-  const transactions =
-    userTokenBalances && userTokenBalances[0].lt(amountToDeposit)
-      ? requireApproval
-        ? [
-            {
-              done: !requireApproval,
-              loading: approveIsLoading,
-              title: `Approve ${collateralSymbol} transfer`,
-              subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
-              exec: approve,
-              arg: false,
-            },
-            ...baseTransaction,
-          ]
-        : baseTransaction
-      : baseTransaction;
+  const transactions = sUSDCBalance.lt(amountToDeposit)
+    ? requireApproval
+      ? [
+          {
+            done: !requireApproval,
+            loading: approveIsLoading,
+            title: `Approve ${collateralSymbol} transfer`,
+            subline: `You must approve your ${collateralSymbol} transfer before depositing.`,
+            exec: approve,
+            arg: false,
+          },
+          ...baseTransaction,
+        ]
+      : baseTransaction
+    : baseTransaction;
 
   const isLoading =
     isPoolLoading &&
