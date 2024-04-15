@@ -26,6 +26,8 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useUndelegateBaseAndromeda } from '../../lib/useUndelegateBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -112,6 +114,14 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
     collateralChange,
     currentCollateral: currentCollateral,
   });
+  const { exec: undelegateBaseAndromeda } = useUndelegateBaseAndromeda({
+    accountId: params.accountId,
+    poolId: params.poolId,
+    collateralTypeAddress: liquidityPosition?.tokenAddress,
+    collateralChange,
+    currentCollateral: currentCollateral,
+    liquidityPosition,
+  });
 
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
@@ -123,7 +133,11 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
     services: {
       [ServiceNames.undelegate]: async () => {
         try {
-          await execUndelegate();
+          if (isBaseAndromeda(network?.id, network?.preset)) {
+            await undelegateBaseAndromeda();
+          } else {
+            await execUndelegate();
+          }
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,

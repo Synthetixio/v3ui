@@ -22,7 +22,6 @@ import React, { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { RepayAllDebt } from './RepayAllDebt';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -189,10 +188,6 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     return Wei.min(collateralAmount, maxWithdrawable);
   }
   const max = maxUndelegate();
-
-  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
-    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
-  }
 
   return (
     <UndelegateUi
