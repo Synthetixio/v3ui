@@ -5,10 +5,9 @@ import { setEthBalance } from './setEthBalance';
 async function getOwner() {
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
   const network = await provider.getNetwork();
-  console.log(network.chainId);
   switch (network.chainId) {
     case 84532:
-      return '0x48914229dedd5a9922f44441ffccfc2cb7856ee9';
+      return '0xa1ae612e07511a947783c629295678c07748bc7a';
     case 8453:
       return '0x25ca6760fC0936127a6E34c3CBD63064b8A0DE1f';
     default:
@@ -16,7 +15,7 @@ async function getOwner() {
   }
 }
 
-export async function getSUSD({ address, amount }) {
+export async function getSUSDC({ address, amount }) {
   const config = await getCollateralConfig('sUSDC');
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
 

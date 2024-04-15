@@ -36,7 +36,7 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/setEthBalance'),
         ...require('./cypress/tasks/wrapEth'),
         ...require('./cypress/tasks/getCollateralConfig'),
-        ...require('./cypress/tasks/getSUSD'),
+        ...require('./cypress/tasks/getSUSDC'),
         ...require('./cypress/tasks/getSnx'),
         ...require('./cypress/tasks/createAccount'),
         ...require('./cypress/tasks/approveCollateral'),

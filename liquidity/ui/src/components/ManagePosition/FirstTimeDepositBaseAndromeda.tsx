@@ -67,7 +67,8 @@ export function FirstTimeDepositBaseAndromeda({
       newAccountId: '1337',
       accountId,
       poolId,
-      availableCollateral: accountBalance.add(sUSDCBalance),
+      availableCollateral: accountBalance,
+      sUSDCBalance: sUSDCBalance,
       collateralTypeAddress: collateralAddress,
     });
 

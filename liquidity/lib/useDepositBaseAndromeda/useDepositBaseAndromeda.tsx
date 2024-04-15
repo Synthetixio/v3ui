@@ -25,6 +25,7 @@ export const useDepositBaseAndromeda = ({
   collateralChange,
   currentCollateral,
   availableCollateral,
+  sUSDCBalance,
 }: {
   accountId?: string;
   newAccountId: string;
@@ -33,6 +34,7 @@ export const useDepositBaseAndromeda = ({
   currentCollateral: Wei;
   availableCollateral?: Wei;
   collateralChange: Wei;
+  sUSDCBalance: Wei;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -81,11 +83,11 @@ export const useDepositBaseAndromeda = ({
         const sUSDC_ADDRESS = getsUSDCAddress(network.id);
         const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
-        const wrap = amount.gt(0)
+        const wrap = sUSDCBalance.lt(amount)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;
 
-        const sUSDCApproval = amount.gt(0)
+        const sUSDCApproval = amountD18.gt(0)
           ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)
           : undefined;
 
