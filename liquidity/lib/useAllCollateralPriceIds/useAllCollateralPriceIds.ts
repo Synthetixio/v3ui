@@ -70,6 +70,7 @@ export const useAllCollateralPriceIds = () => {
       }));
 
       const { returnData } = await Multicall3.callStatic.aggregate(calls);
+
       const decoded = returnData
         .map((bytes, i) => {
           const nodeResp = OracleProxy.interface.decodeFunctionResult('getNode', bytes)[0];

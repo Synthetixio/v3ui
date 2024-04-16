@@ -27,7 +27,9 @@ export const loadAccountCollateral = async ({
     CoreProxy.populateTransaction.getAccountAvailableCollateral(accountId, tokenAddress),
     CoreProxy.populateTransaction.getAccountCollateral(accountId, tokenAddress),
   ]);
+
   const calls = await Promise.all(callsP);
+
   const decoder = (multicallEncoded: string | string[]) => {
     if (!Array.isArray(multicallEncoded)) throw Error('Expected array');
     return tokenAddresses.map((tokenAddress, i) => {
@@ -80,11 +82,13 @@ export function useAccountCollateral({
       if (!CoreProxy || !accountId || tokenAddresses.length < 1 || !network) {
         throw 'useAccountCollateral should be disabled';
       }
+
       const { calls, decoder } = await loadAccountCollateral({
         accountId,
         tokenAddresses,
         CoreProxy,
       });
+
       const data = await erc7412Call(
         network,
         CoreProxy.provider,
@@ -117,6 +121,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
       if (!CoreProxy || !accountId || !collateralAddress || !network) {
         throw 'useAccountSpecificCollateral should not be enabled';
       }
+
       const { calls, decoder } = await loadAccountCollateral({
         accountId,
         tokenAddresses: [collateralAddress],
