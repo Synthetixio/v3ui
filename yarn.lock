@@ -5662,7 +5662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pythnetwork/pyth-evm-js@npm:^1.29.2, @pythnetwork/pyth-evm-js@npm:^1.40.0":
+"@pythnetwork/pyth-evm-js@npm:^1.40.0":
   version: 1.40.0
   resolution: "@pythnetwork/pyth-evm-js@npm:1.40.0"
   dependencies:
@@ -7231,7 +7231,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/withERC7412@workspace:liquidity/lib/withERC7412"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.29.2"
+    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
