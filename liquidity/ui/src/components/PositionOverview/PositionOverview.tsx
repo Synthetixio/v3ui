@@ -35,7 +35,7 @@ export function PositionOverview({
   isLoading: boolean;
   arithmeticOperations?: 'add' | 'sub' | 'none';
   price?: Wei;
-  dontUpdate: boolean;
+  dontUpdate?: boolean;
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
   const { network } = useNetwork();

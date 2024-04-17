@@ -5662,17 +5662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pythnetwork/pyth-evm-js@npm:^1.29.2":
-  version: 1.29.2
-  resolution: "@pythnetwork/pyth-evm-js@npm:1.29.2"
-  dependencies:
-    "@pythnetwork/price-service-client": "npm:*"
-    buffer: "npm:^6.0.3"
-  checksum: 7fbbc4f0f5c6e1189b57a1d02703d0a11ecc6c23e419c4aa39ee6b3ac13e9457e9f04911b7918cc90923dd2b98e4ab41026741ff9b55f7e28a4aaf6f16986c9a
-  languageName: node
-  linkType: hard
-
-"@pythnetwork/pyth-evm-js@npm:^1.40.0":
+"@pythnetwork/pyth-evm-js@npm:^1.29.2, @pythnetwork/pyth-evm-js@npm:^1.40.0":
   version: 1.40.0
   resolution: "@pythnetwork/pyth-evm-js@npm:1.40.0"
   dependencies:
