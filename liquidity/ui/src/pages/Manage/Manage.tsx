@@ -14,11 +14,12 @@ import {
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Spinner } from '@chakra-ui/react';
 
 export function Manage() {
   const { network } = useNetwork();
   const { collateralSymbol, poolId, collateralAddress, accountId, tab, tabAction } = useParams();
-  const { data: liquidityPosition } = useLiquidityPosition({
+  const { data: liquidityPosition, isLoading } = useLiquidityPosition({
     tokenAddress: collateralAddress,
     accountId,
     poolId,
@@ -26,12 +27,13 @@ export function Manage() {
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   // first time depositing for pool for Andromeda
   if (
-    liquidityPosition?.debt.eq(0) &&
-    isBase &&
-    collateralAddress &&
-    !liquidityPosition &&
-    collateralAddress &&
-    isBase
+    (!liquidityPosition && collateralAddress && isBase) ||
+    (liquidityPosition?.debt.eq(0) &&
+      isBase &&
+      collateralAddress &&
+      !liquidityPosition &&
+      collateralAddress &&
+      isBase)
   ) {
     return (
       <FirstTimeDepositBaseAndromeda
@@ -46,10 +48,8 @@ export function Manage() {
   }
   // first time depositing for pool
   if (
-    liquidityPosition?.debt.eq(0) &&
-    collateralAddress &&
-    !liquidityPosition &&
-    collateralAddress
+    (!liquidityPosition && collateralAddress) ||
+    (liquidityPosition?.debt.eq(0) && collateralAddress && !liquidityPosition && collateralAddress)
   ) {
     return (
       <FirstTimeDeposit
@@ -61,7 +61,6 @@ export function Manage() {
       />
     );
   }
-
   // deposit more in an existing position
   if (tab === '0' && tabAction === 'deposit' && collateralAddress && liquidityPosition) {
     return (
@@ -168,5 +167,5 @@ export function Manage() {
       />
     );
   }
-  return 'something went wrong';
+  return isLoading ? <Spinner colorScheme="cyan" /> : 'something went wrong';
 }

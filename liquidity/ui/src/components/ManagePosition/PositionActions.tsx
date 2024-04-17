@@ -215,7 +215,7 @@ export function PositionAction({
       }
     }
     if (tabAction === 'firstDeposit' || tabAction === 'deposit') {
-      if (step === 'deposit' || step === 'firstDeposit') {
+      if (step === 'deposit') {
         return tabAction === 'firstDeposit' ? (
           <Flex
             flexDir="column"

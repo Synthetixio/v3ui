@@ -95,6 +95,7 @@ export function Pools() {
                         queryParams.set('tabAction', 'firstDeposit');
                       }
                       queryParams.set('tab', '0');
+                      queryParams.set('step', 'deposit');
                       navigate({
                         pathname: `/manage/${type.symbol}/${type.tokenAddress}/${pool.id}`,
                         search: queryParams.toString(),

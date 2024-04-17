@@ -10,7 +10,7 @@ export async function createAccount({ privateKey }) {
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
 
-  const accountId = parseInt(`1337${crypto.randomInt(1000)}`);
+  const accountId = parseInt(`1337${crypto.randomInt(100000)}`);
 
   const currentAccountOwner = await coreProxy.getAccountOwner(accountId);
   console.log('createAccount', { accountId, currentAccountOwner });

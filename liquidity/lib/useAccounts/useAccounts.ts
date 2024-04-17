@@ -111,7 +111,6 @@ export function useAccountUrlSync() {
 
   useEffect(() => {
     const accountId = queryParams.get('accountId') || undefined;
-
     if (accounts.isFetched && accounts.data && accounts.data.length > 0) {
       // Accounts fetched and we have some, preselect one
       if (!accountId || !accounts.data.includes(accountId)) {

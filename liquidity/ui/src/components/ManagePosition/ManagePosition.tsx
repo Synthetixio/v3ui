@@ -117,6 +117,7 @@ export function ManagePosition({
                 onClick={() => {
                   queryParams.set('tab', '1');
                   queryParams.set('tabAction', 'repay');
+                  queryParams.delete('step');
                   navigate({
                     pathname,
                     search: queryParams.toString(),
