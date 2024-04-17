@@ -7,11 +7,12 @@ import { ManageInputUi } from './ManageInputUi';
 import { SignTransaction, Transaction } from './SignTransaction';
 import { LiquidityPositionUpdated } from './LiquidityPositionUpdated';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { ZEROWEI } from '../../utils/constants';
+import { ONEWEI, ZEROWEI } from '../../utils/constants';
 import { TokenIcon } from '../TokenIcon';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { InfoIcon } from '@chakra-ui/icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function PositionAction({
   tab,
@@ -25,6 +26,7 @@ export function PositionAction({
   setStep,
   step,
   transactions,
+  issuanceRatio,
 }: {
   liquidityPostion?: LiquidityPosition;
   walletBalance?: Wei;
@@ -37,11 +39,12 @@ export function PositionAction({
   step: Step | undefined;
   setStep: (step?: Step, providedQueryParams?: URLSearchParams) => void;
   transactions: Transaction[];
+  issuanceRatio?: Wei;
 }) {
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const [amountToDeposit] = useRecoilState(amountState);
-
+  const queryClient = useQueryClient();
   if (tabAction === 'close') {
     if (!step) {
       return (
@@ -212,7 +215,7 @@ export function PositionAction({
       }
     }
     if (tabAction === 'firstDeposit' || tabAction === 'deposit') {
-      if (!step) {
+      if (step === 'deposit' || step === 'firstDeposit') {
         return tabAction === 'firstDeposit' ? (
           <Flex
             flexDir="column"
@@ -422,12 +425,12 @@ export function PositionAction({
       if (!step) {
         return (
           <ManageInputUi
-            collateralSymbol={collateralSymbol}
-            collateral={liquidityPostion?.debt.abs()}
-            price={liquidityPostion?.collateralPrice || ZEROWEI}
-            buttonText="Repay"
-            inputSubline="Debt"
-            title="Repay Debt"
+            collateralSymbol="sUSD"
+            collateral={liquidityPostion?.collateralValue.div(issuanceRatio || ONEWEI)}
+            price={ONEWEI}
+            buttonText="Borrow"
+            inputSubline="Max Borrow"
+            title="Borrow"
             handleButtonClick={() => setStep('signTransaction')}
           />
         );
@@ -444,7 +447,10 @@ export function PositionAction({
                   } else {
                     await transactions[i].exec();
                   }
-                  if (i === transactions.length - 1) setStep('done');
+                  if (i === transactions.length - 1) {
+                    setStep('done');
+                    queryClient.clear();
+                  }
                   break;
                 }
               }

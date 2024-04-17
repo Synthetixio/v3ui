@@ -192,6 +192,8 @@ export const NETWORKS: Network[] = [
 ];
 
 export const deploymentsWithERC7412: string[] = [
+  '1-main',
+  '11155111-main',
   '8453-andromeda',
   '84531-andromeda',
   '84532-andromeda',

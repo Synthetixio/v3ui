@@ -232,10 +232,10 @@ export const withERC7412 = async (
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
       const parsedError = await parseError(error, jsonRpcProvider);
-
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
         const ignoreCache = !isRead;
+        console.log(oracleQuery, oracleAddress);
         const signedRequiredData = await fetchOffchainData(
           oracleQuery,
           network.isTestnet,
@@ -314,11 +314,10 @@ export async function erc7412Call<T>(
     const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
       multicallAbi
     ).decodeFunctionResult('aggregate3Value', res)[0];
-
     // Remove the price updates
     const responseWithoutPriceUpdates = decodedMultiCall.filter(
-      ({ returnData }) => returnData !== '0x' // price updates have 0x as return data
-    );
+      ({ returnData }) => returnData !== '0x'
+    ); // price updates have 0x as return data
     return decode(responseWithoutPriceUpdates.map(({ returnData }) => returnData));
   }
 

@@ -5672,6 +5672,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pythnetwork/pyth-evm-js@npm:^1.40.0":
+  version: 1.40.0
+  resolution: "@pythnetwork/pyth-evm-js@npm:1.40.0"
+  dependencies:
+    "@pythnetwork/price-service-client": "npm:*"
+    buffer: "npm:^6.0.3"
+  checksum: 8ac7f2f36952a33814da640d9eebb513d9804fdcdb3de581358cd0ab4ba64961e24eca8c61855c10b43f3e7daa78465c7da091b5558e666c6b24f265c3ed2771
+  languageName: node
+  linkType: hard
+
 "@reactflow/background@npm:11.3.6":
   version: 11.3.6
   resolution: "@reactflow/background@npm:11.3.6"
@@ -6203,7 +6213,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/fetchPythPrices@workspace:liquidity/lib/fetchPythPrices"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.29.2"
+    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
     "@snx-v3/constants": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"

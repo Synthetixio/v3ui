@@ -119,11 +119,13 @@ export function PositionRow({ accountId, poolId, collateralType, debt, final }: 
             onClick={() => {
               queryParams.set('tab', '0');
               queryParams.set('tabAction', 'deposit');
+              queryParams.set('step', 'deposit');
               navigate({
                 pathname: `/manage/${collateralType.symbol}/${collateralType.tokenAddress}/${poolId}`,
                 search: queryParams.toString(),
               });
             }}
+            data-cy="manage-position-row-button"
           >
             Manage
           </Button>

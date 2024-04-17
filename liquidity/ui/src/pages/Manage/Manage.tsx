@@ -24,11 +24,14 @@ export function Manage() {
     poolId,
   });
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-
   // first time depositing for pool for Andromeda
   if (
-    (liquidityPosition?.debt.eq(0) && isBase && collateralAddress) ||
-    (!liquidityPosition && collateralAddress && isBase)
+    liquidityPosition?.debt.eq(0) &&
+    isBase &&
+    collateralAddress &&
+    !liquidityPosition &&
+    collateralAddress &&
+    isBase
   ) {
     return (
       <FirstTimeDepositBaseAndromeda
@@ -43,8 +46,10 @@ export function Manage() {
   }
   // first time depositing for pool
   if (
-    (liquidityPosition?.debt.eq(0) && collateralAddress) ||
-    (!liquidityPosition && collateralAddress)
+    liquidityPosition?.debt.eq(0) &&
+    collateralAddress &&
+    !liquidityPosition &&
+    collateralAddress
   ) {
     return (
       <FirstTimeDeposit
@@ -136,6 +141,7 @@ export function Manage() {
       />
     );
   }
+
   if (tab === '1' && tabAction === 'borrow' && collateralAddress && liquidityPosition) {
     return (
       <Borrow
