@@ -82,7 +82,13 @@ export function DepositFormUi({
       return undefined;
     }
     return tokenBalance.add(ethBalance);
-  }, [collateralType?.symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
+  }, [
+    collateralType?.symbol,
+    tokenBalance,
+    ethBalance,
+    snxBalance?.transferable,
+    accountCollateral?.availableCollateral,
+  ]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
 
