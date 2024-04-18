@@ -72,6 +72,9 @@ export function DepositFormUi({
     if (collateralType?.symbol === 'SNX') {
       return snxBalance?.transferable;
     }
+    if (collateralType?.symbol === 'USDC') {
+      return tokenBalance?.add(accountCollateral?.availableCollateral);
+    }
     if (collateralType?.symbol !== 'WETH') {
       return tokenBalance;
     }
@@ -79,7 +82,13 @@ export function DepositFormUi({
       return undefined;
     }
     return tokenBalance.add(ethBalance);
-  }, [collateralType?.symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
+  }, [
+    collateralType?.symbol,
+    tokenBalance,
+    ethBalance,
+    snxBalance?.transferable,
+    accountCollateral?.availableCollateral,
+  ]);
 
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
 
