@@ -10,6 +10,10 @@ it('Deposit - First Time', () => {
     const isBase = network.chainId === 8453 || network.chainId === 84532;
     cy.task('setEthBalance', { address: wallet.address, balance: 20 });
     if (isBase) {
+      cy.task('approveCollateral', {
+        privateKey: wallet._signingKey().privateKey,
+        symbol: 'sUSDC',
+      });
       cy.task('getSUSDC', { address: wallet.address, amount: 500 });
     } else {
       cy.task('approveCollateral', { privateKey: wallet._signingKey().privateKey, symbol: 'WETH' });
@@ -39,9 +43,9 @@ it('Deposit - First Time', () => {
       cy.get('[data-cy="collateral-action-remove"]').click();
       if (isBase) {
         cy.get('[data-cy="manage-input-balance-max-button"]').contains('450.00');
-        cy.get('[data-cy="manage-input"]').type('101');
+        cy.get('[data-cy="manage-input"]').type('450');
         cy.get('[data-cy="position-overview-collateral"]').contains('0.00 USDC');
-        cy.get('[data-cy="position-overview-collateral-arrow"]').contains('101.00 USDC');
+        cy.get('[data-cy="position-overview-collateral-arrow"]').contains('0.00 USDC');
         cy.get('[data-cy="manage-input-ui-button"]').click();
         cy.wait(1000);
       } else {
