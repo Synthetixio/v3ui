@@ -26,15 +26,7 @@ export function SignTransaction({
   if (isFirstDeposit) {
     return (
       <>
-        <Flex
-          flexDir="column"
-          gap="6"
-          border="1px solid"
-          borderColor="gray.900"
-          rounded="base"
-          p="6"
-          h="fit-content"
-        >
+        <Flex flexDir="column" gap="6" rounded="base" h="fit-content">
           <Heading color="gray.50" fontSize="20px">
             {header}
           </Heading>

@@ -32,6 +32,8 @@ export function Deposit({
   isBase: boolean;
   networkId?: number;
 }) {
+  console.log('here');
+
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const collateralAddresses = isBase

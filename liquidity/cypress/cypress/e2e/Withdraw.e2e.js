@@ -1,6 +1,6 @@
 import { providers } from 'ethers';
 
-it('Deposit - First Time', () => {
+it('Withdraw', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
@@ -59,6 +59,8 @@ it('Deposit - First Time', () => {
       cy.task('mineBlock');
       cy.get('[data-cy="sign-transaction-button"]').click();
       cy.get('[data-cy="liquidity-position-successfully-button"]').click();
+      cy.get('[data-cy="tab-button-debt"]').should('exist');
+      cy.get('[data-cy="tab-actions-button-repay"]').should('exist');
     });
   });
 });

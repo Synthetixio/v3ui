@@ -51,26 +51,30 @@ export function ManagePosition({
     navigate({ pathname, search: qParams.toString() }, { replace: true });
     setStepState(step);
   };
-
-  if (
-    liquidityPostion?.accountCollateral.totalAssigned.eq(0) ||
-    !liquidityPostion ||
-    tabAction === 'close'
-  ) {
+  if (!liquidityPostion || tabAction === 'close') {
     return (
-      <PositionAction
-        collateralSymbol={collateralSymbolParsed}
-        liquidityPostion={liquidityPostion}
-        setStep={setStep}
-        step={stepState}
-        tab={tabParsed}
-        tabAction={tabActionParsed}
-        walletBalance={walletBalance}
-        accountBalance={accountBalance}
-        transactions={transactions}
-        poolId={poolId}
-        collateralAddress={collateralAddress}
-      />
+      <Flex
+        rounded="base"
+        border="1px solid"
+        borderColor="gray.900"
+        p="6"
+        bg="navy.700"
+        height="fit-content"
+      >
+        <PositionAction
+          collateralSymbol={collateralSymbolParsed}
+          liquidityPostion={liquidityPostion}
+          setStep={setStep}
+          step={stepState}
+          tab={tabParsed}
+          tabAction={tabActionParsed}
+          walletBalance={walletBalance}
+          accountBalance={accountBalance}
+          transactions={transactions}
+          poolId={poolId}
+          collateralAddress={collateralAddress}
+        />
+      </Flex>
     );
   }
   const shouldShowTabs = () => {
@@ -98,10 +102,12 @@ export function ManagePosition({
             <TabList>
               <Tab
                 color="white"
+                data-cy="tab-button-collateral"
                 fontWeight={700}
                 onClick={() => {
                   queryParams.set('tab', '0');
                   queryParams.set('tabAction', 'deposit');
+                  queryParams.set('step', 'deposit');
                   navigate({
                     pathname,
                     search: queryParams.toString(),

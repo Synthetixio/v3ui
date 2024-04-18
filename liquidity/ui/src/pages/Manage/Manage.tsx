@@ -24,6 +24,8 @@ export function Manage() {
     accountId,
     poolId,
   });
+
+  if (isLoading) return <Spinner colorScheme="cyan" />;
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   // first time depositing for pool for Andromeda
   if (
@@ -167,5 +169,5 @@ export function Manage() {
       />
     );
   }
-  return isLoading ? <Spinner colorScheme="cyan" /> : 'something went wrong';
+  return 'something went wrong';
 }

@@ -130,7 +130,11 @@ export function PositionAction({
                 } else {
                   await transactions[i].exec();
                 }
-                if (i === transactions.length - 1) setStep('done');
+                if (i === transactions.length - 1) {
+                  setStep('done');
+                  queryClient.clear();
+                }
+
                 break;
               }
             }
@@ -186,7 +190,10 @@ export function PositionAction({
                   } else {
                     await transactions[i].exec();
                   }
-                  if (i === transactions.length - 1) setStep('done');
+                  if (i === transactions.length - 1) {
+                    setStep('done');
+                    queryClient.clear();
+                  }
                   break;
                 }
               }
@@ -216,49 +223,12 @@ export function PositionAction({
     }
     if (tabAction === 'firstDeposit' || tabAction === 'deposit') {
       if (step === 'deposit') {
-        return tabAction === 'firstDeposit' ? (
-          <Flex
-            flexDir="column"
-            rounded="base"
-            border="1px solid"
-            borderColor="gray.900"
-            p="6"
-            bg="navy.700"
-            h="fit-content"
-          >
-            <Heading fontSize="20px" mb="6">
-              Open Liquidity Position
-            </Heading>
-            <Divider mb="6" />
-            <ManageInputUi
-              collateralSymbol={collateralSymbol}
-              collateral={walletBalance?.add(accountBalance)}
-              price={liquidityPostion?.collateralPrice || ZEROWEI}
-              buttonText="Sign Transaction"
-              inputSubline="Balance"
-              title="Deposit Collateral"
-              tooltip={
-                <>
-                  <Text>Wallet Balance: {walletBalance?.toNumber().toFixed(2)}</Text>
-                  <Text>Account Balance: {accountBalance?.toNumber().toFixed(2)}</Text>
-                </>
-              }
-              handleButtonClick={() => setStep('signTransaction')}
-            >
-              {amountToDeposit.gt(0) && (
-                <Alert colorScheme="blue" rounded="base">
-                  <InfoIcon w="20px" h="20px" color="cyan.500" mr="4" />
-                  This action will incur timeout for withdrawing collateral
-                </Alert>
-              )}
-            </ManageInputUi>
-          </Flex>
-        ) : (
+        return (
           <ManageInputUi
             collateralSymbol={collateralSymbol}
             collateral={walletBalance?.add(accountBalance)}
             price={liquidityPostion?.collateralPrice || ZEROWEI}
-            buttonText="Deposit"
+            buttonText="Sign Transaction"
             inputSubline="Balance"
             title="Deposit Collateral"
             tooltip={
@@ -268,7 +238,14 @@ export function PositionAction({
               </>
             }
             handleButtonClick={() => setStep('signTransaction')}
-          />
+          >
+            {amountToDeposit.gt(0) && (
+              <Alert colorScheme="blue" rounded="base">
+                <InfoIcon w="20px" h="20px" color="cyan.500" mr="4" />
+                This action will incur timeout for withdrawing collateral
+              </Alert>
+            )}
+          </ManageInputUi>
         );
       }
       if (step === 'signTransaction') {
@@ -283,7 +260,10 @@ export function PositionAction({
                   } else {
                     await transactions[i].exec();
                   }
-                  if (i === transactions.length - 1) setStep('done');
+                  if (i === transactions.length - 1) {
+                    setStep('done');
+                    queryClient.clear();
+                  }
                   break;
                 }
               }
@@ -339,7 +319,10 @@ export function PositionAction({
                   } else {
                     await transactions[i].exec();
                   }
-                  if (i === transactions.length - 1) setStep('done');
+                  if (i === transactions.length - 1) {
+                    setStep('done');
+                    queryClient.clear();
+                  }
                   break;
                 }
               }
@@ -393,7 +376,10 @@ export function PositionAction({
                   } else {
                     await transactions[i].exec();
                   }
-                  if (i === transactions.length - 1) setStep('done');
+                  if (i === transactions.length - 1) {
+                    setStep('done');
+                    queryClient.clear();
+                  }
                   break;
                 }
               }
