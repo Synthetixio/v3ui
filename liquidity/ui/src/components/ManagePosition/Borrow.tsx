@@ -30,7 +30,7 @@ export function Borrow({
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
   const { exec, isLoading: claimIsLoading } = useBorrow({
-    debtChange: amountToDeposit,
+    debtChange: amountToDeposit.sub(1),
     accountId,
     collateralTypeAddress: collateralAddress,
     poolId,
@@ -38,7 +38,6 @@ export function Borrow({
 
   const maxUInt = new Wei(constants.MaxUint256);
   const isLoading = isPoolLoading && collateralTypesIsLoading;
-
   return (
     <PositionHeader
       title={collateralSymbol + ' Liquidity Position'}
@@ -54,16 +53,22 @@ export function Borrow({
               done: false,
               loading: claimIsLoading,
               exec,
-              subline: 'claim',
-              title: 'claim lol',
+              subline: 'borrow',
+              title: 'borrow moah',
             },
           ]}
+          issuanceRatio={
+            !liquidityPosition.cRatio.eq(0)
+              ? liquidityPosition.cRatio.sub(collateralType?.issuanceRatioD18 || ZEROWEI)
+              : collateralType?.issuanceRatioD18
+          }
         />
       }
       PositionOverview={
         <PositionOverview
+          dontUpdate={true}
           collateralType={collateralSymbol || '?'}
-          debt={liquidityPosition?.debt.mul(liquidityPosition?.collateralPrice) || ZEROWEI}
+          debt={liquidityPosition?.debt || ZEROWEI}
           collateralValue={
             liquidityPosition ? liquidityPosition.collateralValue.toNumber().toFixed(2) : '0.00'
           }

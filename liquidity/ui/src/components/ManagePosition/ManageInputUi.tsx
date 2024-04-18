@@ -4,9 +4,6 @@ import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
 import { Button, Flex, Input, Text, Tooltip } from '@chakra-ui/react';
 import { TokenIcon } from '../TokenIcon';
-import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
-import { useParams } from '@snx-v3/useParams';
-import { ZEROWEI } from '../../utils/constants';
 
 export function ManageInputUi({
   collateralSymbol,
@@ -18,6 +15,7 @@ export function ManageInputUi({
   children,
   tooltip,
   inputIsDisabled = false,
+  price,
 }: {
   collateralSymbol: string;
   collateral?: Wei;
@@ -31,8 +29,6 @@ export function ManageInputUi({
   children?: ReactNode;
 }) {
   const [amount, setAmount] = useRecoilState(amountState);
-  const { collateralAddress } = useParams();
-  const { data: collateralPrices } = useCollateralPrices();
   useEffect(() => {
     if (inputIsDisabled) {
       setAmount(collateral);
@@ -64,6 +60,7 @@ export function ManageInputUi({
             :&nbsp;
             {collateral.toNumber().toFixed(2)}
             <Text
+              data-cy="manage-input-ui-max-button"
               color={inputIsDisabled ? 'gray.900' : 'cyan.500'}
               fontSize="12px"
               fontWeight={700}
@@ -99,15 +96,7 @@ export function ManageInputUi({
             }}
           />
           <Text fontSize="12px" color="gray.500">
-            $
-            {amount
-              .mul(
-                collateralPrices && collateralAddress
-                  ? collateralPrices[collateralAddress]
-                  : ZEROWEI
-              )
-              .toNumber()
-              .toLocaleString('en-US', { maximumFractionDigits: 2 })}
+            ${amount.mul(price).toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
           </Text>
         </Flex>
       </Flex>

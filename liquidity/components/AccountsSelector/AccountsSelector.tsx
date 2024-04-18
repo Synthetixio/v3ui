@@ -10,7 +10,7 @@ import {
   Flex,
   MenuButton,
 } from '@chakra-ui/react';
-import { createSearchParams, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { prettyString } from '@snx-v3/format';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
@@ -20,19 +20,25 @@ import { useEffect } from 'react';
 
 function AccountMenuItem({ accountId }: { accountId: string }) {
   const params = useParams();
+  const [queryParams] = useSearchParams();
   const { pathname } = useLocation();
+
+  if (accountId) {
+    queryParams.set('accountId', accountId);
+  }
 
   return (
     <RouterLink
       to={{
         pathname: pathname,
-        search: accountId ? createSearchParams({ accountId }).toString() : '',
+        search: queryParams.toString(),
       }}
     >
       <MenuItem
         _hover={{ bg: 'whiteAlpha.200' }}
         _focus={{ bg: 'whiteAlpha.200' }}
         _active={{ bg: 'whiteAlpha.200' }}
+        onClick={() => {}}
       >
         <Flex width="100%" alignItems="center">
           {params.accountId === accountId && <CheckIcon marginRight={1} />}

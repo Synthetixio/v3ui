@@ -6,4 +6,5 @@ export const LOCAL_STORAGE_KEYS = {
 };
 
 export const ZEROWEI = new Wei(0);
+export const ONEWEI = new Wei(1);
 export const MAXUINT = new Wei(constants.MaxUint256);

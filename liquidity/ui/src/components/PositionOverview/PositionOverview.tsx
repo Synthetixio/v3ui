@@ -22,6 +22,7 @@ export function PositionOverview({
   targetCratioPercentage,
   arithmeticOperations = 'add',
   price,
+  dontUpdate = false,
 }: {
   currentCollateral: Wei;
   collateralType: string;
@@ -34,6 +35,7 @@ export function PositionOverview({
   isLoading: boolean;
   arithmeticOperations?: 'add' | 'sub' | 'none';
   price?: Wei;
+  dontUpdate?: boolean;
 }) {
   const [amountToDeposit] = useRecoilState(amountState);
   const { network } = useNetwork();
@@ -82,7 +84,7 @@ export function PositionOverview({
             data-cy="position-overview-collateral"
           >
             {currentCollateral.toNumber().toFixed(2)} {collateralType}{' '}
-            {amountToDeposit.gt(0) && (
+            {amountToDeposit.gt(0) && !dontUpdate && (
               <>
                 {arithmeticOperations !== 'none' && (
                   <Text
@@ -101,7 +103,7 @@ export function PositionOverview({
           </Text>
           <Text color="gray.500" fontSize="16px" display="flex" gap="1">
             ${collateralValue}{' '}
-            {amountToDeposit.gt(0) && (
+            {amountToDeposit.gt(0) && !dontUpdate && (
               <>
                 {arithmeticOperations !== 'none' && (
                   <Text color="white" fontSize="16px">
@@ -138,6 +140,7 @@ export function PositionOverview({
             display="flex"
             alignItems="center"
             gap="2"
+            data-cy="position-overview-debt"
           >
             ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
             {pathname.includes('repay') && debt.lt(0) && (

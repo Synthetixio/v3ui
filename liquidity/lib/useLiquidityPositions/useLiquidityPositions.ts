@@ -115,15 +115,8 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               address: collateralTypes[i].tokenAddress,
             }))
           );
-          const encodedFiltered = encoded.filter(
-            (e) => e !== '0x0000000000000000000000000000000000000000000000000000000000000000'
-          );
-          const positionsEncoded =
-            encodedFiltered.length % 2 === 0
-              ? encodedFiltered
-              : encodedFiltered.slice(priceCalls.length);
-
-          const positionData = toPairs(positionsEncoded).map((x) => singlePositionDecoder(x));
+          const pairedPositionsEncoded = toPairs(encoded.slice(priceCalls.length));
+          const positionData = pairedPositionsEncoded.map((x) => singlePositionDecoder(x));
           const positions = positionData.map(({ debt, collateral }, index) => {
             const { poolName, collateralType, poolId, isPreferred } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually

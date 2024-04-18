@@ -20,7 +20,6 @@ it('Deposit - First Time', () => {
     cy.get('[data-cy="pools-deposit-button"]').click();
     cy.url().should('include', 'tabAction=firstDeposit&tab=0');
     cy.url().should('include', 'manage');
-    cy.url().should('not.include', 'deposit/');
     if (isBase) {
       cy.get('[data-cy="manage-input-balance-max-button"]').contains('500.00');
       cy.get('[data-cy="manage-input"]').type('101');

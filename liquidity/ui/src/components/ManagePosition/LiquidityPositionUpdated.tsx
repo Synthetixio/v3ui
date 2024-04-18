@@ -5,7 +5,6 @@ import { CheckIcon } from '@snx-v3/Multistep';
 import Wei from '@synthetixio/wei';
 import { useSearchParams } from 'react-router-dom';
 import { Step } from './ManagePosition';
-import { useQueryClient } from '@tanstack/react-query';
 
 export function LiquidityPositionUpdated({
   debt,
@@ -30,7 +29,6 @@ export function LiquidityPositionUpdated({
   const [queryParams] = useSearchParams();
   const [amountToDeposit] = useRecoilState(amountState);
   const isFirstTimeDeposit = debt.eq(0);
-  const queryClient = useQueryClient();
 
   return (
     <Flex
@@ -79,7 +77,7 @@ export function LiquidityPositionUpdated({
       <Button
         w="100%"
         onClick={() => {
-          if (debt.lt(0)) {
+          if (debt.lte(0)) {
             if (isBase) {
               queryParams.set('tabAction', 'claim');
             } else {
@@ -92,8 +90,9 @@ export function LiquidityPositionUpdated({
               queryParams.set('tabAction', 'borrow');
             }
           }
+
           queryParams.set('tab', '1');
-          queryClient.clear();
+          queryParams.delete('step');
           setStep(undefined, queryParams);
         }}
         data-cy="liquidity-position-successfully-button"

@@ -42,6 +42,7 @@ export const loadAccountCollateral = async ({
           'getAccountCollateral',
           multicallEncoded[i * 2 + 1]
         );
+
       return {
         tokenAddress,
         availableCollateral: wei(availableCollateral),

@@ -5662,13 +5662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pythnetwork/pyth-evm-js@npm:^1.29.2":
-  version: 1.29.2
-  resolution: "@pythnetwork/pyth-evm-js@npm:1.29.2"
+"@pythnetwork/pyth-evm-js@npm:^1.40.0":
+  version: 1.40.0
+  resolution: "@pythnetwork/pyth-evm-js@npm:1.40.0"
   dependencies:
     "@pythnetwork/price-service-client": "npm:*"
     buffer: "npm:^6.0.3"
-  checksum: 7fbbc4f0f5c6e1189b57a1d02703d0a11ecc6c23e419c4aa39ee6b3ac13e9457e9f04911b7918cc90923dd2b98e4ab41026741ff9b55f7e28a4aaf6f16986c9a
+  checksum: 8ac7f2f36952a33814da640d9eebb513d9804fdcdb3de581358cd0ab4ba64961e24eca8c61855c10b43f3e7daa78465c7da091b5558e666c6b24f265c3ed2771
   languageName: node
   linkType: hard
 
@@ -6203,7 +6203,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/fetchPythPrices@workspace:liquidity/lib/fetchPythPrices"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.29.2"
+    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
     "@snx-v3/constants": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
@@ -7231,7 +7231,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/withERC7412@workspace:liquidity/lib/withERC7412"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.29.2"
+    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
