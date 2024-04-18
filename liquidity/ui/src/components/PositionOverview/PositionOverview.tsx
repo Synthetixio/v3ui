@@ -45,7 +45,6 @@ export function PositionOverview({
     : debt.eq(0) && amountToDeposit.gt(0)
       ? MAXUINT.toNumber()
       : calculateCRatio(debt.abs(), new Wei(collateralValue).add(amountToDeposit)).toNumber();
-
   return (
     <Flex
       rounded="base"

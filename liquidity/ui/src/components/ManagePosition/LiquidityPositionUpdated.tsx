@@ -27,7 +27,7 @@ export function LiquidityPositionUpdated({
   setStep: (step?: Step, providedQueryParams?: URLSearchParams) => void;
 }) {
   const [queryParams] = useSearchParams();
-  const [amountToDeposit] = useRecoilState(amountState);
+  const [amountToDeposit, setAmountToDeposit] = useRecoilState(amountState);
   const isFirstTimeDeposit = debt.eq(0);
 
   return (
@@ -94,6 +94,7 @@ export function LiquidityPositionUpdated({
           queryParams.set('tab', '1');
           queryParams.delete('step');
           setStep(undefined, queryParams);
+          setAmountToDeposit(new Wei(0));
         }}
         data-cy="liquidity-position-successfully-button"
       >
