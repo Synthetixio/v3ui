@@ -38,7 +38,7 @@ export function Borrow({
 
   const maxUInt = new Wei(constants.MaxUint256);
   const isLoading = isPoolLoading && collateralTypesIsLoading;
-
+  console.log(liquidityPosition.cRatio.toString());
   return (
     <PositionHeader
       title={collateralSymbol + ' Liquidity Position'}
@@ -58,7 +58,11 @@ export function Borrow({
               title: 'borrow moah',
             },
           ]}
-          issuanceRatio={liquidityPosition.cRatio.sub(collateralType?.issuanceRatioD18 || ZEROWEI)}
+          issuanceRatio={
+            !liquidityPosition.cRatio.eq(0)
+              ? liquidityPosition.cRatio.sub(collateralType?.issuanceRatioD18 || ZEROWEI)
+              : collateralType?.issuanceRatioD18
+          }
         />
       }
       PositionOverview={

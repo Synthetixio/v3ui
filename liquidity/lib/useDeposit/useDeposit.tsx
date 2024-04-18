@@ -82,6 +82,7 @@ export const useDeposit = ({
           currentCollateral.add(collateralChange).toBN(),
           wei(1).toBN()
         );
+
         const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
         const collateralPriceCallsPromise = fetchPriceUpdates(
           collateralPriceUpdates,
