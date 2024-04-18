@@ -44,7 +44,7 @@ export const useUndelegateBaseAndromeda = ({
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { network } = useNetwork();
 
-  const debtExists = liquidityPosition?.debt.gt(0.01);
+  const debtExists = liquidityPosition?.debt.gt(0);
   const currentDebt = debtExists && liquidityPosition ? liquidityPosition.debt : wei(0);
 
   const { approve, requireApproval } = useApprove({
