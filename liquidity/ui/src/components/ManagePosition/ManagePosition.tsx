@@ -143,6 +143,7 @@ export function ManagePosition({
                         borderColor={tabAction === action.link ? 'cyan.500' : 'gray.900'}
                         rounded="base"
                         cursor="pointer"
+                        data-cy={`collateral-action-${action.link}`}
                         onClick={() => {
                           queryParams.delete('step');
                           queryParams.set('tabAction', action.link);

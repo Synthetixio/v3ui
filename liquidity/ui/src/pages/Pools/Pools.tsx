@@ -11,7 +11,7 @@ export function Pools() {
   const { data: collateralTypes } = useCollateralTypes();
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
-  const { data: liquidityPositon } = useLiquidityPositions({
+  const { data: liquidityPositon, isLoading } = useLiquidityPositions({
     accountId: queryParams.get('accountId') ?? undefined,
   });
   return (
@@ -85,6 +85,7 @@ export function Pools() {
 
                   <Button
                     data-cy="pools-deposit-button"
+                    isDisabled={isLoading}
                     onClick={() => {
                       if (
                         liquidityPositon &&
