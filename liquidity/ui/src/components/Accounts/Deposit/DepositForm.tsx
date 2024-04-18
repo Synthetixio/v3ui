@@ -73,7 +73,7 @@ export function DepositFormUi({
       return snxBalance?.transferable;
     }
     if (collateralType?.symbol === 'USDC') {
-      return tokenBalance?.add(accountCollateral?.availableCollateral);
+      return tokenBalance?.add(accountCollateral?.availableCollateral || new Wei(0));
     }
     if (collateralType?.symbol !== 'WETH') {
       return tokenBalance;
