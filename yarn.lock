@@ -5959,20 +5959,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/AccountsSelector@workspace:*, @snx-v3/AccountsSelector@workspace:liquidity/components/AccountsSelector":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/AccountsSelector@workspace:liquidity/components/AccountsSelector"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/format": "workspace:*"
-    "@snx-v3/useAccounts": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
-    react: "npm:^18.2.0"
-    react-router-dom: "npm:^6.18.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/Amount@workspace:*, @snx-v3/Amount@workspace:liquidity/components/Amount":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Amount@workspace:liquidity/components/Amount"
@@ -6356,7 +6342,6 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
-    "@snx-v3/AccountsSelector": "workspace:*"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -27247,17 +27232,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"word-wrap@npm:^1.0.3":
+"word-wrap@npm:^1.0.3, word-wrap@npm:~1.2.3":
   version: 1.2.5
   resolution: "word-wrap@npm:1.2.5"
   checksum: 1ec6f6089f205f83037be10d0c4b34c9183b0b63fca0834a5b3cee55dd321429d73d40bb44c8fc8471b5203d6e8f8275717f49a8ff4b2b0ab41d7e1b563e0854
-  languageName: node
-  linkType: hard
-
-"word-wrap@npm:~1.2.3":
-  version: 1.2.3
-  resolution: "word-wrap@npm:1.2.3"
-  checksum: 08a677e1578b9cc367a03d52bc51b6869fec06303f68d29439e4ed647257411f857469990c31066c1874678937dac737c9f8f20d3fd59918fb86b7d926a76b15
   languageName: node
   linkType: hard
 
