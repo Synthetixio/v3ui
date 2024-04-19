@@ -235,7 +235,6 @@ export const withERC7412 = async (
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
         const ignoreCache = !isRead;
-        console.log(oracleQuery, oracleAddress);
         const signedRequiredData = await fetchOffchainData(
           oracleQuery,
           network.isTestnet,

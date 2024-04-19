@@ -1,6 +1,6 @@
 import { providers } from 'ethers';
 
-it('Deposit - First Time', () => {
+it('Redeposit', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
@@ -8,7 +8,7 @@ it('Deposit - First Time', () => {
     const provider = new providers.JsonRpcProvider('http://127.0.0.1:8545');
     const network = await provider.getNetwork();
     const isBase = network.chainId === 8453 || network.chainId === 84532;
-    cy.task('setEthBalance', { address: wallet.address, balance: 2 });
+    cy.task('setEthBalance', { address: wallet.address, balance: 3 });
     if (isBase) {
       cy.task('getSUSDC', { address: wallet.address, amount: 500 });
     } else {
@@ -37,7 +37,28 @@ it('Deposit - First Time', () => {
     cy.task('mineBlock');
     cy.get('[data-cy="sign-transaction-button"]').click();
     cy.get('[data-cy="liquidity-position-successfully-button"]').click();
-    cy.get('[data-cy="tab-button-debt"]').should('exist');
-    cy.get('[data-cy="tab-actions-button-repay"]').should('exist');
+    cy.get('[data-cy="tab-button-collateral"]').click();
+    cy.get('[data-cy="collateral-action-deposit"]').click();
+    if (isBase) {
+      cy.get('[data-cy="manage-input"]').type('101');
+      cy.get('[data-cy="position-overview-collateral"]').contains('101.00 USDC');
+      cy.get('[data-cy="position-overview-collateral-arrow"]').contains('202.00 USDC');
+      cy.get('[data-cy="manage-input-ui-button"]').click();
+      cy.wait(1000);
+    } else {
+      cy.get('[data-cy="manage-input"]').type('0.5');
+      cy.get('[data-cy="position-overview-collateral"]').contains('1.00 WETH');
+      cy.get('[data-cy="position-overview-collateral-arrow"]').contains('1.50 WETH');
+      cy.get('[data-cy="manage-input-ui-button"]').click();
+      cy.wait(1000);
+      cy.task('mineBlock');
+      cy.get('[data-cy="sign-transaction-button"]').click();
+      cy.wait(1000);
+      cy.task('mineBlock');
+      cy.get('[data-cy="sign-transaction-button"]').click();
+    }
+    cy.get('[data-cy="liquidity-position-successfully-button"]').click();
+    cy.get('[data-cy="tab-button-collateral"]').click();
+    cy.get('[data-cy="collateral-action-deposit"]').click();
   });
 });

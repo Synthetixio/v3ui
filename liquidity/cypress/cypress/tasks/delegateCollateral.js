@@ -10,7 +10,6 @@ export async function delegateCollateral({ privateKey, accountId, symbol, amount
   console.log('delegateCollateral', { address: wallet.address, accountId, symbol, amount, poolId });
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
-
   const tx = await coreProxy.delegateCollateral(
     ethers.BigNumber.from(accountId),
     ethers.BigNumber.from(poolId),

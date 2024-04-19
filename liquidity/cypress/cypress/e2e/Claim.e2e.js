@@ -1,6 +1,6 @@
 import { providers } from 'ethers';
 
-it('Withdraw', () => {
+it('Claim', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
@@ -40,27 +40,6 @@ it('Withdraw', () => {
       cy.get('[data-cy="pools-deposit-button"]').click();
       cy.url().should('include', 'tabAction=deposit&tab=0');
       cy.url().should('include', 'manage');
-      cy.get('[data-cy="collateral-action-remove"]').click();
-      if (isBase) {
-        cy.get('[data-cy="manage-input-balance-max-button"]').contains('450.00');
-        cy.get('[data-cy="manage-input"]').type('450');
-        cy.get('[data-cy="position-overview-collateral"]').contains('0.00 USDC');
-        cy.get('[data-cy="position-overview-collateral-arrow"]').contains('0.00 USDC');
-        cy.get('[data-cy="manage-input-ui-button"]').click();
-        cy.wait(1000);
-      } else {
-        cy.get('[data-cy="manage-input-balance-max-button"]').contains('0.50');
-        cy.get('[data-cy="manage-input"]').type('0.50');
-        cy.get('[data-cy="position-overview-collateral"]').contains('0.00 WETH');
-        cy.get('[data-cy="position-overview-collateral-arrow"]').contains('0.00 WETH');
-        cy.get('[data-cy="manage-input-ui-button"]').click();
-        cy.wait(1000);
-      }
-      cy.task('mineBlock');
-      cy.get('[data-cy="sign-transaction-button"]').click();
-      cy.get('[data-cy="liquidity-position-successfully-button"]').click();
-      cy.get('[data-cy="tab-button-debt"]').should('exist');
-      cy.get('[data-cy="tab-actions-button-repay"]').should('exist');
     });
   });
 });
