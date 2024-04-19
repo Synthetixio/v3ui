@@ -88,7 +88,25 @@ export function PositionRow({ accountId, poolId, collateralType, debt, final }: 
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
               ${debt.toNumber().toLocaleString()}
             </Text>
-            <Text color="cyan.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Text
+              color="cyan.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              cursor="pointer"
+              onClick={() => {
+                queryParams.set('tab', '1');
+                if (debt.gt(0)) {
+                  queryParams.set('tabAction', 'repay');
+                } else {
+                  queryParams.set('tabAction', 'claim');
+                }
+                navigate({
+                  pathname: `/manage/${collateralType.symbol}/${collateralType.tokenAddress}/${poolId}`,
+                  search: queryParams.toString(),
+                });
+              }}
+            >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
           </Flex>
