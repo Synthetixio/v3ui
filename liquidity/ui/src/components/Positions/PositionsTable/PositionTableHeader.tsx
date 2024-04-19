@@ -1,7 +1,7 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Thead, Tr, Th, Flex, Text, Tooltip } from '@chakra-ui/react';
 
-export function PositionTableHeader() {
+export function PositionTableHeader({ isBase }: { isBase: boolean }) {
   return (
     <Thead>
       <Tr>
@@ -88,32 +88,34 @@ export function PositionTableHeader() {
             </Tooltip>
           </Flex>
         </Th>
-        <Th border="none" textTransform="unset" py={5}>
-          <Flex justifyContent="flex-end" alignItems="center">
-            <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-              Borrowed
-            </Text>
-            <Tooltip
-              label={
-                <Flex p={3} flexDirection="column" alignItems="start">
-                  <Text fontWeight="bold" fontSize="14px">
-                    Borrowed.
-                  </Text>
-                  <Text textAlign="left" fontSize="14px">
-                    After Delegating assets in a Position, you can then borrow assets based on your
-                    Position C-Ratio.
-                  </Text>
-                  <Text mt={2} fontSize="14px" textAlign="left">
-                    Borrowed assets are required to be Repaid in order to close your Position and
-                    unlock your Collateral.
-                  </Text>
-                </Flex>
-              }
-            >
-              <InfoIcon w="12px" h="12px" />
-            </Tooltip>
-          </Flex>
-        </Th>
+        {!isBase && (
+          <Th border="none" textTransform="unset" py={5}>
+            <Flex justifyContent="flex-end" alignItems="center">
+              <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+                Borrowed
+              </Text>
+              <Tooltip
+                label={
+                  <Flex p={3} flexDirection="column" alignItems="start">
+                    <Text fontWeight="bold" fontSize="14px">
+                      Borrowed.
+                    </Text>
+                    <Text textAlign="left" fontSize="14px">
+                      After Delegating assets in a Position, you can then borrow assets based on
+                      your Position C-Ratio.
+                    </Text>
+                    <Text mt={2} fontSize="14px" textAlign="left">
+                      Borrowed assets are required to be Repaid in order to close your Position and
+                      unlock your Collateral.
+                    </Text>
+                  </Flex>
+                }
+              >
+                <InfoIcon w="12px" h="12px" />
+              </Tooltip>
+            </Flex>
+          </Th>
+        )}
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>

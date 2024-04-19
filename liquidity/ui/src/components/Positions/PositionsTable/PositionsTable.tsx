@@ -1,6 +1,6 @@
 import { Button, Fade, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { Link, generatePath } from 'react-router-dom';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import {
   PositionsNotConnected,
@@ -10,6 +10,7 @@ import {
   PositionsEmpty,
   TableDivider,
 } from './';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 interface PositionsTableInterface {
   isLoading: boolean;
@@ -18,6 +19,8 @@ interface PositionsTableInterface {
 
 export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface) => {
   const { activeWallet } = useWallet();
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   return (
     <TableContainer
@@ -59,7 +62,7 @@ export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface
             </Fade>
           </Flex>
           <Table variant="simple">
-            <PositionTableHeader />
+            <PositionTableHeader isBase={isBase} />
             <Tbody>
               <TableDivider />
               {isLoading ? (
@@ -71,6 +74,7 @@ export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface
                       key={position.poolName.concat(index.toString())}
                       {...position}
                       final={index === positions.length - 1}
+                      isBase={isBase}
                     />
                   ))}
                 </>

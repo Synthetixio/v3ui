@@ -6,10 +6,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
+  isBase: boolean;
 }
 [];
 
-export function PositionRow({ accountId, poolId, collateralType, debt, final }: PositionRow) {
+export function PositionRow({
+  accountId,
+  poolId,
+  collateralType,
+  debt,
+  final,
+  cRatio,
+  isBase,
+}: PositionRow) {
   const navigate = useNavigate();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -70,18 +79,20 @@ export function PositionRow({ accountId, poolId, collateralType, debt, final }: 
           </Flex>
         </Fade>
       </Td>
-      <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {/* {borrowed$.eq(0) ? 'N/A' : `$${borrowed$.toNumber().toLocaleString()}`} */}
-            </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {/* {borrowed.toNumber()} {token} */}
-            </Text>
-          </Flex>
-        </Fade>
-      </Td>
+      {!isBase && (
+        <Td border="none">
+          <Fade in>
+            <Flex flexDirection="column" alignItems="flex-end">
+              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                {/* {borrowed$.eq(0) ? 'N/A' : `$${borrowed$.toNumber().toLocaleString()}`} */}
+              </Text>
+              <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+                {/* {borrowed.toNumber()} {token} */}
+              </Text>
+            </Flex>
+          </Fade>
+        </Td>
+      )}
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
@@ -116,7 +127,7 @@ export function PositionRow({ accountId, poolId, collateralType, debt, final }: 
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {/* {cRatio === Infinity ? 'Infinite' : cRatio}% */}
+              {isBase ? 'Infinite' : cRatio.toNumber().toFixed(2) + '%'}
             </Text>
             <Badge colorScheme="green" border="1px solid" bg="green.900">
               HEALTHY
