@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import {
+  Badge,
   Button,
   Flex,
   Menu,
@@ -13,16 +14,22 @@ import {
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-
 import { networks } from '../../utils/onboard';
 import { useLocalStorage } from '../../hooks';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
+import { CopyIcon } from '@chakra-ui/icons';
+import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export function NetworkController() {
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-
+  const { data: accounts } = useAccounts();
+  const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     // Check if wallet preference is stored in local storage
@@ -135,20 +142,104 @@ export function NetworkController() {
           </MenuButton>
           <MenuList>
             <MenuItem
-              onClick={() => {
-                try {
-                  navigator.clipboard.writeText(activeWallet?.address);
-                } catch (_e) {}
-              }}
+              as={Flex}
+              border="1px solid"
+              rounded="base"
+              borderColor="gray.900"
+              w="370px"
+              _hover={{ bg: 'navy.700' }}
+              bg="navy.700"
             >
-              <Text variant="nav" ml={2}>
-                Copy address
-              </Text>
-            </MenuItem>
-            <MenuItem onClick={onDisconnect}>
-              <Text variant="nav" ml={2}>
-                Disconnect
-              </Text>
+              <Flex flexDir="column" w="100%" gap="2">
+                <Flex justifyContent="space-between">
+                  <Text>Connected with {walletsInfo?.label}</Text>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDisconnect();
+                    }}
+                    size="xs"
+                    variant="outline"
+                    colorScheme="gray"
+                    color="white"
+                  >
+                    Disconenct
+                  </Button>
+                </Flex>
+                <Text fontWeight={700} color="white" fontSize="16px">
+                  {prettyString(activeWallet.address)}{' '}
+                  <CopyIcon
+                    ml="2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(activeWallet.address);
+                    }}
+                  />
+                </Text>
+                <Flex
+                  flexDir="column"
+                  p="2"
+                  border="1px solid"
+                  borderColor="gray.900"
+                  rounded="base"
+                  gap="2"
+                >
+                  <Text mb="4" fontWeight={400} fontSize="14px">
+                    Account
+                  </Text>
+                  {accounts?.map((account) => (
+                    <Text
+                      key={account}
+                      display="flex"
+                      alignItems="center"
+                      color="white"
+                      fontWeight={700}
+                      fontSize="16px"
+                      cursor="pointer"
+                      _hover={{ bg: 'whiteAlpha.300' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        queryParams.set('accountId', account);
+                        navigate({ pathname, search: queryParams.toString() });
+                      }}
+                    >
+                      #{prettyString(account, 10, 10)}{' '}
+                      {queryParams.get('accountId') === account && (
+                        <Badge colorScheme="cyan" variant="outline" ml="1">
+                          Connected
+                        </Badge>
+                      )}
+                    </Text>
+                  ))}
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mutation.mutate();
+                    }}
+                    size="xs"
+                    variant="outline"
+                    mt="4"
+                    colorScheme="gray"
+                    color="white"
+                    leftIcon={
+                      <svg
+                        width="8"
+                        height="8"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3.5 3.5V0.5H4.5V3.5H7.5V4.5H4.5V7.5H3.5V4.5H0.5V3.5H3.5Z"
+                          fill="white"
+                        />
+                      </svg>
+                    }
+                    w="130px"
+                  >
+                    Create Account
+                  </Button>
+                </Flex>
+              </Flex>
             </MenuItem>
           </MenuList>
         </Menu>
