@@ -5613,6 +5613,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pythnetwork/pyth-evm-js@npm:^1.42.0":
+  version: 1.42.0
+  resolution: "@pythnetwork/pyth-evm-js@npm:1.42.0"
+  dependencies:
+    "@pythnetwork/price-service-client": "npm:*"
+    buffer: "npm:^6.0.3"
+  checksum: 1d79bcdac9c5d517b07e59a923a33d958e2af6378625081f4d46c616bd9f2012acd0ed7e19a8641d877224c2fab4abf668c5f1f3d7076ea486e86e70b21b56d1
+  languageName: node
+  linkType: hard
+
 "@reactflow/background@npm:11.3.6":
   version: 11.3.6
   resolution: "@reactflow/background@npm:11.3.6"
@@ -6790,6 +6800,20 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates"
+  dependencies:
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 

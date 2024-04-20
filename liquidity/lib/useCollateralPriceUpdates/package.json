@@ -1,0 +1,15 @@
+{
+  "name": "@snx-v3/useCollateralPriceUpdates",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.2",
+  "dependencies": {
+    "@pythnetwork/pyth-evm-js": "^1.42.0",
+    "@snx-v3/constants": "workspace:*",
+    "@snx-v3/isBaseAndromeda": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/withERC7412": "workspace:*",
+    "@tanstack/react-query": "^5.8.3",
+    "ethers": "^5.7.2"
+  }
+}
