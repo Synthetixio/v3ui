@@ -25,12 +25,11 @@ export const useCollateralPriceUpdates = () => {
   const { network } = useNetwork();
 
   return useQuery({
-    staleTime: 3600,
     queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', priceIds.join(',')],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const updateType = 1,
-        stalenessTolerance = 100;
+        stalenessTolerance = 60;
 
       const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
 
