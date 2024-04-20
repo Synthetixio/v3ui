@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@pythnetwork/pyth-evm-js": "^1.29.2",
+    "@pythnetwork/pyth-evm-js": "^1.42.0",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
