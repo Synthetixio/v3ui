@@ -34,6 +34,17 @@ export function getsUSDCAddress(id?: number) {
   }
 }
 
+export function getsPythWrapper(id?: number) {
+  switch (id) {
+    case 8453:
+      return '0x3FC194FA6C26BE94Fc404E69b51793c199c3BF52';
+    case 84532:
+      return '0xF9e9e905d3745F5E0B803a179E17328CFe03B56d';
+    default:
+      return sUSDC;
+  }
+}
+
 export const BASE_USDC = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 export const sUSDC = '0xC74eA762cF06c9151cE074E6a569a5945b6302E7';
 
