@@ -98,7 +98,7 @@ export const ManageStatsUi: FC<{
               </Tooltip>
             </Flex>
             <Flex width="100%">
-              {liquidityPosition && aprData ? (
+              {aprData ? (
                 <Flex
                   gap={1}
                   color="gray.50"
