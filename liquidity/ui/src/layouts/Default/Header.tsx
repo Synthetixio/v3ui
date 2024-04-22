@@ -3,10 +3,12 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkController } from './NetworkController';
 import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
+import { useAccountUrlSync } from '@snx-v3/useAccounts';
 
 export default function Header() {
   const { onClose } = useDisclosure();
   const location = useLocation();
+  useAccountUrlSync();
 
   useEffect(() => {
     onClose();

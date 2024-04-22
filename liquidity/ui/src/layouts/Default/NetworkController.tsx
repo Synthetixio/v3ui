@@ -67,6 +67,7 @@ export function NetworkController() {
               colorScheme="gray"
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
+              data-cy="account-menu-button"
             >
               <NetworkIcon networkId={activeNetwork?.id || 666} />
               <Text
@@ -235,6 +236,7 @@ export function NetworkController() {
                       </svg>
                     }
                     w="130px"
+                    data-cy="create-new-account-menu-item"
                   >
                     Create Account
                   </Button>
@@ -251,7 +253,6 @@ export function NetworkController() {
           size="sm"
           ml={2}
           py={5}
-          data-testid="connect-wallet-button"
         >
           Connect Wallet
         </Button>

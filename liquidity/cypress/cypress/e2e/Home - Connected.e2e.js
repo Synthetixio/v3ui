@@ -14,6 +14,7 @@ it('Home Not Connected', () => {
   cy.get('[data-cy="Total Delegated-stats-box"]').contains('$0.00');
   cy.get('[data-cy="Total Debt-stats-box"]').contains('$0.00');
   cy.get('[data-cy="position-empty-button"]').contains('Explore all Pools');
+  cy.get('[data-cy="account-menu-button"]').click();
   cy.get('[data-cy="create-new-account-menu-item"]').contains('Create Account');
 
   cy.get('@wallet').then((wallet) => {
