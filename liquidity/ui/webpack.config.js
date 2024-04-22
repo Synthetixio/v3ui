@@ -163,6 +163,8 @@ module.exports = {
         'process.env': {
           INFURA_KEY: JSON.stringify(process.env.INFURA_KEY),
           WC_PROJECT_ID: JSON.stringify(process.env.WC_PROJECT_ID),
+          PYTH_MAINNET_ENDPOINT: JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
+          PYTH_TESTNET_ENDPOINT: JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
         },
       })
     )

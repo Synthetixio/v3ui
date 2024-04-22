@@ -5662,13 +5662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pythnetwork/pyth-evm-js@npm:^1.40.0":
-  version: 1.40.0
-  resolution: "@pythnetwork/pyth-evm-js@npm:1.40.0"
+"@pythnetwork/pyth-evm-js@npm:^1.42.0":
+  version: 1.42.0
+  resolution: "@pythnetwork/pyth-evm-js@npm:1.42.0"
   dependencies:
     "@pythnetwork/price-service-client": "npm:*"
     buffer: "npm:^6.0.3"
-  checksum: 8ac7f2f36952a33814da640d9eebb513d9804fdcdb3de581358cd0ab4ba64961e24eca8c61855c10b43f3e7daa78465c7da091b5558e666c6b24f265c3ed2771
+  checksum: 1d79bcdac9c5d517b07e59a923a33d958e2af6378625081f4d46c616bd9f2012acd0ed7e19a8641d877224c2fab4abf668c5f1f3d7076ea486e86e70b21b56d1
   languageName: node
   linkType: hard
 
@@ -6189,7 +6189,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/fetchPythPrices@workspace:liquidity/lib/fetchPythPrices"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
     "@snx-v3/constants": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
@@ -6609,7 +6609,6 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
-    date-fns: "npm:^2.30.0"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -6714,6 +6713,20 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates"
+  dependencies:
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7263,7 +7276,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/withERC7412@workspace:liquidity/lib/withERC7412"
   dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.40.0"
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"

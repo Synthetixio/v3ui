@@ -11,6 +11,7 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { keyBy } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;
@@ -39,10 +40,11 @@ function toPairs<T>(array: T[]): [T, T][] {
 
 export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => {
   const { data: CoreProxy } = useCoreProxy();
-  const { data: pools, isLoading: isPoolsLoading } = usePools();
-  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
-  const { data: collateralPriceUpdates, isLoading: isCollateralPricesLoading } =
-    useAllCollateralPriceIds();
+  const { data: pools } = usePools();
+  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx, isLoading: collateralPriceUpdatesIsLoading } =
+    useCollateralPriceUpdates();
 
   const { network } = useNetwork();
 
@@ -55,6 +57,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
+        priceUpdateTx: priceUpdateTx?.data || '',
       },
     ],
     queryFn: async () => {
@@ -100,6 +103,9 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
       const allCalls = collateralPriceCalls.concat(priceCalls.concat(positionCalls));
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
 
       return await erc7412Call(
         network,
@@ -153,7 +159,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
   return {
     ...query,
-    isLoading:
-      query.isLoading || isCollateralPricesLoading || isCollateralTypesLoading || isPoolsLoading,
+    isLoading: query.isLoading || collateralPriceUpdatesIsLoading,
   };
 };
