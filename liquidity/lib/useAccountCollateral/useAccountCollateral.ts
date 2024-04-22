@@ -5,6 +5,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
+import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -12,6 +13,8 @@ export type AccountCollateralType = {
   totalAssigned: Wei;
   totalDeposited: Wei;
   totalLocked: Wei;
+  symbol: string;
+  displaySymbol: string;
 };
 
 export const loadAccountCollateral = async ({
@@ -66,7 +69,8 @@ export function useAccountCollateral({
 
   const collateralTypes = useCollateralTypes(includeDelegationOff);
 
-  const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
+  const tokenAddresses =
+    collateralTypes.data?.map((c) => c.tokenAddress).concat(getsUSDCAddress(network?.id)) ?? [];
 
   return useQuery({
     queryKey: [
@@ -95,7 +99,11 @@ export function useAccountCollateral({
 
       return data.map((x) => ({
         ...x,
-        symbol: collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.symbol ?? '',
+        symbol:
+          collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.symbol ?? 'sUSD',
+        displaySymbol:
+          collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.displaySymbol ??
+          'snxUSD',
       }));
     },
   });

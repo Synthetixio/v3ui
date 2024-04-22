@@ -35,7 +35,6 @@ export function PositionRow({
     poolId,
     collateralTypeAddress: collateralType.tokenAddress,
   });
-  console.log(borrow);
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">

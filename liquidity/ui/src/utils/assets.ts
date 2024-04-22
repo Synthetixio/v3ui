@@ -37,7 +37,6 @@ export function calculateAssets(
     return accountCollaterals?.map((collateral, index) => {
       const balance = userTokenBalances[index];
       const price = collateralPrices[collateral.tokenAddress];
-
       return {
         collateral,
         balance,

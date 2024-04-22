@@ -19,7 +19,6 @@ export const AssetsList = () => {
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
     accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
   );
-
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
   const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
