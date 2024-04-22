@@ -33,8 +33,13 @@ export async function loadPrices({
 
         return PriceSchema.parse(pricesEncoded);
       });
+    } else {
+      const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+        'getCollateralPrice',
+        multicallEncoded
+      )[0];
+      return PriceSchema.parse(pricesEncoded);
     }
-    throw Error('Expected array got: ' + typeof multicallEncoded);
   };
   return { calls, decoder };
 }
@@ -65,7 +70,11 @@ export const useCollateralPrices = () => {
       );
 
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
-        acc[address] = prices[i];
+        if (Array.isArray(prices)) {
+          acc[address] = prices[i];
+        } else {
+          acc[address] = prices;
+        }
         return acc;
       }, {});
     },

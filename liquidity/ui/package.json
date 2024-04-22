@@ -52,6 +52,7 @@
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/useEthBalance": "workspace:*",
     "@snx-v3/useGasSpeed": "workspace:*",
+    "@snx-v3/useGetBorrow": "workspace:*",
     "@snx-v3/useLiquidityPosition": "workspace:*",
     "@snx-v3/useLiquidityPositions": "workspace:*",
     "@snx-v3/useMarketNamesById": "workspace:*",

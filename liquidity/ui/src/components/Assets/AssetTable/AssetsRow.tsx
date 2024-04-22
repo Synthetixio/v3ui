@@ -1,8 +1,10 @@
 import { Flex, Td, Tr, Text, Button, Fade } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
+import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface AssetsRowProps {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
+  token: string;
   name: string;
   walletBalance: number;
   walletBalance$: number;
@@ -10,6 +12,7 @@ interface AssetsRowProps {
   accountBalance$: number;
   delegatedBalance: number;
   delegatedBalance$: number;
+  collateralAddress: string;
   final: boolean; // Used for hiding bottom border
 }
 
@@ -22,8 +25,11 @@ export const AssetsRow = ({
   accountBalance$,
   delegatedBalance,
   delegatedBalance$,
+  collateralAddress,
   final,
 }: AssetsRowProps) => {
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
@@ -44,11 +50,17 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${walletBalance$}
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-wallet-balance"
+            >
+              {formatNumberToUsd(walletBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {walletBalance}
+              {formatNumber(walletBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -57,11 +69,17 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${accountBalance$}
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-account-balance"
+            >
+              {formatNumberToUsd(accountBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {accountBalance}
+              {formatNumber(accountBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -70,11 +88,17 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${delegatedBalance$}
+            <Text
+              color="white"
+              fontWeight={700}
+              lineHeight="1.25rem"
+              fontFamily="heading"
+              data-cy="asset-list-delegated-balance"
+            >
+              {formatNumberToUsd(delegatedBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {delegatedBalance}
+              {formatNumber(delegatedBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -83,19 +107,42 @@ export const AssetsRow = ({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column">
-            <Button
-              variant="unstyled"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-              height="1.75rem"
-              fontWeight={700}
-              borderWidth="1px"
-              borderColor="gray.900"
-              borderRadius="4px"
-              _hover={{ bg: 'gray.900' }}
-            >
-              Withdraw
-            </Button>
+            {!walletBalance && !accountBalance && !delegatedBalance ? (
+              <Button
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                data-cy="asset-list-deposit-button"
+              >
+                Deposit
+              </Button>
+            ) : (
+              <Button
+                variant="unstyled"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                _hover={{ bg: 'gray.900' }}
+                onClick={() => {
+                  queryParams.set('tab', '0');
+                  queryParams.set('tabAction', 'remove');
+                  navigate({
+                    pathname: `manage/${token}/${collateralAddress}/1`,
+                    search: queryParams.toString(),
+                  });
+                }}
+              >
+                Withdraw
+              </Button>
+            )}
           </Flex>
         </Fade>
       </Td>

@@ -1,0 +1,11 @@
+{
+  "name": "@snx-v3/useGetBorrow",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@tanstack/react-query": "^5.8.3",
+    "@snx-v3/isBaseAndromeda": "workspace",
+    "react": "^18.2.0"
+  }
+}

@@ -1,48 +1,53 @@
 import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
-import Wei from '@synthetixio/wei';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useGetBorrow } from '@snx-v3/useGetBorrow';
+import { utils } from 'ethers';
 
-export default function PositionRow({
-  symbol,
-  token,
-  name,
-  delegated$,
-  delegated,
-  apy,
-  pnl,
-  pnlPercentage,
-  borrowed,
-  borrowed$,
+interface PositionRow extends LiquidityPositionType {
+  final: boolean;
+  isBase: boolean;
+  apr?: string;
+}
+[];
+
+export function PositionRow({
+  accountId,
+  poolId,
+  collateralType,
   debt,
-  cRatio,
   final,
-}: {
-  token: string;
-  symbol: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  name: string;
-  delegated$: Wei;
-  delegated: Wei;
-  apy: number;
-  pnl: number;
-  pnlPercentage: number;
-  borrowed: Wei;
-  borrowed$: Wei;
-  debt: Wei;
-  cRatio: number;
-  final: boolean; // Used for hiding bottom border
-}) {
+  cRatio,
+  isBase,
+  apr,
+}: PositionRow) {
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { data: liquidityPosition } = useLiquidityPosition({
+    tokenAddress: collateralType.tokenAddress,
+    accountId,
+    poolId,
+  });
+  const { data: borrow } = useGetBorrow({
+    accountId,
+    poolId,
+    collateralTypeAddress: collateralType.tokenAddress,
+  });
+  console.log(borrow);
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
         <Fade in>
           <Flex alignItems="center">
-            <TokenIcon symbol={symbol} />
+            <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {token}
+                {collateralType.displaySymbol}
               </Text>
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                {name}
+                {collateralType.symbol}
               </Text>
             </Flex>
           </Flex>
@@ -52,11 +57,11 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${delegated$.toNumber().toLocaleString()}
+              {liquidityPosition?.collateralAmount.toNumber().toLocaleString()}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {delegated.toNumber()}
-              {` ${token}`}
+              {/* {delegated.toNumber()} */}
+              {collateralType.symbol.toString()}
             </Text>
           </Flex>
         </Fade>
@@ -65,7 +70,7 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {apy}%
+              {apr?.concat('%') || 'N/A'}
             </Text>
           </Flex>
         </Fade>
@@ -74,50 +79,72 @@ export default function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${pnl.toLocaleString('us-EN')}
+              ${liquidityPosition?.debt.toNumber().toLocaleString()}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {pnlPercentage}%
+              {liquidityPosition?.debt.toNumber().toLocaleString()}
             </Text>
           </Flex>
         </Fade>
       </Td>
+      {!isBase && (
+        <Td border="none">
+          <Fade in>
+            <Flex flexDirection="column" alignItems="flex-end">
+              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                {parseFloat(
+                  utils.formatEther(borrow?.position.net_issuance.toString() || '0')
+                ).toFixed(2)}
+              </Text>
+              <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+                {parseFloat(
+                  utils.formatEther(borrow?.position.net_issuance.toString() || '0')
+                ).toFixed(2)}{' '}
+                snxUSD
+              </Text>
+            </Flex>
+          </Fade>
+        </Td>
+      )}
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {borrowed$.eq(0) ? 'N/A' : `$${borrowed$.toNumber().toLocaleString()}`}
+              ${debt.toNumber().toLocaleString()}
             </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {borrowed.toNumber()} {token}
-            </Text>
-          </Flex>
-        </Fade>
-      </Td>
-      <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {debt.toNumber().toLocaleString()}
-            </Text>
-            <Text color="cyan.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Text
+              color="cyan.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              cursor="pointer"
+              onClick={() => {
+                queryParams.set('manageAction', debt.gt(0) ? 'deposit' : 'borrow');
+                navigate({
+                  pathname: `/positions/${collateralType.symbol}/${poolId}`,
+                  search: queryParams.toString(),
+                });
+              }}
+            >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
           </Flex>
         </Fade>
       </Td>
-      <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {cRatio === Infinity ? 'Infinite' : cRatio}%
-            </Text>
-            <Badge colorScheme="green" border="1px solid" bg="green.900">
-              HEALTHY
-            </Badge>
-          </Flex>
-        </Fade>
-      </Td>
+      {!isBase && (
+        <Td border="none">
+          <Fade in>
+            <Flex flexDirection="column" alignItems="flex-end">
+              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                {isBase ? 'Infinite' : cRatio.toNumber().toFixed(2) + '%'}
+              </Text>
+              <Badge colorScheme="green" border="1px solid" bg="green.900">
+                HEALTHY
+              </Badge>
+            </Flex>
+          </Fade>
+        </Td>
+      )}
       <Td border="none">
         <Flex flexDirection="column">
           <Button
@@ -128,6 +155,12 @@ export default function PositionRow({
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
+            onClick={() => {
+              navigate({
+                pathname: `/positions/${collateralType.displaySymbol}/${poolId}`,
+              });
+            }}
+            data-cy="manage-position-row-button"
           >
             Manage
           </Button>

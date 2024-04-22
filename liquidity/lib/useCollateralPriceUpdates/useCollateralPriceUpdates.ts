@@ -5,7 +5,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
-import { getsPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const priceIds = [
   '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d',
@@ -43,7 +43,7 @@ export const useCollateralPriceUpdates = () => {
 
       return {
         //pyth wrapper
-        to: getsPythWrapper(network?.id),
+        to: getPythWrapper(network?.id),
         data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
         value: priceIds.length * 10,
       };
