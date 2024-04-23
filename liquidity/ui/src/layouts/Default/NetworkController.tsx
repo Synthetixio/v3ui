@@ -46,8 +46,17 @@ export function NetworkController() {
     if (walletsInfo) {
       // store in local storage
       localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
+      navigate({ pathname }, { replace: true });
     }
-  }, [walletsInfo, connect]);
+  }, [walletsInfo, connect, navigate, pathname]);
+
+  useEffect(() => {
+    const accountId = queryParams.get('accountId');
+    if (!accountId && !!accounts?.length) {
+      queryParams.set('accountId', accounts[0]);
+      navigate({ pathname, search: queryParams.toString() });
+    }
+  }, [accounts, navigate, pathname, queryParams]);
 
   const onDisconnect = () => {
     if (walletsInfo) {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 import { StatBox } from './StatBox';
 import { useSearchParams } from 'react-router-dom';
@@ -58,25 +58,55 @@ export const StatsList = () => {
         title="Total Assets"
         isLoading={isLoading}
         value={totalAssets && formatNumberToUsd(totalAssets)}
-        label="All assets in your Wallet and in your Synthetix Account."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Assets:
+            </Text>
+            <Text textAlign="left">All assets in your Wallet and in your Synthetix Account.</Text>
+          </>
+        }
       />
       <StatBox
         title="Total Delegated"
         isLoading={isLoading}
         value={totalDelegated && formatNumberToUsd(totalDelegated)}
-        label="All assets in your Account that have been Delegated to a Pool."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Delegated:
+            </Text>
+            <Text textAlign="left">
+              All assets in your Account that have been Delegated to a Pool.
+            </Text>
+          </>
+        }
       />
       <StatBox
         title="Total Debt"
         isLoading={isLoading}
         value={debt && formatNumberToUsd(debt?.toNumber().toFixed(2))}
-        label="Aggregated Debt of all your Open Positions."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Debt:
+            </Text>
+            <Text textAlign="left">Aggregated Debt of all your Open Positions.</Text>
+          </>
+        }
       />
       <StatBox
         title="APY"
         isLoading={isLoading}
         value={apr?.combinedApr.toFixed(2) || '-'}
-        label="Aggregated APY from all your positions."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              APY Annual Percentage Yield:
+            </Text>
+            <Text textAlign="left">Aggregated APY from all your Positions.</Text>
+          </>
+        }
       />
     </Flex>
   );

@@ -13,7 +13,7 @@ export const PositionsList = () => {
   const { data: apr } = useApr();
 
   const positions = calculatePositions(positionsByKey);
-
+  const parsedPositions = positions.filter((position) => position.collateralAmount.gt(0));
   return (
     <Flex flexDir="column">
       <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem" mt={4}>
@@ -21,7 +21,7 @@ export const PositionsList = () => {
       </Heading>
       <PositionsTable
         isLoading={isLoading}
-        positions={positions}
+        positions={parsedPositions}
         apr={apr?.combinedApr.toFixed(2)}
       />
     </Flex>

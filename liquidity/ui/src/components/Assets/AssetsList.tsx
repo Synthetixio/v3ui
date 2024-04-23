@@ -6,22 +6,38 @@ import { useSearchParams } from 'react-router-dom';
 import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
+import { getSNXUSDAddress, getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { ZEROWEI } from '../../utils/constants';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
+  const { network } = useNetwork();
+  const accountId = params.get('accountId') || undefined;
 
   const { data: accountCollaterals, isLoading: isAccountCollateralsLoading } = useAccountCollateral(
     {
-      accountId: params.get('accountId') || undefined,
+      accountId,
     }
   );
 
-  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
-    accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
-  );
+  const collateralAddresses =
+    accountCollaterals
+      ?.map((collateral) => collateral.tokenAddress)
+      .concat(getSNXUSDAddress(network?.id))
+      .concat(getUSDCAddress(network?.id)) || [];
+
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
+    useTokenBalances(collateralAddresses);
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
   const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+
+  const { data: accountCollateralUnlockDate, isLoading: isAccountCollateralDateLoading } =
+    useAccountCollateralUnlockDate({
+      accountId,
+    });
 
   const assets = useMemo(
     () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices, collateralTypes),
@@ -32,7 +48,25 @@ export const AssetsList = () => {
     isAccountCollateralsLoading ||
     tokenBalancesIsLoading ||
     isCollateralPricesLoading ||
-    isCollateralTypesLoading;
+    isCollateralTypesLoading ||
+    isAccountCollateralDateLoading;
 
-  return <AssetsTable isLoading={isLoading} assets={assets} />;
+  const snxUSDBalance = userTokenBalances
+    ? userTokenBalances[collateralAddresses.length - 2]
+    : ZEROWEI;
+  const usdcCollateral = userTokenBalances
+    ? userTokenBalances[collateralAddresses.length - 1]
+    : ZEROWEI;
+
+  return (
+    <AssetsTable
+      isLoading={isLoading}
+      assets={assets}
+      unlockDate={accountCollateralUnlockDate}
+      accountId={accountId}
+      snxUSDCollateral={snxUSDBalance}
+      isBase={isBaseAndromeda(network?.id, network?.preset)}
+      usdcCollateral={usdcCollateral}
+    />
+  );
 };

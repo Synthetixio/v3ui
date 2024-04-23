@@ -13,18 +13,32 @@ import {
 } from '@chakra-ui/react';
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
-import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading, AssetsEmpty } from '.';
 import { Asset } from '../../../utils/assets';
+import Wei from '@synthetixio/wei';
 
 interface AssetsTableProps {
   isLoading: boolean;
   assets?: Asset[];
+  unlockDate: Date | undefined;
+  accountId?: string;
+  snxUSDCollateral: Wei;
+  isBase: boolean;
+  usdcCollateral: Wei;
 }
 
-export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
-  const { network } = useNetwork();
+export const AssetsTable = ({
+  snxUSDCollateral,
+  isBase,
+  usdcCollateral,
+  accountId,
+  isLoading,
+  assets,
+  unlockDate,
+}: AssetsTableProps) => {
   const { activeWallet, connect } = useWallet();
+
   return (
     <TableContainer
       maxW="100%"
@@ -43,7 +57,20 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
         <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
           Assets
         </Heading>
-        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`} p="3">
+        <Tooltip
+          label={
+            <>
+              <Text fontWeight={600} textAlign="left">
+                Assets:
+              </Text>
+              <Text textAlign="left">
+                All assets used on Synthetix Protocol. As a security precaution, all assets can only
+                be withdrawn to your wallet after 24hs since your previous account activity
+              </Text>
+            </>
+          }
+          p="3"
+        >
           <InfoIcon w="12px" h="12px" ml={2} />
         </Tooltip>
       </Flex>
@@ -89,15 +116,23 @@ export const AssetsTable = ({ isLoading, assets }: AssetsTableProps) => {
 
                   return (
                     <AssetsRow
-                      key={collateral.tokenAddress.concat(collateral?.symbol || index.toString())}
+                      key={collateral.tokenAddress
+                        .concat(collateral?.symbol || index.toString())
+                        .concat(index.toString())}
                       token={collateral.symbol || ''}
                       name={collateral.displaySymbol || ''}
                       walletBalance={balance!.toNumber()}
                       walletBalance$={balance.mul(price).toNumber()}
-                      accountBalance={collateral.availableCollateral.toNumber()}
+                      accountBalance={collateral.availableCollateral}
                       accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
                       delegatedBalance={collateral.totalAssigned.toNumber()}
                       delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      price={price || new Wei(0)}
+                      unlockDate={unlockDate}
+                      accountId={accountId}
+                      snxUSDCollateral={snxUSDCollateral}
+                      isBase={isBase}
+                      usdcCollateral={usdcCollateral}
                       collateralAddress={collateral.tokenAddress}
                       final={index === assets.length - 1}
                     />

@@ -24,7 +24,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             <Tooltip
               label={
                 <Flex p={3} flexDirection="column" alignItems="start">
-                  <Text fontWeight="bold">Delegated Assets</Text>
+                  <Text fontWeight="bold">Delegated Assets:</Text>
                   <Text>Assets used as collateral in this Position.</Text>
                 </Flex>
               }
@@ -42,7 +42,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
               label={
                 <Flex p={3} flexDirection="column" alignItems="start">
                   <Text fontWeight="bold" fontSize="14px">
-                    Annual Percentage Yield
+                    Annual Percentage Yield (APY):
                   </Text>
                   <Text textAlign="left" fontSize="14px">
                     Reflects the Pool PNL. It is calculated as an estimate derived from past week
@@ -68,7 +68,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
               label={
                 <Flex p={3} flexDirection="column" alignItems="start">
                   <Text fontWeight="bold" fontSize="14px">
-                    PNL Profit and Loss Lifetime.
+                    PNL Profit and Loss Lifetime:
                   </Text>
                   <Text textAlign="left" fontSize="14px">
                     Reflects how the Pool PNL is impacted by trading activities (Fees paid, profits
@@ -98,7 +98,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 label={
                   <Flex p={3} flexDirection="column" alignItems="start">
                     <Text fontWeight="bold" fontSize="14px">
-                      Borrowed.
+                      Borrowed:
                     </Text>
                     <Text textAlign="left" fontSize="14px">
                       After Delegating assets in a Position, you can then borrow assets based on
@@ -136,6 +136,14 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                   <Text fontSize="14px" textAlign="left">
                     When your position is performing well, it pays back the borrowed assets (if any)
                     and turns into Credit available to Claim.
+                  </Text>
+
+                  <Text fontWeight="bold" mt={2} fontSize="14px">
+                    Repay debt:
+                  </Text>
+                  <Text fontSize="14px" textAlign="left">
+                    You have debt if the Pool PNL has not yet paid back your borrowed assets, or if
+                    the Pool PNL is Negative.
                   </Text>
                 </Flex>
               }

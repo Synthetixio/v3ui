@@ -1,11 +1,12 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Text, Tooltip, Fade } from '@chakra-ui/react';
 import { SynthSkeleton as Skeleton } from '../Shared';
+import { ReactNode } from 'react';
 
 interface StatBoxProps {
   isLoading: boolean;
   title: string;
-  label?: string;
+  label?: string | ReactNode;
   value?: string;
 }
 

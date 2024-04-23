@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAccountProxy } from '@snx-v3/useAccountProxy';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { useConnectWallet } from '@web3-onboard/react';
-import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useGasPrice } from '@snx-v3/useGasPrice';
 import { wei } from '@synthetixio/wei';
@@ -98,52 +95,4 @@ export function useCreateAccount() {
       },
     }),
   };
-}
-
-export function useAccountUrlSync() {
-  const accounts = useAccounts();
-  const [{ wallet }] = useConnectWallet();
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
-
-  useEffect(() => {
-    const accountId = queryParams.get('accountId') || undefined;
-    if (accounts.isFetched && accounts.data && accounts.data.length > 0) {
-      // Accounts fetched and we have some, preselect one
-      if (!accountId || !accounts.data.includes(accountId)) {
-        queryParams.set('accountId', accounts.data[0]);
-
-        navigate(
-          {
-            pathname: location.pathname,
-            search: queryParams.toString(),
-          },
-          { replace: true }
-        );
-      }
-      // when accountId param is present, and it also exists in the accounts list, do nothing
-      return;
-    }
-
-    const wallets = wallet?.accounts;
-    if (
-      // Check separately for the case when wallet is not connected
-      (wallets && wallets.length < 1) ||
-      (accounts.isFetched && (!accounts.data || accounts.data.length < 1))
-    ) {
-      // We have fetched accounts but there are none, remove account id from url
-      if (accountId) {
-        navigate(
-          {
-            pathname: location.pathname,
-            search: queryParams.toString(),
-          },
-          { replace: true }
-        );
-      }
-    }
-  }, [navigate, location, accounts.data, accounts.isFetched, wallet?.accounts, queryParams]);
 }

@@ -3,7 +3,6 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkController } from './NetworkController';
 import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
-import { useAccountUrlSync } from '@snx-v3/useAccounts';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { getUSDCAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -17,7 +16,6 @@ export default function Header() {
   const { data: balance } = useTokenBalance(
     isBase ? getUSDCAddress(network?.id) : getsUSDCAddress(network?.id)
   );
-  useAccountUrlSync();
 
   useEffect(() => {
     onClose();
