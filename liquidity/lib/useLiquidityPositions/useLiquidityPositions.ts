@@ -4,7 +4,7 @@ import { loadPosition } from '@snx-v3/useLiquidityPosition';
 import { usePools } from '@snx-v3/usePools';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
@@ -40,6 +40,7 @@ function toPairs<T>(array: T[]): [T, T][] {
 
 export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => {
   const { data: CoreProxy } = useCoreProxy();
+
   const { data: pools } = usePools();
   const { data: collateralTypes } = useCollateralTypes();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
@@ -47,6 +48,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
     useCollateralPriceUpdates();
 
   const { network } = useNetwork();
+  const provider = useProviderForChain(network!);
 
   const query = useQuery({
     queryKey: [
@@ -67,7 +69,8 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         !CoreProxy ||
         !accountId ||
         !collateralPriceUpdates ||
-        !network
+        !network ||
+        !provider
       ) {
         throw Error('Query should not be enabled');
       }
@@ -109,7 +112,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
       return await erc7412Call(
         network,
-        CoreProxy.provider,
+        provider!,
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array');
