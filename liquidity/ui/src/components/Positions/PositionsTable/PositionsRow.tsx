@@ -59,7 +59,6 @@ export function PositionRow({
               {liquidityPosition?.collateralAmount.toNumber().toLocaleString()}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {/* {delegated.toNumber()} */}
               {collateralType.symbol.toString()}
             </Text>
           </Flex>
@@ -69,7 +68,7 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {apr?.concat('%') || 'N/A'}
+              {apr?.concat('%') || '-'}
             </Text>
           </Flex>
         </Fade>

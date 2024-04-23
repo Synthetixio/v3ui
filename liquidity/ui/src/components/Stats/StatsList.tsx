@@ -75,7 +75,7 @@ export const StatsList = () => {
       <StatBox
         title="APY"
         isLoading={isLoading}
-        value={apr?.combinedApr.toFixed(2) || 'N/A'}
+        value={apr?.combinedApr.toFixed(2) || '-'}
         label="Aggregated APY from all your positions."
       />
     </Flex>
