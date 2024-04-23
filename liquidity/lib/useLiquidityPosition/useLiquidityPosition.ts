@@ -4,7 +4,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
@@ -82,6 +82,7 @@ export const useLiquidityPosition = ({
   const { data: UsdProxy } = useUSDProxy();
   const { network } = useNetwork();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const provider = useProviderForChain(network!);
 
   return useQuery({
     queryKey: [
@@ -106,7 +107,8 @@ export const useLiquidityPosition = ({
         !tokenAddress ||
         !collateralPriceUpdates ||
         !UsdProxy ||
-        !network
+        !network ||
+        !provider
       ) {
         throw Error('useLiquidityPosition should not be enabled');
       }
@@ -145,7 +147,7 @@ export const useLiquidityPosition = ({
 
       return await erc7412Call(
         network,
-        CoreProxy.provider,
+        provider,
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array ');
