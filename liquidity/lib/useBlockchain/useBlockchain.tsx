@@ -217,8 +217,13 @@ export const appMetadata = {
   explore: 'https://blog.synthetix.io',
 };
 
-export function useProviderForChain(network?: Network) {
+export function useProviderForChain(network?: Network | null) {
   return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined;
+}
+
+export function useDefaultProvider() {
+  const { network } = useNetwork();
+  return useProviderForChain(network);
 }
 
 export function useWallet() {

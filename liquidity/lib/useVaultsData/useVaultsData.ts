@@ -4,10 +4,11 @@ import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -19,6 +20,8 @@ export const useVaultsData = (poolId?: number) => {
   const { data: collateralTypes } = useCollateralTypes();
   const { data: CoreProxyContract } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
@@ -27,6 +30,7 @@ export const useVaultsData = (poolId?: number) => {
       {
         pool: poolId,
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
+        priceUpdateTx: priceUpdateTx?.data,
       },
     ],
     queryFn: async () => {
@@ -35,7 +39,8 @@ export const useVaultsData = (poolId?: number) => {
         !collateralTypes ||
         !poolId ||
         !collateralPriceUpdates ||
-        !network
+        !network ||
+        !provider
       ) {
         throw Error('useVaultsData should not be enabled when missing data');
       }
@@ -61,9 +66,13 @@ export const useVaultsData = (poolId?: number) => {
 
       const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
 
+      if (priceUpdateTx) {
+        calls.unshift(priceUpdateTx as any);
+      }
+
       return await erc7412Call(
         network,
-        CoreProxyContract.provider,
+        provider,
         calls.flat(),
         (multicallResult) => {
           if (!Array.isArray(multicallResult)) throw Error('Expected array');

@@ -26,9 +26,8 @@ export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   collateralPriceByAddress?: Record<string, Wei | undefined>;
   apr?: number;
-  isLoading?: boolean;
   isAprLoading?: boolean;
-}> = ({ vaultsData, collateralPriceByAddress, apr, isLoading, isAprLoading }) => {
+}> = ({ vaultsData, collateralPriceByAddress, apr, isAprLoading }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -51,7 +50,7 @@ export const CollateralSectionUi: FC<{
           >
             Total TVL
           </Text>
-          {isLoading ? (
+          {!vaultsData ? (
             <Skeleton w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
@@ -73,7 +72,7 @@ export const CollateralSectionUi: FC<{
           >
             Total Debt
           </Text>
-          {isLoading ? (
+          {!vaultsData ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
@@ -107,7 +106,7 @@ export const CollateralSectionUi: FC<{
         </Flex>
       </BorderBox>
       <Flex flexDirection="column" justifyContent="space-between">
-        {!vaultsData ? (
+        {!vaultsData || !collateralPriceByAddress ? (
           <Box>
             <Skeleton mt={4} w="full" height={24} />
             <Skeleton mt={2} w="full" height={24} />
@@ -229,10 +228,8 @@ export const CollateralSectionUi: FC<{
 export const CollateralSection = () => {
   const params = useParams();
 
-  const { data: vaultsData, isLoading: isVaultsDataLoading } = useVaultsData(
-    params.poolId ? parseFloat(params.poolId) : undefined
-  );
-  const { data: collateralPriceByAddress, isLoading: isCollateralLoading } = useCollateralPrices();
+  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
+  const { data: collateralPriceByAddress } = useCollateralPrices();
   const { data: aprData, isLoading: isAprLoading } = useApr();
 
   return (
@@ -240,7 +237,6 @@ export const CollateralSection = () => {
       vaultsData={vaultsData}
       collateralPriceByAddress={collateralPriceByAddress}
       apr={aprData?.combinedApr}
-      isLoading={isVaultsDataLoading || isCollateralLoading}
       isAprLoading={isAprLoading}
     />
   );

@@ -4,6 +4,6 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "viem": "^2.8.9"
+    "viem": "^2.9.26"
   }
 }

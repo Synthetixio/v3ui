@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -65,19 +66,20 @@ export function useAccountCollateral({
   const { network } = useNetwork();
 
   const collateralTypes = useCollateralTypes(includeDelegationOff);
-
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
-      { tokens: tokenAddresses },
+      { tokens: tokenAddresses, priceUpdateTx: priceUpdateTx?.data },
     ],
     enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || tokenAddresses.length < 1 || !network) {
+      if (!CoreProxy || !accountId || tokenAddresses.length < 1 || !network || !provider) {
         throw 'useAccountCollateral should be disabled';
       }
       const { calls, decoder } = await loadAccountCollateral({
@@ -85,13 +87,12 @@ export function useAccountCollateral({
         tokenAddresses,
         CoreProxy,
       });
-      const data = await erc7412Call(
-        network,
-        CoreProxy.provider,
-        calls,
-        decoder,
-        'useAccountCollateral'
-      );
+      const allCalls = [...calls];
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
+
+      const data = await erc7412Call(network, provider, calls, decoder, 'useAccountCollateral');
 
       return data.map((x) => ({
         ...x,
@@ -104,17 +105,19 @@ export function useAccountCollateral({
 export function useAccountSpecificCollateral(accountId?: string, collateralAddress?: string) {
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountSpecificCollateral',
       { accountId },
-      { token: collateralAddress },
+      { token: collateralAddress, priceUpdateTx: priceUpdateTx?.data },
     ],
     enabled: Boolean(CoreProxy && accountId && collateralAddress),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || !collateralAddress || !network) {
+      if (!CoreProxy || !accountId || !collateralAddress || !network || !provider) {
         throw 'useAccountSpecificCollateral should not be enabled';
       }
       const { calls, decoder } = await loadAccountCollateral({
@@ -122,10 +125,14 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
         tokenAddresses: [collateralAddress],
         CoreProxy,
       });
+      const allCalls = [...calls];
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
 
       const data = await erc7412Call(
         network,
-        CoreProxy.provider,
+        provider,
         calls,
         decoder,
         'useAccountSpecificCollateral'
