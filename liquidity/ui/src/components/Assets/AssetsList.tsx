@@ -7,13 +7,9 @@ import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { ZEROWEI } from '../../utils/constants';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
-  const { network } = useNetwork();
   const accountId = params.get('accountId') || undefined;
 
   const { data: accountCollaterals, isLoading: isAccountCollateralsLoading } = useAccountCollateral(
@@ -48,22 +44,7 @@ export const AssetsList = () => {
     isCollateralTypesLoading ||
     isAccountCollateralDateLoading;
 
-  const snxUSDBalance = userTokenBalances
-    ? userTokenBalances[collateralAddresses.length - 2]
-    : ZEROWEI;
-  const usdcCollateral = userTokenBalances
-    ? userTokenBalances[collateralAddresses.length - 1]
-    : ZEROWEI;
-
   return (
-    <AssetsTable
-      isLoading={isLoading}
-      assets={assets}
-      unlockDate={accountCollateralUnlockDate}
-      accountId={accountId}
-      snxUSDCollateral={snxUSDBalance}
-      isBase={isBaseAndromeda(network?.id, network?.preset)}
-      usdcCollateral={usdcCollateral}
-    />
+    <AssetsTable isLoading={isLoading} assets={assets} unlockDate={accountCollateralUnlockDate} />
   );
 };
