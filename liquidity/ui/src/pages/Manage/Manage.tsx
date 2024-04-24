@@ -82,13 +82,14 @@ export const ManageUi: FC<{
       <Flex gap={4}>
         <BorderBox p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <Text fontWeight="700" fontSize="xl" color="gray.50" mb="1" fontFamily="heading">
-            Manage C-Ratio
+            Manage Position
           </Text>
           <Text color="gray.400" fontSize="sm" mb="2">
             The Collateralization Ratio (C-Ratio) is calculated by dividing the value of the
             position’s collateral by the value of the position’s debt.{' '}
             <Text as="span" fontWeight="700" display="inline" color="white">
-              This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
+              Manage your position so your debt never equals your collateral else your position
+              might get liquidated.
             </Text>
           </Text>
           <ManageAction liquidityPosition={liquidityPosition} />

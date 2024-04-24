@@ -25,6 +25,21 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 
+// TODO @DEV
+// let's say you have 50 sUSDC and 40 snxUSD
+// user enters an amount
+// you should start by taking the amount from sUSDC
+// if the user enters 50 or less you don't have to withdraw any snxUSD
+// just withdraw sUSDC  and unwrap it
+// if the user enters a number between 50 - 90
+// you take 50 from sUSDC
+// and the rest for withdraw snxUSD -> buy sUSDC -> unwraping
+// so basically it's fairly simple now that i think about it
+// define two values
+// sUSDCAmount = amount - availbleSUSDC
+// snxUSDAmount = amount - sUSDCAmount
+// then use these varible in the hook
+
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
