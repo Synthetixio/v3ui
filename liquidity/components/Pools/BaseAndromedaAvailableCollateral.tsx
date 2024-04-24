@@ -117,8 +117,8 @@ function WithdrawModal({
   const { exec: unwrap } = useUnWrapEth();
 
   const { exec: execWithdraw } = useWithdrawBaseAndromeda({
-    usdcCollateral,
-    snxUSDCollateral,
+    usdcCollateral: usdcCollateral.availableCollateral,
+    snxUSDCollateral: snxUSDCollateral.availableCollateral,
     accountId: searchParams.get('accountId') || '',
   });
 

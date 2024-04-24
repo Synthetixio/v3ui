@@ -127,13 +127,7 @@ export const AssetsTable = ({
                       accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
                       delegatedBalance={collateral.totalAssigned.toNumber()}
                       delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
-                      price={price || new Wei(0)}
                       unlockDate={unlockDate}
-                      accountId={accountId}
-                      snxUSDCollateral={snxUSDCollateral}
-                      isBase={isBase}
-                      usdcCollateral={usdcCollateral}
-                      collateralAddress={collateral.tokenAddress}
                       final={index === assets.length - 1}
                     />
                   );

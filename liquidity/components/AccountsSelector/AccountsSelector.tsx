@@ -20,7 +20,6 @@ import {
 import { prettyString } from '@snx-v3/format';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useParams } from '@snx-v3/useParams';
-import { useAccountUrlSync } from '@snx-v3/useAccounts';
 import { CheckIcon } from '@snx-v3/Multistep';
 import { useEffect } from 'react';
 
@@ -123,15 +122,11 @@ export function AccountsSelector() {
   } = useAccounts();
 
   const {
-    mutate: createAccount,
-    isPending: isCreateAccountLoading,
-    data: createAccountData,
+    mutation: { mutate: createAccount, isPending: isCreateAccountLoading, data: createAccountData },
   } = useCreateAccount();
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  useAccountUrlSync();
 
   const isLoading = isAccountsLoading || isAccountsFetching || isCreateAccountLoading || !accounts;
 

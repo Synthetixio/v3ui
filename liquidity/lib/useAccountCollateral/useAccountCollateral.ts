@@ -50,6 +50,8 @@ export const loadAccountCollateral = async ({
         totalAssigned: wei(totalAssigned),
         totalDeposited: wei(totalDeposited),
         totalLocked: wei(totalLocked),
+        symbol: '',
+        displaySymbol: '',
       };
     });
   };
