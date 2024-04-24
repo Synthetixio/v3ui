@@ -34,7 +34,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.1.2",
-    "@usecannon/cli": "2.12.3",
+    "@usecannon/cli": "2.12.5-alpha.0",
     "debug": "^4.3.4",
     "ethers": "^5.7.2",
     "prettier": "^3.1.0",

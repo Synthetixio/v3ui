@@ -3,10 +3,11 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -54,23 +55,35 @@ export const useCollateralPrices = () => {
     ?.map((x) => x.tokenAddress)
     .concat(getsUSDCAddress(network?.id));
 
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
-    queryKey: [`${network?.id}-${network?.preset}`, 'CollateralPrices', { collateralAddresses }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'CollateralPrices',
+      { collateralAddresses, priceUpdateTx: priceUpdateTx?.data },
+    ],
     queryFn: async () => {
-      if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0 || !network) {
+      if (
+        !CoreProxy ||
+        !collateralAddresses ||
+        collateralAddresses.length == 0 ||
+        !network ||
+        !provider
+      ) {
         throw 'useCollateralPrices missing required data';
       }
 
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
 
-      const prices = await erc7412Call(
-        network,
-        CoreProxy.provider,
-        calls,
-        decoder,
-        'useCollateralPrices'
-      );
+      const allCalls = [...calls];
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
+
+      const prices = await erc7412Call(network, provider, allCalls, decoder, 'useCollateralPrices');
 
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
         if (Array.isArray(prices)) {
