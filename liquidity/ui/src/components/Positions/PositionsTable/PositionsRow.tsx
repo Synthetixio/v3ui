@@ -121,7 +121,7 @@ export function PositionRow({
               lineHeight="1rem"
               cursor="pointer"
               onClick={() => {
-                queryParams.set('manageAction', debt.gt(0) ? 'deposit' : 'borrow');
+                queryParams.set('manageAction', debt.gt(0) ? 'deposit' : 'repay');
                 navigate({
                   pathname: `/positions/${collateralType.symbol}/${poolId}`,
                   search: queryParams.toString(),
@@ -152,7 +152,7 @@ export function PositionRow({
         </Td>
       )}
       <Td border="none">
-        <Flex flexDirection="column">
+        <Flex justifyContent="center">
           <Button
             fontSize="0.75rem"
             lineHeight="1rem"
@@ -161,6 +161,7 @@ export function PositionRow({
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
+            w="100px"
             onClick={() => {
               navigate({
                 pathname: `/positions/${collateralType.displaySymbol}/${poolId}`,

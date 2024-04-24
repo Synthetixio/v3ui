@@ -67,7 +67,7 @@ export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInte
             <Tbody>
               <TableDivider />
               {isLoading ? (
-                <PositionsRowLoading />
+                <PositionsRowLoading isBase={isBase} />
               ) : (
                 <>
                   {positions?.map((position, index) => (

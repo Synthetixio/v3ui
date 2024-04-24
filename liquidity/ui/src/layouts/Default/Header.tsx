@@ -36,6 +36,16 @@ export default function Header() {
             >
               <Logo />
             </Link>
+            <Link href="/#/">
+              <Text fontWeight={700} fontSize="14px" display="inline" mx="4">
+                Dashboard
+              </Text>
+            </Link>
+            <Link href="/#/pools">
+              <Text fontWeight={700} fontSize="14px" display="inline">
+                Pools
+              </Text>
+            </Link>
           </Box>
           <Box display={{ md: 'none' }}>
             <Link to="/" as={RouterLink} py={4} pr={2}>

@@ -28,7 +28,7 @@ export function Pools() {
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: apr } = useApr();
-  const { data: vaultDebt } = useVaultsData(1);
+  const { data: vaultDebt, isLoading: vaultIsLoading } = useVaultsData(1);
   const vaultTVL = vaultDebt?.reduce((cur, prev) => {
     return cur.add(prev.collateral.value);
   }, ZEROWEI);
@@ -75,6 +75,7 @@ export function Pools() {
                 </Text>
                 <Text fontWeight={700} fontSize="30px" color="white">
                   ${vaultTVL?.toNumber().toLocaleString()}
+                  {vaultIsLoading && <Spinner colorScheme="cyan" />}
                 </Text>
               </Flex>
               <Flex flexDir="column" mr="auto">

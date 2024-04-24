@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
-import { TokenIcon } from '../TokenIcon';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { getSNXUSDAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -43,14 +42,16 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
-  const [selectedCollateralType, setSelectedCollateralType] = useState<string>('');
+  const { data: collateralTypes } = useCollateralTypes();
+  const [selectedCollateralType, setSelectedCollateralType] = useState<string>(
+    collateralTypes && collateralTypes[0] ? collateralTypes[0].tokenAddress : ''
+  );
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: accountCollaterals } = useAccountCollateral({
     accountId,
   });
   const { data: collateralPrices } = useCollateralPrices();
-  const { data: collateralTypes } = useCollateralTypes();
   const { mutation: withdrawMain } = useWithdraw({
     amount,
     accountId,
@@ -105,7 +106,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 >
                   {collateralTypes?.map((type) => (
                     <option value={type.tokenAddress} key={type.tokenAddress.concat(type.symbol)}>
-                      <TokenIcon symbol={type.symbol} /> {type.displaySymbol}
+                      {type.displaySymbol}
                     </option>
                   ))}
                   {!isBase && <option value={getSNXUSDAddress(network?.id)}>sUSD</option>}
