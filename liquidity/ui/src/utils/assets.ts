@@ -1,6 +1,7 @@
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei from '@synthetixio/wei';
+import { ONEWEI, ZEROWEI } from './constants';
 
 export interface Asset {
   collateral: AccountCollateralType;
@@ -23,20 +24,20 @@ export function calculateAssets(
         tokenAddress: collateral.tokenAddress,
         symbol: collateral.symbol,
         displaySymbol: collateral.displaySymbol,
-        availableCollateral: new Wei(0),
-        totalDeposited: new Wei(0),
-        totalAssigned: new Wei(0),
-        totalLocked: new Wei(0),
+        availableCollateral: ZEROWEI,
+        totalDeposited: ZEROWEI,
+        totalAssigned: ZEROWEI,
+        totalLocked: ZEROWEI,
       },
-      balance: new Wei(0),
-      price: new Wei(0),
+      balance: ZEROWEI,
+      price: ZEROWEI,
     }));
   }
 
   if (userTokenBalances && collateralPrices) {
     return accountCollaterals?.map((collateral, index) => {
       const balance = userTokenBalances[index];
-      const price = collateralPrices[collateral.tokenAddress];
+      const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
       return {
         collateral,
         balance,
@@ -55,7 +56,7 @@ export function calculateTotalAssets(assets?: Asset[]) {
       // if already assigned to pool, we dont add it
       return assigned !== deposited ? assigned.add(wallet) : assigned.add(wallet).add(deposited);
     })
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
     .toNumber()
     .toFixed(2);
 }
@@ -63,7 +64,7 @@ export function calculateTotalAssets(assets?: Asset[]) {
 export function calculateTotalAssetsDelegated(assets?: Asset[]) {
   return assets
     ?.map((asset) => asset.collateral.totalAssigned.mul(asset.price))
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
     .toNumber()
     .toFixed(2);
 }

@@ -5,7 +5,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getSNXUSDAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -70,7 +70,7 @@ export function useAccountCollateral({
   const collateralTypes = useCollateralTypes(includeDelegationOff);
 
   const tokenAddresses = isBase
-    ? collateralTypes.data?.map((c) => c.tokenAddress) ?? []
+    ? collateralTypes.data?.map((c) => c.tokenAddress).concat(getSNXUSDAddress(network?.id)) ?? []
     : collateralTypes.data?.map((c) => c.tokenAddress).concat(getsUSDCAddress(network?.id)) ?? [];
 
   return useQuery({

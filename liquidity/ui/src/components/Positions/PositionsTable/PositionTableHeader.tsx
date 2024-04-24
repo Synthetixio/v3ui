@@ -79,7 +79,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                   </Text>
                   <Text fontSize="14px" textAlign="left">
                     Means the traders have paid fees to the Pool. All this fees are collected to
-                    reward Liquidity Providers as Claim Credit or by Repaying their Borrowed assets.
+                    reward Liquidity Providers as Claim Credit.
                   </Text>
                 </Flex>
               }
@@ -162,12 +162,13 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 label={
                   <Flex p={3} flexDirection="column" alignItems="start">
                     <Text fontWeight="bold" fontSize="14px">
-                      Manage Position.
+                      C-ratio:
                     </Text>
                     <Text textAlign="left" fontSize="14px">
-                      Manage your Position by Adding or Removing collateral to this position. Borrow
-                      assets or Claim Rewards. To close your position you need to Repay your Debt
-                      and Withdraw your assets to your Wallet.
+                      Manage your Position by Adding or Removing collateral to this position.
+                      BorrowIs a dynamic number that represents a ratio between the collateral
+                      Delegated for your position and the Borrowed assets for this position - the
+                      Pool PNL.
                     </Text>
                   </Flex>
                 }
