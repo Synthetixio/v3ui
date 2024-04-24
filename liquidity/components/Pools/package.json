@@ -26,7 +26,6 @@
     "@synthetixio/safe-import": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
-    "@web3-onboard/injected-wallets": "^2.10.11",
     "@web3-onboard/react": "^2.8.13",
     "@xstate/react": "^3.2.2",
     "react": "^18.2.0",
