@@ -38,6 +38,7 @@ describe('Pool page / Collateral section', () => {
             },
           ] as VaultsDataType
         }
+        collateralPriceByAddress={{}}
       />
     );
     cy.get('[data-testid="pool collateral types"]').should(
