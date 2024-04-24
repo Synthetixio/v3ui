@@ -1,10 +1,38 @@
-import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Spinner,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useApr } from '@snx-v3/useApr';
+import { Fragment } from 'react';
+import { useVaultsData } from '@snx-v3/useVaultsData';
+import { ZEROWEI } from '../../utils/constants';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export function Pools() {
   const { data: pools } = usePools();
+  const navigate = useNavigate();
+  const [queryParams] = useSearchParams();
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: apr } = useApr();
+  const { data: vaultDebt } = useVaultsData(1);
+  const vaultTVL = vaultDebt?.reduce((cur, prev) => {
+    return cur.add(prev.collateral.value);
+  }, ZEROWEI);
+  const { data: collateralType, isLoading: collateralTypeIsLoading } = useCollateralTypes();
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
@@ -21,52 +49,109 @@ export function Pools() {
             p="6"
             maxW={pools.length > 1 ? '488px' : 'unset'}
           >
-            <Flex w="100%" alignItems="center" justifyContent="space-between" mb={4}>
-              <Text fontSize="16px" fontWeight={700} color="white">
-                {pool.name}
-              </Text>
-              <Button variant="outline" colorScheme="gray" color="white">
-                Pool Details
-              </Button>
-            </Flex>
+            <Text fontSize="16px" fontWeight={700} color="white" mb="4">
+              {pool.name}
+            </Text>
             <Divider />
             <Flex w="100%" h="164px" alignItems="center" gap="4">
               <Flex flexDir="column">
                 <Text fontSize="12px" color="gray.600">
                   TVL{' '}
-                  <Tooltip label="???">
+                  <Tooltip
+                    label={
+                      <Flex p={3} flexDirection="column" alignItems="start">
+                        <Text fontWeight="bold" fontSize="14px">
+                          Total Value Locked:
+                        </Text>
+                        <Text textAlign="left" fontSize="14px">
+                          Is the total amount of assets locked as collateral on this Pool.
+                        </Text>
+                        <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
+                      </Flex>
+                    }
+                  >
                     <InfoIcon w="12px" h="12px" />
                   </Tooltip>
                 </Text>
                 <Text fontWeight={700} fontSize="30px" color="white">
-                  TODO
+                  ${vaultTVL?.toNumber().toLocaleString()}
                 </Text>
               </Flex>
               <Flex flexDir="column" mr="auto">
                 <Text fontSize="12px" color="gray.600">
                   APR{' '}
-                  <Tooltip label="???">
+                  <Tooltip
+                    label={
+                      <Flex p={3} flexDirection="column" alignItems="start">
+                        <Text fontWeight="bold" fontSize="14px">
+                          Annual Percentage Yield (APY):
+                        </Text>
+                        <Text textAlign="left" fontSize="14px">
+                          Reflects the Pool PNL. It is calculated as an estimate derived from past
+                          week historical PNL, extrapolated as a year average.
+                        </Text>
+                        <Text fontWeight="bold" mt={2} fontSize="14px">
+                          Calculation
+                        </Text>
+                        <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
+                      </Flex>
+                    }
+                  >
                     <InfoIcon w="12px" h="12px" />
                   </Tooltip>
                 </Text>
                 <Text fontWeight={700} fontSize="30px" color="white">
-                  TODO
+                  {apr?.combinedApr.toFixed(2).concat('%') || '-'}
                 </Text>
               </Flex>
-              <Image src="/pools.svg" mr="50%" mb={4} />
+              <Image src={isBase ? '/base-pool.svg' : 'WETH-pool.svg'} mb={4} />
             </Flex>
             <Divider />
             <Flex mt={4}>
-              <TokenIcon symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                  sUSDC
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  Synthetix USDC
-                </Text>
-              </Flex>
-              <Button>Deposit</Button>
+              {collateralTypeIsLoading && <Spinner colorScheme="cyan" />}
+              {collateralType?.map((type) => (
+                <Fragment key={type.tokenAddress.concat('pool-list')}>
+                  <TokenIcon symbol={type.symbol} />
+                  <Flex flexDirection="column" ml={3} mr="auto">
+                    <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                      {type.symbol}
+                    </Text>
+                    <Text
+                      color="gray.500"
+                      fontFamily="heading"
+                      fontSize="0.75rem"
+                      lineHeight="1rem"
+                    >
+                      {type.displaySymbol}
+                    </Text>
+                  </Flex>
+
+                  <Tooltip
+                    label={
+                      <Flex p={3} flexDirection="column" alignItems="start">
+                        <Text fontWeight="bold" fontSize="14px">
+                          Deposit:
+                        </Text>
+                        <Text textAlign="left" fontSize="14px">
+                          Add assets from your Synthetix Account to this Pool Position.
+                        </Text>
+                      </Flex>
+                    }
+                  >
+                    <Button
+                      onClick={() => {
+                        queryParams.set('manageAction', 'deposit');
+                        navigate({
+                          pathname: `/positions/${type.symbol}/${pool.id}`,
+                          search: queryParams.toString(),
+                        });
+                      }}
+                    >
+                      Deposit
+                    </Button>
+                  </Tooltip>
+                </Fragment>
+              ))}
             </Flex>
           </Flex>
         ))}
@@ -80,21 +165,23 @@ export function Pools() {
           p={6}
           shrink={2}
         >
-          <Image src="/op.svg" w="66px" height="66px" mb={6} />
-          <Text fontWeight={700} fontSize="14px" color="white">
-            10x Cost Effective on Gas Fees
+          <Image src="/snx.svg" w="66px" height="66px" mb={6} />
+          <Text fontWeight={700} fontSize="18px" color="white">
+            Sell SNX at a Premium and watch it Burn
           </Text>
-          <Text fontSize="12px" color="gray.600" mb="auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+          <Text fontSize="16px" color="gray.600" mb="auto">
+            Sell your SNX at a premium to the Buyback and Burn contract and get USDC on Base
           </Text>
-          <Flex justifyContent="flex-end" gap={4} my={6}>
-            <Button variant="outline" colorScheme="gray" color="white">
-              Bridge Asset
-            </Button>
-            <Button variant="outline" colorScheme="gray" color="white">
-              Switch to Optimism
-            </Button>
+          <Flex gap={4}>
+            <Link
+              href="https://blog.synthetix.io/the-andromeda-release-buyback-and-burn/"
+              target="_blank"
+              rel="noopener"
+            >
+              <Button variant="outline" colorScheme="gray" color="white">
+                Learn More
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Flex>

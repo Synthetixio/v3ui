@@ -75,36 +75,38 @@ export function PositionRow({
           </Flex>
         </Fade>
       </Td>
-      <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${liquidityPosition?.debt.toNumber().toLocaleString()}
-            </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {liquidityPosition?.debt.toNumber().toLocaleString()}
-            </Text>
-          </Flex>
-        </Fade>
-      </Td>
       {!isBase && (
-        <Td border="none">
-          <Fade in>
-            <Flex flexDirection="column" alignItems="flex-end">
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {parseFloat(
-                  utils.formatEther(borrow?.position.net_issuance.toString() || '0')
-                ).toFixed(2)}
-              </Text>
-              <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                {parseFloat(
-                  utils.formatEther(borrow?.position.net_issuance.toString() || '0')
-                ).toFixed(2)}{' '}
-                snxUSD
-              </Text>
-            </Flex>
-          </Fade>
-        </Td>
+        <>
+          <Td border="none">
+            <Fade in>
+              <Flex flexDirection="column" alignItems="flex-end">
+                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                  ${liquidityPosition?.debt.toNumber().toLocaleString()}
+                </Text>
+                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+                  {liquidityPosition?.debt.toNumber().toLocaleString()}
+                </Text>
+              </Flex>
+            </Fade>
+          </Td>
+          <Td border="none">
+            <Fade in>
+              <Flex flexDirection="column" alignItems="flex-end">
+                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                  {parseFloat(
+                    utils.formatEther(borrow?.position.net_issuance.toString() || '0')
+                  ).toFixed(2)}
+                </Text>
+                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+                  {parseFloat(
+                    utils.formatEther(borrow?.position.net_issuance.toString() || '0')
+                  ).toFixed(2)}{' '}
+                  snxUSD
+                </Text>
+              </Flex>
+            </Fade>
+          </Td>
+        </>
       )}
       <Td border="none">
         <Fade in>
