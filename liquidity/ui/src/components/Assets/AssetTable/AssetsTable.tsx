@@ -16,27 +16,14 @@ import { AssetTableHeader } from './AssetTableHeader';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading, AssetsEmpty } from '.';
 import { Asset } from '../../../utils/assets';
-import Wei from '@synthetixio/wei';
 
 interface AssetsTableProps {
   isLoading: boolean;
   assets?: Asset[];
   unlockDate: Date | undefined;
-  accountId?: string;
-  snxUSDCollateral: Wei;
-  isBase: boolean;
-  usdcCollateral: Wei;
 }
 
-export const AssetsTable = ({
-  snxUSDCollateral,
-  isBase,
-  usdcCollateral,
-  accountId,
-  isLoading,
-  assets,
-  unlockDate,
-}: AssetsTableProps) => {
+export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps) => {
   const { activeWallet, connect } = useWallet();
 
   return (
