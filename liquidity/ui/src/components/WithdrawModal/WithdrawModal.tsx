@@ -35,8 +35,7 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 // and the rest for withdraw snxUSD -> buy sUSDC -> unwraping
 // so basically it's fairly simple now that i think about it
 // define two values
-// sUSDCAmount = amount - availbleSUSDC
-// snxUSDAmount = amount - sUSDCAmount
+
 // then use these varible in the hook
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -60,10 +59,16 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const activeCollateral = accountCollaterals?.find(
     (collateral) => collateral.tokenAddress === selectedCollateralType
   );
+
+  const sUSDCAmount = amount.sub(
+    accountCollaterals?.find((collateral) => collateral.symbol === 'sUSDC')?.availableCollateral ||
+      ZEROWEI
+  );
+  const snxUSDAmount = amount.sub(sUSDCAmount);
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
     accountId,
-    snxUSDCollateral: ZEROWEI,
-    usdcCollateral: ZEROWEI,
+    snxUSDCollateral: snxUSDAmount,
+    usdcCollateral: sUSDCAmount,
   });
   const withdraw = async () => {
     if (!isBaseAndromeda(network?.id, network?.preset)) {
