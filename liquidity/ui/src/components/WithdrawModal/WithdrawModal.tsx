@@ -60,15 +60,17 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     (collateral) => collateral.tokenAddress === selectedCollateralType
   );
 
-  const sUSDCAmount = amount.sub(
-    accountCollaterals?.find((collateral) => collateral.symbol === 'sUSDC')?.availableCollateral ||
-      ZEROWEI
-  );
-  const snxUSDAmount = amount.sub(sUSDCAmount);
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
     accountId,
-    snxUSDCollateral: snxUSDAmount,
-    usdcCollateral: sUSDCAmount,
+    sUSDCCollateral:
+      accountCollaterals && accountCollaterals[0]
+        ? accountCollaterals[0].availableCollateral
+        : ZEROWEI,
+    snxUSDCollateral:
+      accountCollaterals && accountCollaterals[1]
+        ? accountCollaterals[1].availableCollateral
+        : ZEROWEI,
+    amountToWithdraw: amount,
   });
   const withdraw = async () => {
     if (!isBaseAndromeda(network?.id, network?.preset)) {

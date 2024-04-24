@@ -7,9 +7,12 @@ import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
+  const { network } = useNetwork();
   const accountId = params.get('accountId') || undefined;
 
   const { data: accountCollaterals, isLoading: isAccountCollateralsLoading } = useAccountCollateral(
@@ -32,9 +35,26 @@ export const AssetsList = () => {
       accountId,
     });
 
+  const combinedCollateral = useMemo(() => {
+    return accountCollaterals &&
+      accountCollaterals[0] &&
+      isBaseAndromeda(network?.id, network?.preset)
+      ? [
+          accountCollaterals?.reduce((cur, prev, index) => {
+            //ignore the first iteration
+            if (!index) return cur;
+            return {
+              ...cur,
+              availableCollateral: cur.availableCollateral.add(prev.availableCollateral),
+            };
+          }, accountCollaterals[0]),
+        ]
+      : accountCollaterals;
+  }, [accountCollaterals, network?.id, network?.preset]);
+
   const assets = useMemo(
-    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices, collateralTypes),
-    [accountCollaterals, userTokenBalances, collateralPrices, collateralTypes]
+    () => calculateAssets(combinedCollateral, userTokenBalances, collateralPrices, collateralTypes),
+    [combinedCollateral, userTokenBalances, collateralPrices, collateralTypes]
   );
 
   const isLoading =
