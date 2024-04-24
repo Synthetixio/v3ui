@@ -25,7 +25,6 @@ export const ManageUi: FC<{
 }> = ({ collateralType, isLoading, rewards, liquidityPosition, network }) => {
   return (
     <Box mb={12}>
-      <WithdrawIncrease />
       <Box mb="4">
         <HomeLink />
       </Box>
@@ -81,6 +80,7 @@ export const ManageUi: FC<{
       <Divider mt="31px" mb="24px" color="gray.900" />
       <Flex gap={4}>
         <BorderBox p={6} flexDirection="column" bg="navy.700" height="fit-content">
+          <WithdrawIncrease />
           <Text fontWeight="700" fontSize="xl" color="gray.50" mb="1" fontFamily="heading">
             Manage Position
           </Text>
