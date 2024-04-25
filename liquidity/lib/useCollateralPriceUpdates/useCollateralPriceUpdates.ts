@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
 import { getsPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { importMulticall3 } from '@synthetixio/v3-contracts';
 
 const priceIds = [
   '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d',
@@ -25,11 +26,11 @@ const priceIds = [
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
-export const useCollateralPriceUpdates = () => {
+export const useAllCollateralPriceUpdates = () => {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', priceIds.join(',')],
+    queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates', priceIds.join(',')],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const updateType = 1,
@@ -49,6 +50,65 @@ export const useCollateralPriceUpdates = () => {
         data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
         value: priceIds.length * 10,
       };
+    },
+  });
+};
+
+export const useCollateralPriceUpdates = () => {
+  const { network } = useNetwork();
+  const provider = useDefaultProvider();
+
+  return useQuery({
+    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', priceIds.join(',')],
+    enabled: isBaseAndromeda(network?.id, network?.preset),
+    queryFn: async () => {
+      const stalenessTolerance = 1000;
+      if (!network) {
+        return;
+      }
+      try {
+        const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
+          network.id,
+          network.preset
+        );
+
+        const multicallInterface = new ethers.utils.Interface(multiCallAbi);
+        const pythInterface = new ethers.utils.Interface([
+          'function getLatestPrice(bytes32 priceId, uint256 stalenessTolerance) external view returns (int256)',
+        ]);
+
+        const getPricesTx = multicallInterface.encodeFunctionData('aggregate3Value', [
+          priceIds.map((priceId) => ({
+            target: getsPythWrapper(network?.id),
+            callData: pythInterface.encodeFunctionData('getLatestPrice', [
+              priceId,
+              stalenessTolerance,
+            ]),
+            value: 0,
+            requireSuccess: false,
+          })),
+        ]);
+
+        const result = await provider?.call({
+          data: getPricesTx,
+          to: multicallAddress,
+        });
+
+        const decodedMultiCall: { returnData: string }[] = multicallInterface.decodeFunctionResult(
+          'aggregate3Value',
+          result
+        )[0];
+
+        console.log({
+          decodedMultiCall,
+        });
+        return null;
+      } catch (error) {
+        console.log({
+          error,
+        });
+        return null;
+      }
     },
   });
 };
