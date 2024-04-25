@@ -46,7 +46,7 @@ export const useCollateralPriceUpdates = () => {
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const updateType = 1,
-        stalenessTolerance = 10;
+        stalenessTolerance = 60;
 
       const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
 
