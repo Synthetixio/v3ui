@@ -21,6 +21,19 @@ const priceIds = [
   '0x5de33a9112c2b700b8d30b8a3402c103578ccfa2765696471cc672bd5cf6ac52',
   '0x385f64d993f7b77d8182ed5003d97c60aa3361f3cecfe711544d2d59165e9bdf',
   '0x193c739db502aadcef37c2589738b1e37bdb257d58cf1ab3c7ebc8e6df4e3ec0',
+  '0x7677dd124dee46cfcd46ff03cf405fb0ed94b1f49efbea3444aadbda939a7ad3',
+  '0x60144b1d5c9e9851732ad1d9760e3485ef80be39b984f6bf60f82b28a2b7f126',
+  '0x30e4780570973e438fdb3f1b7ad22618b2fc7333b65c7853a7ca144c39052f7a',
+  '0xb27578a9654246cb0a2950842b92330e9ace141c52b63829cc72d5c45a5a595a',
+  '0x0781209c28fda797616212b7f94d77af3a01f3e94a5d421760aef020cf2bcb51',
+  '0xb962539d0fcb272a494d65ea56f94851c2bcf8823935da05bd628916e2e9edbf',
+  '0x7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592',
+  '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
+  '0x23d7315113f5b1d3ba7a83604c44b94d79f4fd69af77f804fc7f920a6dc65744',
+  '0x410f41de235f2db824e562ea7ab2d3d3d4ff048316c61d629c0b93f58584e1af',
+  '0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17',
+  '0x09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723',
+  '0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026',
 ];
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
@@ -33,7 +46,7 @@ export const useCollateralPriceUpdates = () => {
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const updateType = 1,
-        stalenessTolerance = 60;
+        stalenessTolerance = 10;
 
       const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
 
