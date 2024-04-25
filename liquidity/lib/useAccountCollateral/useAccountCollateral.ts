@@ -5,8 +5,9 @@ import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { getSNXUSDAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -69,12 +70,9 @@ export function useAccountCollateral({
 }) {
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const collateralTypes = useCollateralTypes(includeDelegationOff);
+  const { data: USDTokens } = useGetUSDTokens();
 
-  const tokenAddresses = isBase
-    ? collateralTypes.data?.map((c) => c.tokenAddress).concat(getSNXUSDAddress(network?.id)) ?? []
-    : collateralTypes.data?.map((c) => c.tokenAddress).concat(getsUSDCAddress(network?.id)) ?? [];
   const provider = useDefaultProvider();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
@@ -83,13 +81,15 @@ export function useAccountCollateral({
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
-      { tokens: tokenAddresses, priceUpdateTx: priceUpdateTx?.data },
+      { tokens: JSON.stringify(USDTokens), priceUpdateTx: priceUpdateTx?.data },
     ],
-    enabled: Boolean(CoreProxy && accountId && tokenAddresses.length > 0),
+    enabled: Boolean(CoreProxy && accountId && USDTokens?.snxUSD),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || tokenAddresses.length < 1 || !network || !provider) {
+      if (!CoreProxy || !accountId || !network || !provider || !USDTokens || !USDTokens?.snxUSD) {
         throw 'useAccountCollateral should be disabled';
       }
+      const tokenAddresses =
+        collateralTypes.data?.map((c) => c.tokenAddress).concat(USDTokens.snxUSD) ?? [];
       const { calls, decoder } = await loadAccountCollateral({
         accountId,
         tokenAddresses,

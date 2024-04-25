@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
@@ -38,15 +38,21 @@ export const useWithdrawBaseAndromeda = ({
   const signer = useSigner();
   const provider = useProvider();
 
+  const isSUSDCEnough = amountToWithdraw.lte(sUSDCCollateral);
+  const howMuchSNXUSD = amountToWithdraw.sub(sUSDCCollateral).sub(snxUSDCollateral).eq(0)
+    ? snxUSDCollateral
+    : snxUSDCollateral.sub(amountToWithdraw);
+
+  const amount = useMemo(
+    () => snxUSDCollateral.add(sUSDCCollateral),
+    [snxUSDCollateral, sUSDCCollateral]
+  );
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (!(CoreProxy && SpotProxy && amountToWithdraw.gt(0) && collateralPriceIds && accountId))
-        return;
-
-      const sUSDCAmount = amountToWithdraw.sub(sUSDCCollateral);
-      const snxUSDAmount = amountToWithdraw.add(sUSDCAmount);
+      if (!(CoreProxy && SpotProxy && amount.gt(0) && collateralPriceIds && accountId)) return;
 
       const walletAddress = await signer.getAddress();
 
@@ -55,41 +61,44 @@ export const useWithdrawBaseAndromeda = ({
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const withdraw_sUSDC = sUSDCCollateral?.gt(0)
+        const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
               BigNumber.from(accountId),
               getsUSDCAddress(network.id),
-              sUSDCAmount.gt(0) ? sUSDCAmount.toBN() : sUSDCCollateral.toBN()
+              isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
             )
           : undefined;
 
-        const withdraw_snxUSD = sUSDCAmount?.lt(0)
-          ? CoreProxy.populateTransaction.withdraw(
-              BigNumber.from(accountId),
-              getSNXUSDAddress(network.id),
-              snxUSDAmount.toBN()
-            )
-          : undefined;
+        const withdraw_sUSD =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? CoreProxy.populateTransaction.withdraw(
+                BigNumber.from(accountId),
+                getSNXUSDAddress(network.id),
+                howMuchSNXUSD.toBN()
+              )
+            : undefined;
 
-        const snxUSDCApproval = snxUSDCollateral.gt(0)
-          ? UsdProxy?.populateTransaction.approve(SpotProxy.address, snxUSDAmount.toBN())
-          : undefined;
+        const sUSDCApproval =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? UsdProxy?.populateTransaction.approve(SpotProxy.address, howMuchSNXUSD.toBN())
+            : undefined;
 
-        const buy_USDC = snxUSDCollateral.gt(0)
-          ? SpotProxy.populateTransaction.buy(
-              USDC_BASE_MARKET,
-              snxUSDAmount.toBN(),
-              1,
-              constants.AddressZero
-            )
-          : undefined;
+        const buy_SUSD =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? SpotProxy.populateTransaction.buy(
+                USDC_BASE_MARKET,
+                howMuchSNXUSD.toBN(),
+                0,
+                constants.AddressZero
+              )
+            : undefined;
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
           USDC_BASE_MARKET,
-          snxUSDAmount.toBN(),
+          amountToWithdraw.toBN(),
           //2% slippage
           Number(
-            utils.formatUnits(snxUSDAmount.toBN().mul(98).div(100).toString(), 12).toString()
+            utils.formatUnits(amountToWithdraw.toBN().mul(98).div(100).toString(), 12).toString()
           ).toFixed()
         );
 
@@ -101,28 +110,28 @@ export const useWithdrawBaseAndromeda = ({
         );
         const [
           gasPrices,
-          withdraw_snxUSD_TX,
-          snxUSDCApproval_TX,
-          buy_USDC_TX,
-          unwrapTxnPromised_TX,
-          withdraw_sUSDC_TX,
+          withdraw_sUSDC_Txn,
+          withdraw_SUSD_Txn,
+          sUSDCApproval_Txn,
+          buy_SUSD_Txn,
+          unwrapTxn,
           collateralPriceCalls,
         ] = await Promise.all([
           gasPricesPromised,
-          withdraw_snxUSD,
-          snxUSDCApproval,
-          buy_USDC,
-          unwrapTxnPromised,
           withdraw_sUSDC,
+          withdraw_sUSD,
+          sUSDCApproval,
+          buy_SUSD,
+          unwrapTxnPromised,
           collateralPriceCallsPromise,
         ]);
         const allCalls = collateralPriceCalls.concat(
           [
-            withdraw_snxUSD_TX,
-            snxUSDCApproval_TX,
-            buy_USDC_TX,
-            unwrapTxnPromised_TX,
-            withdraw_sUSDC_TX,
+            withdraw_sUSDC_Txn,
+            withdraw_SUSD_Txn,
+            sUSDCApproval_Txn,
+            buy_SUSD_Txn,
+            unwrapTxn,
           ].filter(notNil)
         );
 

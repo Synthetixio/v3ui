@@ -23,20 +23,7 @@ import { useParams } from '@snx-v3/useParams';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
-
-// TODO @DEV
-// let's say you have 50 sUSDC and 40 snxUSD
-// user enters an amount
-// you should start by taking the amount from sUSDC
-// if the user enters 50 or less you don't have to withdraw any snxUSD
-// just withdraw sUSDC  and unwrap it
-// if the user enters a number between 50 - 90
-// you take 50 from sUSDC
-// and the rest for withdraw snxUSD -> buy sUSDC -> unwraping
-// so basically it's fairly simple now that i think about it
-// define two values
-
-// then use these varible in the hook
+import { useQueryClient } from '@tanstack/react-query';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
@@ -45,6 +32,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const [selectedCollateralType, setSelectedCollateralType] = useState<string>(
     collateralTypes && collateralTypes[0] ? collateralTypes[0].tokenAddress : ''
   );
+  const queryClient = useQueryClient();
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: accountCollaterals } = useAccountCollateral({
@@ -56,9 +44,17 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     accountId,
     collateralTypeAddress: selectedCollateralType,
   });
-  const activeCollateral = accountCollaterals?.find(
-    (collateral) => collateral.tokenAddress === selectedCollateralType
-  );
+  const activeCollateral = isBase
+    ? accountCollaterals?.reduce((cur, prev, index) => {
+        //ignore the first iteration cause we are starting witht the first index of the
+        // array as a default
+        if (!index) return cur;
+        return {
+          ...cur,
+          availableCollateral: cur.availableCollateral.add(prev.availableCollateral),
+        };
+      }, accountCollaterals[0])
+    : accountCollaterals?.find((collateral) => collateral.tokenAddress === selectedCollateralType);
 
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
     accountId,
@@ -78,6 +74,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     } else {
       await withdrawAndromeda.mutateAsync();
     }
+    queryClient.clear();
   };
   return (
     <Modal
@@ -159,7 +156,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   fontWeight={700}
                   data-cy="manage-input"
                   onChange={(e) => {
-                    setAmount(new Wei(e.target.value ? e.target.value : 0, amount.p));
+                    setAmount(new Wei(e.target.value ? e.target.value : 0, 18));
                   }}
                 />
                 <Text fontSize="12px" color="gray.500">

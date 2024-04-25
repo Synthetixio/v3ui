@@ -8,6 +8,7 @@
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCollateralTypes": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
+    "@snx-v3/useGetUSDTokens": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

@@ -41,7 +41,8 @@ export const AssetsList = () => {
       isBaseAndromeda(network?.id, network?.preset)
       ? [
           accountCollaterals?.reduce((cur, prev, index) => {
-            //ignore the first iteration
+            //ignore the first iteration cause we are starting witht the first index of the
+            // array as a default
             if (!index) return cur;
             return {
               ...cur,
@@ -51,7 +52,6 @@ export const AssetsList = () => {
         ]
       : accountCollaterals;
   }, [accountCollaterals, network?.id, network?.preset]);
-
   const assets = useMemo(
     () => calculateAssets(combinedCollateral, userTokenBalances, collateralPrices, collateralTypes),
     [combinedCollateral, userTokenBalances, collateralPrices, collateralTypes]
