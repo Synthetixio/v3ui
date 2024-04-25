@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider, useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber, ethers } from 'ethers';
@@ -17,6 +17,7 @@ import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
 import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -39,12 +40,14 @@ export const useDepositBaseAndromeda = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const { gasSpeed } = useGasSpeed();
 
   const { network } = useNetwork();
   const signer = useSigner();
   const provider = useProvider();
+  const { activeWallet } = useWallet();
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -125,6 +128,13 @@ export const useDepositBaseAndromeda = ({
         ]);
 
         const allCalls = collateralPriceCalls.concat(calls);
+
+        if (priceUpdateTx) {
+          allCalls.unshift({
+            from: activeWallet?.address,
+            ...priceUpdateTx,
+          } as any);
+        }
 
         const erc7412Tx = await withERC7412(
           network,

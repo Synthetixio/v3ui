@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
@@ -35,10 +35,31 @@ const priceIds = [
   '0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17',
   '0x09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723',
   '0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026',
+  '0x9a4df90b25497f66b1afb012467e316e801ca3d839456db028892fe8c70c8016',
 ];
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
+const getPriceUpdates = async (
+  priceIds: string[],
+  stalenessTolerance: number,
+  network: Network | null
+) => {
+  const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
+  const updateType = 1;
+  const data = ethers.utils.defaultAbiCoder.encode(
+    ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
+    [updateType, stalenessTolerance, priceIds, signedOffchainData]
+  );
+  const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
+
+  return {
+    //pyth wrapper
+    to: getsPythWrapper(network?.id),
+    data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
+    value: priceIds.length * 10,
+  };
+};
 export const useAllCollateralPriceUpdates = () => {
   const { network } = useNetwork();
 
@@ -46,22 +67,13 @@ export const useAllCollateralPriceUpdates = () => {
     queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates', priceIds.join(',')],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
-      const updateType = 1,
-        stalenessTolerance = 60;
+      const stalenessTolerance = 60;
 
-      const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
-
-      const data = ethers.utils.defaultAbiCoder.encode(
-        ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
-        [updateType, stalenessTolerance, priceIds, signedOffchainData]
-      );
-      const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
+      const tx = await getPriceUpdates(priceIds, stalenessTolerance, network);
 
       return {
-        //pyth wrapper
-        to: getsPythWrapper(network?.id),
-        data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
-        value: priceIds.length * 10,
+        ...tx,
+        value: tx.value * 10,
       };
     },
   });
@@ -72,13 +84,14 @@ export const useCollateralPriceUpdates = () => {
   const provider = useDefaultProvider();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', priceIds.join(',')],
+    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates'],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
-      const stalenessTolerance = 1000;
+      const stalenessTolerance = 3600;
       if (!network) {
         return;
       }
+
       try {
         const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
           network.id,
@@ -90,9 +103,9 @@ export const useCollateralPriceUpdates = () => {
           'function getLatestPrice(bytes32 priceId, uint256 stalenessTolerance) external view returns (int256)',
         ]);
 
-        const getPricesTx = multicallInterface.encodeFunctionData('aggregate3Value', [
-          priceIds.map((priceId) => ({
-            target: getsPythWrapper(network?.id),
+        const txs = [
+          ...priceIds.map((priceId) => ({
+            target: getsPythWrapper(network.id),
             callData: pythInterface.encodeFunctionData('getLatestPrice', [
               priceId,
               stalenessTolerance,
@@ -100,26 +113,32 @@ export const useCollateralPriceUpdates = () => {
             value: 0,
             requireSuccess: false,
           })),
-        ]);
+        ];
+
+        const getPricesTx = multicallInterface.encodeFunctionData('aggregate3Value', [txs]);
 
         const result = await provider?.call({
           data: getPricesTx,
           to: multicallAddress,
         });
 
-        const decodedMultiCall: { returnData: string }[] = multicallInterface.decodeFunctionResult(
+        const decodedMultiCall: { success: boolean }[] = multicallInterface.decodeFunctionResult(
           'aggregate3Value',
-          result
+          result || ''
         )[0];
 
-        console.log({
-          decodedMultiCall,
+        const outdatedPriceIds: string[] = [];
+
+        decodedMultiCall.forEach(({ success }, i) => {
+          if (!success) {
+            outdatedPriceIds.push(priceIds[i]);
+          }
         });
-        return null;
+
+        if (outdatedPriceIds.length) {
+          return await getPriceUpdates(outdatedPriceIds, stalenessTolerance, network);
+        }
       } catch (error) {
-        console.log({
-          error,
-        });
         return null;
       }
     },
