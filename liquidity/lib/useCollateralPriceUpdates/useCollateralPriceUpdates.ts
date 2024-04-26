@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import { Network, useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
@@ -36,6 +36,7 @@ const priceIds = [
   '0x09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723',
   '0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026',
   '0x9a4df90b25497f66b1afb012467e316e801ca3d839456db028892fe8c70c8016',
+  '0x5fcf71143bb70d41af4fa9aa1287e2efd3c5911cee59f909f915c9f61baacb1e',
 ];
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
@@ -82,12 +83,13 @@ export const useAllCollateralPriceUpdates = () => {
 export const useCollateralPriceUpdates = () => {
   const { network } = useNetwork();
   const provider = useDefaultProvider();
+  const { activeWallet } = useWallet();
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'price-updates'],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
-      const stalenessTolerance = 3600;
+      const stalenessTolerance = 3300;
       if (!network) {
         return;
       }
@@ -136,7 +138,10 @@ export const useCollateralPriceUpdates = () => {
         });
 
         if (outdatedPriceIds.length) {
-          return await getPriceUpdates(outdatedPriceIds, stalenessTolerance, network);
+          return {
+            from: activeWallet?.address,
+            ...(await getPriceUpdates(outdatedPriceIds, stalenessTolerance, network)),
+          };
         }
       } catch (error) {
         return null;
