@@ -26,8 +26,6 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     '0x632cAa10A56343C5e6C0c066735840c096291B18'
   );
 
-  console.log(contractBalance);
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

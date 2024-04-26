@@ -26,7 +26,7 @@ export function Main() {
               Mansion counter
             </Text>
             <Text fontSize="24px" fontWeight={700} color="white">
-              {isLoading ? <Spinner colorScheme="cyan" /> : events.events.length}
+              {isLoading ? <Spinner colorScheme="cyan" /> : events.totalBurns}
             </Text>
           </Flex>
         </Flex>
