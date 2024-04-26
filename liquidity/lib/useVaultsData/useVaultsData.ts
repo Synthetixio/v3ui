@@ -8,7 +8,7 @@ import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -21,7 +21,7 @@ export const useVaultsData = (poolId?: number) => {
   const { data: CoreProxyContract } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [

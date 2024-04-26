@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -29,7 +29,7 @@ export const usePoolConfiguration = (poolId?: string) => {
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),

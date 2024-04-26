@@ -5,7 +5,7 @@ import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -68,7 +68,7 @@ export function useAccountCollateral({
   const collateralTypes = useCollateralTypes(includeDelegationOff);
   const tokenAddresses = collateralTypes.data?.map((c) => c.tokenAddress) ?? [];
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
@@ -106,7 +106,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [

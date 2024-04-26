@@ -11,12 +11,11 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
 import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -38,7 +37,7 @@ export const useDepositBaseAndromeda = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const { gasSpeed } = useGasSpeed();
 
@@ -57,8 +56,7 @@ export const useDepositBaseAndromeda = ({
           SpotMarketProxy &&
           poolId &&
           collateralTypeAddress &&
-          availableCollateral &&
-          collateralPriceUpdates
+          availableCollateral
         )
       ) {
         return;
@@ -67,7 +65,6 @@ export const useDepositBaseAndromeda = ({
 
       try {
         dispatch({ type: 'prompting' });
-        const walletAddress = await signer.getAddress();
         const id = accountId ?? newAccountId;
 
         // create account only when no account exists
@@ -111,24 +108,15 @@ export const useDepositBaseAndromeda = ({
           [wrap, sUSDCApproval, createAccount, deposit, delegate].filter(notNil)
         );
 
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceUpdates,
-          network?.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
-        );
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
 
-        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
-          callsPromise,
-          getGasPrice({ provider }),
-          collateralPriceCallsPromise,
-        ]);
-
-        const allCalls = collateralPriceCalls.concat(calls);
+        if (priceUpdateTx) {
+          calls.unshift(priceUpdateTx as any);
+        }
 
         const erc7412Tx = await withERC7412(
           network,
-          allCalls,
+          calls,
           'useDepositBaseAndromeda',
           CoreProxy.interface
         );

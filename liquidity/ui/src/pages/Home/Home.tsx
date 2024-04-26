@@ -7,6 +7,7 @@ import { useParams } from '@snx-v3/useParams';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { PoolsList, Stats, AvailableCollateral } from '@snx-v3/Pools';
 import { useApr } from '@snx-v3/useApr';
+import { useCollateralPriceUpdates } from '../../../../lib/useCollateralPriceUpdates';
 
 export function Home() {
   const { accountId } = useParams();
@@ -17,6 +18,7 @@ export function Home() {
 
   const { data: liquidityPositionsById, isLoading: liquidityPositionLoading } =
     useLiquidityPositions({ accountId });
+  useCollateralPriceUpdates();
 
   const isLoading =
     collateralTypesLoading || isPoolsLoading || liquidityPositionLoading || isAprLoading;
