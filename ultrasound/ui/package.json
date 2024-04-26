@@ -14,8 +14,10 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*",
     "@snx-v3/useMulticall3": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
+    "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
     "@web3-onboard/coinbase": "^2.2.6",
     "@web3-onboard/injected-wallets": "^2.10.11",
@@ -29,7 +31,6 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.48.2",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
@@ -69,7 +70,11 @@
     "last 1 Opera version"
   ],
   "depcheck": {
-    "ignorePatterns": ["dist"],
-    "ignoreMatches": ["process"]
+    "ignorePatterns": [
+      "dist"
+    ],
+    "ignoreMatches": [
+      "process"
+    ]
   }
 }

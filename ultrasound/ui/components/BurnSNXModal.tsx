@@ -10,21 +10,31 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
 } from '@chakra-ui/react';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useForm } from 'react-hook-form';
 import { USDCBalanceOfBuyBackContract } from '../hooks/USDCBalanceOfBuyBackContract';
+import { useApprove } from '@snx-v3/useApprove';
+import Wei from '@synthetixio/wei';
+import { useState } from 'react';
+import { useSellSNX } from '../mutations/useSellSNX';
 
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [amount, setAmount] = useState(new Wei(0));
   const { connect, activeWallet } = useWallet();
-  const { register, setValue } = useForm({ defaultValues: { snx: 0 } });
+  const { requireApproval, approve, refetchAllowance } = useApprove({
+    contractAddress: '0x22e6966B799c4D5B13BE962E1D117b56327FDa66',
+    amount: amount.toBN(),
+    spender: '0x632cAa10A56343C5e6C0c066735840c096291B18',
+  });
   const { data: snxBalance } = useTokenBalance('0x22e6966B799c4D5B13BE962E1D117b56327FDa66');
   const { data: usdcBalance } = useTokenBalance('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
   const { data: contractBalance } = USDCBalanceOfBuyBackContract(
     '0x632cAa10A56343C5e6C0c066735840c096291B18'
   );
+  const { mutateAsync, isPending } = useSellSNX();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -66,7 +76,15 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   type="number"
                   overflow="scroll"
                   fontWeight={700}
-                  {...register('snx', { valueAsNumber: true })}
+                  value={amount.toNumber()}
+                  onChange={(e) => {
+                    try {
+                      setAmount(new Wei(e.target.value));
+                    } catch (error) {
+                      console.error('failed to parse input: ', Error);
+                      setAmount(new Wei(0));
+                    }
+                  }}
                 />
               </Flex>
               <Flex w="100%" justifyContent="space-between">
@@ -76,7 +94,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   mt="2"
                   cursor="pointer"
                   onClick={() => {
-                    setValue('snx', snxBalance.toNumber());
+                    setAmount(snxBalance);
                   }}
                 >
                   Balance: {snxBalance ? snxBalance.toNumber().toFixed(2) : '-'}
@@ -128,15 +146,30 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             </Flex>
             <Button
               my="4"
-              onClick={() => {
+              onClick={async () => {
                 if (activeWallet?.address) {
+                  if (requireApproval) {
+                    await approve(false);
+                    await refetchAllowance();
+                  }
+                  await mutateAsync(amount);
                 } else {
                   onClose();
                   connect();
                 }
               }}
             >
-              {activeWallet?.address ? 'Burn SNX' : 'Connect Wallet'}
+              {isPending ? (
+                <Spinner colorScheme="black" />
+              ) : activeWallet?.address ? (
+                requireApproval ? (
+                  'Approve SNX'
+                ) : (
+                  'Burn SNX'
+                )
+              ) : (
+                'Connect Wallet'
+              )}
             </Button>
           </Flex>
         </ModalBody>

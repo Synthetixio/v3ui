@@ -15,6 +15,8 @@ const SNXonL1 = new Contract(
   new providers.JsonRpcProvider('https://eth.llamarpc.com')
 );
 
+const now = new Date();
+now.setDate(now.getDate() - 7);
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -24,9 +26,6 @@ export function useBurnEvents() {
     queryFn: async () => {
       const repsonse = await fetch('https://api.synthetix.io/v3/base/snx-buyback');
       const events: BurnEvent[] = await repsonse.json();
-
-      const now = new Date();
-      now.setDate(now.getDate() - 7);
 
       const totalSupply: BigNumber = await SNXonL1.totalSupply();
 
