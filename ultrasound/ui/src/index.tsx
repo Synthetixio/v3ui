@@ -11,6 +11,7 @@ const customTheme = extendTheme({
   ...theme,
 });
 
+// ts-ignore next-line
 const root = createRoot(document!.querySelector('#app'));
 root.render(
   <RecoilRoot>
