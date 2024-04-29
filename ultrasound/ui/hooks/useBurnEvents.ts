@@ -38,8 +38,6 @@ export function useBurnEvents() {
         'https://coins.llama.fi/prices/current/ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'
       );
 
-      // use oracle manger with price ID
-      // 0x508a4a4d7905359126646eae38f367a55525e82375fe78ddaf7534e43c6246c0
       const { coins } = await SNXPriceResponse.json();
 
       const groupedByMonths = events.reduce(
@@ -80,7 +78,8 @@ export function useBurnEvents() {
         totalSupply: Number(utils.formatEther(totalSupply)).toLocaleString('en-US', {
           maximumFractionDigits: 2,
         }),
-        SNXPrice: coins['ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'].price || 3,
+        SNXPrice:
+          (coins['ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'].price as number) || 0,
       };
     },
   });

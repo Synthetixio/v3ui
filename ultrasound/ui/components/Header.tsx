@@ -1,14 +1,22 @@
-import { Box, Button, Divider, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Image, Text, useColorMode } from '@chakra-ui/react';
 import { useIsConnected, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { shortAddress } from '../utils/addresses';
 import { NetworkSelect } from './NetworkSelect';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useEffect } from 'react';
 
 export function Header() {
+  const { colorMode, toggleColorMode } = useColorMode();
   const { network, setNetwork } = useNetwork();
   const isWalletConnected = useIsConnected();
   const { activeWallet, connect, disconnect, walletsInfo } = useWallet();
   const { data: snxBalance } = useTokenBalance('0x22e6966B799c4D5B13BE962E1D117b56327FDa66');
+
+  useEffect(() => {
+    if (colorMode === 'light') {
+      toggleColorMode();
+    }
+  }, [colorMode, toggleColorMode]);
 
   return (
     <Flex as="header" p="2" flexDir="column" w="100%" gap="2">

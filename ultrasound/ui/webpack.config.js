@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+require('dotenv').config();
 
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
@@ -27,6 +28,7 @@ const babelRule = {
     // Need to list all the folders in v3 and outside (if used)
     /ultrasound\/ui/,
     /theme/,
+    /contracts/,
     /liquidity\/components/,
     /liquidity\/lib/,
   ],

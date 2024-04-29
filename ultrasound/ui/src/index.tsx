@@ -6,28 +6,17 @@ import { Web3OnboardProvider } from '@web3-onboard/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onboard } from '../utils/onboard';
 import { App } from './App';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const customTheme = extendTheme({
   ...theme,
 });
 
-// ts-ignore next-line
-const root = createRoot(document!.querySelector('#app'));
+const root = createRoot(document.querySelector('#app'));
 root.render(
   <RecoilRoot>
-    <QueryClientProvider
-      client={
-        new QueryClient({
-          defaultOptions: {
-            queries: {
-              refetchInterval: 9999999,
-              refetchOnMount: false,
-              refetchOnWindowFocus: false,
-            },
-          },
-        })
-      }
-    >
+    <QueryClientProvider client={new QueryClient()}>
+      <ReactQueryDevtools />
       <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={customTheme}>
           <Fonts />

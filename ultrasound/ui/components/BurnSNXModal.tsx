@@ -15,25 +15,32 @@ import {
 } from '@chakra-ui/react';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { USDCBalanceOfBuyBackContract } from '../hooks/USDCBalanceOfBuyBackContract';
+import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
 import { useApprove } from '@snx-v3/useApprove';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
 import { useSellSNX } from '../mutations/useSellSNX';
+import { useBurnEvents } from '../hooks/useBurnEvents';
+import { useSNXPrice } from '../hooks/useSNXPrice';
 
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [amount, setAmount] = useState(new Wei(0));
+  const [receivingUSDCAmount, setReceivingUSDCAmount] = useState(0);
+  const { data: events } = useBurnEvents();
   const { connect, activeWallet } = useWallet();
+  const { data: SNXPrice } = useSNXPrice();
+
+  const { data: snxBalance } = useTokenBalance('0x22e6966B799c4D5B13BE962E1D117b56327FDa66');
+  const { data: usdcBalance } = useTokenBalance('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
+  const { data: contractBalance } = SNXUSDBalanceOfBuyBackContract(
+    '0x632cAa10A56343C5e6C0c066735840c096291B18'
+  );
+
   const { requireApproval, approve, refetchAllowance } = useApprove({
     contractAddress: '0x22e6966B799c4D5B13BE962E1D117b56327FDa66',
     amount: amount.toBN(),
     spender: '0x632cAa10A56343C5e6C0c066735840c096291B18',
   });
-  const { data: snxBalance } = useTokenBalance('0x22e6966B799c4D5B13BE962E1D117b56327FDa66');
-  const { data: usdcBalance } = useTokenBalance('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
-  const { data: contractBalance } = USDCBalanceOfBuyBackContract(
-    '0x632cAa10A56343C5e6C0c066735840c096291B18'
-  );
   const { mutateAsync, isPending } = useSellSNX();
 
   return (
@@ -79,7 +86,11 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   value={amount.toNumber()}
                   onChange={(e) => {
                     try {
-                      setAmount(new Wei(e.target.value));
+                      const snxAmount = new Wei(e.target.value);
+                      setAmount(snxAmount);
+                      setReceivingUSDCAmount(
+                        snxAmount.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                      );
                     } catch (error) {
                       console.error('failed to parse input: ', Error);
                       setAmount(new Wei(0));
@@ -95,6 +106,9 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   cursor="pointer"
                   onClick={() => {
                     setAmount(snxBalance);
+                    setReceivingUSDCAmount(
+                      snxBalance.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                    );
                   }}
                 >
                   Balance: {snxBalance ? snxBalance.toNumber().toFixed(2) : '-'}
@@ -104,7 +118,13 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 </Text>
               </Flex>
               <Text color="gray.500" fontSize="12px">
-                max burnable: ??? make calc
+                max burnable:{' '}
+                {contractBalance &&
+                  events?.SNXPrice &&
+                  (
+                    new Wei(contractBalance, 18).toNumber() /
+                    (events.SNXPrice + events.SNXPrice * 0.01)
+                  ).toFixed(2)}
               </Text>
             </Flex>
             <Text fontWeight={700}>Receive</Text>
@@ -136,6 +156,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   overflow="scroll"
                   fontWeight={700}
                   _disabled={{ color: 'white' }}
+                  value={receivingUSDCAmount}
                 />
               </Flex>
               <Flex w="100%" justifyContent="space-between" gap="2">
@@ -153,6 +174,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     await refetchAllowance();
                   }
                   await mutateAsync(amount);
+                  onClose();
                 } else {
                   onClose();
                   connect();
