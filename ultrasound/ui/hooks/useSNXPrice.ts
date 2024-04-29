@@ -5,12 +5,14 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export function useSNXPrice() {
   const signer = useSigner();
   const { network } = useNetwork();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   return useQuery({
+    enabled: isBaseAndromeda(network?.id, network?.preset),
     queryKey: ['snx-price', { withSigner: !!signer?.provider, network: network?.id }],
     queryFn: async () => {
       if ((signer?.provider && network?.id, network?.preset)) {

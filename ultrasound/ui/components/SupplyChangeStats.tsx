@@ -57,27 +57,28 @@ export function SupplyChangeStats() {
             <Text fontSize="18px" color="gray.500" fontWeight={700}>
               0.00 SNX
             </Text>
-            <Text color="gray.500">
-              <Tooltip
-                hasArrow
-                closeDelay={5000}
-                label={
-                  <Text>
-                    No more SNX are being minted. Read more about{' '}
-                    <Link
-                      href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
-                      rel="noopener"
-                      color="cyan.500"
-                    >
-                      The End of Synthetix Token Inflation
-                    </Link>
-                  </Text>
-                }
-              >
+
+            <Tooltip
+              hasArrow
+              closeDelay={1000}
+              label={
+                <Text>
+                  No more SNX are being minted. Read more about{' '}
+                  <Link
+                    href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
+                    rel="noopener"
+                    color="cyan.500"
+                  >
+                    The End of Synthetix Token Inflation
+                  </Link>
+                </Text>
+              }
+            >
+              <Flex alignItems="center">
                 <InfoIcon color="gray.500" mr="2" />
-              </Tooltip>
-              Why?
-            </Text>
+                <Text color="gray.500">Why?</Text>
+              </Flex>
+            </Tooltip>
           </Flex>
         </>
       )}

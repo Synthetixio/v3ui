@@ -1,8 +1,11 @@
-import { Button, Flex, Image, Spinner, Text, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Image, Spinner, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNXModal } from './BurnSNXModal';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export function BurnSNX() {
+  const { network } = useNetwork();
   const { data: events, isLoading } = useBurnEvents();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,7 +36,13 @@ export function BurnSNX() {
           </Text>
         )}
         <Flex gap="4">
-          <Button onClick={() => onOpen()}>Burn SNX</Button>
+          {!isBaseAndromeda(network?.id, network?.preset) ? (
+            <Tooltip label="Please conect to the Base network">
+              <Button isDisabled={true}>Burn SNX</Button>
+            </Tooltip>
+          ) : (
+            <Button onClick={() => onOpen()}>Burn SNX</Button>
+          )}
           <Button variant="outline" colorScheme="gray">
             Lean More
           </Button>
