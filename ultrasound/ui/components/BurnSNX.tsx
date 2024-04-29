@@ -35,7 +35,7 @@ export function BurnSNX() {
             {events && events?.SNXPrice ? (events.SNXPrice + events.SNXPrice * 0.01).toFixed(2) : 0}
           </Text>
         )}
-        <Flex gap="4">
+        <Flex gap="4" mt="65px">
           {!isBaseAndromeda(network?.id, network?.preset) ? (
             <Tooltip label="Please conect to the Base network">
               <Button isDisabled={true}>Burn SNX</Button>
