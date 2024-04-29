@@ -6,7 +6,6 @@ import Wei from '@synthetixio/wei';
 import { Contract, constants, utils } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -22,11 +21,11 @@ export function useSellSNX() {
   const { data: UsdProxy } = useUSDProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { network } = useNetwork();
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
   const { data: SNXPrice } = useSNXPrice();
+
   return useMutation({
     mutationKey: ['sell-snx'],
     mutationFn: async (amount: Wei) => {
@@ -71,10 +70,6 @@ export function useSellSNX() {
           ]);
 
         const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil);
-
-        if (priceUpdateTx) {
-          allCalls.unshift(priceUpdateTx as any);
-        }
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
 

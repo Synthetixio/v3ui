@@ -1,41 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { useAllCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
+import { useGetNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+
+const snxNodeId = '0x508a4a4d7905359126646eae38f367a55525e82375fe78ddaf7534e43c6246c0';
 
 export function useSNXPrice() {
-  const signer = useSigner();
-  const { network } = useNetwork();
-  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
+  const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
+  const baseProvider = useProviderForChain(baseNetwork);
+
   return useQuery({
-    enabled: isBaseAndromeda(network?.id, network?.preset),
-    queryKey: ['snx-price', { withSigner: !!signer?.provider, network: network?.id }],
+    enabled: !!baseProvider,
+    queryKey: ['snx-price', !!baseProvider],
     queryFn: async () => {
-      if ((signer?.provider && network?.id, network?.preset)) {
+      if (baseProvider) {
         try {
-          const { address, abi } = await importOracleManagerProxy(network.id, network.preset);
+          const { address, abi } = await importOracleManagerProxy(
+            baseNetwork?.id,
+            baseNetwork?.preset
+          );
           const OracleManagerProxy = new Contract(
             address,
             abi,
-            signer?.provider
+            baseProvider
           ) as OracleManagerProxyType;
-          const price = [
-            await OracleManagerProxy.populateTransaction.process(
-              '0x508a4a4d7905359126646eae38f367a55525e82375fe78ddaf7534e43c6246c0'
-            ),
-          ];
+
+          const price = [await OracleManagerProxy.populateTransaction.process(snxNodeId)];
           price[0].from = '0x4200000000000000000000000000000000000006';
 
-          if (priceUpdateTx) {
-            price.unshift(priceUpdateTx as any);
-          }
           return await erc7412Call(
-            network,
-            signer!.provider,
+            baseNetwork,
+            baseProvider,
             price,
             (txs) => {
               return new Wei(
