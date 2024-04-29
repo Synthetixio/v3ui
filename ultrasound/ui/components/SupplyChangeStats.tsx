@@ -38,7 +38,7 @@ export function SupplyChangeStats() {
             </Text>
           </Flex>
           <Text fontWeight={700} fontSize="24px">
-            -{events.supplyChange7Days.toString()} SNX
+            -{events?.supplyChange7Days.toString()} SNX
           </Text>
           <Flex gap="2" alignItems="center">
             <Image src="/burn.svg" />
@@ -46,7 +46,7 @@ export function SupplyChangeStats() {
               Burnt
             </Text>
             <Text fontSize="18px" color="gray.500" fontWeight={700}>
-              {events.supplyChange7Days.toString()} SNX
+              {events?.supplyChange7Days.toString()} SNX
             </Text>
           </Flex>
           <Flex gap="2" alignItems="center">

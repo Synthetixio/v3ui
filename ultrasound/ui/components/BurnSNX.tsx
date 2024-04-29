@@ -28,8 +28,8 @@ export function BurnSNX() {
           <Spinner colorScheme="cyan" />
         ) : (
           <Text fontWeight={700} fontSize="20px">
-            Buyback Price: <s>$ {events.SNXPrice}</s> $
-            {(events.SNXPrice + events.SNXPrice * 0.01).toFixed(2)}
+            Buyback Price: <s>$ {events?.SNXPrice}</s> $
+            {events && events?.SNXPrice ? (events.SNXPrice + events.SNXPrice * 0.01).toFixed(2) : 0}
           </Text>
         )}
         <Flex gap="4">

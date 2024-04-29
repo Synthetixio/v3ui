@@ -20,7 +20,7 @@ export function Chart() {
   const { data: events, isLoading } = useBurnEvents();
 
   if (isLoading) return <Spinner colorScheme="cyan" />;
-
+  if (!events) return;
   return (
     <Flex
       border="1px solid"

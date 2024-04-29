@@ -11,6 +11,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useSNXPrice } from '../hooks/useSNXPrice';
+import { notNil } from '@snx-v3/tsHelpers';
 
 const BuyBack = new Contract('0x632cAa10A56343C5e6C0c066735840c096291B18', [
   'function processBuyback(uint256 snxAmount) external',
@@ -29,57 +30,63 @@ export function useSellSNX() {
   return useMutation({
     mutationKey: ['sell-snx'],
     mutationFn: async (amount: Wei) => {
-      const gasPricesPromised = getGasPrice({ provider });
+      if (!(CoreProxy && network && network && SpotProxy && signer && SNXPrice && provider)) {
+        throw Error('Cant find CoreProxy, network, SpotProxy, SNXPrice, provider or signer');
+      } else {
+        const gasPricesPromised = getGasPrice({ provider });
 
-      const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(0.01));
+        const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(0.01));
 
-      const sellSNX = BuyBack.connect(signer).populateTransaction.processBuyback(amount.toBN());
+        const sellSNX = BuyBack.connect(signer).populateTransaction.processBuyback(amount.toBN());
 
-      const snxUSDApproval = UsdProxy?.populateTransaction.approve(
-        SpotProxy.address,
-        USDCAmountPlusPremium.toBN()
-      );
+        const snxUSDApproval = UsdProxy?.populateTransaction.approve(
+          SpotProxy.address,
+          USDCAmountPlusPremium.toBN()
+        );
 
-      const buy_SUSD = SpotProxy.populateTransaction.buy(
-        1,
-        USDCAmountPlusPremium.toBN(),
-        0,
-        constants.AddressZero
-      );
+        const buy_SUSD = SpotProxy.populateTransaction.buy(
+          1,
+          USDCAmountPlusPremium.toBN(),
+          0,
+          constants.AddressZero
+        );
 
-      const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
-        1,
-        USDCAmountPlusPremium.toBN(),
-        //2% slippage
-        Number(
-          utils.formatUnits(USDCAmountPlusPremium.toBN().mul(98).div(100).toString(), 12).toString()
-        ).toFixed()
-      );
-      const [gasPrices, sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn] =
-        await Promise.all([
-          gasPricesPromised,
-          sellSNX,
-          snxUSDApproval,
-          buy_SUSD,
-          unwrapTxnPromised,
-        ]);
+        const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
+          1,
+          USDCAmountPlusPremium.toBN(),
+          //2% slippage
+          Number(
+            utils
+              .formatUnits(USDCAmountPlusPremium.toBN().mul(98).div(100).toString(), 12)
+              .toString()
+          ).toFixed()
+        );
+        const [gasPrices, sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn] =
+          await Promise.all([
+            gasPricesPromised,
+            sellSNX,
+            snxUSDApproval,
+            buy_SUSD,
+            unwrapTxnPromised,
+          ]);
 
-      const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn];
+        const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil);
 
-      if (priceUpdateTx) {
-        allCalls.unshift(priceUpdateTx as any);
+        if (priceUpdateTx) {
+          allCalls.unshift(priceUpdateTx as any);
+        }
+
+        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
+
+        const gasOptionsForTransaction = formatGasPriceForTransaction({
+          gasLimit: erc7412Tx.gasLimit,
+          gasPrices,
+          gasSpeed,
+        });
+
+        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
+        await txn.wait();
       }
-
-      const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
-
-      const gasOptionsForTransaction = formatGasPriceForTransaction({
-        gasLimit: erc7412Tx.gasLimit,
-        gasPrices,
-        gasSpeed,
-      });
-
-      const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
-      await txn.wait();
     },
   });
 }

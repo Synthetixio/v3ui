@@ -41,7 +41,7 @@ export function Header() {
           {isWalletConnected && (
             <NetworkSelect
               id={network?.id || ''}
-              name={network.name}
+              name={network?.name || ''}
               setNetwork={(netowork) => setNetwork(netowork.id)}
             />
           )}

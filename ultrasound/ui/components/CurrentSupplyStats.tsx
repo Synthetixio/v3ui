@@ -37,7 +37,7 @@ export function CurrentSupplyStats() {
             </Text>
           </Flex>
           <Text fontWeight={700} fontSize="24px" color="white">
-            {events.totalSupply} SNX
+            {events?.totalSupply} SNX
           </Text>
         </>
       )}

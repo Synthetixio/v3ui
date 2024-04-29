@@ -12,17 +12,22 @@ const customTheme = extendTheme({
   ...theme,
 });
 
-const root = createRoot(document.querySelector('#app'));
-root.render(
-  <RecoilRoot>
-    <QueryClientProvider client={new QueryClient()}>
-      <ReactQueryDevtools />
-      <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={customTheme}>
-          <Fonts />
-          <App />
-        </ChakraProvider>
-      </Web3OnboardProvider>
-    </QueryClientProvider>
-  </RecoilRoot>
-);
+if (typeof document !== 'undefined') {
+  const element = document.querySelector('#app');
+  if (element) {
+    const root = createRoot(element);
+    root.render(
+      <RecoilRoot>
+        <QueryClientProvider client={new QueryClient()}>
+          <ReactQueryDevtools />
+          <Web3OnboardProvider web3Onboard={onboard}>
+            <ChakraProvider theme={customTheme}>
+              <Fonts />
+              <App />
+            </ChakraProvider>
+          </Web3OnboardProvider>
+        </QueryClientProvider>
+      </RecoilRoot>
+    );
+  }
+}

@@ -86,11 +86,13 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   value={amount.toNumber()}
                   onChange={(e) => {
                     try {
-                      const snxAmount = new Wei(e.target.value);
-                      setAmount(snxAmount);
-                      setReceivingUSDCAmount(
-                        snxAmount.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
-                      );
+                      if (SNXPrice) {
+                        const snxAmount = new Wei(e.target.value);
+                        setAmount(snxAmount);
+                        setReceivingUSDCAmount(
+                          snxAmount.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                        );
+                      }
                     } catch (error) {
                       console.error('failed to parse input: ', Error);
                       setAmount(new Wei(0));
@@ -105,10 +107,12 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   mt="2"
                   cursor="pointer"
                   onClick={() => {
-                    setAmount(snxBalance);
-                    setReceivingUSDCAmount(
-                      snxBalance.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
-                    );
+                    if (SNXPrice && snxBalance) {
+                      setAmount(snxBalance);
+                      setReceivingUSDCAmount(
+                        snxBalance.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                      );
+                    }
                   }}
                 >
                   Balance: {snxBalance ? snxBalance.toNumber().toFixed(2) : '-'}
