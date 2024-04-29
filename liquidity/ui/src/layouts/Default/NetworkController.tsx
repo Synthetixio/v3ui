@@ -78,7 +78,8 @@ export function NetworkController() {
             </MenuButton>
             <MenuList>
               {networks.map(({ id, label }) => {
-                if ((id === 84532 || id === 11155111) && !showTestnets) return null;
+                if ((id === 84532 || id === 11155111 || id === 421614) && !showTestnets)
+                  return null;
                 return (
                   <MenuItem key={`${id}`} onClick={() => setNetwork(id)}>
                     <NetworkIcon networkId={id} />
