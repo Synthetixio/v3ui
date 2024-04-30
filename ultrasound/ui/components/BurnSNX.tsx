@@ -3,11 +3,13 @@ import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNXModal } from './BurnSNXModal';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useSNXPrice } from '../hooks/useSNXPrice';
 
 export function BurnSNX() {
   const { network } = useNetwork();
   const { data: events, isLoading } = useBurnEvents();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: SNXPrice } = useSNXPrice();
 
   return (
     <Flex

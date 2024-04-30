@@ -4,8 +4,7 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
-
-const snxNodeId = '0x508a4a4d7905359126646eae38f367a55525e82375fe78ddaf7534e43c6246c0';
+import { BuyBack } from '../mutations/useSellSNX';
 
 export function useSNXPrice() {
   const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
@@ -27,7 +26,12 @@ export function useSNXPrice() {
             baseProvider
           ) as OracleManagerProxyType;
 
-          const price = [await OracleManagerProxy.populateTransaction.process(snxNodeId)];
+          const price = [
+            await OracleManagerProxy.populateTransaction.process(
+              await BuyBack.connect(baseProvider).getSnxNodeId()
+            ),
+          ];
+
           price[0].from = '0x4200000000000000000000000000000000000006';
 
           return await erc7412Call(

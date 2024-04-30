@@ -9,11 +9,13 @@ import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { useSNXPrice } from '../hooks/useSNXPrice';
 import { notNil } from '@snx-v3/tsHelpers';
+import { useSNXPrice } from '../hooks/useSNXPrice';
 
-const BuyBack = new Contract('0x632cAa10A56343C5e6C0c066735840c096291B18', [
+export const BuyBack = new Contract('0x632cAa10A56343C5e6C0c066735840c096291B18', [
   'function processBuyback(uint256 snxAmount) external',
+  'function getPremium() view returns(uint256)',
+  'function getSnxNodeId() view returns(bytes32)',
 ]);
 
 export function useSellSNX() {
@@ -33,8 +35,17 @@ export function useSellSNX() {
         throw Error('Cant find CoreProxy, network, SpotProxy, SNXPrice, provider or signer');
       } else {
         const gasPricesPromised = getGasPrice({ provider });
+        // const [snxPriceResponse] = await priceService.getLatestPriceFeeds([
+        // '0x39d020f60982ed892abbcd4a06a276a9f9b7bfbce003204c110b6e488f502da3',
+        // ]);
+        // if (priceUpdateTx) {
+        //   const priceCalls = [priceUpdateTx, Oracle process(snxNodeId)];
+        // }
+        // const SNXPrice = new Wei(snxPriceResponse.getPriceUnchecked().price, 18);
 
-        const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(0.01));
+        const premium = await BuyBack.connect(signer).getPremium();
+
+        const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(premium));
 
         const sellSNX = BuyBack.connect(signer).populateTransaction.processBuyback(amount.toBN());
 
@@ -56,7 +67,7 @@ export function useSellSNX() {
           //2% slippage
           Number(
             utils
-              .formatUnits(USDCAmountPlusPremium.toBN().mul(98).div(100).toString(), 12)
+              .formatUnits(USDCAmountPlusPremium.toBN().mul(99).div(100).toString(), 12)
               .toString()
           ).toFixed()
         );
