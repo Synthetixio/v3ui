@@ -38,19 +38,7 @@ const container = document.querySelector('#app');
 const root = createRoot(container!);
 root.render(
   <RecoilRoot>
-    <QueryClientProvider
-      client={
-        new QueryClient({
-          defaultOptions: {
-            queries: {
-              refetchInterval: 9999999,
-              refetchOnMount: false,
-              refetchOnWindowFocus: false,
-            },
-          },
-        })
-      }
-    >
+    <QueryClientProvider client={new QueryClient()}>
       <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={customTheme}>
           <Fonts />
