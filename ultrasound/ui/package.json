@@ -17,7 +17,6 @@
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/useApprove": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/useCollateralPriceUpdates": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/useGasOptions": "workspace:*",
     "@snx-v3/useGasPrice": "workspace:*",

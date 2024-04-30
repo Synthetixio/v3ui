@@ -32,61 +32,63 @@ export function useSellSNX() {
     mutationKey: ['sell-snx'],
     mutationFn: async (amount: Wei) => {
       await refetch();
-      if (!(CoreProxy && network && network && SpotProxy && signer && SNXPrice && provider)) {
-        throw Error('Cant find CoreProxy, network, SpotProxy, SNXPrice, provider or signer');
-      } else {
-        const gasPricesPromised = getGasPrice({ provider });
+      if (!CoreProxy) return;
+      if (!network) return;
+      if (!SpotProxy) return;
+      if (!signer) return;
+      if (!SNXPrice) return;
+      if (!provider) return;
+      if (!SNXPrice) return;
 
-        const premium = await BuyBack.connect(signer).getPremium();
+      const gasPricesPromised = getGasPrice({ provider });
 
-        const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(premium));
+      const premium = await BuyBack.connect(signer).getPremium();
 
-        const sellSNX = BuyBack.connect(signer).populateTransaction.processBuyback(amount.toBN());
+      const USDCAmountPlusPremium = SNXPrice.mul(amount).add(SNXPrice.mul(premium));
 
-        const snxUSDApproval = UsdProxy?.populateTransaction.approve(
-          SpotProxy.address,
-          USDCAmountPlusPremium.toBN()
-        );
+      const sellSNX = BuyBack.connect(signer).populateTransaction.processBuyback(amount.toBN());
 
-        const buy_SUSD = SpotProxy.populateTransaction.buy(
-          1,
-          USDCAmountPlusPremium.toBN(),
-          0,
-          constants.AddressZero
-        );
+      const snxUSDApproval = UsdProxy?.populateTransaction.approve(
+        SpotProxy.address,
+        USDCAmountPlusPremium.toBN()
+      );
 
-        const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
-          1,
-          USDCAmountPlusPremium.toBN(),
-          //2% slippage
-          Number(
-            utils
-              .formatUnits(USDCAmountPlusPremium.toBN().mul(99).div(100).toString(), 12)
-              .toString()
-          ).toFixed()
-        );
-        const [gasPrices, sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn] =
-          await Promise.all([
-            gasPricesPromised,
-            sellSNX,
-            snxUSDApproval,
-            buy_SUSD,
-            unwrapTxnPromised,
-          ]);
+      const buy_SUSD = SpotProxy.populateTransaction.buy(
+        1,
+        USDCAmountPlusPremium.toBN(),
+        0,
+        constants.AddressZero
+      );
 
-        const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil);
+      const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
+        1,
+        USDCAmountPlusPremium.toBN(),
+        //2% slippage
+        Number(
+          utils.formatUnits(USDCAmountPlusPremium.toBN().mul(99).div(100).toString(), 12).toString()
+        ).toFixed()
+      );
+      const [gasPrices, sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn] =
+        await Promise.all([
+          gasPricesPromised,
+          sellSNX,
+          snxUSDApproval,
+          buy_SUSD,
+          unwrapTxnPromised,
+        ]);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
+      const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil);
 
-        const gasOptionsForTransaction = formatGasPriceForTransaction({
-          gasLimit: erc7412Tx.gasLimit,
-          gasPrices,
-          gasSpeed,
-        });
+      const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
 
-        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
-        await txn.wait();
-      }
+      const gasOptionsForTransaction = formatGasPriceForTransaction({
+        gasLimit: erc7412Tx.gasLimit,
+        gasPrices,
+        gasSpeed,
+      });
+
+      const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
+      await txn.wait();
     },
   });
 }

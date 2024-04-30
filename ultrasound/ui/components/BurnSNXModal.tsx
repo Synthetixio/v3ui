@@ -24,7 +24,7 @@ import { useBurnEvents } from '../hooks/useBurnEvents';
 import { useSNXPrice } from '../hooks/useSNXPrice';
 
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [amount, setAmount] = useState(new Wei(0));
+  const [amount, setAmount] = useState<Wei | undefined>(new Wei(0));
   const [receivingUSDCAmount, setReceivingUSDCAmount] = useState(0);
   const { data: events } = useBurnEvents();
   const { connect, activeWallet } = useWallet();
@@ -83,7 +83,6 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   type="number"
                   overflow="scroll"
                   fontWeight={700}
-                  _placeholder="0"
                   value={amount ? amount.toNumber() : ''}
                   onChange={(e) => {
                     try {
@@ -181,8 +180,10 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                       await approve(false);
                       await refetchAllowance();
                     }
-                    await mutateAsync(amount);
-                    onClose();
+                    if (amount) {
+                      await mutateAsync(amount);
+                      onClose();
+                    }
                   } else {
                     onClose();
                     connect();
