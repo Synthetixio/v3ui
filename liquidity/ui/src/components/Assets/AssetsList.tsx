@@ -7,7 +7,7 @@ import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const AssetsList = () => {
@@ -21,8 +21,11 @@ export const AssetsList = () => {
     }
   );
 
-  const collateralAddresses =
-    accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
+  const collateralAddresses = isBaseAndromeda(network?.id, network?.preset)
+    ? accountCollaterals
+        ?.map((collateral) => collateral.tokenAddress)
+        .concat(getUSDCAddress(network?.id)) || []
+    : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
     useTokenBalances(collateralAddresses);
@@ -52,9 +55,24 @@ export const AssetsList = () => {
         ]
       : accountCollaterals;
   }, [accountCollaterals, network?.id, network?.preset]);
+
   const assets = useMemo(
-    () => calculateAssets(combinedCollateral, userTokenBalances, collateralPrices, collateralTypes),
-    [combinedCollateral, userTokenBalances, collateralPrices, collateralTypes]
+    () =>
+      calculateAssets(
+        combinedCollateral,
+        userTokenBalances,
+        collateralPrices,
+        collateralTypes,
+        isBaseAndromeda(network?.id, network?.preset)
+      ),
+    [
+      combinedCollateral,
+      userTokenBalances,
+      collateralPrices,
+      collateralTypes,
+      network?.id,
+      network?.preset,
+    ]
   );
 
   const isLoading =

@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <>
-      <Flex mb="8" py="4" bg="navy.900" borderBottomWidth="1px" borderBottomColor="gray.900">
+      <Flex bg="navy.700" mb="8" py="4" borderBottomWidth="1px" borderBottomColor="gray.900">
         <Container maxW="1024px" as={Flex} justifyContent="space-between" alignItems="center">
           <Box display={{ base: 'none', md: 'inline-block' }}>
             <Link

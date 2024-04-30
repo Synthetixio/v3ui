@@ -13,7 +13,8 @@ export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
   userTokenBalances?: Wei[] | undefined,
   collateralPrices?: Record<string, Wei | undefined>,
-  collateralTypes?: CollateralType[]
+  collateralTypes?: CollateralType[],
+  isBase?: boolean
 ): Asset[] | undefined {
   if (!accountCollaterals && !userTokenBalances && !collateralPrices) return;
 
@@ -38,6 +39,10 @@ export function calculateAssets(
     return accountCollaterals?.map((collateral, index) => {
       const balance = userTokenBalances[index];
       const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
+      // We want to add USDC that user has in his wallet.
+      if (isBase && index === accountCollaterals.length - 1) {
+        return { collateral, balance: balance.add(userTokenBalances[2]), price };
+      }
       return {
         collateral,
         balance,

@@ -96,15 +96,16 @@ export const StatsList = () => {
         }
       />
       <StatBox
-        title="APY"
+        title="APR"
         isLoading={isLoading}
-        value={apr?.combinedApr.toFixed(2) || '-'}
+        value={apr?.combinedApr.toFixed(2) + '%' || '-'}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
               APY Annual Percentage Yield:
             </Text>
             <Text textAlign="left">Aggregated APY from all your Positions.</Text>
+            <Text textAlign="left">Sum(past 24 hourly pnls) * 365)</Text>
           </>
         }
       />

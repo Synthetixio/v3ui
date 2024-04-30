@@ -57,6 +57,8 @@ export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInte
                   search: location.search,
                 }}
                 variant="outline"
+                colorScheme="gray"
+                color="white"
               >
                 Pool Info
               </Button>

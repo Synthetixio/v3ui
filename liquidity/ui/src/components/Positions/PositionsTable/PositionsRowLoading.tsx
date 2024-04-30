@@ -143,18 +143,20 @@ export function PositionsRowLoading({ isBase }: { isBase: boolean }) {
             </Td>
             <Td border="none">
               <Flex flexDirection="column">
-                <Button
-                  fontSize="0.75rem"
-                  lineHeight="1rem"
-                  height="1.75rem"
-                  fontWeight={700}
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                  borderRadius="4px"
-                  disabled
-                >
-                  Manage
-                </Button>
+                <Skeleton height="1.75rem">
+                  <Button
+                    fontSize="0.75rem"
+                    lineHeight="1rem"
+                    height="1.75rem"
+                    fontWeight={700}
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                    borderRadius="4px"
+                    disabled
+                  >
+                    Manage
+                  </Button>
+                </Skeleton>
               </Flex>
             </Td>
           </Tr>

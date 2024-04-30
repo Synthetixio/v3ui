@@ -5,6 +5,7 @@ import {
   Heading,
   Image,
   Link,
+  Skeleton,
   Spinner,
   Text,
   Tooltip,
@@ -13,7 +14,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import { useApr } from '@snx-v3/useApr';
 import { Fragment } from 'react';
 import { useVaultsData } from '@snx-v3/useVaultsData';
@@ -36,7 +37,7 @@ export function Pools() {
   return (
     <Flex flexDir="column">
       <Heading>All Pools</Heading>
-      <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'}>
+      <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'} mt="6">
         {pools?.map((pool) => (
           <Flex
             key={pool.id}
@@ -49,11 +50,30 @@ export function Pools() {
             p="6"
             maxW={pools.length > 1 ? '488px' : 'unset'}
           >
-            <Text fontSize="16px" fontWeight={700} color="white" mb="4">
-              {pool.name}
-            </Text>
+            <Flex justifyContent="space-between" alignItems="baseline">
+              <Heading fontSize="16px" fontWeight={700} color="white" mb="4">
+                {pool.name}
+              </Heading>
+
+              <Button
+                as={Link}
+                mt={{ base: 2, md: 0 }}
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                color="white"
+                onClick={() => {
+                  navigate({
+                    pathname: generatePath('/pools/:poolId', { poolId: '1' }),
+                    search: location.search,
+                  });
+                }}
+              >
+                Pool Info
+              </Button>
+            </Flex>
             <Divider />
-            <Flex w="100%" h="164px" alignItems="center" gap="4">
+            <Flex w="100%" h="194px" alignItems="center" gap="4">
               <Flex flexDir="column">
                 <Text fontSize="12px" color="gray.600">
                   TVL{' '}
@@ -75,7 +95,7 @@ export function Pools() {
                 </Text>
                 <Text fontWeight={700} fontSize="30px" color="white">
                   ${vaultTVL?.toNumber().toLocaleString()}
-                  {vaultIsLoading && <Spinner colorScheme="cyan" />}
+                  {vaultIsLoading && <Skeleton height="30px" />}
                 </Text>
               </Flex>
               <Flex flexDir="column" mr="auto">

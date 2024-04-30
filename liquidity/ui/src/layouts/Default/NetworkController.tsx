@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -10,6 +10,7 @@ import {
   MenuOptionGroup,
   Switch,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -22,6 +23,7 @@ import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export function NetworkController() {
+  const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
   const { data: accounts } = useAccounts();
@@ -164,7 +166,9 @@ export function NetworkController() {
             >
               <Flex flexDir="column" w="100%" gap="2">
                 <Flex justifyContent="space-between">
-                  <Text>Connected with {walletsInfo?.label}</Text>
+                  <Text fontSize="14px" color="gray.500">
+                    Connected with {walletsInfo?.label}
+                  </Text>
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -175,17 +179,23 @@ export function NetworkController() {
                     colorScheme="gray"
                     color="white"
                   >
-                    Disconenct
+                    Disconnect
                   </Button>
                 </Flex>
                 <Text fontWeight={700} color="white" fontSize="16px">
                   {prettyString(activeWallet.address)}{' '}
-                  <CopyIcon
-                    ml="2"
-                    onClick={() => {
-                      navigator.clipboard.writeText(activeWallet.address);
-                    }}
-                  />
+                  <Tooltip label={toolTipLabel} closeDelay={3000}>
+                    <CopyIcon
+                      ml="2"
+                      onClick={() => {
+                        navigator.clipboard.writeText(activeWallet.address);
+                        setTooltipLabel('Copied');
+                        setTimeout(() => {
+                          setTooltipLabel('Copy');
+                        }, 10000);
+                      }}
+                    />
+                  </Tooltip>
                 </Text>
                 <Flex
                   flexDir="column"
@@ -195,8 +205,8 @@ export function NetworkController() {
                   rounded="base"
                   gap="2"
                 >
-                  <Text mb="4" fontWeight={400} fontSize="14px">
-                    Account
+                  <Text fontWeight={400} fontSize="14px">
+                    Account(s)
                   </Text>
                   {accounts?.map((account) => (
                     <Text
@@ -207,6 +217,7 @@ export function NetworkController() {
                       fontWeight={700}
                       fontSize="16px"
                       cursor="pointer"
+                      p="3"
                       _hover={{ bg: 'whiteAlpha.300' }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -214,7 +225,7 @@ export function NetworkController() {
                         navigate({ pathname, search: queryParams.toString() });
                       }}
                     >
-                      #{prettyString(account, 10, 10)}{' '}
+                      #{prettyString(account, 4, 4)}{' '}
                       {queryParams.get('accountId') === account && (
                         <Badge colorScheme="cyan" variant="outline" ml="1">
                           Connected
@@ -229,7 +240,6 @@ export function NetworkController() {
                     }}
                     size="xs"
                     variant="outline"
-                    mt="4"
                     colorScheme="gray"
                     color="white"
                     leftIcon={
