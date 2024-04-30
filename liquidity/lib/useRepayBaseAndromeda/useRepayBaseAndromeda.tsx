@@ -11,12 +11,11 @@ import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { approveAbi } from '@snx-v3/useApprove';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const useRepayBaseAndromeda = ({
   accountId,
@@ -35,7 +34,7 @@ export const useRepayBaseAndromeda = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
-  const { data: collateralPriceIds } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const signer = useSigner();
   const { network } = useNetwork();
@@ -47,15 +46,7 @@ export const useRepayBaseAndromeda = ({
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
       if (
-        !(
-          CoreProxy &&
-          poolId &&
-          accountId &&
-          collateralTypeAddress &&
-          UsdProxy &&
-          SpotMarketProxy &&
-          collateralPriceIds
-        )
+        !(CoreProxy && poolId && accountId && collateralTypeAddress && UsdProxy && SpotMarketProxy)
       ) {
         return;
       }
@@ -123,24 +114,12 @@ export const useRepayBaseAndromeda = ({
           [wrap, sUSDC_Approval, sell, sUSD_Approval, deposit, burn].filter(notNil)
         );
 
-        const walletAddress = await signer.getAddress();
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
+        if (priceUpdateTx) {
+          calls.push(priceUpdateTx as any);
+        }
 
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceIds,
-          network.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
-        );
-
-        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
-          callsPromise,
-          getGasPrice({ provider }),
-          collateralPriceCallsPromise,
-        ]);
-
-        const allCalls = collateralPriceCalls.concat(calls);
-
-        const erc7412Tx = await withERC7412(network, allCalls, 'useRepay', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, calls, 'useRepay', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

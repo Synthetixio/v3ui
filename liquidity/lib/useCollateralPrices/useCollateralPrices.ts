@@ -7,7 +7,7 @@ import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -56,7 +56,7 @@ export const useCollateralPrices = () => {
     .concat(getsUSDCAddress(network?.id));
 
   const provider = useDefaultProvider();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),

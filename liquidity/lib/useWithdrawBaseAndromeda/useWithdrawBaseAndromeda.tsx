@@ -7,14 +7,13 @@ import { BigNumber, constants, utils } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET, getSNXUSDAddress, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { Wei } from '@synthetixio/wei';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
@@ -31,7 +30,7 @@ export const useWithdrawBaseAndromeda = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
   const { data: UsdProxy } = useUSDProxy();
-  const { data: collateralPriceIds } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { network } = useNetwork();
 
   const { gasSpeed } = useGasSpeed();
@@ -52,9 +51,7 @@ export const useWithdrawBaseAndromeda = ({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (!(CoreProxy && SpotProxy && amount.gt(0) && collateralPriceIds && accountId)) return;
-
-      const walletAddress = await signer.getAddress();
+      if (!(CoreProxy && SpotProxy && amount.gt(0) && accountId)) return;
 
       try {
         dispatch({ type: 'prompting' });
@@ -63,19 +60,19 @@ export const useWithdrawBaseAndromeda = ({
 
         const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
-              BigNumber.from(accountId),
-              getsUSDCAddress(network.id),
-              isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
-            )
+            BigNumber.from(accountId),
+            getsUSDCAddress(network.id),
+            isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
+          )
           : undefined;
 
         const withdraw_sUSD =
           snxUSDCollateral.gt(0) && !isSUSDCEnough
             ? CoreProxy.populateTransaction.withdraw(
-                BigNumber.from(accountId),
-                getSNXUSDAddress(network.id),
-                howMuchSNXUSD.toBN()
-              )
+              BigNumber.from(accountId),
+              getSNXUSDAddress(network.id),
+              howMuchSNXUSD.toBN()
+            )
             : undefined;
 
         const sUSDCApproval =
@@ -86,11 +83,11 @@ export const useWithdrawBaseAndromeda = ({
         const buy_SUSD =
           snxUSDCollateral.gt(0) && !isSUSDCEnough
             ? SpotProxy.populateTransaction.buy(
-                USDC_BASE_MARKET,
-                howMuchSNXUSD.toBN(),
-                0,
-                constants.AddressZero
-              )
+              USDC_BASE_MARKET,
+              howMuchSNXUSD.toBN(),
+              0,
+              constants.AddressZero
+            )
             : undefined;
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
@@ -102,12 +99,6 @@ export const useWithdrawBaseAndromeda = ({
           ).toFixed()
         );
 
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceIds,
-          network.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
-        );
         const [
           gasPrices,
           withdraw_sUSDC_Txn,
@@ -115,7 +106,6 @@ export const useWithdrawBaseAndromeda = ({
           sUSDCApproval_Txn,
           buy_SUSD_Txn,
           unwrapTxn,
-          collateralPriceCalls,
         ] = await Promise.all([
           gasPricesPromised,
           withdraw_sUSDC,
@@ -123,17 +113,19 @@ export const useWithdrawBaseAndromeda = ({
           sUSDCApproval,
           buy_SUSD,
           unwrapTxnPromised,
-          collateralPriceCallsPromise,
         ]);
-        const allCalls = collateralPriceCalls.concat(
-          [
-            withdraw_sUSDC_Txn,
-            withdraw_SUSD_Txn,
-            sUSDCApproval_Txn,
-            buy_SUSD_Txn,
-            unwrapTxn,
-          ].filter(notNil)
-        );
+
+        const allCalls = [
+          withdraw_sUSDC_Txn,
+          withdraw_SUSD_Txn,
+          sUSDCApproval_Txn,
+          buy_SUSD_Txn,
+          unwrapTxn,
+        ].filter(notNil);
+
+        if (priceUpdateTx) {
+          allCalls.unshift(priceUpdateTx as any);
+        }
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
 

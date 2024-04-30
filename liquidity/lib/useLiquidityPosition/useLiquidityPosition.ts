@@ -11,7 +11,7 @@ import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccount
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -80,7 +80,7 @@ export const useLiquidityPosition = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
   const { network } = useNetwork();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
 
   return useQuery({

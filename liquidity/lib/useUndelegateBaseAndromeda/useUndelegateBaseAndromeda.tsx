@@ -10,7 +10,6 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useApprove } from '@snx-v3/useApprove';
 import { USDC_BASE_MARKET, getRepayerContract, getUSDCAddress } from '@snx-v3/isBaseAndromeda';
@@ -18,6 +17,7 @@ import { parseUnits } from '@snx-v3/format';
 import { DEBT_REPAYER_ABI } from '../useClearDebt';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { notNil } from '@snx-v3/tsHelpers';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const useUndelegateBaseAndromeda = ({
   accountId,
@@ -37,6 +37,7 @@ export const useUndelegateBaseAndromeda = ({
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
@@ -102,29 +103,15 @@ export const useUndelegateBaseAndromeda = ({
           wei(1).toBN()
         );
 
-        const walletAddress = await signer.getAddress();
-
         const callsPromise = Promise.all([...transactions, populatedTxnPromised].filter(notNil));
 
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceUpdates,
-          network.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
-        );
-        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
-          callsPromise,
-          getGasPrice({ provider }),
-          collateralPriceCallsPromise,
-        ]);
-        const allCalls = collateralPriceCalls.concat(...calls);
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
 
-        const erc7412Tx = await withERC7412(
-          network,
-          allCalls,
-          'useUndelegate',
-          CoreProxy.interface
-        );
+        if (priceUpdateTx) {
+          calls.unshift(priceUpdateTx as any);
+        }
+
+        const erc7412Tx = await withERC7412(network, calls, 'useUndelegate', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
