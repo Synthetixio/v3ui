@@ -26,22 +26,16 @@ export function useSellSNX() {
   const { network } = useNetwork();
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
-  const { data: SNXPrice } = useSNXPrice();
+  const { data: SNXPrice, refetch } = useSNXPrice();
 
   return useMutation({
     mutationKey: ['sell-snx'],
     mutationFn: async (amount: Wei) => {
+      await refetch();
       if (!(CoreProxy && network && network && SpotProxy && signer && SNXPrice && provider)) {
         throw Error('Cant find CoreProxy, network, SpotProxy, SNXPrice, provider or signer');
       } else {
         const gasPricesPromised = getGasPrice({ provider });
-        // const [snxPriceResponse] = await priceService.getLatestPriceFeeds([
-        // '0x39d020f60982ed892abbcd4a06a276a9f9b7bfbce003204c110b6e488f502da3',
-        // ]);
-        // if (priceUpdateTx) {
-        //   const priceCalls = [priceUpdateTx, Oracle process(snxNodeId)];
-        // }
-        // const SNXPrice = new Wei(snxPriceResponse.getPriceUnchecked().price, 18);
 
         const premium = await BuyBack.connect(signer).getPremium();
 

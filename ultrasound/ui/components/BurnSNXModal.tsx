@@ -38,7 +38,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   const { requireApproval, approve, refetchAllowance } = useApprove({
     contractAddress: '0x22e6966B799c4D5B13BE962E1D117b56327FDa66',
-    amount: amount.toBN(),
+    amount: amount ? amount.toBN() : 0,
     spender: '0x632cAa10A56343C5e6C0c066735840c096291B18',
   });
   const { mutateAsync, isPending } = useSellSNX();
@@ -83,7 +83,8 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   type="number"
                   overflow="scroll"
                   fontWeight={700}
-                  value={amount.toNumber()}
+                  _placeholder="0"
+                  value={amount ? amount.toNumber() : ''}
                   onChange={(e) => {
                     try {
                       if (SNXPrice) {
@@ -95,7 +96,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                       }
                     } catch (error) {
                       console.error('failed to parse input: ', Error);
-                      setAmount(new Wei(0));
+                      setAmount(undefined);
                     }
                   }}
                 />
@@ -169,34 +170,32 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 </Text>
               </Flex>
             </Flex>
-            <Button
-              my="4"
-              onClick={async () => {
-                if (activeWallet?.address) {
-                  if (requireApproval) {
-                    await approve(false);
-                    await refetchAllowance();
+            {isPending ? (
+              <Spinner colorScheme="black" alignSelf="center" />
+            ) : (
+              <Button
+                my="4"
+                onClick={async () => {
+                  if (activeWallet?.address) {
+                    if (requireApproval) {
+                      await approve(false);
+                      await refetchAllowance();
+                    }
+                    await mutateAsync(amount);
+                    onClose();
+                  } else {
+                    onClose();
+                    connect();
                   }
-                  await mutateAsync(amount);
-                  onClose();
-                } else {
-                  onClose();
-                  connect();
-                }
-              }}
-            >
-              {isPending ? (
-                <Spinner colorScheme="black" />
-              ) : activeWallet?.address ? (
-                requireApproval ? (
-                  'Approve SNX'
-                ) : (
-                  'Burn SNX'
-                )
-              ) : (
-                'Connect Wallet'
-              )}
-            </Button>
+                }}
+              >
+                {activeWallet?.address
+                  ? requireApproval
+                    ? 'Approve SNX'
+                    : 'Burn SNX'
+                  : 'Connect Wallet'}
+              </Button>
+            )}
           </Flex>
         </ModalBody>
       </ModalContent>

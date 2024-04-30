@@ -1,5 +1,4 @@
-import { Button, Flex, Image, Spinner, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { useBurnEvents } from '../hooks/useBurnEvents';
+import { Button, Flex, Image, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { BurnSNXModal } from './BurnSNXModal';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -7,7 +6,6 @@ import { useSNXPrice } from '../hooks/useSNXPrice';
 
 export function BurnSNX() {
   const { network } = useNetwork();
-  const { data: events, isLoading } = useBurnEvents();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: SNXPrice } = useSNXPrice();
 
@@ -29,14 +27,10 @@ export function BurnSNX() {
           Sell your SNX at a <b>premium</b> price to the Buyback and Burn contract and get USDC on
           Base
         </Text>
-        {isLoading ? (
-          <Spinner colorScheme="cyan" />
-        ) : (
-          <Text fontWeight={700} fontSize="20px">
-            Buyback Price: <s>$ {events?.SNXPrice}</s> $
-            {events && events?.SNXPrice ? (events.SNXPrice + events.SNXPrice * 0.01).toFixed(2) : 0}
-          </Text>
-        )}
+        <Text fontWeight={700} fontSize="20px">
+          Buyback Price: <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $
+          {SNXPrice ? (SNXPrice?.toNumber() + SNXPrice?.toNumber() * 0.01).toFixed(2) : 0}
+        </Text>
         <Flex gap="4" mt="65px">
           {!isBaseAndromeda(network?.id, network?.preset) ? (
             <Tooltip label="Please conect to the Base network">
