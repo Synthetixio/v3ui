@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Image, Link, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { BurnSNXModal } from './BurnSNXModal';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -28,8 +28,14 @@ export function BurnSNX() {
           Base
         </Text>
         <Text fontWeight={700} fontSize="20px">
-          Buyback Price: <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $
-          {SNXPrice ? (SNXPrice?.toNumber() + SNXPrice?.toNumber() * 0.01).toFixed(2) : 0}
+          {SNXPrice?.eq(0) ? (
+            'refecthing...'
+          ) : (
+            <>
+              Buyback Price: <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $
+              {SNXPrice ? (SNXPrice?.toNumber() + SNXPrice?.toNumber() * 0.01).toFixed(2) : 0}
+            </>
+          )}
         </Text>
         <Flex gap="4" mt="65px">
           {!isBaseAndromeda(network?.id, network?.preset) ? (
@@ -39,9 +45,15 @@ export function BurnSNX() {
           ) : (
             <Button onClick={() => onOpen()}>Burn SNX</Button>
           )}
-          <Button variant="outline" colorScheme="gray">
-            Lean More
-          </Button>
+          <Link
+            href="https://blog.synthetix.io/the-andromeda-release-buyback-and-burn/"
+            target="_blank"
+            rel="noopener"
+          >
+            <Button variant="outline" colorScheme="gray" color="white">
+              Lean More
+            </Button>
+          </Link>
         </Flex>
       </Flex>
       <BurnSNXModal isOpen={isOpen} onClose={onClose} />

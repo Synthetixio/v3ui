@@ -63,20 +63,19 @@ export function SupplyChangeStats() {
               closeDelay={1000}
               label={
                 <Text>
-                  No more SNX are being minted. Read more about{' '}
-                  <Link
-                    href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
-                    rel="noopener"
-                    color="cyan.500"
-                  >
-                    The End of Synthetix Token Inflation
-                  </Link>
+                  No more SNX are being minted. Read more about The End of Synthetix Token Inflation
                 </Text>
               }
             >
               <Flex alignItems="center">
                 <InfoIcon color="gray.500" mr="2" />
-                <Text color="gray.500">Why?</Text>
+                <Link
+                  href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
+                  rel="noopener"
+                  target="_blank"
+                >
+                  <Text color="gray.500">Why?</Text>
+                </Link>
               </Flex>
             </Tooltip>
           </Flex>
