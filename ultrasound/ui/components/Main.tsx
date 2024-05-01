@@ -1,9 +1,10 @@
 import { Flex, Heading, Image, Link, Spinner, Text } from '@chakra-ui/react';
-import { Chart } from './Chart';
-import { SupplyChangeStats } from './SupplyChangeStats';
-import { CurrentSupplyStats } from './CurrentSupplyStats';
-import { BurnSNX } from './BurnSNX';
 import { useBurnEvents } from '../hooks/useBurnEvents';
+import { BurnSNX } from './BurnSNX';
+import { Chart } from './Chart';
+import { CurrentSupplyStats } from './CurrentSupplyStats';
+import kainSvg from './kain.svg';
+import { SupplyChangeStats } from './SupplyChangeStats';
 
 export function Main() {
   const { data: events, isLoading } = useBurnEvents();
@@ -20,7 +21,7 @@ export function Main() {
           </Heading>
         </Flex>
         <Flex alignItems="center">
-          <Image src="/kain.svg" />
+          <Image src={kainSvg} />
           <Flex flexDir="column">
             <Text fontSize="16px" fontWeight={700} color="white">
               Mansion counter

@@ -16,6 +16,7 @@ const isTest = process.env.NODE_ENV === 'test';
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './index.html',
   scriptLoading: 'defer',
+  favicon: './favicon.ico',
   minify: false,
   hash: false,
   xhtml: true,

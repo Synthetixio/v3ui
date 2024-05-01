@@ -1,8 +1,9 @@
 import { Button, Flex, Image, Link, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { BurnSNXModal } from './BurnSNXModal';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useSNXPrice } from '../hooks/useSNXPrice';
+import burnSnxSvg from './burn-snx.svg';
+import { BurnSNXModal } from './BurnSNXModal';
 
 export function BurnSNX() {
   const { network } = useNetwork();
@@ -18,7 +19,7 @@ export function BurnSNX() {
       bg="navy.700"
       w="415px"
     >
-      <Image src="/burn-snx.svg" h="284px" />
+      <Image src={burnSnxSvg} h="284px" />
       <Flex flexDir="column" gap="6" p="4">
         <Text fontWeight={700} fontSize="18px" color="white">
           Sell SNX at premium and watch it burn

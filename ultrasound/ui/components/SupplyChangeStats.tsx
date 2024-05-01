@@ -1,6 +1,8 @@
+import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
-import { InfoIcon } from '@chakra-ui/icons';
+import burnSvg from './burn.svg';
+import mintedSvg from './minted.svg';
 
 export function SupplyChangeStats() {
   const { data: events, isLoading } = useBurnEvents();
@@ -41,7 +43,7 @@ export function SupplyChangeStats() {
             -{events?.supplyChange7Days.toString()} SNX
           </Text>
           <Flex gap="2" alignItems="center">
-            <Image src="/burn.svg" />
+            <Image src={burnSvg} />
             <Text fontSize="16px" color="gray.500" fontWeight={400}>
               Burnt
             </Text>
@@ -50,7 +52,7 @@ export function SupplyChangeStats() {
             </Text>
           </Flex>
           <Flex gap="2" alignItems="center">
-            <Image src="/minted.svg" />
+            <Image src={mintedSvg} />
             <Text fontSize="16px" color="gray.500" fontWeight={400}>
               Minted
             </Text>
