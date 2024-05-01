@@ -115,6 +115,7 @@ jobs:
       - run: yarn deps:circular
       - run: yarn pretty
       - run: yarn lint
+      - run: yarn svg:check
 
   tests:
     working_directory: /tmp/app
