@@ -16,7 +16,7 @@ export function Main() {
             ultrasound.homes
           </Heading>
           <Heading fontSize="30px" fontWeight={700} color="white">
-            burning SNX for Kain's mansions
+            burning SNX for Kain&apos;s mansions
           </Heading>
         </Flex>
         <Flex alignItems="center">
@@ -53,7 +53,7 @@ export function Main() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_3050_14040)">
+            <g clipPath="url(#clip0_3050_14040)">
               <path
                 d="M25.7124 25.8147L32.4133 33.75H30.8254L25.0071 26.8599L20.3599 33.75H15L22.0274 23.331L15 15.0096H16.588L22.7324 22.2858L27.6401 15.0096H33L25.7121 25.8147H25.7124ZM23.5375 23.2392L22.8255 24.2767L17.1602 32.5322H19.5992L24.1712 25.8697L24.8832 24.8322L30.8262 16.1721H28.3871L23.5375 23.2388V23.2392Z"
                 fill="white"

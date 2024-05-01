@@ -6639,6 +6639,7 @@ __metadata:
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
