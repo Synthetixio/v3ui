@@ -61,7 +61,7 @@ export default function Header() {
                 fontSize="14px"
                 display="inline"
                 textDecoration="none"
-                color={location.pathname === '/pools' ? 'white' : 'gray.500'}
+                color={location.pathname.includes('/pools') ? 'white' : 'gray.500'}
               >
                 Pools
               </Text>
