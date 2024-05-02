@@ -36,7 +36,9 @@ export function Pools() {
   const { data: collateralType, isLoading: collateralTypeIsLoading } = useCollateralTypes();
   return (
     <Flex flexDir="column">
-      <Heading>All Pools</Heading>
+      <Heading color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
+        All Pools
+      </Heading>
       <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'} mt="6">
         {pools?.map((pool) => (
           <Flex
@@ -56,7 +58,6 @@ export function Pools() {
               </Heading>
 
               <Button
-                as={Link}
                 mt={{ base: 2, md: 0 }}
                 size="sm"
                 variant="outline"
@@ -93,9 +94,19 @@ export function Pools() {
                     <InfoIcon w="12px" h="12px" />
                   </Tooltip>
                 </Text>
-                <Text fontWeight={700} fontSize="30px" color="white">
-                  ${vaultTVL?.toNumber().toLocaleString()}
-                  {vaultIsLoading && <Skeleton height="30px" />}
+                <Text
+                  fontWeight={700}
+                  fontSize="30px"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                >
+                  $
+                  {vaultIsLoading ? (
+                    <Skeleton ml="2" height="30px" width="100px" />
+                  ) : (
+                    vaultTVL?.toNumber().toLocaleString()
+                  )}
                 </Text>
               </Flex>
               <Flex flexDir="column" mr="auto">

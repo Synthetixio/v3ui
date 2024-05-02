@@ -23,7 +23,14 @@ export default function Header() {
 
   return (
     <>
-      <Flex bg="navy.700" mb="8" py="4" borderBottomWidth="1px" borderBottomColor="gray.900">
+      <Flex
+        bg="navy.700"
+        mb="4"
+        py="2"
+        borderBottomWidth="1px"
+        borderBottomColor="gray.900"
+        px="10"
+      >
         <Container maxW="1024px" as={Flex} justifyContent="space-between" alignItems="center">
           <Box display={{ base: 'none', md: 'inline-block' }}>
             <Link
@@ -36,13 +43,26 @@ export default function Header() {
             >
               <Logo />
             </Link>
-            <Link href="/#/">
-              <Text fontWeight={700} fontSize="14px" display="inline" mx="4">
+            <Link href="/#/" _hover={{ textDecoration: 'none' }}>
+              <Text
+                fontWeight={700}
+                fontSize="14px"
+                display="inline"
+                mx="4"
+                textDecoration="none"
+                color={location.pathname === '/' ? 'white' : 'gray.500'}
+              >
                 Dashboard
               </Text>
             </Link>
-            <Link href="/#/pools">
-              <Text fontWeight={700} fontSize="14px" display="inline">
+            <Link href="/#/pools" _hover={{ textDecoration: 'none' }}>
+              <Text
+                fontWeight={700}
+                fontSize="14px"
+                display="inline"
+                textDecoration="none"
+                color={location.pathname === '/pools' ? 'white' : 'gray.500'}
+              >
                 Pools
               </Text>
             </Link>

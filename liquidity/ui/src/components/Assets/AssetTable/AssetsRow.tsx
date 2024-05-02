@@ -111,7 +111,13 @@ export const AssetsRow = ({
       </Td>
       <Td border="none">
         <Fade in>
-          <Tooltip label={!canWithdraw ? `Withdraw available in ${hoursToWithdraw} hours` : ''}>
+          <Tooltip
+            label={
+              !canWithdraw &&
+              accountBalance.gt(0) &&
+              `Withdraw available in ${hoursToWithdraw} hours`
+            }
+          >
             <Button
               isDisabled={!canWithdraw}
               variant="unstyled"

@@ -73,3 +73,15 @@ export function calculateTotalAssetsDelegated(assets?: Asset[]) {
     .toNumber()
     .toFixed(2);
 }
+
+export function calculateTotalAssetsAvailable(assets?: Asset[]) {
+  return assets
+    ?.map((asset) => {
+      const assigned = asset.collateral.availableCollateral;
+      const wallet = asset.balance.mul(asset.price);
+      return assigned.add(wallet);
+    })
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
+    .toNumber()
+    .toFixed(2);
+}

@@ -152,7 +152,7 @@ export function PositionRow({
         </Td>
       )}
       <Td border="none">
-        <Flex justifyContent="center">
+        <Flex justifyContent="flex-end">
           <Button
             fontSize="0.75rem"
             lineHeight="1rem"

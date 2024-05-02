@@ -23,12 +23,16 @@ const CollateralConfigurationSchema = z.object({
 const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
+  name: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
-const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
+const ERC20Interface = new utils.Interface([
+  'function symbol() view returns (string)',
+  'function name() view returns (string)',
+]);
 
 async function loadSymbols({
   Multicall3,
@@ -47,6 +51,23 @@ async function loadSymbols({
   );
 }
 
+async function loadName({
+  Multicall3,
+  tokenConfigs,
+}: {
+  Multicall3: Multicall3Type;
+  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
+}) {
+  const calls = tokenConfigs.map((tokenConfig) => ({
+    target: tokenConfig.tokenAddress,
+    callData: ERC20Interface.encodeFunctionData('name'),
+  }));
+  const multicallResult = await Multicall3.callStatic.aggregate(calls);
+  return multicallResult.returnData.map((bytes: string) =>
+    SymbolSchema.parse(ERC20Interface.decodeFunctionResult('name', bytes)[0])
+  );
+}
+
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
@@ -62,6 +83,8 @@ async function loadCollateralTypes({
 
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
 
+  const names = await loadName({ Multicall3, tokenConfigs });
+
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
     issuanceRatioD18: config.issuanceRatioD18,
@@ -72,6 +95,7 @@ async function loadCollateralTypes({
     tokenAddress: config.tokenAddress,
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
+    name: names[i],
   }));
 }
 
@@ -96,7 +120,7 @@ export function useCollateralTypes(includeDelegationOff = false) {
             displaySymbol:
               collateralType.displaySymbol === 'sUSDC' &&
               isBaseAndromeda(network?.id, network?.preset)
-                ? 'USDC'
+                ? 'USD Coin'
                 : collateralType.symbol,
           };
         }

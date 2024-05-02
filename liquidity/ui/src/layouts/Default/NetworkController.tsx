@@ -129,7 +129,7 @@ export function NetworkController() {
         )}
       </Menu>
       {activeWallet ? (
-        <Menu>
+        <Menu placement="bottom-end">
           <MenuButton
             as={Button}
             variant="outline"
@@ -184,7 +184,7 @@ export function NetworkController() {
                 </Flex>
                 <Text fontWeight={700} color="white" fontSize="16px">
                   {prettyString(activeWallet.address)}{' '}
-                  <Tooltip label={toolTipLabel} closeDelay={3000}>
+                  <Tooltip label={toolTipLabel} closeOnClick={false}>
                     <CopyIcon
                       ml="2"
                       onClick={() => {

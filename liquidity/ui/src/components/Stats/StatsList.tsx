@@ -10,6 +10,7 @@ import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import {
   calculateAssets,
   calculateTotalAssets,
+  calculateTotalAssetsAvailable,
   calculateTotalAssetsDelegated,
 } from '../../utils/assets';
 import { calculateDebt } from '../../utils/positions';
@@ -42,7 +43,7 @@ export const StatsList = () => {
   );
 
   const debt = calculateDebt(positions);
-  const totalAssets = calculateTotalAssets(assets);
+  const totalAssets = calculateTotalAssetsAvailable(assets);
   const totalDelegated = calculateTotalAssetsDelegated(assets);
 
   const isLoading =
@@ -98,7 +99,7 @@ export const StatsList = () => {
       <StatBox
         title="APR"
         isLoading={isLoading}
-        value={apr?.combinedApr.toFixed(2) + '%' || '-'}
+        value={!!apr ? apr.combinedApr.toFixed(2) + '%' : '-'}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
