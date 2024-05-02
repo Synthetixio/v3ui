@@ -5,7 +5,6 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "load-env": "source load-env.sh",
     "focus": "yarn workspaces focus '@snx-v3/ultrasound-homes'"
   },
   "dependencies": {

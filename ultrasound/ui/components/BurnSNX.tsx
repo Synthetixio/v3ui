@@ -2,7 +2,8 @@ import { Button, Flex, Image, Link, Text, Tooltip, useDisclosure } from '@chakra
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useSNXPrice } from '../hooks/useSNXPrice';
-import burnSnxSvg from './burn-snx.svg';
+import burnSnxSvg from './svgs/burn-snx.svg';
+import baseBadgeMinted from './svgs/base-badge.svg';
 import { BurnSNXModal } from './BurnSNXModal';
 
 export function BurnSNX() {
@@ -17,10 +18,11 @@ export function BurnSNX() {
       rounded="base"
       flexDir="column"
       bg="navy.700"
-      w="415px"
+      w={{ base: '100%', xl: '415px' }}
     >
       <Image src={burnSnxSvg} h="284px" />
       <Flex flexDir="column" gap="6" p="4">
+        <Image src={baseBadgeMinted} w="100px" h="20px" />
         <Text fontWeight={700} fontSize="18px" color="white">
           Sell SNX at premium and watch it burn
         </Text>
@@ -38,7 +40,7 @@ export function BurnSNX() {
             </>
           )}
         </Text>
-        <Flex gap="4" mt="65px">
+        <Flex gap="4" mt="34px">
           {!isBaseAndromeda(network?.id, network?.preset) ? (
             <Tooltip label="Please conect to the Base network">
               <Button isDisabled={true}>Burn SNX</Button>

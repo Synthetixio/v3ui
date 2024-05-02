@@ -1,16 +1,16 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Image, Link, Spinner, Tab, TabList, Tabs, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
-import burnSvg from './burn.svg';
-import mintedSvg from './minted.svg';
+import burnSvg from './svgs/burn.svg';
+import mintedSvg from './svgs/minted.svg';
 
 export function SupplyChangeStats() {
   const { data: events, isLoading } = useBurnEvents();
 
   return (
     <Flex
-      w="369px"
-      h="184px"
+      w={{ base: '100%', xl: '369px' }}
+      h="200px"
       p="4"
       border="1px solid"
       borderColor="gray.900"
@@ -27,17 +27,13 @@ export function SupplyChangeStats() {
             <Text fontSize="18px" fontWeight={700}>
               Supply Change
             </Text>
-            <Text
-              bg="whiteAlpha.400"
-              rounded="30"
-              w="40px"
-              pt="1"
-              textAlign="center"
-              fontWeight={700}
-              fontSize="12px"
-            >
-              7D
-            </Text>
+            <Tabs variant="soft-rounded">
+              <TabList>
+                <Tab color="gray.500" _selected={{ color: 'white', bg: 'whiteAlpha.400' }}>
+                  7D
+                </Tab>
+              </TabList>
+            </Tabs>
           </Flex>
           <Text fontWeight={700} fontSize="24px">
             -{events?.supplyChange7Days.toString()} SNX

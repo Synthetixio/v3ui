@@ -11,7 +11,7 @@ export function useSNXPrice() {
   const baseProvider = useProviderForChain(baseNetwork);
 
   return useQuery({
-    refetchInterval: 5000,
+    refetchInterval: 10000,
     enabled: !!baseProvider,
     queryKey: ['snx-price', !!baseProvider],
     queryFn: async () => {
