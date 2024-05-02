@@ -16,6 +16,7 @@ const isTest = process.env.NODE_ENV === 'test';
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './index.html',
   scriptLoading: 'defer',
+  favicon: './favicon.ico',
   minify: false,
   hash: false,
   xhtml: true,
@@ -26,11 +27,12 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /ultrasound\/ui/,
-    /theme/,
     /contracts/,
-    /liquidity\/components/,
+    /theme/,
     /liquidity\/lib/,
+    /liquidity\/components/,
+
+    /ultrasound\/ui/,
   ],
   resolve: {
     fullySpecified: false,
@@ -95,10 +97,11 @@ const devServer = {
 };
 
 module.exports = {
-  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  //  devtool: isProd ? 'source-map' : isTest ? false : 'eval',
+  devtool: isTest ? false : 'source-map',
   devServer,
   mode: isProd ? 'production' : 'development',
-  entry: './src/index.tsx',
+  entry: './index.js',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -130,15 +133,24 @@ module.exports = {
   plugins: [htmlPlugin]
     .concat(isProd ? [new CopyWebpackPlugin({ patterns: [{ from: 'public', to: '' }] })] : [])
 
-    .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
+    .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        /^@tanstack\/react-query$/,
+        require.resolve('@tanstack/react-query')
+      ),
+      new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js')),
+    ])
 
     .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        new RegExp(`^@synthetixio/v3-contracts$`),
+        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
+      ),
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
         path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
       ),
     ])
-    .concat([])
 
     .concat([
       new webpack.ProvidePlugin({
@@ -146,7 +158,14 @@ module.exports = {
         process: 'process/browser.js',
       }),
     ])
-
+    .concat(
+      new webpack.DefinePlugin({
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
+        'process.env.PYTH_MAINNET_ENDPOINT': JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
+        'process.env.PYTH_TESTNET_ENDPOINT': JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
+      })
+    )
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
       process.env.GENERATE_BUNDLE_REPORT === 'true'
@@ -159,17 +178,12 @@ module.exports = {
             }),
           ]
         : []
-    )
-    .concat(
-      new webpack.DefinePlugin({
-        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
-        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
-        'process.env.PYTH_MAINNET_ENDPOINT': JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
-        'process.env.PYTH_TESTNET_ENDPOINT': JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
-      })
     ),
 
   resolve: {
+    alias: {
+      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
+    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

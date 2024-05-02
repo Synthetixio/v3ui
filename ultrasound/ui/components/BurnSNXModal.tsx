@@ -13,15 +13,17 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react';
+import { useApprove } from '@snx-v3/useApprove';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
-import { useApprove } from '@snx-v3/useApprove';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
-import { useSellSNX } from '../mutations/useSellSNX';
+import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { useSNXPrice } from '../hooks/useSNXPrice';
+import { useSellSNX } from '../mutations/useSellSNX';
+import snxInputSvg from './snx-input.svg';
+import usdcSvg from './usdc.svg';
 
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [amount, setAmount] = useState<Wei | undefined>(new Wei(0));
@@ -69,7 +71,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   w="90px"
                   gap="2"
                 >
-                  <Image src="/snx-input.svg" />
+                  <Image src={snxInputSvg} />
                   <Text fontWeight={700} fontSize="16px">
                     SNX
                   </Text>
@@ -144,7 +146,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   w="120px"
                   gap="2"
                 >
-                  <Image src="/usdc.svg" />
+                  <Image src={usdcSvg} />
                   <Text fontWeight={700} fontSize="16px">
                     USDC
                   </Text>
