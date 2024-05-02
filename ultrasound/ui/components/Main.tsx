@@ -1,41 +1,47 @@
-import { Flex, Heading, Image, Link, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Heading, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNX } from './BurnSNX';
 import { Chart } from './Chart';
 import { CurrentSupplyStats } from './CurrentSupplyStats';
-import kainSvg from './kain.svg';
+import kainSvg from './svgs/kain.svg';
 import { SupplyChangeStats } from './SupplyChangeStats';
+import { InfoIcon } from '@chakra-ui/icons';
 
 export function Main() {
   const { data: events, isLoading } = useBurnEvents();
 
   return (
     <Flex flexDir="column" mt="10" width="100%" maxW="1200px">
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
         <Flex flexDir="column">
-          <Heading fontSize="72px" fontWeight={700} color="white">
+          <Heading fontSize={{ base: '48px', xl: '72px' }} fontWeight={700} color="white">
             ultrasound.homes
           </Heading>
           <Heading fontSize="30px" fontWeight={700} color="white">
             burning SNX for Kain&apos;s mansions
           </Heading>
         </Flex>
-        <Flex alignItems="center">
+        <Flex alignItems="center" mt={{ base: 10, xl: 0 }}>
           <Image src={kainSvg} />
           <Flex flexDir="column">
-            <Text fontSize="16px" fontWeight={700} color="white">
-              Mansion counter
-            </Text>
+            <Flex alignItems="baseline" gap="2">
+              <Text fontSize="16px" fontWeight={700} color="white">
+                Mansion counter
+              </Text>
+              <Tooltip label="Times the BuyBack contract was triggered">
+                <InfoIcon w="10px" h="10px" />
+              </Tooltip>
+            </Flex>
             <Text fontSize="24px" fontWeight={700} color="white">
               {isLoading ? <Spinner colorScheme="cyan" /> : events?.totalBurns}
             </Text>
           </Flex>
         </Flex>
       </Flex>
-      <Flex gap="4" mt="4">
+      <Flex gap="4" mt="4" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
         <Flex flexDir="column">
           <Chart />
-          <Flex gap="6">
+          <Flex gap="6" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
             <SupplyChangeStats />
             <CurrentSupplyStats />
           </Flex>

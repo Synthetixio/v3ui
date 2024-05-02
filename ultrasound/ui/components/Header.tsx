@@ -1,11 +1,12 @@
-import { Box, Button, Divider, Flex, Image, Text, useColorMode } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Hide, Image, Text, useColorMode } from '@chakra-ui/react';
 import { useIsConnected, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useEffect } from 'react';
 import { shortAddress } from '../utils/addresses';
 import { NetworkSelect } from './NetworkSelect';
-import snxSmallSvg from './snx-small.svg';
-import snxSvg from './snx.svg';
+import snxSmallSvg from './svgs/snx-small.svg';
+import snxSvg from './svgs/snx.svg';
+import snxHeaderMobileSvg from './svgs/snx-header-mobile.svg';
 
 export function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -22,8 +23,14 @@ export function Header() {
 
   return (
     <Flex as="header" p="2" flexDir="column" w="100%" gap="2">
-      <Flex w="100%" justifyContent="space-between" alignItems="center" px="5">
-        <Image src={snxSvg} />
+      <Flex w="100%" justifyContent="space-between" alignItems="center" px={{ base: 4, xl: 5 }}>
+        <Hide above="xl">
+          <Image src={snxHeaderMobileSvg} />
+        </Hide>
+        <Hide below="xl">
+          <Image src={snxSvg} />
+        </Hide>
+
         <Flex alignItems="center" gap="2">
           <Box
             border="1px solid"
@@ -40,14 +47,11 @@ export function Header() {
               {snxBalance ? snxBalance?.toNumber().toFixed(2) : '-'}
             </Text>
           </Box>
-          {isWalletConnected && (
-            <NetworkSelect
-              id={network?.id || ''}
-              name={network?.name || ''}
-              setNetwork={(netowork) => setNetwork(netowork.id)}
-            />
-          )}
-
+          <NetworkSelect
+            id={network?.id || ''}
+            name={network?.name || ''}
+            setNetwork={(netowork) => setNetwork(netowork.id)}
+          />
           {isWalletConnected ? (
             <Button
               variant="outline"

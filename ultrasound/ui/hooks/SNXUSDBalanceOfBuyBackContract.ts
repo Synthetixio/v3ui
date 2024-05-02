@@ -14,5 +14,6 @@ export function SNXUSDBalanceOfBuyBackContract(contract: string) {
       const balance: BigNumber = await USDC.balanceOf(contract);
       return balance;
     },
+    refetchInterval: 100000,
   });
 }
