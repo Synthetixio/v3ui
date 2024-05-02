@@ -9,7 +9,7 @@ import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
 import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
-import { findParentNode, useFetchNodeState } from '../hooks/useFetchNodeState';
+import { useFetchPrice } from '../hooks/useFetchPrice';
 
 export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -21,8 +21,9 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const toast = useToast();
   const param = useParams();
   const networkParam = param?.network ? Number(param.network) : undefined;
-  const { data: nodeStateFetched } = useFetchNodeState(networkParam, node);
-  console.log(nodeStateFetched);
+  const { data: price } = useFetchPrice(node.id);
+  console.log(price.toString());
+
   const handleButtonClick = async () => {
     if (!isWalletConnected) {
       await connect();
