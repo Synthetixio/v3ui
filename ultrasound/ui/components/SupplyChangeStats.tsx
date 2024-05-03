@@ -1,5 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Image, Link, Spinner, Tab, TabList, Tabs, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Image, Link, Spinner, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import burnSvg from './svgs/burn.svg';
 import mintedSvg from './svgs/minted.svg';
