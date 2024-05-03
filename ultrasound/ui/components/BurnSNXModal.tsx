@@ -19,7 +19,6 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
 import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
-import { useBurnEvents } from '../hooks/useBurnEvents';
 import { useSNXPrice } from '../hooks/useSNXPrice';
 import { useSellSNX } from '../mutations/useSellSNX';
 import snxInputSvg from './svgs/snx-input.svg';
@@ -28,7 +27,6 @@ import usdcSvg from './svgs/usdc.svg';
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [amount, setAmount] = useState<Wei | undefined>(new Wei(0));
   const [receivingUSDCAmount, setReceivingUSDCAmount] = useState(0);
-  const { data: events } = useBurnEvents();
   const { connect, activeWallet } = useWallet();
   const { data: SNXPrice } = useSNXPrice();
 
@@ -129,11 +127,21 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 <Text color="gray.500" fontSize="12px">
                   Burnable:{' '}
                   {contractBalance &&
-                    events?.SNXPrice &&
-                    (
-                      new Wei(contractBalance, 18).toNumber() /
-                      (events.SNXPrice + events.SNXPrice * 0.01)
-                    ).toFixed(2)}
+                    SNXPrice &&
+                    new Wei(contractBalance, 18).div(SNXPrice).toNumber().toFixed(2)}
+                  <Button
+                    size="xs"
+                    variant="unstyled"
+                    color="cyan.500"
+                    ml="2"
+                    fontSize="12px"
+                    onClick={() => {
+                      setAmount(new Wei(contractBalance, 18).div(SNXPrice));
+                      setReceivingUSDCAmount(new Wei(contractBalance, 18).div(SNXPrice).toNumber());
+                    }}
+                  >
+                    Max
+                  </Button>
                 </Text>
               </Flex>
             </Flex>

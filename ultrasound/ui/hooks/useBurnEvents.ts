@@ -32,7 +32,7 @@ export function useBurnEvents() {
       const supplyChange7Days = events
         .filter((event) => event.ts > now.getTime())
         .reduce((cur, prev) => cur + prev.snxAmount, 0)
-        .toFixed(2);
+        .toLocaleString();
 
       const SNXPriceResponse = await fetch(
         'https://coins.llama.fi/prices/current/ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'

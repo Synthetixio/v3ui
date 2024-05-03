@@ -24,7 +24,7 @@ export function CurrentSupplyStats() {
             <Text fontSize="18px" fontWeight={700}>
               Current Supply
             </Text>
-            <Tabs variant="soft-rounded">
+            <Tabs variant="soft-rounded" size="sm">
               <TabList>
                 <Tab color="gray.500" _selected={{ color: 'white', bg: 'whiteAlpha.400' }}>
                   ALL

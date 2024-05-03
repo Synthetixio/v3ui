@@ -28,7 +28,7 @@ export function Main() {
               <Text fontSize="16px" fontWeight={700} color="white">
                 Mansion counter
               </Text>
-              <Tooltip label="Times the BuyBack contract was triggered">
+              <Tooltip label="Times the BuyBack and Burn contract was triggered">
                 <InfoIcon w="10px" h="10px" />
               </Tooltip>
             </Flex>
@@ -39,7 +39,7 @@ export function Main() {
         </Flex>
       </Flex>
       <Flex gap="4" mt="4" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
-        <Flex flexDir="column">
+        <Flex flexDir="column" w={{ base: '100%', xl: 'unset' }}>
           <Chart />
           <Flex gap="6" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
             <SupplyChangeStats />
