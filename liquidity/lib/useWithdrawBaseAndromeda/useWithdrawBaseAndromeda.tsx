@@ -60,19 +60,19 @@ export const useWithdrawBaseAndromeda = ({
 
         const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
-            BigNumber.from(accountId),
-            getsUSDCAddress(network.id),
-            isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
-          )
+              BigNumber.from(accountId),
+              getsUSDCAddress(network.id),
+              isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
+            )
           : undefined;
 
         const withdraw_sUSD =
           snxUSDCollateral.gt(0) && !isSUSDCEnough
             ? CoreProxy.populateTransaction.withdraw(
-              BigNumber.from(accountId),
-              getSNXUSDAddress(network.id),
-              howMuchSNXUSD.toBN()
-            )
+                BigNumber.from(accountId),
+                getSNXUSDAddress(network.id),
+                howMuchSNXUSD.toBN()
+              )
             : undefined;
 
         const sUSDCApproval =
@@ -83,11 +83,11 @@ export const useWithdrawBaseAndromeda = ({
         const buy_SUSD =
           snxUSDCollateral.gt(0) && !isSUSDCEnough
             ? SpotProxy.populateTransaction.buy(
-              USDC_BASE_MARKET,
-              howMuchSNXUSD.toBN(),
-              0,
-              constants.AddressZero
-            )
+                USDC_BASE_MARKET,
+                howMuchSNXUSD.toBN(),
+                0,
+                constants.AddressZero
+              )
             : undefined;
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
