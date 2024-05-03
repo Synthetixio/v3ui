@@ -52,7 +52,9 @@ export async function bootstrap() {
   const root = ReactDOM.createRoot(container);
   root.render(
     <RecoilRoot>
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { staleTime: 999999 } } })}
+      >
         <ReactQueryDevtools />
         <Web3OnboardProvider web3Onboard={onboard}>
           <ChakraProvider theme={theme}>

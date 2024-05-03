@@ -19,7 +19,6 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
 import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
-import { useBurnEvents } from '../hooks/useBurnEvents';
 import { useSNXPrice } from '../hooks/useSNXPrice';
 import { useSellSNX } from '../mutations/useSellSNX';
 import snxInputSvg from './svgs/snx-input.svg';
@@ -28,7 +27,6 @@ import usdcSvg from './svgs/usdc.svg';
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [amount, setAmount] = useState<Wei | undefined>(new Wei(0));
   const [receivingUSDCAmount, setReceivingUSDCAmount] = useState(0);
-  const { data: events } = useBurnEvents();
   const { connect, activeWallet } = useWallet();
   const { data: SNXPrice } = useSNXPrice();
 
