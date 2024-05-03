@@ -45,10 +45,10 @@ export function PositionRow({
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {collateralType.displaySymbol}
+                {collateralType.symbol}
               </Text>
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                {collateralType.symbol}
+                {collateralType.displaySymbol}
               </Text>
             </Flex>
           </Flex>
@@ -58,7 +58,9 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              {liquidityPosition?.collateralAmount.toNumber().toLocaleString()}
+              {liquidityPosition?.collateralAmount
+                .toNumber()
+                .toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {collateralType.symbol.toString()}
@@ -112,7 +114,7 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-              ${debt.toNumber().toLocaleString()}
+              ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
             <Text
               color="cyan.500"

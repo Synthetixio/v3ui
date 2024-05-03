@@ -110,7 +110,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 >
                   {collateralTypes?.map((type) => (
                     <option value={type.tokenAddress} key={type.tokenAddress.concat(type.symbol)}>
-                      {type.displaySymbol}
+                      {type.symbol}
                     </option>
                   ))}
                   {!isBase && <option value={getSNXUSDAddress(network?.id)}>sUSD</option>}
@@ -161,14 +161,16 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 />
                 <Text fontSize="12px" color="gray.500">
                   $
-                  {amount
-                    .mul(
-                      collateralPrices && collateralPrices[selectedCollateralType]
-                        ? collateralPrices[selectedCollateralType]
-                        : ONEWEI
-                    )
-                    .toNumber()
-                    .toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                  {amount.eq(0)
+                    ? '00.00'
+                    : amount
+                        .mul(
+                          collateralPrices && collateralPrices[selectedCollateralType]
+                            ? collateralPrices[selectedCollateralType]
+                            : ONEWEI
+                        )
+                        .toNumber()
+                        .toLocaleString('en-US', { maximumFractionDigits: 2 })}
                 </Text>
               </Flex>
             </Flex>

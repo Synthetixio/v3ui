@@ -6,7 +6,7 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>Synthetix V3</title>
+        <title>Synthetix Liquidity V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column">
