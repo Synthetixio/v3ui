@@ -1,13 +1,12 @@
 import { Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { providers } from 'ethers';
 import { FC, useCallback, useState } from 'react';
-import { useConnectWallet } from '@web3-onboard/react';
 import { encodeBytesByNodeType, getNodeModuleContract } from '../utils/contracts';
 import { Node } from '../utils/types';
 import { useRecoilState } from 'recoil';
 import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
-import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
 import { useFetchPrice } from '../hooks/useFetchPrice';
 import { findParentNode } from '../utils/nodes';
@@ -15,22 +14,15 @@ import { findParentNode } from '../utils/nodes';
 export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [isLoading, setIsLoading] = useState(false);
-  const [, connect] = useConnectWallet();
   const signer = useSigner();
-  const isWalletConnected = useIsConnected();
-  const { network, setNetwork } = useNetwork();
+  const { network } = useNetwork();
   const toast = useToast();
   const param = useParams();
   const networkParam = param?.network ? Number(param.network) : undefined;
-  const { data, isError } = useFetchPrice(node.id, networkParam);
+  const { data, status } = useFetchPrice(node.id, networkParam);
 
   const handleButtonClick = async () => {
-    if (!isWalletConnected) {
-      await connect();
-      if (network && node?.network) {
-        setNetwork(node.network);
-      }
-    } else if (node.isRegistered) {
+    if (node.isRegistered) {
       try {
         setIsLoading(true);
         if (network?.id && signer) {
@@ -66,11 +58,12 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   };
 
   const renderText = useCallback(() => {
-    if (!isWalletConnected) return <Text>Please connect your wallet</Text>;
     if (!node.isRegistered) return <Text>Register Node</Text>;
-    if (isError) return 'Something went wrong';
     return 'Loading...';
-  }, [node.isRegistered, isWalletConnected, isError]);
+  }, [node.isRegistered]);
+
+  if (status === 'error') return 'Something went wrong...';
+  if (!data) return 'Loading...';
 
   return (
     <Flex flexDir="column" alignItems="center">
@@ -89,13 +82,13 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
         >
           {renderText()}
         </Button>
-      ) : !!data?.price && !data?.price.eq(0) ? (
+      ) : (
         <Flex gap="2" flexDir="column">
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
             Price:
           </Text>
           <Text fontSize="xs" color="whiteAlpha.800">
-            {data.price.toNumber()}
+            {data.price.toString()}
           </Text>
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
             Timestamp:{' '}
@@ -109,10 +102,6 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
             })}
           </Text>
         </Flex>
-      ) : !isWalletConnected ? (
-        'Please Connect your Wallet'
-      ) : (
-        'Loading...'
       )}
       <Text
         fontSize="xx-small"

@@ -18,7 +18,7 @@ let x = 0;
 let y = 0;
 
 export const RegisteredNode: FC = () => {
-  const [node, setNodes] = useRecoilState(nodesState);
+  const [nodes, setNodes] = useRecoilState(nodesState);
   const param = useParams();
   const nodeID = param?.nodeId;
   const networkParam = param?.network ? Number(param.network) : undefined;
@@ -31,7 +31,7 @@ export const RegisteredNode: FC = () => {
   );
 
   useEffect(() => {
-    if (!node.find((node) => node.id === nodeID)) {
+    if (!nodes.find((node) => node.id === nodeID)) {
       const fetchNode = async (id: string) => {
         if (networkParam) {
           const contract = await getNodeModuleContract(
@@ -72,7 +72,7 @@ export const RegisteredNode: FC = () => {
       };
       fetchNode(nodeID);
     }
-  }, [nodeID, networkParam, node, provider, setNodes]);
+  }, [nodeID, networkParam, nodes, provider, setNodes]);
 
   return (
     <Flex p="10" flexDir="column" gap="5">

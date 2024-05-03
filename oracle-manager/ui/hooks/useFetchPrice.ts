@@ -39,28 +39,37 @@ export function useFetchPrice(nodeId: string, networkId: number) {
             baseProvider,
             price,
             (txs) => {
-              return {
-                price: new Wei(
-                  OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
-                ),
-                timestamp: new Date(
-                  Number(
-                    OracleManagerProxy.interface
-                      .decodeFunctionResult('process', txs[0])[0]
-                      .timestamp.mul(1000)
-                      .toString()
-                  )
-                ),
-              };
+              try {
+                return {
+                  price: new Wei(
+                    OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
+                  ),
+                  timestamp: new Date(
+                    Number(
+                      OracleManagerProxy.interface
+                        .decodeFunctionResult('process', txs[0])[0]
+                        .timestamp.mul(1000)
+                        .toString()
+                    )
+                  ),
+                };
+              } catch (error) {
+                const nodes = OracleManagerProxy.interface.decodeFunctionResult('process', txs);
+                return {
+                  price: new Wei(nodes[0].price),
+                  timestamp: new Date(Number(nodes[0].timestamp.mul(1000).toString())),
+                };
+              }
             },
             'priceCall'
           );
         } catch (error) {
           console.error(error);
-          return { price: new Wei(0), timestamp: new Date() };
+          throw error;
         }
+      } else {
+        throw new Error('BaseProvider and BaseNetwork undefined');
       }
-      return { price: new Wei(0), timestamp: new Date() };
     },
   });
 }

@@ -9,6 +9,7 @@ import { RegisteredNode } from './RegisteredNode';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onboard } from '../utils/onboard';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const Alert: ComponentStyleConfig = {
   variants: {
@@ -55,6 +56,7 @@ root.render(
     >
       <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={customTheme}>
+          <ReactQueryDevtools />
           <Fonts />
           <Header />
           <RouterProvider router={router} />
