@@ -5,12 +5,15 @@ import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 
-export function useFetchPrice(nodeId: string) {
-  const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
+export function useFetchPrice(nodeId: string, networkId: number) {
+  const baseNetwork = useGetNetwork(`0x${Number(networkId).toString(16)}`);
   const baseProvider = useProviderForChain(baseNetwork);
 
   return useQuery({
     refetchInterval: 15000,
+    retry: false,
+    staleTime: 99999,
+
     enabled: !!baseNetwork && !!baseProvider,
     queryKey: ['snx-price', !!baseProvider],
     queryFn: async () => {

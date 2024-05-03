@@ -65,8 +65,6 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
     }
   };
 
-  NOTIFY USER THAT CONNECTED NETWORK DOESNT MATCH WITH NETWORK that HE LOOKS FOR
-
   const renderText = useCallback(() => {
     if (!isWalletConnected) return <Text>Please connect your wallet</Text>;
     if (!node.isRegistered) return <Text>Register Node</Text>;
