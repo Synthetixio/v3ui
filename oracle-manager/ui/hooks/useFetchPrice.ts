@@ -5,12 +5,15 @@ import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 
-export function useFetchPrice(nodeId: string) {
-  const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
+export function useFetchPrice(nodeId: string, networkId: number) {
+  const baseNetwork = useGetNetwork(`0x${Number(networkId).toString(16)}`);
   const baseProvider = useProviderForChain(baseNetwork);
 
   return useQuery({
     refetchInterval: 15000,
+    retry: false,
+    staleTime: 99999,
+
     enabled: !!baseNetwork && !!baseProvider,
     queryKey: ['snx-price', !!baseProvider],
     queryFn: async () => {
@@ -36,28 +39,24 @@ export function useFetchPrice(nodeId: string) {
             baseProvider,
             price,
             (txs) => {
+              const node = OracleManagerProxy.interface.decodeFunctionResult(
+                'process',
+                Array.isArray(txs) ? txs[0] : txs
+              );
               return {
-                price: new Wei(
-                  OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
-                ),
-                timestamp: new Date(
-                  Number(
-                    OracleManagerProxy.interface
-                      .decodeFunctionResult('process', txs[0])[0]
-                      .timestamp.mul(1000)
-                      .toString()
-                  )
-                ),
+                price: new Wei(node.price),
+                timestamp: new Date(Number(node.timestamp.mul(1000).toString())),
               };
             },
             'priceCall'
           );
         } catch (error) {
           console.error(error);
-          return { price: new Wei(0), timestamp: new Date() };
+          throw error;
         }
+      } else {
+        throw new Error('BaseProvider and BaseNetwork undefined');
       }
-      return { price: new Wei(0), timestamp: new Date() };
     },
   });
 }

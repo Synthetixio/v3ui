@@ -1,5 +1,5 @@
 import { Box, Text, useDisclosure, useToast } from '@chakra-ui/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
   Background,
   useEdgesState,
@@ -42,7 +42,8 @@ const NODE_TYPES = {
 
 export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }) => {
   const toast = useToast();
-  const params = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -114,7 +115,7 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
   };
 
   useEffect(() => {
-    if (!!params.values().next().value) {
+    if (!!queryParams.values().next().value) {
       const stateObject: Partial<{
         tid: string;
         id: string;
@@ -122,7 +123,7 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
         pam: string;
         par: string;
         net: string;
-      }> = Object.fromEntries(params.entries());
+      }> = Object.fromEntries(queryParams.entries());
       const typeIds: number[] = JSON.parse(stateObject?.tid || '[]');
       const ids: string[] = JSON.parse(stateObject?.id || '[]');
       const locations: { x: string; y: string }[] = JSON.parse(stateObject?.loc || '[]');
@@ -177,8 +178,7 @@ export const Chart: FC<{ cannotRemoveEdges?: boolean }> = ({ cannotRemoveEdges }
         }
       });
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [edges, nodes, setEdges, setNodes, queryParams]);
 
   return (
     <Box
