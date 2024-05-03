@@ -10,6 +10,7 @@ import { shortAddress } from '../utils/addresses';
 import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
 import { useFetchPrice } from '../hooks/useFetchPrice';
+import { findParentNode } from '../utils/nodes';
 
 export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -21,8 +22,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const toast = useToast();
   const param = useParams();
   const networkParam = param?.network ? Number(param.network) : undefined;
-  const { data: price } = useFetchPrice(node.id);
-  console.log(price.toString());
+  const { data, isError } = useFetchPrice(node.id, networkParam);
 
   const handleButtonClick = async () => {
     if (!isWalletConnected) {
@@ -65,18 +65,20 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
     }
   };
 
+  NOTIFY USER THAT CONNECTED NETWORK DOESNT MATCH WITH NETWORK that HE LOOKS FOR
+
   const renderText = useCallback(() => {
     if (!isWalletConnected) return <Text>Please connect your wallet</Text>;
-    if (node.isRegistered) return <Text>Register Node</Text>;
-    if (!node.isRegistered) return '';
-    return 'Something went wrong';
-  }, [node.isRegistered, isWalletConnected]);
+    if (!node.isRegistered) return <Text>Register Node</Text>;
+    if (isError) return 'Something went wrong';
+    return 'Loading...';
+  }, [node.isRegistered, isWalletConnected, isError]);
 
   return (
     <Flex flexDir="column" alignItems="center">
       {isLoading ? (
         <Spinner colorScheme="cyan" />
-      ) : node.isRegistered ? (
+      ) : !node.isRegistered ? (
         <Button
           border="1px solid white"
           size="xs"
@@ -89,24 +91,30 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
         >
           {renderText()}
         </Button>
-      ) : nodeStateFetched?.price !== '0' && !!nodeStateFetched?.price ? (
+      ) : !!data?.price && !data?.price.eq(0) ? (
         <Flex gap="2" flexDir="column">
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
             Price:
           </Text>
           <Text fontSize="xs" color="whiteAlpha.800">
-            {nodeStateFetched?.price}
+            {data.price.toNumber()}
           </Text>
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
-            Timestamp:
-          </Text>
-          <Text fontSize="xs" color="whiteAlpha.800">
-            {nodeStateFetched?.date.toLocaleTimeString()} -{' '}
-            {nodeStateFetched?.date.toLocaleDateString()}
+            Timestamp:{' '}
+            {data.timestamp.toLocaleString(undefined, {
+              day: '2-digit',
+              month: 'short',
+              year: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
           </Text>
         </Flex>
+      ) : !isWalletConnected ? (
+        'Please Connect your Wallet'
       ) : (
-        'Something went wrong'
+        'Loading...'
       )}
       <Text
         fontSize="xx-small"
