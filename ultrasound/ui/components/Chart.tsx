@@ -21,6 +21,7 @@ export function Chart() {
 
   if (isLoading) return <Spinner colorScheme="cyan" />;
   if (!events) return;
+
   return (
     <Flex
       border="1px solid"
@@ -37,7 +38,9 @@ export function Chart() {
       <Heading fontSize="18px" fontWeight={700} w="100%">
         SNX Supply Chart
       </Heading>
+      {/* TODO @MF addd padding at the bottom of the chart */}
       <Line
+        style={{ marginBottom: '8px' }}
         data={{
           labels: Object.keys(events[range]),
           datasets: [
@@ -50,6 +53,7 @@ export function Chart() {
           ],
         }}
         options={{
+          layout: { padding: { bottom: 16 } },
           plugins: {
             tooltip: {
               backgroundColor: '#06061B',
@@ -62,16 +66,19 @@ export function Chart() {
               bodyColor: '#9999AC',
               bodySpacing: 8,
               usePointStyle: true,
+              enabled: true,
+              mode: 'index',
+              intersect: false,
             },
             legend: {
               align: 'start',
               labels: {
-                boxWidth: 10,
+                boxWidth: 8,
                 useBorderRadius: true,
-                boxHeight: 10,
-                borderRadius: 5,
+                boxHeight: 8,
+                borderRadius: 4,
                 color: '#9999AC',
-                font: { size: 16, family: 'Inter' },
+                font: { size: 12, family: 'Inter' },
               },
             },
           },
@@ -90,6 +97,7 @@ export function Chart() {
         right="10px"
         top="10px"
         defaultIndex={range === 'groupedByMonths' ? 1 : 0}
+        size="sm"
       >
         <TabList>
           <Tab

@@ -129,11 +129,21 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 <Text color="gray.500" fontSize="12px">
                   Burnable:{' '}
                   {contractBalance &&
-                    events?.SNXPrice &&
-                    (
-                      new Wei(contractBalance, 18).toNumber() /
-                      (events.SNXPrice + events.SNXPrice * 0.01)
-                    ).toFixed(2)}
+                    SNXPrice &&
+                    new Wei(contractBalance, 18).div(SNXPrice).toNumber().toFixed(2)}
+                  <Button
+                    size="xs"
+                    variant="unstyled"
+                    color="cyan.500"
+                    ml="2"
+                    fontSize="12px"
+                    onClick={() => {
+                      setAmount(new Wei(contractBalance, 18).div(SNXPrice));
+                      setReceivingUSDCAmount(new Wei(contractBalance, 18).div(SNXPrice).toNumber());
+                    }}
+                  >
+                    Max
+                  </Button>
                 </Text>
               </Flex>
             </Flex>

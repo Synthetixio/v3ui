@@ -27,7 +27,7 @@ export function SupplyChangeStats() {
             <Text fontSize="18px" fontWeight={700}>
               Supply Change
             </Text>
-            <Tabs variant="soft-rounded">
+            <Tabs variant="soft-rounded" size="sm">
               <TabList>
                 <Tab color="gray.500" _selected={{ color: 'white', bg: 'whiteAlpha.400' }}>
                   7D
@@ -36,7 +36,7 @@ export function SupplyChangeStats() {
             </Tabs>
           </Flex>
           <Text fontWeight={700} fontSize="24px">
-            -{events?.supplyChange7Days.toString()} SNX
+            -{events?.supplyChange7Days} SNX
           </Text>
           <Flex gap="2" alignItems="center">
             <Image src={burnSvg} />
@@ -44,7 +44,7 @@ export function SupplyChangeStats() {
               Burnt
             </Text>
             <Text fontSize="18px" color="gray.500" fontWeight={700}>
-              {events?.supplyChange7Days.toString()} SNX
+              {events?.supplyChange7Days} SNX
             </Text>
           </Flex>
           <Flex gap="2" alignItems="center">
@@ -56,26 +56,16 @@ export function SupplyChangeStats() {
               0.00 SNX
             </Text>
 
-            <Tooltip
-              hasArrow
-              closeDelay={1000}
-              label={
-                <Text>
-                  No more SNX are being minted. Read more about The End of Synthetix Token Inflation
-                </Text>
-              }
+            <Link
+              href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
+              rel="noopener"
+              target="_blank"
+              _hover={{ textDecoration: 'none' }}
             >
-              <Flex alignItems="center">
-                <InfoIcon color="gray.500" mr="2" />
-                <Link
-                  href="https://sips.synthetix.io/sips/sip-2043/?ref=blog.synthetix.io"
-                  rel="noopener"
-                  target="_blank"
-                >
-                  <Text color="gray.500">Why?</Text>
-                </Link>
-              </Flex>
-            </Tooltip>
+              <Text color="gray.500" fontWeight="bold" _hover={{ color: 'white' }}>
+                Why?
+              </Text>
+            </Link>
           </Flex>
         </>
       )}
