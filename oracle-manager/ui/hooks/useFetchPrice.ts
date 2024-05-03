@@ -5,9 +5,7 @@ import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 
-export function useFetchPrice(nodeId: string, networkId?: number) {
-  // make it work with other netwroks
-  // console.log(networkId);
+export function useFetchPrice(nodeId: string) {
   const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
   const baseProvider = useProviderForChain(baseNetwork);
 
