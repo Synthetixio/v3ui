@@ -19,15 +19,13 @@ import { useApr } from '@snx-v3/useApr';
 import { Fragment } from 'react';
 import { useVaultsData } from '@snx-v3/useVaultsData';
 import { ZEROWEI } from '../../utils/constants';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import opSvg from './op.svg';
+import poolsSvg from './pools.svg';
 
 export function Pools() {
   const { data: pools } = usePools();
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
-  const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: apr } = useApr();
   const { data: vaultDebt, isLoading: vaultIsLoading } = useVaultsData(1);
   const vaultTVL = vaultDebt?.reduce((cur, prev) => {
@@ -136,7 +134,7 @@ export function Pools() {
                   {apr?.combinedApr.toFixed(2).concat('%') || '-'}
                 </Text>
               </Flex>
-              <Image src={isBase ? '/base-pool.svg' : 'WETH-pool.svg'} mb={4} />
+              <Image src={poolsSvg} mr="50%" mb={4} />
             </Flex>
             <Divider />
             <Flex mt={4}>
@@ -197,9 +195,9 @@ export function Pools() {
           p={6}
           shrink={2}
         >
-          <Image src="/snx.svg" w="66px" height="66px" mb={6} />
-          <Text fontWeight={700} fontSize="18px" color="white">
-            Sell SNX at a Premium and watch it Burn
+          <Image src={opSvg} w="66px" height="66px" mb={6} />
+          <Text fontWeight={700} fontSize="14px" color="white">
+            10x Cost Effective on Gas Fees
           </Text>
           <Text fontSize="16px" color="gray.600" mb="auto">
             Sell your SNX at a premium to the Buyback and Burn contract and get USDC on Base

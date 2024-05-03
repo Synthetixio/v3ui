@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   BaseIcon,
   EthereumIcon,
@@ -249,6 +249,12 @@ export function useWallet() {
     connect,
     disconnect,
   };
+}
+
+export function useGetNetwork(chainId: string) {
+  return useMemo(() => {
+    return NETWORKS.find((n) => n.hexId === chainId);
+  }, [chainId]);
 }
 
 export function useNetwork() {
