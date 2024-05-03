@@ -9,7 +9,6 @@ import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import {
   calculateAssets,
-  calculateTotalAssets,
   calculateTotalAssetsAvailable,
   calculateTotalAssetsDelegated,
 } from '../../utils/assets';
