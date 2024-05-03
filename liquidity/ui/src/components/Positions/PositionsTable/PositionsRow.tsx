@@ -57,12 +57,18 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
               {liquidityPosition?.collateralAmount
                 .toNumber()
                 .toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Text
+              color="gray.500"
+              fontWeight={700}
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+            >
               {collateralType.symbol.toString()}
             </Text>
           </Flex>
@@ -71,7 +77,7 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
               {apr?.concat('%') || '-'}
             </Text>
           </Flex>
@@ -82,7 +88,7 @@ export function PositionRow({
           <Td border="none">
             <Fade in>
               <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
                   ${liquidityPosition?.debt.toNumber().toLocaleString()}
                 </Text>
                 <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -94,7 +100,7 @@ export function PositionRow({
           <Td border="none">
             <Fade in>
               <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
                   {parseFloat(
                     utils.formatEther(borrow?.position.net_issuance.toString() || '0')
                   ).toFixed(2)}
@@ -113,7 +119,7 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
               ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
             <Text
