@@ -18,7 +18,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const { network } = useNetwork();
   const toast = useToast();
   const param = useParams();
-  const networkParam = param?.network ? Number(param.network) : undefined;
+  const networkParam = param?.network ? Number(param.network) : 1;
   const { data, status } = useFetchPrice(node.id, networkParam);
 
   const handleButtonClick = async () => {

@@ -6555,17 +6555,14 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
-    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
-    "@snx-v3/constants": "workspace:*"
-    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
+    "@tanstack/react-query-devtools": "npm:^5.8.3"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
     "@web3-onboard/injected-wallets": "npm:^2.10.11"
@@ -6874,7 +6871,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useCollateralPriceUpdates@workspace:*, @snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
+"@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates"
   dependencies:

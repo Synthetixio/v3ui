@@ -31,7 +31,7 @@ export const RegisteredNode: FC = () => {
   );
 
   useEffect(() => {
-    if (!nodes.find((node) => node.id === nodeID)) {
+    if (!nodes.find((node) => node.id === nodeID) && nodeID) {
       const fetchNode = async (id: string) => {
         if (networkParam) {
           const contract = await getNodeModuleContract(

@@ -13,35 +13,37 @@ export function useRegisterAllNodes() {
 
   return useMutation({
     mutationFn: async () => {
-      const oracleManagerContract = await getNodeModuleContract(signer, network);
-      const data = nodes
-        .filter((node) => !node.isRegistered)
-        .sort((a, b) => {
-          if (a.parents.length > b.parents.length) return 1;
-          if (a.parents.length < b.parents.length) return -1;
-          return 0;
-        })
-        .map((node) => {
-          return {
-            target: oracleManagerContract.address,
-            callData: oracleManagerContract.interface.encodeFunctionData('registerNode', [
-              node.typeId,
-              encodeBytesByNodeType(node.typeId, node.parameters),
-              node.parents.map((parentId: string) => {
-                const parentNode = nodes.find((node) => node.id === parentId);
-                if (parentNode) {
-                  return hashId(parentNode, []);
-                }
-                return '';
-              }),
-            ]),
-          };
+      if (multicall && network && signer) {
+        const oracleManagerContract = await getNodeModuleContract(signer, network);
+        const data = nodes
+          .filter((node) => !node.isRegistered)
+          .sort((a, b) => {
+            if (a.parents.length > b.parents.length) return 1;
+            if (a.parents.length < b.parents.length) return -1;
+            return 0;
+          })
+          .map((node) => {
+            return {
+              target: oracleManagerContract.address,
+              callData: oracleManagerContract.interface.encodeFunctionData('registerNode', [
+                node.typeId,
+                encodeBytesByNodeType(node.typeId, node.parameters),
+                node.parents.map((parentId: string) => {
+                  const parentNode = nodes.find((node) => node.id === parentId);
+                  if (parentNode) {
+                    return hashId(parentNode, []);
+                  }
+                  return '';
+                }),
+              ]),
+            };
+          });
+        const tx = await multicall.aggregate(data);
+        await tx.wait(1);
+        setNodes((state) => {
+          return state.map((n) => ({ ...n, isRegistered: true, network: network.id }));
         });
-      const tx = await multicall.aggregate(data);
-      await tx.wait(1);
-      setNodes((state) => {
-        return state.map((n) => ({ ...n, isRegistered: true, network: network.id }));
-      });
+      }
     },
   });
 }
