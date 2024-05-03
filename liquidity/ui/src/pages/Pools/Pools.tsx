@@ -2,6 +2,8 @@ import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
 import { TokenIcon } from '../../components/TokenIcon';
+import opSvg from './op.svg';
+import poolsSvg from './pools.svg';
 
 export function Pools() {
   const { data: pools } = usePools();
@@ -53,7 +55,7 @@ export function Pools() {
                   TODO
                 </Text>
               </Flex>
-              <Image src="/pools.svg" mr="50%" mb={4} />
+              <Image src={poolsSvg} mr="50%" mb={4} />
             </Flex>
             <Divider />
             <Flex mt={4}>
@@ -80,7 +82,7 @@ export function Pools() {
           p={6}
           shrink={2}
         >
-          <Image src="/op.svg" w="66px" height="66px" mb={6} />
+          <Image src={opSvg} w="66px" height="66px" mb={6} />
           <Text fontWeight={700} fontSize="14px" color="white">
             10x Cost Effective on Gas Fees
           </Text>

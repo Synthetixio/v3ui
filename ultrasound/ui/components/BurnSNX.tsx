@@ -1,8 +1,19 @@
-import { Button, Flex, Image, Link, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { BurnSNXModal } from './BurnSNXModal';
+import {
+  Button,
+  Flex,
+  Image,
+  Link,
+  Skeleton,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useSNXPrice } from '../hooks/useSNXPrice';
+import burnSnxSvg from './svgs/burn-snx.svg';
+import baseBadgeMinted from './svgs/base-badge.svg';
+import { BurnSNXModal } from './BurnSNXModal';
 
 export function BurnSNX() {
   const { network } = useNetwork();
@@ -16,28 +27,31 @@ export function BurnSNX() {
       rounded="base"
       flexDir="column"
       bg="navy.700"
-      w="415px"
+      w={{ base: '100%', xl: '415px' }}
     >
-      <Image src="/burn-snx.svg" h="284px" />
-      <Flex flexDir="column" gap="6" p="4">
+      <Image src={burnSnxSvg} h="284px" objectFit="cover" />
+      <Flex flexDir="column" gap="2" p="4">
+        <Image src={baseBadgeMinted} w="100px" h="20px" />
         <Text fontWeight={700} fontSize="18px" color="white">
-          Sell SNX at premium and watch it burn
+          Sell SNX to the Buyback and Burn Contract on Base
         </Text>
-        <Text fontSize="16px">
-          Sell your SNX at a <b>premium</b> price to the Buyback and Burn contract and get USDC on
-          Base
+        <Text fontSize="14px">
+          Sell your SNX to the Buyback and Burn contract on Base at a premium over the oracle price
+          and receive USDC in return. The contract will then burn the SNX, permanently removing it
+          from circulation.
         </Text>
-        <Text fontWeight={700} fontSize="20px">
-          {SNXPrice?.eq(0) ? (
-            'refecthing...'
+        <Text fontWeight={700} fontSize="20px" display="flex" alignItems="center" gap="2">
+          Buyback Price:{' '}
+          {!SNXPrice ? (
+            <Skeleton h="20px" width="100px" ml="2" />
           ) : (
             <>
-              Buyback Price: <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $
+              <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $
               {SNXPrice ? (SNXPrice?.toNumber() + SNXPrice?.toNumber() * 0.01).toFixed(2) : 0}
             </>
           )}
         </Text>
-        <Flex gap="4" mt="65px">
+        <Flex gap="4" mt="34px">
           {!isBaseAndromeda(network?.id, network?.preset) ? (
             <Tooltip label="Please conect to the Base network">
               <Button isDisabled={true}>Burn SNX</Button>
@@ -51,7 +65,7 @@ export function BurnSNX() {
             rel="noopener"
           >
             <Button variant="outline" colorScheme="gray" color="white">
-              Lean More
+              Learn More
             </Button>
           </Link>
         </Flex>

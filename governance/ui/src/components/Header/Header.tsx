@@ -21,6 +21,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
 import { Network } from '@snx-v3/useBlockchain';
+import governanceHeaderSvg from './governance-header.svg';
+import snxHeaderSvg from './snx-header.svg';
 
 const activeIcon = (currentNetwork: Network | null) => {
   switch (currentNetwork?.id) {
@@ -139,9 +141,9 @@ export function Header() {
     >
       <Flex maxW="1440px" w="100%" alignItems="center">
         <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
-          <Image src="/snx-header.svg" pr="10px" />
+          <Image src={snxHeaderSvg} pr="10px" />
           <Show above="md">
-            <Image src="/governance-header.svg" />
+            <Image src={governanceHeaderSvg} />
           </Show>
         </Flex>
         <PeriodCountdown council={councils[0].slug} />

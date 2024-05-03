@@ -32,7 +32,7 @@ export function useBurnEvents() {
       const supplyChange7Days = events
         .filter((event) => event.ts > now.getTime())
         .reduce((cur, prev) => cur + prev.snxAmount, 0)
-        .toFixed(2);
+        .toLocaleString();
 
       const SNXPriceResponse = await fetch(
         'https://coins.llama.fi/prices/current/ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'
@@ -54,21 +54,26 @@ export function useBurnEvents() {
         {} as Record<string, number>
       );
 
-      const groupedByLast30Days = events.reduce(
-        (cur, prev) => {
-          const currentDate = new Date(prev.ts);
-          if (currentDate.getTime() > thirtyDaysAgo.getTime()) {
-            const day = currentDate.toLocaleString('default', { day: '2-digit', month: 'long' });
-            if (cur[day]) {
-              cur[day] = cur[day] - prev.snxAmount;
-            } else {
-              cur[day] = Number(utils.formatEther(totalSupply)) - prev.cumulativeSnxAmount;
+      const groupedByLast30Days = events
+        .filter((_, index) => index % 2 === 0)
+        .reduce(
+          (cur, prev) => {
+            const currentDate = new Date(prev.ts);
+            if (currentDate.getTime() > thirtyDaysAgo.getTime()) {
+              const day = currentDate.toLocaleString('default', {
+                day: '2-digit',
+                month: '2-digit',
+              });
+              if (cur[day]) {
+                cur[day] = cur[day] - prev.snxAmount;
+              } else {
+                cur[day] = Number(utils.formatEther(totalSupply)) - prev.cumulativeSnxAmount;
+              }
             }
-          }
-          return cur;
-        },
-        {} as Record<string, number>
-      );
+            return cur;
+          },
+          {} as Record<string, number>
+        );
 
       return {
         totalBurns: events.length,
@@ -82,5 +87,6 @@ export function useBurnEvents() {
           (coins['ethereum:0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F'].price as number) || 0,
       };
     },
+    refetchInterval: 100000,
   });
 }

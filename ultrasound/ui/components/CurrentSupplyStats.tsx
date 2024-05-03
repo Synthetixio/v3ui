@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Spinner, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 
 export function CurrentSupplyStats() {
@@ -6,8 +6,8 @@ export function CurrentSupplyStats() {
 
   return (
     <Flex
-      w="369px"
-      h="184px"
+      w={{ base: '100%', xl: '369px' }}
+      h="200px"
       p="4"
       border="1px solid"
       borderColor="gray.900"
@@ -22,19 +22,15 @@ export function CurrentSupplyStats() {
         <>
           <Flex justifyContent="space-between">
             <Text fontSize="18px" fontWeight={700}>
-              Curren tSupply
+              Current Supply
             </Text>
-            <Text
-              bg="whiteAlpha.400"
-              rounded="30"
-              w="40px"
-              pt="1"
-              textAlign="center"
-              fontWeight={700}
-              fontSize="12px"
-            >
-              ALL
-            </Text>
+            <Tabs variant="soft-rounded" size="sm">
+              <TabList>
+                <Tab color="gray.500" _selected={{ color: 'white', bg: 'whiteAlpha.400' }}>
+                  ALL
+                </Tab>
+              </TabList>
+            </Tabs>
           </Flex>
           <Text fontWeight={700} fontSize="24px" color="white">
             {events?.totalSupply} SNX

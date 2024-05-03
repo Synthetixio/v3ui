@@ -5,7 +5,6 @@
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "load-env": "source load-env.sh",
     "focus": "yarn workspaces focus '@snx-v3/ultrasound-homes'"
   },
   "dependencies": {
@@ -25,6 +24,7 @@
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useUSDProxy": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
+    "@synthetixio/safe-import": "workspace:*",
     "@synthetixio/v3-contracts": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

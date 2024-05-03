@@ -1,36 +1,39 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
+import { useGetNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 
-export function useFetchPrice(nodeId: string, networkId?: number) {
-  // make it work with other netwroks
-  // console.log(networkId);
-  // const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
-  // const baseProvider = useProviderForChain(baseNetwork);
-  const provider = useProvider();
-  const { network } = useNetwork();
+export function useFetchPrice(nodeId: string) {
+  const baseNetwork = useGetNetwork(`0x${Number(8453).toString(16)}`);
+  const baseProvider = useProviderForChain(baseNetwork);
 
   return useQuery({
     refetchInterval: 15000,
-    enabled: !!provider && !!network,
-    queryKey: ['snx-price', !!provider],
+    enabled: !!baseNetwork && !!baseProvider,
+    queryKey: ['snx-price', !!baseProvider],
     queryFn: async () => {
-      if (provider && network) {
+      if (baseProvider && baseNetwork) {
         try {
-          const { address, abi } = await importOracleManagerProxy(network.id, network.preset);
+          const { address, abi } = await importOracleManagerProxy(
+            baseNetwork.id,
+            baseNetwork.preset
+          );
 
-          const OracleManagerProxy = new Contract(address, abi, provider) as OracleManagerProxyType;
+          const OracleManagerProxy = new Contract(
+            address,
+            abi,
+            baseProvider
+          ) as OracleManagerProxyType;
 
           const price = [await OracleManagerProxy.populateTransaction.process(nodeId)];
 
           price[0].from = '0x4200000000000000000000000000000000000006';
 
           return await erc7412Call(
-            network,
-            provider,
+            baseNetwork,
+            baseProvider,
             price,
             (txs) => {
               return {

@@ -17,7 +17,6 @@ export function NetworkSelect({
         <>
           <MenuButton
             as={Button}
-            ml={2}
             variant="outline"
             colorScheme="gray"
             sx={{ '> span': { display: 'flex', alignItems: 'center' } }}

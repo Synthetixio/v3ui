@@ -13,20 +13,20 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react';
+import { useApprove } from '@snx-v3/useApprove';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
-import { useApprove } from '@snx-v3/useApprove';
 import Wei from '@synthetixio/wei';
 import { useState } from 'react';
-import { useSellSNX } from '../mutations/useSellSNX';
-import { useBurnEvents } from '../hooks/useBurnEvents';
+import { SNXUSDBalanceOfBuyBackContract } from '../hooks/SNXUSDBalanceOfBuyBackContract';
 import { useSNXPrice } from '../hooks/useSNXPrice';
+import { useSellSNX } from '../mutations/useSellSNX';
+import snxInputSvg from './svgs/snx-input.svg';
+import usdcSvg from './svgs/usdc.svg';
 
 export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [amount, setAmount] = useState<Wei | undefined>(new Wei(0));
   const [receivingUSDCAmount, setReceivingUSDCAmount] = useState(0);
-  const { data: events } = useBurnEvents();
   const { connect, activeWallet } = useWallet();
   const { data: SNXPrice } = useSNXPrice();
 
@@ -53,150 +53,169 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex flexDir="column" gap="4">
-            <Text fontWeight={700} color="white">
-              Burn
-            </Text>
-            <Flex border="1px solid" borderColor="gray.900" rounded="base" flexDir="column" p="4">
-              <Flex justifyContent="space-between" w="100%">
-                <Flex
-                  alignItems="center"
-                  border="1px solid"
-                  borderColor="gray.900"
-                  p="2"
-                  rounded="base"
-                  justifyContent="center"
-                  w="90px"
-                  gap="2"
-                >
-                  <Image src="/snx-input.svg" />
-                  <Text fontWeight={700} fontSize="16px">
-                    SNX
-                  </Text>
+          <Flex flexDir="column" gap="3">
+            <Flex flexDir="column" gap="3">
+              <Text fontWeight={700} color="white">
+                Burn
+              </Text>
+              <Flex border="1px solid" borderColor="gray.900" rounded="base" flexDir="column" p="3">
+                <Flex justifyContent="space-between" w="100%">
+                  <Flex
+                    alignItems="center"
+                    border="1px solid"
+                    borderColor="gray.900"
+                    p="2"
+                    rounded="base"
+                    justifyContent="center"
+                    w="90px"
+                    gap="2"
+                  >
+                    <Image src={snxInputSvg} />
+                    <Text fontWeight={700} fontSize="16px">
+                      SNX
+                    </Text>
+                  </Flex>
+                  <Input
+                    variant="unstyled"
+                    placeholder="Enter Amount"
+                    textAlign="end"
+                    fontSize="24px"
+                    color="white"
+                    type="number"
+                    overflow="scroll"
+                    fontWeight={700}
+                    value={amount ? amount.toNumber() : ''}
+                    onChange={(e) => {
+                      try {
+                        if (SNXPrice) {
+                          const snxAmount = new Wei(e.target.value);
+                          setAmount(snxAmount);
+                          setReceivingUSDCAmount(
+                            snxAmount.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                          );
+                        }
+                      } catch (error) {
+                        console.error('failed to parse input: ', Error);
+                        setAmount(undefined);
+                        setReceivingUSDCAmount(0);
+                      }
+                    }}
+                  />
                 </Flex>
-                <Input
-                  variant="unstyled"
-                  placeholder="0.00"
-                  textAlign="end"
-                  fontSize="24px"
-                  color="white"
-                  type="number"
-                  overflow="scroll"
-                  fontWeight={700}
-                  value={amount ? amount.toNumber() : ''}
-                  onChange={(e) => {
-                    try {
-                      if (SNXPrice) {
-                        const snxAmount = new Wei(e.target.value);
-                        setAmount(snxAmount);
+                <Flex w="100%" justifyContent="space-between">
+                  <Text
+                    color="gray.500"
+                    fontSize="12px"
+                    mt="2"
+                    cursor="pointer"
+                    onClick={() => {
+                      if (SNXPrice && snxBalance) {
+                        setAmount(snxBalance);
                         setReceivingUSDCAmount(
-                          snxAmount.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
+                          snxBalance.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
                         );
                       }
-                    } catch (error) {
-                      console.error('failed to parse input: ', Error);
-                      setAmount(undefined);
-                    }
-                  }}
-                />
-              </Flex>
-              <Flex w="100%" justifyContent="space-between">
-                <Text
-                  color="gray.500"
-                  fontSize="12px"
-                  mt="2"
-                  cursor="pointer"
-                  onClick={() => {
-                    if (SNXPrice && snxBalance) {
-                      setAmount(snxBalance);
-                      setReceivingUSDCAmount(
-                        snxBalance.mul(SNXPrice).add(SNXPrice.mul(0.01)).toNumber()
-                      );
-                    }
-                  }}
-                >
-                  Balance: {snxBalance ? snxBalance.toNumber().toFixed(2) : '-'}
-                </Text>
-                <Text color="gray.500" fontSize="12px" mt="2">
-                  $
-                </Text>
-              </Flex>
-              <Text color="gray.500" fontSize="12px">
-                max burnable:{' '}
-                {contractBalance &&
-                  events?.SNXPrice &&
-                  (
-                    new Wei(contractBalance, 18).toNumber() /
-                    (events.SNXPrice + events.SNXPrice * 0.01)
-                  ).toFixed(2)}
-              </Text>
-            </Flex>
-            <Text fontWeight={700}>Receive</Text>
-            <Flex border="1px solid" borderColor="gray.900" rounded="base" flexDir="column" p="4">
-              <Flex justifyContent="space-between" w="100%">
-                <Flex
-                  alignItems="center"
-                  border="1px solid"
-                  borderColor="gray.900"
-                  p="2"
-                  rounded="base"
-                  justifyContent="center"
-                  w="120px"
-                  gap="2"
-                >
-                  <Image src="/usdc.svg" />
-                  <Text fontWeight={700} fontSize="16px">
-                    USDC
+                    }}
+                  >
+                    Balance: {snxBalance ? snxBalance.toNumber().toFixed(2) : '-'}
+                  </Text>
+                  <Text color="gray.500" fontSize="12px" mt="2">
+                    $
+                    {!amount || amount.eq(0) ? '00.00' : amount.mul(SNXPrice).toNumber().toFixed(2)}
                   </Text>
                 </Flex>
-                <Input
-                  variant="unstyled"
-                  placeholder="0.00"
-                  textAlign="end"
-                  fontSize="24px"
-                  color="white"
-                  type="number"
-                  isDisabled={true}
-                  overflow="scroll"
-                  fontWeight={700}
-                  _disabled={{ color: 'white' }}
-                  value={receivingUSDCAmount}
-                />
-              </Flex>
-              <Flex w="100%" justifyContent="space-between" gap="2">
-                <Text color="gray.500" fontSize="12px" mt="2">
-                  Balance: {usdcBalance ? usdcBalance.toNumber().toFixed(2) : '-'}
+                <Text color="gray.500" fontSize="12px">
+                  Burnable:{' '}
+                  {contractBalance &&
+                    SNXPrice &&
+                    new Wei(contractBalance, 18).div(SNXPrice).toNumber().toFixed(2)}
+                  <Button
+                    size="xs"
+                    variant="unstyled"
+                    color="cyan.500"
+                    ml="2"
+                    fontSize="12px"
+                    onClick={() => {
+                      setAmount(new Wei(contractBalance, 18).div(SNXPrice));
+                      setReceivingUSDCAmount(new Wei(contractBalance, 18).div(SNXPrice).toNumber());
+                    }}
+                  >
+                    Max
+                  </Button>
                 </Text>
               </Flex>
             </Flex>
-            {isPending ? (
-              <Spinner colorScheme="black" alignSelf="center" />
-            ) : (
-              <Button
-                my="4"
-                onClick={async () => {
-                  if (activeWallet?.address) {
-                    if (requireApproval) {
-                      await approve(false);
-                      await refetchAllowance();
-                    }
-                    if (amount) {
-                      await mutateAsync(amount);
+            <Flex flexDir="column" gap="3">
+              <Text fontWeight={700}>Receive</Text>
+              <Flex border="1px solid" borderColor="gray.900" rounded="base" flexDir="column" p="3">
+                <Flex justifyContent="space-between" w="100%">
+                  <Flex
+                    alignItems="center"
+                    border="1px solid"
+                    borderColor="gray.900"
+                    p="2"
+                    rounded="base"
+                    justifyContent="center"
+                    w="120px"
+                    gap="2"
+                  >
+                    <Image src={usdcSvg} />
+                    <Text fontWeight={700} fontSize="16px">
+                      USDC
+                    </Text>
+                  </Flex>
+                  <Input
+                    variant="unstyled"
+                    placeholder="0.00"
+                    textAlign="end"
+                    fontSize="24px"
+                    color="white"
+                    type="number"
+                    isDisabled={true}
+                    overflow="scroll"
+                    fontWeight={700}
+                    _disabled={{ color: 'white' }}
+                    value={!receivingUSDCAmount ? '00.00' : receivingUSDCAmount.toFixed(2)}
+                  />
+                </Flex>
+                <Flex w="100%" justifyContent="space-between" gap="2">
+                  <Text color="gray.500" fontSize="12px" mt="2">
+                    Balance: {usdcBalance ? usdcBalance.toNumber().toFixed(2) : '-'}
+                  </Text>
+                  <Text color="gray.500" fontSize="12px" mt="2">
+                    ${!receivingUSDCAmount ? '00.00' : receivingUSDCAmount.toFixed(2)}
+                  </Text>
+                </Flex>
+              </Flex>
+              {isPending ? (
+                <Spinner colorScheme="black" alignSelf="center" />
+              ) : (
+                <Button
+                  my="4"
+                  onClick={async () => {
+                    if (activeWallet?.address) {
+                      if (requireApproval) {
+                        await approve(false);
+                        await refetchAllowance();
+                      }
+                      if (amount) {
+                        await mutateAsync(amount);
+                        onClose();
+                      }
+                    } else {
                       onClose();
+                      connect();
                     }
-                  } else {
-                    onClose();
-                    connect();
-                  }
-                }}
-              >
-                {activeWallet?.address
-                  ? requireApproval
-                    ? 'Approve SNX'
-                    : 'Burn SNX'
-                  : 'Connect Wallet'}
-              </Button>
-            )}
+                  }}
+                >
+                  {activeWallet?.address
+                    ? requireApproval
+                      ? 'Approve SNX'
+                      : 'Burn SNX'
+                    : 'Connect Wallet'}
+                </Button>
+              )}
+            </Flex>
           </Flex>
         </ModalBody>
       </ModalContent>
