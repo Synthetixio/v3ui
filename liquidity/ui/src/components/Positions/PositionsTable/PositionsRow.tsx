@@ -172,7 +172,7 @@ export function PositionRow({
             w="100px"
             onClick={() => {
               navigate({
-                pathname: `/positions/${collateralType.displaySymbol}/${poolId}`,
+                pathname: `/positions/${collateralType.symbol}/${poolId}`,
               });
             }}
             data-cy="manage-position-row-button"
