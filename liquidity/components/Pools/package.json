@@ -7,6 +7,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/BorderBox": "workspace:*",
+    "@snx-v3/Tooltip": "workspace:*",
     "@snx-v3/calculations": "workspace:*",
     "@snx-v3/formatters": "workspace:*",
     "@snx-v3/icons": "workspace:*",
