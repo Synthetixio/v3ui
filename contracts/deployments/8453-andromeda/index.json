@@ -1,10 +1,6 @@
 {
   "name": "synthetix-omnibus",
-<<<<<<< HEAD
-  "version": "22",
-=======
   "version": "23",
->>>>>>> master
   "preset": "andromeda",
   "url": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 8453,
