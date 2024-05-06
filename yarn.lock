@@ -5945,7 +5945,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/Amount@workspace:liquidity/components/Amount"
   dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
@@ -6132,6 +6132,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
