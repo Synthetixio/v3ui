@@ -1,4 +1,4 @@
-import { Button, Flex, Text, Tooltip } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
@@ -12,6 +12,7 @@ import { FC, useContext } from 'react';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { RepayAllDebt } from './RepayAllDebt';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export const RepayUi: FC<{
   debtChange: Wei;

@@ -6084,6 +6084,7 @@ __metadata:
   dependencies:
     "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
@@ -6149,6 +6150,14 @@ __metadata:
     "@synthetixio/v3-theme": "workspace:*"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/Tooltip@workspace:*, @snx-v3/Tooltip@workspace:^, @snx-v3/Tooltip@workspace:liquidity/components/Tooltip":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/Tooltip@workspace:liquidity/components/Tooltip"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
   languageName: unknown
   linkType: soft
 
@@ -6429,6 +6438,7 @@ __metadata:
     "@snx-v3/PoolBox": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
+    "@snx-v3/Tooltip": "workspace:^"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/calculations": "workspace:*"

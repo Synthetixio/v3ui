@@ -1,5 +1,6 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Thead, Tr, Th, Flex, Text, Tooltip } from '@chakra-ui/react';
+import { Thead, Tr, Th, Flex, Text } from '@chakra-ui/react';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function PositionTableHeader({ isBase }: { isBase: boolean }) {
   return (

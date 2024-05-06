@@ -1,7 +1,8 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Text, Tooltip, Fade } from '@chakra-ui/react';
+import { Flex, Text, Fade } from '@chakra-ui/react';
 import { SynthSkeleton as Skeleton } from '../Shared';
 import { ReactNode } from 'react';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface StatBoxProps {
   isLoading: boolean;

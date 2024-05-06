@@ -1,5 +1,6 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Thead, Tr, Th, Flex, Text, Tooltip } from '@chakra-ui/react';
+import { Thead, Tr, Th, Flex, Text } from '@chakra-ui/react';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export const AssetTableHeader = () => {
   return (
@@ -27,10 +28,12 @@ export const AssetTableHeader = () => {
                   <Text fontWeight={600} textAlign="left">
                     Wallet Balance:
                   </Text>
-                  <Text textAlign="left">
+                  <Text textAlign="left" mt={1}>
                     Assets currently in your Wallet that can be deposited in your Synthetix Account.
                   </Text>
-                  <Text>Note: Assets on your Account will not show on your Wallet.</Text>
+                  <Text textAlign="left" mt={1}>
+                    Note: Assets on your Account will not show on your Wallet.
+                  </Text>
                 </>
               }
             >
@@ -49,7 +52,7 @@ export const AssetTableHeader = () => {
                   <Text fontWeight={600} textAlign="left">
                     Account Available:
                   </Text>
-                  <Text textAlign="left">
+                  <Text textAlign="left" mt={1}>
                     Assets deposited in your Synthetix Account. These assets are available to be
                     delegated to a pool.
                   </Text>
@@ -71,7 +74,9 @@ export const AssetTableHeader = () => {
                   <Text fontWeight={600} textAlign="left">
                     Account Delegated Assets:
                   </Text>
-                  <Text textAlign="left">Assets used as collateral in a Position.</Text>
+                  <Text textAlign="left" mt={1}>
+                    Assets used as collateral in a Position.
+                  </Text>
                 </>
               }
             >

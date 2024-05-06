@@ -10,7 +10,6 @@ import {
   MenuOptionGroup,
   Switch,
   Text,
-  Tooltip,
 } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -21,6 +20,7 @@ import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');

@@ -1,8 +1,9 @@
-import { Flex, Td, Tr, Text, Button, Fade, Tooltip, useDisclosure } from '@chakra-ui/react';
+import { Flex, Td, Tr, Text, Button, Fade, useDisclosure } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 import Wei from '@synthetixio/wei';
 import { WithdrawModal } from '../../WithdrawModal';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface AssetsRowProps {
   token: string;

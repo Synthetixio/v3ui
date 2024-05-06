@@ -8,7 +8,6 @@ import {
   Skeleton,
   Spinner,
   Text,
-  Tooltip,
 } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { usePools } from '@snx-v3/usePools';
@@ -21,6 +20,7 @@ import { useVaultsData } from '@snx-v3/useVaultsData';
 import { ZEROWEI } from '../../utils/constants';
 import opSvg from './op.svg';
 import poolsSvg from './pools.svg';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function Pools() {
   const { data: pools } = usePools();

@@ -3,7 +3,6 @@ import {
   TableContainer,
   Table,
   Heading,
-  Tooltip,
   Flex,
   Tbody,
   Td,
@@ -16,6 +15,7 @@ import { AssetTableHeader } from './AssetTableHeader';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { AssetRowLoading, AssetsEmpty } from '.';
 import { Asset } from '../../../utils/assets';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface AssetsTableProps {
   isLoading: boolean;
@@ -50,7 +50,7 @@ export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps)
               <Text fontWeight={600} textAlign="left">
                 Assets:
               </Text>
-              <Text textAlign="left">
+              <Text textAlign="left" mt={1}>
                 All assets used on Synthetix Protocol. As a security precaution, all assets can only
                 be withdrawn to your wallet after 24hs since your previous account activity
               </Text>

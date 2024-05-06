@@ -76,7 +76,7 @@ export const StatsList = () => {
             <Text fontWeight={600} textAlign="left">
               Total Delegated:
             </Text>
-            <Text textAlign="left">
+            <Text textAlign="left" mt={1}>
               All assets in your Account that have been Delegated to a Pool.
             </Text>
           </>
@@ -91,7 +91,9 @@ export const StatsList = () => {
             <Text fontWeight={600} textAlign="left">
               Total Debt:
             </Text>
-            <Text textAlign="left">Aggregated Debt of all your Open Positions.</Text>
+            <Text mt={1} textAlign="left">
+              Aggregated Debt of all your Open Positions.
+            </Text>
           </>
         }
       />
@@ -104,8 +106,12 @@ export const StatsList = () => {
             <Text fontWeight={600} textAlign="left">
               APY Annual Percentage Yield:
             </Text>
-            <Text textAlign="left">Aggregated APY from all your Positions.</Text>
-            <Text textAlign="left">Sum(past 24 hourly pnls) * 365)</Text>
+            <Text mt={1} textAlign="left">
+              Aggregated APY from all your Positions.
+            </Text>
+            <Text mt={1} textAlign="left">
+              Sum(past 24 hourly pnls) * 365)
+            </Text>
           </>
         }
       />

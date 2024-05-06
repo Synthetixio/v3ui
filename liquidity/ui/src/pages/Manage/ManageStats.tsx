@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Skeleton, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -14,6 +14,7 @@ import { constants } from 'ethers';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useApr } from '@snx-v3/useApr';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 const ChangeStat: FC<{
   value: Wei;
