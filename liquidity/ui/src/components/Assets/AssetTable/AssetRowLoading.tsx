@@ -2,9 +2,9 @@ import { Tr, Td, Flex, Button, Text } from '@chakra-ui/react';
 import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../Shared';
 import { TokenIcon } from '../../TokenIcon';
 
-export const AssetRowLoading = () => {
+export const AssetRowLoading = ({ final }: { final?: boolean }) => {
   return (
-    <Tr borderBottomWidth="1px">
+    <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
         <Flex alignItems="center">
           <SkeletonCircle>

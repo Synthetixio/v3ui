@@ -4,6 +4,7 @@ import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 import Wei from '@synthetixio/wei';
 import { WithdrawModal } from '../../WithdrawModal';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { NavLink, generatePath } from 'react-router-dom';
 
 interface AssetsRowProps {
   token: string;
@@ -31,6 +32,7 @@ export const AssetsRow = ({
   final,
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
   const hoursToWithdraw = canWithdraw
     ? ''
@@ -111,17 +113,38 @@ export const AssetsRow = ({
         </Fade>
       </Td>
       <Td border="none">
-        <Fade in>
-          <Tooltip
-            label={
-              !canWithdraw &&
-              accountBalance.gt(0) &&
-              `Withdraw available in ${hoursToWithdraw} hours`
-            }
-          >
+        <Flex justifyContent="space-between">
+          <Fade in>
+            <Tooltip
+              label={
+                !canWithdraw &&
+                accountBalance.gt(0) &&
+                `Withdraw available in ${hoursToWithdraw} hours`
+              }
+            >
+              <Button
+                isDisabled={!canWithdraw}
+                variant="unstyled"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                w="100%"
+                px={4}
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                _hover={{ bg: 'gray.900' }}
+                onClick={onOpen}
+              >
+                Withdraw
+              </Button>
+            </Tooltip>
+          </Fade>
+          {/* TODO: Update when multiple pools for USDC LPing available */}
+          <Fade in>
             <Button
-              isDisabled={!canWithdraw}
-              variant="unstyled"
+              as={NavLink}
               fontSize="0.75rem"
               lineHeight="1rem"
               height="1.75rem"
@@ -131,12 +154,18 @@ export const AssetsRow = ({
               borderColor="gray.900"
               borderRadius="4px"
               _hover={{ bg: 'gray.900' }}
-              onClick={onOpen}
+              to={{
+                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                  poolId: '1',
+                  collateralSymbol: 'USDC',
+                }),
+                search: location.search,
+              }}
             >
-              Withdraw
+              Deposit
             </Button>
-          </Tooltip>
-        </Fade>
+          </Fade>
+        </Flex>
         <WithdrawModal isOpen={isOpen} onClose={onClose} />
       </Td>
     </Tr>

@@ -11,7 +11,7 @@ import {
   Switch,
   Text,
 } from '@chakra-ui/react';
-import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
+import { WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { networks } from '../../utils/onboard';
