@@ -6154,7 +6154,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Tooltip@workspace:*, @snx-v3/Tooltip@workspace:^, @snx-v3/Tooltip@workspace:liquidity/components/Tooltip":
+"@snx-v3/Tooltip@workspace:*, @snx-v3/Tooltip@workspace:liquidity/components/Tooltip":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Tooltip@workspace:liquidity/components/Tooltip"
   dependencies:
@@ -6439,7 +6439,7 @@ __metadata:
     "@snx-v3/PoolBox": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
-    "@snx-v3/Tooltip": "workspace:^"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
