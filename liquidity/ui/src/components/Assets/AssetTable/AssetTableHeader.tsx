@@ -37,7 +37,7 @@ export const AssetTableHeader = () => {
                 </>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>
@@ -59,7 +59,7 @@ export const AssetTableHeader = () => {
                 </>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>
@@ -80,7 +80,7 @@ export const AssetTableHeader = () => {
                 </>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>

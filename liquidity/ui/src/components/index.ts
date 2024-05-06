@@ -6,3 +6,4 @@ export * from './Rewards';
 export * from './Shared';
 export * from './Stats';
 export * from './Positions';
+export * from './Balance';

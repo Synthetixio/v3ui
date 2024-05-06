@@ -70,7 +70,7 @@ export function NetworkController() {
   return (
     <Flex>
       <Menu>
-        {({ isOpen }) => (
+        {() => (
           <>
             <MenuButton
               as={Button}
@@ -79,22 +79,9 @@ export function NetworkController() {
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
               data-cy="account-menu-button"
+              px={3}
             >
-              <NetworkIcon networkId={activeNetwork?.id || 666} />
-              <Text
-                variant="nav"
-                fontSize="sm"
-                fontWeight={700}
-                ml={1.5}
-                mr={2}
-                display={{ base: 'none', md: 'initial' }}
-                data-cy="current-selected-network"
-              >
-                {activeNetwork?.label || 'Not Connected'}
-              </Text>
-              <Flex display={{ base: 'none', md: 'initial' }}>
-                {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
-              </Flex>
+              <NetworkIcon networkId={activeNetwork?.id || 8453} />
             </MenuButton>
             <MenuList>
               {networks.map(({ id, label }) => {
@@ -140,11 +127,11 @@ export function NetworkController() {
             px="9.5px"
             whiteSpace="nowrap"
           >
-            <WalletIcon />
+            <WalletIcon color="white" />
             <Text
               as="span"
               ml={1}
-              color="whiteAlpha.800"
+              color="white"
               fontWeight={700}
               fontSize="xs"
               userSelect="none"

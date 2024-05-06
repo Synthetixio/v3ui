@@ -23,18 +23,21 @@ import poolsSvg from './pools.svg';
 import { Tooltip } from '@snx-v3/Tooltip';
 
 export function Pools() {
-  const { data: pools } = usePools();
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
+
+  const { data: pools } = usePools();
   const { data: apr } = useApr();
   const { data: vaultDebt, isLoading: vaultIsLoading } = useVaultsData(1);
+  const { data: collateralType, isLoading: collateralTypeIsLoading } = useCollateralTypes();
+
   const vaultTVL = vaultDebt?.reduce((cur, prev) => {
     return cur.add(prev.collateral.value);
   }, ZEROWEI);
-  const { data: collateralType, isLoading: collateralTypeIsLoading } = useCollateralTypes();
+
   return (
     <Flex flexDir="column">
-      <Heading color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
+      <Heading mt={10} color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
         All Pools
       </Heading>
       <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'} mt="6">
@@ -78,7 +81,7 @@ export function Pools() {
                   TVL{' '}
                   <Tooltip
                     label={
-                      <Flex p={3} flexDirection="column" alignItems="start">
+                      <Flex flexDirection="column" alignItems="start">
                         <Text fontWeight="bold" fontSize="14px">
                           Total Value Locked:
                         </Text>
@@ -89,7 +92,7 @@ export function Pools() {
                       </Flex>
                     }
                   >
-                    <InfoIcon w="12px" h="12px" />
+                    <InfoIcon mb={0.5} w="10px" h="10px" />
                   </Tooltip>
                 </Text>
                 <Text
@@ -127,7 +130,7 @@ export function Pools() {
                       </Flex>
                     }
                   >
-                    <InfoIcon w="12px" h="12px" />
+                    <InfoIcon w="10px" h="10px" mb={0.5} />
                   </Tooltip>
                 </Text>
                 <Text fontWeight={700} fontSize="30px" color="white">
@@ -158,7 +161,7 @@ export function Pools() {
 
                   <Tooltip
                     label={
-                      <Flex p={3} flexDirection="column" alignItems="start">
+                      <Flex flexDirection="column" alignItems="start">
                         <Text fontWeight="bold" fontSize="14px">
                           Deposit:
                         </Text>

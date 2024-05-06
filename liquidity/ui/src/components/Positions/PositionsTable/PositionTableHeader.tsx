@@ -30,7 +30,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 </Flex>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>
@@ -56,7 +56,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 </Flex>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>
@@ -75,7 +75,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 </Text>
                 <Tooltip
                   label={
-                    <Flex p={3} flexDirection="column" alignItems="start">
+                    <Flex flexDirection="column" alignItems="start">
                       <Text fontWeight="bold" fontSize="14px">
                         PNL Profit and Loss Lifetime:
                       </Text>
@@ -93,7 +93,9 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                     </Flex>
                   }
                 >
-                  <InfoIcon w="12px" h="12px" />
+                  <Flex width="12px" height="12px" justifyContent="center" alignItems="center">
+                    <InfoIcon w="10px" h="10px" />
+                  </Flex>
                 </Tooltip>
               </Flex>
             </Th>
@@ -125,7 +127,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                     </Flex>
                   }
                 >
-                  <InfoIcon w="12px" h="12px" />
+                  <InfoIcon w="10px" h="10px" />
                 </Tooltip>
               </Flex>
             </Th>
@@ -163,7 +165,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 </Flex>
               }
             >
-              <InfoIcon w="12px" h="12px" />
+              <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
         </Th>
@@ -188,7 +190,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                   </Flex>
                 }
               >
-                <InfoIcon w="12px" h="12px" />
+                <InfoIcon w="10px" h="10px" />
               </Tooltip>
             </Flex>
           </Th>

@@ -58,7 +58,7 @@ export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps)
           }
           p="3"
         >
-          <InfoIcon w="12px" h="12px" ml={2} />
+          <InfoIcon w="10px" h="10px" ml={2} />
         </Tooltip>
       </Flex>
       {/* Not connected state */}
