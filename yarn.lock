@@ -4156,13 +4156,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/connect-kit@npm:1.1.12":
-  version: 1.1.12
-  resolution: "@ledgerhq/connect-kit@npm:1.1.12"
-  dependencies:
-    rollup-plugin-dotenv: "npm:0.5.0"
-    uuid: "npm:9.0.1"
-  checksum: a87ba456b6e61dab72d459ace0e44b591e56290626ed5a1a7386f693bae9b88272b466ff7eccf42c62a7a0d71239e4d2094e44e31bb3b8de50481808daa6b723
+"@ledgerhq/connect-kit-loader@npm:^1.1.0":
+  version: 1.1.8
+  resolution: "@ledgerhq/connect-kit-loader@npm:1.1.8"
+  checksum: 8352e0932e9c4a7179eb0d162b0e7c92437de9216a2efa04bd274450edf205fdba3fe971ff41593c1ac851cfb3a7a474900b7e467da87f982c85f0c5edba45b5
   languageName: node
   linkType: hard
 
@@ -5733,37 +5730,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-replace@npm:^5.0.1":
-  version: 5.0.5
-  resolution: "@rollup/plugin-replace@npm:5.0.5"
-  dependencies:
-    "@rollup/pluginutils": "npm:^5.0.1"
-    magic-string: "npm:^0.30.3"
-  peerDependencies:
-    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-  checksum: bcf106346f1990478a569cda6b375411dd27e0110238f8b10b424c55f09a2788a607e42fce713480c19ed942dcd67411b64c25471086de560da1e58d8f4e0740
-  languageName: node
-  linkType: hard
-
-"@rollup/pluginutils@npm:^5.0.1":
-  version: 5.1.0
-  resolution: "@rollup/pluginutils@npm:5.1.0"
-  dependencies:
-    "@types/estree": "npm:^1.0.0"
-    estree-walker: "npm:^2.0.2"
-    picomatch: "npm:^2.3.1"
-  peerDependencies:
-    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-  checksum: abb15eaec5b36f159ec351b48578401bedcefdfa371d24a914cfdbb1e27d0ebfbf895299ec18ccc343d247e71f2502cba21202bc1362d7ef27d5ded699e5c2b2
-  languageName: node
-  linkType: hard
-
 "@safe-global/safe-apps-provider@npm:^0.18.2":
   version: 0.18.2
   resolution: "@safe-global/safe-apps-provider@npm:0.18.2"
@@ -6376,7 +6342,7 @@ __metadata:
     "@web3-onboard/coinbase": "npm:^2.2.7"
     "@web3-onboard/gnosis": "npm:^2.2.2"
     "@web3-onboard/injected-wallets": "npm:^2.10.16"
-    "@web3-onboard/ledger": "npm:^2.6.0"
+    "@web3-onboard/ledger": "npm:2.5.2"
     "@web3-onboard/react": "npm:^2.8.17"
     "@web3-onboard/trezor": "npm:^2.4.4"
     "@web3-onboard/walletconnect": "npm:^2.5.5"
@@ -6523,7 +6489,7 @@ __metadata:
     "@types/react-helmet": "npm:^6.1.9"
     "@web3-onboard/coinbase": "npm:^2.2.7"
     "@web3-onboard/injected-wallets": "npm:^2.10.16"
-    "@web3-onboard/ledger": "npm:^2.6.0"
+    "@web3-onboard/ledger": "npm:2.5.2"
     "@web3-onboard/react": "npm:^2.8.17"
     "@web3-onboard/trezor": "npm:^2.4.4"
     "@web3-onboard/walletconnect": "npm:^2.5.5"
@@ -6673,7 +6639,7 @@ __metadata:
     "@types/react-dom": "npm:^18.2.15"
     "@web3-onboard/coinbase": "npm:^2.2.7"
     "@web3-onboard/injected-wallets": "npm:^2.10.16"
-    "@web3-onboard/ledger": "npm:^2.6.0"
+    "@web3-onboard/ledger": "npm:2.5.2"
     "@web3-onboard/react": "npm:^2.8.17"
     "@web3-onboard/trezor": "npm:^2.4.4"
     "@web3-onboard/walletconnect": "npm:^2.5.5"
@@ -9634,17 +9600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/logger@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@walletconnect/logger@npm:2.0.1"
-  dependencies:
-    pino: "npm:7.11.0"
-    tslib: "npm:1.14.1"
-  checksum: 93ad8fd59a07a512ffb0f250dba83b15ea0b4ba7c5d676241c98238b78910e1c26d86a270b85a8c2809833bfd9e87325c37f55c88255102ad199d73da537bf42
-  languageName: node
-  linkType: hard
-
-"@walletconnect/logger@npm:^2.1.2":
+"@walletconnect/logger@npm:^2.0.1, @walletconnect/logger@npm:^2.1.2":
   version: 2.1.2
   resolution: "@walletconnect/logger@npm:2.1.2"
   dependencies:
@@ -9995,18 +9951,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/common@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "@web3-onboard/common@npm:2.3.3"
-  dependencies:
-    bignumber.js: "npm:^9.1.0"
-    ethers: "npm:5.5.4"
-    joi: "npm:17.9.1"
-  checksum: c671648fa95055ff0adc121353c2c290e62e09ff1f6394ee43f4ee4420738122d0a5c0ac68c7f5d8f8e1fe141bb1830c1d555d8ea231446e9a01600030c18bfd
-  languageName: node
-  linkType: hard
-
-"@web3-onboard/common@npm:^2.3.4":
+"@web3-onboard/common@npm:^2.3.3, @web3-onboard/common@npm:^2.3.4":
   version: 2.3.4
   resolution: "@web3-onboard/common@npm:2.3.4"
   dependencies:
@@ -10074,18 +10019,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/ledger@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@web3-onboard/ledger@npm:2.6.0"
+"@web3-onboard/ledger@npm:2.5.2":
+  version: 2.5.2
+  resolution: "@web3-onboard/ledger@npm:2.5.2"
   dependencies:
     "@ethersproject/providers": "npm:5.5.0"
-    "@ledgerhq/connect-kit": "npm:1.1.12"
+    "@ledgerhq/connect-kit-loader": "npm:^1.1.0"
     "@walletconnect/client": "npm:^1.8.0"
     "@walletconnect/ethereum-provider": "npm:2.9.1"
     "@walletconnect/modal": "npm:2.6.1"
     "@web3-onboard/common": "npm:^2.3.3"
     rxjs: "npm:^7.5.2"
-  checksum: 6769305b834cce1ddbb341ef87b3f5f56eff4c5a5940b5232f24fbebc6555ec0e916b4b8e56bd39904bfd08a308834134eb68b43f2ad9312d81d62ef985bb35c
+  checksum: 190b3ed7a535c2a320346516c9e7c9eb79aef9121398dd18f8836aec44afc7a4dd5c0e687b7ede6fe75f1493703f9c9dbda5be9d34893b7ba73ea2759cda3976
   languageName: node
   linkType: hard
 
@@ -14332,17 +14277,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.3":
+"dotenv@npm:^16.3.1, dotenv@npm:^16.4.3":
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^16.3.1, dotenv@npm:^16.4.3":
-  version: 16.4.3
-  resolution: "dotenv@npm:16.4.3"
-  checksum: f07db902c62c239aef7a7b696b21dfab8e95bf5883bcf23c6b9b55f42578d18b842e6257b4f4ecfdbd024a3ee9949fbaaa4c84807de7ba037c74fe3c70785198
   languageName: node
   linkType: hard
 
@@ -20064,21 +20002,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.3":
+"magic-string@npm:^0.30.5":
   version: 0.30.10
   resolution: "magic-string@npm:0.30.10"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
   checksum: 9f8bf6363a14c98a9d9f32ef833b194702a5c98fb931b05ac511b76f0b06fd30ed92beda6ca3261d2d52d21e39e891ef1136fbd032023f6cbb02d0b7d5767201
-  languageName: node
-  linkType: hard
-
-"magic-string@npm:^0.30.5":
-  version: 0.30.5
-  resolution: "magic-string@npm:0.30.5"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: c8a6b25f813215ca9db526f3a407d6dc0bf35429c2b8111d6f1c2cf6cf6afd5e2d9f9cd189416a0e3959e20ecd635f73639f9825c73de1074b29331fe36ace59
   languageName: node
   linkType: hard
 
@@ -24008,18 +23937,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-dotenv@npm:0.5.0":
-  version: 0.5.0
-  resolution: "rollup-plugin-dotenv@npm:0.5.0"
-  dependencies:
-    "@rollup/plugin-replace": "npm:^5.0.1"
-    dotenv: "npm:^16.0.3"
-  peerDependencies:
-    rollup: ^1.20.0 || ^2.0.0 || ^3.0.0
-  checksum: 524dd8be3bf5cf2a131977d04afc94d4df7b6c26fb6cac0b42a0fc788f36910878f59dde2c0f92ac22526d0c76f127ddecd16d8e55037f7c3f809d209c6e4234
-  languageName: node
-  linkType: hard
-
 "root@workspace:.":
   version: 0.0.0-use.local
   resolution: "root@workspace:."
@@ -26766,15 +26683,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1, uuid@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 9d0b6adb72b736e36f2b1b53da0d559125ba3e39d913b6072f6f033e0c87835b414f0836b45bcfaf2bdf698f92297fea1c3cc19b0b258bc182c9c43cc0fab9f2
-  languageName: node
-  linkType: hard
-
 "uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
@@ -26790,6 +26698,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 9a5f7aa1d6f56dd1e8d5f2478f855f25c645e64e26e347a98e98d95781d5ed20062d6cca2eecb58ba7c84bc3910be95c0451ef4161906abaab44f9cb68ffbdd1
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 9d0b6adb72b736e36f2b1b53da0d559125ba3e39d913b6072f6f033e0c87835b414f0836b45bcfaf2bdf698f92297fea1c3cc19b0b258bc182c9c43cc0fab9f2
   languageName: node
   linkType: hard
 
