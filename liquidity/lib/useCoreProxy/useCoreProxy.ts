@@ -16,7 +16,7 @@ export function useCoreProxy() {
     queryFn: async function () {
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
 
-      const { address, abi } = await importCoreProxy(network?.id, network?.preset);
+      const { address, abi } = await importCoreProxy(network?.id);
       return new Contract(address, abi, signerOrProvider) as CoreProxyType;
     },
     enabled: Boolean(signerOrProvider),

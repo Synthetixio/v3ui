@@ -98,7 +98,7 @@ export function useGetAllPools(withTestnets: boolean) {
     queryKey: ['AllPools'],
     queryFn: async () => {
       const allCoreProxies = (await Promise.all(
-        networks.map((network) => importCoreProxy(network?.id, network?.preset))
+        networks.map((network) => importCoreProxy(network?.id))
       )) as any[];
 
       const allCoreProxiesConnected = allCoreProxies.map(
