@@ -26,6 +26,7 @@ export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
+
   const { data: accounts } = useAccounts();
   const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
@@ -67,6 +68,9 @@ export function NetworkController() {
     }
   };
 
+  const notConnected = !activeWallet;
+  const notSupported = activeWallet && !activeNetwork;
+
   return (
     <Flex>
       <Menu>
@@ -81,7 +85,7 @@ export function NetworkController() {
               data-cy="account-menu-button"
               px={3}
             >
-              <NetworkIcon networkId={activeNetwork?.id || 8453} />
+              <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
             </MenuButton>
             <MenuList>
               {networks.map(({ id, label }) => {
