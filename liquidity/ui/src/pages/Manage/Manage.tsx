@@ -24,7 +24,7 @@ export const ManageUi: FC<{
   network?: Network | null;
 }> = ({ collateralType, isLoading, rewards, liquidityPosition, network }) => {
   return (
-    <Box mb={12}>
+    <Box mb={12} mt={8}>
       <Box mb="4">
         <HomeLink />
       </Box>

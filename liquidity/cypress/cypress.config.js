@@ -43,6 +43,7 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/delegateCollateral'),
         ...require('./cypress/tasks/borrowUsd'),
         ...require('./cypress/tasks/setConfig'),
+        ...require('./cypress/tasks/getSUSDC'),
       });
 
       return config;
