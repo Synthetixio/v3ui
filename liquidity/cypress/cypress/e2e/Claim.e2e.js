@@ -17,6 +17,7 @@ it('Claim', () => {
         privateKey: wallet._signingKey().privateKey,
         symbol: 'sUSDC',
       });
+
       cy.task('getSUSDC', { address: wallet.address, amount: 500 });
     } else {
       cy.task('approveCollateral', { privateKey: wallet._signingKey().privateKey, symbol: 'WETH' });
@@ -44,8 +45,6 @@ it('Claim', () => {
       cy.viewport(1200, 900);
       cy.visit('#/pools');
       cy.get('[data-cy="pools-deposit-button"]').click();
-      // cy.url().should('include', 'tabAction=deposit&tab=0');
-      // cy.url().should('include', 'manage');
     });
   });
 });

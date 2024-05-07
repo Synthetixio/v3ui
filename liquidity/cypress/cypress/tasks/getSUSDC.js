@@ -29,6 +29,7 @@ export async function getSUSDC({ address, amount }) {
   console.log({
     tokenAddress: config.tokenAddress,
   });
+
   const erc20 = new ethers.Contract(
     config.tokenAddress,
     [
@@ -39,6 +40,7 @@ export async function getSUSDC({ address, amount }) {
   );
 
   const oldBalance = parseFloat(ethers.utils.formatUnits(await erc20.balanceOf(address)));
+
   console.log('getSUSD', {
     address,
     oldBalance,

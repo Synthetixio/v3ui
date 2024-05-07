@@ -14,6 +14,7 @@ export async function approveCollateral({ privateKey, symbol }) {
     ['function approve(address spender, uint256 amount) returns (bool)'],
     wallet
   );
+
   const tx = await wethContract.approve(CoreProxy.address, ethers.constants.MaxUint256);
   await tx.wait();
   return null;
