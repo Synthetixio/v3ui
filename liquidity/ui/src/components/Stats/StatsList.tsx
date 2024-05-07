@@ -117,7 +117,7 @@ export const StatsList = () => {
               Aggregated APY from all your Positions.
             </Text>
             <Text mt={1} textAlign="left">
-              Sum(past 24 hourly pnls) * 365)
+              Sum(past 24 hourly pnls) * 365
             </Text>
           </>
         }
