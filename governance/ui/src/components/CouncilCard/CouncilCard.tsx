@@ -5,7 +5,6 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
 import { CouncilPeriodBadge } from './CouncilPeriodBadge';
-
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '../../queries/useWallet';
 

@@ -6485,6 +6485,7 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     "@tanstack/react-query-devtools": "npm:^5.8.3"
+    "@types/humanize-plus": "npm:^1"
     "@types/react": "npm:^18.2.37"
     "@types/react-helmet": "npm:^6.1.9"
     "@web3-onboard/coinbase": "npm:^2.2.7"
@@ -6506,6 +6507,7 @@ __metadata:
     ethers: "npm:^5.7.2"
     framer-motion: "npm:^10.16.5"
     html-webpack-plugin: "npm:^5.5.3"
+    humanize-plus: "npm:^1.8.2"
     i18next: "npm:^23.7.6"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
@@ -8614,6 +8616,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 48075c535a5d4805feca388a539b4dcb80666963499018918584aefb4f7806c2c86b0c289bb0f1d96539816d90d702b7c2167e68c3ebe858725e598a1c3c05d2
+  languageName: node
+  linkType: hard
+
+"@types/humanize-plus@npm:^1":
+  version: 1.8.2
+  resolution: "@types/humanize-plus@npm:1.8.2"
+  checksum: a95ba6e42b71d3a11bf1b5c1f9ae2d76f4344191c88ff4149a89d53857b4d5b45df8c54555bcb7b7b6faf3198a470aba264414b5a140f82092c705c2d26d4075
   languageName: node
   linkType: hard
 
@@ -17161,6 +17170,13 @@ __metadata:
   dependencies:
     ms: "npm:^2.0.0"
   checksum: 9c7a74a2827f9294c009266c82031030eae811ca87b0da3dceb8d6071b9bde22c9f3daef0469c3c533cc67a97d8a167cd9fc0389350e5f415f61a79b171ded16
+  languageName: node
+  linkType: hard
+
+"humanize-plus@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "humanize-plus@npm:1.8.2"
+  checksum: 3c60707ec52157d0e73ad53e4c0928804485580696b58bd9e01bccb39e42115ef92f7967c41135f359601d760d72315bd35578e3b7efcb3477eca74a9b3b2c94
   languageName: node
   linkType: hard
 

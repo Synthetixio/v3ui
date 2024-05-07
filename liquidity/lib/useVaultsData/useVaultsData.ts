@@ -53,6 +53,7 @@ export const useVaultsData = (poolId?: number) => {
           )
         )
       );
+
       const debtCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
           CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
