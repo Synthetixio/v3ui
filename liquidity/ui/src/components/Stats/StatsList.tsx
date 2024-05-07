@@ -14,9 +14,12 @@ import {
 } from '../../utils/assets';
 import { calculateDebt } from '../../utils/positions';
 import { useApr } from '@snx-v3/useApr';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
+  const { network } = useNetwork();
 
   const { data: apr, isLoading: aprIsLoading } = useApr();
 
@@ -31,7 +34,11 @@ export const StatsList = () => {
   );
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
-    accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
+    accountCollaterals?.map((collateral) => {
+      return isBaseAndromeda(network?.id, network?.preset) && collateral.symbol === 'USDC'
+        ? getUSDCAddress(network?.id)
+        : collateral.tokenAddress;
+    }) || []
   );
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
