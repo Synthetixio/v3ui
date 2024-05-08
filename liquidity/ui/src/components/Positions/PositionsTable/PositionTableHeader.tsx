@@ -112,7 +112,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 </Text>
                 <Tooltip
                   label={
-                    <Flex p={3} flexDirection="column" alignItems="start">
+                    <Flex flexDirection="column" alignItems="start">
                       <Text fontWeight="bold" fontSize="14px">
                         Borrowed:
                       </Text>
@@ -140,7 +140,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Text>
             <Tooltip
               label={
-                <Flex p={3} flexDirection="column" alignItems="start">
+                <Flex flexDirection="column" alignItems="start">
                   <Text fontWeight="bold" fontSize="14px">
                     Debt.
                   </Text>
@@ -177,7 +177,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
               </Text>
               <Tooltip
                 label={
-                  <Flex p={3} flexDirection="column" alignItems="start">
+                  <Flex flexDirection="column" alignItems="start">
                     <Text fontWeight="bold" fontSize="14px">
                       C-ratio:
                     </Text>
