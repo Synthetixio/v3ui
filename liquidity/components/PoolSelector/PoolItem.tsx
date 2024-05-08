@@ -28,6 +28,7 @@ export function PoolItem({ name, value }: { name: string; value: string }) {
               as={NavLink}
               to={{
                 pathname: generatePath('/pools/:poolId', { poolId: value }),
+                search: location.search,
               }}
               color="cyan.500"
               display="inline-block"

@@ -41,6 +41,7 @@ export default function Header() {
             <Link
               to={{
                 pathname: '/',
+                search: location.search,
               }}
               as={RouterLink}
               py={4}
@@ -52,6 +53,7 @@ export default function Header() {
               as={RouterLink}
               to={{
                 pathname: '/',
+                search: location.search,
               }}
               fontWeight={700}
               fontSize="14px"
@@ -70,6 +72,7 @@ export default function Header() {
               as={RouterLink}
               to={{
                 pathname: '/pools',
+                search: location.search,
               }}
               fontWeight={700}
               fontSize="14px"
