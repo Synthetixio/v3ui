@@ -200,6 +200,7 @@ export const BaseInfoCard = () => {
       flexDir="column"
       justifyContent="space-between"
       maxW="397px"
+      minH="337px"
       border="1px solid"
       borderColor="gray.900"
       rounded="base"

@@ -6,7 +6,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
@@ -51,9 +51,11 @@ export const useCollateralPrices = () => {
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralData } = useCollateralTypes();
 
-  const collateralAddresses = collateralData
-    ?.map((x) => x.tokenAddress)
-    .concat(getsUSDCAddress(network?.id));
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
+  const collateralAddresses = isBase
+    ? collateralData?.map((x) => x.tokenAddress).concat(getsUSDCAddress(network?.id))
+    : collateralData?.map((x) => x.tokenAddress);
 
   const provider = useDefaultProvider();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
