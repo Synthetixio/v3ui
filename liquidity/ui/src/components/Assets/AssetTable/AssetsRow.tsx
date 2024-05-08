@@ -153,7 +153,6 @@ export const AssetsRow = ({
               borderWidth="1px"
               borderColor="gray.900"
               borderRadius="4px"
-              _hover={{ bg: 'gray.900' }}
               to={{
                 pathname: generatePath('/positions/:collateralSymbol/:poolId', {
                   poolId: '1',
