@@ -24,7 +24,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Text>
             <Tooltip
               label={
-                <Flex p={3} flexDirection="column" alignItems="start">
+                <Flex flexDirection="column" alignItems="start">
                   <Text fontWeight="bold">Delegated Assets:</Text>
                   <Text>Assets used as collateral in this Position.</Text>
                 </Flex>
@@ -41,7 +41,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Text>
             <Tooltip
               label={
-                <Flex p={3} flexDirection="column" alignItems="start">
+                <Flex flexDirection="column" alignItems="start">
                   <Text fontWeight="bold" fontSize="14px">
                     Annual Percentage Yield (APY):
                   </Text>
