@@ -120,7 +120,7 @@ export const AssetsRow = ({
               label={
                 !canWithdraw &&
                 accountBalance.gt(0) &&
-                `Withdraw available in ${hoursToWithdraw} hours`
+                `Withdrawal available in ${hoursToWithdraw} hours`
               }
             >
               <Button

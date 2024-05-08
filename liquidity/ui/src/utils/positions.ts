@@ -22,6 +22,7 @@ export function calculatePositions(positionsByKey?: DebtPositions, isBase = fals
     if (isBase && position.collateralType.symbol === 'sUSDC') {
       position.collateralType.symbol = 'USDC';
       position.collateralType.displaySymbol = 'USDC';
+      position.collateralType.name = 'USD Coin';
     }
 
     return position;

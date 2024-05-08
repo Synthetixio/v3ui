@@ -89,7 +89,21 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     queryClient.clear();
   };
 
-  const collateralTypeDisplayName = collateralTypes?.find(
+  // Replace out sUSDC with USDC for Andromeda
+  const collateralTypesHydated = collateralTypes?.map((type) => {
+    if (isBase && type.symbol === 'sUSDC') {
+      return {
+        ...type,
+        symbol: 'USDC',
+        displaySymbol: 'USDC',
+        name: 'USD Coin',
+      };
+    }
+
+    return type;
+  });
+
+  const collateralTypeDisplayName = collateralTypesHydated?.find(
     (item) => item.tokenAddress === selectedCollateralType
   )?.symbol;
 
@@ -188,7 +202,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           </Flex>
                         </MenuButton>
                         <MenuList>
-                          {collateralTypes?.map((type) => (
+                          {collateralTypesHydated?.map((type) => (
                             <MenuItem
                               onClick={() => setSelectedCollateralType(type.tokenAddress)}
                               key={type.tokenAddress}

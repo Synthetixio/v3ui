@@ -1,7 +1,8 @@
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { ONEWEI, ZEROWEI } from './constants';
+import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 
 export interface Asset {
   collateral: AccountCollateralType;
@@ -11,12 +12,18 @@ export interface Asset {
 
 export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
-  userTokenBalances?: Wei[] | undefined,
+  associatedUserBalances?:
+    | {
+        balance: Wei;
+        tokenAddress: string;
+      }[]
+    | undefined,
   collateralPrices?: Record<string, Wei | undefined>,
   collateralTypes?: CollateralType[],
-  isBase?: boolean
+  isBase?: boolean,
+  networkId?: number
 ): Asset[] | undefined {
-  if (!accountCollaterals && !userTokenBalances && !collateralPrices) return;
+  if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
   // Empty state
   if (collateralTypes && !accountCollaterals) {
@@ -35,17 +42,20 @@ export function calculateAssets(
     }));
   }
 
-  if (userTokenBalances && collateralPrices) {
-    return accountCollaterals?.map((collateral, index) => {
-      let balance = userTokenBalances[index];
+  if (associatedUserBalances && collateralPrices) {
+    return accountCollaterals?.map((collateral) => {
+      let balance =
+        associatedUserBalances.find((item) => item.tokenAddress === collateral.tokenAddress)
+          ?.balance || wei(0);
       const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
 
       // ANDROMEDA CASE
-      if (isBase && collateral.symbol === 'sUSDC') {
-        collateral.symbol = 'USDC';
-        collateral.displaySymbol = 'USDC';
+      if (isBase && collateral.symbol === 'USDC') {
         // We also want to show the USDC balance, not the sUSDC balance
-        balance = userTokenBalances[2];
+        balance =
+          associatedUserBalances.find(
+            (balance) => balance.tokenAddress === getUSDCAddress(networkId)
+          )?.balance || wei(0);
       }
 
       return {

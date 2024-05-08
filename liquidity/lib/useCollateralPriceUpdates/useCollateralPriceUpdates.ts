@@ -55,12 +55,13 @@ const getPriceUpdates = async (
   const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
   return {
-    //pyth wrapper
+    // pyth wrapper
     to: getPythWrapper(network?.id),
     data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
     value: priceIds.length * 10,
   };
 };
+
 export const useAllCollateralPriceUpdates = () => {
   const { network } = useNetwork();
 

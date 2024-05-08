@@ -28,6 +28,7 @@ const fetchOffchainData = withMemoryCache(
     const priceService = new EvmPriceServiceConnection(
       isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
     );
+
     const OracleQuerySchema = z.tuple([z.number(), ZodBigNumber, z.array(z.string())]);
     const decoded = ethers.utils.defaultAbiCoder.decode(
       ['uint8', 'uint64', 'bytes32[]'],

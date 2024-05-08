@@ -16,6 +16,7 @@ import { calculateDebt } from '../../utils/positions';
 import { useApr } from '@snx-v3/useApr';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
@@ -27,25 +28,52 @@ export const StatsList = () => {
     accountId: params.get('accountId') || undefined,
   });
 
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+
   const { data: accountCollaterals, isLoading: isAccountCollateralsLoading } = useAccountCollateral(
     {
       accountId: params.get('accountId') || undefined,
     }
   );
 
-  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
-    accountCollaterals?.map((collateral) => {
-      return isBaseAndromeda(network?.id, network?.preset) && collateral.symbol === 'USDC'
-        ? getUSDCAddress(network?.id)
-        : collateral.tokenAddress;
-    }) || []
-  );
+  const collateralAddresses = isBaseAndromeda(network?.id, network?.preset)
+    ? accountCollaterals
+        ?.map((collateral) => collateral.tokenAddress)
+        .concat(getUSDCAddress(network?.id)) || []
+    : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
+
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
+    useTokenBalances(collateralAddresses);
+
+  const associatedUserBalances = userTokenBalances?.map((balance, index) => {
+    return {
+      balance,
+      tokenAddress: collateralAddresses[index],
+    };
+  });
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   const assets = useMemo(
-    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
-    [accountCollaterals, userTokenBalances, collateralPrices]
+    () =>
+      calculateAssets(
+        accountCollaterals,
+        associatedUserBalances,
+        collateralPrices,
+        collateralTypes,
+        isBase,
+        network?.id
+      ),
+    [
+      accountCollaterals,
+      associatedUserBalances,
+      collateralPrices,
+      collateralTypes,
+      isBase,
+      network?.id,
+    ]
   );
 
   const debt = calculateDebt(positions);
@@ -57,7 +85,8 @@ export const StatsList = () => {
     tokenBalancesIsLoading ||
     isCollateralPricesLoading ||
     isLiquidityPositionLoading ||
-    aprIsLoading;
+    aprIsLoading ||
+    isCollateralTypesLoading;
 
   return (
     <Flex w="100%" gap="4" mt={6}>

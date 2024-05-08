@@ -29,6 +29,14 @@ export const AssetsList = () => {
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
     useTokenBalances(collateralAddresses);
+
+  const associatedUserBalances = userTokenBalances?.map((balance, index) => {
+    return {
+      balance,
+      tokenAddress: collateralAddresses[index],
+    };
+  });
+
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
   const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
@@ -62,12 +70,20 @@ export const AssetsList = () => {
     () =>
       calculateAssets(
         combinedCollateral,
-        userTokenBalances,
+        associatedUserBalances,
         collateralPrices,
         collateralTypes,
-        isBase
+        isBase,
+        network?.id
       ),
-    [combinedCollateral, userTokenBalances, collateralPrices, collateralTypes, isBase]
+    [
+      combinedCollateral,
+      associatedUserBalances,
+      collateralPrices,
+      collateralTypes,
+      isBase,
+      network?.id,
+    ]
   );
 
   const isLoading =
