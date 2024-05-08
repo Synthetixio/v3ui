@@ -8,7 +8,7 @@ export function PositionsRowLoading({ isBase }: { isBase: boolean }) {
     <>
       {rows.map((row) => {
         return (
-          <Tr borderBottomWidth="1px" key={row}>
+          <Tr borderBottomWidth={row === 1 ? 'none' : '1px'} key={row}>
             <Td border="none">
               <Flex alignItems="center">
                 <SkeletonCircle>

@@ -16,6 +16,22 @@ export function Pools() {
 
   const isLoading = isPoolsLoading || isAprLoading || isVaultsLoading || isCollateralTypesLoading;
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
+  const hydratedCollateralTypes = isBase
+    ? collateralTypes?.map((item) => {
+        if (item.symbol === 'sUSDC') {
+          return {
+            ...item,
+            symbol: 'USDC',
+            name: 'USD Coin',
+          };
+        }
+
+        return item;
+      })
+    : collateralTypes;
+
   return (
     <Flex flexDir="column">
       <Heading mt={10} color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
@@ -31,7 +47,7 @@ export function Pools() {
                 pool={pool}
                 apr={apr}
                 vaultDebt={vaultDebt}
-                collateralTypes={collateralTypes}
+                collateralTypes={hydratedCollateralTypes}
               />
             ))}
           </>
