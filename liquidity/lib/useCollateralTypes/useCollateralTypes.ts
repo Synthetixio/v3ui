@@ -8,7 +8,6 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -113,15 +112,8 @@ export function useCollateralTypes(includeDelegationOff = false) {
         (collateralType) => {
           return {
             ...collateralType,
-            symbol:
-              collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
-                ? 'USDC'
-                : collateralType.symbol,
-            displaySymbol:
-              collateralType.displaySymbol === 'sUSDC' &&
-              isBaseAndromeda(network?.id, network?.preset)
-                ? 'USD Coin'
-                : collateralType.symbol,
+            symbol: collateralType.symbol,
+            displaySymbol: collateralType.symbol,
           };
         }
       );

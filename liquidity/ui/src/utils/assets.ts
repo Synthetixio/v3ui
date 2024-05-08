@@ -37,12 +37,17 @@ export function calculateAssets(
 
   if (userTokenBalances && collateralPrices) {
     return accountCollaterals?.map((collateral, index) => {
-      const balance = userTokenBalances[index];
+      let balance = userTokenBalances[index];
       const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
-      // We want to add USDC that user has in his wallet.
-      if (isBase && index === accountCollaterals.length - 1) {
-        return { collateral, balance: balance.add(userTokenBalances[2]), price };
+
+      // ANDROMEDA CASE
+      if (isBase && collateral.symbol === 'sUSDC') {
+        collateral.symbol = 'USDC';
+        collateral.displaySymbol = 'USDC';
+        // We also want to show the USDC balance, not the sUSDC balance
+        balance = userTokenBalances[2];
       }
+
       return {
         collateral,
         balance,
