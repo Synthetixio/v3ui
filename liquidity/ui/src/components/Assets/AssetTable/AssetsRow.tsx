@@ -34,6 +34,7 @@ export const AssetsRow = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
+
   const hoursToWithdraw = canWithdraw
     ? ''
     : new Date(unlockDate.getDate() - new Date().getTime()).getHours();

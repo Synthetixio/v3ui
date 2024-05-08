@@ -1,4 +1,4 @@
-import { Alert, Button, Flex, Link, Text } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
@@ -17,7 +17,6 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { InfoIcon } from '@chakra-ui/icons';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -157,7 +156,8 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      <Alert colorScheme="blue" rounded="base" m="2" my="4">
+      {/* TODO Hook for this */}
+      {/* <Alert colorScheme="blue" rounded="base" m="2" my="4">
         <InfoIcon w="24px" h="24px" color="cyan.500" mr="2" />
         <Text>
           Market Caps have been reached, you cannot add collateral for now. Keep an eye on{' '}
@@ -166,7 +166,7 @@ export const DepositUi: FC<{
           </Link>
           for the next market cap increase.
         </Text>
-      </Alert>
+      </Alert> */}
       <Button
         disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"

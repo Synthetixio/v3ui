@@ -56,6 +56,8 @@ export const AssetsList = () => {
       : accountCollaterals;
   }, [accountCollaterals, network?.id, network?.preset]);
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   const assets = useMemo(
     () =>
       calculateAssets(
@@ -63,16 +65,9 @@ export const AssetsList = () => {
         userTokenBalances,
         collateralPrices,
         collateralTypes,
-        isBaseAndromeda(network?.id, network?.preset)
+        isBase
       ),
-    [
-      combinedCollateral,
-      userTokenBalances,
-      collateralPrices,
-      collateralTypes,
-      network?.id,
-      network?.preset,
-    ]
+    [combinedCollateral, userTokenBalances, collateralPrices, collateralTypes, isBase]
   );
 
   const isLoading =
