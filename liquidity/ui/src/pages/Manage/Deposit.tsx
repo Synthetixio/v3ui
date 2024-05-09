@@ -183,7 +183,12 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
   const { network } = useNetwork();
   const params = useParams();
 
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const baseCompatibleSymbol =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : params.collateralSymbol;
+
+  const { data: collateralType } = useCollateralType(baseCompatibleSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
 
   const { data: tokenBalance } = useTokenBalance(

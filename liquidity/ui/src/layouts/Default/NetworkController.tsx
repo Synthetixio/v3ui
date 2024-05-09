@@ -130,6 +130,7 @@ export function NetworkController() {
             py="6px"
             px="9.5px"
             whiteSpace="nowrap"
+            data-cy="header-wallet-address-button"
           >
             <WalletIcon color="white" />
             <Text
@@ -199,31 +200,34 @@ export function NetworkController() {
                   <Text fontWeight={400} fontSize="14px">
                     Account(s)
                   </Text>
-                  {accounts?.map((account) => (
-                    <Text
-                      key={account}
-                      display="flex"
-                      alignItems="center"
-                      color="white"
-                      fontWeight={700}
-                      fontSize="16px"
-                      cursor="pointer"
-                      p="3"
-                      _hover={{ bg: 'whiteAlpha.300' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        queryParams.set('accountId', account);
-                        navigate({ pathname, search: queryParams.toString() });
-                      }}
-                    >
-                      #{prettyString(account, 4, 4)}{' '}
-                      {queryParams.get('accountId') === account && (
-                        <Badge colorScheme="cyan" variant="outline" ml="1">
-                          Connected
-                        </Badge>
-                      )}
-                    </Text>
-                  ))}
+                  <Flex data-cy="header-account-list">
+                    {accounts?.map((account) => (
+                      <Text
+                        key={account}
+                        display="flex"
+                        alignItems="center"
+                        color="white"
+                        fontWeight={700}
+                        fontSize="16px"
+                        cursor="pointer"
+                        p="3"
+                        _hover={{ bg: 'whiteAlpha.300' }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          queryParams.set('accountId', account);
+                          navigate({ pathname, search: queryParams.toString() });
+                        }}
+                      >
+                        #{prettyString(account, 4, 4)}{' '}
+                        {queryParams.get('accountId') === account && (
+                          <Badge colorScheme="cyan" variant="outline" ml="1">
+                            Connected
+                          </Badge>
+                        )}
+                      </Text>
+                    ))}
+                  </Flex>
+
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();

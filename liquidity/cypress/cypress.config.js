@@ -44,6 +44,7 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/borrowUsd'),
         ...require('./cypress/tasks/setConfig'),
         ...require('./cypress/tasks/getSUSDC'),
+        ...require('./cypress/tasks/getUSDC'),
       });
 
       return config;

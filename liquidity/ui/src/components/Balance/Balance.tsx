@@ -22,7 +22,14 @@ export const Balance = ({ isBase, balance }: BalanceProps) => {
           mr="2"
         >
           <TokenIcon symbol={isBase ? 'USDC' : 'sUSD'} width={24} height={24} />
-          <Text fontSize="14px" lineHeight="20px" fontWeight={600} ml="2" fontFamily="heading">
+          <Text
+            data-cy="header-balance"
+            fontSize="14px"
+            lineHeight="20px"
+            fontWeight={600}
+            ml="2"
+            fontFamily="heading"
+          >
             {balance?.toNumber().toFixed(2)}
           </Text>
         </Flex>

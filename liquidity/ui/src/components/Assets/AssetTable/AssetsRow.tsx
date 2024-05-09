@@ -68,7 +68,13 @@ export const AssetsRow = ({
             >
               {formatNumberToUsd(walletBalance$)}
             </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Text
+              color="gray.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              data-cy="asset-wallet-balance"
+            >
               {formatNumber(walletBalance)}
               {` ${token}`}
             </Text>
@@ -161,6 +167,7 @@ export const AssetsRow = ({
                 }),
                 search: location.search,
               }}
+              data-cy="assets-deposit-button"
             >
               Deposit
             </Button>

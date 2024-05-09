@@ -27,19 +27,44 @@ export function calculateAssets(
 
   // Empty state
   if (collateralTypes && !accountCollaterals) {
-    return collateralTypes.map((collateral) => ({
-      collateral: {
-        tokenAddress: collateral.tokenAddress,
-        symbol: collateral.symbol,
-        displaySymbol: collateral.displaySymbol,
-        availableCollateral: ZEROWEI,
-        totalDeposited: ZEROWEI,
-        totalAssigned: ZEROWEI,
-        totalLocked: ZEROWEI,
-      },
-      balance: ZEROWEI,
-      price: ZEROWEI,
-    }));
+    // Because we are mapping over collateral types we need to convert sUSDC symbol to USDC
+
+    return collateralTypes.map((collateral) => {
+      if (isBase && collateral.symbol === 'sUSDC') {
+        const balance =
+          associatedUserBalances?.find((item) => item.tokenAddress === getUSDCAddress(networkId))
+            ?.balance || wei(0);
+
+        return {
+          collateral: {
+            ...collateral,
+            symbol: 'USDC',
+            displaySymbol: 'USDC',
+            name: 'USD Coin',
+            availableCollateral: ZEROWEI,
+            totalDeposited: ZEROWEI,
+            totalAssigned: ZEROWEI,
+            totalLocked: ZEROWEI,
+          },
+          balance,
+          price: ONEWEI,
+        };
+      }
+
+      return {
+        collateral: {
+          tokenAddress: collateral.tokenAddress,
+          symbol: collateral.symbol,
+          displaySymbol: collateral.displaySymbol,
+          availableCollateral: ZEROWEI,
+          totalDeposited: ZEROWEI,
+          totalAssigned: ZEROWEI,
+          totalLocked: ZEROWEI,
+        },
+        balance: ZEROWEI,
+        price: ZEROWEI,
+      };
+    });
   }
 
   if (associatedUserBalances && collateralPrices) {

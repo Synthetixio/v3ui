@@ -22,7 +22,8 @@ export const ManageUi: FC<{
   rewards?: RewardsType;
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
-}> = ({ collateralType, isLoading, rewards, liquidityPosition, network }) => {
+  collateralSymbol?: string;
+}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
   return (
     <Box mb={12} mt={8}>
       <Box mb="4">
@@ -39,7 +40,7 @@ export const ManageUi: FC<{
           display="flex"
         >
           <CollateralIcon
-            symbol={collateralType?.symbol}
+            symbol={collateralSymbol}
             width="28px"
             height="28px"
             fill="#0B0B22"
@@ -53,8 +54,9 @@ export const ManageUi: FC<{
           color="gray.50"
           display="flex"
           alignItems="center"
+          data-cy="manage-position-title"
         >
-          {collateralType?.symbol} Liquidity Position
+          {collateralSymbol} Liquidity Position
         </Heading>
       </Flex>
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
@@ -101,9 +103,15 @@ export const ManageUi: FC<{
 
 export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
+  const { network } = useNetwork();
+
+  const baseCompatibleSymbol =
+    isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : collateralSymbol;
 
   const { isLoading: isCollateralLoading, data: collateralType } =
-    useCollateralType(collateralSymbol);
+    useCollateralType(baseCompatibleSymbol);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
@@ -120,17 +128,16 @@ export const Manage = () => {
     poolId,
   });
 
-  const { network } = useNetwork();
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   return (
     <ManagePositionProvider>
       <ManageUi
         isLoading={isLoading}
-        collateralType={collateralType}
         rewards={rewardsData}
         liquidityPosition={liquidityPosition}
         network={network}
+        collateralSymbol={collateralSymbol}
       />
     </ManagePositionProvider>
   );

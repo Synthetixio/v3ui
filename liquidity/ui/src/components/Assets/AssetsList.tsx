@@ -23,8 +23,10 @@ export const AssetsList = () => {
 
   const collateralAddresses = isBaseAndromeda(network?.id, network?.preset)
     ? accountCollaterals
-        ?.map((collateral) => collateral.tokenAddress)
-        .concat(getUSDCAddress(network?.id)) || []
+      ? accountCollaterals
+          ?.map((collateral) => collateral.tokenAddress)
+          .concat(getUSDCAddress(network?.id)) || []
+      : [getUSDCAddress(network?.id)]
     : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =

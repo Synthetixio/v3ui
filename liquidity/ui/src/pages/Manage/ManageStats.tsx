@@ -135,11 +135,7 @@ export const ManageStatsUi: FC<{
         </Flex>
         {liquidityPosition && collateralType ? (
           <>
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              data-testid="manage stats collateral"
-            >
+            <Flex justifyContent="space-between" alignItems="center">
               <ChangeStat
                 value={liquidityPosition.collateralAmount}
                 newValue={newCollateralAmount}
@@ -152,6 +148,7 @@ export const ManageStatsUi: FC<{
                 fontSize="md"
                 fontFamily="heading"
                 lineHeight="24px"
+                data-cy="manage-stats-collateral-value"
               >
                 {currency(liquidityPosition.collateralValue, {
                   currency: 'USD',
@@ -190,7 +187,7 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <Flex width="100%" data-testid="manage stats debt">
+          <Flex width="100%" data-testid="manage-stats-debt-value">
             {liquidityPosition && collateralType ? (
               <ChangeStat
                 value={liquidityPosition.debt}
@@ -263,9 +260,15 @@ export const ManageStatsUi: FC<{
 
 export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
+  const { network } = useNetwork();
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const baseCompatibleSymbol =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : params.collateralSymbol;
+
+  const { data: collateralType } = useCollateralType(baseCompatibleSymbol);
 
   const { data: aprData } = useApr();
 
@@ -282,6 +285,23 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
     debtChange: debtChange,
   });
 
+  const baseCompatibleCollateralType =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? {
+          ...collateralType,
+          name: 'USD Coin',
+          symbol: 'USDC',
+          displaySymbol: 'USDC',
+          depositingEnabled: collateralType?.depositingEnabled || false,
+          issuanceRatioD18: collateralType?.issuanceRatioD18 || wei(0),
+          liquidationRatioD18: collateralType?.liquidationRatioD18 || wei(0),
+          liquidationRewardD18: collateralType?.liquidationRewardD18 || wei(0),
+          oracleNodeId: collateralType?.oracleNodeId || '',
+          tokenAddress: collateralType?.tokenAddress || '',
+          minDelegationD18: collateralType?.minDelegationD18 || wei(0),
+        }
+      : collateralType;
+
   return (
     <ManageStatsUi
       hasChanges={hasChanges}
@@ -289,7 +309,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
       newDebt={newDebt}
       newCollateralAmount={newCollateralAmount}
       liquidityPosition={liquidityPosition}
-      collateralType={collateralType}
+      collateralType={baseCompatibleCollateralType}
       cRatio={cRatio}
       collateralValue={collateralValue}
       aprData={aprData?.combinedApr}
