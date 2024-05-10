@@ -144,6 +144,8 @@ export const useCollateralPriceUpdates = () => {
             ...(await getPriceUpdates(outdatedPriceIds, stalenessTolerance, network)),
           };
         }
+
+        return null;
       } catch (error) {
         return null;
       }
