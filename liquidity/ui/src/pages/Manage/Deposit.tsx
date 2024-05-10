@@ -86,7 +86,7 @@ export const DepositUi: FC<{
                   setCollateralChange(value);
                 }}
                 max={maxAmount}
-                data-cy="deposit-number-input"
+                dataTestId="deposit-number-input"
               />
               <Flex
                 flexDirection="column"

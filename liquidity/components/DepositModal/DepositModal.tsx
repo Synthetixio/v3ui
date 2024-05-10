@@ -180,7 +180,6 @@ export const DepositModalUi: FC<{
               loading: state.matches(State.deposit) && !error,
             }}
           />
-
           <Button
             isDisabled={isProcessing}
             onClick={onSubmit}
@@ -226,13 +225,37 @@ export const DepositModal: DepositModalProps = ({
   const params = useParams();
   const queryClient = useQueryClient();
   const { network } = useNetwork();
+
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
+  const baseCompatibleSymbol =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : params.collateralSymbol;
+
+  const { data: collateralType } = useCollateralType(baseCompatibleSymbol);
+
+  const baseCompatibleCollateralType =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? {
+          ...collateralType,
+          name: 'USD Coin',
+          symbol: 'USDC',
+          displaySymbol: 'USDC',
+          depositingEnabled: collateralType?.depositingEnabled || false,
+          issuanceRatioD18: collateralType?.issuanceRatioD18 || wei(0),
+          liquidationRatioD18: collateralType?.liquidationRatioD18 || wei(0),
+          liquidationRewardD18: collateralType?.liquidationRewardD18 || wei(0),
+          oracleNodeId: collateralType?.oracleNodeId || '',
+          tokenAddress: collateralType?.tokenAddress || '',
+          minDelegationD18: collateralType?.minDelegationD18 || wei(0),
+        }
+      : collateralType;
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
     ? getUSDCAddress(network?.id)
-    : collateralType?.tokenAddress;
+    : baseCompatibleCollateralType?.tokenAddress;
 
   const collateralNeeded = collateralChange.sub(availableCollateral);
 
@@ -255,6 +278,7 @@ export const DepositModal: DepositModalProps = ({
   const newAccountId = useMemo(() => `${Math.floor(Math.random() * 10000000000)}`, []);
 
   const { exec: wrapEth, wethBalance } = useWrapEth();
+
   const wrapAmount =
     collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
       ? collateralChange.sub(wethBalance || 0)

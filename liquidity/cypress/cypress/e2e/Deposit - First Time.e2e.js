@@ -46,6 +46,15 @@ it('Deposit - First Time', () => {
     cy.get('[data-cy="manage-stats-collateral-value"]').contains('0');
     cy.get('[data-cy="manage-stats-debt-value"]').contains('$0');
 
+    // Click deposit
+    cy.get('[data-cy="manage-action-deposit"]').click();
+    // Choose 50% of the balance
+    cy.get('[data-cy="manage-percent-50"]').click();
+    // Check the amount
+    cy.get('[data-cy="deposit-number-input"]').should('have.value', '250');
+    // Click deposit submit
+    cy.get('[data-cy="deposit-submit-button"]').click();
+
     // cy.get('[data-cy="pools-deposit-button"]').click();
     // cy.url().should('include', 'tabAction=firstDeposit&tab=0');
     // cy.url().should('include', 'manage');
