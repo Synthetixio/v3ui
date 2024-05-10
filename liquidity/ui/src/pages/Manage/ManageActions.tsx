@@ -68,6 +68,7 @@ const ActionButton: FC<
     width="50%"
     textAlign="center"
     opacity={disabled ? '50%' : '100%'}
+    data-cy={`manage-action-${action}`}
   >
     {children}
   </BorderBox>

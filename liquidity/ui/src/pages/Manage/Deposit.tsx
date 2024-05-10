@@ -41,6 +41,7 @@ export const DepositUi: FC<{
   snxBalance,
 }) => {
   const [activeBadge, setActiveBadge] = useState(0);
+
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable;
@@ -85,6 +86,7 @@ export const DepositUi: FC<{
                   setCollateralChange(value);
                 }}
                 max={maxAmount}
+                data-cy="deposit-number-input"
               />
               <Flex
                 flexDirection="column"
@@ -170,6 +172,7 @@ export const DepositUi: FC<{
       <Button
         disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"
+        data-cy="deposit-submit-button"
         type="submit"
       >
         Add {displaySymbol}
@@ -197,6 +200,23 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
       : collateralType?.tokenAddress
   );
 
+  const baseCompatibleCollateralType =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? {
+          ...collateralType,
+          name: 'USD Coin',
+          symbol: 'USDC',
+          displaySymbol: 'USDC',
+          depositingEnabled: collateralType?.depositingEnabled || false,
+          issuanceRatioD18: collateralType?.issuanceRatioD18 || wei(0),
+          liquidationRatioD18: collateralType?.liquidationRatioD18 || wei(0),
+          liquidationRewardD18: collateralType?.liquidationRewardD18 || wei(0),
+          oracleNodeId: collateralType?.oracleNodeId || '',
+          tokenAddress: collateralType?.tokenAddress || '',
+          minDelegationD18: collateralType?.minDelegationD18 || wei(0),
+        }
+      : collateralType;
+
   const { data: ethBalance } = useEthBalance();
 
   if (!collateralType || !liquidityPosition?.accountCollateral) return null;
@@ -204,11 +224,11 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
   return (
     <DepositUi
       accountCollateral={liquidityPosition.accountCollateral}
-      displaySymbol={collateralType.displaySymbol}
+      displaySymbol={baseCompatibleCollateralType?.displaySymbol || ''}
       tokenBalance={tokenBalance}
       snxBalance={transferrableSnx}
       ethBalance={ethBalance}
-      symbol={collateralType.symbol}
+      symbol={baseCompatibleCollateralType?.symbol || ''}
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
     />

@@ -292,12 +292,35 @@ export function DepositFormUi({
 
 export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const [_, connect] = useConnectWallet();
+  const { network } = useNetwork();
   const navigate = useNavigate();
   const isConnected = useIsConnected();
   const params = useParams();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const { network } = useNetwork();
+  const baseCompatibleSymbol =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : params.collateralSymbol;
+
+  const { data: collateralType } = useCollateralType(baseCompatibleSymbol);
+
+  const baseCompatibleCollateralType =
+    isBaseAndromeda(network?.id, network?.preset) && params.collateralSymbol === 'USDC'
+      ? {
+          ...collateralType,
+          name: 'USD Coin',
+          symbol: 'USDC',
+          displaySymbol: 'USDC',
+          depositingEnabled: collateralType?.depositingEnabled || false,
+          issuanceRatioD18: collateralType?.issuanceRatioD18 || wei(0),
+          liquidationRatioD18: collateralType?.liquidationRatioD18 || wei(0),
+          liquidationRewardD18: collateralType?.liquidationRewardD18 || wei(0),
+          oracleNodeId: collateralType?.oracleNodeId || '',
+          tokenAddress: collateralType?.tokenAddress || '',
+          minDelegationD18: collateralType?.minDelegationD18 || wei(0),
+        }
+      : collateralType;
+
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
 
@@ -317,7 +340,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
       staticCollateral={props.staticCollateral}
       isConnected={isConnected}
       openConnectModal={() => connect()}
-      collateralType={collateralType}
+      collateralType={baseCompatibleCollateralType}
       accountCollateral={accountCollateral}
       tokenBalance={tokenBalance}
       snxBalance={transferrable.data}

@@ -20,8 +20,9 @@ const ChangeStat: FC<{
   value: Wei;
   newValue: Wei;
   hasChanges: boolean;
+  dataTestId?: string;
   formatFn: (val: Wei) => string;
-}> = ({ formatFn, value, newValue, hasChanges }) => {
+}> = ({ formatFn, value, newValue, hasChanges, dataTestId }) => {
   return (
     <Flex
       gap={4}
@@ -31,7 +32,7 @@ const ChangeStat: FC<{
       alignItems="center"
       lineHeight="32px"
     >
-      <Text>{formatFn(value)}</Text>
+      <Text data-cy={dataTestId}>{formatFn(value)}</Text>
       {hasChanges && !value.eq(newValue) ? (
         <>
           <ArrowForwardIcon />
@@ -187,7 +188,7 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <Flex width="100%" data-testid="manage-stats-debt-value">
+          <Flex width="100%">
             {liquidityPosition && collateralType ? (
               <ChangeStat
                 value={liquidityPosition.debt}
@@ -200,6 +201,7 @@ export const ManageStatsUi: FC<{
                   })
                 }
                 hasChanges={hasChanges}
+                dataTestId="manage-stats-debt-value"
               />
             ) : (
               <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
