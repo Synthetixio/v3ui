@@ -26,10 +26,21 @@ it('Deposit - First Time', () => {
     cy.get('[data-cy="header-balance"]').contains((500).toFixed(2));
     cy.get('[data-cy="asset-wallet-balance"]').contains(`${(500).toFixed(2)} USDC`);
 
-    // Create Account
+    // Create account
     cy.get('[data-cy="header-wallet-address-button"]').click();
     cy.get('[data-cy="create-new-account-menu-item"]').click();
     cy.get('[data-cy="header-account-list"]').children().should('have.length', 1);
+
+    // The account id in the url should be the same as in the header
+    cy.url().then((url) => {
+      const [baseUrl, fragment] = url.split('/#/');
+      const params = new URL(`${baseUrl}${fragment}`).searchParams;
+
+      const accountId = params.get('accountId');
+
+      cy.get(`[data-cy="account-${accountId}"]`).should('exist');
+    });
+
     cy.get('[data-cy="header-wallet-address-button"]').click();
 
     // Deposit
@@ -55,9 +66,14 @@ it('Deposit - First Time', () => {
     // Click deposit submit
     cy.get('[data-cy="deposit-submit-button"]').click();
 
-    // cy.get('[data-cy="pools-deposit-button"]').click();
-    // cy.url().should('include', 'tabAction=firstDeposit&tab=0');
-    // cy.url().should('include', 'manage');
+    if (isBase) {
+      cy.get('[data-cy="multistep-1"]').contains('Approve USDC transfer');
+      cy.get('[data-cy="multistep-2"]').contains('Delegate USDC');
+
+      cy.get('[data-cy="deposit-confirm-button"]').click();
+    } else {
+      // Handle OP case
+    }
 
     // if (isBase) {
     //   cy.get('[data-cy="manage-input-balance-max-button"]').contains('500.00');

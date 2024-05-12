@@ -26,11 +26,11 @@ export function calculateAssets(
   if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
   // Empty state
-  if (collateralTypes && !accountCollaterals) {
+  if (collateralTypes && !accountCollaterals && associatedUserBalances) {
     // Because we are mapping over collateral types we need to convert sUSDC symbol to USDC
 
     return collateralTypes.map((collateral) => {
-      if (isBase && collateral.symbol === 'sUSDC') {
+      if (isBase && collateral.symbol === 'USDC') {
         const balance =
           associatedUserBalances?.find((item) => item.tokenAddress === getUSDCAddress(networkId))
             ?.balance || wei(0);
@@ -38,9 +38,6 @@ export function calculateAssets(
         return {
           collateral: {
             ...collateral,
-            symbol: 'USDC',
-            displaySymbol: 'USDC',
-            name: 'USD Coin',
             availableCollateral: ZEROWEI,
             totalDeposited: ZEROWEI,
             totalAssigned: ZEROWEI,

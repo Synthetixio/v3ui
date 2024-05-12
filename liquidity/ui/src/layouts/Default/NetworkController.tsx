@@ -211,6 +211,7 @@ export function NetworkController() {
                         fontSize="16px"
                         cursor="pointer"
                         p="3"
+                        data-cy={`account-${account}`}
                         _hover={{ bg: 'whiteAlpha.300' }}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -218,9 +219,9 @@ export function NetworkController() {
                           navigate({ pathname, search: queryParams.toString() });
                         }}
                       >
-                        #{prettyString(account, 4, 4)}{' '}
+                        #{prettyString(account, 4, 4)}
                         {queryParams.get('accountId') === account && (
-                          <Badge colorScheme="cyan" variant="outline" ml="1">
+                          <Badge ml={2} colorScheme="cyan" variant="outline">
                             Connected
                           </Badge>
                         )}
