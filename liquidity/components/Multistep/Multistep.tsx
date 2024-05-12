@@ -47,7 +47,7 @@ export function Multistep({
     >
       <Step status={status}>{step}</Step>
       <Flex direction="column">
-        <Text>{title}</Text>
+        <Text data-cy={`multistep-${step}`}>{title}</Text>
         {subtitle ? (
           <Text as="div" fontSize="xs" opacity="0.66">
             {subtitle}

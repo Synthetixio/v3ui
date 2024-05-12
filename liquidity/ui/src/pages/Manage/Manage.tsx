@@ -105,13 +105,8 @@ export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
   const { network } = useNetwork();
 
-  const baseCompatibleSymbol =
-    isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'USDC'
-      ? 'sUSDC'
-      : collateralSymbol;
-
   const { isLoading: isCollateralLoading, data: collateralType } =
-    useCollateralType(baseCompatibleSymbol);
+    useCollateralType(collateralSymbol);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 

@@ -8,6 +8,7 @@ import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -28,6 +29,7 @@ const CollateralTypeSchema = CollateralConfigurationSchema.extend({
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
+
 const ERC20Interface = new utils.Interface([
   'function symbol() view returns (string)',
   'function name() view returns (string)',
@@ -44,7 +46,9 @@ async function loadSymbols({
     target: tokenConfig.tokenAddress,
     callData: ERC20Interface.encodeFunctionData('symbol'),
   }));
+
   const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
   return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
   );
@@ -61,7 +65,9 @@ async function loadName({
     target: tokenConfig.tokenAddress,
     callData: ERC20Interface.encodeFunctionData('name'),
   }));
+
   const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
   return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('name', bytes)[0])
   );
@@ -76,6 +82,7 @@ async function loadCollateralTypes({
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
   const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
@@ -110,6 +117,15 @@ export function useCollateralTypes(includeDelegationOff = false) {
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
         (collateralType) => {
+          const isBase = isBaseAndromeda(network?.id, network?.preset);
+          if (isBase && collateralType.symbol === 'sUSDC') {
+            return {
+              ...collateralType,
+              symbol: 'USDC',
+              displaySymbol: 'USDC',
+              name: 'USD Coin',
+            };
+          }
           return {
             ...collateralType,
             symbol: collateralType.symbol,
