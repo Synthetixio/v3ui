@@ -1,5 +1,6 @@
+import { useGetNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
-import { BigNumber, Contract, providers, utils } from 'ethers';
+import { BigNumber, Contract, utils } from 'ethers';
 
 interface BurnEvent {
   ts: number;
@@ -9,21 +10,24 @@ interface BurnEvent {
   cumulativeUsdAmount: number;
 }
 
-const SNXonL1 = new Contract(
-  '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
-  ['function totalSupply() view returns(uint256)'],
-  new providers.JsonRpcProvider('https://eth.llamarpc.com')
-);
-
 const now = new Date();
 now.setDate(now.getDate() - 7);
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
 export function useBurnEvents() {
+  const ethNetwork = useGetNetwork(`0x${Number(1).toString(16)}`);
+  const ethProvider = useProviderForChain(ethNetwork);
+
   return useQuery({
     queryKey: ['burn-events'],
     queryFn: async () => {
+      const SNXonL1 = new Contract(
+        '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
+        ['function totalSupply() view returns(uint256)'],
+        ethProvider
+      );
+
       const repsonse = await fetch('https://api.synthetix.io/v3/base/snx-buyback');
       const events: BurnEvent[] = await repsonse.json();
 
