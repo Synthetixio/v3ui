@@ -142,6 +142,7 @@ export const ManageStatsUi: FC<{
                 newValue={newCollateralAmount}
                 formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
                 hasChanges={hasChanges}
+                dataTestId="manage stats collateral"
               />
               <Text
                 fontWeight="400"
@@ -214,12 +215,8 @@ export const ManageStatsUi: FC<{
           <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
             C-RATIO
           </Text>
-          <Flex
-            justifyContent="space-between"
-            alignItems="center"
-            data-testid="manage stats collateral"
-          >
-            {liquidityPosition && collateralType ? (
+          <Flex justifyContent="space-between" alignItems="center">
+            {collateralType ? (
               <>
                 <ChangeStat
                   // TODO, need a function to burn to target so dust debt not left over

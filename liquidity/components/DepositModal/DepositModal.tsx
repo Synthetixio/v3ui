@@ -72,7 +72,7 @@ export const DepositModalUi: FC<{
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="deposit modal">
+      <ModalContent bg="black" color="white" data-cy="deposit-modal">
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

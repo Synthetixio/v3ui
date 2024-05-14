@@ -11,6 +11,8 @@ export async function depositCollateral({ privateKey, accountId, symbol, amount 
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
 
+  console.log(config);
+
   const tx = await coreProxy.deposit(
     ethers.BigNumber.from(accountId),
     config.tokenAddress,

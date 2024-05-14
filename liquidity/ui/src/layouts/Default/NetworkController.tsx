@@ -26,7 +26,6 @@ export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-
   const { data: accounts } = useAccounts();
   const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
@@ -200,7 +199,7 @@ export function NetworkController() {
                   <Text fontWeight={400} fontSize="14px">
                     Account(s)
                   </Text>
-                  <Flex data-cy="header-account-list">
+                  <Flex data-cy="header-account-list" flexDir="column">
                     {accounts?.map((account) => (
                       <Text
                         key={account}

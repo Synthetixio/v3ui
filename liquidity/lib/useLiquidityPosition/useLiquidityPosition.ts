@@ -91,7 +91,6 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
         priceUpdateTx: priceUpdateTx?.data || '',
       },
     ],
@@ -161,6 +160,7 @@ export const useLiquidityPosition = ({
           const [accountCollateral, usdCollateral] = accountCollateralDecoder(
             encoded.slice(startOfAccountCollateral)
           );
+
           return {
             collateralPrice: Array.isArray(collateralPrice) ? collateralPrice[0] : collateralPrice,
             collateralAmount: decodedPosition.collateral.amount,

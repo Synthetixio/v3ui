@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { constants, ethers } from 'ethers';
 import { importCoreProxy } from './importCoreProxy';
 
 const erc20Abi = [
@@ -15,12 +15,15 @@ export async function wrapEth({ privateKey, amount }) {
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
   const collateralConfigs = await coreProxy.getCollateralConfigurations(true);
   const collaterals = await Promise.all(
-    collateralConfigs.map(async (config) => {
-      const contract = new ethers.Contract(config.tokenAddress, erc20Abi, wallet);
-      const symbol = await contract.symbol();
-      return { contract, symbol };
-    })
+    collateralConfigs
+      .filter((config) => config.tokenAddress !== constants.AddressZero)
+      .map(async (config) => {
+        const contract = new ethers.Contract(config.tokenAddress, erc20Abi, wallet);
+        const symbol = await contract.symbol();
+        return { contract, symbol };
+      })
   );
+
   const weth = collaterals.find(({ symbol }) => symbol === 'WETH').contract;
   const balance = parseFloat(ethers.utils.formatUnits(await weth.balanceOf(wallet.address)));
 

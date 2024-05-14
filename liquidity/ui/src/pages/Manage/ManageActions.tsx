@@ -183,7 +183,6 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   useEffect(() => {
     // This is just for initial state, if we have a manage action selected return
     const queryParams = new URLSearchParams(location.search);
-
     if (queryParams.get('manageAction')) return;
     if (!liquidityPosition) return;
     if (!collateralType) return;

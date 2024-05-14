@@ -19,23 +19,23 @@ export type CoreProxyType =
   | CoreProxy8453Andromeda
   | CoreProxy84532Andromeda;
 
-export async function importCoreProxy(chainId: number) {
-  switch (`${chainId}`) {
-    case '1':
+export async function importCoreProxy(chainId: number, preset: string = 'main') {
+  switch (`${chainId}-${preset}`) {
+    case '1-main':
       return import('./1-main/CoreProxy');
-    case '10':
+    case '10-main':
       return import('./10-main/CoreProxy');
-    case '11155111':
+    case '11155111-main':
       return import('./11155111-main/CoreProxy');
-    case '13370':
+    case '13370-main':
       return import('./13370-main/CoreProxy');
-    case '42161':
+    case '42161-arbthetix':
       return import('./42161-arbthetix/CoreProxy');
-    case '421614':
+    case '421614-arbthetix':
       return import('./421614-arbthetix/CoreProxy');
-    case '8453':
+    case '8453-andromeda':
       return import('./8453-andromeda/CoreProxy');
-    case '84532':
+    case '84532-andromeda':
       return import('./84532-andromeda/CoreProxy');
     default:
       throw new Error(`Unsupported chain ${chainId} for CoreProxy`);

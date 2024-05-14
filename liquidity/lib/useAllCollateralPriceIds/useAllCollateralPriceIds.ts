@@ -56,7 +56,6 @@ export const useAllCollateralPriceIds = () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
-
       if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
 
       const configs = await loadConfigs({ CoreProxy });
@@ -75,6 +74,7 @@ export const useAllCollateralPriceIds = () => {
           const nodeResp = OracleProxy.interface.decodeFunctionResult('getNode', bytes)[0];
 
           const { nodeType, parameters } = NodeSchema.parse({ ...nodeResp });
+
           if (nodeType !== EXTERNAL_NODE_TYPE) return undefined;
 
           try {
@@ -82,7 +82,6 @@ export const useAllCollateralPriceIds = () => {
               ['address', 'bytes32', 'uint256'],
               parameters
             );
-
             const parametersDecoded = PythParametersSchema.parse({
               address,
               priceFeedId,

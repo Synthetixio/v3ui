@@ -16,6 +16,7 @@ export async function getCollateralConfig(symbol) {
         provider
       );
       const collateralSymbol = await contract.symbol();
+
       if (collateralSymbol === symbol) {
         return config;
       }

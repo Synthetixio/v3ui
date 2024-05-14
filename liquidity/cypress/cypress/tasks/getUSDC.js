@@ -52,5 +52,5 @@ export async function getUSDC({ address, amount }) {
   const newBalance = parseFloat(ethers.utils.formatUnits(await erc20.balanceOf(address)));
   console.log('getUSDC', { address, newBalance });
 
-  return null;
+  return newBalance;
 }

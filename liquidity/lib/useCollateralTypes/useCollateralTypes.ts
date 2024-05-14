@@ -153,7 +153,6 @@ export function useCollateralTypes(includeDelegationOff = false) {
 
 export function useCollateralType(collateralSymbol?: string) {
   const { data: collateralTypes, isLoading, error } = useCollateralTypes();
-
   return {
     isLoading,
     error,
