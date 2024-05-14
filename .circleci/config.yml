@@ -342,17 +342,11 @@ workflows:
           chain: base-mainnet
           name: liquidity-e2e-base-mainnet
       - liquidity-e2e:
-          chain: optimism-mainnet
-          name: liquidity-e2e-optimism-mainnet
+          chain: sepolia
+          name: liquidity-e2e-sepolia
       - combine-coverage:
           requires:
-            [
-              tests,
-              liquidity-cy,
-              governance-cy,
-              liquidity-e2e-base-mainnet,
-              liquidity-e2e-optimism-mainnet,
-            ]
+            [tests, liquidity-cy, governance-cy, liquidity-e2e-base-mainnet, liquidity-e2e-sepolia]
       - liquidity-armada:
           requires:
             - checks
@@ -360,7 +354,7 @@ workflows:
             - tests
             - liquidity-cy
             - liquidity-e2e-base-mainnet
-            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:
@@ -374,7 +368,7 @@ workflows:
             - tests
             - liquidity-cy
             - liquidity-e2e-base-mainnet
-            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:
