@@ -19,14 +19,14 @@ export function Chart() {
   const [range, setRange] = useState<'groupedByMonths' | 'groupedByLast30Days'>('groupedByMonths');
   const { data: events, isLoading } = useBurnEvents();
 
-  if (isLoading) return <Spinner colorScheme="cyan" />;
-  if (!events) return;
+  if (!events || isLoading) return null;
 
   return (
     <Flex
       border="1px solid"
       borderColor="gray.900"
       rounded="base"
+      maxWidth="100%"
       w={{ base: '100%', xl: '761px' }}
       h={{ base: '100%', xl: '400px' }}
       bg="navy.700"

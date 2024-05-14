@@ -6,6 +6,8 @@ export function CurrentSupplyStats() {
 
   return (
     <Flex
+      alignItems={isLoading ? 'center' : ''}
+      justifyContent={isLoading ? 'center' : ''}
       w={{ base: '100%', xl: '369px' }}
       h="200px"
       p="4"
