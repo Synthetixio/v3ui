@@ -62,13 +62,7 @@ export function PositionRow({
                 .toNumber()
                 .toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
-            <Text
-              color="gray.500"
-              fontWeight={700}
-              fontFamily="heading"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-            >
+            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {collateralType.symbol.toString()}
             </Text>
           </Flex>

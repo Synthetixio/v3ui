@@ -26,7 +26,7 @@ export function calculateAssets(
   if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
   // Empty state
-  if (collateralTypes && !accountCollaterals && !associatedUserBalances) {
+  if (collateralTypes && !accountCollaterals) {
     // Because we are mapping over collateral types we need to convert sUSDC symbol to USDC
     return collateralTypes.map((collateral) => {
       if (isBase && collateral.symbol === 'USDC') {
@@ -38,7 +38,11 @@ export function calculateAssets(
             totalAssigned: ZEROWEI,
             totalLocked: ZEROWEI,
           },
-          balance: ZEROWEI,
+          balance: associatedUserBalances
+            ? associatedUserBalances.find(
+                (balance) => balance.tokenAddress === collateral.tokenAddress
+              )?.balance || ZEROWEI
+            : ZEROWEI,
           price: ONEWEI,
         };
       }
