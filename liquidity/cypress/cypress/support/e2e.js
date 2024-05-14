@@ -17,7 +17,7 @@ beforeEach(() => {
   [
     'mainnet',
     'optimism-mainnet',
-    'base',
+    'base-mainnet',
     'sepolia',
     'base-sepolia',
     'arbitrum-mainnet',
