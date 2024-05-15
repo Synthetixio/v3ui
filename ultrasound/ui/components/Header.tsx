@@ -23,7 +23,14 @@ export function Header() {
 
   return (
     <Flex as="header" p="2" flexDir="column" w="100%" gap="2">
-      <Flex w="100%" justifyContent="space-between" alignItems="center" px={{ base: 4, xl: 5 }}>
+      <Flex
+        flexWrap="wrap"
+        w="100%"
+        gap="4"
+        justifyContent="space-between"
+        alignItems="center"
+        px={{ base: 4, xl: 5 }}
+      >
         <Hide above="xl">
           <Image src={snxHeaderMobileSvg} />
         </Hide>
@@ -31,7 +38,7 @@ export function Header() {
           <Image src={snxSvg} />
         </Hide>
 
-        <Flex alignItems="center" gap="2">
+        <Flex flexWrap="wrap" alignItems="center" gap="2">
           <Box
             border="1px solid"
             borderColor="gray.900"
