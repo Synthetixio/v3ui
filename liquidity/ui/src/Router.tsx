@@ -10,6 +10,7 @@ import { Playground } from './pages/Playground';
 import { Teleporter } from './pages/Teleporter';
 import { NotFoundPage } from './pages/404';
 import { Pools } from './pages/Pools';
+import { Dashboard } from './pages/Dashboard';
 
 export const Router = () => {
   return (
@@ -22,6 +23,7 @@ export const Router = () => {
           <Route path="/pools/:poolId" element={<Pool />} />
           <Route path="/teleporter" element={<Teleporter />} />
           <Route path="/playground" element={<Playground />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

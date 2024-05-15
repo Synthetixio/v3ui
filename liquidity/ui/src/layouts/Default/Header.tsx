@@ -52,7 +52,7 @@ export default function Header() {
               ml={6}
               as={RouterLink}
               to={{
-                pathname: '/',
+                pathname: '/dashboard',
                 search: location.search,
               }}
               fontWeight={700}
