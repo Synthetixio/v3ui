@@ -6776,7 +6776,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
   dependencies:
-    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
