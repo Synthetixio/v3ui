@@ -13,18 +13,14 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@snx-v3/Amount": "workspace:*",
-    "@snx-v3/Balance": "workspace:*",
     "@snx-v3/BorderBox": "workspace:*",
     "@snx-v3/BorrowModal": "workspace:*",
-    "@snx-v3/CollateralTypeSelector": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/DepositModal": "workspace:*",
     "@snx-v3/HomeLink": "workspace:*",
     "@snx-v3/ManagePositionContext": "workspace:*",
-    "@snx-v3/Multistep": "workspace:*",
     "@snx-v3/NumberInput": "workspace:*",
     "@snx-v3/PercentBadges": "workspace:*",
-    "@snx-v3/PoolBox": "workspace:*",
     "@snx-v3/RepayModal": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",
@@ -60,7 +56,6 @@
     "@snx-v3/usePoolData": "workspace:*",
     "@snx-v3/usePools": "workspace:*",
     "@snx-v3/useRewards": "workspace:^",
-    "@snx-v3/useTeleport": "workspace:*",
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useTransferableSynthetix": "workspace:*",
     "@snx-v3/useUSDProxy": "workspace:*",
@@ -78,7 +73,6 @@
     "@web3-onboard/react": "^2.8.17",
     "@web3-onboard/trezor": "^2.4.4",
     "@web3-onboard/walletconnect": "^2.5.5",
-    "@xstate/react": "^3.2.2",
     "date-fns": "^2.30.0",
     "ethers": "^5.7.2",
     "framer-motion": "^10.16.5",
@@ -86,8 +80,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-i18next": "^13.4.1",
     "react-router-dom": "^6.18.0",
-    "xstate": "^4.38.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -130,7 +124,11 @@
     "last 1 Opera version"
   ],
   "depcheck": {
-    "ignorePatterns": ["dist"],
-    "ignoreMatches": ["process"]
+    "ignorePatterns": [
+      "dist"
+    ],
+    "ignoreMatches": [
+      "process"
+    ]
   }
 }

@@ -8,3 +8,8 @@ export * from './Balance';
 export * from './TokenIcon';
 export * from './WithdrawModal';
 export * from './PoolStats';
+export * from './Borrow';
+export * from './Deposit';
+export * from './Manage';
+export * from './Repay';
+export * from './Undelegate';
