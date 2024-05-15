@@ -20,10 +20,10 @@ import {
   useState,
 } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Borrow } from './Borrow';
-import { Repay } from './Repay';
-import { Undelegate } from './Undelegate';
-import { Deposit } from './Deposit';
+import { Borrow } from '../';
+import { Repay } from '../';
+import { Undelegate } from '../';
+import { Deposit } from '../';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';

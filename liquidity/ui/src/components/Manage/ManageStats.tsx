@@ -109,7 +109,7 @@ export const ManageStatsUi: FC<{
                   alignItems="center"
                   lineHeight="32px"
                 >
-                  <Text>{!!aprData ? aprData : '-'}%</Text>
+                  <Text>{!!aprData ? aprData.toFixed(2) : '-'}%</Text>
                 </Flex>
               ) : (
                 <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>

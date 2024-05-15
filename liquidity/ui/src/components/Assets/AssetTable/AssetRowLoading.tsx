@@ -1,5 +1,5 @@
 import { Tr, Td, Flex, Button, Text } from '@chakra-ui/react';
-import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../Shared';
+import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../SynthSkeleton';
 import { TokenIcon } from '../../TokenIcon';
 
 export const AssetRowLoading = ({ final }: { final?: boolean }) => {
