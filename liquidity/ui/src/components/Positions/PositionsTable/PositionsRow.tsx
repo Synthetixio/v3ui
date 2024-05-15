@@ -9,7 +9,7 @@ import { utils } from 'ethers';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
-  apr?: string;
+  apr?: number;
 }
 [];
 
@@ -72,7 +72,7 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-              {!!apr ? apr?.concat('%') : '-'}
+              {!!apr ? apr.toFixed(2).concat('%') : '-'}
             </Text>
           </Flex>
         </Fade>

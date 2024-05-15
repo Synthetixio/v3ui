@@ -14,8 +14,7 @@ export function useApr() {
 
         return {
           // 0 meaning not the right network
-          combinedApr:
-            network?.id === 8453 || network?.id === 84532 ? (data.aprCombined * 100).toFixed(2) : 0,
+          combinedApr: network?.id === 8453 || network?.id === 84532 ? data.aprCombined * 100 : 0,
         };
       } catch (error) {
         return;
