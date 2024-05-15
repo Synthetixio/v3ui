@@ -52,6 +52,7 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
 
       cy.get('[data-cy="manage-action-repay"]').click();
 
+      cy.wait(5000);
       // Need to wait for max repay amount to be fetched
       cy.get('[data-testid="repay amount input"]')
         .should('have.attr', 'data-max')
