@@ -136,7 +136,7 @@ export const StatsList = () => {
       <StatBox
         title="APR"
         isLoading={isLoading}
-        value={!!apr ? apr.combinedApr.toFixed(2) + '%' : '-'}
+        value={!!apr?.combinedApr ? apr.combinedApr.toFixed(2) + '%' : '-'}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
