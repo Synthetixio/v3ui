@@ -27,7 +27,7 @@ import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useQueryClient } from '@tanstack/react-query';
 import { CloseIcon, InfoIcon } from '@chakra-ui/icons';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { TokenIcon } from '../TokenIcon';
+import { TokenIcon } from '../';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
