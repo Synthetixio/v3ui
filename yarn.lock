@@ -6677,6 +6677,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAccountCollateral@workspace:liquidity/lib/useAccountCollateral"
   dependencies:
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -6879,6 +6880,7 @@ __metadata:
   resolution: "@snx-v3/useCollateralPrices@workspace:liquidity/lib/useCollateralPrices"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -7047,6 +7049,7 @@ __metadata:
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -7346,6 +7349,7 @@ __metadata:
   resolution: "@snx-v3/useVaultsData@workspace:liquidity/lib/useVaultsData"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
