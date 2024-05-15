@@ -9,6 +9,7 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -30,7 +31,7 @@ export const useVaultsData = (poolId?: number) => {
       {
         pool: poolId,
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
-        priceUpdateTx: priceUpdateTx?.data,
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     queryFn: async () => {
@@ -53,6 +54,7 @@ export const useVaultsData = (poolId?: number) => {
           )
         )
       );
+
       const debtCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
           CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)

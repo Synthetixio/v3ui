@@ -1,6 +1,6 @@
 {
   "name": "synthetix-omnibus",
-  "version": "5",
+  "version": "6",
   "preset": "arbthetix",
   "url": "ipfs://QmeSt2mnJKE8qmRhLyYbHQQxDKpsFbcWnw5e7JF4xVbN6k",
   "chainId": 42161,

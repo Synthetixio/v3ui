@@ -288,6 +288,7 @@ jobs:
       - run: yarn download-cci-coverage tests /tmp/cov || true
       - run: yarn download-cci-coverage liquidity-cy /tmp/cov || true
       - run: yarn download-cci-coverage governance-cy /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-base-mainnet /tmp/cov || true
       - run: yarn download-cci-coverage liquidity-e2e-optimism-mainnet /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
@@ -338,17 +339,22 @@ workflows:
       - liquidity-cy
       - governance-cy
       - liquidity-e2e:
-          chain: optimism-mainnet
-          name: liquidity-e2e-optimism-mainnet
+          chain: base-mainnet
+          name: liquidity-e2e-base-mainnet
+      - liquidity-e2e:
+          chain: sepolia
+          name: liquidity-e2e-sepolia
       - combine-coverage:
-          requires: [tests, liquidity-cy, governance-cy, liquidity-e2e-optimism-mainnet]
+          requires:
+            [tests, liquidity-cy, governance-cy, liquidity-e2e-base-mainnet, liquidity-e2e-sepolia]
       - liquidity-armada:
           requires:
             - checks
             - typecheck
             - tests
             - liquidity-cy
-            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-base-mainnet
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:
@@ -361,7 +367,8 @@ workflows:
             - typecheck
             - tests
             - liquidity-cy
-            - liquidity-e2e-optimism-mainnet
+            - liquidity-e2e-base-mainnet
+            - liquidity-e2e-sepolia
           filters:
             branches:
               only:

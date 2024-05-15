@@ -1,11 +1,13 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Text, Tooltip, Fade } from '@chakra-ui/react';
+import { Flex, Text, Fade } from '@chakra-ui/react';
 import { SynthSkeleton as Skeleton } from '../Shared';
+import { ReactNode } from 'react';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface StatBoxProps {
   isLoading: boolean;
   title: string;
-  label?: string;
+  label?: string | ReactNode;
   value?: string;
 }
 
@@ -29,7 +31,7 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
           {title}
         </Text>
         {label && (
-          <Tooltip label={label} p={2} mt={1}>
+          <Tooltip label={label} p={3} mt={1}>
             <InfoIcon w="10px" h="10px" />
           </Tooltip>
         )}
@@ -43,8 +45,8 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
           endColor="navy.800"
         >
           <Fade in>
-            <Text fontSize="24px" lineHeight="24px" fontWeight={800}>
-              {value || 'Place'}
+            <Text fontSize="24px" lineHeight="24px" fontWeight={800} data-cy={`${title}-stats-box`}>
+              {value || '$0.00'}
             </Text>
           </Fade>
         </Skeleton>

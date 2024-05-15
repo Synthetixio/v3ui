@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Badge,
   Button,
   Flex,
   Menu,
@@ -10,19 +11,27 @@ import {
   Switch,
   Text,
 } from '@chakra-ui/react';
-import { ChevronDown, ChevronUp, WalletIcon } from '@snx-v3/icons';
+import { WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-
 import { networks } from '../../utils/onboard';
 import { useLocalStorage } from '../../hooks';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
+import { CopyIcon } from '@chakra-ui/icons';
+import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function NetworkController() {
+  const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-
+  const { data: accounts } = useAccounts();
+  const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     // Check if wallet preference is stored in local storage
@@ -39,8 +48,17 @@ export function NetworkController() {
     if (walletsInfo) {
       // store in local storage
       localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
+      navigate({ pathname }, { replace: true });
     }
-  }, [walletsInfo, connect]);
+  }, [walletsInfo, connect, navigate, pathname]);
+
+  useEffect(() => {
+    const accountId = queryParams.get('accountId');
+    if (!accountId && !!accounts?.length) {
+      queryParams.set('accountId', accounts[0]);
+      navigate({ pathname, search: queryParams.toString() });
+    }
+  }, [accounts, navigate, pathname, queryParams]);
 
   const onDisconnect = () => {
     if (walletsInfo) {
@@ -49,10 +67,13 @@ export function NetworkController() {
     }
   };
 
+  const notConnected = !activeWallet;
+  const notSupported = activeWallet && !activeNetwork;
+
   return (
     <Flex>
       <Menu>
-        {({ isOpen }) => (
+        {() => (
           <>
             <MenuButton
               as={Button}
@@ -60,21 +81,10 @@ export function NetworkController() {
               colorScheme="gray"
               sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
               mr={1}
+              data-cy="account-menu-button"
+              px={3}
             >
-              <NetworkIcon networkId={activeNetwork?.id || 666} />
-              <Text
-                variant="nav"
-                fontSize="sm"
-                fontWeight={700}
-                ml={1.5}
-                mr={2}
-                display={{ base: 'none', md: 'initial' }}
-              >
-                {activeNetwork?.label || 'Not Connected'}
-              </Text>
-              <Flex display={{ base: 'none', md: 'initial' }}>
-                {isOpen ? <ChevronUp color="cyan" /> : <ChevronDown color="cyan.500" />}
-              </Flex>
+              <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
             </MenuButton>
             <MenuList>
               {networks.map(({ id, label }) => {
@@ -109,7 +119,7 @@ export function NetworkController() {
         )}
       </Menu>
       {activeWallet ? (
-        <Menu>
+        <Menu placement="bottom-end">
           <MenuButton
             as={Button}
             variant="outline"
@@ -119,46 +129,146 @@ export function NetworkController() {
             py="6px"
             px="9.5px"
             whiteSpace="nowrap"
+            data-cy="header-wallet-address-button"
           >
-            <WalletIcon />
+            <WalletIcon color="white" />
             <Text
               as="span"
               ml={1}
-              color="whiteAlpha.800"
+              color="white"
               fontWeight={700}
               fontSize="xs"
               userSelect="none"
+              data-cy="header-wallet-address-display"
             >
               {activeWallet.ens?.name || prettyString(activeWallet.address)}
             </Text>
           </MenuButton>
           <MenuList>
-            <MenuItem
-              onClick={() => {
-                try {
-                  navigator.clipboard.writeText(activeWallet?.address);
-                } catch (_e) {}
-              }}
+            <Flex
+              border="1px solid"
+              rounded="base"
+              borderColor="gray.900"
+              w="370px"
+              _hover={{ bg: 'navy.700' }}
+              backgroundColor="navy.700"
+              opacity={1}
+              p="4"
             >
-              <Text variant="nav" ml={2}>
-                Copy address
-              </Text>
-            </MenuItem>
-            <MenuItem onClick={onDisconnect}>
-              <Text variant="nav" ml={2}>
-                Disconnect
-              </Text>
-            </MenuItem>
+              <Flex flexDir="column" w="100%" gap="2">
+                <Flex justifyContent="space-between">
+                  <Text fontSize="14px" color="gray.500">
+                    Connected with {walletsInfo?.label}
+                  </Text>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDisconnect();
+                    }}
+                    size="xs"
+                    variant="outline"
+                    colorScheme="gray"
+                    color="white"
+                  >
+                    Disconnect
+                  </Button>
+                </Flex>
+                <Text fontWeight={700} color="white" fontSize="16px">
+                  {prettyString(activeWallet.address)}{' '}
+                  <Tooltip label={toolTipLabel} closeOnClick={false}>
+                    <CopyIcon
+                      ml="2"
+                      onClick={() => {
+                        navigator.clipboard.writeText(activeWallet.address);
+                        setTooltipLabel('Copied');
+                        setTimeout(() => {
+                          setTooltipLabel('Copy');
+                        }, 10000);
+                      }}
+                    />
+                  </Tooltip>
+                </Text>
+                <Flex
+                  flexDir="column"
+                  p="2"
+                  border="1px solid"
+                  borderColor="gray.900"
+                  rounded="base"
+                  gap="2"
+                >
+                  <Text fontWeight={400} fontSize="14px">
+                    Account(s)
+                  </Text>
+                  <Flex data-cy="header-account-list" flexDir="column">
+                    {accounts?.map((account) => (
+                      <Text
+                        key={account}
+                        display="flex"
+                        alignItems="center"
+                        color="white"
+                        fontWeight={700}
+                        fontSize="16px"
+                        cursor="pointer"
+                        p="3"
+                        data-cy={`account-${account}`}
+                        _hover={{ bg: 'whiteAlpha.300' }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          queryParams.set('accountId', account);
+                          navigate({ pathname, search: queryParams.toString() });
+                        }}
+                      >
+                        #{prettyString(account, 4, 4)}
+                        {queryParams.get('accountId') === account && (
+                          <Badge ml={2} colorScheme="cyan" variant="outline">
+                            Connected
+                          </Badge>
+                        )}
+                      </Text>
+                    ))}
+                  </Flex>
+
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mutation.mutate();
+                    }}
+                    size="xs"
+                    variant="outline"
+                    colorScheme="gray"
+                    color="white"
+                    leftIcon={
+                      <svg
+                        width="8"
+                        height="8"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3.5 3.5V0.5H4.5V3.5H7.5V4.5H4.5V7.5H3.5V4.5H0.5V3.5H3.5Z"
+                          fill="white"
+                        />
+                      </svg>
+                    }
+                    w="130px"
+                    data-cy="create-new-account-menu-item"
+                  >
+                    Create Account
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
           </MenuList>
         </Menu>
       ) : (
         <Button
+          data-cy="header-connect-wallet"
           onClick={() => connect()}
           type="button"
           size="sm"
           ml={2}
           py={5}
-          data-testid="connect-wallet-button"
         >
           Connect Wallet
         </Button>

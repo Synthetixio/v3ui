@@ -1,0 +1,48 @@
+<svg width="279" height="179" fill="none" viewBox="0 0 279 179" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#6B59FF" d="m142.843 94.795 43.832 25.452-.022 4.053-43.953 25.559-6.994-.008-43.838-25.457.004-4.044 43.991-25.546z"/>
+  <path fill="#00D1FF" d="m139.215 103.506 38.376 22.284-38.376 22.284-38.376-22.284z"/>
+  <path fill="#008EAD" d="m104.933 128.164 34.309-19.937v4.715l-30.244 17.586z"/>
+  <path fill="#008EAD" d="m139.215 108.246 34.318 19.918-4.075 2.348-30.243-17.548z"/>
+  <path fill="#2D1EA6" d="m100.837 125.792 38.378-22.285v2.476l-36.239 21.054z"/>
+  <path fill="#402FC8" d="m139.215 103.506 38.373 22.283-2.119 1.249-36.254-21.052z"/>
+  <path fill="#2D1EA6" d="m102.812 126.928 36.406-21.159v2.476l-34.295 19.926z"/>
+  <path fill="#402FC8" d="m139.215 105.769 36.446 21.144-2.151 1.25-34.295-19.914z"/>
+  <mask id="a" fill="#fff">
+    <path d="m91.664 123.871 44.182 25.655v23.149L91.664 147.02z"/>
+  </mask>
+  <path fill="#402FC8" d="m91.664 123.871 44.182 25.655v23.149L91.664 147.02z"/>
+  <path fill="#AEA4FF" d="M135.414 149.275v23.149l.865.503v-23.15z" mask="url(#a)"/>
+  <mask id="b" fill="#fff">
+    <path d="m142.859 149.561 44.182-25.655v23.146l-44.182 25.656z"/>
+  </mask>
+  <path fill="#2D1EA6" d="m142.859 149.561 44.182-25.655v23.146l-44.182 25.656z"/>
+  <path fill="#AEA4FF" d="M143.291 172.457V149.31l-.865.502v23.147z" mask="url(#b)"/>
+  <mask id="c" fill="#fff">
+    <path d="M135.842 149.452h7.025v23.223h-7.025z"/>
+  </mask>
+  <path fill="#2D1EA6" d="M135.842 149.452h7.025v23.223h-7.025z"/>
+  <path fill="#AEA4FF" d="M135.842 149.452v-.5h-.5v.5zm7.025 0h.5v-.5h-.5zm-7.025.5h7.025v-1h-7.025zm6.525-.5v23.223h1v-23.223zm-6.025 23.223v-23.223h-1v23.223z" mask="url(#c)"/>
+  <path stroke="#AEA4FF" d="m91.668 123.839 44.185 25.668h7.004l44.19-25.669"/>
+  <path fill="url(#d)" d="M100.848 40h76.742v83.16c0 3.012-3.911 4.806-6.688 6.483l-31.69 18.406-31.717-18.39c-3.53-2.082-6.66-3.487-6.66-6.499V40z"/>
+  <path fill="url(#e)" d="M168.203 40h-57.756v85.684h57.756z"/>
+  <circle cx="22.977" cy="22.977" r="22.977" fill="#06061B" transform="matrix(.86603 .5 0 1 120.578 13)"/>
+  <circle cx="22.977" cy="22.977" r="22.977" fill="#06061B" transform="matrix(.86603 .5 0 1 118.58 14.162)"/>
+  <circle cx="23.136" cy="23.136" r="23.136" fill="#fff" transform="matrix(.86603 .5 0 1 118.5 14.303)"/>
+  <g clip-path="url(#f)">
+    <path fill="#0052FF" d="M138.501 72.122c11.085 6.4 20.071 1.23 20.071-11.547s-8.986-28.324-20.071-34.724c-10.517-6.072-19.144-1.73-20.001 9.643l26.529 15.317v3.89L118.5 39.383c.857 12.362 9.484 26.666 20.001 32.738"/>
+  </g>
+  <defs>
+    <linearGradient id="d" x1="139.212" x2="139.212" y1="40" y2="128.622" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2EDAFF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#2EDAFF" stop-opacity=".2"/>
+    </linearGradient>
+    <linearGradient id="e" x1="139.325" x2="139.325" y1="40" y2="125.684" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2EDAFF" stop-opacity="0"/>
+      <stop offset=".865" stop-color="#2EDAFF" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#2EDAFF" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="f">
+      <path fill="#fff" d="m118.5 14.303 40.072 23.136v46.27L118.5 60.575z"/>
+    </clipPath>
+  </defs>
+</svg>

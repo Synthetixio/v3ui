@@ -1,70 +1,30 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { TableContainer, Table, Heading, Tooltip, Flex, Tbody, Td, Tr } from '@chakra-ui/react';
+import {
+  TableContainer,
+  Table,
+  Heading,
+  Flex,
+  Tbody,
+  Td,
+  Tr,
+  Text,
+  Button,
+} from '@chakra-ui/react';
 import { AssetsRow } from './AssetsRow';
 import { AssetTableHeader } from './AssetTableHeader';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { AssetRowLoading } from '.';
-
-interface Asset {
-  token: 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-  name: string;
-  walletBalance: number;
-  walletBalance$: number;
-  accountBalance: number;
-  accountBalance$: number;
-  delegatedBalance: number;
-  delegatedBalance$: number;
-}
-
-const mockAssets: Asset[] = [
-  {
-    token: 'SNX',
-    name: 'Synthetix',
-    walletBalance: 2000,
-    walletBalance$: 8000,
-    accountBalance: 500,
-    accountBalance$: 2000,
-    delegatedBalance: 10,
-    delegatedBalance$: 40,
-  },
-  {
-    token: 'ETH',
-    name: 'Ethirium',
-    walletBalance: 0.5,
-    walletBalance$: 500,
-    accountBalance: 1,
-    accountBalance$: 1000,
-    delegatedBalance: 0.1,
-    delegatedBalance$: 100,
-  },
-  {
-    token: 'sUSD',
-    name: 'Synthetic USD',
-    walletBalance: 4000,
-    walletBalance$: 4000,
-    accountBalance: 2000,
-    accountBalance$: 2000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-  {
-    token: 'USDC', // TODO: add token icon for synth usdc
-    name: 'sUSDC',
-    walletBalance: 10000,
-    walletBalance$: 10000,
-    accountBalance: 6000,
-    accountBalance$: 6000,
-    delegatedBalance: 1000,
-    delegatedBalance$: 1000,
-  },
-];
+import { useWallet } from '@snx-v3/useBlockchain';
+import { AssetRowLoading, AssetsEmpty } from '.';
+import { Asset } from '../../../utils/assets';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface AssetsTableProps {
   isLoading: boolean;
+  assets?: Asset[];
+  unlockDate: Date | undefined;
 }
 
-export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
-  const { network } = useNetwork();
+export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps) => {
+  const { activeWallet, connect } = useWallet();
 
   return (
     <TableContainer
@@ -84,61 +44,85 @@ export const AssetsTable = ({ isLoading }: AssetsTableProps) => {
         <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
           Assets
         </Heading>
-        <Tooltip label={network?.name && `Collateral types configured for ${network?.name}`}>
-          <InfoIcon w="12px" h="12px" ml={2} />
+        <Tooltip
+          label={
+            <>
+              <Text fontWeight={600} textAlign="left">
+                Assets:
+              </Text>
+              <Text textAlign="left" mt={1}>
+                All assets used on Synthetix Protocol. As a security precaution, all assets can only
+                be withdrawn to your wallet after 24hs since your previous account activity
+              </Text>
+            </>
+          }
+          p="3"
+        >
+          <InfoIcon w="10px" h="10px" ml={2} />
         </Tooltip>
       </Flex>
-      <Table variant="simple">
-        <AssetTableHeader />
-        <Tbody>
-          <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-            <Td height="0px" border="none" px={0} pt={0} pb={5} />
-          </Tr>
-          {isLoading ? (
-            <>
-              <AssetRowLoading />
-              <AssetRowLoading />
-            </>
-          ) : (
-            <>
-              {mockAssets.map(
-                (
-                  {
-                    token,
-                    name,
-                    accountBalance,
-                    accountBalance$,
-                    delegatedBalance,
-                    delegatedBalance$,
-                    walletBalance,
-                    walletBalance$,
-                  },
-                  index
-                ) => {
+      {/* Not connected state */}
+      {!activeWallet?.address ? (
+        <Flex w="100%" justifyContent="space-between">
+          <Text color="gray.500" fontWeight={500} fontSize="14px" mt="4" pl="3">
+            Please connect wallet to view assets
+          </Text>
+          <Button
+            data-cy="connect-button-asset-table"
+            size="sm"
+            onClick={() => {
+              connect();
+            }}
+          >
+            Connect Wallet
+          </Button>
+        </Flex>
+      ) : // Empty State
+      assets && assets.length === 0 && !isLoading ? (
+        <AssetsEmpty />
+      ) : (
+        <Table variant="simple">
+          <AssetTableHeader />
+          <Tbody>
+            <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+              <Td height="0px" border="none" px={0} pt={0} pb={5} />
+            </Tr>
+            {isLoading || !assets ? (
+              <>
+                <AssetRowLoading />
+                <AssetRowLoading final />
+              </>
+            ) : (
+              <>
+                {assets?.map((asset, index) => {
+                  const { collateral, balance, price } = asset;
                   return (
                     <AssetsRow
-                      key={token}
-                      token={token}
-                      name={name}
-                      walletBalance={walletBalance}
-                      walletBalance$={walletBalance$}
-                      accountBalance={accountBalance}
-                      accountBalance$={accountBalance$}
-                      delegatedBalance={delegatedBalance}
-                      delegatedBalance$={delegatedBalance$}
-                      final={index === mockAssets.length - 1}
+                      key={collateral.tokenAddress
+                        .concat(collateral?.symbol || index.toString())
+                        .concat(index.toString())}
+                      token={collateral.symbol || ''}
+                      name={collateral.displaySymbol || ''}
+                      walletBalance={balance!.toNumber()}
+                      walletBalance$={balance.mul(price).toNumber()}
+                      accountBalance={collateral.availableCollateral}
+                      accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
+                      delegatedBalance={collateral.totalAssigned.toNumber()}
+                      delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      unlockDate={unlockDate}
+                      final={index === assets.length - 1}
                     />
                   );
-                }
-              )}
-            </>
-          )}
-        </Tbody>
-      </Table>
+                })}
+              </>
+            )}
+          </Tbody>
+        </Table>
+      )}
     </TableContainer>
   );
 };

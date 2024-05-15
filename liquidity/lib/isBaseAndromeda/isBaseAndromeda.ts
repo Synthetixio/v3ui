@@ -25,6 +25,10 @@ export function getUSDCAddress(id?: number) {
 
 export function getsUSDCAddress(id?: number) {
   switch (id) {
+    case 1:
+      return '0xb2F30A7C980f052f02563fb518dcc39e6bf38175';
+    case 11155111:
+      return '0x1b791d05E437C78039424749243F5A79E747525e';
     case 8453:
       return sUSDC;
     case 84532:
@@ -34,7 +38,22 @@ export function getsUSDCAddress(id?: number) {
   }
 }
 
-export function getsPythWrapper(id?: number) {
+export function getSNXUSDAddress(id?: number) {
+  switch (id) {
+    case 1:
+      return '0xb2F30A7C980f052f02563fb518dcc39e6bf38175';
+    case 11155111:
+      return '0x1b791d05E437C78039424749243F5A79E747525e';
+    case 84532:
+      return '0x682f0d17feDC62b2a0B91f8992243Bf44cAfeaaE';
+    case 8453:
+      return '0x09d51516F38980035153a554c26Df3C6f51a23C3';
+    default:
+      return '0xb2F30A7C980f052f02563fb518dcc39e6bf38175';
+  }
+}
+
+export function getPythWrapper(id?: number) {
   switch (id) {
     case 8453:
       return '0x3FC194FA6C26BE94Fc404E69b51793c199c3BF52';

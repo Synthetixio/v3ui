@@ -7,19 +7,19 @@ import { BigNumber } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { withERC7412 } from '@snx-v3/withERC7412';
+import Wei from '@synthetixio/wei';
 
 export const useWithdraw = ({
   accountId,
   collateralTypeAddress,
-  accountCollateral,
+  amount,
 }: {
   accountId?: string;
   collateralTypeAddress?: string;
-  accountCollateral: AccountCollateralWithSymbol;
+  amount: Wei;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -34,16 +34,8 @@ export const useWithdraw = ({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (
-        !(
-          CoreProxy &&
-          collateralTypeAddress &&
-          accountCollateral?.availableCollateral &&
-          collateralPriceIds
-        )
-      )
-        return;
-      if (accountCollateral?.availableCollateral.eq(0)) return;
+      if (!(CoreProxy && collateralTypeAddress && amount && collateralPriceIds)) return;
+      if (amount?.eq(0)) return;
       const walletAddress = await signer.getAddress();
 
       try {
@@ -54,7 +46,7 @@ export const useWithdraw = ({
         const populatedTxnPromised = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
           collateralTypeAddress,
-          accountCollateral?.availableCollateral.toBN()
+          amount.toBN()
         );
 
         const collateralPriceCallsPromise = fetchPriceUpdates(

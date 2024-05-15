@@ -7,6 +7,7 @@
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/zod": "workspace:*",
+    "@synthetixio/v3-contracts": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "ethers": "^5.7.2",
     "react": "^18.2.0",

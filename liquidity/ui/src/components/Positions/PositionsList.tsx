@@ -1,22 +1,31 @@
-import { useState, useEffect } from 'react';
 import { Heading, Flex } from '@chakra-ui/react';
 import { PositionsTable } from './PositionsTable';
+import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
+import { calculatePositions } from '../../utils/positions';
+import { useParams } from '@snx-v3/useParams';
+import { useApr } from '@snx-v3/useApr';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export const PositionsList = () => {
-  const [isLoading, setIsLoading] = useState(true); // TEMP
+  const { accountId } = useParams();
+  const { network } = useNetwork();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  }, []);
+  const { data: positionsByKey, isLoading } = useLiquidityPositions({
+    accountId,
+  });
+  const { data: apr } = useApr();
+
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const positions = calculatePositions(positionsByKey, isBase);
+  const parsedPositions = positions.filter((position) => position.collateralAmount.gt(0));
 
   return (
     <Flex flexDir="column">
       <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem" mt={4}>
         Positions
       </Heading>
-      <PositionsTable isLoading={isLoading} />
+      <PositionsTable isLoading={isLoading} positions={parsedPositions} apr={apr?.combinedApr} />
     </Flex>
   );
 };

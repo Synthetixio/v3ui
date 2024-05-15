@@ -72,7 +72,7 @@ export const DepositModalUi: FC<{
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="deposit modal">
+      <ModalContent bg="black" color="white" data-cy="deposit-modal">
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -180,13 +180,12 @@ export const DepositModalUi: FC<{
               loading: state.matches(State.deposit) && !error,
             }}
           />
-
           <Button
             isDisabled={isProcessing}
             onClick={onSubmit}
             width="100%"
             my="4"
-            data-testid="deposit confirm button"
+            data-cy="deposit-confirm-button"
           >
             {(() => {
               switch (true) {
@@ -223,12 +222,14 @@ export const DepositModal: DepositModalProps = ({
   availableCollateral,
 }) => {
   const navigate = useNavigate();
-  const params = useParams();
+  const { collateralSymbol, poolId, accountId } = useParams();
   const queryClient = useQueryClient();
   const { network } = useNetwork();
+
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
     ? getUSDCAddress(network?.id)
@@ -255,17 +256,18 @@ export const DepositModal: DepositModalProps = ({
   const newAccountId = useMemo(() => `${Math.floor(Math.random() * 10000000000)}`, []);
 
   const { exec: wrapEth, wethBalance } = useWrapEth();
+
   const wrapAmount =
     collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
       ? collateralChange.sub(wethBalance || 0)
       : wei(0);
 
-  const { data: pool } = usePool(params.poolId);
+  const { data: pool } = usePool(poolId);
 
   const { exec: execDeposit } = useDeposit({
-    accountId: params.accountId,
+    accountId: accountId,
     newAccountId,
-    poolId: params.poolId,
+    poolId: poolId,
     collateralTypeAddress: collateralAddress,
     collateralChange,
     currentCollateral,
@@ -273,9 +275,9 @@ export const DepositModal: DepositModalProps = ({
   });
 
   const { exec: depositBaseAndromeda } = useDepositBaseAndromeda({
-    accountId: params.accountId,
+    accountId,
     newAccountId,
-    poolId: params.poolId,
+    poolId,
     collateralTypeAddress: collateralAddress,
     collateralChange,
     currentCollateral,
@@ -311,7 +313,7 @@ export const DepositModal: DepositModalProps = ({
         try {
           toast({
             title: 'Approve collateral for transfer',
-            description: params.accountId
+            description: accountId
               ? 'The next transaction will delegate this collateral.'
               : 'The next transaction will create your account and and delegate this collateral',
             status: 'info',
@@ -340,7 +342,7 @@ export const DepositModal: DepositModalProps = ({
         try {
           toast.closeAll();
           toast({
-            title: Boolean(params.accountId)
+            title: Boolean(accountId)
               ? 'Delegating your collateral'
               : 'Creating your account and depositing collateral',
             description: '',
@@ -369,7 +371,7 @@ export const DepositModal: DepositModalProps = ({
             queryClient.invalidateQueries({
               queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
             }),
-            !params.accountId
+            !accountId
               ? queryClient.invalidateQueries({
                   queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
                 })
@@ -423,20 +425,20 @@ export const DepositModal: DepositModalProps = ({
   const handleClose = useCallback(() => {
     const isSuccess = state.matches(State.success);
 
-    if (isSuccess && params.poolId && collateralType?.symbol) {
+    if (isSuccess && poolId && collateralType?.symbol) {
       send(Events.RESET);
       onClose();
       navigate({
         pathname: generatePath('/positions/:collateralType/:poolId', {
           collateralType: collateralType.symbol,
-          poolId: params.poolId,
+          poolId,
         }),
         search: location.search,
       });
     }
     send(Events.RESET);
     onClose();
-  }, [location.search, send, onClose, state, params.poolId, collateralType?.symbol, navigate]);
+  }, [location.search, send, onClose, state, poolId, collateralType?.symbol, navigate]);
 
   const onSubmit = useCallback(async () => {
     if (state.matches(State.success)) {

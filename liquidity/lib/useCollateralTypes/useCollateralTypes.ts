@@ -23,12 +23,17 @@ const CollateralConfigurationSchema = z.object({
 const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
+  name: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
-const ERC20Interface = new utils.Interface(['function symbol() view returns (string)']);
+
+const ERC20Interface = new utils.Interface([
+  'function symbol() view returns (string)',
+  'function name() view returns (string)',
+]);
 
 async function loadSymbols({
   Multicall3,
@@ -41,9 +46,30 @@ async function loadSymbols({
     target: tokenConfig.tokenAddress,
     callData: ERC20Interface.encodeFunctionData('symbol'),
   }));
+
   const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
   return multicallResult.returnData.map((bytes: string) =>
     SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
+  );
+}
+
+async function loadName({
+  Multicall3,
+  tokenConfigs,
+}: {
+  Multicall3: Multicall3Type;
+  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
+}) {
+  const calls = tokenConfigs.map((tokenConfig) => ({
+    target: tokenConfig.tokenAddress,
+    callData: ERC20Interface.encodeFunctionData('name'),
+  }));
+
+  const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
+  return multicallResult.returnData.map((bytes: string) =>
+    SymbolSchema.parse(ERC20Interface.decodeFunctionResult('name', bytes)[0])
   );
 }
 
@@ -56,11 +82,14 @@ async function loadCollateralTypes({
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
   const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
     .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
 
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
+
+  const names = await loadName({ Multicall3, tokenConfigs });
 
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
@@ -72,6 +101,7 @@ async function loadCollateralTypes({
     tokenAddress: config.tokenAddress,
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
+    name: names[i],
   }));
 }
 
@@ -87,17 +117,19 @@ export function useCollateralTypes(includeDelegationOff = false) {
         throw Error('Query should not be enabled when contracts missing');
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
         (collateralType) => {
+          const isBase = isBaseAndromeda(network?.id, network?.preset);
+          if (isBase && collateralType.symbol === 'sUSDC') {
+            return {
+              ...collateralType,
+              symbol: 'USDC',
+              displaySymbol: 'USDC',
+              name: 'USD Coin',
+            };
+          }
           return {
             ...collateralType,
-            symbol:
-              collateralType.symbol === 'sUSDC' && isBaseAndromeda(network?.id, network?.preset)
-                ? 'USDC'
-                : collateralType.symbol,
-            displaySymbol:
-              collateralType.displaySymbol === 'sUSDC' &&
-              isBaseAndromeda(network?.id, network?.preset)
-                ? 'USDC'
-                : collateralType.symbol,
+            symbol: collateralType.symbol,
+            displaySymbol: collateralType.symbol,
           };
         }
       );
@@ -121,7 +153,6 @@ export function useCollateralTypes(includeDelegationOff = false) {
 
 export function useCollateralType(collateralSymbol?: string) {
   const { data: collateralTypes, isLoading, error } = useCollateralTypes();
-
   return {
     isLoading,
     error,

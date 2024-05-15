@@ -41,7 +41,7 @@ export const onboard = init({
   chains: [...networks],
   appMetadata: {
     ...appMetadata,
-    name: 'Synthetix Governance',
+    name: 'Synthetix Liquidity',
   },
   accountCenter: {
     desktop: {

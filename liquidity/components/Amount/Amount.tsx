@@ -1,8 +1,8 @@
-import { Tooltip } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { currency } from '@snx-v3/format';
 import Wei, { wei } from '@synthetixio/wei';
 import { constants } from 'ethers';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function Amount({
   value,

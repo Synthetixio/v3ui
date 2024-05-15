@@ -7,21 +7,23 @@ import { BigNumber, constants, utils } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getSNXUSDAddress, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { Wei } from '@synthetixio/wei';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
-  usdcCollateral,
+  sUSDCCollateral,
   snxUSDCollateral,
+  amountToWithdraw,
 }: {
-  usdcCollateral: AccountCollateralWithSymbol;
-  snxUSDCollateral: AccountCollateralWithSymbol;
+  sUSDCCollateral: Wei;
+  snxUSDCollateral: Wei;
+  amountToWithdraw: Wei;
   accountId?: string;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
@@ -35,9 +37,14 @@ export const useWithdrawBaseAndromeda = ({
   const signer = useSigner();
   const provider = useProvider();
 
+  const isSUSDCEnough = amountToWithdraw.lte(sUSDCCollateral);
+  const howMuchSNXUSD = amountToWithdraw.sub(sUSDCCollateral).sub(snxUSDCollateral).eq(0)
+    ? snxUSDCollateral
+    : snxUSDCollateral.sub(amountToWithdraw);
+
   const amount = useMemo(
-    () => snxUSDCollateral.availableCollateral.add(usdcCollateral.availableCollateral),
-    [snxUSDCollateral.availableCollateral, usdcCollateral.availableCollateral]
+    () => snxUSDCollateral.add(sUSDCCollateral),
+    [snxUSDCollateral, sUSDCCollateral]
   );
 
   const mutation = useMutation({
@@ -51,44 +58,44 @@ export const useWithdrawBaseAndromeda = ({
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const withdraw_sUSDC = usdcCollateral?.availableCollateral.gt(0)
+        const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
               BigNumber.from(accountId),
-              usdcCollateral.tokenAddress,
-              usdcCollateral?.availableCollateral.toBN()
+              getsUSDCAddress(network.id),
+              isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
             )
           : undefined;
 
-        const withdraw_sUSD = snxUSDCollateral?.availableCollateral.gt(0)
-          ? CoreProxy.populateTransaction.withdraw(
-              BigNumber.from(accountId),
-              snxUSDCollateral.tokenAddress,
-              snxUSDCollateral?.availableCollateral.toBN()
-            )
-          : undefined;
+        const withdraw_sUSD =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? CoreProxy.populateTransaction.withdraw(
+                BigNumber.from(accountId),
+                getSNXUSDAddress(network.id),
+                howMuchSNXUSD.toBN()
+              )
+            : undefined;
 
-        const sUSDCApproval = snxUSDCollateral.availableCollateral.gt(0)
-          ? UsdProxy?.populateTransaction.approve(
-              SpotProxy.address,
-              snxUSDCollateral.availableCollateral.toBN()
-            )
-          : undefined;
+        const sUSDCApproval =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? UsdProxy?.populateTransaction.approve(SpotProxy.address, howMuchSNXUSD.toBN())
+            : undefined;
 
-        const buy_SUSD = snxUSDCollateral.availableCollateral.gt(0)
-          ? SpotProxy.populateTransaction.buy(
-              USDC_BASE_MARKET,
-              snxUSDCollateral.availableCollateral.toBN(),
-              0,
-              constants.AddressZero
-            )
-          : undefined;
+        const buy_SUSD =
+          snxUSDCollateral.gt(0) && !isSUSDCEnough
+            ? SpotProxy.populateTransaction.buy(
+                USDC_BASE_MARKET,
+                howMuchSNXUSD.toBN(),
+                0,
+                constants.AddressZero
+              )
+            : undefined;
 
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
           USDC_BASE_MARKET,
-          amount.toBN(),
+          amountToWithdraw.toBN(),
           //2% slippage
           Number(
-            utils.formatUnits(amount.toBN().mul(98).div(100).toString(), 12).toString()
+            utils.formatUnits(amountToWithdraw.toBN().mul(98).div(100).toString(), 12).toString()
           ).toFixed()
         );
 

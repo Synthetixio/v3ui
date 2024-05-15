@@ -292,17 +292,18 @@ export function DepositFormUi({
 
 export const DepositForm = (props: { staticCollateral?: boolean }) => {
   const [_, connect] = useConnectWallet();
+  const { network } = useNetwork();
   const navigate = useNavigate();
   const isConnected = useIsConnected();
-  const params = useParams();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { collateralSymbol, accountId, poolId } = useParams();
 
-  const { network } = useNetwork();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
+
   const ethBalance = useEthBalance();
   const transferrable = useTransferableSynthetix();
 
   const { data: accountCollateral } = useAccountSpecificCollateral(
-    params.accountId,
+    accountId,
     collateralType?.tokenAddress
   );
 
@@ -322,7 +323,7 @@ export const DepositForm = (props: { staticCollateral?: boolean }) => {
       tokenBalance={tokenBalance}
       snxBalance={transferrable.data}
       ethBalance={ethBalance.data}
-      poolId={params.poolId}
+      poolId={poolId}
       navigate={navigate}
       DepositModal={DepositModal}
       CollateralTypeSelector={CollateralTypeSelector}

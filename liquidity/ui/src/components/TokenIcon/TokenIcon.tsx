@@ -1,9 +1,7 @@
 import { Image, ImageProps } from '@chakra-ui/react';
 
-type TokenSymbol = 'SNX' | 'sUSD' | 'ETH' | 'USDC';
-
 interface TokenIconProps extends ImageProps {
-  symbol: TokenSymbol;
+  symbol: string;
   width?: number;
   height?: number;
 }

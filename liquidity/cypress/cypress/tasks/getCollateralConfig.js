@@ -7,6 +7,7 @@ export async function getCollateralConfig(symbol) {
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, provider);
   const collateralConfigs = await coreProxy.getCollateralConfigurations(true);
+
   for (const config of collateralConfigs) {
     try {
       const contract = new ethers.Contract(
@@ -15,6 +16,7 @@ export async function getCollateralConfig(symbol) {
         provider
       );
       const collateralSymbol = await contract.symbol();
+
       if (collateralSymbol === symbol) {
         return config;
       }

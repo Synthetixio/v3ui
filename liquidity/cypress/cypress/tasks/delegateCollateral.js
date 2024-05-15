@@ -10,16 +10,19 @@ export async function delegateCollateral({ privateKey, accountId, symbol, amount
   console.log('delegateCollateral', { address: wallet.address, accountId, symbol, amount, poolId });
 
   const coreProxy = new ethers.Contract(CoreProxy.address, CoreProxy.abi, wallet);
-
-  const tx = await coreProxy.delegateCollateral(
-    ethers.BigNumber.from(accountId),
-    ethers.BigNumber.from(poolId),
-    config.tokenAddress,
-    ethers.utils.parseEther(`${amount}`),
-    ethers.utils.parseEther(`1`),
-    { gasLimit: 10_000_000 }
-  );
-  await tx.wait();
-
-  return accountId;
+  try {
+    const tx = await coreProxy.delegateCollateral(
+      ethers.BigNumber.from(accountId),
+      ethers.BigNumber.from(poolId),
+      config.tokenAddress,
+      ethers.utils.parseEther(`${amount}`),
+      ethers.utils.parseEther(`1`),
+      { gasLimit: 10_000_000 }
+    );
+    await tx.wait();
+    return accountId;
+  } catch (error) {
+    console.log('error: ', error);
+    return false;
+  }
 }

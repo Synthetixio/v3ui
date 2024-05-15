@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
 import Wei, { wei } from '@synthetixio/wei';
@@ -8,6 +8,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useApr } from '@snx-v3/useApr';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -99,7 +100,7 @@ export const CollateralSectionUi: FC<{
           ) : (
             <Tooltip label="APR is a combination of past week pool performance and rewards.">
               <Text fontWeight={700} fontSize="xl" color="white">
-                {`${apr ? apr?.toFixed(2) : '-'}%`}
+                {`${!!apr ? apr.toFixed(2) : '-'}%`}
               </Text>
             </Tooltip>
           )}

@@ -28,6 +28,7 @@ const fetchOffchainData = withMemoryCache(
     const priceService = new EvmPriceServiceConnection(
       isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
     );
+
     const OracleQuerySchema = z.tuple([z.number(), ZodBigNumber, z.array(z.string())]);
     const decoded = ethers.utils.defaultAbiCoder.decode(
       ['uint8', 'uint64', 'bytes32[]'],
@@ -205,7 +206,7 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id, network.preset)
+    ? await importCoreProxy(network.id)
     : await importMulticall3(network.id, network.preset);
 
   while (true) {

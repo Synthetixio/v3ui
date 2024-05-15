@@ -41,6 +41,7 @@ export const DepositUi: FC<{
   snxBalance,
 }) => {
   const [activeBadge, setActiveBadge] = useState(0);
+
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable;
@@ -64,7 +65,7 @@ export const DepositUi: FC<{
         Add {displaySymbol}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Provide additional collateral to this position. This will increase the position’s C-Ratio.
+        Provide additional collateral to this position.
       </Text>
       <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
         <Flex>
@@ -85,6 +86,7 @@ export const DepositUi: FC<{
                   setCollateralChange(value);
                 }}
                 max={maxAmount}
+                dataTestId="deposit-number-input"
               />
               <Flex
                 flexDirection="column"
@@ -156,9 +158,21 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
+      {/* TODO Hook for this */}
+      {/* <Alert colorScheme="blue" rounded="base" m="2" my="4">
+        <InfoIcon w="24px" h="24px" color="cyan.500" mr="2" />
+        <Text>
+          Market Caps have been reached, you cannot add collateral for now. Keep an eye on{' '}
+          <Link href="https://sips.synthetix.io/all-sccp/" rel="noopener" color="cyan.500">
+            new announcements{' '}
+          </Link>
+          for the next market cap increase.
+        </Text>
+      </Alert> */}
       <Button
         disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"
+        data-cy="deposit-submit-button"
         type="submit"
       >
         Add {displaySymbol}
@@ -170,9 +184,9 @@ export const DepositUi: FC<{
 export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
-  const params = useParams();
+  const { collateralSymbol } = useParams();
 
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
 
   const { data: tokenBalance } = useTokenBalance(
@@ -188,11 +202,11 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
   return (
     <DepositUi
       accountCollateral={liquidityPosition.accountCollateral}
-      displaySymbol={collateralType.displaySymbol}
+      displaySymbol={collateralType?.displaySymbol || ''}
       tokenBalance={tokenBalance}
       snxBalance={transferrableSnx}
       ethBalance={ethBalance}
-      symbol={collateralType.symbol}
+      symbol={collateralType?.symbol || ''}
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
     />

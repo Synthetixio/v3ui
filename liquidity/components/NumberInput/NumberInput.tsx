@@ -24,12 +24,14 @@ export function NumberInput({
   min,
   max,
   InputProps,
+  dataTestId,
 }: {
   onChange?: (value: Wei) => void;
   value: Wei;
   min?: Wei;
   max?: Wei;
   InputProps?: NumberInputProps;
+  dataTestId?: string;
 }) {
   const [inputValue, setInputValue] = useState(value.gt(0) ? value.toString() : '');
 
@@ -110,6 +112,7 @@ export function NumberInput({
       _placeholder={{ color: 'whiteAlpha.700' }}
       value={inputValue}
       onChange={onInputChange}
+      data-cy={dataTestId}
       {...InputProps}
     />
   );

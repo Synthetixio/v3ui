@@ -12,6 +12,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -91,8 +92,7 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
-        priceUpdateTx: priceUpdateTx?.data || '',
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     enabled: Boolean(
@@ -156,13 +156,14 @@ export const useLiquidityPosition = ({
           const endOfPosition = startOfPosition + positionCalls.length;
 
           const startOfAccountCollateral = endOfPosition;
-          const [collateralPrice] = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
+          const collateralPrice = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
           const decodedPosition = positionDecoder(encoded.slice(startOfPosition, endOfPosition));
           const [accountCollateral, usdCollateral] = accountCollateralDecoder(
             encoded.slice(startOfAccountCollateral)
           );
+
           return {
-            collateralPrice,
+            collateralPrice: Array.isArray(collateralPrice) ? collateralPrice[0] : collateralPrice,
             collateralAmount: decodedPosition.collateral.amount,
             collateralValue: decodedPosition.collateral.amount.mul(collateralPrice),
             debt: decodedPosition.debt,

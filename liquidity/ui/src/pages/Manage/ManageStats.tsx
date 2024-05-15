@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Skeleton, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -14,13 +14,15 @@ import { constants } from 'ethers';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useApr } from '@snx-v3/useApr';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 const ChangeStat: FC<{
   value: Wei;
   newValue: Wei;
   hasChanges: boolean;
+  dataTestId?: string;
   formatFn: (val: Wei) => string;
-}> = ({ formatFn, value, newValue, hasChanges }) => {
+}> = ({ formatFn, value, newValue, hasChanges, dataTestId }) => {
   return (
     <Flex
       gap={4}
@@ -30,7 +32,7 @@ const ChangeStat: FC<{
       alignItems="center"
       lineHeight="32px"
     >
-      <Text>{formatFn(value)}</Text>
+      <Text data-cy={dataTestId}>{formatFn(value)}</Text>
       {hasChanges && !value.eq(newValue) ? (
         <>
           <ArrowForwardIcon />
@@ -107,7 +109,7 @@ export const ManageStatsUi: FC<{
                   alignItems="center"
                   lineHeight="32px"
                 >
-                  <Text>{aprData.toFixed(2)}%</Text>
+                  <Text>{!!aprData ? aprData : '-'}%</Text>
                 </Flex>
               ) : (
                 <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
@@ -134,16 +136,13 @@ export const ManageStatsUi: FC<{
         </Flex>
         {liquidityPosition && collateralType ? (
           <>
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              data-testid="manage stats collateral"
-            >
+            <Flex justifyContent="space-between" alignItems="center">
               <ChangeStat
                 value={liquidityPosition.collateralAmount}
                 newValue={newCollateralAmount}
                 formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
                 hasChanges={hasChanges}
+                dataTestId="manage stats collateral"
               />
               <Text
                 fontWeight="400"
@@ -151,6 +150,7 @@ export const ManageStatsUi: FC<{
                 fontSize="md"
                 fontFamily="heading"
                 lineHeight="24px"
+                data-cy="manage-stats-collateral-value"
               >
                 {currency(liquidityPosition.collateralValue, {
                   currency: 'USD',
@@ -189,7 +189,7 @@ export const ManageStatsUi: FC<{
               </Flex>
             </Tooltip>
           </Flex>
-          <Flex width="100%" data-testid="manage stats debt">
+          <Flex width="100%">
             {liquidityPosition && collateralType ? (
               <ChangeStat
                 value={liquidityPosition.debt}
@@ -202,6 +202,7 @@ export const ManageStatsUi: FC<{
                   })
                 }
                 hasChanges={hasChanges}
+                dataTestId="manage-stats-debt-value"
               />
             ) : (
               <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
@@ -214,12 +215,8 @@ export const ManageStatsUi: FC<{
           <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
             C-RATIO
           </Text>
-          <Flex
-            justifyContent="space-between"
-            alignItems="center"
-            data-testid="manage stats collateral"
-          >
-            {liquidityPosition && collateralType ? (
+          <Flex justifyContent="space-between" alignItems="center">
+            {collateralType ? (
               <>
                 <ChangeStat
                   // TODO, need a function to burn to target so dust debt not left over
@@ -261,10 +258,10 @@ export const ManageStatsUi: FC<{
 };
 
 export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
-  const params = useParams();
+  const { collateralSymbol } = useParams();
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const { data: aprData } = useApr();
 

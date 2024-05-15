@@ -1,104 +1,54 @@
-import { Button, Divider, Flex, Heading, Image, Text, Tooltip } from '@chakra-ui/react';
-import { InfoIcon } from '@chakra-ui/icons';
+import { Flex, Heading } from '@chakra-ui/react';
 import { usePools } from '@snx-v3/usePools';
-import { TokenIcon } from '../../components/TokenIcon';
-import opSvg from './op.svg';
-import poolsSvg from './pools.svg';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useApr } from '@snx-v3/useApr';
+import { useVaultsData } from '@snx-v3/useVaultsData';
+import { BasePoolCard, BaseInfoCard } from '../../components/Pools';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
 
 export function Pools() {
-  const { data: pools } = usePools();
+  const { network } = useNetwork();
+  const { data: pools, isLoading: isPoolsLoading } = usePools();
+  const { data: apr, isLoading: isAprLoading } = useApr();
+  const { data: vaultDebt, isLoading: isVaultsLoading } = useVaultsData(1);
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+
+  const isLoading = isPoolsLoading || isAprLoading || isVaultsLoading || isCollateralTypesLoading;
+
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
+  const hydratedCollateralTypes = isBase
+    ? collateralTypes?.map((item) => {
+        if (item.symbol === 'sUSDC') {
+          return {
+            ...item,
+            symbol: 'USDC',
+            name: 'USD Coin',
+          };
+        }
+
+        return item;
+      })
+    : collateralTypes;
+
   return (
     <Flex flexDir="column">
-      <Heading>All Pools</Heading>
-      <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'}>
+      <Heading mt={10} color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
+        All Pools
+      </Heading>
+      <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'} mt="6">
         {pools?.map((pool) => (
-          <Flex
+          <BasePoolCard
             key={pool.id}
-            flexDir="column"
-            w="100%"
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            bg="navy.700"
-            p="6"
-            maxW={pools.length > 1 ? '488px' : 'unset'}
-          >
-            <Flex w="100%" alignItems="center" justifyContent="space-between" mb={4}>
-              <Text fontSize="16px" fontWeight={700} color="white">
-                {pool.name}
-              </Text>
-              <Button variant="outline" colorScheme="gray" color="white">
-                Pool Details
-              </Button>
-            </Flex>
-            <Divider />
-            <Flex w="100%" h="164px" alignItems="center" gap="4">
-              <Flex flexDir="column">
-                <Text fontSize="12px" color="gray.600">
-                  TVL{' '}
-                  <Tooltip label="???">
-                    <InfoIcon w="12px" h="12px" />
-                  </Tooltip>
-                </Text>
-                <Text fontWeight={700} fontSize="30px" color="white">
-                  TODO
-                </Text>
-              </Flex>
-              <Flex flexDir="column" mr="auto">
-                <Text fontSize="12px" color="gray.600">
-                  APR{' '}
-                  <Tooltip label="???">
-                    <InfoIcon w="12px" h="12px" />
-                  </Tooltip>
-                </Text>
-                <Text fontWeight={700} fontSize="30px" color="white">
-                  TODO
-                </Text>
-              </Flex>
-              <Image src={poolsSvg} mr="50%" mb={4} />
-            </Flex>
-            <Divider />
-            <Flex mt={4}>
-              <TokenIcon symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                  sUSDC
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  Synthetix USDC
-                </Text>
-              </Flex>
-              <Button>Deposit</Button>
-            </Flex>
-          </Flex>
+            isLoading={isLoading}
+            pool={pool}
+            apr={apr?.combinedApr}
+            vaultDebt={vaultDebt}
+            collateralTypes={hydratedCollateralTypes}
+          />
         ))}
-        <Flex
-          flexDir="column"
-          w="100%"
-          border="1px solid"
-          borderColor="gray.900"
-          rounded="base"
-          bg="navy.700"
-          p={6}
-          shrink={2}
-        >
-          <Image src={opSvg} w="66px" height="66px" mb={6} />
-          <Text fontWeight={700} fontSize="14px" color="white">
-            10x Cost Effective on Gas Fees
-          </Text>
-          <Text fontSize="12px" color="gray.600" mb="auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
-          </Text>
-          <Flex justifyContent="flex-end" gap={4} my={6}>
-            <Button variant="outline" colorScheme="gray" color="white">
-              Bridge Asset
-            </Button>
-            <Button variant="outline" colorScheme="gray" color="white">
-              Switch to Optimism
-            </Button>
-          </Flex>
-        </Flex>
+        <BaseInfoCard />
       </Flex>
     </Flex>
   );

@@ -2720,9 +2720,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@coinbase/wallet-sdk@npm:^3.7.2":
-  version: 3.9.1
-  resolution: "@coinbase/wallet-sdk@npm:3.9.1"
+"@coinbase/wallet-sdk@npm:^3.9.3":
+  version: 3.9.3
+  resolution: "@coinbase/wallet-sdk@npm:3.9.3"
   dependencies:
     bn.js: "npm:^5.2.1"
     buffer: "npm:^6.0.3"
@@ -2733,7 +2733,7 @@ __metadata:
     keccak: "npm:^3.0.3"
     preact: "npm:^10.16.0"
     sha.js: "npm:^2.4.11"
-  checksum: afa2b01ba69edb96c5d8d0b34e68eb9ab1ef99c20f0a6db81c0b42f6f234c4dec538b978e6dc69d9dd37539e6d7290068e3aae960029afee78995bd515bc8077
+  checksum: 3bc3f0edad8ea46cb7a127993373093d95b6fef03d2a6a40bae7983a1d9a20a114faa8e7bf1230efd380ffb67b42dae405c6617cd6fad6d278bf9b9e021a0280
   languageName: node
   linkType: hard
 
@@ -5907,25 +5907,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/AccountsSelector@workspace:*, @snx-v3/AccountsSelector@workspace:liquidity/components/AccountsSelector":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/AccountsSelector@workspace:liquidity/components/AccountsSelector"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/format": "workspace:*"
-    "@snx-v3/useAccounts": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
-    react: "npm:^18.2.0"
-    react-router-dom: "npm:^6.18.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/Amount@workspace:*, @snx-v3/Amount@workspace:liquidity/components/Amount":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Amount@workspace:liquidity/components/Amount"
   dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
@@ -6098,41 +6084,31 @@ __metadata:
   dependencies:
     "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Pools@workspace:*, @snx-v3/Pools@workspace:liquidity/components/Pools":
+"@snx-v3/Pools@workspace:liquidity/components/Pools":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Pools@workspace:liquidity/components/Pools"
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
-    "@snx-v3/ContractError": "workspace:*"
-    "@snx-v3/WithdrawModal": "workspace:*"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
-    "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useContractErrorParser": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
-    "@snx-v3/useWrapEth": "workspace:*"
-    "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/react": "npm:^2.8.13"
-    "@xstate/react": "npm:^3.2.2"
+    "@web3-onboard/react": "npm:^2.8.17"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
   languageName: unknown
@@ -6175,6 +6151,14 @@ __metadata:
     "@synthetixio/v3-theme": "workspace:*"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/Tooltip@workspace:*, @snx-v3/Tooltip@workspace:liquidity/components/Tooltip":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/Tooltip@workspace:liquidity/components/Tooltip"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
   languageName: unknown
   linkType: soft
 
@@ -6221,7 +6205,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/WithdrawModal@workspace:*, @snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal":
+"@snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal"
   dependencies:
@@ -6355,13 +6339,13 @@ __metadata:
     "@types/react": "npm:^18.2.37"
     "@types/react-blockies": "npm:^1"
     "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/coinbase": "npm:^2.2.6"
-    "@web3-onboard/gnosis": "npm:^2.2.1"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/ledger": "npm:^2.5.2"
-    "@web3-onboard/react": "npm:^2.8.13"
-    "@web3-onboard/trezor": "npm:^2.4.3"
-    "@web3-onboard/walletconnect": "npm:^2.5.3"
+    "@web3-onboard/coinbase": "npm:^2.2.7"
+    "@web3-onboard/gnosis": "npm:^2.2.2"
+    "@web3-onboard/injected-wallets": "npm:^2.10.16"
+    "@web3-onboard/ledger": "npm:2.5.2"
+    "@web3-onboard/react": "npm:^2.8.17"
+    "@web3-onboard/trezor": "npm:^2.4.4"
+    "@web3-onboard/walletconnect": "npm:^2.5.5"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
     bn.js: "npm:^5.2.1"
@@ -6440,7 +6424,6 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
-    "@snx-v3/AccountsSelector": "workspace:*"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/Balance": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
@@ -6454,9 +6437,9 @@ __metadata:
     "@snx-v3/NumberInput": "workspace:*"
     "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/PoolBox": "workspace:*"
-    "@snx-v3/Pools": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
+    "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
@@ -6480,6 +6463,7 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useGetBorrow": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useMarketNamesById": "workspace:*"
@@ -6493,20 +6477,23 @@ __metadata:
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
+    "@snx-v3/useWithdraw": "workspace:*"
+    "@snx-v3/useWithdrawBaseAndromeda": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     "@tanstack/react-query-devtools": "npm:^5.8.3"
+    "@types/humanize-plus": "npm:^1"
     "@types/react": "npm:^18.2.37"
     "@types/react-helmet": "npm:^6.1.9"
-    "@web3-onboard/coinbase": "npm:^2.2.6"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/ledger": "npm:^2.5.2"
-    "@web3-onboard/react": "npm:^2.8.13"
-    "@web3-onboard/trezor": "npm:^2.4.3"
-    "@web3-onboard/walletconnect": "npm:^2.5.3"
+    "@web3-onboard/coinbase": "npm:^2.2.7"
+    "@web3-onboard/injected-wallets": "npm:^2.10.16"
+    "@web3-onboard/ledger": "npm:2.5.2"
+    "@web3-onboard/react": "npm:^2.8.17"
+    "@web3-onboard/trezor": "npm:^2.4.4"
+    "@web3-onboard/walletconnect": "npm:^2.5.5"
     "@xstate/react": "npm:^3.2.2"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
@@ -6520,6 +6507,7 @@ __metadata:
     ethers: "npm:^5.7.2"
     framer-motion: "npm:^10.16.5"
     html-webpack-plugin: "npm:^5.5.3"
+    humanize-plus: "npm:^1.8.2"
     i18next: "npm:^23.7.6"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
@@ -6565,8 +6553,8 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.8.3"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/react": "npm:^2.8.13"
+    "@web3-onboard/injected-wallets": "npm:^2.10.16"
+    "@web3-onboard/react": "npm:^2.8.17"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
     bn.js: "npm:^5.2.1"
@@ -6651,12 +6639,12 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.8.3"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/coinbase": "npm:^2.2.6"
-    "@web3-onboard/injected-wallets": "npm:^2.10.11"
-    "@web3-onboard/ledger": "npm:^2.5.2"
-    "@web3-onboard/react": "npm:^2.8.13"
-    "@web3-onboard/trezor": "npm:^2.4.3"
-    "@web3-onboard/walletconnect": "npm:^2.5.3"
+    "@web3-onboard/coinbase": "npm:^2.2.7"
+    "@web3-onboard/injected-wallets": "npm:^2.10.16"
+    "@web3-onboard/ledger": "npm:2.5.2"
+    "@web3-onboard/react": "npm:^2.8.17"
+    "@web3-onboard/trezor": "npm:^2.4.4"
+    "@web3-onboard/walletconnect": "npm:^2.5.5"
     babel-loader: "npm:^9.1.3"
     babel-plugin-istanbul: "npm:^6.1.1"
     bn.js: "npm:^5.2.1"
@@ -6689,9 +6677,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAccountCollateral@workspace:liquidity/lib/useAccountCollateral"
   dependencies:
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6730,10 +6720,9 @@ __metadata:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
-    "@web3-onboard/react": "npm:^2.8.13"
-    react: "npm:^18.2.0"
-    react-router-dom: "npm:^6.18.0"
   languageName: unknown
   linkType: soft
 
@@ -6787,7 +6776,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
   dependencies:
-    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
@@ -6811,7 +6799,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/icons": "workspace:*"
-    "@web3-onboard/react": "npm:^2.8.13"
+    "@web3-onboard/react": "npm:^2.8.17"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
@@ -6871,7 +6859,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
+"@snx-v3/useCollateralPriceUpdates@workspace:*, @snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCollateralPriceUpdates@workspace:liquidity/lib/useCollateralPriceUpdates"
   dependencies:
@@ -6890,6 +6878,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCollateralPrices@workspace:liquidity/lib/useCollateralPrices"
   dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -7029,11 +7019,36 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useGetBorrow@workspace:*, @snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow"
+  dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useGetUSDTokens@workspace:*, @snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens"
+  dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -7149,6 +7164,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
+    "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
@@ -7332,6 +7348,7 @@ __metadata:
   resolution: "@snx-v3/useVaultsData@workspace:liquidity/lib/useVaultsData"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -7350,7 +7367,6 @@ __metadata:
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -7358,27 +7374,29 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda":
+"@snx-v3/useWithdrawBaseAndromeda@workspace:*, @snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
@@ -8604,6 +8622,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/humanize-plus@npm:^1":
+  version: 1.8.2
+  resolution: "@types/humanize-plus@npm:1.8.2"
+  checksum: a95ba6e42b71d3a11bf1b5c1f9ae2d76f4344191c88ff4149a89d53857b4d5b45df8c54555bcb7b7b6faf3198a470aba264414b5a140f82092c705c2d26d4075
+  languageName: node
+  linkType: hard
+
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.4
   resolution: "@types/istanbul-lib-coverage@npm:2.0.4"
@@ -9336,9 +9361,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/core@npm:2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/core@npm:2.11.0"
+"@walletconnect/core@npm:2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/core@npm:2.12.2"
   dependencies:
     "@walletconnect/heartbeat": "npm:1.2.1"
     "@walletconnect/jsonrpc-provider": "npm:1.0.13"
@@ -9346,18 +9371,18 @@ __metadata:
     "@walletconnect/jsonrpc-utils": "npm:1.0.8"
     "@walletconnect/jsonrpc-ws-connection": "npm:1.0.14"
     "@walletconnect/keyvaluestorage": "npm:^1.1.1"
-    "@walletconnect/logger": "npm:^2.0.1"
+    "@walletconnect/logger": "npm:^2.1.2"
     "@walletconnect/relay-api": "npm:^1.0.9"
     "@walletconnect/relay-auth": "npm:^1.0.4"
     "@walletconnect/safe-json": "npm:^1.0.2"
     "@walletconnect/time": "npm:^1.0.2"
-    "@walletconnect/types": "npm:2.11.0"
-    "@walletconnect/utils": "npm:2.11.0"
+    "@walletconnect/types": "npm:2.12.2"
+    "@walletconnect/utils": "npm:2.12.2"
     events: "npm:^3.3.0"
     isomorphic-unfetch: "npm:3.1.0"
     lodash.isequal: "npm:4.5.0"
     uint8arrays: "npm:^3.1.0"
-  checksum: 062b4b66eb4a961ee2044e8ba834f010f89d9c6ca62cc9bdaeb11150ee815ff833afdd47b8f9c1c0be9aae59ab7b10e517b2153bfa51e07ceb1efcbdaadd0ef0
+  checksum: 640b6ef23115d98c9d7cc465a7a09c96bb36384fca9d4dafdc8d1e6b82ae05317aae84d0ebd22175d40d52a44beaa6f98458d3b7822e247b672dd3e77c576489
   languageName: node
   linkType: hard
 
@@ -9452,21 +9477,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/ethereum-provider@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/ethereum-provider@npm:2.11.0"
+"@walletconnect/ethereum-provider@npm:^2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/ethereum-provider@npm:2.12.2"
   dependencies:
     "@walletconnect/jsonrpc-http-connection": "npm:^1.0.7"
     "@walletconnect/jsonrpc-provider": "npm:^1.0.13"
     "@walletconnect/jsonrpc-types": "npm:^1.0.3"
     "@walletconnect/jsonrpc-utils": "npm:^1.0.8"
     "@walletconnect/modal": "npm:^2.6.2"
-    "@walletconnect/sign-client": "npm:2.11.0"
-    "@walletconnect/types": "npm:2.11.0"
-    "@walletconnect/universal-provider": "npm:2.11.0"
-    "@walletconnect/utils": "npm:2.11.0"
+    "@walletconnect/sign-client": "npm:2.12.2"
+    "@walletconnect/types": "npm:2.12.2"
+    "@walletconnect/universal-provider": "npm:2.12.2"
+    "@walletconnect/utils": "npm:2.12.2"
     events: "npm:^3.3.0"
-  checksum: d17aac8f8e89f428ad401f37ea3ef4efb75c50e4a956afe4f43ee589b248dcae5b3d20ef67152067168d3e56e0cb577dc7087d78d5db44bf591a6335a0942b71
+  checksum: 740a9c5deeb28cbeb5f0cae5e353303db0dce4a4b9ab71caeaae531efeb8dc126f7e8bd6258c2ba4573d85200413aa87696fe8da01283f7f7c0338e9f649a38e
   languageName: node
   linkType: hard
 
@@ -9587,13 +9612,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/logger@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@walletconnect/logger@npm:2.0.1"
+"@walletconnect/logger@npm:^2.0.1, @walletconnect/logger@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@walletconnect/logger@npm:2.1.2"
   dependencies:
+    "@walletconnect/safe-json": "npm:^1.0.2"
     pino: "npm:7.11.0"
-    tslib: "npm:1.14.1"
-  checksum: 93ad8fd59a07a512ffb0f250dba83b15ea0b4ba7c5d676241c98238b78910e1c26d86a270b85a8c2809833bfd9e87325c37f55c88255102ad199d73da537bf42
+  checksum: 2e6d438bd352595fff6691712c83953e3ad6b2b9ab298c5a8b670a024f53a3f744b165e5aa081a79261ee4801b93b6c60698a39947d613d49a8f6e6215ecd4c2
   languageName: node
   linkType: hard
 
@@ -9711,20 +9736,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/sign-client@npm:2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/sign-client@npm:2.11.0"
+"@walletconnect/sign-client@npm:2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/sign-client@npm:2.12.2"
   dependencies:
-    "@walletconnect/core": "npm:2.11.0"
+    "@walletconnect/core": "npm:2.12.2"
     "@walletconnect/events": "npm:^1.0.1"
     "@walletconnect/heartbeat": "npm:1.2.1"
     "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/logger": "npm:^2.0.1"
+    "@walletconnect/logger": "npm:^2.1.2"
     "@walletconnect/time": "npm:^1.0.2"
-    "@walletconnect/types": "npm:2.11.0"
-    "@walletconnect/utils": "npm:2.11.0"
+    "@walletconnect/types": "npm:2.12.2"
+    "@walletconnect/utils": "npm:2.12.2"
     events: "npm:^3.3.0"
-  checksum: dfce7c223cd12d478f42410e7cc0d15b0e2cefaa29bb860eed1826627efb34513cbe2bb37b301c42a93bae9d9c677407ec9439e7f3de0b76eac581f92adc099e
+  checksum: 1c123659b304e80694c2ffa3a151ca66d1b06791f9741217ad3e9f9acb83aa591052f68a3202f5f2c50f5ca816b5d1e6a736bd1a8957fe97cb2118e8ae4c7fa3
   languageName: node
   linkType: hard
 
@@ -9765,9 +9790,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/types@npm:2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/types@npm:2.11.0"
+"@walletconnect/types@npm:2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/types@npm:2.12.2"
   dependencies:
     "@walletconnect/events": "npm:^1.0.1"
     "@walletconnect/heartbeat": "npm:1.2.1"
@@ -9775,7 +9800,7 @@ __metadata:
     "@walletconnect/keyvaluestorage": "npm:^1.1.1"
     "@walletconnect/logger": "npm:^2.0.1"
     events: "npm:^3.3.0"
-  checksum: 72602e3a38dbc8db789467cbf40fad5500c2fdf736277dde11990b8d11d989c3c075cb3ab8a6e88dc7f1a6b559cd791a2aa5da843239c34a0ee726d1f73fd723
+  checksum: 7e90d57dbbb5998141953f9887b1cd591a486eaf98b344718f206c479c5d20aa8c6133c893b770b8a0e21649f7dcd8aa373ed82621b70a060df44e0c119cd2a3
   languageName: node
   linkType: hard
 
@@ -9800,20 +9825,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/universal-provider@npm:2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/universal-provider@npm:2.11.0"
+"@walletconnect/universal-provider@npm:2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/universal-provider@npm:2.12.2"
   dependencies:
     "@walletconnect/jsonrpc-http-connection": "npm:^1.0.7"
     "@walletconnect/jsonrpc-provider": "npm:1.0.13"
     "@walletconnect/jsonrpc-types": "npm:^1.0.2"
     "@walletconnect/jsonrpc-utils": "npm:^1.0.7"
-    "@walletconnect/logger": "npm:^2.0.1"
-    "@walletconnect/sign-client": "npm:2.11.0"
-    "@walletconnect/types": "npm:2.11.0"
-    "@walletconnect/utils": "npm:2.11.0"
+    "@walletconnect/logger": "npm:^2.1.2"
+    "@walletconnect/sign-client": "npm:2.12.2"
+    "@walletconnect/types": "npm:2.12.2"
+    "@walletconnect/utils": "npm:2.12.2"
     events: "npm:^3.3.0"
-  checksum: 8e04a6530f285f7c6e3a125f0b3707959436fe181d33e6a7bad6e400cc9552c97158065bda518a29b9764e62bb8ae31a2be992aa3606d1de24f92300ae8e3585
+  checksum: c30a245b24f3fb0a155bf8493bf252f973f279be9b4294550d3deb08f57b354064f7594afe3daa3fec552176a7d346b31230b9e32279b76b27d9f0e9994881bb
   languageName: node
   linkType: hard
 
@@ -9834,9 +9859,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/utils@npm:2.11.0":
-  version: 2.11.0
-  resolution: "@walletconnect/utils@npm:2.11.0"
+"@walletconnect/utils@npm:2.12.2":
+  version: 2.12.2
+  resolution: "@walletconnect/utils@npm:2.12.2"
   dependencies:
     "@stablelib/chacha20poly1305": "npm:1.0.1"
     "@stablelib/hkdf": "npm:1.0.1"
@@ -9846,13 +9871,13 @@ __metadata:
     "@walletconnect/relay-api": "npm:^1.0.9"
     "@walletconnect/safe-json": "npm:^1.0.2"
     "@walletconnect/time": "npm:^1.0.2"
-    "@walletconnect/types": "npm:2.11.0"
+    "@walletconnect/types": "npm:2.12.2"
     "@walletconnect/window-getters": "npm:^1.0.1"
     "@walletconnect/window-metadata": "npm:^1.0.1"
     detect-browser: "npm:5.3.0"
     query-string: "npm:7.1.3"
     uint8arrays: "npm:^3.1.0"
-  checksum: d58f001ba989f8c798b7d51004bf9441175c1e6b199523adc3688cb509fc883160cd537873f2f233d1ff1bf523dbf80f42c4159ba820d5db22222ed8cdbd551d
+  checksum: 088d7623ba39c10239f47a9fe30704daaf2569534c2d5bf3c8f5827a01f7ace4d0e5da9f22b8e5ec520abfa5fafebfa0112ec74994f96e5d98c7cfa373d4b02a
   languageName: node
   linkType: hard
 
@@ -9928,32 +9953,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/coinbase@npm:^2.2.6":
-  version: 2.2.6
-  resolution: "@web3-onboard/coinbase@npm:2.2.6"
+"@web3-onboard/coinbase@npm:^2.2.7":
+  version: 2.2.7
+  resolution: "@web3-onboard/coinbase@npm:2.2.7"
   dependencies:
-    "@coinbase/wallet-sdk": "npm:^3.7.2"
+    "@coinbase/wallet-sdk": "npm:^3.9.3"
     "@web3-onboard/common": "npm:^2.3.3"
-  checksum: 3aea38b63bb33c450beab0b4e84c0c9898cc35d30a6304f3e73bceede94c31ecee680aa991e6faa4edb10388c175bd8dccc27812ed51bf4ebc7bf93491a86be4
+  checksum: 7efdb9401406e2943433163512631ea64864ef7b4103a045d10705df00b9d5890a66ef45c824da7cc69a6e693cceb03c047049e25366ac14c48f2bb36b8af50b
   languageName: node
   linkType: hard
 
-"@web3-onboard/common@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "@web3-onboard/common@npm:2.3.3"
+"@web3-onboard/common@npm:^2.3.3, @web3-onboard/common@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "@web3-onboard/common@npm:2.3.4"
   dependencies:
     bignumber.js: "npm:^9.1.0"
     ethers: "npm:5.5.4"
     joi: "npm:17.9.1"
-  checksum: c671648fa95055ff0adc121353c2c290e62e09ff1f6394ee43f4ee4420738122d0a5c0ac68c7f5d8f8e1fe141bb1830c1d555d8ea231446e9a01600030c18bfd
+  checksum: 932c42023f7781e45081a164d0deef3e5fbf7f6199ee0ff519ae514dadebf9b7eb96539f0372c4de5679bc4ba70d86659c02df01df92398ce96c0c31009a87d8
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:^2.21.2":
-  version: 2.21.2
-  resolution: "@web3-onboard/core@npm:2.21.2"
+"@web3-onboard/core@npm:^2.21.6":
+  version: 2.21.6
+  resolution: "@web3-onboard/core@npm:2.21.6"
   dependencies:
-    "@web3-onboard/common": "npm:^2.3.3"
+    "@web3-onboard/common": "npm:^2.3.4"
     bignumber.js: "npm:^9.0.0"
     bnc-sdk: "npm:^4.6.7"
     bowser: "npm:^2.11.0"
@@ -9966,47 +9991,47 @@ __metadata:
     rxjs: "npm:^7.5.5"
     svelte: "npm:^3.49.0"
     svelte-i18n: "npm:^3.3.13"
-  checksum: ddcd6e78d0ea36ee70a9e01dd18fe8e58d0f43c2ac74004761e3cf09ab480b308336d7eed42db9f21997c32ba899e3dbaff2304a10e929192d1a58a82224cf38
+  checksum: d4325b174d1a1fdabae5fa5b0cf260a8b4d58756ff14f12c7a0330182f19dbde3742526706b8b97df9d66a43b9220ce3e1e5acbe33454623b0a8f215f65dc263
   languageName: node
   linkType: hard
 
-"@web3-onboard/gnosis@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "@web3-onboard/gnosis@npm:2.2.1"
+"@web3-onboard/gnosis@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@web3-onboard/gnosis@npm:2.2.2"
   dependencies:
     "@web3-onboard/common": "npm:^2.3.3"
   peerDependencies:
     "@safe-global/safe-apps-provider": ^0.17.1
     "@safe-global/safe-apps-sdk": ^8.0.0
-  checksum: 2f50497aafdd818c31459f76bf057e3785921cef3a707ac28961019df79c7787e37fcc970c554452bc6146f3e5233b7e444700ca4d044df43b7a251ae03ce394
+  checksum: c84884bfee9d848c0b2714154ee8adc5e1be976b8193770556da9532b78b4a169a1391eeefcbbd20cabb1d099643c0f53e08e45bd246550bcdb71dd111aef078
   languageName: node
   linkType: hard
 
-"@web3-onboard/hw-common@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@web3-onboard/hw-common@npm:2.3.0"
+"@web3-onboard/hw-common@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@web3-onboard/hw-common@npm:2.3.1"
   dependencies:
     "@ethereumjs/common": "npm:2.6.2"
-    "@web3-onboard/common": "npm:^2.3.3"
+    "@web3-onboard/common": "npm:^2.3.4"
     ethers: "npm:5.5.4"
     joi: "npm:17.9.1"
     rxjs: "npm:^7.5.2"
-  checksum: 75c8c542bb4d4785a61273b531fe94e44fa1cc382e236785bc1e7a4e17651e11ed30c111de8f354e342693a8d861cbd23f9f941fdd3b6df07ba7358c3deaacd9
+  checksum: 9d20ff00c60bcdf29248a1be74d3afaed20cc0e232f59c7ce7fb68da3e87752f0c6d841e6b53073cffbfca14641a321bf2340d2a3d0ff140918face7dc3bf608
   languageName: node
   linkType: hard
 
-"@web3-onboard/injected-wallets@npm:^2.10.11":
-  version: 2.10.11
-  resolution: "@web3-onboard/injected-wallets@npm:2.10.11"
+"@web3-onboard/injected-wallets@npm:^2.10.16":
+  version: 2.10.16
+  resolution: "@web3-onboard/injected-wallets@npm:2.10.16"
   dependencies:
     "@web3-onboard/common": "npm:^2.3.3"
     joi: "npm:17.9.1"
     lodash.uniqby: "npm:^4.7.0"
-  checksum: f3a20e649e64413ca10526307f9507d33a6943cbcbfd65eeae01a8d15fb932514da9d91798cbbf733188e90c5dac02b4c9bf5426eea7cbf2018879731ff79834
+  checksum: 8e7084338f17053832b287b5788e6d1e19168e6d63d225073e129b4bdd4e0ca4d6b2cd8ec62379d72ec686529d2ebb407d5a465f794de07e47df5626c1214707
   languageName: node
   linkType: hard
 
-"@web3-onboard/ledger@npm:^2.5.2":
+"@web3-onboard/ledger@npm:2.5.2":
   version: 2.5.2
   resolution: "@web3-onboard/ledger@npm:2.5.2"
   dependencies:
@@ -10021,45 +10046,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/react@npm:^2.8.13":
-  version: 2.8.13
-  resolution: "@web3-onboard/react@npm:2.8.13"
+"@web3-onboard/react@npm:^2.8.17":
+  version: 2.8.17
+  resolution: "@web3-onboard/react@npm:2.8.17"
   dependencies:
     "@web3-onboard/common": "npm:^2.3.3"
-    "@web3-onboard/core": "npm:^2.21.2"
+    "@web3-onboard/core": "npm:^2.21.6"
     use-sync-external-store: "npm:1.0.0"
   peerDependencies:
     react: ">=16.8"
-  checksum: 4b814fa4863f4906b23ce5ca484d5a22b309fab6192937d9c11715dabad4c2489bacefda7821272bad4039b1e87dc816feae1e1204fbbdee6be29bd749c83f1c
+  checksum: a67010dc454f794e6acd87938029936ee67bed7bbf26a1e774a941aa544dbb32d73053064ce91495afc871f2fe127086a997c1d02f442df6026769431f2493dd
   languageName: node
   linkType: hard
 
-"@web3-onboard/trezor@npm:^2.4.3":
-  version: 2.4.3
-  resolution: "@web3-onboard/trezor@npm:2.4.3"
+"@web3-onboard/trezor@npm:^2.4.4":
+  version: 2.4.4
+  resolution: "@web3-onboard/trezor@npm:2.4.4"
   dependencies:
     "@ethereumjs/tx": "npm:^3.4.0"
     "@ethersproject/providers": "npm:^5.5.0"
     "@trezor/connect-web": "npm:^9.0.11"
-    "@web3-onboard/common": "npm:^2.3.3"
-    "@web3-onboard/hw-common": "npm:^2.3.0"
+    "@web3-onboard/common": "npm:^2.3.4"
+    "@web3-onboard/hw-common": "npm:^2.3.1"
     buffer: "npm:^6.0.3"
     eth-crypto: "npm:^2.1.0"
     ethereumjs-util: "npm:^7.1.3"
     hdkey: "npm:^2.0.1"
-  checksum: 48b5cd480683ad606236a7c50a0a9bf52ac4de8e65cc6b83d7d8c2f4c916d5b189a4aca21d22552166284aed3a8378fef9cc7d0f9718383abecc81bc1446b542
+  checksum: 5550bcb80fa4def2362fc71a55682d097cc78bb45a24a6c515137f1a530dbd37d5515d5b10ea6291a74cd5478a741a21c2dd5177ea48a7b5b2278705945bdc29
   languageName: node
   linkType: hard
 
-"@web3-onboard/walletconnect@npm:^2.5.3":
-  version: 2.5.3
-  resolution: "@web3-onboard/walletconnect@npm:2.5.3"
+"@web3-onboard/walletconnect@npm:^2.5.5":
+  version: 2.5.5
+  resolution: "@web3-onboard/walletconnect@npm:2.5.5"
   dependencies:
-    "@walletconnect/ethereum-provider": "npm:^2.11.0"
+    "@walletconnect/ethereum-provider": "npm:^2.12.2"
     "@web3-onboard/common": "npm:^2.3.3"
     joi: "npm:17.9.1"
     rxjs: "npm:^7.5.2"
-  checksum: 9b69c3a86d1d942a28bc240aada316d26c8314189804e4838a6e8983d897884db3c123d8d05504bf915ff68c2f383993b77e8ba2110e09eae5176d0d65f60b82
+  checksum: bd19304d9b1b8e049c939288212dc338ae9aa857348ef66dc224eba73bbc5ec8f21aacc0b7d4ef050e6520946b2e0142bb45bd6d89a16220935db00918d239fe
   languageName: node
   linkType: hard
 
@@ -14265,9 +14290,9 @@ __metadata:
   linkType: hard
 
 "dotenv@npm:^16.3.1, dotenv@npm:^16.4.3":
-  version: 16.4.3
-  resolution: "dotenv@npm:16.4.3"
-  checksum: f07db902c62c239aef7a7b696b21dfab8e95bf5883bcf23c6b9b55f42578d18b842e6257b4f4ecfdbd024a3ee9949fbaaa4c84807de7ba037c74fe3c70785198
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
   languageName: node
   linkType: hard
 
@@ -17151,6 +17176,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"humanize-plus@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "humanize-plus@npm:1.8.2"
+  checksum: 3c60707ec52157d0e73ad53e4c0928804485580696b58bd9e01bccb39e42115ef92f7967c41135f359601d760d72315bd35578e3b7efcb3477eca74a9b3b2c94
+  languageName: node
+  linkType: hard
+
 "husky@npm:^8.0.3":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
@@ -19990,11 +20022,11 @@ __metadata:
   linkType: hard
 
 "magic-string@npm:^0.30.5":
-  version: 0.30.5
-  resolution: "magic-string@npm:0.30.5"
+  version: 0.30.10
+  resolution: "magic-string@npm:0.30.10"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: c8a6b25f813215ca9db526f3a407d6dc0bf35429c2b8111d6f1c2cf6cf6afd5e2d9f9cd189416a0e3959e20ecd635f73639f9825c73de1074b29331fe36ace59
+  checksum: 9f8bf6363a14c98a9d9f32ef833b194702a5c98fb931b05ac511b76f0b06fd30ed92beda6ca3261d2d52d21e39e891ef1136fbd032023f6cbb02d0b7d5767201
   languageName: node
   linkType: hard
 

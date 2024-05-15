@@ -7,11 +7,14 @@ export const BaseIcon = ({
   ...props
 }: IconProps) => {
   return (
-    <Icon width={width} height={height} viewBox="0 0 111 111" {...props}>
-      <path
-        d="M54.921 110.034C85.359 110.034 110.034 85.402 110.034 55.017C110.034 24.6319 85.359 0 54.921 0C26.0432 0 2.35281 22.1714 0 50.3923H72.8467V59.6416H3.9565e-07C2.35281 87.8625 26.0432 110.034 54.921 110.034Z"
-        fill={fill as string}
-      />
+    <Icon width={width} height={height} viewBox="0 0 24 24" {...props}>
+      <circle cx="12" cy="12" r="12" fill="white" />
+      <g width="24" height="24" fill="white">
+        <path
+          d="M11.9791 24C18.618 24 24 18.6274 24 12C24 5.37257 18.618 0 11.9791 0C5.6804 0 0.513182 4.8359 0 10.9913H15.8889V13.0087H8.6297e-08C0.513182 19.1641 5.6804 24 11.9791 24Z"
+          fill={fill as string}
+        />
+      </g>
     </Icon>
   );
 };

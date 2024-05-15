@@ -6,7 +6,9 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -34,8 +36,13 @@ export async function loadPrices({
 
         return PriceSchema.parse(pricesEncoded);
       });
+    } else {
+      const pricesEncoded = CoreProxy.interface.decodeFunctionResult(
+        'getCollateralPrice',
+        multicallEncoded
+      )[0];
+      return PriceSchema.parse(pricesEncoded);
     }
-    throw Error('Expected array got: ' + typeof multicallEncoded);
   };
   return { calls, decoder };
 }
@@ -45,8 +52,13 @@ export const useCollateralPrices = () => {
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralData } = useCollateralTypes();
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
+  const collateralAddresses = isBase
+    ? collateralData?.map((x) => x.tokenAddress).concat(getsUSDCAddress(network?.id))
+    : collateralData?.map((x) => x.tokenAddress);
+
   const provider = useDefaultProvider();
-  const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
@@ -54,7 +66,12 @@ export const useCollateralPrices = () => {
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'CollateralPrices',
-      { collateralAddresses, priceUpdateTx: priceUpdateTx?.data },
+      {
+        collateralAddresses: collateralAddresses?.filter(
+          (item, pos) => collateralAddresses.indexOf(item) === pos
+        ),
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
+      },
     ],
     queryFn: async () => {
       if (
@@ -77,7 +94,11 @@ export const useCollateralPrices = () => {
       const prices = await erc7412Call(network, provider, allCalls, decoder, 'useCollateralPrices');
 
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
-        acc[address] = prices[i];
+        if (Array.isArray(prices)) {
+          acc[address] = prices[i];
+        } else {
+          acc[address] = prices;
+        }
         return acc;
       }, {});
     },

@@ -22,10 +22,10 @@ export const ManageUi: FC<{
   rewards?: RewardsType;
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
-}> = ({ collateralType, isLoading, rewards, liquidityPosition, network }) => {
+  collateralSymbol?: string;
+}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
   return (
-    <Box mb={12}>
-      <WithdrawIncrease />
+    <Box mb={12} mt={8}>
       <Box mb="4">
         <HomeLink />
       </Box>
@@ -40,7 +40,7 @@ export const ManageUi: FC<{
           display="flex"
         >
           <CollateralIcon
-            symbol={collateralType?.symbol}
+            symbol={collateralSymbol}
             width="28px"
             height="28px"
             fill="#0B0B22"
@@ -54,8 +54,9 @@ export const ManageUi: FC<{
           color="gray.50"
           display="flex"
           alignItems="center"
+          data-cy="manage-position-title"
         >
-          {collateralType?.symbol} Liquidity Position
+          {collateralSymbol} Liquidity Position
         </Heading>
       </Flex>
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
@@ -81,15 +82,13 @@ export const ManageUi: FC<{
       <Divider mt="31px" mb="24px" color="gray.900" />
       <Flex gap={4}>
         <BorderBox p={6} flexDirection="column" bg="navy.700" height="fit-content">
+          <WithdrawIncrease />
           <Text fontWeight="700" fontSize="xl" color="gray.50" mb="1" fontFamily="heading">
-            Manage C-Ratio
+            Manage Position
           </Text>
-          <Text color="gray.400" fontSize="sm" mb="2">
-            The Collateralization Ratio (C-Ratio) is calculated by dividing the value of the
-            position’s collateral by the value of the position’s debt.{' '}
-            <Text as="span" fontWeight="700" display="inline" color="white">
-              This position will be liquidated if the C-Ratio drops below the Liquidation C-Ratio.
-            </Text>
+          <Text as="span" fontWeight="700" display="inline" color="white">
+            Manage your position so your debt never equals your collateral else your position might
+            get liquidated.
           </Text>
           <ManageAction liquidityPosition={liquidityPosition} />
         </BorderBox>
@@ -104,6 +103,7 @@ export const ManageUi: FC<{
 
 export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
+  const { network } = useNetwork();
 
   const { isLoading: isCollateralLoading, data: collateralType } =
     useCollateralType(collateralSymbol);
@@ -123,17 +123,16 @@ export const Manage = () => {
     poolId,
   });
 
-  const { network } = useNetwork();
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   return (
     <ManagePositionProvider>
       <ManageUi
         isLoading={isLoading}
-        collateralType={collateralType}
         rewards={rewardsData}
         liquidityPosition={liquidityPosition}
         network={network}
+        collateralSymbol={collateralSymbol}
       />
     </ManagePositionProvider>
   );
