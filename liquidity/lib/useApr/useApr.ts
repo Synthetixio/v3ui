@@ -1,4 +1,3 @@
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,13 +13,14 @@ export function useApr() {
         const data = await response.json();
 
         return {
-          combinedApr: data.aprCombined * 100,
+          // 0 meaning not the right network
+          combinedApr:
+            network?.id === 8453 || network?.id === 84532 ? (data.aprCombined * 100).toFixed(2) : 0,
         };
       } catch (error) {
         return;
       }
     },
-    enabled: isBaseAndromeda(network?.id, network?.preset),
     staleTime: 60000,
   });
 }

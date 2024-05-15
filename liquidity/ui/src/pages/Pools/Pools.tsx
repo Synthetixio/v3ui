@@ -38,20 +38,16 @@ export function Pools() {
         All Pools
       </Heading>
       <Flex gap="4" flexWrap={pools && pools.length > 1 ? 'wrap' : 'nowrap'} mt="6">
-        {isBaseAndromeda(network?.id, network?.preset) && (
-          <>
-            {pools?.map((pool) => (
-              <BasePoolCard
-                key={pool.id}
-                isLoading={isLoading}
-                pool={pool}
-                apr={apr}
-                vaultDebt={vaultDebt}
-                collateralTypes={hydratedCollateralTypes}
-              />
-            ))}
-          </>
-        )}
+        {pools?.map((pool) => (
+          <BasePoolCard
+            key={pool.id}
+            isLoading={isLoading}
+            pool={pool}
+            apr={apr?.combinedApr}
+            vaultDebt={vaultDebt}
+            collateralTypes={hydratedCollateralTypes}
+          />
+        ))}
         <BaseInfoCard />
       </Flex>
     </Flex>

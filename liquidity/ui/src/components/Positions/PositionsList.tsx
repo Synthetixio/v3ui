@@ -25,11 +25,7 @@ export const PositionsList = () => {
       <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem" mt={4}>
         Positions
       </Heading>
-      <PositionsTable
-        isLoading={isLoading}
-        positions={parsedPositions}
-        apr={apr?.combinedApr.toFixed(2)}
-      />
+      <PositionsTable isLoading={isLoading} positions={parsedPositions} apr={apr?.combinedApr} />
     </Flex>
   );
 };

@@ -72,7 +72,7 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-              {apr?.concat('%') || '-'}
+              {!!apr ? apr?.concat('%') : '-'}
             </Text>
           </Flex>
         </Fade>
