@@ -29,7 +29,7 @@ export const useTokenBalance = (address?: string) => {
     queryFn: async () =>
       await fetchTokenBalance(address!, activeWallet!.address, provider!, network!),
     enabled: Boolean(activeWallet?.address && tokenAddress && provider && network?.id),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
   });
 };
 
@@ -52,7 +52,7 @@ export const useTokenBalances = (addresses: string[]) => {
         )
       ),
     enabled: Boolean(activeWallet?.address && addresses.length && provider && network?.id),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
   });
 };
 

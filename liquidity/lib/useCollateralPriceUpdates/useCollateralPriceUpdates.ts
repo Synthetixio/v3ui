@@ -37,6 +37,7 @@ const priceIds = [
   '0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026',
   '0x9a4df90b25497f66b1afb012467e316e801ca3d839456db028892fe8c70c8016',
   '0x5fcf71143bb70d41af4fa9aa1287e2efd3c5911cee59f909f915c9f61baacb1e',
+  '0xd69731a2e74ac1ce884fc3890f7ee324b6deb66147055249568869ed700882e4',
 ];
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
@@ -66,7 +67,7 @@ export const useAllCollateralPriceUpdates = () => {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates', priceIds.join(',')],
+    queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates'],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const stalenessTolerance = 60;
@@ -78,6 +79,7 @@ export const useAllCollateralPriceUpdates = () => {
         value: tx.value * 10,
       };
     },
+    refetchInterval: 60000,
   });
 };
 

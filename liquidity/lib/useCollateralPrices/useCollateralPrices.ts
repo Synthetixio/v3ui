@@ -8,6 +8,7 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -65,7 +66,12 @@ export const useCollateralPrices = () => {
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'CollateralPrices',
-      { collateralAddresses, priceUpdateTx: priceUpdateTx?.data },
+      {
+        collateralAddresses: collateralAddresses?.filter(
+          (item, pos) => collateralAddresses.indexOf(item) === pos
+        ),
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
+      },
     ],
     queryFn: async () => {
       if (

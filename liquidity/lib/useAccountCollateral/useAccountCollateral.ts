@@ -7,6 +7,7 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -80,7 +81,7 @@ export function useAccountCollateral({
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
-      { tokens: JSON.stringify(USDTokens), priceUpdateTx: priceUpdateTx?.data },
+      { tokens: JSON.stringify(USDTokens), priceUpdateTx: stringToHash(priceUpdateTx?.data) },
     ],
     enabled: Boolean(CoreProxy && accountId && USDTokens?.snxUSD),
     queryFn: async function () {
@@ -124,7 +125,7 @@ export function useAccountSpecificCollateral(accountId?: string, collateralAddre
       `${network?.id}-${network?.preset}`,
       'AccountSpecificCollateral',
       { accountId },
-      { token: collateralAddress, priceUpdateTx: priceUpdateTx?.data },
+      { token: collateralAddress, priceUpdateTx: stringToHash(priceUpdateTx?.data) },
     ],
     enabled: Boolean(CoreProxy && accountId && collateralAddress),
     queryFn: async function () {
