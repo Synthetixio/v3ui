@@ -49,10 +49,9 @@ it('should repay borrowed snxUSD and get back SNX collateral', () => {
         });
         cy.visit(`/#${path}?manageAction=repay&accountId=${accountId}`);
       });
-
-      cy.get('[data-cy="manage-action-repay"]').click();
-      cy.task('mineBlock');
       cy.wait(7000);
+      cy.get('[data-cy="manage-action-repay"]').click();
+
       // Need to wait for max repay amount to be fetched
       cy.get('[data-testid="repay amount input"]')
         .should('have.attr', 'data-max')
