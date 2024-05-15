@@ -2,7 +2,7 @@ import { Flex, Td, Tr, Text, Button, Fade, useDisclosure } from '@chakra-ui/reac
 import { TokenIcon } from '../../TokenIcon';
 import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 import Wei from '@synthetixio/wei';
-import { WithdrawModal } from '../../WithdrawModal';
+import { WithdrawModal } from '../../';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { NavLink, generatePath } from 'react-router-dom';
 

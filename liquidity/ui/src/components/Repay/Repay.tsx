@@ -11,7 +11,7 @@ import Wei, { wei } from '@synthetixio/wei';
 import { FC, useContext } from 'react';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { RepayAllDebt } from './RepayAllDebt';
+import { RepayAllDebt } from './';
 import { Tooltip } from '@snx-v3/Tooltip';
 
 export const RepayUi: FC<{
