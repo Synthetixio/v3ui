@@ -44,7 +44,7 @@ export function useSNXPrice() {
                 OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
               );
             },
-            'priceCall'
+            'useSNXPrice'
           );
         } catch (error) {
           console.error(error);
