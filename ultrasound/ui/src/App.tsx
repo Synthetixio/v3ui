@@ -6,7 +6,7 @@ export function App() {
   return (
     <Flex flexDir="column" alignItems="center">
       <Header />
-      <Box p="4">
+      <Box p={{ base: 4, xl: 0 }}>
         <Main />
       </Box>
     </Flex>
