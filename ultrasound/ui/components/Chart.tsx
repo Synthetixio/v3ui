@@ -1,4 +1,4 @@
-import { Flex, Heading, Spinner, Tab, TabList, Tabs } from '@chakra-ui/react';
+import { Flex, Heading, Tab, TabList, Tabs } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { Line } from 'react-chartjs-2';
 import {
