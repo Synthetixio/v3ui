@@ -1,18 +1,18 @@
 import { providers } from 'ethers';
 import { generatePath } from 'react-router-dom';
 
-it('should repay borrowed snxUSD and get back SNX collateral', async () => {
+it('should repay borrowed snxUSD and get back SNX collateral', () => {
   cy.on('window:before:load', (win) => {
     win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
   });
   const provider = new providers.JsonRpcProvider('http://127.0.0.1:8545');
-  const network = await provider.getNetwork();
-  const isBase = network.chainId === 8453 || network.chainId === 84532;
 
-  if (isBase) {
-    return true;
-  }
-  cy.connectWallet().then(({ address, privateKey }) => {
+  cy.connectWallet().then(async ({ address, privateKey }) => {
+    const network = await provider.getNetwork();
+    const isBase = network.chainId === 8453 || network.chainId === 84532;
+    if (isBase) {
+      return true;
+    }
     cy.task('setEthBalance', { address, balance: 105 });
 
     cy.task('approveCollateral', { privateKey: privateKey, symbol: 'WETH' });
@@ -92,5 +92,5 @@ it('should repay borrowed snxUSD and get back SNX collateral', async () => {
 
   cy.get('[data-testid="repay modal"]').should('not.exist');
 
-  cy.get('[data-testid="manage stats debt"]').should('have.text', `$0`);
+  cy.get('[data-cy="manage-stats-debt-value"]').should('have.text', `$0`);
 });
