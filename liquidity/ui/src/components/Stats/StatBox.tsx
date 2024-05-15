@@ -21,7 +21,8 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
       flexDir="column"
       alignItems="center"
       justifyContent="space-between"
-      w="297px"
+      minWidth="200px"
+      flex={1}
       height="88px"
       px={6}
       py={4}

@@ -19,7 +19,6 @@ export const Balance = ({ isBase, balance }: BalanceProps) => {
           rounded="base"
           h="40px"
           alignItems="center"
-          mr="2"
         >
           <TokenIcon symbol={isBase ? 'USDC' : 'sUSD'} width={24} height={24} />
           <Text

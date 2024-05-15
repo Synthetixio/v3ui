@@ -10,7 +10,15 @@ export function Home() {
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column" mb={16}>
-        <Heading mt={10} color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
+        <Heading
+          mt={{
+            base: 2,
+            sm: 10,
+          }}
+          color="gray.50"
+          fontSize="1.5rem"
+          data-cy="liquidity-dashboard"
+        >
           Dashboard
         </Heading>
         <StatsList />
