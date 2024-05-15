@@ -38,6 +38,7 @@ const priceIds = [
   '0x9a4df90b25497f66b1afb012467e316e801ca3d839456db028892fe8c70c8016',
   '0x5fcf71143bb70d41af4fa9aa1287e2efd3c5911cee59f909f915c9f61baacb1e',
   '0xd69731a2e74ac1ce884fc3890f7ee324b6deb66147055249568869ed700882e4',
+  '0xb7910ba7322db020416fcac28b48c01212fd9cc8fbcbaf7d30477ed8605f6bd4',
 ];
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
