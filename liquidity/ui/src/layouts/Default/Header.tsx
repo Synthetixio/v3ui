@@ -16,9 +16,7 @@ export default function Header() {
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: usdTokens } = useGetUSDTokens();
-  const { data: balance } = useTokenBalance(
-    isBase ? usdTokens?.USDC : usdTokens?.sUSD?.tokenAddress
-  );
+  const { data: balance } = useTokenBalance(isBase ? usdTokens?.USDC : usdTokens?.sUSD);
 
   useEffect(() => {
     onClose();
