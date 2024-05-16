@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -42,10 +42,10 @@ function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
   });
 }
 
-export const useAllCollateralPriceIds = (providerForChain?: providers.JsonRpcProvider) => {
-  const { data: Multicall3 } = useMulticall3(providerForChain);
-  const { data: OracleProxy } = useOracleManagerProxy(providerForChain);
-  const { data: CoreProxy } = useCoreProxy(providerForChain);
+export const useAllCollateralPriceIds = (customNetwork?: Network) => {
+  const { data: Multicall3 } = useMulticall3(customNetwork);
+  const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { network } = useNetwork();
 
   return useQuery({

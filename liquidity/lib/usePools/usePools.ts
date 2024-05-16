@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { NETWORKS, useNetwork } from '@snx-v3/useBlockchain';
+import { NETWORKS, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
@@ -18,9 +18,9 @@ export type PoolType = z.infer<typeof PoolSchema>;
 export const PoolsSchema = z.array(PoolSchema);
 export type PoolsType = z.infer<typeof PoolsSchema>;
 
-export function usePools() {
+export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy();
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
 
   return useQuery({
     enabled: Boolean(CoreProxy),
@@ -60,8 +60,8 @@ export function usePools() {
   });
 }
 
-export function usePool(poolId?: string) {
-  const { isLoading, error, data } = usePools();
+export function usePool(poolId?: string, customNetwork?: Network) {
+  const { isLoading, error, data } = usePools(customNetwork);
 
   return {
     isLoading,
@@ -70,8 +70,8 @@ export function usePool(poolId?: string) {
   };
 }
 
-export function usePreferredPool() {
-  const { isLoading, error, data } = usePools();
+export function usePreferredPool(customNetwork?: Network) {
+  const { isLoading, error, data } = usePools(customNetwork);
 
   return {
     isLoading,
