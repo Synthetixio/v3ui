@@ -51,7 +51,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
     requireApproval,
     isLoading: approvalLoading,
   } = useApprove({
-    contractAddress: getUSDCAddress(network?.id),
+    contractAddress: usdTokens?.USDC,
     //slippage for approval
     amount: parseUnits(currentDebt.toString(), 6).mul(110).div(100),
     spender: getRepayerContract(network?.id),
