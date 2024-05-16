@@ -21,9 +21,12 @@ export function useGetUSDTokens() {
       const USDC: string = isBase
         ? (await (SpotMarket as any).getWrapper(USDC_BASE_MARKET)).wrapCollateralType
         : undefined;
+
       return {
         snxUSD: USDProxy,
-        sUSD: collateralTypes?.find((type) => type.symbol.toLowerCase() === 'susdc')?.tokenAddress,
+        sUSD: collateralTypes?.find((type) =>
+          isBase ? type.symbol.toLowerCase() === 'usdc' : type.symbol.toLowerCase() === 'susdc'
+        )?.tokenAddress,
         USDC,
       };
     },
