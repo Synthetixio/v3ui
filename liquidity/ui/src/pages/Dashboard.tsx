@@ -1,6 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { AssetsList, PositionsList, StatsList } from '../../components';
+import { AssetsList, PositionsList, StatsList } from '../components';
 
 export function Dashboard() {
   return (

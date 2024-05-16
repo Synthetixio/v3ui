@@ -1,6 +1,6 @@
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { PoolsList } from '../../components/Pools';
+import { PoolsList } from '../components/Pools';
 
 export function Home() {
   return (

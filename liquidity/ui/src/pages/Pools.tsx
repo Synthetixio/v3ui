@@ -3,7 +3,7 @@ import { usePools } from '@snx-v3/usePools';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useApr } from '@snx-v3/useApr';
 import { useVaultsData } from '@snx-v3/useVaultsData';
-import { BasePoolCard, BaseInfoCard } from '../../components/Pools';
+import { BasePoolCard, BaseInfoCard } from '../components/Pools';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
