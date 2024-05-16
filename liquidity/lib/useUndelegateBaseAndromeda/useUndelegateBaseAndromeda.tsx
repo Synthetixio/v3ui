@@ -12,12 +12,13 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useApprove } from '@snx-v3/useApprove';
-import { USDC_BASE_MARKET, getRepayerContract, getUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { DEBT_REPAYER_ABI } from '../useClearDebt';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useUndelegateBaseAndromeda = ({
   accountId,
@@ -44,12 +45,13 @@ export const useUndelegateBaseAndromeda = ({
   const provider = useProvider();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { network } = useNetwork();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const debtExists = liquidityPosition?.debt.gt(0);
   const currentDebt = debtExists && liquidityPosition ? liquidityPosition.debt : wei(0);
 
   const { approve, requireApproval } = useApprove({
-    contractAddress: getUSDCAddress(network?.id),
+    contractAddress: usdTokens?.USDC,
     //slippage for approval
     amount: parseUnits(currentDebt.toString(), 6).mul(110).div(100),
     spender: getRepayerContract(network?.id),

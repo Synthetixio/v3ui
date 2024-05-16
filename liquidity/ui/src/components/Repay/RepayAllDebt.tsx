@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { wei } from '@synthetixio/wei';
-import { getRepayerContract, getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getRepayerContract, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
@@ -11,6 +11,7 @@ import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useClearDebt } from '@snx-v3/useClearDebt';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: LiquidityPosition }) => {
   const { network } = useNetwork();
@@ -22,9 +23,10 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
 
   const debtExists = liquidityPosition.debt.gt(0.01);
   const currentDebt = debtExists ? liquidityPosition.debt : wei(0);
+  const { data: usdTokens } = useGetUSDTokens();
 
   const { data: tokenBalance } = useTokenBalance(
-    isBase ? getUSDCAddress(network?.id) : liquidityPosition.tokenAddress
+    isBase ? usdTokens?.USDC : liquidityPosition.tokenAddress
   );
 
   const sufficientBalance = useMemo(

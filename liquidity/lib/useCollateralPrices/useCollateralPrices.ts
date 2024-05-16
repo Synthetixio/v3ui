@@ -6,9 +6,10 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -51,12 +52,14 @@ export const useCollateralPrices = () => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralData } = useCollateralTypes();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const collateralAddresses = isBase
-    ? collateralData?.map((x) => x.tokenAddress).concat(getsUSDCAddress(network?.id))
-    : collateralData?.map((x) => x.tokenAddress);
+  const collateralAddresses =
+    isBase && usdTokens?.USDC
+      ? collateralData?.map((x) => x.tokenAddress).concat(usdTokens.USDC)
+      : collateralData?.map((x) => x.tokenAddress);
 
   const provider = useDefaultProvider();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();

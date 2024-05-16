@@ -5,8 +5,9 @@ import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { getUSDCAddress, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Balance } from '../../components';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export default function Header() {
   const { onClose } = useDisclosure();
@@ -14,8 +15,9 @@ export default function Header() {
   const { network } = useNetwork();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: usdTokens } = useGetUSDTokens();
   const { data: balance } = useTokenBalance(
-    isBase ? getUSDCAddress(network?.id) : getsUSDCAddress(network?.id)
+    isBase ? usdTokens?.USDC : usdTokens?.sUSD?.tokenAddress
   );
 
   useEffect(() => {

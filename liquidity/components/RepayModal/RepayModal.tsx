@@ -29,9 +29,10 @@ import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useRepayBaseAndromeda } from '../../lib/useRepayBaseAndromeda';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -115,7 +116,7 @@ export const RepayModal: React.FC<{
   const params = useParams();
 
   const { network } = useNetwork();
-
+  const { data: usdTokens } = useGetUSDTokens();
   const queryClient = useQueryClient();
   const { data: USDProxy } = useUSDProxy();
 
@@ -148,7 +149,7 @@ export const RepayModal: React.FC<{
   const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? getUSDCAddress(network?.id)
+    ? usdTokens?.USDC
     : USDProxy?.address;
 
   const { approve, requireApproval } = useApprove({

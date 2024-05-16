@@ -12,10 +12,11 @@ import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useRepayBaseAndromeda = ({
   accountId,
@@ -35,6 +36,7 @@ export const useRepayBaseAndromeda = ({
   const { data: UsdProxy } = useUSDProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const signer = useSigner();
   const { network } = useNetwork();
@@ -46,7 +48,15 @@ export const useRepayBaseAndromeda = ({
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
       if (
-        !(CoreProxy && poolId && accountId && collateralTypeAddress && UsdProxy && SpotMarketProxy)
+        !(
+          CoreProxy &&
+          poolId &&
+          accountId &&
+          collateralTypeAddress &&
+          UsdProxy &&
+          SpotMarketProxy &&
+          usdTokens?.USDC
+        )
       ) {
         return;
       }
@@ -67,7 +77,7 @@ export const useRepayBaseAndromeda = ({
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
           : undefined;
 
-        const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+        const sUSDC_ADDRESS = usdTokens.USDC;
         const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const sUSDC_Approval = amountToDeposit.gt(0)

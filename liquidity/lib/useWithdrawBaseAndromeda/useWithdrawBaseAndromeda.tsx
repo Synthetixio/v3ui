@@ -9,11 +9,12 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET, getSNXUSDAddress, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { Wei } from '@synthetixio/wei';
 import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
@@ -32,6 +33,7 @@ export const useWithdrawBaseAndromeda = ({
   const { data: UsdProxy } = useUSDProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { network } = useNetwork();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const { gasSpeed } = useGasSpeed();
   const signer = useSigner();
@@ -51,7 +53,17 @@ export const useWithdrawBaseAndromeda = ({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (!(CoreProxy && SpotProxy && amount.gt(0) && accountId)) return;
+      if (
+        !(
+          CoreProxy &&
+          SpotProxy &&
+          amount.gt(0) &&
+          accountId &&
+          usdTokens?.USDC &&
+          usdTokens.snxUSD
+        )
+      )
+        return;
 
       try {
         dispatch({ type: 'prompting' });
@@ -61,7 +73,7 @@ export const useWithdrawBaseAndromeda = ({
         const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
               BigNumber.from(accountId),
-              getsUSDCAddress(network.id),
+              usdTokens?.USDC,
               isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
             )
           : undefined;
@@ -70,7 +82,7 @@ export const useWithdrawBaseAndromeda = ({
           snxUSDCollateral.gt(0) && !isSUSDCEnough
             ? CoreProxy.populateTransaction.withdraw(
                 BigNumber.from(accountId),
-                getSNXUSDAddress(network.id),
+                usdTokens?.snxUSD,
                 howMuchSNXUSD.toBN()
               )
             : undefined;
