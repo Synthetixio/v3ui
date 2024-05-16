@@ -59,7 +59,7 @@ export const useWithdrawBaseAndromeda = ({
           SpotProxy &&
           amount.gt(0) &&
           accountId &&
-          usdTokens?.sUSD?.tokenAddress &&
+          usdTokens?.sUSD &&
           usdTokens.snxUSD
         )
       )
@@ -73,7 +73,7 @@ export const useWithdrawBaseAndromeda = ({
         const withdraw_sUSDC = sUSDCCollateral.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
               BigNumber.from(accountId),
-              usdTokens?.sUSD?.tokenAddress,
+              usdTokens?.sUSD,
               isSUSDCEnough ? amountToWithdraw.toBN() : sUSDCCollateral.toBN()
             )
           : undefined;

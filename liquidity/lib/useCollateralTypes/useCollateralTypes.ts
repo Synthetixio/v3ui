@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
@@ -105,10 +105,11 @@ async function loadCollateralTypes({
   }));
 }
 
-export function useCollateralTypes(includeDelegationOff = false) {
+export function useCollateralTypes(includeDelegationOff = false, customNetwork?: Network) {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy();
-  const { data: Multicall3 } = useMulticall3();
+  const providerForChain = useProviderForChain(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(providerForChain);
+  const { data: Multicall3 } = useMulticall3(providerForChain);
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'CollateralTypes', { includeDelegationOff }],

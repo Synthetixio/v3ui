@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
@@ -42,21 +42,25 @@ function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
   });
 }
 
-export const useAllCollateralPriceIds = () => {
-  const { data: Multicall3 } = useMulticall3();
-  const { data: OracleProxy } = useOracleManagerProxy();
-  const { data: CoreProxy } = useCoreProxy();
+export const useAllCollateralPriceIds = (providerForChain?: providers.JsonRpcProvider) => {
+  const { data: Multicall3 } = useMulticall3(providerForChain);
+  const { data: OracleProxy } = useOracleManagerProxy(providerForChain);
+  const { data: CoreProxy } = useCoreProxy(providerForChain);
   const { network } = useNetwork();
 
   return useQuery({
-    enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
+    enabled: Boolean(
+      Multicall3 &&
+        OracleProxy &&
+        CoreProxy &&
+        !deploymentsWithERC7412.includes(`${network?.id}-${network?.preset}`)
+    ),
     staleTime: Infinity,
     queryKey: [`${network?.id}-${network?.preset}`, 'AllCollateralPriceIds'],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
-      if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
 
       const configs = await loadConfigs({ CoreProxy });
 

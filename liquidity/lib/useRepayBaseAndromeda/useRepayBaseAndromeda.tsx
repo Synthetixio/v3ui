@@ -55,7 +55,7 @@ export const useRepayBaseAndromeda = ({
           collateralTypeAddress &&
           UsdProxy &&
           SpotMarketProxy &&
-          usdTokens?.sUSD?.tokenAddress
+          usdTokens?.sUSD
         )
       ) {
         return;
@@ -77,7 +77,7 @@ export const useRepayBaseAndromeda = ({
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
           : undefined;
 
-        const sUSDC_ADDRESS = usdTokens?.sUSD?.tokenAddress;
+        const sUSDC_ADDRESS = usdTokens?.sUSD;
         const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
 
         const sUSDC_Approval = amountToDeposit.gt(0)

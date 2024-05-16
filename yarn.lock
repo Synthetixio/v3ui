@@ -6920,6 +6920,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7097,6 +7098,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7108,6 +7110,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 

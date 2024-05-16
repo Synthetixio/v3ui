@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
-
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
