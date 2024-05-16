@@ -58,7 +58,7 @@ export const useDepositBaseAndromeda = ({
           poolId &&
           collateralTypeAddress &&
           availableCollateral &&
-          usdTokens?.USDC
+          usdTokens?.sUSD?.tokenAddress
         )
       ) {
         return;
@@ -79,7 +79,7 @@ export const useDepositBaseAndromeda = ({
         const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
         // Wrap USDC to sUSDC
-        const sUSDC_ADDRESS = usdTokens.USDC;
+        const sUSDC_ADDRESS = usdTokens?.sUSD?.tokenAddress;
         const wrap = usdcAmount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;

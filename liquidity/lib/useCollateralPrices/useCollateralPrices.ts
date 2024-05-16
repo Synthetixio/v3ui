@@ -57,8 +57,8 @@ export const useCollateralPrices = () => {
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const collateralAddresses =
-    isBase && usdTokens?.USDC
-      ? collateralData?.map((x) => x.tokenAddress).concat(usdTokens.USDC)
+    isBase && usdTokens?.sUSD?.tokenAddress
+      ? collateralData?.map((x) => x.tokenAddress).concat(usdTokens.sUSD?.tokenAddress)
       : collateralData?.map((x) => x.tokenAddress);
 
   const provider = useDefaultProvider();
