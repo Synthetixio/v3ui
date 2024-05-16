@@ -8,7 +8,7 @@ import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { keyBy } from '@snx-v3/tsHelpers';
+import { keyBy, stringToHash } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
@@ -59,7 +59,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
-        priceUpdateTx: priceUpdateTx?.data || '',
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     queryFn: async () => {

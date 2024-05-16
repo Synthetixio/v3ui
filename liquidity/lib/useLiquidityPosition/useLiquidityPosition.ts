@@ -12,6 +12,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -91,7 +92,7 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        priceUpdateTx: priceUpdateTx?.data || '',
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     enabled: Boolean(

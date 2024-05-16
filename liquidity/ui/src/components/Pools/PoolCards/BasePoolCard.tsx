@@ -13,9 +13,7 @@ import { compactInteger } from 'humanize-plus';
 interface BasePoolCardProps {
   isLoading: boolean;
   pool: PoolType;
-  apr?: {
-    combinedApr: number;
-  };
+  apr?: number;
   vaultDebt?: {
     debt: Wei;
     collateral: {
@@ -138,7 +136,7 @@ export const BasePoolCard = ({
             </Text>
             <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
               <Text fontWeight={700} fontSize="30px" color="white" lineHeight="36px">
-                {apr?.combinedApr.toFixed(2).concat('%') || '-'}
+                {apr?.toFixed(2).concat('%') || '-'}
                 {/* For sizing the skeleton */}
                 {isLoading && '42%'}
               </Text>

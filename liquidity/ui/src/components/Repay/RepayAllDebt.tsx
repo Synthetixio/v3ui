@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useClearDebt } from '../../../../lib/useClearDebt';
+import { useClearDebt } from '@snx-v3/useClearDebt';
 
 export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: LiquidityPosition }) => {
   const { network } = useNetwork();

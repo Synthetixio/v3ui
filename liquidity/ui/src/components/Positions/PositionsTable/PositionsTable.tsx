@@ -15,7 +15,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 interface PositionsTableInterface {
   isLoading: boolean;
   positions?: LiquidityPositionType[];
-  apr?: string;
+  apr?: number;
 }
 
 export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInterface) => {

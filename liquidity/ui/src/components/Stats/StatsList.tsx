@@ -89,7 +89,7 @@ export const StatsList = () => {
     isCollateralTypesLoading;
 
   return (
-    <Flex w="100%" gap="4" mt={6}>
+    <Flex flexWrap="wrap" w="100%" gap="4" mt={6}>
       <StatBox
         title="Total Assets"
         isLoading={isLoading}
@@ -136,7 +136,7 @@ export const StatsList = () => {
       <StatBox
         title="APR"
         isLoading={isLoading}
-        value={!!apr ? apr.combinedApr.toFixed(2) + '%' : '-'}
+        value={!!apr?.combinedApr ? apr.combinedApr.toFixed(2) + '%' : '-'}
         label={
           <>
             <Text fontWeight={600} textAlign="left">

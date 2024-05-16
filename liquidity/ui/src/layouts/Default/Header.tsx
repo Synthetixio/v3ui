@@ -92,7 +92,7 @@ export default function Header() {
               <LogoIcon />
             </Link>
           </Box>
-          <Flex justifyContent="center" alignItems="center">
+          <Flex gap={3} flexWrap="wrap-reverse" justifyContent="center" alignItems="center">
             <Balance isBase={isBase} balance={balance} />
             <NetworkController />
           </Flex>

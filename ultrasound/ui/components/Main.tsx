@@ -11,10 +11,14 @@ export function Main() {
   const { data: events, isLoading } = useBurnEvents();
 
   return (
-    <Flex flexDir="column" mt="10" width="100%" maxW="1200px">
+    <Flex flexDir="column" mt="8" width="100%" maxW="1200px">
       <Flex justifyContent="space-between" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
         <Flex flexDir="column">
-          <Heading fontSize={{ base: '48px', xl: '72px' }} fontWeight={700} color="white">
+          <Heading
+            fontSize={{ medium: '30px', base: '48px', xl: '72px' }}
+            fontWeight={700}
+            color="white"
+          >
             ultrasound.homes
           </Heading>
           <Heading fontSize="30px" fontWeight={700} color="white">
@@ -39,9 +43,15 @@ export function Main() {
         </Flex>
       </Flex>
       <Flex gap="4" mt="4" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
-        <Flex flexDir="column" w={{ base: '100%', xl: 'unset' }}>
+        <Flex alignItems="center" flexDir="column" w={{ base: '100%', xl: 'unset' }}>
           <Chart />
-          <Flex gap="6" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
+          <Flex
+            width={{
+              base: '100%',
+            }}
+            gap="4"
+            flexWrap={{ base: 'wrap', xl: 'nowrap' }}
+          >
             <SupplyChangeStats />
             <CurrentSupplyStats />
           </Flex>

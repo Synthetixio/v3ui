@@ -100,7 +100,7 @@ export const CollateralSectionUi: FC<{
           ) : (
             <Tooltip label="APR is a combination of past week pool performance and rewards.">
               <Text fontWeight={700} fontSize="xl" color="white">
-                {`${apr ? apr?.toFixed(2) : '-'}%`}
+                {`${!!apr ? apr.toFixed(2) : '-'}%`}
               </Text>
             </Tooltip>
           )}

@@ -12,7 +12,7 @@ import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert } from '../../components/CollateralAlert';
+import { CollateralAlert } from '../';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';

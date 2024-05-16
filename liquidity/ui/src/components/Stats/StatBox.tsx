@@ -1,6 +1,6 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Text, Fade } from '@chakra-ui/react';
-import { SynthSkeleton as Skeleton } from '../Shared';
+import { SynthSkeleton as Skeleton } from '../SynthSkeleton';
 import { ReactNode } from 'react';
 import { Tooltip } from '@snx-v3/Tooltip';
 
@@ -21,7 +21,8 @@ export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {
       flexDir="column"
       alignItems="center"
       justifyContent="space-between"
-      w="297px"
+      minWidth="200px"
+      flex={1}
       height="88px"
       px={6}
       py={4}
