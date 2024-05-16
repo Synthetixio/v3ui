@@ -43,32 +43,33 @@ export const UNSUPPORTED_NETWORK: Network = {
 
 interface NetworkIconProps extends IconProps {
   networkId?: Network['id'];
+  size?: string;
 }
 
-export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
+export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconProps) => {
   switch (networkId) {
     case 1:
-      return <EthereumIcon w="24px" h="24px" {...props} />;
+      return <EthereumIcon w={size} h={size} {...props} />;
     case 10:
-      return <OptimismIcon w="24px" h="24px" {...props} />;
+      return <OptimismIcon w={size} h={size} {...props} />;
     case 11155111:
-      return <EthereumIcon w="24px" h="24px" {...props} />;
+      return <EthereumIcon w={size} h={size} {...props} />;
     case 84531:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 84532:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 13370:
       return <LogoIcon w="29px" h="21px" {...props} />;
     case 8453:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 11155420:
-      return <OptimismIcon w="24px" h="24px" {...props} />;
+      return <OptimismIcon w={size} h={size} {...props} />;
     case 421614:
-      return <ArbitrumIcon w="24px" h="24px" {...props} />;
+      return <ArbitrumIcon w={size} h={size} {...props} />;
     case 42161:
-      return <ArbitrumIcon w="24px" h="24px" {...props} />;
+      return <ArbitrumIcon w={size} h={size} {...props} />;
     default:
-      return <FailedIcon w="24px" h="24px" {...props} />;
+      return <FailedIcon w={size} h={size} {...props} />;
   }
 };
 
