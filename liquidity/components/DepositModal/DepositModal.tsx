@@ -29,9 +29,10 @@ import { ContractError } from '@snx-v3/ContractError';
 import { usePool } from '@snx-v3/usePools';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useDepositBaseAndromeda } from '../../lib/useDepositBaseAndromeda';
 import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -228,11 +229,11 @@ export const DepositModal: DepositModalProps = ({
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
-
+  const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? getUSDCAddress(network?.id)
+    ? usdTokens?.USDC
     : collateralType?.tokenAddress;
 
   const collateralNeeded = collateralChange.sub(availableCollateral);

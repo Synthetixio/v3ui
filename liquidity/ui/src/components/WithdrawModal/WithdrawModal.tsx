@@ -17,7 +17,7 @@ import Wei from '@synthetixio/wei';
 import { useState } from 'react';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
-import { getSNXUSDAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { ONEWEI, ZEROWEI } from '../../utils/constants';
 import { useParams } from '@snx-v3/useParams';
@@ -29,11 +29,13 @@ import { CloseIcon, InfoIcon } from '@chakra-ui/icons';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { TokenIcon } from '../';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
   const { data: collateralTypes } = useCollateralTypes();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const [selectedCollateralType, setSelectedCollateralType] = useState<string>(
     collateralTypes && collateralTypes[0] ? collateralTypes[0].tokenAddress : ''
@@ -213,10 +215,8 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           ))}
                           {!isBase && (
                             <MenuItem
-                              onClick={() =>
-                                setSelectedCollateralType(getSNXUSDAddress(network?.id))
-                              }
-                              key={getSNXUSDAddress(network?.id)}
+                              onClick={() => setSelectedCollateralType(usdTokens?.snxUSD || '')}
+                              key={usdTokens?.snxUSD.concat('-base')}
                             >
                               <TokenIcon mr={1} height={16} width={16} symbol="sUSD" />
                               sUSD

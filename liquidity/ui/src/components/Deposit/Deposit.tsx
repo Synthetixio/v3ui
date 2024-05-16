@@ -16,7 +16,8 @@ import { CollateralAlert } from '../';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -158,17 +159,6 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      {/* TODO Hook for this */}
-      {/* <Alert colorScheme="blue" rounded="base" m="2" my="4">
-        <InfoIcon w="24px" h="24px" color="cyan.500" mr="2" />
-        <Text>
-          Market Caps have been reached, you cannot add collateral for now. Keep an eye on{' '}
-          <Link href="https://sips.synthetix.io/all-sccp/" rel="noopener" color="cyan.500">
-            new announcements{' '}
-          </Link>
-          for the next market cap increase.
-        </Text>
-      </Alert> */}
       <Button
         disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"
@@ -185,14 +175,12 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
   const { collateralSymbol } = useParams();
-
+  const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
 
   const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset)
-      ? getUSDCAddress(network?.id)
-      : collateralType?.tokenAddress
+    isBaseAndromeda(network?.id, network?.preset) ? usdTokens?.USDC : collateralType?.tokenAddress
   );
 
   const { data: ethBalance } = useEthBalance();

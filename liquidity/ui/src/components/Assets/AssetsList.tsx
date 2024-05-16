@@ -7,8 +7,9 @@ import { AssetsTable } from './AssetTable';
 import { calculateAssets } from '../../utils/assets';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { getUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const AssetsList = () => {
   const [params] = useSearchParams();
@@ -20,14 +21,16 @@ export const AssetsList = () => {
       accountId,
     }
   );
+  const { data: usdTokens } = useGetUSDTokens();
 
-  const collateralAddresses = isBaseAndromeda(network?.id, network?.preset)
-    ? accountCollaterals
+  const collateralAddresses =
+    isBaseAndromeda(network?.id, network?.preset) && usdTokens?.USDC
       ? accountCollaterals
-          ?.map((collateral) => collateral.tokenAddress)
-          .concat(getUSDCAddress(network?.id)) || []
-      : [getUSDCAddress(network?.id)]
-    : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
+        ? accountCollaterals
+            ?.map((collateral) => collateral.tokenAddress)
+            .concat(usdTokens?.USDC) || []
+        : [usdTokens?.USDC]
+      : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
 
   const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
     useTokenBalances(collateralAddresses);
@@ -76,7 +79,7 @@ export const AssetsList = () => {
         collateralPrices,
         collateralTypes,
         isBase,
-        network?.id
+        usdTokens?.USDC
       ),
     [
       combinedCollateral,
@@ -84,7 +87,7 @@ export const AssetsList = () => {
       collateralPrices,
       collateralTypes,
       isBase,
-      network?.id,
+      usdTokens?.USDC,
     ]
   );
 

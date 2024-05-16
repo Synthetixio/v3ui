@@ -5,7 +5,6 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber, ethers } from 'ethers';
-
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -13,9 +12,10 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { USDC_BASE_MARKET, getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -38,6 +38,7 @@ export const useDepositBaseAndromeda = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const { gasSpeed } = useGasSpeed();
 
@@ -56,7 +57,8 @@ export const useDepositBaseAndromeda = ({
           SpotMarketProxy &&
           poolId &&
           collateralTypeAddress &&
-          availableCollateral
+          availableCollateral &&
+          usdTokens?.sUSD
         )
       ) {
         return;
@@ -77,7 +79,7 @@ export const useDepositBaseAndromeda = ({
         const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
         // Wrap USDC to sUSDC
-        const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+        const sUSDC_ADDRESS = usdTokens?.sUSD;
         const wrap = usdcAmount.gt(0)
           ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
           : undefined;

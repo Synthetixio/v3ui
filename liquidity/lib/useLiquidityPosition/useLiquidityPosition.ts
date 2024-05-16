@@ -150,6 +150,7 @@ export const useLiquidityPosition = ({
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array ');
+
           const startOfPrice = 0;
           const endOfPrice = priceCalls.length;
           const startOfPosition = endOfPrice;
