@@ -3,7 +3,7 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { networks } from '../../utils/onboard';
 
-const supportedChains = networks.filter((network) => !network.isTestnet && network.id === 42161);
+const supportedChains = networks.filter((network) => !network.isTestnet);
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
