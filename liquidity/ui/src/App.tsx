@@ -50,7 +50,7 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={extendedTheme}>
+        <ChakraProvider theme={theme}>
           <ColorMode />
           <Fonts />
           <GasSpeedProvider>
