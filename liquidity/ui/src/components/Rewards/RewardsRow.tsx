@@ -1,4 +1,4 @@
-import { Flex, Td, Text, Button, Fade, Tr, Tooltip, Link } from '@chakra-ui/react';
+import { Flex, Td, Text, Button, Fade, Tr, Link } from '@chakra-ui/react';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -9,6 +9,7 @@ import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface RewardsRowInterface {
   symbol: string;
@@ -41,7 +42,8 @@ export const RewardsRow = ({
     poolId || '',
     collateralData?.tokenAddress || '',
     accountId,
-    address
+    address,
+    claimableAmount
   );
 
   const onClick = () => {

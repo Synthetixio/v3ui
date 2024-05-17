@@ -1,14 +1,14 @@
 import { Badge, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
-import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../Shared';
-import { TokenIcon } from '../../TokenIcon';
+import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../';
+import { TokenIcon } from '../../';
 
-export function PositionsRowLoading() {
+export function PositionsRowLoading({ isBase }: { isBase: boolean }) {
   const rows = Array.from({ length: 2 }, (_, i) => i);
   return (
     <>
       {rows.map((row) => {
         return (
-          <Tr borderBottomWidth="1px" key={row}>
+          <Tr borderBottomWidth={row === 1 ? 'none' : '1px'} key={row}>
             <Td border="none">
               <Flex alignItems="center">
                 <SkeletonCircle>
@@ -33,43 +33,72 @@ export function PositionsRowLoading() {
                 </Flex>
               </Flex>
             </Td>
-            <Td border="none">
-              <Flex flexDirection="column" alignItems="flex-end">
-                <Skeleton height="1rem" mb={1}>
-                  <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                    $100,000,00
-                  </Text>
-                </Skeleton>
-                <Skeleton height="0.75rem">
-                  <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                    100,000 SNX
-                  </Text>
-                </Skeleton>
-              </Flex>
-            </Td>
-            <Td border="none">
-              <Flex flexDirection="column" alignItems="flex-end">
-                <Skeleton height="1rem" width="80%">
-                  <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                    15%
-                  </Text>
-                </Skeleton>
-              </Flex>
-            </Td>
-            <Td border="none">
-              <Flex flexDirection="column" alignItems="flex-end">
-                <Skeleton height="1rem" mb={1}>
-                  <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                    $5,000
-                  </Text>
-                </Skeleton>
-                <Skeleton height="0.75rem">
-                  <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                    22%
-                  </Text>
-                </Skeleton>
-              </Flex>
-            </Td>
+            {!isBase && (
+              <>
+                <Td border="none">
+                  <Flex flexDirection="column" alignItems="flex-end">
+                    <Skeleton height="1rem" mb={1}>
+                      <Text
+                        color="white"
+                        fontWeight={700}
+                        lineHeight="1.25rem"
+                        fontFamily="heading"
+                      >
+                        $100,000,00
+                      </Text>
+                    </Skeleton>
+                    <Skeleton height="0.75rem">
+                      <Text
+                        color="gray.500"
+                        fontFamily="heading"
+                        fontSize="0.75rem"
+                        lineHeight="1rem"
+                      >
+                        100,000 SNX
+                      </Text>
+                    </Skeleton>
+                  </Flex>
+                </Td>
+                <Td border="none">
+                  <Flex flexDirection="column" alignItems="flex-end">
+                    <Skeleton height="1rem" width="80%">
+                      <Text
+                        color="white"
+                        fontWeight={700}
+                        lineHeight="1.25rem"
+                        fontFamily="heading"
+                      >
+                        15%
+                      </Text>
+                    </Skeleton>
+                  </Flex>
+                </Td>
+                <Td border="none">
+                  <Flex flexDirection="column" alignItems="flex-end">
+                    <Skeleton height="1rem" mb={1}>
+                      <Text
+                        color="white"
+                        fontWeight={700}
+                        lineHeight="1.25rem"
+                        fontFamily="heading"
+                      >
+                        $5,000
+                      </Text>
+                    </Skeleton>
+                    <Skeleton height="0.75rem">
+                      <Text
+                        color="gray.500"
+                        fontFamily="heading"
+                        fontSize="0.75rem"
+                        lineHeight="1rem"
+                      >
+                        22%
+                      </Text>
+                    </Skeleton>
+                  </Flex>
+                </Td>
+              </>
+            )}
             <Td border="none">
               <Flex flexDirection="column" alignItems="flex-end">
                 <Skeleton height="1rem" mb={1}>
@@ -114,18 +143,20 @@ export function PositionsRowLoading() {
             </Td>
             <Td border="none">
               <Flex flexDirection="column">
-                <Button
-                  fontSize="0.75rem"
-                  lineHeight="1rem"
-                  height="1.75rem"
-                  fontWeight={700}
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                  borderRadius="4px"
-                  disabled
-                >
-                  Manage
-                </Button>
+                <Skeleton height="1.75rem">
+                  <Button
+                    fontSize="0.75rem"
+                    lineHeight="1rem"
+                    height="1.75rem"
+                    fontWeight={700}
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                    borderRadius="4px"
+                    disabled
+                  >
+                    Manage
+                  </Button>
+                </Skeleton>
               </Flex>
             </Td>
           </Tr>

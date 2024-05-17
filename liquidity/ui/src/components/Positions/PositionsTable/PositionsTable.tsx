@@ -15,9 +15,10 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 interface PositionsTableInterface {
   isLoading: boolean;
   positions?: LiquidityPositionType[];
+  apr?: number;
 }
 
-export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface) => {
+export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInterface) => {
   const { activeWallet } = useWallet();
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
@@ -56,6 +57,8 @@ export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface
                   search: location.search,
                 }}
                 variant="outline"
+                colorScheme="gray"
+                color="white"
               >
                 Pool Info
               </Button>
@@ -66,7 +69,7 @@ export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface
             <Tbody>
               <TableDivider />
               {isLoading ? (
-                <PositionsRowLoading />
+                <PositionsRowLoading isBase={isBase} />
               ) : (
                 <>
                   {positions?.map((position, index) => (
@@ -75,6 +78,7 @@ export const PositionsTable = ({ isLoading, positions }: PositionsTableInterface
                       {...position}
                       final={index === positions.length - 1}
                       isBase={isBase}
+                      apr={apr}
                     />
                   ))}
                 </>

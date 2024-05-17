@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 import { StatBox } from './StatBox';
 import { useSearchParams } from 'react-router-dom';
@@ -9,17 +9,28 @@ import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import {
   calculateAssets,
-  calculateTotalAssets,
+  calculateTotalAssetsAvailable,
   calculateTotalAssetsDelegated,
 } from '../../utils/assets';
 import { calculateDebt } from '../../utils/positions';
+import { useApr } from '@snx-v3/useApr';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
+  const { network } = useNetwork();
+
+  const { data: usdTokens } = useGetUSDTokens();
+  const { data: apr, isLoading: aprIsLoading } = useApr();
 
   const { data: positions, isLoading: isLiquidityPositionLoading } = useLiquidityPositions({
     accountId: params.get('accountId') || undefined,
   });
+
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
 
   const { data: accountCollaterals, isLoading: isAccountCollateralsLoading } = useAccountCollateral(
     {
@@ -27,52 +38,120 @@ export const StatsList = () => {
     }
   );
 
-  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
-    accountCollaterals?.map((collateral) => collateral.tokenAddress) || []
-  );
+  const collateralAddresses =
+    isBaseAndromeda(network?.id, network?.preset) && usdTokens?.USDC
+      ? accountCollaterals?.map((collateral) => collateral.tokenAddress).concat(usdTokens.USDC) ||
+        []
+      : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
+
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
+    useTokenBalances(collateralAddresses);
+
+  const associatedUserBalances = userTokenBalances?.map((balance, index) => {
+    return {
+      balance,
+      tokenAddress: collateralAddresses[index],
+    };
+  });
 
   const { data: collateralPrices, isLoading: isCollateralPricesLoading } = useCollateralPrices();
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   const assets = useMemo(
-    () => calculateAssets(accountCollaterals, userTokenBalances, collateralPrices),
-    [accountCollaterals, userTokenBalances, collateralPrices]
+    () =>
+      calculateAssets(
+        accountCollaterals,
+        associatedUserBalances,
+        collateralPrices,
+        collateralTypes,
+        isBase,
+        usdTokens?.USDC
+      ),
+    [
+      accountCollaterals,
+      associatedUserBalances,
+      collateralPrices,
+      collateralTypes,
+      isBase,
+      usdTokens?.USDC,
+    ]
   );
 
   const debt = calculateDebt(positions);
-  const totalAssets = calculateTotalAssets(assets);
+  const totalAssets = calculateTotalAssetsAvailable(assets);
   const totalDelegated = calculateTotalAssetsDelegated(assets);
 
   const isLoading =
     isAccountCollateralsLoading ||
     tokenBalancesIsLoading ||
     isCollateralPricesLoading ||
-    isLiquidityPositionLoading;
+    isLiquidityPositionLoading ||
+    aprIsLoading ||
+    isCollateralTypesLoading;
 
   return (
-    <Flex w="100%" gap="4" mt={6}>
+    <Flex flexWrap="wrap" w="100%" gap="4" mt={6}>
       <StatBox
         title="Total Assets"
         isLoading={isLoading}
         value={totalAssets && formatNumberToUsd(totalAssets)}
-        label="All assets in your Wallet and in your Synthetix Account."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Assets:
+            </Text>
+            <Text textAlign="left">All assets in your Wallet and in your Synthetix Account.</Text>
+          </>
+        }
       />
       <StatBox
         title="Total Delegated"
         isLoading={isLoading}
         value={totalDelegated && formatNumberToUsd(totalDelegated)}
-        label="All assets in your Account that have been Delegated to a Pool."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Delegated:
+            </Text>
+            <Text textAlign="left" mt={1}>
+              All assets in your Account that have been Delegated to a Pool.
+            </Text>
+          </>
+        }
       />
       <StatBox
         title="Total Debt"
         isLoading={isLoading}
         value={debt && formatNumberToUsd(debt?.toNumber().toFixed(2))}
-        label="Aggregated Debt of all your Open Positions."
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              Total Debt:
+            </Text>
+            <Text mt={1} textAlign="left">
+              Aggregated Debt of all your Open Positions.
+            </Text>
+          </>
+        }
       />
       <StatBox
-        title="APY"
+        title="APR"
         isLoading={isLoading}
-        value="14%"
-        label="Aggregated APY from all your positions."
+        value={!!apr?.combinedApr ? apr.combinedApr.toFixed(2) + '%' : '-'}
+        label={
+          <>
+            <Text fontWeight={600} textAlign="left">
+              APY Annual Percentage Yield:
+            </Text>
+            <Text mt={1} textAlign="left">
+              Aggregated APY from all your Positions.
+            </Text>
+            <Text mt={1} textAlign="left">
+              Sum(past 24 hourly pnls) * 365
+            </Text>
+          </>
+        }
       />
     </Flex>
   );

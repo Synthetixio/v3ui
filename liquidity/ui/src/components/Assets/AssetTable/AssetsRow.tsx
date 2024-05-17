@@ -1,18 +1,21 @@
-import { Flex, Td, Tr, Text, Button, Fade } from '@chakra-ui/react';
+import { Flex, Td, Tr, Text, Button, Fade, useDisclosure } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import Wei from '@synthetixio/wei';
+import { WithdrawModal } from '../../';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { NavLink, generatePath } from 'react-router-dom';
 
 interface AssetsRowProps {
   token: string;
   name: string;
   walletBalance: number;
   walletBalance$: number;
-  accountBalance: number;
+  accountBalance: Wei;
   accountBalance$: number;
   delegatedBalance: number;
   delegatedBalance$: number;
-  collateralAddress: string;
+  unlockDate?: Date;
   final: boolean; // Used for hiding bottom border
 }
 
@@ -25,11 +28,17 @@ export const AssetsRow = ({
   accountBalance$,
   delegatedBalance,
   delegatedBalance$,
-  collateralAddress,
+  unlockDate = new Date(),
   final,
 }: AssetsRowProps) => {
-  const [queryParams] = useSearchParams();
-  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const canWithdraw = unlockDate.getTime() < new Date().getTime();
+
+  const hoursToWithdraw = canWithdraw
+    ? ''
+    : new Date(unlockDate.getDate() - new Date().getTime()).getHours();
+
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
@@ -59,7 +68,13 @@ export const AssetsRow = ({
             >
               {formatNumberToUsd(walletBalance$)}
             </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Text
+              color="gray.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              data-cy="asset-wallet-balance"
+            >
               {formatNumber(walletBalance)}
               {` ${token}`}
             </Text>
@@ -79,7 +94,7 @@ export const AssetsRow = ({
               {formatNumberToUsd(accountBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {formatNumber(accountBalance)}
+              {formatNumber(accountBalance.toNumber())}
               {` ${token}`}
             </Text>
           </Flex>
@@ -105,46 +120,60 @@ export const AssetsRow = ({
         </Fade>
       </Td>
       <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column">
-            {!walletBalance && !accountBalance && !delegatedBalance ? (
+        <Flex justifyContent="space-between">
+          <Fade in>
+            <Tooltip
+              label={
+                !canWithdraw &&
+                accountBalance.gt(0) &&
+                `Withdrawal available in ${hoursToWithdraw} hours`
+              }
+            >
               <Button
-                fontSize="0.75rem"
-                lineHeight="1rem"
-                height="1.75rem"
-                fontWeight={700}
-                borderWidth="1px"
-                borderColor="gray.900"
-                borderRadius="4px"
-                data-cy="asset-list-deposit-button"
-              >
-                Deposit
-              </Button>
-            ) : (
-              <Button
+                isDisabled={!canWithdraw}
                 variant="unstyled"
                 fontSize="0.75rem"
                 lineHeight="1rem"
                 height="1.75rem"
+                w="100%"
+                px={4}
                 fontWeight={700}
                 borderWidth="1px"
                 borderColor="gray.900"
                 borderRadius="4px"
                 _hover={{ bg: 'gray.900' }}
-                onClick={() => {
-                  queryParams.set('tab', '0');
-                  queryParams.set('tabAction', 'remove');
-                  navigate({
-                    pathname: `manage/${token}/${collateralAddress}/1`,
-                    search: queryParams.toString(),
-                  });
-                }}
+                onClick={onOpen}
               >
                 Withdraw
               </Button>
-            )}
-          </Flex>
-        </Fade>
+            </Tooltip>
+          </Fade>
+          {/* TODO: Update when multiple pools for USDC LPing available */}
+          <Fade in>
+            <Button
+              as={NavLink}
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              height="1.75rem"
+              w="100%"
+              fontWeight={700}
+              borderWidth="1px"
+              borderColor="gray.900"
+              borderRadius="4px"
+              to={{
+                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                  poolId: '1',
+                  collateralSymbol: 'USDC',
+                }),
+                search: location.search,
+              }}
+              data-cy="assets-deposit-button"
+            >
+              Deposit
+            </Button>
+          </Fade>
+        </Flex>
+        <WithdrawModal isOpen={isOpen} onClose={onClose} />
       </Td>
     </Tr>
   );

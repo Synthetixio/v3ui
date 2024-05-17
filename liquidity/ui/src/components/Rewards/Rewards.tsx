@@ -9,13 +9,13 @@ import {
   Flex,
   Fade,
   FlexProps,
-  Tooltip,
 } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { RewardsRow } from './RewardsRow';
 import { RewardsType } from '@snx-v3/useRewards';
 import { RewardsLoading } from './RewardsLoading';
 import { InfoIcon } from '@chakra-ui/icons';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface RewardsDistributorsInterface extends FlexProps {
   rewards?: RewardsType;
