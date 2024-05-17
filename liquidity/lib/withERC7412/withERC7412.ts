@@ -28,6 +28,7 @@ const fetchOffchainData = withMemoryCache(
     const priceService = new EvmPriceServiceConnection(
       isTestnet ? offchainTestnetEndpoint : offchainMainnetEndpoint
     );
+
     const OracleQuerySchema = z.tuple([z.number(), ZodBigNumber, z.array(z.string())]);
     const decoded = ethers.utils.defaultAbiCoder.decode(
       ['uint8', 'uint64', 'bytes32[]'],
@@ -143,7 +144,6 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
       parseError
     );
     // If we cant parse it, throw the original error
-    console.error(error);
     throw error;
   }
 };
@@ -157,12 +157,15 @@ const getDefaultFromAddress = (chainName: string) => {
       return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here
     case 'mainnet':
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    case 'goerli':
+      return '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6';
     case 'sepolia':
       return '0x7b79995e5f793a07bc00c21412e50ecae098e7f9';
     case 'arbitrum':
       return '0x82af49447d8a07e3bd95bd0d56f35241523fbab1';
     case 'optimism-mainnet':
     case 'optimism-goerli':
+    case 'base-goerli':
     case 'base':
     case 'base-sepolia':
       return '0x4200000000000000000000000000000000000006';
@@ -203,7 +206,7 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id, network.preset)
+    ? await importCoreProxy(network.id)
     : await importMulticall3(network.id, network.preset);
 
   while (true) {
@@ -232,6 +235,7 @@ export const withERC7412 = async (
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
       const parsedError = await parseError(error, jsonRpcProvider);
+
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
         const ignoreCache = !isRead;
@@ -313,10 +317,11 @@ export async function erc7412Call<T>(
     const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
       multicallAbi
     ).decodeFunctionResult('aggregate3Value', res)[0];
+
     // Remove the price updates
     const responseWithoutPriceUpdates = decodedMultiCall.filter(
-      ({ returnData }) => returnData !== '0x'
-    ); // price updates have 0x as return data
+      ({ returnData }) => returnData !== '0x' // price updates have 0x as return data
+    );
     return decode(responseWithoutPriceUpdates.map(({ returnData }) => returnData));
   }
 

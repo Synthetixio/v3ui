@@ -1,9 +1,10 @@
 {
-  "name": "@snx-v3/useApr",
+  "name": "@snx-v3/useGetBorrow",
   "private": true,
   "main": "index.ts",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "dependencies": {
+    "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "react": "^18.2.0"

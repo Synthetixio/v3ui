@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   BaseIcon,
   EthereumIcon,
@@ -43,32 +43,33 @@ export const UNSUPPORTED_NETWORK: Network = {
 
 interface NetworkIconProps extends IconProps {
   networkId?: Network['id'];
+  size?: string;
 }
 
-export const NetworkIcon = ({ networkId, ...props }: NetworkIconProps) => {
+export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconProps) => {
   switch (networkId) {
     case 1:
-      return <EthereumIcon w="24px" h="24px" {...props} />;
+      return <EthereumIcon w={size} h={size} {...props} />;
     case 10:
-      return <OptimismIcon w="24px" h="24px" {...props} />;
+      return <OptimismIcon w={size} h={size} {...props} />;
     case 11155111:
-      return <EthereumIcon w="24px" h="24px" {...props} />;
+      return <EthereumIcon w={size} h={size} {...props} />;
     case 84531:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 84532:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 13370:
       return <LogoIcon w="29px" h="21px" {...props} />;
     case 8453:
-      return <BaseIcon w="24px" h="24px" {...props} />;
+      return <BaseIcon w={size} h={size} {...props} />;
     case 11155420:
-      return <OptimismIcon w="24px" h="24px" {...props} />;
+      return <OptimismIcon w={size} h={size} {...props} />;
     case 421614:
-      return <ArbitrumIcon w="24px" h="24px" {...props} />;
+      return <ArbitrumIcon w={size} h={size} {...props} />;
     case 42161:
-      return <ArbitrumIcon w="24px" h="24px" {...props} />;
+      return <ArbitrumIcon w={size} h={size} {...props} />;
     default:
-      return <FailedIcon w="24px" h="24px" {...props} />;
+      return <FailedIcon w={size} h={size} {...props} />;
   }
 };
 
@@ -193,7 +194,6 @@ export const NETWORKS: Network[] = [
 
 export const deploymentsWithERC7412: string[] = [
   '8453-andromeda',
-  '84531-andromeda',
   '84532-andromeda',
   '42161-arbthetix',
 ];
@@ -217,8 +217,13 @@ export const appMetadata = {
   explore: 'https://blog.synthetix.io',
 };
 
-export function useProviderForChain(network?: Network) {
+export function useProviderForChain(network?: Network | null) {
   return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined;
+}
+
+export function useDefaultProvider() {
+  const { network } = useNetwork();
+  return useProviderForChain(network);
 }
 
 export function useWallet() {
@@ -244,6 +249,12 @@ export function useWallet() {
     connect,
     disconnect,
   };
+}
+
+export function useGetNetwork(chainId: string) {
+  return useMemo(() => {
+    return NETWORKS.find((n) => n.hexId === chainId);
+  }, [chainId]);
 }
 
 export function useNetwork() {

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -42,25 +42,25 @@ function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
   });
 }
 
-export const useAllCollateralPriceIds = () => {
-  const { data: Multicall3 } = useMulticall3();
-  const { data: OracleProxy } = useOracleManagerProxy();
-  const { data: CoreProxy } = useCoreProxy();
+export const useAllCollateralPriceIds = (customNetwork?: Network) => {
+  const { data: Multicall3 } = useMulticall3(customNetwork);
+  const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { network } = useNetwork();
 
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
-
     queryKey: [`${network?.id}-${network?.preset}`, 'AllCollateralPriceIds'],
-
     queryFn: async () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
+      if (!deploymentsWithERC7412.includes(`${network?.id}-${network?.preset}`)) return [];
+
       const configs = await loadConfigs({ CoreProxy });
+
       const oracleNodeIds = configs.map((x) => x.oracleNodeId);
 
       const calls = oracleNodeIds.map((oracleNodeId) => ({
@@ -69,11 +69,13 @@ export const useAllCollateralPriceIds = () => {
       }));
 
       const { returnData } = await Multicall3.callStatic.aggregate(calls);
+
       const decoded = returnData
         .map((bytes, i) => {
           const nodeResp = OracleProxy.interface.decodeFunctionResult('getNode', bytes)[0];
 
           const { nodeType, parameters } = NodeSchema.parse({ ...nodeResp });
+
           if (nodeType !== EXTERNAL_NODE_TYPE) return undefined;
 
           try {
@@ -81,7 +83,6 @@ export const useAllCollateralPriceIds = () => {
               ['address', 'bytes32', 'uint256'],
               parameters
             );
-
             const parametersDecoded = PythParametersSchema.parse({
               address,
               priceFeedId,

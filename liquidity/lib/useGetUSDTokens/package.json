@@ -1,0 +1,14 @@
+{
+  "name": "@snx-v3/useGetUSDTokens",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@snx-v3/isBaseAndromeda": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useCollateralTypes": "workspace:*",
+    "@snx-v3/useCoreProxy": "workspace:*",
+    "@snx-v3/useSpotMarketProxy": "workspace:*",
+    "@tanstack/react-query": "^5.8.3"
+  }
+}

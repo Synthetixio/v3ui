@@ -5,6 +5,7 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
+
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -57,6 +58,7 @@ export const useDeposit = ({
         return;
       }
       if (collateralChange.eq(0)) return;
+
       try {
         dispatch({ type: 'prompting' });
         const walletAddress = await signer.getAddress();
@@ -82,7 +84,6 @@ export const useDeposit = ({
           currentCollateral.add(collateralChange).toBN(),
           wei(1).toBN()
         );
-
         const callsPromise = Promise.all([createAccount, deposit, delegate].filter(notNil));
         const collateralPriceCallsPromise = fetchPriceUpdates(
           collateralPriceUpdates,
@@ -90,13 +91,11 @@ export const useDeposit = ({
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );
-
         const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
           callsPromise,
           getGasPrice({ provider }),
           collateralPriceCallsPromise,
         ]);
-
         const allCalls = collateralPriceCalls.concat(calls);
 
         const erc7412Tx = await withERC7412(network, allCalls, 'useDeposit', CoreProxy.interface);

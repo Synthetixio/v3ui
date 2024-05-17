@@ -11,8 +11,8 @@ import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccount
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
-import { calculateCRatio } from '@snx-v3/calculations';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -36,6 +36,7 @@ export const loadPosition = async ({
     CoreProxy.populateTransaction.getPositionCollateral(accountId, poolId, tokenAddress),
     CoreProxy.populateTransaction.getPositionDebt(accountId, poolId, tokenAddress),
   ]);
+
   const decoder = (multicallEncoded: string | string[]) => {
     if (Array.isArray(multicallEncoded) && multicallEncoded.length === 2) {
       const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
@@ -65,7 +66,6 @@ export type LiquidityPosition = {
   accountCollateral: AccountCollateralType;
   usdCollateral: AccountCollateralType;
   tokenAddress: string;
-  cRatio: Wei;
 };
 
 export const useLiquidityPosition = ({
@@ -81,7 +81,7 @@ export const useLiquidityPosition = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: UsdProxy } = useUSDProxy();
   const { network } = useNetwork();
-  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
 
   return useQuery({
@@ -92,8 +92,7 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        collateralPriceUpdatesLength: collateralPriceUpdates?.length,
-        priceUpdateTx: priceUpdateTx?.data || '',
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     enabled: Boolean(
@@ -151,29 +150,27 @@ export const useLiquidityPosition = ({
         allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array ');
+
           const startOfPrice = 0;
           const endOfPrice = priceCalls.length;
           const startOfPosition = endOfPrice;
           const endOfPosition = startOfPosition + positionCalls.length;
 
           const startOfAccountCollateral = endOfPosition;
-          const [collateralPrice] = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
+          const collateralPrice = priceDecoder(encoded.slice(startOfPrice, endOfPrice));
           const decodedPosition = positionDecoder(encoded.slice(startOfPosition, endOfPosition));
           const [accountCollateral, usdCollateral] = accountCollateralDecoder(
             encoded.slice(startOfAccountCollateral)
           );
-          const debt = decodedPosition.debt;
-          const collateralValue = decodedPosition.collateral.amount.mul(collateralPrice);
-          const cRatio = calculateCRatio(debt, collateralValue);
+
           return {
-            collateralPrice,
+            collateralPrice: Array.isArray(collateralPrice) ? collateralPrice[0] : collateralPrice,
             collateralAmount: decodedPosition.collateral.amount,
-            collateralValue,
-            debt,
+            collateralValue: decodedPosition.collateral.amount.mul(collateralPrice),
+            debt: decodedPosition.debt,
             tokenAddress,
             accountCollateral,
             usdCollateral,
-            cRatio,
           };
         },
         `useLiquidityPosition`

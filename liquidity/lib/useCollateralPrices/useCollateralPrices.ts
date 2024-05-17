@@ -3,9 +3,13 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -21,7 +25,6 @@ export async function loadPrices({
       return CoreProxy.populateTransaction.getCollateralPrice(address);
     })
   );
-
   if (calls.length === 0) return { calls: [], decoder: () => [] };
 
   const decoder = (multicallEncoded: string | string[]) => {
@@ -39,7 +42,7 @@ export async function loadPrices({
         'getCollateralPrice',
         multicallEncoded
       )[0];
-      return [PriceSchema.parse(pricesEncoded)];
+      return PriceSchema.parse(pricesEncoded);
     }
   };
   return { calls, decoder };
@@ -48,34 +51,59 @@ export async function loadPrices({
 export const useCollateralPrices = () => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: collateralData, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+  const { data: collateralData } = useCollateralTypes();
+  const { data: usdTokens } = useGetUSDTokens();
 
-  const collateralAddresses = collateralData?.map((x) => x.tokenAddress);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const query = useQuery({
+  const collateralAddresses =
+    isBase && usdTokens?.sUSD
+      ? collateralData?.map((x) => x.tokenAddress).concat(usdTokens.sUSD)
+      : collateralData?.map((x) => x.tokenAddress);
+
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
+
+  return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
-    queryKey: [`${network?.id}-${network?.preset}`, 'CollateralPrices', { collateralAddresses }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'CollateralPrices',
+      {
+        collateralAddresses: collateralAddresses?.filter(
+          (item, pos) => collateralAddresses.indexOf(item) === pos
+        ),
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
+      },
+    ],
     queryFn: async () => {
-      if (!CoreProxy || !collateralAddresses || collateralAddresses.length == 0 || !network) {
+      if (
+        !CoreProxy ||
+        !collateralAddresses ||
+        collateralAddresses.length == 0 ||
+        !network ||
+        !provider
+      ) {
         throw 'useCollateralPrices missing required data';
       }
 
       const { calls, decoder } = await loadPrices({ CoreProxy, collateralAddresses });
 
-      const prices = await erc7412Call(
-        network,
-        CoreProxy.provider,
-        calls,
-        decoder,
-        'useCollateralPrices'
-      );
+      const allCalls = [...calls];
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
+
+      const prices = await erc7412Call(network, provider, allCalls, decoder, 'useCollateralPrices');
 
       return collateralAddresses.reduce((acc: Record<string, Wei | undefined>, address, i) => {
-        acc[address] = prices[i];
+        if (Array.isArray(prices)) {
+          acc[address] = prices[i];
+        } else {
+          acc[address] = prices;
+        }
         return acc;
       }, {});
     },
   });
-
-  return { ...query, isLoading: isCollateralTypesLoading || query.isLoading };
 };

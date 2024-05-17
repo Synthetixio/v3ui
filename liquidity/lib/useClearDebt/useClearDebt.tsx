@@ -11,9 +11,9 @@ import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
+import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const DEBT_REPAYER_ABI = [
   {
@@ -49,6 +49,7 @@ export const useClearDebt = ({
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const signer = useSigner();
   const { network } = useNetwork();
@@ -97,24 +98,13 @@ export const useClearDebt = ({
 
         const callsPromise = Promise.all([depositDebtToRepay, burn].filter(notNil));
 
-        const walletAddress = await signer.getAddress();
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
 
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceIds,
-          network.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
-        );
+        if (priceUpdateTx) {
+          calls.unshift(priceUpdateTx as any);
+        }
 
-        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
-          callsPromise,
-          getGasPrice({ provider }),
-          collateralPriceCallsPromise,
-        ]);
-
-        const allCalls = collateralPriceCalls.concat(calls);
-
-        const erc7412Tx = await withERC7412(network, allCalls, 'useRepay', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, calls, 'useRepay', CoreProxy.interface);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

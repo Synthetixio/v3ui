@@ -12,32 +12,7 @@ export function getRepayerContract(id?: number) {
   }
 }
 
-export function getUSDCAddress(id?: number) {
-  switch (id) {
-    case 8453:
-      return BASE_USDC;
-    case 84532:
-      return BASE_SEPOLIA_fUSDC;
-    default:
-      return BASE_USDC;
-  }
-}
-
-export function getsUSDCAddress(id?: number) {
-  switch (id) {
-    case 8453:
-      return sUSDC;
-    case 84532:
-      return BASE_SEPOLIA_sUSDC;
-    default:
-      return sUSDC;
-  }
-}
-
-export const isBaseAndromedaTestnet = (id?: number | string, preset?: string) =>
-  id?.toString() === '84532' && preset === 'andromeda';
-
-export function getsPythWrapper(id?: number) {
+export function getPythWrapper(id?: number) {
   switch (id) {
     case 8453:
       return '0x3FC194FA6C26BE94Fc404E69b51793c199c3BF52';

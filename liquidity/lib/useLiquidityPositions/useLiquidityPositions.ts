@@ -8,7 +8,7 @@ import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { keyBy } from '@snx-v3/tsHelpers';
+import { keyBy, stringToHash } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
@@ -59,7 +59,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         pools: pools ? pools.map((pool) => pool.id).sort() : [],
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
-        priceUpdateTx: priceUpdateTx?.data || '',
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
     queryFn: async () => {
@@ -90,6 +90,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           )
         )
       );
+
       const positionCallsAndData = positionCallsAndDataNested.flat();
 
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
@@ -106,6 +107,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
 
       const allCalls = collateralPriceCalls.concat(priceCalls.concat(positionCalls));
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
+
       if (priceUpdateTx) {
         allCalls.unshift(priceUpdateTx as any);
       }
@@ -117,13 +119,18 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array');
           if (!singlePositionDecoder) return {};
+          const prices = priceDecoder(encoded.slice(0, priceCalls.length));
           const pricesByAddress = keyBy(
             'address',
-            priceDecoder(encoded.slice(0, priceCalls.length)).map((price, i) => ({
-              price,
-              address: collateralTypes[i].tokenAddress,
-            }))
+
+            Array.isArray(prices)
+              ? prices.map((price, i) => ({
+                  price,
+                  address: collateralTypes[i].tokenAddress,
+                }))
+              : [{ price: prices, address: collateralTypes[0].tokenAddress }]
           );
+
           const pairedPositionsEncoded = toPairs(encoded.slice(priceCalls.length));
           const positionData = pairedPositionsEncoded.map((x) => singlePositionDecoder(x));
           const positions = positionData.map(({ debt, collateral }, index) => {

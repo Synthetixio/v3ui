@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { z } from 'zod';
 import { SmallIntSchema, WeiSchema } from '@snx-v3/zod';
 import { ethers } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,
@@ -27,12 +28,14 @@ export const usePoolConfiguration = (poolId?: string) => {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     enabled: Boolean(CoreProxy && poolId && collateralPriceUpdates),
     queryKey: [`${network?.id}-${network?.preset}`, 'PoolConfiguration', { poolId }],
     queryFn: async () => {
-      if (!CoreProxy || !poolId || !collateralPriceUpdates || !network) {
+      if (!CoreProxy || !poolId || !collateralPriceUpdates || !network || !provider) {
         throw Error('usePoolConfiguration should not be enabled');
       }
       const marketsData = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));
@@ -49,10 +52,15 @@ export const usePoolConfiguration = (poolId?: string) => {
       const calls = await Promise.all(
         markets.map((m) => CoreProxy.populateTransaction.isMarketCapacityLocked(m.id))
       );
+
+      const allCalls = collateralPriceCalls.concat(calls);
+      if (priceUpdateTx) {
+        allCalls.unshift(priceUpdateTx as any);
+      }
       const decoded = await erc7412Call(
         network,
-        CoreProxy.provider,
-        collateralPriceCalls.concat(calls),
+        provider,
+        allCalls,
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array');
           return encoded.map((x) =>

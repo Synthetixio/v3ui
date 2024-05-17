@@ -4,21 +4,26 @@ import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { stringToHash } from '@snx-v3/tsHelpers';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
   .transform(({ value, amount }) => ({ value: wei(value), amount: wei(amount) }));
 const VaultDebtSchema = ZodBigNumber.transform((x) => wei(x));
 
-export const useVaultsData = (poolId?: number) => {
+export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const { network } = useNetwork();
-  const { data: collateralTypes } = useCollateralTypes();
-  const { data: CoreProxyContract } = useCoreProxy();
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
+  const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
+  const { data: CoreProxyContract } = useCoreProxy(customNetwork);
+  const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);
+
+  const provider = useDefaultProvider();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
@@ -27,7 +32,9 @@ export const useVaultsData = (poolId?: number) => {
       {
         pool: poolId,
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
+        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
+      { customNetwork: !!customNetwork?.id },
     ],
     queryFn: async () => {
       if (
@@ -35,7 +42,8 @@ export const useVaultsData = (poolId?: number) => {
         !collateralTypes ||
         !poolId ||
         !collateralPriceUpdates ||
-        !network
+        !network ||
+        !provider
       ) {
         throw Error('useVaultsData should not be enabled when missing data');
       }
@@ -48,6 +56,7 @@ export const useVaultsData = (poolId?: number) => {
           )
         )
       );
+
       const debtCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
           CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
@@ -61,9 +70,13 @@ export const useVaultsData = (poolId?: number) => {
 
       const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
 
+      if (priceUpdateTx) {
+        calls.unshift(priceUpdateTx as any);
+      }
+
       return await erc7412Call(
         network,
-        CoreProxyContract.provider,
+        provider,
         calls.flat(),
         (multicallResult) => {
           if (!Array.isArray(multicallResult)) throw Error('Expected array');
