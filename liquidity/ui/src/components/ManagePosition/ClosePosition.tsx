@@ -7,9 +7,9 @@ import { usePool } from '@snx-v3/usePools';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useClosePosition } from '@snx-v3/useClosePosition';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { Transaction } from './SignTransaction';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function ClosePosition({
   liquidityPosition,
@@ -18,22 +18,20 @@ export function ClosePosition({
   collateralSymbol,
   accountId,
   isBase,
-  networkId,
 }: {
   liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress?: string;
   accountId?: string;
-  networkId?: number;
   isBase: boolean;
 }) {
+  const { data: usdTokens } = useGetUSDTokens();
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
-  const collateralAddresses = isBase
-    ? [collateralAddress, getUSDCAddress(networkId)]
-    : [collateralAddress];
+  const collateralAddresses =
+    isBase && usdTokens?.USDC ? [collateralAddress, usdTokens.USDC] : [collateralAddress];
   const { data: userTokenBalances } = useTokenBalances(collateralAddresses);
   const { data: accountBalances } = useAccountCollateral({ accountId });
 

@@ -10,8 +10,8 @@ import Wei from '@synthetixio/wei';
 import { constants } from 'ethers';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { getsUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useRepay } from '@snx-v3/useRepay';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function Repay({
   liquidityPosition,
@@ -19,20 +19,19 @@ export function Repay({
   collateralAddress,
   collateralSymbol,
   accountId,
-  networkId,
 }: {
   liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress: string;
   accountId?: string;
-  networkId?: number;
 }) {
+  const { data: usdTokens } = useGetUSDTokens();
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
-  const { data: USDBalance } = useTokenBalance(getsUSDCAddress(networkId));
+  const { data: USDBalance } = useTokenBalance(usdTokens?.sUSD);
   const { exec, isLoading: repayIsLoading } = useRepay({
     debtChange: amountToDeposit,
     accountId,

@@ -9,7 +9,7 @@ import { amountState } from '../../state/amount';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function RepayBaseAndromeda({
   liquidityPosition,
@@ -17,20 +17,19 @@ export function RepayBaseAndromeda({
   collateralAddress,
   collateralSymbol,
   accountId,
-  networkId,
 }: {
   liquidityPosition: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress: string;
   accountId?: string;
-  networkId?: number;
 }) {
+  const { data: usdTokens } = useGetUSDTokens();
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
-  const { data: USDCBalance } = useTokenBalance(getUSDCAddress(networkId));
+  const { data: USDCBalance } = useTokenBalance(usdTokens?.USDC);
   const { exec, isLoading: repayIsLoading } = useRepayBaseAndromeda({
     debtChange: amountToDeposit,
     accountId,

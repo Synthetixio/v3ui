@@ -9,12 +9,13 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { Wei } from '@synthetixio/wei';
-import { USDC_BASE_MARKET, getsUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { USDC_BASE_MARKET, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { notNil } from '@snx-v3/tsHelpers';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useClosePosition = ({
   accountId,
@@ -34,6 +35,7 @@ export const useClosePosition = ({
   const { data: UsdProxy } = useUSDProxy();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
   const { network } = useNetwork();
+  const { data: usdTokens } = useGetUSDTokens();
 
   const { gasSpeed } = useGasSpeed();
   const signer = useSigner();
@@ -50,7 +52,8 @@ export const useClosePosition = ({
           collateralTypeAddress &&
           collateralPriceIds &&
           accountId &&
-          liquidityPosition
+          liquidityPosition &&
+          usdTokens?.sUSD
         )
       )
         return;
@@ -102,7 +105,7 @@ export const useClosePosition = ({
                 ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, amountToWrap, 0)
                 : undefined;
 
-              const sUSDC_ADDRESS = getsUSDCAddress(network.id);
+              const sUSDC_ADDRESS = usdTokens.sUSD;
               const sUSDC_Contract = new Contract(sUSDC_ADDRESS, approveAbi, signer);
 
               const sUSDC_Approval = needsWrapping

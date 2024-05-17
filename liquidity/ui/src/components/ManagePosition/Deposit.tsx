@@ -13,7 +13,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { useDeposit } from '@snx-v3/useDeposit';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function Deposit({
   liquidityPosition,
@@ -21,7 +21,6 @@ export function Deposit({
   collateralAddress,
   collateralSymbol,
   accountId,
-  networkId,
   isBase,
 }: {
   liquidityPosition: LiquidityPosition;
@@ -30,13 +29,12 @@ export function Deposit({
   collateralAddress: string;
   accountId?: string;
   isBase: boolean;
-  networkId?: number;
 }) {
+  const { data: usdTokens } = useGetUSDTokens();
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
-  const collateralAddresses = isBase
-    ? [collateralAddress, getUSDCAddress(networkId)]
-    : [collateralAddress];
+  const collateralAddresses =
+    isBase && usdTokens?.USDC ? [collateralAddress, usdTokens.USDC] : [collateralAddress];
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
   const { data: userTokenBalances, isLoading: userTokenBalancesIsLoading } =

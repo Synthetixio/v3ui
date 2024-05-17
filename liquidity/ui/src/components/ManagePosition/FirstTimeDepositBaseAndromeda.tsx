@@ -6,7 +6,6 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ManagePosition } from './ManagePosition';
 import { ZEROWEI } from '../../utils/constants';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useRecoilState } from 'recoil';
 import { amountState } from '../../state/amount';
@@ -14,29 +13,29 @@ import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useApprove } from '@snx-v3/useApprove';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export function FirstTimeDepositBaseAndromeda({
   liquidityPosition,
   poolId,
   collateralSymbol,
   collateralAddress,
-  networkId,
   accountId,
 }: {
   liquidityPosition?: LiquidityPosition;
   poolId?: string;
   collateralSymbol?: string;
   collateralAddress: string;
-  networkId?: number;
   accountId?: string;
 }) {
+  const { data: usdTokens } = useGetUSDTokens();
   const [amountToDeposit] = useRecoilState(amountState);
   const { data: pool, isLoading: isPoolLoading } = usePool(poolId);
   const { data: collateralType, isLoading: collateralTypesIsLoading } =
     useCollateralType(collateralSymbol);
   const { data: userTokenBalances, isLoading: userTokenBalancesIsLoading } = useTokenBalances([
     collateralAddress,
-    getUSDCAddress(networkId),
+    usdTokens?.USDC || '',
   ]);
   const { data: accountCollateral, isLoading: accountCollateralIsLoading } = useAccountCollateral({
     accountId,
@@ -48,7 +47,7 @@ export function FirstTimeDepositBaseAndromeda({
     isLoading: approveIsLoading,
   } = useApprove({
     amount: amountToDeposit.toBN(),
-    contractAddress: getUSDCAddress(networkId),
+    contractAddress: usdTokens?.USDC,
     spender: SpotMarket?.address,
   });
   const { data: collateralPrices } = useCollateralPrices();
