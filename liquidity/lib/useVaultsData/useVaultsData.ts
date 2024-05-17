@@ -10,6 +10,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
+import { useMemo } from 'react';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -18,23 +19,23 @@ const VaultDebtSchema = ZodBigNumber.transform((x) => wei(x));
 
 export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const { network } = useNetwork();
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
   const { data: CoreProxyContract } = useCoreProxy(customNetwork);
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);
 
-  const provider = useProviderForChain(customNetwork || network);
+  const provider = useProviderForChain(targetNetwork);
 
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'VaultCollaterals',
       {
         pool: poolId,
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
         priceUpdateTx: stringToHash(priceUpdateTx?.data),
-        customNetwork: customNetwork?.id,
       },
     ],
     queryFn: async () => {
@@ -43,7 +44,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
         !collateralTypes ||
         !poolId ||
         !collateralPriceUpdates ||
-        !network ||
+        !targetNetwork ||
         !provider
       ) {
         throw Error('useVaultsData should not be enabled when missing data');
@@ -66,7 +67,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
 
       const collateralPriceUpdateCallsP = fetchPriceUpdates(
         collateralPriceUpdates,
-        network.isTestnet
+        targetNetwork.isTestnet
       ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
 
       const calls = await Promise.all([collateralPriceUpdateCallsP, collateralCallsP, debtCallsP]);
@@ -76,7 +77,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
       }
 
       return await erc7412Call(
-        network,
+        targetNetwork,
         provider,
         calls.flat(),
         (multicallResult) => {
@@ -86,7 +87,9 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
           const debtResult = multicallResult.slice(collateralTypes.length);
 
           return collateralResult.map((bytes: string, i: number) => {
-            const debtBytes = debtResult[i];
+            const debtBytes =
+              debtResult[i] || '0x0000000000000000000000000000000000000000000000000000000000000000';
+
             const decodedDebt = CoreProxyContract.interface.decodeFunctionResult(
               'getVaultDebt',
               debtBytes
