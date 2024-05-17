@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
+import { ChainFilter, TokenFilter } from '.';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -9,6 +10,10 @@ export const PoolsList = () => {
       <Heading fontWeight={700} fontSize={24}>
         Pools
       </Heading>
+      <Flex>
+        <ChainFilter />
+        <TokenFilter activeTokens={state.collateral} />
+      </Flex>
     </Flex>
   );
 };
