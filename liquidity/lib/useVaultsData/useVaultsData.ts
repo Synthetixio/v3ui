@@ -34,8 +34,8 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
         pool: poolId,
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
         priceUpdateTx: stringToHash(priceUpdateTx?.data),
+        customNetwork: customNetwork?.id,
       },
-      { customNetwork: customNetwork?.id },
     ],
     queryFn: async () => {
       if (
