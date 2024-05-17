@@ -26,7 +26,7 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
         py="6px"
         fontWeight={600}
         borderRadius="9999px"
-        w="62px"
+        mr={1.5}
       >
         All
       </Flex>
@@ -49,14 +49,14 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
             bg={isActive ? 'whiteAlpha.300' : 'transparent'}
             justifyContent="center"
             display="flex"
-            mr={1}
+            mr={1.5}
             as={Button}
             px="16px"
             py="6px"
             fontWeight={600}
             borderRadius="9999px"
           >
-            <NetworkIcon networkId={chain.id} />
+            <NetworkIcon size="18px" networkId={chain.id} />
           </Flex>
         );
       })}

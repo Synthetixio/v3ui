@@ -1,8 +1,13 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-export const EthereumIcon = ({ width = '24px', height = '24px', fill = `#627EEA` }: IconProps) => {
+export const EthereumIcon = ({
+  width = '24px',
+  height = '24px',
+  fill = `#627EEA`,
+  ...props
+}: IconProps) => {
   return (
-    <Icon width={width} height={height} viewBox="0 0 30 30" fill="none">
+    <Icon width={width} height={height} viewBox="0 0 30 30" fill="none" {...props}>
       <path
         d="M15 30c8.284 0 15-6.716 15-15 0-8.284-6.716-15-15-15C6.716 0 0 6.716 0 15c0 8.284 6.716 15 15 15Z"
         fill={fill as string}
