@@ -43,7 +43,6 @@ export function Manage() {
         collateralSymbol={collateralSymbol}
         poolId={poolId}
         collateralAddress={collateralAddress}
-        networkId={network?.id}
         accountId={accountId}
       />
     );
@@ -73,7 +72,6 @@ export function Manage() {
         collateralAddress={collateralAddress}
         accountId={accountId}
         isBase={isBase}
-        networkId={network?.id}
       />
     );
   }
@@ -99,7 +97,6 @@ export function Manage() {
         poolId={poolId}
         collateralAddress={collateralAddress}
         accountId={accountId}
-        networkId={network?.id}
       />
     );
   }
@@ -112,7 +109,6 @@ export function Manage() {
         poolId={poolId}
         collateralAddress={collateralAddress}
         accountId={accountId}
-        networkId={network?.id}
       />
     );
   }
@@ -164,7 +160,6 @@ export function Manage() {
         liquidityPosition={liquidityPosition}
         accountId={accountId}
         collateralSymbol={collateralSymbol}
-        networkId={network?.id}
         poolId={poolId}
       />
     );

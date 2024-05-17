@@ -20,16 +20,15 @@ export function Pools() {
 
   const hydratedCollateralTypes = isBase
     ? collateralTypes?.map((item) => {
-      if (item.symbol === 'sUSDC') {
-        return {
-          ...item,
-          symbol: 'USDC',
-          name: 'USD Coin',
-        };
-      }
-
-      return item;
-    })
+        if (item.symbol === 'sUSDC') {
+          return {
+            ...item,
+            symbol: 'USDC',
+            name: 'USD Coin',
+          };
+        }
+        return item;
+      })
     : collateralTypes;
 
   return (
