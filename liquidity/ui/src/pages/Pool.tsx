@@ -1,12 +1,12 @@
 import { Box, Divider, Flex } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { PoolHeader } from '../../components';
-import { MarketSection } from '../../components';
-import { CollateralSection } from '../../components';
+import { PoolHeader } from '../components';
+import { MarketSection } from '../components';
+import { CollateralSection } from '../components';
 import { useParams } from '@snx-v3/useParams';
 import { HomeLink } from '@snx-v3/HomeLink';
 import { usePool } from '@snx-v3/usePools';
-import { Rewards } from '../../components';
+import { Rewards } from '../components';
 import { useRewards } from '@snx-v3/useRewards';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';

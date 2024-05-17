@@ -1,8 +1,8 @@
 import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { AssetsList, PositionsList, StatsList } from '../../components';
+import { AssetsList, PositionsList, StatsList } from '../components';
 
-export function Home() {
+export function Dashboard() {
   return (
     <>
       <Helmet>
@@ -10,15 +10,7 @@ export function Home() {
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column" mb={16}>
-        <Heading
-          mt={{
-            base: 2,
-            sm: 10,
-          }}
-          color="gray.50"
-          fontSize="1.5rem"
-          data-cy="liquidity-dashboard"
-        >
+        <Heading mt={10} color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
           Dashboard
         </Heading>
         <StatsList />

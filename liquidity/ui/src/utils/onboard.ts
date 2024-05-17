@@ -13,10 +13,7 @@ const supportedNetworks = [1, 11155111, 8453, 84532, 421614, 42161];
 
 // Filter networks to only supported ones
 export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
-  id: n.id,
-  token: n.token,
-  label: n.label,
-  rpcUrl: n.rpcUrl(),
+  ...n,
 }));
 
 export const onboard = init({
@@ -38,7 +35,14 @@ export const onboard = init({
     // gnosisModule(),
     coinbaseModule(),
   ],
-  chains: [...networks],
+  chains: [
+    ...networks.map((n) => ({
+      id: n.id,
+      token: n.token,
+      label: n.label,
+      rpcUrl: n.rpcUrl(),
+    })),
+  ],
   appMetadata: {
     ...appMetadata,
     name: 'Synthetix Liquidity',
