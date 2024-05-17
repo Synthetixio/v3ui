@@ -115,6 +115,7 @@ jobs:
       - run: yarn deps:circular
       - run: yarn pretty
       - run: yarn lint
+      - run: yarn svg:check
 
   tests:
     working_directory: /tmp/app
@@ -287,8 +288,8 @@ jobs:
       - run: yarn download-cci-coverage tests /tmp/cov || true
       - run: yarn download-cci-coverage liquidity-cy /tmp/cov || true
       - run: yarn download-cci-coverage governance-cy /tmp/cov || true
-      - run: yarn download-cci-coverage liquidity-e2e-base-sepolia /tmp/cov || true
-      - run: yarn download-cci-coverage liquidity-e2e-sepolia /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-base-mainnet /tmp/cov || true
+      - run: yarn download-cci-coverage liquidity-e2e-optimism-mainnet /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
       - run: mkdir -p /tmp/cov/combined
@@ -338,21 +339,21 @@ workflows:
       - liquidity-cy
       - governance-cy
       - liquidity-e2e:
-          chain: base-sepolia
-          name: liquidity-e2e-base-sepolia
+          chain: base-mainnet
+          name: liquidity-e2e-base-mainnet
       - liquidity-e2e:
           chain: sepolia
           name: liquidity-e2e-sepolia
       - combine-coverage:
           requires:
-            [tests, liquidity-cy, governance-cy, liquidity-e2e-sepolia, liquidity-e2e-base-sepolia]
+            [tests, liquidity-cy, governance-cy, liquidity-e2e-base-mainnet, liquidity-e2e-sepolia]
       - liquidity-armada:
           requires:
             - checks
             - typecheck
             - tests
             - liquidity-cy
-            - liquidity-e2e-base-sepolia
+            - liquidity-e2e-base-mainnet
             - liquidity-e2e-sepolia
           filters:
             branches:
@@ -366,7 +367,7 @@ workflows:
             - typecheck
             - tests
             - liquidity-cy
-            - liquidity-e2e-base-sepolia
+            - liquidity-e2e-base-mainnet
             - liquidity-e2e-sepolia
           filters:
             branches:
