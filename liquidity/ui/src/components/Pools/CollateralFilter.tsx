@@ -1,25 +1,24 @@
 import { Dispatch } from 'react';
 import { Flex, Button } from '@chakra-ui/react';
+import { TokenIcon } from '../TokenIcon';
 import { PoolsFilterAction } from './PoolsList';
-import { NetworkIcon } from '@snx-v3/useBlockchain';
-import { networks } from '../../utils/onboard';
 
-interface ChainFilterProps {
-  activeChains: number[];
+const supportedCollateralTypes = ['ETH', 'SNX', 'USDC', 'DAI', 'ARB'];
+
+interface CollateralFilterProps {
+  activeCollateral: string[];
   dispatch: Dispatch<PoolsFilterAction>;
 }
 
-const supportedChains = networks.filter((network) => !network.isTestnet);
-
-export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
-  const isAllActive = activeChains.length === 0;
+export const CollateralFilter = ({ activeCollateral, dispatch }: CollateralFilterProps) => {
+  const isAllActive = activeCollateral.length === 0;
 
   return (
     <Flex justifyContent="center">
       <Flex
         variant="unstyled"
         bg={isAllActive ? 'whiteAlpha.300' : 'transparent'}
-        onClick={() => dispatch({ type: 'RESET_CHAIN' })}
+        onClick={() => dispatch({ type: 'RESET_COLLATERAL' })}
         color="gray.50"
         as={Button}
         px="16px"
@@ -30,20 +29,20 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
       >
         All
       </Flex>
-      {supportedChains.map((chain) => {
-        const isActive = activeChains.includes(chain.id);
+      {supportedCollateralTypes.map((collateral) => {
+        const isActive = activeCollateral.includes(collateral);
 
         const toggle = () => {
           if (isActive) {
-            dispatch({ type: 'REMOVE_CHAIN', payload: { chain: chain.id } });
+            dispatch({ type: 'REMOVE_COLLATERAL', payload: { collateral } });
           } else {
-            dispatch({ type: 'ADD_CHAIN', payload: { chain: chain.id } });
+            dispatch({ type: 'ADD_COLLATERAL', payload: { collateral } });
           }
         };
 
         return (
           <Flex
-            key={chain.id}
+            key={collateral}
             onClick={toggle}
             variant="unstyled"
             bg={isActive ? 'whiteAlpha.300' : 'transparent'}
@@ -56,7 +55,7 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
             fontWeight={600}
             borderRadius="9999px"
           >
-            <NetworkIcon networkId={chain.id} />
+            <TokenIcon symbol={collateral} />
           </Flex>
         );
       })}

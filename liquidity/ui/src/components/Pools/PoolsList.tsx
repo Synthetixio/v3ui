@@ -1,18 +1,18 @@
 import { useReducer } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
-import { ChainFilter, TokenFilter } from '.';
+import { ChainFilter, CollateralFilter } from './';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
 
   return (
-    <Flex mt={6}>
+    <Flex mt={6} flexDirection="column">
       <Heading fontWeight={700} fontSize={24}>
         Pools
       </Heading>
-      <Flex>
-        <ChainFilter />
-        <TokenFilter activeTokens={state.collateral} />
+      <Flex justifyContent="space-between" my={6}>
+        <ChainFilter activeChains={state.chain} dispatch={dispatch} />
+        <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
     </Flex>
   );
@@ -20,46 +20,62 @@ export const PoolsList = () => {
 
 interface PoolsFilterState {
   collateral: string[];
-  chain: string[];
+  chain: number[];
 }
 
-interface PoolsFilterAction {
-  type: 'ADD_COLLATERAL' | 'REMOVE_COLLATERAL' | 'ADD_CHAIN' | 'REMOVE_CHAIN' | 'RESET';
-  payload: {
-    collateral: string;
-    chain: string;
+export interface PoolsFilterAction {
+  type:
+    | 'ADD_COLLATERAL'
+    | 'REMOVE_COLLATERAL'
+    | 'ADD_CHAIN'
+    | 'REMOVE_CHAIN'
+    | 'RESET_COLLATERAL'
+    | 'RESET_CHAIN';
+  payload?: {
+    collateral?: string;
+    chain?: number;
   };
 }
 
 function poolsReducer(state: PoolsFilterState, action: PoolsFilterAction): PoolsFilterState {
   switch (action.type) {
     case 'ADD_COLLATERAL':
-      return {
-        ...state,
-        collateral: [...state.collateral, action.payload.collateral],
-      };
+      if (action.payload?.collateral) {
+        return {
+          ...state,
+          collateral: [...state.collateral, action.payload.collateral],
+        };
+      }
 
     case 'REMOVE_COLLATERAL':
       return {
         ...state,
-        collateral: state.collateral.filter((item) => item !== action.payload.collateral),
+        collateral: state.collateral.filter((item) => item !== action.payload?.collateral),
       };
 
     case 'ADD_CHAIN':
-      return {
-        ...state,
-        chain: [...state.chain, action.payload.chain],
-      };
+      if (action.payload?.chain) {
+        return {
+          ...state,
+          chain: [...state.chain, action.payload.chain],
+        };
+      }
 
     case 'REMOVE_CHAIN':
       return {
         ...state,
-        chain: state.chain.filter((item) => item !== action.payload.chain),
+        chain: state.chain.filter((item) => item !== action.payload?.chain),
       };
 
-    case 'RESET':
+    case 'RESET_COLLATERAL':
       return {
         collateral: [],
+        chain: state.chain,
+      };
+
+    case 'RESET_CHAIN':
+      return {
+        collateral: state.collateral,
         chain: [],
       };
 
