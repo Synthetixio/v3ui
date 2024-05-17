@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+require('dotenv').config();
 // For depcheck to be happy
 require.resolve('webpack-dev-server');
 
@@ -167,10 +167,9 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.NEXT_PUBLIC_INFURA_KEY': JSON.stringify(process.env.NEXT_PUBLIC_INFURA_KEY),
-        'process.env.NEXT_PUBLIC_WC_PROJECT_ID': JSON.stringify(
-          process.env.NEXT_PUBLIC_WC_PROJECT_ID
-        ),
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.PYTH_MAINNET_ENDPOINT': JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
+        'process.env.PYTH_TESTNET_ENDPOINT': JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
       })
     ),
 

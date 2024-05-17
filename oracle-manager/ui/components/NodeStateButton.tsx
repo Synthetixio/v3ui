@@ -1,135 +1,28 @@
 import { Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
-import { providers, utils } from 'ethers';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { useConnectWallet } from '@web3-onboard/react';
-import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/contracts';
+import { providers } from 'ethers';
+import { FC, useCallback, useState } from 'react';
+import { encodeBytesByNodeType, getNodeModuleContract } from '../utils/contracts';
 import { Node } from '../utils/types';
 import { useRecoilState } from 'recoil';
 import { nodesState } from '../state/nodes';
 import { shortAddress } from '../utils/addresses';
-import { NETWORKS, useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useParams } from 'react-router-dom';
-
-let interval: any;
+import { useFetchPrice } from '../hooks/useFetchPrice';
+import { findParentNode } from '../utils/nodes';
 
 export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [isLoading, setIsLoading] = useState(false);
-  const [nodeState, setNodeState] = useState<'registerNode' | 'nodeRegistered'>('registerNode');
-  const [nodeId, setNodeId] = useState('');
-  const [price, setPrice] = useState('0');
-  const [time, setTime] = useState(new Date());
-  const [_, connect] = useConnectWallet();
   const signer = useSigner();
-  const isWalletConnected = useIsConnected();
-  const { network, setNetwork } = useNetwork();
-
+  const { network } = useNetwork();
   const toast = useToast();
   const param = useParams();
-
-  const networkParam = param?.network ? Number(param.network) : undefined;
-  const provider = new providers.JsonRpcProvider(
-    NETWORKS.filter((network) => network.id === (networkParam || 1))[0].rpcUrl()
-  );
-  const findParentNode = useCallback(
-    (parentId: string) => {
-      const parentNode = nodes.find((node) => node.id === parentId);
-      if (parentNode) {
-        return hashId(parentNode, []);
-      }
-      return '';
-    },
-    [nodes]
-  );
-
-  useEffect(() => {
-    const fetchNodeState = async () => {
-      if (network?.id) {
-        try {
-          const contract = await getNodeModuleContract(networkParam ? provider : signer!, network);
-          const hashedId = hashId(node, node.parents.map(findParentNode));
-          const nodeFromChain = await contract.getNode(hashedId);
-          if (nodeFromChain[0] > 0) {
-            const nodeID = await contract.getNodeId(
-              nodeFromChain[0],
-              nodeFromChain[1],
-              nodeFromChain[2]
-            );
-            setNodeId(nodeID);
-            setNodeState('nodeRegistered');
-            setNodes((state) => {
-              return state.map((n) => {
-                if (n.id === nodeID) {
-                  return { ...n, isRegistered: true, network: network.id };
-                }
-                return n;
-              });
-            });
-            const price = await contract.process(nodeID);
-            setPrice(utils.formatEther(price[0]));
-            setTime(() => {
-              const newDate = new Date(1970, 0, 1);
-              newDate.setSeconds(price[1].toNumber());
-              return newDate;
-            });
-            interval = setInterval(async () => {
-              try {
-                const price = await contract.process(nodeID);
-                setTime(() => {
-                  const newDate = new Date(1970, 0, 1);
-                  newDate.setSeconds(price[1].toNumber());
-                  return newDate;
-                });
-                setPrice(utils.formatEther(price[0]));
-              } catch (error) {
-                console.error('interval for price fetching errored ', error);
-              }
-            }, 10000);
-          } else {
-            setNodeState('registerNode');
-            setPrice('');
-            setTime(new Date());
-            setNodeId('');
-            clearInterval(interval);
-            setNodes((state) => {
-              return state.map((n) => {
-                if (n.id === node.id) {
-                  return { ...n, isRegistered: false };
-                }
-                return n;
-              });
-            });
-          }
-        } catch (error) {
-          console.error(error);
-          setNodeState('registerNode');
-          setPrice('');
-          setTime(new Date());
-          setNodeId('');
-          clearInterval(interval);
-          setNodes((state) => {
-            return state.map((n) => {
-              if (n.id === node.id) {
-                return { ...n, isRegistered: false };
-              }
-              return n;
-            });
-          });
-        }
-      }
-    };
-    fetchNodeState();
-
-    // eslint-disable-next-line
-  }, [isWalletConnected, network?.id, node.type, node.parameters, node.parents, node.isRegistered]);
+  const networkParam = param?.network ? Number(param.network) : 1;
+  const { data, status } = useFetchPrice(node.id, networkParam);
 
   const handleButtonClick = async () => {
-    if (!isWalletConnected) {
-      await connect();
-      if (network && node?.network) {
-        setNetwork(node.network);
-      }
-    } else if (nodeState === 'registerNode') {
+    if (node.isRegistered) {
       try {
         setIsLoading(true);
         if (network?.id && signer) {
@@ -137,17 +30,15 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
           const tx: providers.TransactionResponse = await contract.registerNode(
             node.typeId,
             encodeBytesByNodeType(node.typeId, node.parameters),
-            node.parents.map(findParentNode)
+            node.parents.map((id) => findParentNode(id, nodes))
           );
           await tx.wait(1);
           const nodeID = await contract.getNodeId(
             node.typeId,
             encodeBytesByNodeType(node.typeId, node.parameters),
-            node.parents.map(findParentNode)
+            node.parents.map((id) => findParentNode(id, nodes))
           );
           if (nodeID) {
-            setNodeId(nodeID);
-            setNodeState('nodeRegistered');
             setNodes((state) => {
               return state.map((n) => {
                 if (n.id === nodeID) {
@@ -167,17 +58,18 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
   };
 
   const renderText = useCallback(() => {
-    if (!isWalletConnected) return <Text>Please connect your wallet</Text>;
-    if (nodeState === 'registerNode') return <Text>Register Node</Text>;
-    if (nodeState === 'nodeRegistered') return '';
-    return 'Something went wrong';
-  }, [nodeState, isWalletConnected]);
+    if (!node.isRegistered) return <Text>Register Node</Text>;
+    return 'Loading...';
+  }, [node.isRegistered]);
+
+  if (status === 'error') return 'Something went wrong...';
+  if (!data) return 'Loading...';
 
   return (
     <Flex flexDir="column" alignItems="center">
       {isLoading ? (
         <Spinner colorScheme="cyan" />
-      ) : nodeState !== 'nodeRegistered' ? (
+      ) : !node.isRegistered ? (
         <Button
           border="1px solid white"
           size="xs"
@@ -190,23 +82,26 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
         >
           {renderText()}
         </Button>
-      ) : price !== '0' && !!price ? (
+      ) : (
         <Flex gap="2" flexDir="column">
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
             Price:
           </Text>
           <Text fontSize="xs" color="whiteAlpha.800">
-            {price}
+            {data.price.toString()}
           </Text>
           <Text fontWeight="bold" color="whiteAlpha.800" fontSize="xs">
-            Timestamp:
-          </Text>
-          <Text fontSize="xs" color="whiteAlpha.800">
-            {time.toLocaleTimeString()} - {time.toLocaleDateString()}
+            Timestamp:{' '}
+            {data.timestamp.toLocaleString(undefined, {
+              day: '2-digit',
+              month: 'short',
+              year: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
           </Text>
         </Flex>
-      ) : (
-        'Something went wrong'
       )}
       <Text
         fontSize="xx-small"
@@ -214,7 +109,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
         _hover={{ opacity: 0.5 }}
         onClick={(e) => {
           e.stopPropagation();
-          navigator.clipboard.writeText(nodeId);
+          navigator.clipboard.writeText(node.id);
           toast({
             description: 'Copy ID to clipboard',
             status: 'success',
@@ -223,7 +118,7 @@ export const NodeStateButton: FC<{ node: Node }> = ({ node }) => {
           });
         }}
       >
-        {!!nodeId && <Text>Node ID: {shortAddress(nodeId)}</Text>}
+        {!!node.id && <Text>Node ID: {shortAddress(node.id)}</Text>}
       </Text>
     </Flex>
   );

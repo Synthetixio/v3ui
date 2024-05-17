@@ -6,11 +6,19 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>Synthetix V3</title>
+        <title>Synthetix Liquidity V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
-      <Flex flexDir="column">
-        <Heading color="gray.50" fontSize="1.5rem" data-cy="liquidity-dashboard">
+      <Flex flexDir="column" mb={16}>
+        <Heading
+          mt={{
+            base: 2,
+            sm: 10,
+          }}
+          color="gray.50"
+          fontSize="1.5rem"
+          data-cy="liquidity-dashboard"
+        >
           Dashboard
         </Heading>
         <StatsList />

@@ -8,8 +8,8 @@ import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 
 // LP App Supported Networks
-// MAINNET, SEPOLIA, BASE, BASE SEPOLIA,
-const supportedNetworks = [1, 11155111, 8453, 84532];
+// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, Arbitrum
+const supportedNetworks = [1, 11155111, 8453, 84532, 421614, 42161];
 
 // Filter networks to only supported ones
 export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
@@ -41,7 +41,7 @@ export const onboard = init({
   chains: [...networks],
   appMetadata: {
     ...appMetadata,
-    name: 'Synthetix Governance',
+    name: 'Synthetix Liquidity',
   },
   accountCenter: {
     desktop: {

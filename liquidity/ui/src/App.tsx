@@ -11,7 +11,6 @@ import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from './utils/onboard';
-import './i18n';
 import { RecoilRoot } from 'recoil';
 import { Progress } from './utils/theme';
 

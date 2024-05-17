@@ -9,6 +9,7 @@ import { RegisteredNode } from './RegisteredNode';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onboard } from '../utils/onboard';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const Alert: ComponentStyleConfig = {
   variants: {
@@ -43,8 +44,10 @@ root.render(
         new QueryClient({
           defaultOptions: {
             queries: {
-              refetchInterval: 9999999,
+              staleTime: 999999,
+              refetchInterval: 999999,
               refetchOnMount: false,
+              refetchOnReconnect: false,
               refetchOnWindowFocus: false,
             },
           },
@@ -53,6 +56,7 @@ root.render(
     >
       <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={customTheme}>
+          <ReactQueryDevtools />
           <Fonts />
           <Header />
           <RouterProvider router={router} />

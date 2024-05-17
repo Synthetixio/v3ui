@@ -9,10 +9,22 @@ export function calculateDebt(positions?: DebtPositions) {
   );
 }
 
-export function calculatePositions(positionsByKey?: DebtPositions) {
+export function calculatePositions(positionsByKey?: DebtPositions, isBase = false) {
   const positionsIds = !!positionsByKey
     ? (Object.keys(positionsByKey) as `${string}-${string}`[])
     : [];
 
-  return positionsByKey ? positionsIds.map((id) => positionsByKey[id]) : [];
+  if (!positionsByKey) return [];
+
+  return positionsIds.map((id) => {
+    const position = positionsByKey[id];
+
+    if (isBase && position.collateralType.symbol === 'sUSDC') {
+      position.collateralType.symbol = 'USDC';
+      position.collateralType.displaySymbol = 'USDC';
+      position.collateralType.name = 'USD Coin';
+    }
+
+    return position;
+  });
 }

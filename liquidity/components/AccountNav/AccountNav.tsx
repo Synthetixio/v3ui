@@ -1,13 +1,7 @@
 import { ChevronLeftIcon, SettingsIcon } from '@chakra-ui/icons';
 import { Flex, Link } from '@chakra-ui/react';
 import { useParams } from '@snx-v3/useParams';
-import {
-  createSearchParams,
-  generatePath,
-  Link as RouterLink,
-  useMatch,
-  useLocation,
-} from 'react-router-dom';
+import { generatePath, Link as RouterLink, useMatch, useLocation } from 'react-router-dom';
 
 export function AccountNav() {
   const params = useParams();
@@ -21,9 +15,7 @@ export function AccountNav() {
           as={RouterLink}
           to={{
             pathname: generatePath('/'),
-            search: params.accountId
-              ? createSearchParams({ accountId: params.accountId }).toString()
-              : '',
+            search: location.search,
           }}
           fontSize="xs"
           fontWeight="normal"

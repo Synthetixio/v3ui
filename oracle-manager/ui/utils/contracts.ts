@@ -5,6 +5,7 @@ import { Contract, providers, utils } from 'ethers';
 import { Node } from './types';
 import { ORACLE_NODE_TYPES } from './constants';
 import { Network } from '@snx-v3/useBlockchain';
+import { importOracleManagerProxy } from '@synthetixio/v3-contracts';
 
 export function encodeBytesByNodeType(id: number, parameters: any[]) {
   switch (id) {
@@ -135,8 +136,6 @@ export const getNodeModuleContract = async (
   signerOrProvider: providers.JsonRpcSigner | providers.JsonRpcProvider,
   network: Network
 ) => {
-  const OracleManagerProxy = await import(
-    `@synthetixio/v3-contracts/build/${network.id}-${network.preset}/OracleManagerProxy`
-  );
+  const OracleManagerProxy = await importOracleManagerProxy(network.id, network.preset);
   return new Contract(OracleManagerProxy.address, OracleManagerProxy.abi, signerOrProvider);
 };

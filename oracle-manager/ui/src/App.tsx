@@ -18,25 +18,21 @@ import { convertStateToQueryParam } from '../utils/url';
 import { NodeFormModule } from '../components/NodeFormModule';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { encodeBytesByNodeType, getNodeModuleContract, hashId } from '../utils/contracts';
-import { useIsConnected, useNetwork, useSigner } from '@snx-v3/useBlockchain';
+import { useIsConnected, useNetwork } from '@snx-v3/useBlockchain';
 import { SearchIcon } from '@chakra-ui/icons';
-import { providers } from 'ethers';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
 import NetworkSelect from '../components/NetworkSelect';
+import { RegisterAllNodesButton } from '../components/RegisterAllNodesButton';
 
 export const App: FC = () => {
-  const [currentNetwork, setNetwork] = useState({ id: 1, name: 'Ethereum' });
-  const [nodes, setNodes] = useRecoilState(nodesState);
   const { colorMode, toggleColorMode } = useColorMode();
+  const [currentNetwork, setNetwork] = useState({ id: 1, name: 'Ethereum' });
+  const [nodes] = useRecoilState(nodesState);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, getValues } = useForm({ defaultValues: { search: '' } });
   const navigate = useNavigate();
   const { network } = useNetwork();
-  const signer = useSigner();
   const isWalletConnected = useIsConnected();
-  const { data: contract } = useMulticall3();
 
   useEffect(() => {
     if (colorMode === 'light') {
@@ -94,58 +90,7 @@ export const App: FC = () => {
           Click on the black connection lines to disconnect a parent node from a child node.
         </Text>
         <Flex justifyContent="center">
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            mr="16px"
-            isDisabled={!isWalletConnected}
-            onClick={async () => {
-              if (nodes.every((node) => node.isRegistered)) {
-                toast({
-                  title: 'All nodes are already registered',
-                  status: 'info',
-                  duration: 9000,
-                  isClosable: true,
-                });
-              } else if (signer && network?.id && !!contract) {
-                const oracleManagerContract = await getNodeModuleContract(signer, network);
-                const data = nodes
-                  .slice()
-                  .filter((node) => !node.isRegistered)
-                  .sort((a, b) => {
-                    if (a.parents.length > b.parents.length) return 1;
-                    if (a.parents.length < b.parents.length) return -1;
-                    return 0;
-                  })
-                  .map((node) => {
-                    return {
-                      target: oracleManagerContract.address,
-                      callData: oracleManagerContract.interface.encodeFunctionData('registerNode', [
-                        node.typeId,
-                        encodeBytesByNodeType(node.typeId, node.parameters),
-                        node.parents.map((parentId: string) => {
-                          const parentNode = nodes.find((node) => node.id === parentId);
-                          if (parentNode) {
-                            return hashId(parentNode, []);
-                          }
-                          return '';
-                        }),
-                      ]),
-                    };
-                  });
-                contract.aggregate(data).then((tx: providers.TransactionResponse) =>
-                  tx.wait(1).then(() => {
-                    setNodes((state) => {
-                      return state.map((n) => ({ ...n, isRegistered: true }));
-                    });
-                  })
-                );
-                setNodes(nodes.map((node) => ({ ...node, network: network.id })));
-              }
-            }}
-          >
-            Register All Nodes
-          </Button>
+          <RegisterAllNodesButton />
           <Button
             mr="16px"
             variant="outline"

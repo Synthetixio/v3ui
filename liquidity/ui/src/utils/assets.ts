@@ -1,6 +1,7 @@
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
+import { ONEWEI, ZEROWEI } from './constants';
 
 export interface Asset {
   collateral: AccountCollateralType;
@@ -10,33 +11,71 @@ export interface Asset {
 
 export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
-  userTokenBalances?: Wei[] | undefined,
+  associatedUserBalances?:
+    | {
+      balance: Wei;
+      tokenAddress: string;
+    }[]
+    | undefined,
   collateralPrices?: Record<string, Wei | undefined>,
-  collateralTypes?: CollateralType[]
+  collateralTypes?: CollateralType[],
+  isBase?: boolean,
+  USDCAddress?: string
 ): Asset[] | undefined {
-  if (!accountCollaterals && !userTokenBalances && !collateralPrices) return;
+  if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
   // Empty state
   if (collateralTypes && !accountCollaterals) {
-    return collateralTypes.map((collateral) => ({
-      collateral: {
-        tokenAddress: collateral.tokenAddress,
-        symbol: collateral.symbol,
-        displaySymbol: collateral.displaySymbol,
-        availableCollateral: new Wei(0),
-        totalDeposited: new Wei(0),
-        totalAssigned: new Wei(0),
-        totalLocked: new Wei(0),
-      },
-      balance: new Wei(0),
-      price: new Wei(0),
-    }));
+    // Because we are mapping over collateral types we need to convert sUSDC symbol to USDC
+    return collateralTypes.map((collateral) => {
+      if (isBase && collateral.symbol === 'USDC') {
+        return {
+          collateral: {
+            ...collateral,
+            availableCollateral: ZEROWEI,
+            totalDeposited: ZEROWEI,
+            totalAssigned: ZEROWEI,
+            totalLocked: ZEROWEI,
+          },
+          balance: associatedUserBalances
+            ? associatedUserBalances.find(
+              (balance) => balance.tokenAddress === collateral.tokenAddress
+            )?.balance || ZEROWEI
+            : ZEROWEI,
+          price: ONEWEI,
+        };
+      }
+
+      return {
+        collateral: {
+          tokenAddress: collateral.tokenAddress,
+          symbol: collateral.symbol,
+          displaySymbol: collateral.displaySymbol,
+          availableCollateral: ZEROWEI,
+          totalDeposited: ZEROWEI,
+          totalAssigned: ZEROWEI,
+          totalLocked: ZEROWEI,
+        },
+        balance: ZEROWEI,
+        price: ZEROWEI,
+      };
+    });
   }
 
-  if (userTokenBalances && collateralPrices) {
-    return accountCollaterals?.map((collateral, index) => {
-      const balance = userTokenBalances[index];
-      const price = collateralPrices[collateral.tokenAddress];
+  if (associatedUserBalances && collateralPrices) {
+    return accountCollaterals?.map((collateral) => {
+      let balance =
+        associatedUserBalances.find((item) => item.tokenAddress === collateral.tokenAddress)
+          ?.balance || wei(0);
+      const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
+
+      // ANDROMEDA CASE
+      if (isBase && collateral.symbol === 'USDC') {
+        // We also want to show the USDC balance, not the sUSDC balance
+        balance =
+          associatedUserBalances.find((balance) => balance.tokenAddress === USDCAddress)?.balance ||
+          wei(0);
+      }
 
       return {
         collateral,
@@ -56,7 +95,7 @@ export function calculateTotalAssets(assets?: Asset[]) {
       // if already assigned to pool, we dont add it
       return assigned !== deposited ? assigned.add(wallet) : assigned.add(wallet).add(deposited);
     })
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
     .toNumber()
     .toFixed(2);
 }
@@ -64,7 +103,19 @@ export function calculateTotalAssets(assets?: Asset[]) {
 export function calculateTotalAssetsDelegated(assets?: Asset[]) {
   return assets
     ?.map((asset) => asset.collateral.totalAssigned.mul(asset.price))
-    .reduce((prev, cur) => prev.add(cur), new Wei(0))
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
+    .toNumber()
+    .toFixed(2);
+}
+
+export function calculateTotalAssetsAvailable(assets?: Asset[]) {
+  return assets
+    ?.map((asset) => {
+      const assigned = asset.collateral.availableCollateral;
+      const wallet = asset.balance.mul(asset.price);
+      return assigned.add(wallet);
+    })
+    .reduce((prev, cur) => prev.add(cur), ZEROWEI)
     .toNumber()
     .toFixed(2);
 }

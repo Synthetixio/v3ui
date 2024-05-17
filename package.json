@@ -22,7 +22,8 @@
     "deps:circular": "deps-circular",
     "deps:version": "deps-version",
     "upgrade-browsers": "yarn up browserslist caniuse-lite --recursive",
-    "svg": "svgo  --config ./svgo.json",
+    "svg": "svgo --config svgo.config.js --recursive ./",
+    "svg:check": "yarn svg && git diff --exit-code **/*.svg",
     "download-cci-coverage": "download-cci-coverage",
     "publish:release": "lerna publish",
     "publish:dev": "lerna publish --force-publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD)",
@@ -59,6 +60,7 @@
     "lint-staged": "^15.1.0",
     "nyc": "^15.1.0",
     "prettier": "^3.1.0",
+    "svgo": "^3.2.0",
     "typescript": "^5.2.2"
   },
   "browserslist": [

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Amount } from '@snx-v3/Amount';
-import { Button, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
+import { Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { generatePath, Link, useLocation } from 'react-router-dom';
 import { useConnectWallet } from '@web3-onboard/react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
@@ -10,6 +10,7 @@ import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 function VaultRowUi({
   collateralType,

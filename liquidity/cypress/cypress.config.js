@@ -44,6 +44,9 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/delegateCollateral'),
         ...require('./cypress/tasks/borrowUsd'),
         ...require('./cypress/tasks/setConfig'),
+        ...require('./cypress/tasks/getSUSDC'),
+        ...require('./cypress/tasks/getUSDC'),
+        ...require('./cypress/tasks/isBase'),
       });
 
       return config;

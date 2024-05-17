@@ -1,6 +1,6 @@
 import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
-import { NETWORKS } from '@snx-v3/useBlockchain';
+import { NETWORKS, appMetadata } from '@snx-v3/useBlockchain';
 
 export const networks = NETWORKS.map((n) => ({
   id: n.id,
@@ -12,4 +12,19 @@ export const networks = NETWORKS.map((n) => ({
 export const onboard = init({
   wallets: [injectedModule({})],
   chains: [...networks],
+  appMetadata: {
+    ...appMetadata,
+    name: 'Synthetix Oracle Manager',
+  },
+  accountCenter: {
+    desktop: {
+      enabled: false,
+    },
+    mobile: {
+      enabled: false,
+    },
+  },
+  notify: {
+    enabled: false,
+  },
 });

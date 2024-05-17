@@ -1,6 +1,7 @@
 import { ExternalLinkIcon, InfoIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading, Link, Radio, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, Heading, Link, Radio, Text } from '@chakra-ui/react';
 import { generatePath, Link as NavLink } from 'react-router-dom';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 export function PoolItem({ name, value }: { name: string; value: string }) {
   return (
@@ -27,6 +28,7 @@ export function PoolItem({ name, value }: { name: string; value: string }) {
               as={NavLink}
               to={{
                 pathname: generatePath('/pools/:poolId', { poolId: value }),
+                search: location.search,
               }}
               color="cyan.500"
               display="inline-block"
