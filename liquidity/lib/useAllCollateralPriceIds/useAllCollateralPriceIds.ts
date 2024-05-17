@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -42,10 +42,10 @@ function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
   });
 }
 
-export const useAllCollateralPriceIds = () => {
-  const { data: Multicall3 } = useMulticall3();
-  const { data: OracleProxy } = useOracleManagerProxy();
-  const { data: CoreProxy } = useCoreProxy();
+export const useAllCollateralPriceIds = (customNetwork?: Network) => {
+  const { data: Multicall3 } = useMulticall3(customNetwork);
+  const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { network } = useNetwork();
 
   return useQuery({
@@ -56,7 +56,8 @@ export const useAllCollateralPriceIds = () => {
       if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
-      if (!deploymentsWithERC7412.includes(`${network.id}-${network.preset}`)) return [];
+
+      if (!deploymentsWithERC7412.includes(`${network?.id}-${network?.preset}`)) return [];
 
       const configs = await loadConfigs({ CoreProxy });
 

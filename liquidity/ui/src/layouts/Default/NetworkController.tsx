@@ -48,7 +48,6 @@ export function NetworkController() {
     if (walletsInfo) {
       // store in local storage
       localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
-      navigate({ pathname }, { replace: true });
     }
   }, [walletsInfo, connect, navigate, pathname]);
 

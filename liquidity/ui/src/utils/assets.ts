@@ -2,7 +2,6 @@ import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei, { wei } from '@synthetixio/wei';
 import { ONEWEI, ZEROWEI } from './constants';
-import { getUSDCAddress } from '@snx-v3/isBaseAndromeda';
 
 export interface Asset {
   collateral: AccountCollateralType;
@@ -21,7 +20,7 @@ export function calculateAssets(
   collateralPrices?: Record<string, Wei | undefined>,
   collateralTypes?: CollateralType[],
   isBase?: boolean,
-  networkId?: number
+  USDCAddress?: string
 ): Asset[] | undefined {
   if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
@@ -74,9 +73,8 @@ export function calculateAssets(
       if (isBase && collateral.symbol === 'USDC') {
         // We also want to show the USDC balance, not the sUSDC balance
         balance =
-          associatedUserBalances.find(
-            (balance) => balance.tokenAddress === getUSDCAddress(networkId)
-          )?.balance || wei(0);
+          associatedUserBalances.find((balance) => balance.tokenAddress === USDCAddress)?.balance ||
+          wei(0);
       }
 
       return {
