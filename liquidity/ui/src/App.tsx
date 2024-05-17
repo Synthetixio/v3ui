@@ -10,9 +10,9 @@ import { TermsModal } from '@snx-v3/TermsModal';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
-import { onboard } from './utils/onboard';
+import { onboard } from './utils';
 import { RecoilRoot } from 'recoil';
-import { Progress } from './utils/theme';
+import { Progress } from './utils';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,7 +50,7 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={theme}>
+        <ChakraProvider theme={extendedTheme}>
           <ColorMode />
           <Fonts />
           <GasSpeedProvider>
