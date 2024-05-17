@@ -4,7 +4,7 @@ import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
-import { Network, useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
@@ -22,7 +22,8 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const { data: CoreProxyContract } = useCoreProxy(customNetwork);
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);
 
-  const provider = useDefaultProvider();
+  const provider = useProviderForChain(customNetwork || network);
+
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
   return useQuery({
@@ -34,7 +35,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
         tokens: collateralTypes ? collateralTypes?.map((x) => x.tokenAddress).sort() : [],
         priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
-      { customNetwork: !!customNetwork?.id },
+      { customNetwork: customNetwork?.id },
     ],
     queryFn: async () => {
       if (

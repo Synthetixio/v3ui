@@ -18,7 +18,11 @@ export function useMulticall3(customNetwork?: Network) {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'Multicall3', { withSigner }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'Multicall3',
+      { withSigner, customNetwork: customNetwork?.id },
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importMulticall3(customNetwork.id, customNetwork.preset);

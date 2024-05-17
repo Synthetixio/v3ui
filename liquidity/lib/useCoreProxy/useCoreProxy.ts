@@ -23,7 +23,7 @@ export function useCoreProxy(customNetwork?: Network) {
       `${network?.id}-${network?.preset}`,
       'CoreProxy',
       { withSigner },
-      { providerForChain },
+      { providerForChain, customNetwork: customNetwork?.id },
     ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {

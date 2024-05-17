@@ -1,12 +1,11 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Button, Text, Image, Divider, Heading, Skeleton } from '@chakra-ui/react';
+import { Flex, Button, Text, Divider, Heading, Skeleton } from '@chakra-ui/react';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { TokenIcon } from '../../TokenIcon';
-import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
-import { CollateralType } from '@snx-v3/useCollateralTypes';
-import Wei from '@synthetixio/wei';
-import { NetworkIcon } from '@snx-v3/useBlockchain';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { Network, NetworkIcon } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { useApr } from '@snx-v3/useApr';
 import { useVaultsData } from '@snx-v3/useVaultsData';
@@ -14,31 +13,17 @@ import { usePool } from '@snx-v3/usePools';
 
 interface PoolCardProps {
   poolId: number;
-  networkId: number;
-  name: string;
-  apr?: number;
-  vaultDebt?: {
-    debt: Wei;
-    collateral: {
-      value: Wei;
-      amount: Wei;
-    };
-    collateralType: CollateralType;
-  }[];
-  collateralTypes?: CollateralType[];
+  network: Network;
 }
 
-export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
+export const PoolCard = ({ poolId, network }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
-
-  const { data: pool, isLoading: isPoolLoading } = usePool(`${poolId}`, 1);
   const { data: apr, isLoading: isAprLoading } = useApr();
-  const { data: vaultDebt, isLoading: isVaultsLoading } = useVaultsData(1);
-  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes(
-    poolId,
-    networkId
-  );
+
+  const { data: pool } = usePool(poolId.toString(), network);
+  const { data: vaultDebt, isLoading: isVaultsLoading } = useVaultsData(poolId, network);
+  const { data: collateralTypes } = useCollateralTypes(false, network);
 
   const vaultTVL = vaultDebt?.reduce((cur, prev) => {
     return cur.add(prev.collateral.value);
@@ -46,7 +31,6 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
 
   return (
     <Flex
-      key={`${poolId}-${networkId}`}
       flexDir="column"
       w="100%"
       border="1px solid"
@@ -54,36 +38,20 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
       rounded="base"
       bg="navy.700"
       p="6"
-      maxW="767px"
     >
       <Flex justifyContent="space-between" alignItems="center">
-        <Flex alignItems="center">
-          <NetworkIcon networkId={8453} />
-          <Heading fontSize="16px" fontWeight={700} color="white" ml={3}>
-            {pool.name}
+        <Flex flexDir="column" gap={1}>
+          <Heading fontSize="20px" fontWeight={700} color="white">
+            {pool?.name}
           </Heading>
+          <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
+            <NetworkIcon size="14px" networkId={network.id} />
+            {network.label} Network
+          </Flex>
         </Flex>
-        <Button
-          mt={{ base: 2, md: 0 }}
-          size="sm"
-          variant="outline"
-          colorScheme="gray"
-          color="white"
-          onClick={() => {
-            navigate({
-              pathname: generatePath('/pools/:poolId', { poolId: '1' }),
-              search: location.search,
-            });
-          }}
-        >
-          Pool Details
-        </Button>
-      </Flex>
-      <Divider my="18px" />
-      <Flex w="100%" h="194px" alignItems="center" gap="4" justifyContent="space-between">
-        <Flex w="60%">
-          <Flex flexDirection="column" mr={12}>
-            <Text fontSize="12px" color="gray.600" mb={1}>
+        <Flex>
+          <Flex alignItems="center" mr={6} gap={2}>
+            <Text fontSize="20px" fontWeight="bold" color="gray.500">
               TVL
               <Tooltip
                 label={
@@ -101,10 +69,14 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
                 <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
               </Tooltip>
             </Text>
-            <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
+            <Skeleton
+              isLoaded={!isVaultsLoading}
+              startColor="whiteAlpha.500"
+              endColor="whiteAlpha.200"
+            >
               <Text
-                fontWeight={700}
-                fontSize="30px"
+                fontWeight="bold"
+                fontSize="20px"
                 color="white"
                 display="flex"
                 alignItems="center"
@@ -112,12 +84,12 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
               >
                 {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
                 {/* For sizing the skeleton */}
-                {isLoading && '100M'}
+                {isVaultsLoading && '100M'}
               </Text>
             </Skeleton>
           </Flex>
-          <Flex flexDir="column" mr="auto">
-            <Text fontSize="12px" color="gray.600" mb={1}>
+          <Flex alignItems="center" gap={2}>
+            <Text fontSize="20px" fontWeight="bold" color="gray.500">
               APR
               <Tooltip
                 label={
@@ -139,29 +111,37 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
                 <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
               </Tooltip>
             </Text>
-            <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
-              <Text fontWeight={700} fontSize="30px" color="white" lineHeight="36px">
-                {apr?.toFixed(2).concat('%') || '-'}
+            <Skeleton
+              isLoaded={!isAprLoading}
+              startColor="whiteAlpha.500"
+              endColor="whiteAlpha.200"
+            >
+              <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
+                {!!apr ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
                 {/* For sizing the skeleton */}
-                {isLoading && '42%'}
+                {isAprLoading && '42%'}
               </Text>
             </Skeleton>
           </Flex>
         </Flex>
-        <Flex w="40%" justifyContent="center" alignItems="center">
-          <Image src="/pools.svg" mb={4} />
-        </Flex>
       </Flex>
+
       <Divider mt="18px" mb="10px" />
       {collateralTypes?.map((type) => (
-        <Flex key={type.tokenAddress} justifyContent="space-between" mt={3}>
+        <Flex alignItems="center" key={type.tokenAddress} gap={4} mt={3}>
           <Flex alignItems="center">
             <TokenIcon symbol={type.symbol} />
             <Flex flexDirection="column" ml={3} mr="auto">
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+              <Text
+                fontSize="14px"
+                color="white"
+                fontWeight={700}
+                lineHeight="1.25rem"
+                fontFamily="heading"
+              >
                 {type.symbol}
               </Text>
-              <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+              <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
                 {type.displaySymbol}
               </Text>
             </Flex>
@@ -183,10 +163,20 @@ export const PoolCard = ({ poolId, networkId }: PoolCardProps) => {
               onClick={() => {
                 queryParams.set('manageAction', 'deposit');
                 navigate({
-                  pathname: `/positions/${type.symbol}/${pool.id}`,
+                  pathname: `/positions/${type.symbol}/${poolId}`,
                   search: queryParams.toString(),
                 });
               }}
+              variant="unstyled"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              height="1.75rem"
+              px={4}
+              fontWeight={700}
+              borderWidth="1px"
+              borderColor="gray.900"
+              borderRadius="4px"
+              _hover={{ bg: 'gray.900' }}
             >
               Deposit
             </Button>

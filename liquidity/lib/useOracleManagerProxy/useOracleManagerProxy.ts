@@ -19,7 +19,11 @@ export function useOracleManagerProxy(customNetwork?: Network) {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'OracleManagerProxy', { withSigner }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'OracleManagerProxy',
+      { withSigner, customNetwork: customNetwork?.id },
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importOracleManagerProxy(
