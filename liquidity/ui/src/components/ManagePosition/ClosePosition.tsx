@@ -86,7 +86,8 @@ export function ClosePosition({
           }
           poolPnl="$00.00"
           currentCollateral={liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
-          cRatio={isBase ? MAXUINT.toNumber() : liquidityPosition.cRatio.toNumber()}
+          cRatio={isBase ? MAXUINT.toNumber() : 0}
+          // liquidityPosition.cRatio.toNumber()
           liquidationCratioPercentage={collateralType?.liquidationRatioD18.toNumber()}
           targetCratioPercentage={collateralType?.issuanceRatioD18.toNumber()}
           isLoading={isLoading}
