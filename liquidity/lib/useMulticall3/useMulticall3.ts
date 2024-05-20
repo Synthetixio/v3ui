@@ -10,8 +10,8 @@ import {
 import { importMulticall3, Multicall3Type } from '@synthetixio/v3-contracts';
 
 export function useMulticall3(customNetwork?: Network) {
-  const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
+  const providerForChain = useProviderForChain(customNetwork);
   const provider = useProvider();
   const signer = useSigner();
   const signerOrProvider = signer || provider || providerForChain;

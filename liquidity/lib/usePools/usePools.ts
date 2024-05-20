@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { NETWORKS, Network, useNetwork } from '@snx-v3/useBlockchain';
@@ -21,10 +22,11 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
     enabled: Boolean(CoreProxy),
-    queryKey: [`${network?.id}-${network?.preset}`, 'Pools', { customNetwork: customNetwork?.id }],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
 

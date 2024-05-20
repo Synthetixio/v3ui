@@ -13,7 +13,7 @@ export function Home() {
         <Heading
           mt={10}
           color="gray.50"
-          width="33%"
+          maxWidth="20rem"
           fontSize="3rem"
           data-cy="liquidity-home"
           lineHeight="120%"

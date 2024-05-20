@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { networks } from '../../utils/onboard';
@@ -8,18 +8,24 @@ const supportedChains = networks.filter((network) => !network.isTestnet);
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
 
+  const filteredChains = useMemo(() => {
+    return supportedChains.filter((chain) =>
+      state.chain.length ? state.chain.includes(chain.id) : true
+    );
+  }, [state.chain]);
+
   return (
     <Flex mt={6} flexDirection="column">
       <Heading fontWeight={700} fontSize={24}>
         Pools
       </Heading>
-      <Flex justifyContent="space-between" my={6}>
+      <Flex flexWrap="wrap" gap={4} justifyContent="space-between" my={6}>
         <ChainFilter activeChains={state.chain} dispatch={dispatch} />
         <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
       <Flex direction="column" gap={4}>
-        {supportedChains.map((chain) => (
-          <PoolCard key={chain.id} poolId={1} network={chain} />
+        {filteredChains.map((chain) => (
+          <PoolCard key={chain.id} poolId={1} network={chain} collaterals={state.collateral} />
         ))}
       </Flex>
     </Flex>

@@ -63,16 +63,20 @@ const getPriceUpdates = async (
   };
 };
 
-export const useAllCollateralPriceUpdates = () => {
+export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const { network } = useNetwork();
+  const chain = customNetwork || network;
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates'],
-    enabled: isBaseAndromeda(network?.id, network?.preset),
+    queryKey: [`${chain?.id}-${chain?.preset}`, 'all-price-updates'],
+    enabled: isBaseAndromeda(chain?.id, chain?.preset),
     queryFn: async () => {
+      if (!chain) {
+        return;
+      }
       const stalenessTolerance = 60;
 
-      const tx = await getPriceUpdates(priceIds, stalenessTolerance, network);
+      const tx = await getPriceUpdates(priceIds, stalenessTolerance, chain);
 
       return {
         ...tx,

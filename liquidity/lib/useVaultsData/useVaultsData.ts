@@ -26,7 +26,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
 
   const provider = useProviderForChain(targetNetwork);
 
-  const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
+  const { data: priceUpdateTx } = useAllCollateralPriceUpdates(customNetwork);
 
   return useQuery({
     queryKey: [

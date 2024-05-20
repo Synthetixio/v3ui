@@ -1,11 +1,12 @@
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
-export function useApr() {
+export function useApr(customNetwork?: Network) {
   const { network } = useNetwork();
+  const chain = network || customNetwork;
 
   return useQuery({
-    queryKey: ['apr', network?.id],
+    queryKey: ['apr', chain?.id],
     queryFn: async () => {
       try {
         const response = await fetch('https://api.synthetix.io/v3/base/sc-pool-apy');
@@ -14,7 +15,7 @@ export function useApr() {
 
         return {
           // 0 meaning not the right network
-          combinedApr: network?.id === 8453 || network?.id === 84532 ? data.aprCombined * 100 : 0,
+          combinedApr: chain?.id === 8453 || chain?.id === 84532 ? data.aprCombined * 100 : 0,
         };
       } catch (error) {
         return;
