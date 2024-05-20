@@ -14,7 +14,7 @@ export function useMulticall3(customNetwork?: Network) {
   const { network } = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const signerOrProvider = signer || provider || providerForChain;
   const withSigner = Boolean(signer);
 
   return useQuery({
