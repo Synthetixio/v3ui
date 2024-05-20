@@ -13,6 +13,7 @@ import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythP
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -66,6 +67,7 @@ export type LiquidityPosition = {
   accountCollateral: AccountCollateralType;
   usdCollateral: AccountCollateralType;
   tokenAddress: string;
+  cRatio: Wei;
 };
 
 export const useLiquidityPosition = ({
@@ -163,12 +165,18 @@ export const useLiquidityPosition = ({
             encoded.slice(startOfAccountCollateral)
           );
 
+          const cRatio = calculateCRatio(
+            decodedPosition.debt,
+            decodedPosition.collateral.amount.mul(collateralPrice)
+          );
+
           return {
             collateralPrice: Array.isArray(collateralPrice) ? collateralPrice[0] : collateralPrice,
             collateralAmount: decodedPosition.collateral.amount,
             collateralValue: decodedPosition.collateral.amount.mul(collateralPrice),
             debt: decodedPosition.debt,
             tokenAddress,
+            cRatio,
             accountCollateral,
             usdCollateral,
           };

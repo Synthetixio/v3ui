@@ -67,7 +67,6 @@ export function FirstTimeDepositBaseAndromeda({
       accountId,
       poolId,
       availableCollateral: accountBalance,
-      sUSDCBalance: sUSDCBalance,
       collateralTypeAddress: collateralAddress,
     });
 
