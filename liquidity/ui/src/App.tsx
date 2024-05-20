@@ -10,9 +10,8 @@ import { TermsModal } from '@snx-v3/TermsModal';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
-import { onboard } from './utils';
 import { RecoilRoot } from 'recoil';
-import { Progress } from './utils';
+import { Progress, onboard } from './utils';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,24 +45,23 @@ const extendedTheme = extendTheme({
 export const App = () => {
   const TERMS_CONDITIONS_ACCEPTED =
     sessionStorage.getItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED) === 'true';
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={extendedTheme}>
-          <ColorMode />
-          <Fonts />
-          <GasSpeedProvider>
-            <HashRouter>
-              <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
-              <RecoilRoot>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <Web3OnboardProvider web3Onboard={onboard}>
+          <ChakraProvider theme={extendedTheme}>
+            <ColorMode />
+            <Fonts />
+            <GasSpeedProvider>
+              <HashRouter>
+                <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
                 <Router />
-              </RecoilRoot>
-            </HashRouter>
-          </GasSpeedProvider>
-          <ReactQueryDevtools />
-        </ChakraProvider>
-      </Web3OnboardProvider>
-    </QueryClientProvider>
+              </HashRouter>
+            </GasSpeedProvider>
+            <ReactQueryDevtools />
+          </ChakraProvider>
+        </Web3OnboardProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 };
