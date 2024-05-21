@@ -32,7 +32,6 @@ export const AssetsRow = ({
   final,
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
 
   const hoursToWithdraw = canWithdraw
