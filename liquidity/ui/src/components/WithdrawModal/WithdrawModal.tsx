@@ -105,16 +105,16 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     return type;
   });
 
-  const collateralTypeDisplayName = collateralTypesHydated?.find(
-    (item) => item.tokenAddress === selectedCollateralType
-  )?.symbol;
+  const collateralTypeDisplayName =
+    collateralTypesHydated?.find((item) => item.tokenAddress === selectedCollateralType)?.symbol ||
+    'sUSD';
 
   return (
     <Modal
       isOpen={isOpen}
       isCentered
       onClose={() => {
-        setAmount(new Wei(0));
+        setAmount(ZEROWEI);
         onClose();
       }}
     >
@@ -216,7 +216,6 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           {!isBase && (
                             <MenuItem
                               onClick={() => setSelectedCollateralType(usdTokens?.snxUSD || '')}
-                              key={usdTokens?.snxUSD.concat('-base')}
                             >
                               <TokenIcon mr={1} height={16} width={16} symbol="sUSD" />
                               sUSD
