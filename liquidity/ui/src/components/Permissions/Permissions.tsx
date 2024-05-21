@@ -22,14 +22,23 @@ import { PermissionRow } from './PermissionRow';
 import { useAccountOwner, useAccountPermissions } from '@snx-v3/useAccountPermissions';
 import { prettyString } from '@snx-v3/format';
 import { CopyIcon } from '@chakra-ui/icons';
-import { NewPermissionRow } from './NewPermissionRow';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { AddPermissionModal } from './AddPermissionModal';
+import { TransferOwnershipModal } from './TransferOwnershipModal';
 
 export default function Permissions() {
   const [accountId, setAccountId] = useState('');
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isPermissionOpen,
+    onClose: onPermissionClose,
+    onOpen: onPermissionOpen,
+  } = useDisclosure();
+  const {
+    isOpen: isTransferOpen,
+    onClose: onTransferClose,
+    onOpen: onTransferOpen,
+  } = useDisclosure();
   const { activeWallet } = useWallet();
   const { data: accounts } = useAccounts();
   const { data: permissionData, refetch } = useAccountPermissions(accounts);
@@ -61,7 +70,7 @@ export default function Permissions() {
                 size="xs"
                 onClick={() => {
                   setAccountId(account);
-                  onOpen();
+                  onPermissionOpen();
                 }}
               >
                 + New Permission
@@ -126,14 +135,31 @@ export default function Permissions() {
                         </Skeleton>
                       </Td>
                       <Td py={5} borderBottomColor="gray.900">
-                        <Badge color="cyan" variant="outline" bg="cyan.900">
-                          Owner
+                        <Badge
+                          cursor="pointer"
+                          colorScheme="cyan"
+                          variant="outline"
+                          bg="cyan.900"
+                          size="sm"
+                          textTransform="capitalize"
+                          mx="1"
+                        >
+                          OWNER
                         </Badge>
                       </Td>
                       <Td py={5} borderBottomColor="gray.900" textAlign="end">
                         {activeWallet?.address.toLowerCase() ==
                           accountOwners[index].toLowerCase() && (
-                          <Button size="xs" variant="outline" colorScheme="gray" color="white">
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            colorScheme="gray"
+                            color="white"
+                            onClick={() => {
+                              setAccountId(account);
+                              onTransferOpen();
+                            }}
+                          >
                             Transfer Ownership
                           </Button>
                         )}
@@ -141,7 +167,7 @@ export default function Permissions() {
                     </Tr>
 
                     {permissionData &&
-                      Object.keys(permissionData)
+                      Object.keys(permissionData[index])
                         .filter((target) => permissionData[index][target]?.length > 0)
                         .map((target) => (
                           <PermissionRow
@@ -152,8 +178,6 @@ export default function Permissions() {
                             refetch={() => refetch()}
                           />
                         ))}
-
-                    {/* {account && <NewPermissionRow accountId={account} refetch={() => refetch()} />} */}
                   </Tbody>
                 </Table>
               </Stack>
@@ -194,7 +218,16 @@ export default function Permissions() {
           </Button>
         </Link>
       </Flex>
-      <AddPermissionModal isOpen={isOpen} onClose={onClose} accountId={accountId} />
+      <AddPermissionModal
+        isOpen={isPermissionOpen}
+        onClose={onPermissionClose}
+        accountId={accountId}
+      />
+      <TransferOwnershipModal
+        isOpen={isTransferOpen}
+        onClose={onTransferClose}
+        accountId={accountId}
+      />
     </Flex>
   );
 }

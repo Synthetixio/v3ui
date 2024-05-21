@@ -1,5 +1,5 @@
-import { CopyIcon } from '@chakra-ui/icons';
-import { Badge, Td, Tooltip, Tr, Text, Button, Flex } from '@chakra-ui/react';
+import { CopyIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { Badge, Td, Tooltip, Tr, Text, Button, Flex, IconButton } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { permissionsList } from './AccountPermissions';
@@ -68,23 +68,40 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
           <Flex flexWrap="wrap" gap={2}>
             {permissionsList.map((r) => (
               <Badge
-                onClick={() => selectPermission(r)}
-                variant="outline"
-                key={r}
-                color={permissions.includes(r) ? 'cyan' : 'gray'}
-                textTransform="capitalize"
                 cursor="pointer"
+                onClick={() => selectPermission(r)}
+                colorScheme={permissions.includes(r) ? 'cyan' : 'gray'}
+                variant="outline"
+                bg={permissions.includes(r) ? 'cyan.900' : 'gray.900'}
+                size="sm"
+                textTransform="capitalize"
+                mx="1"
+                key={r.concat('permission-row')}
               >
                 {r}
               </Badge>
             ))}
           </Flex>
         </Td>
-        <Td>
-          <Button onClick={() => submit()} isLoading={isPending} size="sm">
+        <Td textAlign="end">
+          <Button
+            onClick={() => submit()}
+            isLoading={isPending}
+            size="xs"
+            variant="outline"
+            colorScheme="gray"
+            color="white"
+            mr="2"
+          >
             Save
           </Button>
-          <Button onClick={() => setIsEdit(false)} size="sm">
+          <Button
+            onClick={() => setIsEdit(false)}
+            size="xs"
+            variant="outline"
+            colorScheme="gray"
+            color="white"
+          >
             Cancel
           </Button>
         </Td>
@@ -109,28 +126,39 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
       <Td>
         {currentPermissions.map((r) => (
           <Badge
-            key={r}
-            size="sm"
-            mr="1"
-            my="1"
             color="cyan"
             variant="outline"
+            bg="cyan.900"
+            size="sm"
             textTransform="capitalize"
+            mx="1"
+            key={r.concat('permission-row')}
           >
             {r}
           </Badge>
         ))}
       </Td>
-      <Td>
-        <Button
+      <Td textAlign="end">
+        <IconButton
           onClick={() => {
             setPermissions([...currentPermissions]);
             setIsEdit(true);
           }}
           size="sm"
-        >
-          Edit
-        </Button>
+          aria-label="edit"
+          variant="outline"
+          colorScheme="gray"
+          icon={<EditIcon />}
+          mr="2"
+        />
+        <IconButton
+          variant="outline"
+          colorScheme="gray"
+          onClick={() => {}}
+          size="sm"
+          aria-label="delete"
+          icon={<DeleteIcon />}
+        />
       </Td>
     </Tr>
   );

@@ -17,6 +17,7 @@ import {
 import { useState } from 'react';
 import { permissionsList } from './AccountPermissions';
 import { useGrantPermission } from '@snx-v3/useGrantPermission';
+import { utils } from 'ethers';
 
 export function AddPermissionModal({
   accountId,
@@ -82,7 +83,7 @@ export function AddPermissionModal({
           {isPending ? (
             <Spinner color="cyan" />
           ) : (
-            <Button w="100%" onClick={() => mutateAsync()}>
+            <Button w="100%" onClick={() => mutateAsync()} isDisabled={!utils.isAddress(address)}>
               Add New Permission
             </Button>
           )}

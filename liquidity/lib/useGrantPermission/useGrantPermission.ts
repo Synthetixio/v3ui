@@ -9,6 +9,7 @@ export function useGrantPermission(to: string, accountId: string, permissions: s
 
   return useMutation({
     mutationFn: async () => {
+      if (!to) throw new Error('to is not defined');
       if (!(CoreProxy && multicall)) throw new Error('CoreProxy or Multicall not defined');
       const permissionsData = permissions.map((permission) => ({
         target: CoreProxy.address,
