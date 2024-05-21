@@ -82,7 +82,7 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
         </Td>
         <Td>
           <Button onClick={() => submit()} isLoading={isPending} size="sm">
-            save
+            Save
           </Button>
           <Button onClick={() => setIsEdit(false)} size="sm">
             Cancel

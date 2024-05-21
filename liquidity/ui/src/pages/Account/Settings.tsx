@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet';
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import Permissions from '../../components/Permissions/Permissions';
 
 export function Settings() {
   return (
-    <Box>
+    <>
       <Helmet>
         <title>Account Settings</title>
         <meta name="description" content="Account Settings" />
@@ -23,6 +23,6 @@ export function Settings() {
         </Heading>
         <Permissions />
       </Flex>
-    </Box>
+    </>
   );
 }

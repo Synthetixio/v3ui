@@ -3,8 +3,8 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { AddressInput } from './AddressInput';
 import { permissionsList } from './AccountPermissions';
 import { utils } from 'ethers';
-import { useAccountOwner, useAccountPermissions } from '../../../../lib/useAccountInfo';
-import { useManagePermissions } from '../../../../lib/useManagePermissions/useManagePermissions';
+import { useAccountOwner, useAccountPermissions } from '@snx-v3/useAccountPermissions';
+import { useManagePermissions } from '@snx-v3/useManagePermissions';
 
 interface Props {
   accountId: string;
@@ -24,8 +24,8 @@ export const NewPermissionRow: FC<Props> = ({ accountId, refetch }) => {
     selected: permissions,
     existing: [],
   });
-  const { data: permissionData } = useAccountPermissions(accountId);
-  const { data: accountOwner } = useAccountOwner(accountId);
+  const { data: permissionData } = useAccountPermissions([accountId]);
+  const { data: accountOwner } = useAccountOwner([accountId]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -74,6 +74,8 @@ export const NewPermissionRow: FC<Props> = ({ accountId, refetch }) => {
               color={permissions.includes(r) ? 'cyan' : 'gray'}
               textTransform="capitalize"
               cursor="pointer"
+              bg="gray.900"
+              colorScheme={permissions.includes(r) ? 'cyan' : 'gray'}
             >
               {r}
             </Badge>
