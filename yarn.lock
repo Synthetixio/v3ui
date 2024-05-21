@@ -6693,6 +6693,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useAccountPermissions@workspace:liquidity/lib/useAccountInfo":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useAccountPermissions@workspace:liquidity/lib/useAccountInfo"
+  dependencies:
+    "@snx-v3/useAccountProxy": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useAccountProxy@workspace:*, @snx-v3/useAccountProxy@workspace:liquidity/lib/useAccountProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAccountProxy@workspace:liquidity/lib/useAccountProxy"
