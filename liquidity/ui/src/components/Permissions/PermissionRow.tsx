@@ -3,7 +3,7 @@ import { Badge, Td, Tooltip, Tr, Text, Button, Flex } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { permissionsList } from './AccountPermissions';
-import { useManagePermissions } from '../../../../lib/useManagePermissions/useManagePermissions';
+import { useManagePermissions } from '@snx-v3/useManagePermissions';
 
 interface Props {
   address: string;

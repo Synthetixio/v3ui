@@ -15,8 +15,9 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PermissionRow } from './PermissionRow';
 import { useAccountOwner, useAccountPermissions } from '@snx-v3/useAccountPermissions';
 import { prettyString } from '@snx-v3/format';
@@ -24,144 +25,144 @@ import { CopyIcon } from '@chakra-ui/icons';
 import { NewPermissionRow } from './NewPermissionRow';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useAccounts } from '@snx-v3/useAccounts';
+import { AddPermissionModal } from './AddPermissionModal';
 
 export default function Permissions() {
-  const [accountPermissions, setAccountPermissions] = useState<Record<string, Array<string>>>({});
+  const [accountId, setAccountId] = useState('');
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { activeWallet } = useWallet();
   const { data: accounts } = useAccounts();
-
-  const {
-    isLoading: loadingAccountPermissions,
-    data: permissionData,
-    refetch,
-  } = useAccountPermissions(accounts);
-
+  const { data: permissionData, refetch } = useAccountPermissions(accounts);
   const { isLoading: loadingOwner, data: accountOwners } = useAccountOwner(accounts);
-  console.log(permissionData, accountOwners);
-  useEffect(() => {
-    if (permissionData && !loadingAccountPermissions) {
-      // setAccountPermissions(permissionData);
-    }
-  }, [loadingAccountPermissions, permissionData]);
 
   return (
-    <Flex wrap={{ base: 'wrap', xl: 'nowrap' }} justifyContent="center" gap="6">
-      {accounts?.map((account, index) => (
-        <TableContainer
-          key={account}
-          flexGrow="2"
-          mt={4}
-          borderColor="gray.900"
-          borderWidth="1px"
-          borderRadius="5px"
-          p={6}
-          sx={{
-            borderCollapse: 'separate',
-            borderSpacing: 0,
-          }}
-          bg="navy.700"
-        >
-          <Flex mb="2">
-            <Heading size="md" mb="1">
-              Permissions
-            </Heading>
-          </Flex>
-          {accountOwners && accountOwners[index] ? (
-            <Stack>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th
-                      py={5}
-                      textTransform="unset"
-                      color="gray.600"
-                      fontFamily="heading"
-                      fontSize="12px"
-                      lineHeight="16px"
-                      borderBottomColor="gray.900"
-                    >
-                      Address
-                    </Th>
-                    <Th
-                      py={5}
-                      textTransform="unset"
-                      color="gray.600"
-                      fontFamily="heading"
-                      fontSize="12px"
-                      lineHeight="16px"
-                      borderBottomColor="gray.900"
-                    >
-                      Permissions
-                    </Th>
-                    <Th
-                      py={5}
-                      textTransform="unset"
-                      color="gray.600"
-                      fontFamily="heading"
-                      fontSize="12px"
-                      lineHeight="16px"
-                      borderBottomColor="gray.900"
-                    ></Th>
-                  </Tr>
-                </Thead>
+    <Flex flexDir="column" gap="6">
+      <Flex flexDir="column">
+        {accounts?.map((account, index) => (
+          <TableContainer
+            key={account}
+            flexGrow="2"
+            mt={4}
+            borderColor="gray.900"
+            borderWidth="1px"
+            borderRadius="5px"
+            p={6}
+            sx={{
+              borderCollapse: 'separate',
+              borderSpacing: 0,
+            }}
+            bg="navy.700"
+          >
+            <Flex mb="2" w="100%" justifyContent="space-between">
+              <Heading size="md" mb="1">
+                Account #{prettyString(account, 4, 4)}
+              </Heading>
+              <Button
+                size="xs"
+                onClick={() => {
+                  setAccountId(account);
+                  onOpen();
+                }}
+              >
+                + New Permission
+              </Button>
+            </Flex>
+            {accountOwners && accountOwners[index] ? (
+              <Stack>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th
+                        py={5}
+                        textTransform="unset"
+                        color="gray.600"
+                        fontFamily="heading"
+                        fontSize="12px"
+                        lineHeight="16px"
+                        borderBottomColor="gray.900"
+                      >
+                        Address
+                      </Th>
+                      <Th
+                        py={5}
+                        textTransform="unset"
+                        color="gray.600"
+                        fontFamily="heading"
+                        fontSize="12px"
+                        lineHeight="16px"
+                        borderBottomColor="gray.900"
+                      >
+                        Permissions
+                      </Th>
+                      <Th
+                        py={5}
+                        textTransform="unset"
+                        color="gray.600"
+                        fontFamily="heading"
+                        fontSize="12px"
+                        lineHeight="16px"
+                        borderBottomColor="gray.900"
+                      ></Th>
+                    </Tr>
+                  </Thead>
 
-                <Tbody>
-                  <Tr>
-                    <Td py={5} borderBottomColor="gray.900">
-                      <Skeleton isLoaded={!loadingOwner}>
-                        {accountOwners[index] && (
-                          <Text fontWeight={400} color="white" fontSize="16px">
-                            {prettyString(accountOwners[index])}{' '}
-                            <Tooltip closeOnClick={false}>
-                              <CopyIcon
-                                ml="2"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(accountOwners[index]);
-                                }}
-                              />
-                            </Tooltip>
-                          </Text>
+                  <Tbody>
+                    <Tr>
+                      <Td py={5} borderBottomColor="gray.900">
+                        <Skeleton isLoaded={!loadingOwner}>
+                          {accountOwners[index] && (
+                            <Text fontWeight={400} color="white" fontSize="16px">
+                              {prettyString(accountOwners[index])}{' '}
+                              <Tooltip closeOnClick={false}>
+                                <CopyIcon
+                                  ml="2"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(accountOwners[index]);
+                                  }}
+                                />
+                              </Tooltip>
+                            </Text>
+                          )}
+                        </Skeleton>
+                      </Td>
+                      <Td py={5} borderBottomColor="gray.900">
+                        <Badge color="cyan" variant="outline" bg="cyan.900">
+                          Owner
+                        </Badge>
+                      </Td>
+                      <Td py={5} borderBottomColor="gray.900" textAlign="end">
+                        {activeWallet?.address.toLowerCase() ==
+                          accountOwners[index].toLowerCase() && (
+                          <Button size="xs" variant="outline" colorScheme="gray" color="white">
+                            Transfer Ownership
+                          </Button>
                         )}
-                      </Skeleton>
-                    </Td>
-                    <Td py={5} borderBottomColor="gray.900">
-                      <Badge color="cyan" variant="outline" bg="cyan.900">
-                        Owner
-                      </Badge>
-                    </Td>
-                    <Td py={5} borderBottomColor="gray.900">
-                      {activeWallet?.address.toLowerCase() ==
-                        accountOwners[index].toLowerCase() && (
-                        <Button size="xs" variant="outline" colorScheme="gray" color="white">
-                          Transfer Ownership
-                        </Button>
-                      )}
-                    </Td>
-                  </Tr>
+                      </Td>
+                    </Tr>
 
-                  {Object.keys(accountPermissions)
-                    .filter((target) => accountPermissions[target].length > 0)
-                    .map((target) => {
-                      return (
-                        <PermissionRow
-                          key={target}
-                          address={target}
-                          currentPermissions={accountPermissions[target]}
-                          accountId={account || ''}
-                          refetch={() => refetch()}
-                        />
-                      );
-                    })}
+                    {permissionData &&
+                      Object.keys(permissionData)
+                        .filter((target) => permissionData[index][target]?.length > 0)
+                        .map((target) => (
+                          <PermissionRow
+                            key={target}
+                            address={target}
+                            currentPermissions={permissionData[index][target]}
+                            accountId={account || ''}
+                            refetch={() => refetch()}
+                          />
+                        ))}
 
-                  {account && <NewPermissionRow accountId={account} refetch={() => refetch()} />}
-                </Tbody>
-              </Table>
-            </Stack>
-          ) : (
-            <Text>No permissions</Text>
-          )}
-        </TableContainer>
-      ))}
+                    {/* {account && <NewPermissionRow accountId={account} refetch={() => refetch()} />} */}
+                  </Tbody>
+                </Table>
+              </Stack>
+            ) : (
+              <Text>No permissions</Text>
+            )}
+          </TableContainer>
+        ))}
+      </Flex>
       <Flex
         mt="4"
         flexGrow="1"
@@ -193,6 +194,7 @@ export default function Permissions() {
           </Button>
         </Link>
       </Flex>
+      <AddPermissionModal isOpen={isOpen} onClose={onClose} accountId={accountId} />
     </Flex>
   );
 }
