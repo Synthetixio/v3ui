@@ -5,6 +5,7 @@ import Wei from '@synthetixio/wei';
 import { WithdrawModal } from '../../';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { NavLink, generatePath } from 'react-router-dom';
+import { pluralize } from 'humanize-plus';
 
 interface AssetsRowProps {
   token: string;
@@ -33,10 +34,6 @@ export const AssetsRow = ({
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
-
-  const pluralize = (value: number, word: string) => {
-    return value === 1 ? word : `${word}s`;
-  };
 
   const getTimeToWithdraw = () => {
     if (canWithdraw) {
