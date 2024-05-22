@@ -34,9 +34,31 @@ export const AssetsRow = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
 
-  const hoursToWithdraw = canWithdraw
-    ? ''
-    : new Date(unlockDate.getDate() - new Date().getTime()).getHours();
+  const pluralize = (value: number, word: string) => {
+    return value === 1 ? word : `${word}s`;
+  };
+
+  const getTimeToWithdraw = () => {
+    if (canWithdraw) {
+      return '';
+    }
+
+    const timeDiff = new Date(unlockDate.getDate() - new Date().getTime());
+
+    const hoursToWithdraw = timeDiff.getHours();
+    if (hoursToWithdraw > 0) {
+      return `${hoursToWithdraw} ${pluralize(hoursToWithdraw, 'hour')}`;
+    }
+    
+    const minutesToWithdraw = timeDiff.getMinutes();
+    if (minutesToWithdraw > 0) {
+      return `${minutesToWithdraw} ${pluralize(minutesToWithdraw, 'minute')}`;
+    }
+
+    const secondsToWithdraw = timeDiff.getSeconds();
+    return `${secondsToWithdraw} ${pluralize(secondsToWithdraw, 'second')}`; 
+  };
+  
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
@@ -125,7 +147,7 @@ export const AssetsRow = ({
               label={
                 !canWithdraw &&
                 accountBalance.gt(0) &&
-                `Withdrawal available in ${hoursToWithdraw} hours`
+                `Withdrawal available in ${getTimeToWithdraw()}`
               }
             >
               <Button
