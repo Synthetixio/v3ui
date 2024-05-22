@@ -4,12 +4,8 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
-    "@snx-v3/useGasOptions": "workspace:*",
-    "@snx-v3/useGasPrice": "workspace:*",
-    "@snx-v3/useGasSpeed": "workspace:*",
-    "@snx-v3/withERC7412": "workspace:*",
+    "@snx-v3/useMulticall3": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "ethers": "^5.7.2"
   }

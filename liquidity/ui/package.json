@@ -47,7 +47,6 @@
     "@snx-v3/useGasSpeed": "workspace:*",
     "@snx-v3/useGetBorrow": "workspace:*",
     "@snx-v3/useGetUSDTokens": "workspace:*",
-    "@snx-v3/useGrantPermission": "workspace:*",
     "@snx-v3/useLiquidityPosition": "workspace:*",
     "@snx-v3/useLiquidityPositions": "workspace:*",
     "@snx-v3/useManagePermissions": "workspace:*",
