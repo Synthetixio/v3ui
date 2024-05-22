@@ -83,7 +83,17 @@ export function AddPermissionModal({
           {isPending ? (
             <Spinner color="cyan" />
           ) : (
-            <Button w="100%" onClick={() => mutateAsync()} isDisabled={!utils.isAddress(address)}>
+            <Button
+              w="100%"
+              onClick={() => {
+                mutateAsync().then(() => {
+                  setAddress('');
+                  setSelectedPermissions([]);
+                  onClose();
+                });
+              }}
+              isDisabled={!utils.isAddress(address)}
+            >
               Add New Permission
             </Button>
           )}

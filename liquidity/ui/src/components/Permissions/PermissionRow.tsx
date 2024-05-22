@@ -153,8 +153,12 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
         />
         <IconButton
           variant="outline"
+          isLoading={isPending}
           colorScheme="gray"
-          onClick={() => {}}
+          onClick={() => {
+            setPermissions([]);
+            submit();
+          }}
           size="sm"
           aria-label="delete"
           icon={<DeleteIcon />}

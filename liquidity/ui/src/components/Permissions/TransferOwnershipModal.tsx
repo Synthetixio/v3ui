@@ -13,7 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import { useNotifyAccountTransfer } from '@snx-v3/useNotifyAccountTransfer';
+import { useTransferAccountId } from '@snx-v3/useTransferAccountId';
 import { utils } from 'ethers';
 import { useState } from 'react';
 
@@ -27,7 +27,7 @@ export function TransferOwnershipModal({
   accountId: string;
 }) {
   const [to, setTo] = useState('');
-  const { isPending, mutateAsync } = useNotifyAccountTransfer(to, accountId);
+  const { isPending, mutateAsync } = useTransferAccountId(to, accountId);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -55,7 +55,16 @@ export function TransferOwnershipModal({
           {isPending ? (
             <Spinner color="cyan" />
           ) : (
-            <Button w="100%" onClick={() => mutateAsync()} isDisabled={!utils.isAddress(to)}>
+            <Button
+              w="100%"
+              onClick={() =>
+                mutateAsync().then(() => {
+                  setTo('');
+                  onClose();
+                })
+              }
+              isDisabled={!utils.isAddress(to)}
+            >
               Add New Permission
             </Button>
           )}

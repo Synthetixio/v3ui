@@ -6461,6 +6461,7 @@ __metadata:
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetBorrow": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useGrantPermission": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useManagePermissions": "workspace:*"
@@ -6471,6 +6472,7 @@ __metadata:
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useTokenBalance": "workspace:*"
+    "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
@@ -7050,13 +7052,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGrantPermission@workspace:liquidity/lib/useGrantPermission":
+"@snx-v3/useGrantPermission@workspace:*, @snx-v3/useGrantPermission@workspace:liquidity/lib/useGrantPermission":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGrantPermission@workspace:liquidity/lib/useGrantPermission"
   dependencies:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7135,15 +7138,6 @@ __metadata:
     "@ethersproject/contracts": "npm:^5.7.0"
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useNotifyAccountTransfer@workspace:liquidity/lib/useNotifyAccountTransfer":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useNotifyAccountTransfer@workspace:liquidity/lib/useNotifyAccountTransfer"
-  dependencies:
-    "@snx-v3/useCoreProxy": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
@@ -7315,6 +7309,16 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTransferAccountId@workspace:*, @snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId"
+  dependencies:
+    "@snx-v3/useAccountProxy": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
