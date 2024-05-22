@@ -185,8 +185,8 @@ export function NetworkController() {
                     color="white"
                   >
                     Disconnect
-                  </Button>
-                </Flex>
+                  </Button >
+                </Flex >
                 <Text fontWeight={700} color="white" fontSize="16px">
                   {prettyString(activeWallet.address)}{' '}
                   <Tooltip label={toolTipLabel} closeOnClick={false}>
@@ -201,7 +201,7 @@ export function NetworkController() {
                       }}
                     />
                   </Tooltip>
-                </Text>
+                </Text >
                 <Flex
                   flexDir="column"
                   p="2"
@@ -270,11 +270,11 @@ export function NetworkController() {
                   >
                     Create Account
                   </Button>
-                </Flex>
-              </Flex>
+                </Flex >
+              </Flex >
             </Flex>
-          </MenuList>
-        </Menu>
+          </MenuList >
+        </Menu >
       ) : (
         <Button
           data-cy="header-connect-wallet"
@@ -286,7 +286,8 @@ export function NetworkController() {
         >
           Connect Wallet
         </Button>
-      )}
-    </Flex>
+      )
+      }
+    </Flex >
   );
 }

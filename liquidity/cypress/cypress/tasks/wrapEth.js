@@ -1,4 +1,4 @@
-import { constants, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { importCoreProxy } from './importCoreProxy';
 
 const erc20Abi = [
@@ -15,7 +15,7 @@ export async function wrapEth({ privateKey, amount }) {
   const collateralConfigs = await coreProxy.getCollateralConfigurations(true);
   const collaterals = await Promise.all(
     collateralConfigs
-      .filter((config) => config.tokenAddress !== constants.AddressZero)
+      .filter((config) => config.tokenAddress !== ethers.constants.AddressZero)
       .map(async (config) => {
         const contract = new ethers.Contract(config.tokenAddress, erc20Abi, wallet);
         const symbol = await contract.symbol();

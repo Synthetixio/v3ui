@@ -14,7 +14,6 @@ yarn cannon inspect synthetix-omnibus:latest@main --chain-id 10 --json > ./canno
 # Base
 yarn cannon inspect synthetix-omnibus:latest@andromeda --chain-id 8453 --json > ./cannon/8453-andromeda.json
 yarn cannon inspect synthetix-omnibus:latest@andromeda --chain-id 84532 --json > ./cannon/84532-andromeda.json
-# yarn cannon inspect synthetix-omnibus:latest@main --chain-id 84531 --json > ./cannon/84531-main.json
 
 # Arbitrum
 yarn cannon inspect synthetix-omnibus:latest@arbthetix --chain-id 421614 --json > ./cannon/421614-arbthetix.json

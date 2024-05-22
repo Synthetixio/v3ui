@@ -13,7 +13,7 @@ export const Router = () => {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route element={<DefaultLayout />}>
-          <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
+          <Route path="/manage/:collateralSymbol/:collateralAddress/:poolId" element={<Manage />} />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
           <Route path="/" element={<Home />} />

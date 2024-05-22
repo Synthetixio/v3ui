@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
-import { ChakraProvider, useColorMode } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, useColorMode } from '@chakra-ui/react';
 import { Fonts, theme } from '@synthetixio/v3-theme';
 import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +10,8 @@ import { TermsModal } from '@snx-v3/TermsModal';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
-import { onboard } from './utils/onboard';
+import { RecoilRoot } from 'recoil';
+import { Progress, onboard } from './utils';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,25 +34,34 @@ function ColorMode() {
   return null;
 }
 
+const extendedTheme = extendTheme({
+  ...theme,
+  components: {
+    ...theme.components,
+    Progress,
+  },
+});
+
 export const App = () => {
   const TERMS_CONDITIONS_ACCEPTED =
     sessionStorage.getItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED) === 'true';
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={theme}>
-          <ColorMode />
-          <Fonts />
-          <GasSpeedProvider>
-            <HashRouter>
-              <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
-              <Router />
-            </HashRouter>
-          </GasSpeedProvider>
-          <ReactQueryDevtools />
-        </ChakraProvider>
-      </Web3OnboardProvider>
-    </QueryClientProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <Web3OnboardProvider web3Onboard={onboard}>
+          <ChakraProvider theme={extendedTheme}>
+            <ColorMode />
+            <Fonts />
+            <GasSpeedProvider>
+              <HashRouter>
+                <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
+                <Router />
+              </HashRouter>
+            </GasSpeedProvider>
+            <ReactQueryDevtools />
+          </ChakraProvider>
+        </Web3OnboardProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 };

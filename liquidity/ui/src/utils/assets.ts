@@ -13,9 +13,9 @@ export function calculateAssets(
   accountCollaterals?: AccountCollateralType[],
   associatedUserBalances?:
     | {
-        balance: Wei;
-        tokenAddress: string;
-      }[]
+      balance: Wei;
+      tokenAddress: string;
+    }[]
     | undefined,
   collateralPrices?: Record<string, Wei | undefined>,
   collateralTypes?: CollateralType[],
@@ -39,8 +39,8 @@ export function calculateAssets(
           },
           balance: associatedUserBalances
             ? associatedUserBalances.find(
-                (balance) => balance.tokenAddress === collateral.tokenAddress
-              )?.balance || ZEROWEI
+              (balance) => balance.tokenAddress === collateral.tokenAddress
+            )?.balance || ZEROWEI
             : ZEROWEI,
           price: ONEWEI,
         };

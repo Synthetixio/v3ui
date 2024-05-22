@@ -27,7 +27,6 @@ export function Pools() {
             name: 'USD Coin',
           };
         }
-
         return item;
       })
     : collateralTypes;
