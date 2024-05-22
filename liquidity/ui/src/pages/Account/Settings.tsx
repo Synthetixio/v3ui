@@ -13,8 +13,9 @@ export function Settings() {
         <Heading
           mt={{
             base: 2,
-            sm: 10,
+            sm: 8,
           }}
+          mb={6}
           color="gray.50"
           fontSize="1.5rem"
           data-cy="liquidity-dashboard"

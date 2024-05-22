@@ -1,18 +1,25 @@
-import { CopyIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import { Badge, Td, Tooltip, Tr, Text, Button, Flex, IconButton } from '@chakra-ui/react';
-import { prettyString } from '@snx-v3/format';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { Badge, Td, Tr, Text, Button, Flex, IconButton } from '@chakra-ui/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { permissionsList } from './AccountPermissions';
 import { useManagePermissions } from '@snx-v3/useManagePermissions';
+import { Address } from '../Address';
 
 interface Props {
   address: string;
   currentPermissions: Array<string>;
   accountId: string;
   refetch: () => void;
+  isOwner: boolean;
 }
 
-export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountId, refetch }) => {
+export const PermissionRow: FC<Props> = ({
+  address,
+  currentPermissions,
+  accountId,
+  refetch,
+  isOwner,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
   const [permissions, setPermissions] = useState<string[]>([...currentPermissions]);
 
@@ -51,39 +58,31 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
   if (isEdit) {
     return (
       <Tr>
-        <Td py="4" width="200px">
+        <Td borderBottomColor="gray.900" py="4" width="200px">
           <Text fontWeight={400} color="white" fontSize="16px">
-            {prettyString(address)}{' '}
-            <Tooltip closeOnClick={false}>
-              <CopyIcon
-                ml="2"
-                onClick={() => {
-                  navigator.clipboard.writeText(address);
-                }}
-              />
-            </Tooltip>
+            <Address address={address} />
           </Text>
         </Td>
-        <Td>
-          <Flex flexWrap="wrap" gap={2}>
-            {permissionsList.map((r) => (
+        <Td borderBottomColor="gray.900">
+          <Flex py={2} flexWrap="wrap" gap={3}>
+            {permissionsList.map((permission) => (
               <Badge
                 cursor="pointer"
-                onClick={() => selectPermission(r)}
-                colorScheme={permissions.includes(r) ? 'cyan' : 'gray'}
+                onClick={() => selectPermission(permission)}
+                colorScheme={permissions.includes(permission) ? 'cyan' : 'gray'}
+                color={permissions.includes(permission) ? 'cyan' : 'gray'}
                 variant="outline"
-                bg={permissions.includes(r) ? 'cyan.900' : 'gray.900'}
-                size="sm"
+                bg={permissions.includes(permission) ? 'cyan.900' : 'gray.900'}
+                size="md"
                 textTransform="capitalize"
-                mx="1"
-                key={r.concat('permission-row')}
+                key={permission.concat('permission-row')}
               >
-                {r}
+                {permission}
               </Badge>
             ))}
           </Flex>
         </Td>
-        <Td textAlign="end">
+        <Td borderBottomColor="gray.900" textAlign="end">
           <Button
             onClick={() => submit()}
             isLoading={isPending}
@@ -108,61 +107,59 @@ export const PermissionRow: FC<Props> = ({ address, currentPermissions, accountI
       </Tr>
     );
   }
+
   return (
     <Tr>
-      <Td py="4" width="200px">
+      <Td borderBottomColor="gray.900" py="4" width="200px">
         <Text fontWeight={400} color="white" fontSize="16px">
-          {prettyString(address)}{' '}
-          <Tooltip closeOnClick={false}>
-            <CopyIcon
-              ml="2"
-              onClick={() => {
-                navigator.clipboard.writeText(address);
-              }}
-            />
-          </Tooltip>
+          <Address address={address} />
         </Text>
       </Td>
-      <Td>
-        {currentPermissions.map((r) => (
-          <Badge
-            color="cyan"
-            variant="outline"
-            bg="cyan.900"
-            size="sm"
-            textTransform="capitalize"
-            mx="1"
-            key={r.concat('permission-row')}
-          >
-            {r}
-          </Badge>
-        ))}
+      <Td borderBottomColor="gray.900">
+        <Flex py={2} flexWrap="wrap" gap={3}>
+          {currentPermissions.map((r) => (
+            <Badge
+              color="cyan"
+              variant="outline"
+              bg="cyan.900"
+              size="sm"
+              textTransform="capitalize"
+              key={r.concat('permission-row')}
+            >
+              {r}
+            </Badge>
+          ))}
+        </Flex>
       </Td>
-      <Td textAlign="end">
-        <IconButton
-          onClick={() => {
-            setPermissions([...currentPermissions]);
-            setIsEdit(true);
-          }}
-          size="sm"
-          aria-label="edit"
-          variant="outline"
-          colorScheme="gray"
-          icon={<EditIcon />}
-          mr="2"
-        />
-        <IconButton
-          variant="outline"
-          isLoading={isPending}
-          colorScheme="gray"
-          onClick={() => {
-            setPermissions([]);
-            submit();
-          }}
-          size="sm"
-          aria-label="delete"
-          icon={<DeleteIcon />}
-        />
+      <Td borderBottomColor="gray.900" textAlign="end">
+        {isOwner && (
+          <>
+            <IconButton
+              onClick={() => {
+                setPermissions([...currentPermissions]);
+                setIsEdit(true);
+              }}
+              size="sm"
+              aria-label="edit"
+              variant="outline"
+              colorScheme="gray"
+              icon={<EditIcon />}
+              mr="2"
+            />
+            <IconButton
+              variant="outline"
+              isLoading={isPending}
+              colorScheme="gray"
+              onClick={() => {
+                setPermissions([]);
+                submit();
+              }}
+              size="sm"
+              aria-label="delete"
+              icon={<DeleteIcon />}
+            />
+          </>
+        )}
       </Td>
     </Tr>
   );

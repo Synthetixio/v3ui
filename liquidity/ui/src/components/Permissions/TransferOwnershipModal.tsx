@@ -29,7 +29,8 @@ export function TransferOwnershipModal({
   refetch: () => void;
 }) {
   const [to, setTo] = useState('');
-  const { isPending, mutateAsync } = useTransferAccountId(to, accountId);
+  const { isPending, mutateAsync: submit } = useTransferAccountId(to, accountId);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -60,7 +61,7 @@ export function TransferOwnershipModal({
             <Button
               w="100%"
               onClick={() =>
-                mutateAsync().then(() => {
+                submit().then(() => {
                   setTo('');
                   refetch();
                   onClose();

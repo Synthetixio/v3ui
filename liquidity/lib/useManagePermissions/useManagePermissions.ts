@@ -1,11 +1,7 @@
 import { utils } from 'ethers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { withERC7412 } from '@snx-v3/withERC7412';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
-import { getGasPrice } from '@snx-v3/useGasPrice';
-import { useGasSpeed } from '@snx-v3/useGasSpeed';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
 
 type Permissions = Array<string>;
 const getPermissionDiff = (
@@ -40,57 +36,41 @@ export const useManagePermissions = ({
   selected: Permissions;
 }) => {
   const { data: CoreProxy } = useCoreProxy();
-  const { network } = useNetwork();
-  const { gasSpeed } = useGasSpeed();
-  const signer = useSigner();
-  const provider = useProvider();
+  const { data: multicall } = useMulticall3();
 
   return useMutation({
     mutationFn: async () => {
-      if (!CoreProxy || !network || !signer || !provider) {
+      if (!CoreProxy || !multicall) {
         return;
       }
 
       const { grants, revokes } = getPermissionDiff(existing, selected);
 
       try {
-        const grantCalls = grants.map((permission) =>
-          CoreProxy.populateTransaction.grantPermission(
+        const grantCalls = grants.map((permission) => ({
+          target: CoreProxy.address,
+          callData: CoreProxy.interface.encodeFunctionData('grantPermission', [
             accountId,
             utils.formatBytes32String(permission),
-            target
-          )
-        );
+            target,
+          ]),
+          allowFailure: false,
+          requireSuccess: true,
+        }));
 
-        const revokeCalls = revokes.map((permission) =>
-          CoreProxy.populateTransaction.revokePermission(
+        const revokeCalls = revokes.map((permission) => ({
+          target: CoreProxy.address,
+          callData: CoreProxy.interface.encodeFunctionData('revokePermission', [
             accountId,
             utils.formatBytes32String(permission),
-            target
-          )
-        );
+            target,
+          ]),
+          allowFailure: false,
+          requireSuccess: true,
+        }));
 
-        const [calls, gasPrices] = await Promise.all([
-          Promise.all([...grantCalls, ...revokeCalls]),
-          getGasPrice({ provider }),
-        ]);
-
-        const erc7412Tx = await withERC7412(
-          network,
-          calls,
-          'manage-permissions',
-          CoreProxy.interface
-        );
-
-        const gasOptionsForTransaction = formatGasPriceForTransaction({
-          gasLimit: erc7412Tx.gasLimit,
-          gasPrices,
-          gasSpeed,
-        });
-
-        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
-
-        await txn.wait();
+        const tx = await multicall.aggregate3([...grantCalls, ...revokeCalls]);
+        await tx.wait();
       } catch (error: any) {
         throw error;
       }
