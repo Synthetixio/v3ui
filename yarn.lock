@@ -6704,6 +6704,7 @@ __metadata:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
   languageName: unknown
