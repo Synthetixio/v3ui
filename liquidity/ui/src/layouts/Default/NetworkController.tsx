@@ -28,12 +28,27 @@ export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-  const { data: accounts } = useAccounts();
+  const {
+    data: accounts,
+    isLoading: isAccountsLoading,
+    isFetching: isAccountsFetching,
+  } = useAccounts();
   const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!isAccountsLoading && !isAccountsFetching && accounts) {
+      const accountId = queryParams.get('accountId');
+
+      if (accountId && !accounts?.includes(accountId)) {
+        queryParams.set('accountId', accounts[0]);
+        navigate({ pathname, search: accounts[0] ? queryParams.toString() : '' });
+      }
+    }
+  }, [accounts, isAccountsLoading, isAccountsFetching, queryParams, navigate, pathname]);
 
   useEffect(() => {
     // Check if wallet preference is stored in local storage
