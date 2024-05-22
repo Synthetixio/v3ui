@@ -55,7 +55,7 @@ export const AssetsRow = ({
       return `${minutesToWithdraw} ${pluralize(minutesToWithdraw, 'minute')}`;
     }
 
-    const secondsToWithdraw = Math.floor(timeDiff);
+    const secondsToWithdraw = Math.floor(timeDiff / 1000);
     return `${secondsToWithdraw} ${pluralize(secondsToWithdraw, 'second')}`; 
   };
   
