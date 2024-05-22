@@ -25,7 +25,11 @@ export const PoolsList = () => {
         <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
       <Flex direction="column" gap={4}>
-        <TorosPoolCard />
+        <TorosPoolCard
+          poolId={1}
+          network={filteredChains.find((chain) => chain.id === 8453)!}
+          collaterals={state.collateral}
+        />
         {filteredChains.map((chain) => (
           <PoolCard key={chain.id} poolId={1} network={chain} collaterals={state.collateral} />
         ))}

@@ -13,7 +13,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useMemo } from 'react';
 
-interface PoolCardProps {
+export interface PoolCardProps {
   poolId: number;
   network: Network;
   collaterals: string[];
