@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading } from '@chakra-ui/react';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { FC } from 'react';
 
