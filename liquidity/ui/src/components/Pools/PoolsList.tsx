@@ -2,6 +2,7 @@ import { useMemo, useReducer } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { networks } from '../../utils/onboard';
+import { TorosPoolCard } from './PoolCards/TorosPoolCard';
 
 const supportedChains = networks.filter((network) => !network.isTestnet);
 
@@ -24,6 +25,11 @@ export const PoolsList = () => {
         <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
       <Flex direction="column" gap={4}>
+        <TorosPoolCard
+          poolId={1}
+          network={filteredChains.find((chain) => chain.id === 8453)!}
+          collaterals={state.collateral}
+        />
         {filteredChains.map((chain) => (
           <PoolCard key={chain.id} poolId={1} network={chain} collaterals={state.collateral} />
         ))}
