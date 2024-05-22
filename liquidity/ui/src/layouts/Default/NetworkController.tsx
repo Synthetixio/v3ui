@@ -3,6 +3,8 @@ import {
   Badge,
   Button,
   Flex,
+  IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -17,7 +19,7 @@ import { prettyString } from '@snx-v3/format';
 import { networks } from '../../utils/onboard';
 import { useLocalStorage } from '../../hooks';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
-import { CopyIcon } from '@chakra-ui/icons';
+import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
@@ -210,9 +212,20 @@ export function NetworkController() {
                   rounded="base"
                   gap="2"
                 >
-                  <Text fontWeight={400} fontSize="14px">
-                    Account(s)
-                  </Text>
+                  <Flex w="100%" justifyContent="space-between">
+                    <Text fontWeight={400} fontSize="14px">
+                      Account(s)
+                    </Text>
+                    <Link href="/#/account/settings">
+                      <IconButton
+                        variant="outline"
+                        colorScheme="gray"
+                        size="xs"
+                        icon={<SettingsIcon />}
+                        aria-label="account settings"
+                      />
+                    </Link>
+                  </Flex>
                   <Flex data-cy="header-account-list" flexDir="column">
                     {accounts?.map((account) => (
                       <Text

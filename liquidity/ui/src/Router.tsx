@@ -7,12 +7,14 @@ import { Manage } from './pages/Manage';
 import { Pool } from './pages/Pool';
 import { NotFoundPage } from './pages/404';
 import { Pools } from './pages/Pools';
+import { Settings } from './pages/Account/Settings';
 
 export const Router = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route element={<DefaultLayout />}>
+          <Route path="/account/settings" element={<Settings />} />
           <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
           <Route path="/pools" element={<Pools />} />
           <Route path="/pools/:poolId" element={<Pool />} />
