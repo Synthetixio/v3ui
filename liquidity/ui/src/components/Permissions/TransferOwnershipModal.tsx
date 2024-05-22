@@ -21,10 +21,12 @@ export function TransferOwnershipModal({
   isOpen,
   onClose,
   accountId,
+  refetch,
 }: {
   isOpen: boolean;
   onClose: () => void;
   accountId: string;
+  refetch: () => void;
 }) {
   const [to, setTo] = useState('');
   const { isPending, mutateAsync } = useTransferAccountId(to, accountId);
@@ -60,12 +62,13 @@ export function TransferOwnershipModal({
               onClick={() =>
                 mutateAsync().then(() => {
                   setTo('');
+                  refetch();
                   onClose();
                 })
               }
               isDisabled={!utils.isAddress(to)}
             >
-              Add New Permission
+              Transfer Ownership
             </Button>
           )}
         </ModalFooter>

@@ -40,7 +40,7 @@ export default function Permissions() {
     onOpen: onTransferOpen,
   } = useDisclosure();
   const { activeWallet } = useWallet();
-  const { data: accounts } = useAccounts();
+  const { data: accounts, refetch: refetchAccounts } = useAccounts();
   const { data: permissionData, refetch } = useAccountPermissions(accounts);
   const { isLoading: loadingOwner, data: accountOwners } = useAccountOwner(accounts);
 
@@ -222,11 +222,13 @@ export default function Permissions() {
         isOpen={isPermissionOpen}
         onClose={onPermissionClose}
         accountId={accountId}
+        refetch={refetch}
       />
       <TransferOwnershipModal
         isOpen={isTransferOpen}
         onClose={onTransferClose}
         accountId={accountId}
+        refetch={refetchAccounts}
       />
     </Flex>
   );

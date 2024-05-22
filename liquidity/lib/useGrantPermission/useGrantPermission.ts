@@ -23,7 +23,6 @@ export function useGrantPermission(to: string, accountId: string, permissions: s
       }));
       const tx = await multicall.aggregate3(permissionsData);
       tx.wait();
-      return 'done';
     },
   });
 }

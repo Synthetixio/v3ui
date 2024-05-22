@@ -23,10 +23,12 @@ export function AddPermissionModal({
   accountId,
   isOpen,
   onClose,
+  refetch,
 }: {
   accountId: string;
   isOpen: boolean;
   onClose: () => void;
+  refetch: () => void;
 }) {
   const [address, setAddress] = useState('');
   const [selectedPermission, setSelectedPermissions] = useState<string[]>([]);
@@ -89,10 +91,11 @@ export function AddPermissionModal({
                 mutateAsync().then(() => {
                   setAddress('');
                   setSelectedPermissions([]);
+                  refetch();
                   onClose();
                 });
               }}
-              isDisabled={!utils.isAddress(address)}
+              isDisabled={!utils.isAddress(address) || selectedPermission.length === 0}
             >
               Add New Permission
             </Button>
