@@ -43,19 +43,19 @@ export const AssetsRow = ({
       return '';
     }
 
-    const timeDiff = new Date(unlockDate.getDate() - new Date().getTime());
+    const timeDiff = unlockDate.getTime() - new Date().getTime();
 
-    const hoursToWithdraw = timeDiff.getHours();
+    const hoursToWithdraw = Math.floor(timeDiff / 1000 / 60 / 60);
     if (hoursToWithdraw > 0) {
       return `${hoursToWithdraw} ${pluralize(hoursToWithdraw, 'hour')}`;
     }
     
-    const minutesToWithdraw = timeDiff.getMinutes();
+    const minutesToWithdraw = Math.floor(timeDiff / 1000 / 60);
     if (minutesToWithdraw > 0) {
       return `${minutesToWithdraw} ${pluralize(minutesToWithdraw, 'minute')}`;
     }
 
-    const secondsToWithdraw = timeDiff.getSeconds();
+    const secondsToWithdraw = Math.floor(timeDiff);
     return `${secondsToWithdraw} ${pluralize(secondsToWithdraw, 'second')}`; 
   };
   
