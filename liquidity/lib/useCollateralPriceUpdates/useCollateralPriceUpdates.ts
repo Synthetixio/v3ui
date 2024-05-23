@@ -90,7 +90,7 @@ export const useCollateralPriceUpdates = () => {
   const { activeWallet } = useWallet();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates'],
+    queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', activeWallet?.address],
     enabled: isBaseAndromeda(network?.id, network?.preset),
     queryFn: async () => {
       const stalenessTolerance = 3300;
@@ -143,8 +143,8 @@ export const useCollateralPriceUpdates = () => {
 
         if (outdatedPriceIds.length) {
           return {
-            from: activeWallet?.address,
             ...(await getPriceUpdates(outdatedPriceIds, stalenessTolerance, network)),
+            from: activeWallet?.address,
           };
         }
 
@@ -153,5 +153,6 @@ export const useCollateralPriceUpdates = () => {
         return null;
       }
     },
+    refetchInterval: 60000,
   });
 };
