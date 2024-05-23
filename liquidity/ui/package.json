@@ -82,6 +82,7 @@
     "react-helmet": "^6.1.0",
     "react-i18next": "^13.4.1",
     "react-router-dom": "^6.18.0",
+    "react-timer-hook": "^3.0.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {
