@@ -101,6 +101,7 @@ function RewardsRow({
     collateralType?.tokenAddress,
     accountId
   );
+
   return isRewardsLoading && !rewardsData ? (
     <Spinner />
   ) : (

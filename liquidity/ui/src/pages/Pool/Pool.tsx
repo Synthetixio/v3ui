@@ -4,13 +4,12 @@ import { useParams } from '@snx-v3/useParams';
 import { usePool } from '@snx-v3/usePools';
 import { ArrowLeft } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
-import { CollateralTable, RewardsTable } from '../../components/PoolStats';
+import { CollateralTable, HistoricalTVL, RewardsTable } from '../../components/PoolStats';
 
 export const Pool = () => {
   const { poolId, accountId } = useParams();
   const { network } = useNetwork();
   const { data: pool } = usePool(poolId);
-
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
 
   return (
@@ -48,8 +47,15 @@ export const Pool = () => {
             Borrow Interest-free
           </Tag>
         </Flex>
-        <CollateralTable accountId={accountId} poolId={poolId!} />
-        <RewardsTable accountId={accountId} poolId={poolId!} />
+        <Flex gap="2">
+          <Flex flexDir="column" gap="2">
+            <CollateralTable accountId={accountId} poolId={poolId!} />
+            <RewardsTable accountId={accountId} poolId={poolId!} />
+          </Flex>
+          <Flex flexDir="column" minW="500px">
+            <HistoricalTVL poolId={poolId!} />
+          </Flex>
+        </Flex>
       </Flex>
     </>
   );

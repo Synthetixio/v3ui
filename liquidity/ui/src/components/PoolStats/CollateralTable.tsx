@@ -9,6 +9,9 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { InfoIcon } from '@chakra-ui/icons';
 import { useMemo } from 'react';
 import { CustomTable } from '../CustomTable';
+import { useVaultsData } from '@snx-v3/useVaultsData';
+import { useApr } from '@snx-v3/useApr';
+import { compactInteger } from 'humanize-plus';
 
 const TableHeader = [
   <Th
@@ -111,10 +114,13 @@ export function CollateralTable({ accountId, poolId }: { accountId?: string; poo
   const [queryParams] = useSearchParams();
   const { connect, activeWallet } = useWallet();
   const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+  const { data: vaultsData, isLoading: vaultsDataIsLoading } = useVaultsData(Number(poolId));
+  const { data: apr, isLoading: aprIsLoading } = useApr();
   const { data: liquidityPositions, isLoading: isLiquidityPositionsLoading } =
     useLiquidityPositions({ accountId });
 
-  const isLoading = isCollateralTypesLoading && isLiquidityPositionsLoading;
+  const isLoading =
+    isCollateralTypesLoading && isLiquidityPositionsLoading && vaultsDataIsLoading && aprIsLoading;
 
   const positionsAndCollaterals = useMemo(
     () =>
@@ -181,14 +187,16 @@ export function CollateralTable({ accountId, poolId }: { accountId?: string; poo
                 <Td border="none">
                   <Fade in>
                     <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                      TVL
+                      {vaultsData
+                        ? compactInteger(vaultsData[index].collateral.amount.toNumber())
+                        : '-'}
                     </Text>
                   </Fade>
                 </Td>
                 <Td border="none">
                   <Fade in>
                     <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                      PNL
+                      {apr?.cumulativePnl ? '$' + compactInteger(apr.cumulativePnl, 1) : '-'}
                     </Text>
                   </Fade>
                 </Td>
