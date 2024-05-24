@@ -115,8 +115,8 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
-        (collateralType) => {
+      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
+        .map((collateralType) => {
           const isBase = isBaseAndromeda(network?.id, network?.preset);
           if (isBase && collateralType.symbol === 'sUSDC') {
             return {
@@ -131,8 +131,8 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
             symbol: collateralType.symbol,
             displaySymbol: collateralType.symbol,
           };
-        }
-      );
+        })
+        .filter((collateralType) => collateralType.symbol !== 'snxUSD');
 
       if (includeDelegationOff) {
         return collateralTypes;
