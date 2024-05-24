@@ -153,6 +153,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
 
 export function useCollateralType(collateralSymbol?: string) {
   const { data: collateralTypes, isLoading, error } = useCollateralTypes();
+
   return {
     isLoading,
     error,
@@ -163,6 +164,7 @@ export function useCollateralType(collateralSymbol?: string) {
       if (!collateralSymbol) {
         return collateralTypes[0];
       }
+
       return collateralTypes.find(
         (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
       );
