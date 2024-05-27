@@ -2,7 +2,6 @@ import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
-import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
@@ -152,15 +151,15 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes, isLoading, error } = useCollateralTypes();
+  const { data: collateralTypes } = useCollateralTypes();
 
-  return {
-    isLoading,
-    error,
-    data: useMemo(() => {
+  return useQuery({
+    queryKey: [collateralSymbol, 'CollateralType'],
+    queryFn: async () => {
       if (!collateralTypes || !collateralTypes?.length) {
         return;
       }
+
       if (!collateralSymbol) {
         return collateralTypes[0];
       }
@@ -168,6 +167,7 @@ export function useCollateralType(collateralSymbol?: string) {
       return collateralTypes.find(
         (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
       );
-    }, [collateralSymbol, collateralTypes]),
-  };
+    },
+    enabled: Boolean(collateralTypes),
+  });
 }
