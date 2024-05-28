@@ -17,7 +17,7 @@ export const Pool = () => {
 
   const { accountId, collateralSymbol, poolId } = useParams();
 
-  const { isLoading: isCollateralLoading, data: collateralType } =
+  const { isFetching: isCollateralLoading, data: collateralType } =
     useCollateralType(collateralSymbol);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
