@@ -1,17 +1,18 @@
 import { Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetHistoricalTVL } from '@snx-v3/useGetHistoricalTVL';
-import { Legend, Line, AreaChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Legend, Area, AreaChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 export function HistoricalTVL({ poolId }: { poolId: string }) {
-  const { data: collateralTypes, isLoading: collateralTypesAreLoading } = useCollateralTypes();
+  const { data: collateralTypes } = useCollateralTypes();
   const { data: tvl } = useGetHistoricalTVL({
     poolId,
     collateralTypeAddresses: !!collateralTypes?.length
       ? collateralTypes?.map((types) => types.tokenAddress)
       : [],
   });
-  console.log(tvl);
+
+  console.error(tvl);
   return (
     <Flex
       border="1px solid"
@@ -47,7 +48,7 @@ export function HistoricalTVL({ poolId }: { poolId: string }) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="value" stroke="red" />
+        <Area type="monotone" dataKey="value" stroke="#8884d8" fillOpacity={1} fill="red" />
       </AreaChart>
     </Flex>
   );

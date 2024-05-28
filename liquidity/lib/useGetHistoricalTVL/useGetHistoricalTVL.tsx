@@ -15,7 +15,7 @@ export const useGetHistoricalTVL = ({
     queryFn: async () => {
       if (!network?.name || !collateralTypeAddresses?.length) return;
       const responses = await Promise.all(
-        collateralTypeAddresses.map((address) =>
+        collateralTypeAddresses.map(() =>
           fetch(getSubgraphUrl(network?.name), {
             method: 'POST',
             headers: {
