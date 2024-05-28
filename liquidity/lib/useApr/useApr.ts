@@ -15,6 +15,7 @@ export function useApr(customNetwork?: Network) {
         return {
           // 0 meaning not the right network
           combinedApr: network?.id === 8453 || network?.id === 84532 ? data.aprCombined * 100 : 0,
+          cumulativePnl: network?.id === 8453 || network?.id === 84532 ? data.cumulativePnl : 0,
         };
       } catch (error) {
         return;
