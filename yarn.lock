@@ -6450,6 +6450,7 @@ __metadata:
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useAccountPermissions": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
+    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -6763,7 +6764,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useAppReady@workspace:liquidity/lib/useAppReady":
+"@snx-v3/useAppReady@workspace:*, @snx-v3/useAppReady@workspace:liquidity/lib/useAppReady":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAppReady@workspace:liquidity/lib/useAppReady"
   dependencies:
@@ -6916,6 +6917,7 @@ __metadata:
   resolution: "@snx-v3/useCollateralTypes@workspace:liquidity/lib/useCollateralTypes"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
@@ -7192,6 +7194,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePools@workspace:liquidity/lib/usePools"
   dependencies:
+    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
@@ -7254,6 +7257,7 @@ __metadata:
   resolution: "@snx-v3/useRewards@workspace:liquidity/lib/useRewards"
   dependencies:
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
