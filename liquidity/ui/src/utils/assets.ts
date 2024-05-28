@@ -24,8 +24,12 @@ export function calculateAssets(
 ): Asset[] | undefined {
   if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
 
+  const filteredAccountCollaterals = accountCollaterals?.filter(
+    (item) => item.displaySymbol !== 'snxUSD'
+  );
+
   // Empty state
-  if (collateralTypes && !accountCollaterals) {
+  if (collateralTypes && !filteredAccountCollaterals) {
     // Because we are mapping over collateral types we need to convert sUSDC symbol to USDC
     return collateralTypes.map((collateral) => {
       if (isBase && collateral.symbol === 'USDC') {
@@ -63,7 +67,7 @@ export function calculateAssets(
   }
 
   if (associatedUserBalances && collateralPrices) {
-    return accountCollaterals?.map((collateral) => {
+    return filteredAccountCollaterals?.map((collateral) => {
       let balance =
         associatedUserBalances.find((item) => item.tokenAddress === collateral.tokenAddress)
           ?.balance || wei(0);

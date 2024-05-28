@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManageAction } from '../components';
+import { ManageAction, UnsupportedCollateralAlert } from '../../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -23,12 +23,21 @@ export const ManageUi: FC<{
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
   collateralSymbol?: string;
-}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
+  collateralSupported: boolean;
+}> = ({
+  isLoading,
+  rewards,
+  liquidityPosition,
+  network,
+  collateralSymbol,
+  collateralSupported,
+}) => {
   return (
     <Box mb={12} mt={8}>
       <Box mb="4">
         <HomeLink />
       </Box>
+      <UnsupportedCollateralAlert isOpen={!collateralSupported} />
       <Flex alignItems="center" mb="8px">
         <Flex
           bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
@@ -105,12 +114,12 @@ export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
   const { network } = useNetwork();
 
-  const { isLoading: isCollateralLoading, data: collateralType } =
+  const { isFetching: isCollateralFetching, data: collateralType } =
     useCollateralType(collateralSymbol);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
+  const { isFetching: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
@@ -123,7 +132,9 @@ export const Manage = () => {
     poolId,
   });
 
-  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
+  const isLoading = isRewardsLoading || isCollateralFetching || isPoolGraphDataLoading;
+
+  const collateralSupported = !(!collateralType && !isCollateralFetching);
 
   return (
     <ManagePositionProvider>
@@ -133,6 +144,7 @@ export const Manage = () => {
         liquidityPosition={liquidityPosition}
         network={network}
         collateralSymbol={collateralSymbol}
+        collateralSupported={collateralSupported}
       />
     </ManagePositionProvider>
   );

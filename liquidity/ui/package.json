@@ -36,6 +36,7 @@
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*",
     "@snx-v3/useAccountPermissions": "workspace:*",
     "@snx-v3/useAccounts": "workspace:*",
+    "@snx-v3/useAppReady": "workspace:*",
     "@snx-v3/useApprove": "workspace:*",
     "@snx-v3/useApr": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
