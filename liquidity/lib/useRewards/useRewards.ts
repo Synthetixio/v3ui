@@ -28,7 +28,7 @@ type RewardsResponseArray = typeof RewardsResponseSchema._type;
 
 export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 
-type RewardsInterface = {
+export type RewardsInterface = {
   id: string;
   total_distributed: string;
   rewards_distributions: {

@@ -148,7 +148,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
       return collateralTypes.filter((collateralType) =>
         collateralType.minDelegationD18.lt(constants.MaxUint256)
-      );
+      ) as CollateralType[];
     },
     // one hour in ms
     staleTime: 60 * 60 * 1000,
