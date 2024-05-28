@@ -5,6 +5,7 @@ import Wei from '@synthetixio/wei';
 import { WithdrawModal } from '../../';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { NavLink, generatePath } from 'react-router-dom';
+import { useTimer } from 'react-timer-hook';
 
 interface AssetsRowProps {
   token: string;
@@ -32,11 +33,11 @@ export const AssetsRow = ({
   final,
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const canWithdraw = unlockDate.getTime() < new Date().getTime();
 
-  const hoursToWithdraw = canWithdraw
-    ? ''
-    : new Date(unlockDate.getDate() - new Date().getTime()).getHours();
+  const { minutes, hours, isRunning } = useTimer({
+    expiryTimestamp: unlockDate,
+    autoStart: true,
+  });
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
@@ -123,13 +124,11 @@ export const AssetsRow = ({
           <Fade in>
             <Tooltip
               label={
-                !canWithdraw &&
-                accountBalance.gt(0) &&
-                `Withdrawal available in ${hoursToWithdraw} hours`
+                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H ${minutes}M`
               }
             >
               <Button
-                isDisabled={!canWithdraw}
+                isDisabled={isRunning}
                 variant="unstyled"
                 fontSize="0.75rem"
                 lineHeight="1rem"

@@ -186,7 +186,7 @@ export const withERC7412 = async (
 ): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
-  let multicallCalls = [tx].flat(); // Use let to communicate that we mutate this array
+  let multicallCalls = [...[tx].flat()]; // Use let to communicate that we mutate this array
 
   if (multicallCalls.some((x) => !x.to)) {
     throw Error(`Make sure all txs have 'to' field set`);
@@ -305,6 +305,7 @@ export async function erc7412Call<T>(
   );
 
   const reqs = [txRequests].flat();
+
   for (const txRequest of reqs) {
     txRequest.from = getDefaultFromAddress(network.name); // Reads can always use WETH
   }

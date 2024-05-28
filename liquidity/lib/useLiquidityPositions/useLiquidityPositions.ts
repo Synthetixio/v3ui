@@ -11,7 +11,7 @@ import { erc7412Call } from '@snx-v3/withERC7412';
 import { keyBy, stringToHash } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;
@@ -45,7 +45,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
   const { data: collateralTypes } = useCollateralTypes();
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: priceUpdateTx, isLoading: collateralPriceUpdatesIsLoading } =
-    useCollateralPriceUpdates();
+    useAllCollateralPriceUpdates();
 
   const { network } = useNetwork();
   const provider = useProviderForChain(network!);
