@@ -6762,6 +6762,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useAppReady@workspace:liquidity/lib/useAppReady":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useAppReady@workspace:liquidity/lib/useAppReady"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useApprove@workspace:*, @snx-v3/useApprove@workspace:liquidity/lib/useApprove":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApprove@workspace:liquidity/lib/useApprove"

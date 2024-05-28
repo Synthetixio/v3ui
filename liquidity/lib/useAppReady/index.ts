@@ -1,1 +1,1 @@
-export * from './useAppReady'
+export * from './useAppReady';

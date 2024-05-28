@@ -151,10 +151,10 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
 
-  return useQuery({
-    queryKey: [collateralSymbol, 'CollateralType'],
+  const query = useQuery({
+    queryKey: [collateralTypes, collateralSymbol, 'CollateralType'],
     queryFn: async () => {
       if (!collateralTypes || !collateralTypes?.length) {
         return;
@@ -169,5 +169,11 @@ export function useCollateralType(collateralSymbol?: string) {
       );
     },
     enabled: Boolean(collateralTypes),
+    initialData: undefined,
   });
+
+  return {
+    ...query,
+    isLoading: isCollateralTypesLoading || query.isLoading,
+  };
 }
