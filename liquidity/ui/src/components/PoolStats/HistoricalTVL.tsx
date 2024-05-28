@@ -1,7 +1,7 @@
 import { Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetHistoricalTVL } from '@snx-v3/useGetHistoricalTVL';
-import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Legend, Line, AreaChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 export function HistoricalTVL({ poolId }: { poolId: string }) {
   const { data: collateralTypes, isLoading: collateralTypesAreLoading } = useCollateralTypes();
@@ -34,7 +34,7 @@ export function HistoricalTVL({ poolId }: { poolId: string }) {
           </TabList>
         </Tabs>
       </Flex>
-      <LineChart
+      <AreaChart
         width={445}
         height={200}
         data={[
@@ -48,7 +48,7 @@ export function HistoricalTVL({ poolId }: { poolId: string }) {
         <Tooltip />
         <Legend />
         <Line type="monotone" dataKey="value" stroke="red" />
-      </LineChart>
+      </AreaChart>
     </Flex>
   );
 }
