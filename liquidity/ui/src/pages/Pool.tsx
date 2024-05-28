@@ -4,12 +4,36 @@ import { useParams } from '@snx-v3/useParams';
 import { usePool } from '@snx-v3/usePools';
 import { ArrowLeft } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
-import { CollateralTable, HistoricalTVL, RewardsTable } from '../../components/PoolStats';
+import { CollateralTable, HistoricalTVL, RewardsTable,Rewards } from '../components'
+import { useRewards } from '@snx-v3/useRewards';
+import { usePoolData } from '@snx-v3/usePoolData';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const Pool = () => {
   const { poolId, accountId } = useParams();
   const { network } = useNetwork();
   const { data: pool } = usePool(poolId);
+
+export const Pool = () => {
+  const params = useParams();
+  const { data: pool } = usePool(params.poolId);
+
+  const { accountId, collateralSymbol, poolId } = useParams();
+
+  const { isFetching: isCollateralLoading, data: collateralType } =
+    useCollateralType(collateralSymbol);
+
+  const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
+
+  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
+    poolData?.registered_distributors,
+    poolId,
+    collateralType?.tokenAddress,
+    accountId
+  );
+
+  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
+
   const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
 
   return (

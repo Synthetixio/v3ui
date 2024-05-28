@@ -1,10 +1,9 @@
 import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { AssetsList, PositionsList, StatsList } from '../../components';
-import { AccountBanner } from '../../components/AccountBanner';
+import { AssetsList, PositionsList, StatsList, AccountBanner } from '../components';
 import { useWallet } from '@snx-v3/useBlockchain';
 
-export function Home() {
+export function Dashboard() {
   const { activeWallet } = useWallet();
   return (
     <>

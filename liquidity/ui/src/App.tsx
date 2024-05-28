@@ -11,6 +11,7 @@ import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from './utils/onboard';
+import { AppReadyProvider } from '@snx-v3/useAppReady';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,15 +42,17 @@ export const App = () => {
     <QueryClientProvider client={queryClient}>
       <Web3OnboardProvider web3Onboard={onboard}>
         <ChakraProvider theme={theme}>
-          <ColorMode />
-          <Fonts />
-          <GasSpeedProvider>
-            <HashRouter>
-              <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
-              <Router />
-            </HashRouter>
-          </GasSpeedProvider>
-          <ReactQueryDevtools />
+          <AppReadyProvider>
+            <ColorMode />
+            <Fonts />
+            <GasSpeedProvider>
+              <HashRouter>
+                <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
+                <Router />
+              </HashRouter>
+            </GasSpeedProvider>
+            <ReactQueryDevtools />
+          </AppReadyProvider>
         </ChakraProvider>
       </Web3OnboardProvider>
     </QueryClientProvider>

@@ -9,6 +9,7 @@ import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
+import { useMemo } from 'react';
 
 const NodeSchema = z.object({
   nodeType: z.number(),
@@ -47,17 +48,19 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
   const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { network } = useNetwork();
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
-    queryKey: [`${network?.id}-${network?.preset}`, 'AllCollateralPriceIds'],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'AllCollateralPriceIds'],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
+      if (!CoreProxy || !Multicall3 || !OracleProxy || !targetNetwork) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!deploymentsWithERC7412.includes(`${network?.id}-${network?.preset}`)) return [];
+      if (!deploymentsWithERC7412.includes(`${targetNetwork?.id}-${targetNetwork?.preset}`))
+        return [];
 
       const configs = await loadConfigs({ CoreProxy });
 

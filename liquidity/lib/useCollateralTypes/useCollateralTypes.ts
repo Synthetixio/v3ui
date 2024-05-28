@@ -2,13 +2,13 @@ import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
-import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useAppReady } from '@snx-v3/useAppReady';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -109,14 +109,20 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: Multicall3 } = useMulticall3(customNetwork);
+  const isAppReady = useAppReady();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'CollateralTypes', { includeDelegationOff }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'CollateralTypes',
+      { includeDelegationOff, customNetwork: customNetwork?.id },
+    ],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
-        (collateralType) => {
+
+      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
+        .map((collateralType) => {
           const isBase = isBaseAndromeda(network?.id, network?.preset);
           if (isBase && collateralType.symbol === 'sUSDC') {
             return {
@@ -131,8 +137,8 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
             symbol: collateralType.symbol,
             displaySymbol: collateralType.symbol,
           };
-        }
-      );
+        })
+        .filter((collateralType) => collateralType.symbol !== 'snxUSD');
 
       if (includeDelegationOff) {
         return collateralTypes;
@@ -147,25 +153,29 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(CoreProxy && Multicall3),
+    enabled: Boolean(isAppReady),
   });
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes, isLoading, error } = useCollateralTypes();
+  const { data: collateralTypes, isFetching: isCollateralTypesFetching } = useCollateralTypes();
+
+  function getCollateralType(collateralSymbol?: string) {
+    if (!collateralTypes || !collateralTypes?.length) {
+      return;
+    }
+
+    if (!collateralSymbol) {
+      return collateralTypes[0];
+    }
+
+    return collateralTypes?.find(
+      (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
+    );
+  }
+
   return {
-    isLoading,
-    error,
-    data: useMemo(() => {
-      if (!collateralTypes || !collateralTypes?.length) {
-        return;
-      }
-      if (!collateralSymbol) {
-        return collateralTypes[0];
-      }
-      return collateralTypes.find(
-        (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
-      );
-    }, [collateralSymbol, collateralTypes]),
+    isFetching: isCollateralTypesFetching,
+    data: getCollateralType(collateralSymbol),
   };
 }

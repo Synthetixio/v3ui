@@ -10,16 +10,19 @@ import {
 import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
 
 export function useOracleManagerProxy(customNetwork?: Network) {
-  const providerForChain = useProviderForChain(customNetwork);
-
   const { network } = useNetwork();
+  const providerForChain = useProviderForChain(customNetwork);
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const signerOrProvider = signer || provider || providerForChain;
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'OracleManagerProxy', { withSigner }],
+    queryKey: [
+      `${network?.id}-${network?.preset}`,
+      'OracleManagerProxy',
+      { withSigner, customNetwork: customNetwork?.id },
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importOracleManagerProxy(

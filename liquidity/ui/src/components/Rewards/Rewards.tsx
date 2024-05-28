@@ -29,7 +29,7 @@ export const Rewards = ({
   readOnly = false,
   ...props
 }: RewardsDistributorsInterface) => {
-  const empty = rewards && rewards.length === 0;
+  const empty = (typeof rewards === 'undefined' && !isLoading) || (rewards && rewards.length === 0);
 
   return (
     <BorderBox bg="navy.700" py={4} px={4} flexDir="column" {...props}>

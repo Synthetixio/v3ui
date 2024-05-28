@@ -161,7 +161,7 @@ export const AssetsRow = ({
               to={{
                 pathname: generatePath('/positions/:collateralSymbol/:poolId', {
                   poolId: '1',
-                  collateralSymbol: 'USDC',
+                  collateralSymbol: token.toUpperCase(),
                 }),
                 search: location.search,
               }}

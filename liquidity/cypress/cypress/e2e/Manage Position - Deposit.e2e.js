@@ -29,6 +29,8 @@ it('should deposit additional collateral', () => {
       cy.task('mineBlock');
       cy.get('[data-cy="manage-action-deposit"]').click();
 
+      cy.wait(5000);
+
       cy.get('[data-testid="deposit amount input"]').type(isBase ? '101' : '10');
 
       cy.get('[data-testid="deposit submit"]').should('be.enabled').click();

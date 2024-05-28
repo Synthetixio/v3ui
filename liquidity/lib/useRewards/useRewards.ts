@@ -2,6 +2,7 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
 import { utils, BigNumber } from 'ethers';
 import { Wei, wei } from '@synthetixio/wei';
+import { useAppReady } from '@snx-v3/useAppReady';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
@@ -63,11 +64,10 @@ export function useRewards(
   const { network } = useNetwork();
   const { data: Multicall3 } = useMulticall3();
   const { data: CoreProxy } = useCoreProxy();
+  const isAppReady = useAppReady();
 
   return useQuery({
-    enabled: Boolean(
-      Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
-    ),
+    enabled: Boolean(isAppReady && distributors && poolId && collateralAddress && accountId),
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'Rewards',
@@ -87,6 +87,7 @@ export function useRewards(
       ) {
         throw 'useRewards is missing required data';
       }
+
       if (distributors.length === 0) return [];
 
       try {
