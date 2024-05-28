@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { AssetsList, PositionsList, StatsList, AccountBanner } from '../components';
 import { useWallet } from '@snx-v3/useBlockchain';
 
-export function Home() {
+export function Dashboard() {
   const { activeWallet } = useWallet();
   return (
     <>
