@@ -14,7 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Wei from '@synthetixio/wei';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -51,12 +51,6 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
   const { data: collateralPrices } = useCollateralPrices();
 
-  const { mutation: withdrawMain } = useWithdraw({
-    amount,
-    accountId,
-    collateralTypeAddress: selectedCollateralType,
-  });
-
   const activeCollateral = isBase
     ? accountCollaterals?.reduce((cur, prev, index) => {
         //ignore the first iteration cause we are starting witht the first index of the
@@ -69,7 +63,13 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
       }, accountCollaterals[0])
     : accountCollaterals?.find((collateral) => collateral.tokenAddress === selectedCollateralType);
 
-  const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
+  const { mutation: withdrawMain, isLoading } = useWithdraw({
+    amount,
+    accountId,
+    collateralTypeAddress: selectedCollateralType,
+  });
+
+  const { mutation: withdrawAndromeda, isLoading: isLoadingAndromeda } = useWithdrawBaseAndromeda({
     accountId,
     sUSDCCollateral:
       accountCollaterals && accountCollaterals[0]
@@ -82,14 +82,14 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     amountToWithdraw: amount,
   });
 
-  const withdraw = async () => {
+  const withdraw = useCallback(async () => {
     if (!isBaseAndromeda(network?.id, network?.preset)) {
       await withdrawMain.mutateAsync();
     } else {
       await withdrawAndromeda.mutateAsync();
     }
     queryClient.clear();
-  };
+  }, [network?.id, network?.preset, queryClient, withdrawAndromeda, withdrawMain]);
 
   // Replace out sUSDC with USDC for Andromeda
   const collateralTypesHydated = collateralTypes?.map((type) => {
@@ -105,16 +105,16 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     return type;
   });
 
-  const collateralTypeDisplayName = collateralTypesHydated?.find(
-    (item) => item.tokenAddress === selectedCollateralType
-  )?.symbol;
+  const collateralTypeDisplayName =
+    collateralTypesHydated?.find((item) => item.tokenAddress === selectedCollateralType)?.symbol ||
+    'sUSD';
 
   return (
     <Modal
       isOpen={isOpen}
       isCentered
       onClose={() => {
-        setAmount(new Wei(0));
+        setAmount(ZEROWEI);
         onClose();
       }}
     >
@@ -216,7 +216,6 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           {!isBase && (
                             <MenuItem
                               onClick={() => setSelectedCollateralType(usdTokens?.snxUSD || '')}
-                              key={usdTokens?.snxUSD.concat('-base')}
                             >
                               <TokenIcon mr={1} height={16} width={16} symbol="sUSD" />
                               sUSD
@@ -287,9 +286,8 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 isDisabled={amount.eq(0)}
                 mt={6}
                 mb="2"
-                onClick={() => {
-                  withdraw();
-                }}
+                onClick={withdraw}
+                isLoading={isLoadingAndromeda || isLoading}
               >
                 {amount.eq(0) ? 'Enter Amount' : 'Withdraw'}
               </Button>

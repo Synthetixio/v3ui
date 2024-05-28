@@ -3,6 +3,8 @@ import {
   Badge,
   Button,
   Flex,
+  IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -17,7 +19,7 @@ import { prettyString } from '@snx-v3/format';
 import { networks } from '../../utils/onboard';
 import { useLocalStorage } from '../../hooks';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
-import { CopyIcon } from '@chakra-ui/icons';
+import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
@@ -26,12 +28,27 @@ export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-  const { data: accounts } = useAccounts();
+  const {
+    data: accounts,
+    isLoading: isAccountsLoading,
+    isFetching: isAccountsFetching,
+  } = useAccounts();
   const { mutation } = useCreateAccount();
   const [showTestnets, setShowTestnets] = useLocalStorage(LOCAL_STORAGE_KEYS.SHOW_TESTNETS, false);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!isAccountsLoading && !isAccountsFetching && accounts) {
+      const accountId = queryParams.get('accountId');
+
+      if (accountId && !accounts?.includes(accountId)) {
+        queryParams.set('accountId', accounts[0]);
+        navigate({ pathname, search: accounts[0] ? queryParams.toString() : '' });
+      }
+    }
+  }, [accounts, isAccountsLoading, isAccountsFetching, queryParams, navigate, pathname]);
 
   useEffect(() => {
     // Check if wallet preference is stored in local storage
@@ -195,9 +212,20 @@ export function NetworkController() {
                   rounded="base"
                   gap="2"
                 >
-                  <Text fontWeight={400} fontSize="14px">
-                    Account(s)
-                  </Text>
+                  <Flex w="100%" justifyContent="space-between">
+                    <Text fontWeight={400} fontSize="14px">
+                      Account(s)
+                    </Text>
+                    <Link href="/#/account/settings">
+                      <IconButton
+                        variant="outline"
+                        colorScheme="gray"
+                        size="xs"
+                        icon={<SettingsIcon />}
+                        aria-label="account settings"
+                      />
+                    </Link>
+                  </Flex>
                   <Flex data-cy="header-account-list" flexDir="column">
                     {accounts?.map((account) => (
                       <Text

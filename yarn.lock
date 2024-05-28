@@ -6448,6 +6448,7 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
+    "@snx-v3/useAccountPermissions": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
@@ -6462,6 +6463,7 @@ __metadata:
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
+    "@snx-v3/useManagePermissions": "workspace:*"
     "@snx-v3/useMarketNamesById": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
@@ -6469,6 +6471,7 @@ __metadata:
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useTokenBalance": "workspace:*"
+    "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
@@ -6508,6 +6511,7 @@ __metadata:
     react-i18next: "npm:^13.4.1"
     react-refresh: "npm:^0.14.0"
     react-router-dom: "npm:^6.18.0"
+    react-timer-hook: "npm:^3.0.7"
     stream-browserify: "npm:^3.0.0"
     style-loader: "npm:^3.3.3"
     terser-webpack-plugin: "npm:^5.3.9"
@@ -6690,6 +6694,18 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useAccountPermissions@workspace:*, @snx-v3/useAccountPermissions@workspace:liquidity/lib/useAccountInfo":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useAccountPermissions@workspace:liquidity/lib/useAccountInfo"
+  dependencies:
+    "@snx-v3/useAccountProxy": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -7079,6 +7095,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useManagePermissions@workspace:*, @snx-v3/useManagePermissions@workspace:liquidity/lib/useManagePermissions":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useManagePermissions@workspace:liquidity/lib/useManagePermissions"
+  dependencies:
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useMarketNamesById@workspace:*, @snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById"
@@ -7269,6 +7296,16 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTransferAccountId@workspace:*, @snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId"
+  dependencies:
+    "@snx-v3/useAccountProxy": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 

@@ -64,7 +64,6 @@ export function AccountsSelectorUi({
 
   return (
     <>
-      {/* // Temporarily disable account selector menu */}
       <Menu>
         {isLoading ? (
           <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200">
