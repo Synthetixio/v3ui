@@ -114,12 +114,12 @@ export const Manage = () => {
   const { accountId, collateralSymbol, poolId } = useParams();
   const { network } = useNetwork();
 
-  const { isLoading: isCollateralLoading, data: collateralType } =
+  const { isFetching: isCollateralFetching, data: collateralType } =
     useCollateralType(collateralSymbol);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
-  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
+  const { isFetching: isRewardsLoading, data: rewardsData } = useRewards(
     poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
@@ -132,9 +132,9 @@ export const Manage = () => {
     poolId,
   });
 
-  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
+  const isLoading = isRewardsLoading || isCollateralFetching || isPoolGraphDataLoading;
 
-  const collateralSupported = !(!collateralType && !isCollateralLoading);
+  const collateralSupported = !(!collateralType && !isCollateralFetching);
 
   return (
     <ManagePositionProvider>

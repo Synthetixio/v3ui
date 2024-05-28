@@ -8,6 +8,7 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useAppReady } from '@snx-v3/useAppReady';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -108,12 +109,14 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: Multicall3 } = useMulticall3(customNetwork);
+  const isAppReady = useAppReady();
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
+
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
         .map((collateralType) => {
           const isBase = isBaseAndromeda(network?.id, network?.preset);
@@ -146,34 +149,29 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(CoreProxy && Multicall3),
+    enabled: Boolean(isAppReady),
   });
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes();
+  const { data: collateralTypes, isFetching: isCollateralTypesFetching } = useCollateralTypes();
 
-  const query = useQuery({
-    queryKey: [collateralTypes, collateralSymbol, 'CollateralType'],
-    queryFn: async () => {
-      if (!collateralTypes || !collateralTypes?.length) {
-        return;
-      }
+  function getCollateralType(collateralSymbol?: string) {
+    if (!collateralTypes || !collateralTypes?.length) {
+      return;
+    }
 
-      if (!collateralSymbol) {
-        return collateralTypes[0];
-      }
+    if (!collateralSymbol) {
+      return collateralTypes[0];
+    }
 
-      return collateralTypes.find(
-        (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
-      );
-    },
-    enabled: Boolean(collateralTypes),
-    initialData: undefined,
-  });
+    return collateralTypes?.find(
+      (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
+    );
+  }
 
   return {
-    ...query,
-    isLoading: isCollateralTypesLoading || query.isLoading,
+    isFetching: isCollateralTypesFetching,
+    data: getCollateralType(collateralSymbol),
   };
 }

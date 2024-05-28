@@ -66,12 +66,8 @@ export function useRewards(
   const { data: CoreProxy } = useCoreProxy();
   const isAppReady = useAppReady();
 
-  console.log('isAppReady', isAppReady);
-
   return useQuery({
-    enabled: Boolean(
-      Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
-    ),
+    enabled: Boolean(isAppReady && distributors && poolId && collateralAddress && accountId),
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'Rewards',

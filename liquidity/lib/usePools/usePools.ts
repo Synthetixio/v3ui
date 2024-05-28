@@ -5,6 +5,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
 import { importCoreProxy } from '@synthetixio/v3-contracts';
+import { useAppReady } from '@snx-v3/useAppReady';
 
 export const PoolIdSchema = ZodBigNumber.transform((x) => x.toString());
 
@@ -21,9 +22,10 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const isAppReady = useAppReady();
 
   return useQuery({
-    enabled: Boolean(CoreProxy),
+    enabled: Boolean(isAppReady),
     queryKey: [`${network?.id}-${network?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';
