@@ -20,7 +20,7 @@ export function useApr() {
           };
         }
         return {
-          data.aprCombined * 100
+          combinedApr: data.aprCombined * 100,
         };
       } catch (error) {
         return;
