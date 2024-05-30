@@ -74,6 +74,7 @@ export function useAprHistory(customNetwork?: Network) {
 
         const sevenWeeksAPR = data
           .filter((d) => new Date(d.timestamp).getTime() >= sevenWeeks.getTime())
+          .filter((_, index) => index % 7 === 0)
           .map((d) => ({
             timestamp: d.timestamp,
             value: d.apr7d * 100,
@@ -83,7 +84,7 @@ export function useAprHistory(customNetwork?: Network) {
             pnlCombined: d.aprPnl * 100,
             rewardsCombined: d.aprRewards * 100,
           }))
-          .filter((_, index) => index % 7 === 0)
+
           .reverse();
         const sevenMonthAPR = data
           .filter((d) => new Date(d.timestamp).getTime() >= sevenMonth.getTime())
