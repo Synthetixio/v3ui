@@ -9,7 +9,9 @@ type ActiveTabs = 'sevenDaysAPR' | 'sevenWeeksAPR' | 'sevenMonthAPR' | 'oneYearA
 export function HistoricalAPR() {
   const [activeTab, setActiveTab] = useState<ActiveTabs>('sevenDaysAPR');
   const { data } = useAprHistory();
-  const combinedAPR = data?.allAPR && data.allAPR[data.allAPR.length - 1].value;
+  const combinedAPR = data?.allAPR && data.allAPR[data.allAPR.length - 1].combined;
+  const pnlAPR = data?.allAPR && data.allAPR[data.allAPR.length - 1].pnlCombined;
+  const rewardsAPR = data?.allAPR && data.allAPR[data.allAPR.length - 1].rewardsCombined;
   return (
     <Flex
       border="1px solid"
@@ -89,7 +91,9 @@ export function HistoricalAPR() {
             verticalAlign="top"
             align="left"
             iconType="circle"
-            content={<CustomizedLegend />}
+            content={
+              <CustomizedLegend combinedAPR={combinedAPR} rewardsAPR={rewardsAPR} pnlAPR={pnlAPR} />
+            }
           />
 
           <Line type="basis" dataKey="value" stroke="#00D1FF" dot={false} />
@@ -101,27 +105,86 @@ export function HistoricalAPR() {
   );
 }
 
-const CustomizedLegend = () => {
+const CustomizedLegend = ({
+  combinedAPR,
+  pnlAPR,
+  rewardsAPR,
+}: {
+  combinedAPR?: number;
+  pnlAPR?: number;
+  rewardsAPR?: number;
+}) => {
   return (
-    <Flex alignItems="center" gap="2" mb="4">
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="#00D1FF" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="4" cy="4" r="4" fill="#00D1FF" />
-      </svg>
-      <Text fontSize="12px" color="gray.500">
-        Total APR
-      </Text>
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="#402FC8" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="4" cy="4" r="4" fill="#402FC8" />
-      </svg>
-      <Text fontSize="12px" color="gray.500">
-        APR Rewards
-      </Text>
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="#EE2EFF" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="4" cy="4" r="4" fill="#EE2EFF" />
-      </svg>
-      <Text fontSize="12px" color="gray.500">
-        APR PnL
-      </Text>
+    <Flex gap="2" mb="4" flexDir="column">
+      <Flex flexDir="column">
+        <Flex alignItems="center">
+          <svg
+            width="8"
+            height="8"
+            viewBox="0 0 8 8"
+            fill="#00D1FF"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="4" cy="4" r="4" fill="#00D1FF" />
+          </svg>
+          <Text fontSize="12px" color="gray.500">
+            Total APR
+          </Text>
+        </Flex>
+        <Text fontWeight={800} fontSize="30px">
+          {combinedAPR?.toFixed(2)}%
+        </Text>
+      </Flex>
+      <Flex alignItems="center" gap="2">
+        <Flex
+          border="1px solid"
+          borderColor="gray.900"
+          rounded="base"
+          alignItems="center"
+          gap="1"
+          p="1"
+        >
+          <svg
+            width="8"
+            height="8"
+            viewBox="0 0 8 8"
+            fill="#402FC8"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="4" cy="4" r="4" fill="#402FC8" />
+          </svg>
+          <Text fontSize="12px" color="gray.500">
+            APR Rewards
+          </Text>
+          <Text fontSize="14px" fontWeight={700} color="white">
+            {rewardsAPR?.toFixed(2)}%
+          </Text>
+        </Flex>
+        <Flex
+          border="1px solid"
+          borderColor="gray.900"
+          rounded="base"
+          alignItems="center"
+          gap="1"
+          p="1"
+        >
+          <svg
+            width="8"
+            height="8"
+            viewBox="0 0 8 8"
+            fill="#EE2EFF"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="4" cy="4" r="4" fill="#EE2EFF" />
+          </svg>
+          <Text fontSize="12px" color="gray.500">
+            APR PnL
+          </Text>
+          <Text fontSize="14px" fontWeight={700} color="white">
+            {pnlAPR?.toFixed(2)}%
+          </Text>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
@@ -158,14 +221,25 @@ const CustomizedToolTip = (props: any) => {
       <Text color="gray.500" fontSize="12px" fontWeight={700}>
         {new Date(props.payload[0].payload.timestamp).toLocaleString().split(',')[0]}
       </Text>
+
+      <Divider />
+      <Text color="gray.500" fontSize="12px" fontWeight={700}>
+        {currentTVLLabel()} APR
+      </Text>
       <Flex justifyContent="space-between">
+        <Flex gap="1" alignItems="center">
+          <TokenIcon symbol="usdc" width={12} height={12} />
+          <Text color="gray.500" fontSize="12px">
+            USDC
+          </Text>
+        </Flex>
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          Total APR
-        </Text>
-        <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {props.totalAPR && props.totalAPR.toFixed(2).concat('%')}
+          {props.payload[0].payload.value.toFixed(2).concat('%')}
         </Text>
       </Flex>
+      <Text color="gray.500" fontSize="12px" fontWeight={700}>
+        APR PNL
+      </Text>
       <Flex justifyContent="space-between">
         <Flex gap="1" alignItems="center">
           <TokenIcon symbol="usdc" width={12} height={12} />
@@ -174,27 +248,16 @@ const CustomizedToolTip = (props: any) => {
           </Text>
         </Flex>
         <Text color="gray.500" fontSize="12px">
-          {props.totalAPR && props.totalAPR.toFixed(2).concat('%')}
+          {props.payload[0].payload.pnl.toFixed(2).concat('%')}
         </Text>
       </Flex>
       <Divider />
       <Flex justifyContent="space-between">
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {currentTVLLabel()} APR
+          APR Rewards
         </Text>
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {props.payload[0].payload.value.toFixed(2).concat('%')}
-        </Text>
-      </Flex>
-      <Flex justifyContent="space-between">
-        <Flex gap="1" alignItems="center">
-          <TokenIcon symbol="usdc" width={12} height={12} />
-          <Text color="gray.500" fontSize="12px">
-            USDC
-          </Text>
-        </Flex>
-        <Text color="gray.500" fontSize="12px">
-          {props.payload[0].payload.value.toFixed(2).concat('%')}
+          {props.payload[0].payload.rewards.toFixed(2).concat('%')}
         </Text>
       </Flex>
     </Flex>

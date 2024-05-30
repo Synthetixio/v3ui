@@ -67,6 +67,8 @@ export function useAprHistory(customNetwork?: Network) {
             pnl: d.apr24hPnl * 100,
             rewards: d.apr24hRewards * 100,
             combined: d.aprCombined * 100,
+            pnlCombined: d.aprPnl * 100,
+            rewardsCombined: d.aprRewards * 100,
           }))
           .reverse();
 
@@ -78,6 +80,8 @@ export function useAprHistory(customNetwork?: Network) {
             pnl: d.apr7dPnl * 100,
             rewards: d.apr7dRewards * 100,
             combined: d.aprCombined * 100,
+            pnlCombined: d.aprPnl * 100,
+            rewardsCombined: d.aprRewards * 100,
           }))
           .filter((_, index) => index % 7 === 0)
           .reverse();
@@ -90,6 +94,8 @@ export function useAprHistory(customNetwork?: Network) {
             pnl: d.apr28dPnl * 100,
             rewards: d.apr28dRewards * 100,
             combined: d.aprCombined * 100,
+            pnlCombined: d.aprPnl * 100,
+            rewardsCombined: d.aprRewards * 100,
           }))
           .reverse();
         const oneYearAPR = data
@@ -100,6 +106,8 @@ export function useAprHistory(customNetwork?: Network) {
             pnl: d.apr28dPnl * 100,
             rewards: d.apr28dRewards * 100,
             combined: d.aprCombined * 100,
+            pnlCombined: d.aprPnl * 100,
+            rewardsCombined: d.aprRewards * 100,
           }))
           .reverse();
 
@@ -151,6 +159,8 @@ export function useAprHistory(customNetwork?: Network) {
               pnl: d.apr24hPnl * 100,
               rewards: d.apr24hRewards * 100,
               combined: d.aprCombined * 100,
+              pnlCombined: d.aprPnl * 100,
+              rewardsCombined: d.aprRewards * 100,
             }))
             .reverse(),
           sevenDaysAPR,
