@@ -78,6 +78,7 @@ export function HistoricalAPR() {
             tickLine={false}
           />
           <YAxis
+            fontSize="12px"
             type="number"
             tickFormatter={(value) => `${value}%`}
             includeHidden
