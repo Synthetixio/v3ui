@@ -22,7 +22,8 @@ const ChangeStat: FC<{
   hasChanges: boolean;
   dataTestId?: string;
   formatFn: (val: Wei) => string;
-}> = ({ formatFn, value, newValue, hasChanges, dataTestId }) => {
+  withColor?: boolean;
+}> = ({ formatFn, value, newValue, hasChanges, dataTestId, withColor }) => {
   return (
     <Flex
       gap={4}
@@ -32,11 +33,22 @@ const ChangeStat: FC<{
       alignItems="center"
       lineHeight="32px"
     >
-      <Text data-cy={dataTestId}>{formatFn(value)}</Text>
+      <Text
+        data-cy={dataTestId}
+        color={withColor && value.gt(0) ? 'green.700' : value.lt(0) ? 'red.700' : 'gray.50'}
+      >
+        {formatFn(value)}
+      </Text>
       {hasChanges && !value.eq(newValue) ? (
         <>
           <ArrowForwardIcon />
-          <Text>{formatFn(newValue)}</Text>
+          <Text
+            color={
+              withColor && newValue.gt(0) ? 'green.700' : newValue.lt(0) ? 'red.700' : 'gray.50'
+            }
+          >
+            {formatFn(newValue)}
+          </Text>
         </>
       ) : null}
     </Flex>
@@ -181,7 +193,7 @@ export const ManageStatsUi: FC<{
         <Flex flexDirection="column" justifyContent="space-between" width="100%">
           <Flex alignItems="center" mb="4px">
             <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-              DEBT
+              PnL
             </Text>
             <Tooltip label="Your minted debt balance." textAlign="start" py={2} px={3}>
               <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
@@ -192,8 +204,8 @@ export const ManageStatsUi: FC<{
           <Flex width="100%">
             {liquidityPosition && collateralType ? (
               <ChangeStat
-                value={liquidityPosition.debt}
-                newValue={newDebt}
+                value={liquidityPosition.debt.mul(-1)}
+                newValue={newDebt.mul(-1)}
                 formatFn={(val: Wei) =>
                   currency(val, {
                     currency: 'USD',
@@ -201,6 +213,7 @@ export const ManageStatsUi: FC<{
                     maximumFractionDigits: 8,
                   })
                 }
+                withColor
                 hasChanges={hasChanges}
                 dataTestId="manage-stats-debt-value"
               />
