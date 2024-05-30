@@ -9,8 +9,9 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
-  const [stats, setStats] = useState({ tvl: '0', apy: 0 });
+  const [stats, setStats] = useState({ tvl: '0', apy: 0, isLoading: true });
   const { data: collateralTypes } = useCollateralTypes(false, network);
+
   useEffect(() => {
     if (!stats.apy) {
       fetch('https://api-v2.dhedge.org/graphql', {
@@ -37,6 +38,7 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
           setStats({
             tvl: compactInteger(data.fund.totalValue / 1e18, 1),
             apy: data.fund.apy.monthly,
+            isLoading: false,
           });
         });
     }

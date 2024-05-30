@@ -15,6 +15,7 @@ export const PoolSchema = z.object({
   name: z.string().default('Unnamed Pool'),
   isPreferred: z.boolean(),
 });
+
 export type PoolType = z.infer<typeof PoolSchema>;
 
 export const PoolsSchema = z.array(PoolSchema);
@@ -24,10 +25,11 @@ export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const isAppReady = useAppReady();
+
   const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
-    enabled: Boolean(isAppReady),
+    enabled: Boolean(customNetwork ? true : isAppReady),
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';

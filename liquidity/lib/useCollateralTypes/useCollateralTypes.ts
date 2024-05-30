@@ -111,9 +111,13 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const isAppReady = useAppReady();
 
+  const networkId = customNetwork
+    ? `${customNetwork?.id}-${customNetwork?.preset}`
+    : `${network?.id}-${network?.preset}`;
+
   return useQuery({
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      networkId,
       'CollateralTypes',
       { includeDelegationOff, customNetwork: customNetwork?.id },
     ],
@@ -153,7 +157,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(isAppReady),
+    enabled: Boolean(customNetwork ? true : isAppReady),
   });
 }
 

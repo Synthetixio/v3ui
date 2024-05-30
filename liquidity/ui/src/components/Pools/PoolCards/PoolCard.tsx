@@ -51,9 +51,13 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
     [collateralTypes, collaterals, network.id, network.preset]
   );
 
+  console.log('isCollateralFiltered', isCollateralFiltered);
+
   if (!isCollateralFiltered) {
     return null;
   }
+
+  const isLoading = isAprLoading || isVaultsLoading;
 
   return (
     <Flex
@@ -95,11 +99,7 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
                 <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
               </Tooltip>
             </Text>
-            <Skeleton
-              isLoaded={!isVaultsLoading}
-              startColor="whiteAlpha.500"
-              endColor="whiteAlpha.200"
-            >
+            <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
               <Text
                 fontWeight="bold"
                 fontSize="20px"
@@ -110,7 +110,7 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
               >
                 {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
                 {/* For sizing the skeleton */}
-                {isVaultsLoading && '100M'}
+                {isLoading && '100M'}
               </Text>
             </Skeleton>
           </Flex>
@@ -137,11 +137,7 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
                 <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
               </Tooltip>
             </Text>
-            <Skeleton
-              isLoaded={!isAprLoading}
-              startColor="whiteAlpha.500"
-              endColor="whiteAlpha.200"
-            >
+            <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {!!apr ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
                 {/* For sizing the skeleton */}
@@ -151,7 +147,6 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
           </Flex>
         </Flex>
       </Flex>
-
       <Divider mt="18px" mb="10px" />
       <Flex flexWrap="wrap" gap={6}>
         {collateralTypes?.map((type) => (
