@@ -1,17 +1,15 @@
 import { Divider, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
-import { formatNumberToUsd } from '@snx-v3/formatters';
 import { useAprHistory } from '@snx-v3/useAprHistory';
 import { useState } from 'react';
-import { Legend, Area, AreaChart, Tooltip, XAxis } from 'recharts';
+import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { TokenIcon } from '../TokenIcon';
 
-type ActiveTabs = 'sevenDaysTVL' | 'sevenWeeksTVL' | 'sevenMonthTVL' | 'oneYearTVL' | 'allTVL';
+type ActiveTabs = 'sevenDaysAPR' | 'sevenWeeksAPR' | 'sevenMonthAPR' | 'oneYearAPR' | 'allAPR';
 
-export function HistoricalTVL() {
-  const [activeTab, setActiveTab] = useState<ActiveTabs>('sevenDaysTVL');
+export function HistoricalAPR() {
+  const [activeTab, setActiveTab] = useState<ActiveTabs>('sevenDaysAPR');
   const { data } = useAprHistory();
-  const totalTVL = data?.allTVL && data.allTVL[data.allTVL?.length - 1].value;
-
+  const combinedAPR = data?.allAPR && data.allAPR[data.allAPR.length - 1].value;
   return (
     <Flex
       border="1px solid"
@@ -24,7 +22,7 @@ export function HistoricalTVL() {
     >
       <Flex justifyContent="space-between" alignItems="center" w="100%">
         <Text fontWeight={700} fontSize="20px" color="white">
-          TVL
+          APR
         </Text>
         <Tabs
           variant="soft-rounded"
@@ -33,15 +31,15 @@ export function HistoricalTVL() {
             setActiveTab(() => {
               switch (e) {
                 case 0:
-                  return 'sevenDaysTVL';
+                  return 'sevenDaysAPR';
                 case 1:
-                  return 'sevenWeeksTVL';
+                  return 'sevenWeeksAPR';
                 case 2:
-                  return 'sevenMonthTVL';
+                  return 'sevenMonthAPR';
                 case 3:
-                  return 'oneYearTVL';
+                  return 'oneYearAPR';
                 default:
-                  return 'allTVL';
+                  return 'allAPR';
               }
             });
           }}
@@ -65,27 +63,54 @@ export function HistoricalTVL() {
           </TabList>
         </Tabs>
       </Flex>
-      {data && data[activeTab]?.length && (
-        <AreaChart width={445} height={300} data={data[activeTab]}>
+      {!!data && data[activeTab] && (
+        <LineChart width={445} height={300} data={data[activeTab]}>
           <XAxis
-            axisLine={false}
-            tickLine={false}
             dataKey={(key) => {
               const now = new Date(key.timestamp);
               return `${now.getDate()}/${now.getMonth() + 1}`;
             }}
             color="#9999AC"
             fontSize="12px"
+            axisLine={false}
+            tickLine={false}
           />
-          <Tooltip content={<CustomizedToolTip activeTab={activeTab} totalTVL={totalTVL} />} />
+          <YAxis
+            type="number"
+            tickFormatter={(value) => `${value}%`}
+            includeHidden
+            allowDecimals={false}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip content={<CustomizedToolTip activeTab={activeTab} totalAPR={combinedAPR} />} />
+
           <Legend
             verticalAlign="top"
             align="left"
             iconType="circle"
             content={<CustomizedLegend />}
           />
-          <Area type="basis" dataKey="value" fillOpacity={1} fill="#319795" />
-        </AreaChart>
+
+          <Line
+            type="basis"
+            dataKey="value"
+            stroke="#00D1FF"
+            dot={{ stroke: '#00D1FF', strokeWidth: 2, fill: '#00D1FF' }}
+          />
+          <Line
+            type="basis"
+            dataKey="pnl"
+            stroke="#EE2EFF"
+            dot={{ stroke: '#EE2EFF', strokeWidth: 2, fill: '#EE2EFF' }}
+          />
+          <Line
+            type="basis"
+            dataKey="rewards"
+            stroke="#402FC8"
+            dot={{ stroke: '#402FC8', strokeWidth: 2, fill: '#402FC8' }}
+          />
+        </LineChart>
       )}
     </Flex>
   );
@@ -93,12 +118,24 @@ export function HistoricalTVL() {
 
 const CustomizedLegend = () => {
   return (
-    <Flex alignItems="center" gap="2">
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="#319795" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="4" cy="4" r="4" fill="#319795" />
+    <Flex alignItems="center" gap="2" mb="4">
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="#00D1FF" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="4" r="4" fill="#00D1FF" />
       </svg>
       <Text fontSize="12px" color="gray.500">
-        Total Value Locked
+        Total APR
+      </Text>
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="#402FC8" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="4" r="4" fill="#402FC8" />
+      </svg>
+      <Text fontSize="12px" color="gray.500">
+        APR Rewards
+      </Text>
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="#EE2EFF" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="4" r="4" fill="#EE2EFF" />
+      </svg>
+      <Text fontSize="12px" color="gray.500">
+        APR PnL
       </Text>
     </Flex>
   );
@@ -107,13 +144,13 @@ const CustomizedLegend = () => {
 const CustomizedToolTip = (props: any) => {
   const currentTVLLabel = () => {
     switch (props.activeTab) {
-      case 'sevenDaysTVL':
+      case 'sevenDaysAPR':
         return 'Daily';
-      case 'sevenWeeksTVL':
+      case 'sevenWeeksAPR':
         return 'Weekly';
-      case 'sevenMonthTVL':
+      case 'sevenMonthAPR':
         return 'Monhtly';
-      case 'oneYearTVL':
+      case 'oneYearAPR':
         return 'Yearly';
       default:
         return 'Total';
@@ -138,10 +175,10 @@ const CustomizedToolTip = (props: any) => {
       </Text>
       <Flex justifyContent="space-between">
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          Total TVL
+          Total APR
         </Text>
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {props.totalTVL && formatNumberToUsd(props.totalTVL, { maximumFractionDigits: 2 })}
+          {props.totalAPR && props.totalAPR.toFixed(2).concat('%')}
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -152,16 +189,16 @@ const CustomizedToolTip = (props: any) => {
           </Text>
         </Flex>
         <Text color="gray.500" fontSize="12px">
-          {props.totalTVL && formatNumberToUsd(props.totalTVL, { maximumFractionDigits: 2 })}
+          {props.totalAPR && props.totalAPR.toFixed(2).concat('%')}
         </Text>
       </Flex>
       <Divider />
       <Flex justifyContent="space-between">
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {currentTVLLabel()} TVL
+          {currentTVLLabel()} APR
         </Text>
         <Text color="gray.500" fontSize="12px" fontWeight={700}>
-          {formatNumberToUsd(props.payload[0].payload.value, { maximumFractionDigits: 2 })}
+          {props.payload[0].payload.value.toFixed(2).concat('%')}
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -172,7 +209,7 @@ const CustomizedToolTip = (props: any) => {
           </Text>
         </Flex>
         <Text color="gray.500" fontSize="12px">
-          {formatNumberToUsd(props.payload[0].payload.value, { maximumFractionDigits: 2 })}
+          {props.payload[0].payload.value.toFixed(2).concat('%')}
         </Text>
       </Flex>
     </Flex>

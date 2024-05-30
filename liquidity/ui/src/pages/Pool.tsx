@@ -5,6 +5,7 @@ import { usePool } from '@snx-v3/usePools';
 import { ArrowLeft } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { CollateralTable, HistoricalTVL, RewardsTable } from '../components';
+import { HistoricalAPR } from '../components/PoolStats/HistoricalAPR';
 
 export const Pool = () => {
   const params = useParams();
@@ -53,8 +54,9 @@ export const Pool = () => {
             <CollateralTable accountId={accountId} poolId={poolId!} />
             <RewardsTable accountId={accountId} poolId={poolId!} />
           </Flex>
-          <Flex flexDir="column" minW="500px">
-            <HistoricalTVL poolId={poolId!} />
+          <Flex flexDir="column" minW="500px" gap="2">
+            <HistoricalTVL />
+            <HistoricalAPR />
           </Flex>
         </Flex>
       </Flex>

@@ -6453,6 +6453,7 @@ __metadata:
     "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
+    "@snx-v3/useAprHistory": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useClearDebt": "workspace:*"
@@ -6796,6 +6797,16 @@ __metadata:
 "@snx-v3/useApr@workspace:*, @snx-v3/useApr@workspace:liquidity/lib/useApr":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApr@workspace:liquidity/lib/useApr"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useAprHistory@workspace:*, @snx-v3/useAprHistory@workspace:liquidity/lib/useAprHistory":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useAprHistory@workspace:liquidity/lib/useAprHistory"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
