@@ -92,24 +92,9 @@ export function HistoricalAPR() {
             content={<CustomizedLegend />}
           />
 
-          <Line
-            type="basis"
-            dataKey="value"
-            stroke="#00D1FF"
-            dot={{ stroke: '#00D1FF', strokeWidth: 2, fill: '#00D1FF' }}
-          />
-          <Line
-            type="basis"
-            dataKey="pnl"
-            stroke="#EE2EFF"
-            dot={{ stroke: '#EE2EFF', strokeWidth: 2, fill: '#EE2EFF' }}
-          />
-          <Line
-            type="basis"
-            dataKey="rewards"
-            stroke="#402FC8"
-            dot={{ stroke: '#402FC8', strokeWidth: 2, fill: '#402FC8' }}
-          />
+          <Line type="basis" dataKey="value" stroke="#00D1FF" dot={false} />
+          <Line type="basis" dataKey="pnl" stroke="#EE2EFF" dot={false} />
+          <Line type="basis" dataKey="rewards" stroke="#402FC8" dot={false} />
         </LineChart>
       )}
     </Flex>
