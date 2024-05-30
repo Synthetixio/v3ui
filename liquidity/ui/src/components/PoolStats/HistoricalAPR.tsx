@@ -118,7 +118,7 @@ const CustomizedLegend = ({
   return (
     <Flex gap="2" mb="4" flexDir="column">
       <Flex flexDir="column">
-        <Flex alignItems="center">
+        <Flex alignItems="center" gap="1">
           <svg
             width="8"
             height="8"
