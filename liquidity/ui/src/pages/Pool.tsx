@@ -49,7 +49,7 @@ export const Pool = () => {
             Borrow Interest-free
           </Tag>
         </Flex>
-        <Flex gap="2">
+        <Flex gap="2" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
           <Flex flexDir="column" gap="2">
             <CollateralTable accountId={accountId} poolId={poolId!} />
             <RewardsTable accountId={accountId} poolId={poolId!} />
