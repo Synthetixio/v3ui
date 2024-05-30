@@ -6462,7 +6462,6 @@ __metadata:
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetBorrow": "workspace:*"
-    "@snx-v3/useGetHistoricalTVL": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
@@ -7065,7 +7064,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetHistoricalTVL@workspace:*, @snx-v3/useGetHistoricalTVL@workspace:liquidity/lib/useGetHistoricalTVL":
+"@snx-v3/useGetHistoricalTVL@workspace:liquidity/lib/useGetHistoricalTVL":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetHistoricalTVL@workspace:liquidity/lib/useGetHistoricalTVL"
   dependencies:
