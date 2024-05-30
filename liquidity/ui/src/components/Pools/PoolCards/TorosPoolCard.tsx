@@ -62,7 +62,7 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
     [collateralTypes, collaterals, network?.id, network?.preset]
   );
 
-  if (!isCollateralFiltered || !network) {
+  if (!isCollateralFiltered) {
     return null;
   }
 

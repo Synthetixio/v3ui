@@ -67,10 +67,10 @@ export function usePools(customNetwork?: Network) {
 }
 
 export function usePool(poolId?: string, customNetwork?: Network) {
-  const { isLoading, error, data } = usePools(customNetwork);
+  const { isFetching, error, data } = usePools(customNetwork);
 
   return {
-    isLoading,
+    isLoading: isFetching,
     error,
     data: data?.find((item) => item.id === poolId),
   };

@@ -24,9 +24,12 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
   const [queryParams] = useSearchParams();
   const { data: apr, isLoading: isAprLoading } = useApr(network);
 
-  const { data: pool } = usePool(poolId.toString(), network);
+  const { data: pool, isLoading: isPoolLoading } = usePool(poolId.toString(), network);
   const { data: vaultDebt, isLoading: isVaultsLoading } = useVaultsData(poolId, network);
-  const { data: collateralTypes } = useCollateralTypes(false, network);
+  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes(
+    false,
+    network
+  );
   const { network: currentNetwork, setNetwork } = useNetwork();
 
   const vaultTVL = vaultDebt?.reduce((cur, prev) => {
@@ -51,13 +54,11 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
     [collateralTypes, collaterals, network.id, network.preset]
   );
 
-  console.log('isCollateralFiltered', isCollateralFiltered);
-
   if (!isCollateralFiltered) {
     return null;
   }
 
-  const isLoading = isAprLoading || isVaultsLoading;
+  const isLoading = isAprLoading || isVaultsLoading || isCollateralTypesLoading || isPoolLoading;
 
   return (
     <Flex
@@ -71,12 +72,17 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
     >
       <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
         <Flex flexDir="column" gap={1}>
-          <Heading fontSize="20px" fontWeight={700} color="white">
-            {pool?.name}
-          </Heading>
+          <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
+            <Heading fontSize="20px" fontWeight={700} color="white">
+              {/* Undefined value used for loading */}
+              {pool?.name || 'USDC Andromeda Yield'}
+            </Heading>
+          </Skeleton>
           <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
-            <NetworkIcon size="14px" networkId={network.id} />
-            {network.label} Network
+            <Skeleton isLoaded={!isLoading} startColor="whiteAlpha.500" endColor="whiteAlpha.200">
+              <NetworkIcon size="14px" networkId={network.id} mr={1} />
+              {network.label} Network
+            </Skeleton>
           </Flex>
         </Flex>
         <Flex flexWrap="wrap">
