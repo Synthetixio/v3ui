@@ -12,10 +12,10 @@ export function useApr(customNetwork?: Network) {
         const response = await fetch('https://api.synthetix.io/v3/base/sc-pool-apy');
 
         const data = await response.json();
-
         return {
           // 0 meaning not the right network
-          combinedApr: chain?.id === 8453 || chain?.id === 84532 ? data.aprCombined * 100 : 0,
+          combinedApr: network?.id === 8453 || network?.id === 84532 ? data.aprCombined * 100 : 0,
+          cumulativePnl: network?.id === 8453 || network?.id === 84532 ? data.cumulativePnl : 0,
         };
       } catch (error) {
         return;

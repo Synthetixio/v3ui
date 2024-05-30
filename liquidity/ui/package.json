@@ -47,11 +47,11 @@
     "@snx-v3/useEthBalance": "workspace:*",
     "@snx-v3/useGasSpeed": "workspace:*",
     "@snx-v3/useGetBorrow": "workspace:*",
+    "@snx-v3/useGetHistoricalTVL": "workspace:*",
     "@snx-v3/useGetUSDTokens": "workspace:*",
     "@snx-v3/useLiquidityPosition": "workspace:*",
     "@snx-v3/useLiquidityPositions": "workspace:*",
     "@snx-v3/useManagePermissions": "workspace:*",
-    "@snx-v3/useMarketNamesById": "workspace:*",
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/usePoolConfiguration": "workspace:*",
     "@snx-v3/usePoolData": "workspace:*",
@@ -84,6 +84,7 @@
     "react-i18next": "^13.4.1",
     "react-router-dom": "^6.18.0",
     "react-timer-hook": "^3.0.7",
+    "recharts": "^2.12.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {
