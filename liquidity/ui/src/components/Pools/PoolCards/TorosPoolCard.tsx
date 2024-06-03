@@ -1,10 +1,11 @@
-import { Flex, Heading, Tag, Text, Divider, Button, Link, Box } from '@chakra-ui/react';
+import { Flex, Heading, Tag, Text, Divider, Button, Link, Box, Fade } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
 import { compactInteger } from 'humanize-plus';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { PoolCardLoading } from './PoolCardLoading';
 
 export function TorosPoolCard() {
   const [stats, setStats] = useState({ tvl: '0', apy: 0, isLoading: true });
@@ -41,138 +42,142 @@ export function TorosPoolCard() {
     }
   }, [stats]);
 
+  if (stats.isLoading) return <PoolCardLoading />;
+
   return (
-    <Box bgGradient="linear(to-tr, green.700, cyan.800)" p="1px" rounded="base">
-      <Flex
-        flexDir="column"
-        border="1px solid"
-        borderColor="gray.900"
-        rounded="base"
-        bg="navy.700"
-        p="6"
-      >
-        <Flex w="100%" gap="2" alignItems="start" mb="4">
-          <Flex flexDirection="column" justifyContent="space-between">
-            <Heading fontSize="20px" fontWeight={700} color="white">
-              USDC Andromeda Yield
-            </Heading>
-            <Flex alignItems="center" gap="1">
-              <NetworkIcon networkId={8453} w="14px" height="14px" />
-              <Text color="gray.500" fontSize="12px">
-                Base Network
-              </Text>
+    <Fade in>
+      <Box bgGradient="linear(to-tr, green.700, cyan.800)" p="1px" rounded="base">
+        <Flex
+          flexDir="column"
+          border="1px solid"
+          borderColor="gray.900"
+          rounded="base"
+          bg="navy.700"
+          p="6"
+        >
+          <Flex w="100%" gap="2" alignItems="start" mb="4">
+            <Flex flexDirection="column" justifyContent="space-between">
+              <Heading fontSize="20px" fontWeight={700} color="white">
+                USDC Andromeda Yield
+              </Heading>
+              <Flex alignItems="center" gap="1">
+                <NetworkIcon networkId={8453} w="14px" height="14px" />
+                <Text color="gray.500" fontSize="12px">
+                  Base Network
+                </Text>
+              </Flex>
             </Flex>
-          </Flex>
 
-          <Tag
-            mt="2px"
-            size="sm"
-            bgGradient="linear(to-tr, green.700, cyan.800)"
-            mr="auto"
-            color="white"
-          >
-            Auto Compound
-          </Tag>
-
-          <Text fontSize="20px" fontWeight={700} color="gray.500">
-            TVL
-          </Text>
-          <Text fontSize="20px" fontWeight={700} color="white" mr="4">
-            ${stats.tvl}
-            <Tooltip
-              label={
-                <Flex flexDirection="column" alignItems="start">
-                  <Text fontWeight="bold" fontSize="14px">
-                    Total Value Locked:
-                  </Text>
-                  <Text textAlign="left" fontSize="14px">
-                    Is the total amount of assets locked as collateral on this Pool.
-                  </Text>
-                  <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                </Flex>
-              }
-            >
-              <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
-            </Tooltip>
-          </Text>
-          <Text fontSize="20px" fontWeight={700} color="gray.500">
-            APY
-          </Text>
-          <Text fontSize="20px" fontWeight={700} color="white">
-            Up to {stats.apy}%
-            <Tooltip
-              label={
-                <Flex flexDirection="column" alignItems="start">
-                  <Text fontWeight="bold" fontSize="14px">
-                    Annual Percentage Yield (APY):
-                  </Text>
-                  <Text textAlign="left" fontSize="14px">
-                    Reflects the Pool PNL. It is calculated as an estimate derived from past week
-                    historical PNL, extrapolated as a year average.
-                  </Text>
-                  <Text fontWeight="bold" mt={2} fontSize="14px">
-                    Calculation
-                  </Text>
-                  <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                </Flex>
-              }
-            >
-              <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
-            </Tooltip>
-          </Text>
-        </Flex>
-        <Divider />
-        <Flex alignItems="center" mt="4" gap="4">
-          <Flex alignItems="center">
-            <CollateralIcon width="26px" height="26px" symbol="USDC" />
-            <Flex flexDirection="column" ml={3} mr="auto">
-              <Text
-                fontSize="14px"
-                color="white"
-                fontWeight={700}
-                lineHeight="1.25rem"
-                fontFamily="heading"
-              >
-                USDC
-              </Text>
-              <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                USDC
-              </Text>
-            </Flex>
-          </Flex>
-          <Link
-            href="https://toros.finance/synthetix-usdc-andromeda-yield"
-            rel="noopener"
-            target="_blank"
-            _hover={{ textDecoration: 'none' }}
-            mr="auto"
-          >
-            <Button
+            <Tag
+              mt="2px"
               size="sm"
-              variant="unstyled"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-              height="1.75rem"
-              px={4}
-              fontWeight={700}
-              borderWidth="1px"
-              borderColor="gray.900"
-              borderRadius="4px"
-              _hover={{ bg: 'gray.900' }}
-              display="flex"
-              gap="2"
+              bgGradient="linear(to-tr, green.700, cyan.800)"
+              mr="auto"
+              color="white"
             >
-              Deposit on Toros
-              <LinkOffIcon />
-            </Button>
-          </Link>
-          <Text fontSize="16px" color="gray.500">
-            by
-          </Text>
-          <TorosIcon />
+              Auto Compound
+            </Tag>
+
+            <Text fontSize="20px" fontWeight={700} color="gray.500">
+              TVL
+            </Text>
+            <Text fontSize="20px" fontWeight={700} color="white" mr="4">
+              ${stats.tvl}
+              <Tooltip
+                label={
+                  <Flex flexDirection="column" alignItems="start">
+                    <Text fontWeight="bold" fontSize="14px">
+                      Total Value Locked:
+                    </Text>
+                    <Text textAlign="left" fontSize="14px">
+                      Is the total amount of assets locked as collateral on this Pool.
+                    </Text>
+                    <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
+                  </Flex>
+                }
+              >
+                <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
+              </Tooltip>
+            </Text>
+            <Text fontSize="20px" fontWeight={700} color="gray.500">
+              APY
+            </Text>
+            <Text fontSize="20px" fontWeight={700} color="white">
+              Up to {stats.apy}%
+              <Tooltip
+                label={
+                  <Flex flexDirection="column" alignItems="start">
+                    <Text fontWeight="bold" fontSize="14px">
+                      Annual Percentage Yield (APY):
+                    </Text>
+                    <Text textAlign="left" fontSize="14px">
+                      Reflects the Pool PNL. It is calculated as an estimate derived from past week
+                      historical PNL, extrapolated as a year average.
+                    </Text>
+                    <Text fontWeight="bold" mt={2} fontSize="14px">
+                      Calculation
+                    </Text>
+                    <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
+                  </Flex>
+                }
+              >
+                <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
+              </Tooltip>
+            </Text>
+          </Flex>
+          <Divider />
+          <Flex alignItems="center" mt="4" gap="4">
+            <Flex alignItems="center">
+              <CollateralIcon width="26px" height="26px" symbol="USDC" />
+              <Flex flexDirection="column" ml={3} mr="auto">
+                <Text
+                  fontSize="14px"
+                  color="white"
+                  fontWeight={700}
+                  lineHeight="1.25rem"
+                  fontFamily="heading"
+                >
+                  USDC
+                </Text>
+                <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
+                  USDC
+                </Text>
+              </Flex>
+            </Flex>
+            <Link
+              href="https://toros.finance/synthetix-usdc-andromeda-yield"
+              rel="noopener"
+              target="_blank"
+              _hover={{ textDecoration: 'none' }}
+              mr="auto"
+            >
+              <Button
+                size="sm"
+                variant="unstyled"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                px={4}
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                _hover={{ bg: 'gray.900' }}
+                display="flex"
+                gap="2"
+              >
+                Deposit on Toros
+                <LinkOffIcon />
+              </Button>
+            </Link>
+            <Text fontSize="16px" color="gray.500">
+              by
+            </Text>
+            <TorosIcon />
+          </Flex>
         </Flex>
-      </Flex>
-    </Box>
+      </Box>
+    </Fade>
   );
 }
 
