@@ -14,15 +14,11 @@ export function Main() {
     <Flex flexDir="column" mt="8" width="100%" maxW="1200px">
       <Flex justifyContent="space-between" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
         <Flex flexDir="column">
-          <Heading
-            fontSize={{ medium: '30px', base: '48px', xl: '72px' }}
-            fontWeight={700}
-            color="white"
-          >
-            ultrasound.homes
+          <Heading fontSize={{ base: '48px', xl: '72px' }} fontWeight={700} color="white">
+            ultrasoundsnx.money
           </Heading>
           <Heading fontSize="30px" fontWeight={700} color="white">
-            burning SNX for Kain&apos;s mansions
+            Zero inflation, infinite burn: Perps fuel SNX deflation
           </Heading>
         </Flex>
         <Flex alignItems="center" mt={{ base: 10, xl: 0 }}>
