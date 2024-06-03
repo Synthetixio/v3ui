@@ -10,11 +10,15 @@ export const ONBOARD_KEY = 'sec_jykTuCK0ZuqXWf3wNYqizxs2';
 export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
   switch (networkName) {
     case 'arbitrum':
-      return `https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-arbitrum-mainnet/version/v1/api`;
+      return `https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-arbitrum-mainnet/api`;
     case 'base-sepolia':
-      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-sepolia-andromeda/version/v1.1/api';
+      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-sepolia-andromeda/api';
     case 'base':
-      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-mainnet-andromeda/version/v1.1/api';
+      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-base-mainnet-andromeda/api';
+    case 'optimism-mainnet':
+      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-optimism-mainnet/api';
+    case 'mainnet':
+      return 'https://subgraph.satsuma-prod.com/ce5e03f52f3b/synthetix/synthetix-mainnet/api';
     default:
       return `https://api.thegraph.com/subgraphs/name/snx-v3/${networkName}`;
   }
