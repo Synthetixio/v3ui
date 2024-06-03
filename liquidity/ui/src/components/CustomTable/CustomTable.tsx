@@ -12,14 +12,19 @@ export function CustomTable({ headerColumns, rows, loadingState }: TableProps) {
   const loadingRows = Array(loadingState.numberOfRows).fill(1, 0);
 
   return (
-    <TableContainer>
-      <Table
-        variant="simple"
-        bg="navy.700"
-        border="1px solid"
-        borderColor="gray.900"
-        rounded="base"
-      >
+    <TableContainer
+      maxW="100%"
+      borderColor="gray.900"
+      borderWidth="1px"
+      borderRadius="5px"
+      p={6}
+      sx={{
+        borderCollapse: 'separate !important',
+        borderSpacing: 0,
+      }}
+      bg="navy.700"
+    >
+      <Table variant="simple">
         <Thead>
           {loadingState.isLoading ? (
             <Tr borderBottomWidth="none">
