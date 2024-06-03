@@ -1,11 +1,11 @@
 {
-  "name": "@snx-v3/ultrasound-homes",
+  "name": "@snx-v3/ultrasound",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
-    "focus": "yarn workspaces focus '@snx-v3/ultrasound-homes'"
+    "focus": "yarn workspaces focus '@snx-v3/ultrasound'"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
