@@ -1,8 +1,20 @@
 import { Helmet } from 'react-helmet';
 import { Flex, Heading } from '@chakra-ui/react';
 import Permissions from '../../components/Permissions/Permissions';
+import { useIsConnected } from '@snx-v3/useBlockchain';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export function Settings() {
+  const navigate = useNavigate();
+  const isConnected = useIsConnected();
+
+  useEffect(() => {
+    if (!isConnected) {
+      navigate('/');
+    }
+  }, [isConnected, navigate]);
+
   return (
     <>
       <Helmet>

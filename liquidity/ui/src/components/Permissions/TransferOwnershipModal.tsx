@@ -39,7 +39,7 @@ export function TransferOwnershipModal({
         <ModalCloseButton />
         <ModalBody>
           <Divider />
-          <Text fontSize="14px" fontWeight={700} mt="2">
+          <Text fontSize="18px" fontWeight={700} mt="4">
             Account #{prettyString(accountId, 4, 4)}
           </Text>
           <Text fontSize="14px" color="white" mt="2">

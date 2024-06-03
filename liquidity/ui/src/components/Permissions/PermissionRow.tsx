@@ -1,9 +1,10 @@
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import { Badge, Td, Tr, Text, Button, Flex, IconButton } from '@chakra-ui/react';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { permissionsList } from './AccountPermissions';
+import { Badge, Td, Tr, Text, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
+import { FC, useEffect } from 'react';
 import { useManagePermissions } from '@snx-v3/useManagePermissions';
 import { Address } from '../Address';
+import { PermissionModal } from './PermissionModal';
+import { permissionsList } from './AccountPermissions';
 
 interface Props {
   address: string;
@@ -20,125 +21,72 @@ export const PermissionRow: FC<Props> = ({
   refetch,
   isOwner,
 }) => {
-  const [isEdit, setIsEdit] = useState(false);
-  const [permissions, setPermissions] = useState<string[]>([...currentPermissions]);
+  const {
+    isOpen: isPermissionOpen,
+    onClose: onPermissionClose,
+    onOpen: onPermissionOpen,
+  } = useDisclosure();
 
   const {
-    mutate: submit,
+    mutate: removePermissions,
     isPending,
     isSuccess,
   } = useManagePermissions({
     accountId,
     target: address,
-    selected: permissions,
+    selected: [],
     existing: currentPermissions,
   });
 
   useEffect(() => {
     if (isSuccess) {
       refetch();
-      setIsEdit(false);
+      onPermissionClose();
     }
-  }, [isSuccess, refetch]);
-
-  const selectPermission = useCallback(
-    (permission: string) => {
-      const index = permissions.findIndex((p) => p === permission);
-      if (index < 0) {
-        setPermissions([...permissions, permission]);
-      } else {
-        const list = [...permissions];
-        list.splice(index, 1);
-        setPermissions(list);
-      }
-    },
-    [permissions]
-  );
-
-  if (isEdit) {
-    return (
-      <Tr>
-        <Td borderBottomColor="gray.900" py="4" width="200px">
-          <Text fontWeight={400} color="white" fontSize="16px">
-            <Address address={address} />
-          </Text>
-        </Td>
-        <Td borderBottomColor="gray.900">
-          <Flex py={2} flexWrap="wrap" gap={3}>
-            {permissionsList.map((permission) => (
-              <Badge
-                cursor="pointer"
-                onClick={() => selectPermission(permission)}
-                colorScheme={permissions.includes(permission) ? 'cyan' : 'gray'}
-                color={permissions.includes(permission) ? 'cyan' : 'gray'}
-                variant="outline"
-                bg={permissions.includes(permission) ? 'cyan.900' : 'gray.900'}
-                size="md"
-                textTransform="capitalize"
-                key={permission.concat('permission-row')}
-              >
-                {permission}
-              </Badge>
-            ))}
-          </Flex>
-        </Td>
-        <Td borderBottomColor="gray.900" textAlign="end">
-          <Button
-            onClick={() => submit()}
-            isLoading={isPending}
-            size="xs"
-            variant="outline"
-            colorScheme="gray"
-            color="white"
-            mr="2"
-          >
-            Save
-          </Button>
-          <Button
-            onClick={() => setIsEdit(false)}
-            size="xs"
-            variant="outline"
-            colorScheme="gray"
-            color="white"
-          >
-            Cancel
-          </Button>
-        </Td>
-      </Tr>
-    );
-  }
+  }, [isSuccess, onPermissionClose, refetch]);
 
   return (
     <Tr>
-      <Td borderBottomColor="gray.900" py="4" width="200px">
+      <Td width={240} borderBottomColor="gray.900" py="4">
         <Text fontWeight={400} color="white" fontSize="16px">
           <Address address={address} />
         </Text>
       </Td>
       <Td borderBottomColor="gray.900">
         <Flex py={2} flexWrap="wrap" gap={3}>
-          {currentPermissions.map((r) => (
-            <Badge
-              color="cyan"
-              variant="outline"
-              bg="cyan.900"
-              size="sm"
-              textTransform="capitalize"
-              key={r.concat('permission-row')}
-            >
-              {r}
-            </Badge>
-          ))}
+          {permissionsList.map((permission) => {
+            const isActive =
+              currentPermissions.includes(permission) || currentPermissions.includes('ADMIN');
+            return (
+              <Badge
+                color={isActive ? 'cyan' : 'gray'}
+                colorScheme={isActive ? 'cyan' : 'gray'}
+                variant="outline"
+                bg={isActive ? 'cyan.900' : 'gray.900'}
+                size="sm"
+                textTransform="capitalize"
+                key={permission.concat('permission-row')}
+              >
+                {permission}
+              </Badge>
+            );
+          })}
         </Flex>
       </Td>
+
       <Td borderBottomColor="gray.900" textAlign="end">
         {isOwner && (
           <>
+            <PermissionModal
+              isOpen={isPermissionOpen}
+              onClose={onPermissionClose}
+              accountId={accountId}
+              refetch={refetch}
+              existingPermissions={currentPermissions}
+              target={address}
+            />
             <IconButton
-              onClick={() => {
-                setPermissions([...currentPermissions]);
-                setIsEdit(true);
-              }}
+              onClick={onPermissionOpen}
               size="sm"
               aria-label="edit"
               variant="outline"
@@ -151,8 +99,7 @@ export const PermissionRow: FC<Props> = ({
               isLoading={isPending}
               colorScheme="gray"
               onClick={() => {
-                setPermissions([]);
-                submit();
+                removePermissions();
               }}
               size="sm"
               aria-label="delete"
