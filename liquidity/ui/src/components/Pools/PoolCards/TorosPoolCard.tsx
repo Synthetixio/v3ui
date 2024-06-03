@@ -1,16 +1,13 @@
-import { Flex, Heading, Tag, Text, Divider, Tooltip, Button, Link, Box } from '@chakra-ui/react';
+import { Flex, Heading, Tag, Text, Divider, Button, Link, Box } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
 import { compactInteger } from 'humanize-plus';
-import { PoolCardProps } from './PoolCard';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Tooltip } from '@snx-v3/Tooltip';
 
-export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
+export function TorosPoolCard() {
   const [stats, setStats] = useState({ tvl: '0', apy: 0, isLoading: true });
-  const { data: collateralTypes } = useCollateralTypes(false, network);
 
   useEffect(() => {
     if (!stats.apy) {
@@ -44,28 +41,6 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
     }
   }, [stats]);
 
-  const isCollateralFiltered = useMemo(
-    () =>
-      collateralTypes?.some((collateralType) =>
-        collaterals.length
-          ? !!collaterals.find((collateral) => {
-              if (
-                isBaseAndromeda(network.id, network.preset) &&
-                collateralType.symbol.toUpperCase() === 'SUSDC'
-              ) {
-                return collateral.toUpperCase() === 'USDC';
-              }
-              return collateral.toUpperCase() === collateralType.symbol.toUpperCase();
-            })
-          : true
-      ),
-    [collateralTypes, collaterals, network?.id, network?.preset]
-  );
-
-  if (!isCollateralFiltered) {
-    return null;
-  }
-
   return (
     <Box bgGradient="linear(to-tr, green.700, cyan.800)" p="1px" rounded="base">
       <Flex
@@ -77,7 +52,7 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
         p="6"
       >
         <Flex w="100%" gap="2" alignItems="start" mb="4">
-          <Flex flexDirection="column">
+          <Flex flexDirection="column" justifyContent="space-between">
             <Heading fontSize="20px" fontWeight={700} color="white">
               USDC Andromeda Yield
             </Heading>
@@ -88,11 +63,22 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
               </Text>
             </Flex>
           </Flex>
-          <Tag size="sm" bgGradient="linear(to-tr, green.700, cyan.800)" mr="auto" color="white">
+
+          <Tag
+            mt="2px"
+            size="sm"
+            bgGradient="linear(to-tr, green.700, cyan.800)"
+            mr="auto"
+            color="white"
+          >
             Auto Compound
           </Tag>
+
           <Text fontSize="20px" fontWeight={700} color="gray.500">
             TVL
+          </Text>
+          <Text fontSize="20px" fontWeight={700} color="white" mr="4">
+            ${stats.tvl}
             <Tooltip
               label={
                 <Flex flexDirection="column" alignItems="start">
@@ -109,11 +95,11 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
               <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
             </Tooltip>
           </Text>
-          <Text fontSize="20px" fontWeight={700} color="white" mr="4">
-            ${stats.tvl}
-          </Text>
           <Text fontSize="20px" fontWeight={700} color="gray.500">
             APY
+          </Text>
+          <Text fontSize="20px" fontWeight={700} color="white">
+            Up to {stats.apy}%
             <Tooltip
               label={
                 <Flex flexDirection="column" alignItems="start">
@@ -133,9 +119,6 @@ export function TorosPoolCard({ network, collaterals }: PoolCardProps) {
             >
               <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
             </Tooltip>
-          </Text>
-          <Text fontSize="20px" fontWeight={700} color="white">
-            Up to {stats.apy}%
           </Text>
         </Flex>
         <Divider />

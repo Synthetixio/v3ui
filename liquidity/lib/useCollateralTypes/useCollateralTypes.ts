@@ -150,6 +150,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
 
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
+
       return collateralTypes.filter((collateralType) =>
         collateralType.minDelegationD18.lt(constants.MaxUint256)
       ) as CollateralType[];

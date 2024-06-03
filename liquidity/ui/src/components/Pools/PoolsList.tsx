@@ -15,6 +15,12 @@ export const PoolsList = () => {
     );
   }, [state.chain]);
 
+  const { collateral, chain } = state;
+
+  const showToros =
+    (chain.length === 0 || chain.includes(8453)) &&
+    (collateral.length === 0 || collateral.includes('USDC'));
+
   return (
     <Flex mt={6} flexDirection="column">
       <Heading fontWeight={700} fontSize={24}>
@@ -25,7 +31,7 @@ export const PoolsList = () => {
         <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
       <Flex direction="column" gap={4}>
-        <TorosPoolCard />
+        {showToros && <TorosPoolCard />}
         {filteredChains.map((chain) => (
           <PoolCard key={chain.id} poolId={1} network={chain} collaterals={state.collateral} />
         ))}

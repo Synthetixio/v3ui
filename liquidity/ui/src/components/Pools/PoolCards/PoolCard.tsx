@@ -54,11 +54,11 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
     [collateralTypes, collaterals, network.id, network.preset]
   );
 
-  if (!isCollateralFiltered) {
+  const isLoading = isAprLoading || isVaultsLoading || isCollateralTypesLoading || isPoolLoading;
+
+  if (!isCollateralFiltered && !isLoading) {
     return null;
   }
-
-  const isLoading = isAprLoading || isVaultsLoading || isCollateralTypesLoading || isPoolLoading;
 
   return (
     <Flex
