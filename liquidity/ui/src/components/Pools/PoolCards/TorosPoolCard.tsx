@@ -1,49 +1,15 @@
 import { Flex, Heading, Tag, Text, Divider, Button, Link, Box, Fade } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
-import { useEffect, useState } from 'react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
-import { compactInteger } from 'humanize-plus';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { PoolCardLoading } from './PoolCardLoading';
 
-export function TorosPoolCard() {
-  const [stats, setStats] = useState({ tvl: '0', apy: 0, isLoading: true });
+interface TorosPoolCardProps {
+  tvl: string;
+  apy: number;
+}
 
-  useEffect(() => {
-    if (!stats.apy) {
-      fetch('https://api-v2.dhedge.org/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-          query GetFund($address: String!) {
-              fund(address: $address) {
-                totalValue
-                apy {
-                  monthly
-                  weekly
-                }
-              }
-            }`,
-          variables: { address: '0xc1e02884af4a283ca25ab63c45360d220d69da52' },
-        }),
-      })
-        .then((response) => response.json())
-        .then(({ data }) => {
-          setStats({
-            tvl: compactInteger(data.fund.totalValue / 1e18, 1),
-            apy: data.fund.apy.monthly,
-            isLoading: false,
-          });
-        });
-    }
-  }, [stats]);
-
-  if (stats.isLoading) return <PoolCardLoading />;
-
+export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
   return (
     <Fade in>
       <Box bgGradient="linear(to-tr, green.700, cyan.800)" p="1px" rounded="base">
@@ -67,7 +33,6 @@ export function TorosPoolCard() {
                 </Text>
               </Flex>
             </Flex>
-
             <Tag
               mt="2px"
               size="sm"
@@ -82,7 +47,7 @@ export function TorosPoolCard() {
               TVL
             </Text>
             <Text fontSize="20px" fontWeight={700} color="white" mr="4">
-              ${stats.tvl}
+              ${tvl}
               <Tooltip
                 label={
                   <Flex flexDirection="column" alignItems="start">
@@ -103,7 +68,7 @@ export function TorosPoolCard() {
               APY
             </Text>
             <Text fontSize="20px" fontWeight={700} color="white">
-              Up to {stats.apy}%
+              Up to {apy}%
               <Tooltip
                 label={
                   <Flex flexDirection="column" alignItems="start">

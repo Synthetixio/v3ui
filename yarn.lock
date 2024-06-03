@@ -6470,6 +6470,7 @@ __metadata:
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/usePoolsList": "workspace:^"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -7221,6 +7222,18 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/v3-contracts": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+    zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/usePoolsList@workspace:^, @snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList"
+  dependencies:
+    "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"

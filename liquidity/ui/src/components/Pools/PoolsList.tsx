@@ -1,19 +1,13 @@
-import { useMemo, useReducer } from 'react';
+import { useReducer } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
-import { networks } from '../../utils/onboard';
 import { TorosPoolCard } from './PoolCards/TorosPoolCard';
-
-const supportedChains = networks.filter((network) => !network.isTestnet);
+import { usePoolsList } from '@snx-v3/usePoolsList';
+import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
-
-  const filteredChains = useMemo(() => {
-    return supportedChains.filter((chain) =>
-      state.chain.length ? state.chain.includes(chain.id) : true
-    );
-  }, [state.chain]);
+  const { data, isLoading } = usePoolsList();
 
   const { collateral, chain } = state;
 
@@ -31,10 +25,28 @@ export const PoolsList = () => {
         <CollateralFilter activeCollateral={state.collateral} dispatch={dispatch} />
       </Flex>
       <Flex direction="column" gap={4}>
-        {showToros && <TorosPoolCard />}
-        {filteredChains.map((chain) => (
-          <PoolCard key={chain.id} poolId={1} network={chain} collaterals={state.collateral} />
-        ))}
+        {isLoading && <PoolCardsLoading />}
+        {!isLoading && showToros && (
+          <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} />
+        )}
+        {!isLoading &&
+          data?.synthetixPools.map(({ network, poolInfo, apr }) => {
+            const collateralTypes = poolInfo.map((info) => info.collateral_type);
+            const pool = poolInfo[0].pool;
+
+            if (chain.length > 0 && !chain.includes(network.id)) return null;
+
+            return (
+              <PoolCard
+                key={network.hexId}
+                collateralTypes={collateralTypes}
+                apr={apr}
+                network={network}
+                pool={pool}
+                collaterals={collateral}
+              />
+            );
+          })}
       </Flex>
     </Flex>
   );

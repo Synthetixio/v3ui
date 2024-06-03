@@ -1,0 +1,9 @@
+{
+  "name": "@snx-v3/usePoolsList",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.2",
+  "dependencies": {
+    "@tanstack/react-query": "^5.8.3"
+  }
+}

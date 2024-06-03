@@ -1,49 +1,44 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import {
-  Flex,
-  Button,
-  Text,
-  Divider,
-  Heading,
-  Skeleton,
-  SkeletonCircle,
-  Fade,
-} from '@chakra-ui/react';
+import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/react';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
-import { useApr } from '@snx-v3/useApr';
-import { useVaultsData } from '@snx-v3/useVaultsData';
-import { usePool } from '@snx-v3/usePools';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useMemo } from 'react';
-import { PoolCardLoading } from './PoolCardLoading';
+import { wei } from '@synthetixio/wei';
 
 export interface PoolCardProps {
-  poolId: number;
+  pool: {
+    name: string;
+    id: string;
+  };
   network: Network;
   collaterals: string[];
+  collateralTypes: {
+    oracle_node_id: string;
+    name: string;
+    decimals: number;
+    symbol: string;
+    total_amount_deposited: string;
+  }[];
+  apr: {
+    combinedApr: number;
+    cumulativePnl: number;
+  };
 }
 
-export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
+export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
-  const { data: apr, isLoading: isAprLoading } = useApr(network);
 
-  const { data: pool, isLoading: isPoolLoading } = usePool(poolId.toString(), network);
-  const { data: vaultDebt, isLoading: isVaultsLoading } = useVaultsData(poolId, network);
-  const { data: collateralTypes, isLoading: isCollateralTypesLoading } = useCollateralTypes(
-    false,
-    network
-  );
   const { network: currentNetwork, setNetwork } = useNetwork();
 
-  const vaultTVL = vaultDebt?.reduce((cur, prev) => {
-    return cur.add(prev.collateral.value);
+  const vaultTVL = collateralTypes.reduce((acc, type) => {
+    const amount = wei(type.total_amount_deposited, type.decimals, true);
+    return acc.add(amount);
   }, ZEROWEI);
 
   const isCollateralFiltered = useMemo(
@@ -64,13 +59,9 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
     [collateralTypes, collaterals, network.id, network.preset]
   );
 
-  const isLoading = isAprLoading || isVaultsLoading || isCollateralTypesLoading || isPoolLoading;
-
-  if (!isCollateralFiltered && !isLoading) {
+  if (!isCollateralFiltered) {
     return null;
   }
-
-  if (isLoading) return <PoolCardLoading />;
 
   return (
     <Fade in>
@@ -82,75 +73,74 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
         rounded="base"
         bg="navy.700"
         p="6"
+        _hover={{ cursor: 'pointer' }}
+        onClick={() => {
+          navigate(`/pools/${pool.id}`);
+        }}
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
-          <Flex flexDir="column" gap={1}>
-            <Skeleton
-              isLoaded={!isLoading}
-              startColor="whiteAlpha.500"
-              endColor="whiteAlpha.200"
-              borderRadius={4}
-            >
+          <Flex>
+            <Flex flexDir="column" gap={1}>
               <Heading fontSize="20px" fontWeight={700} color="white">
-                {/* Undefined value used for loading */}
-                {pool?.name || 'USDC Andromeda Yield'}
+                {pool?.name}
               </Heading>
-            </Skeleton>
-            <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
-              <Skeleton
-                borderRadius={4}
-                isLoaded={!isLoading}
-                startColor="whiteAlpha.500"
-                endColor="whiteAlpha.200"
-              >
+              <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
                 <NetworkIcon size="14px" networkId={network.id} mr={1} />
                 {network.label} Network
-              </Skeleton>
+              </Flex>
             </Flex>
+            {[1, 42161].includes(network.id) && (
+              <Tag
+                ml={2}
+                mt="2px"
+                size="sm"
+                bg="purple.500"
+                mr="auto"
+                color="white"
+                height="fit-content"
+              >
+                Borrow Interest-Free
+              </Tag>
+            )}
           </Flex>
           <Flex flexWrap="wrap">
-            <Skeleton
-              borderRadius={4}
-              isLoaded={!isLoading}
-              startColor="whiteAlpha.500"
-              endColor="whiteAlpha.200"
-              as={Flex}
-            >
-              <Flex alignItems="center" mr={6} gap={2}>
-                <Text fontSize="20px" fontWeight="bold" color="gray.500">
-                  TVL
-                  <Tooltip
-                    label={
-                      <Flex flexDirection="column" alignItems="start">
-                        <Text fontWeight="bold" fontSize="14px">
-                          Total Value Locked:
-                        </Text>
-                        <Text textAlign="left" fontSize="14px">
-                          Is the total amount of assets locked as collateral on this Pool.
-                        </Text>
-                        <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                      </Flex>
-                    }
-                  >
-                    <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
-                  </Tooltip>
-                </Text>
-                <Text
-                  fontWeight="bold"
-                  fontSize="20px"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  lineHeight="36px"
+            <Flex alignItems="center" mr={6} gap={2}>
+              <Text fontSize="20px" fontWeight="bold" color="gray.500">
+                TVL
+              </Text>
+              <Text
+                fontWeight="bold"
+                fontSize="20px"
+                color="white"
+                display="flex"
+                alignItems="center"
+                lineHeight="36px"
+              >
+                {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
+                <Tooltip
+                  label={
+                    <Flex flexDirection="column" alignItems="start">
+                      <Text fontWeight="bold" fontSize="14px">
+                        Total Value Locked:
+                      </Text>
+                      <Text textAlign="left" fontSize="14px">
+                        Is the total amount of assets locked as collateral on this Pool.
+                      </Text>
+                      <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
+                    </Flex>
+                  }
                 >
-                  {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
-                  {/* For sizing the skeleton */}
-                  {isLoading && '100M'}
-                </Text>
-              </Flex>
-              <Flex alignItems="center" gap={2}>
-                <Text fontSize="20px" fontWeight="bold" color="gray.500">
-                  APR
+                  <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
+                </Tooltip>
+              </Text>
+            </Flex>
+            <Flex alignItems="center" gap={2}>
+              <Text fontSize="20px" fontWeight="bold" color="gray.500">
+                APR
+              </Text>
+              <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
+                {apr.combinedApr > 0 ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
+                {apr.combinedApr > 0 && (
                   <Tooltip
                     label={
                       <Flex flexDirection="column" alignItems="start">
@@ -170,97 +160,66 @@ export const PoolCard = ({ poolId, network, collaterals }: PoolCardProps) => {
                   >
                     <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
                   </Tooltip>
-                </Text>
-                <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-                  {!!apr ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
-                  {/* For sizing the skeleton */}
-                  {isAprLoading && '42%'}
-                </Text>
-              </Flex>
-            </Skeleton>
+                )}
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
         <Divider mt="18px" mb="10px" />
-        <Flex justifyContent="space-between">
-          {isLoading &&
-            [1, 2, 3, 4, 5].map((i) => (
-              <Flex key={i} alignItems="center">
-                <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" mr={3} />
-                <Skeleton
-                  height="25px"
-                  width="80px"
-                  startColor="whiteAlpha.500"
-                  endColor="whiteAlpha.200"
-                  borderRadius={4}
-                />
-              </Flex>
-            ))}
-        </Flex>
         <Flex flexWrap="wrap" gap={6}>
-          {!isLoading &&
-            collateralTypes?.map((type) => (
-              <Flex alignItems="center" key={type.tokenAddress} gap={4} mt={3}>
-                <Flex alignItems="center">
-                  <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
-                  <Flex flexDirection="column" ml={3} mr="auto">
-                    <Text
-                      fontSize="14px"
-                      color="white"
-                      fontWeight={700}
-                      lineHeight="1.25rem"
-                      fontFamily="heading"
-                    >
-                      {type.symbol}
-                    </Text>
-                    <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                      {type.displaySymbol}
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Tooltip
-                  label={
-                    <Flex flexDirection="column" alignItems="start">
-                      <Text fontWeight="bold" fontSize="14px">
-                        Deposit:
-                      </Text>
-                      <Text textAlign="left" fontSize="14px">
-                        Add assets from your Synthetix Account to this Pool Position.
-                      </Text>
-                    </Flex>
-                  }
-                >
-                  <Button
-                    size="sm"
-                    onClick={async () => {
-                      try {
-                        if (currentNetwork?.id !== network.id) {
-                          if (!(await setNetwork(network.id))) {
-                            return;
-                          }
-                        }
-                        queryParams.set('manageAction', 'deposit');
-                        navigate({
-                          pathname: `/positions/${type.symbol}/${poolId}`,
-                          search: queryParams.toString(),
-                        });
-                      } catch (error) {}
-                    }}
-                    variant="unstyled"
-                    fontSize="0.75rem"
-                    lineHeight="1rem"
-                    height="1.75rem"
-                    px={4}
+          {collateralTypes?.map((type) => (
+            <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
+              <Flex alignItems="center">
+                <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
+                <Flex flexDirection="column" ml={3} mr="auto">
+                  <Text
+                    fontSize="14px"
+                    color="white"
                     fontWeight={700}
-                    borderWidth="1px"
-                    borderColor="gray.900"
-                    borderRadius="4px"
-                    _hover={{ bg: 'gray.900' }}
+                    lineHeight="1.25rem"
+                    fontFamily="heading"
                   >
-                    Deposit
-                  </Button>
-                </Tooltip>
+                    {type.symbol}
+                  </Text>
+                  <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
+                    {type.symbol}
+                  </Text>
+                </Flex>
               </Flex>
-            ))}
+              <Button
+                size="sm"
+                onClick={async (e) => {
+                  try {
+                    e.preventDefault();
+                    if (currentNetwork?.id !== network.id) {
+                      if (!(await setNetwork(network.id))) {
+                        return;
+                      }
+                    }
+                    queryParams.set('manageAction', 'deposit');
+                    navigate({
+                      pathname: `/positions/${type.symbol}/${pool.id}`,
+                      search: queryParams.toString(),
+                    });
+                  } catch (error) {}
+                }}
+                variant="outline"
+                colorScheme="gray"
+                height="32px"
+                py="10px"
+                px="12px"
+                whiteSpace="nowrap"
+                borderRadius="4px"
+                color="white"
+                fontFamily="heading"
+                fontWeight={700}
+                fontSize="14px"
+                lineHeight="20px"
+              >
+                Deposit
+              </Button>
+            </Flex>
+          ))}
         </Flex>
       </Flex>
     </Fade>
