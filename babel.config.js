@@ -18,7 +18,7 @@ module.exports = {
           {
             root: ['.'],
             alias: {
-              '@synthetixio/v3-contracts/build': './contracts/src',
+              '@snx-v3/contracts/build': './contracts/src',
               '@synthetixio/v3-theme': './theme/src',
             },
           },

@@ -143,8 +143,8 @@ module.exports = {
 
     .concat([
       new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-contracts$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
+        new RegExp(`^@snx-v3/contracts$`),
+        path.resolve(path.dirname(require.resolve(`@snx-v3/contracts/package.json`)), 'src')
       ),
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
@@ -184,7 +184,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
+      '@snx-v3/contracts/build': '@snx-v3/contracts/src',
     },
     fallback: {
       buffer: require.resolve('buffer'),

@@ -8,7 +8,8 @@
     "src"
   ],
   "scripts": {
-    "build": "DEBUG=codegen:* node ./codegen.js && tsc --build --verbose --force",
+    "codegen": "DEBUG='codegen:*' node ./codegen.js",
+    "build": "tsc --build --verbose --force",
     "start:mainnet": "anvil --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY",
     "start:sepolia": "anvil --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
     "start:optimism": "anvil --chain-id 10 --fork-url https://optimism.infura.io/v3/$INFURA_KEY",
