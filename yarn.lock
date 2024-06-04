@@ -6579,7 +6579,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/parser@workspace:liquidity/lib/parser"
   dependencies:
-    viem: "npm:^2.9.26"
+    viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
 
@@ -7479,7 +7479,7 @@ __metadata:
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
-    viem: "npm:^2.9.26"
+    viem: "npm:^2.13.5"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
@@ -26387,7 +26387,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.13.5, viem@npm:^2.9.26":
+"viem@npm:^2.13.5":
   version: 2.13.5
   resolution: "viem@npm:2.13.5"
   dependencies:

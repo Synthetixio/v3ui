@@ -12,7 +12,7 @@
     "@snx-v3/zod": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "ethers": "^5.7.2",
-    "viem": "^2.9.26",
+    "viem": "^2.13.5",
     "zod": "^3.22.4"
   }
 }
