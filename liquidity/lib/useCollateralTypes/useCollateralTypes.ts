@@ -1,6 +1,6 @@
 import { constants, utils } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
+import { CoreProxyType, Multicall3Type } from '@snx-v3/contracts';
 import { z } from 'zod';
 import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';

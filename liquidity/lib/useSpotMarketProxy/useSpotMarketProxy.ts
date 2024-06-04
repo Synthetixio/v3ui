@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { SpotMarketProxyType, importSpotMarketProxy } from '@synthetixio/v3-contracts';
+import { SpotMarketProxyType, importSpotMarketProxy } from '@snx-v3/contracts';
 
 export function useSpotMarketProxy() {
   const { network } = useNetwork();

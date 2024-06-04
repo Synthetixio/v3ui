@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
+import { CoreProxyType } from '@snx-v3/contracts';
 import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';

@@ -6,7 +6,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
+import { importCoreProxy, importMulticall3 } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
 import * as viem from 'viem';
 import { parseTxError } from '../parser';

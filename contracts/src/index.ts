@@ -5,6 +5,5 @@ export * from './importOracleManagerProxy';
 export * from './importMulticall3';
 export * from './importRewardDistributor';
 export * from './importSpotMarketProxy';
-export * from './importMintableTokenBox';
 export * from './importPerpsMarketProxy';
 export * from './importPerpsAccountProxy';

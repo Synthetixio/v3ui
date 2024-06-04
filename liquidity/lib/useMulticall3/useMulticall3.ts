@@ -7,7 +7,7 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { importMulticall3, Multicall3Type } from '@synthetixio/v3-contracts';
+import { importMulticall3, Multicall3Type } from '@snx-v3/contracts';
 
 export function useMulticall3(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);

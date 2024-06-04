@@ -4,7 +4,7 @@ import { NETWORKS, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
-import { importCoreProxy } from '@synthetixio/v3-contracts';
+import { importCoreProxy } from '@snx-v3/contracts';
 
 export const PoolIdSchema = ZodBigNumber.transform((x) => x.toString());
 

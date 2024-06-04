@@ -272,122 +272,6 @@ import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export declare namespace IAccountModule {
-  export type AccountPermissionsStruct = { user: string; permissions: BytesLike[] };
-
-  export type AccountPermissionsStructOutput = [string, string[]] & {
-    user: string;
-    permissions: string[];
-  };
-}
-
-export declare namespace CcipClient {
-  export type EVMTokenAmountStruct = { token: string; amount: BigNumberish };
-
-  export type EVMTokenAmountStructOutput = [string, BigNumber] & {
-    token: string;
-    amount: BigNumber;
-  };
-
-  export type Any2EVMMessageStruct = {
-    messageId: BytesLike;
-    sourceChainSelector: BigNumberish;
-    sender: BytesLike;
-    data: BytesLike;
-    tokenAmounts: CcipClient.EVMTokenAmountStruct[];
-  };
-
-  export type Any2EVMMessageStructOutput = [
-    string,
-    BigNumber,
-    string,
-    string,
-    CcipClient.EVMTokenAmountStructOutput[]
-  ] & {
-    messageId: string;
-    sourceChainSelector: BigNumber;
-    sender: string;
-    data: string;
-    tokenAmounts: CcipClient.EVMTokenAmountStructOutput[];
-  };
-}
-
-export declare namespace CollateralLock {
-  export type DataStruct = { amountD18: BigNumberish; lockExpirationTime: BigNumberish };
-
-  export type DataStructOutput = [BigNumber, BigNumber] & {
-    amountD18: BigNumber;
-    lockExpirationTime: BigNumber;
-  };
-}
-
-export declare namespace CollateralConfiguration {
-  export type DataStruct = {
-    depositingEnabled: boolean;
-    issuanceRatioD18: BigNumberish;
-    liquidationRatioD18: BigNumberish;
-    liquidationRewardD18: BigNumberish;
-    oracleNodeId: BytesLike;
-    tokenAddress: string;
-    minDelegationD18: BigNumberish;
-  };
-
-  export type DataStructOutput = [
-    boolean,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    BigNumber
-  ] & {
-    depositingEnabled: boolean;
-    issuanceRatioD18: BigNumber;
-    liquidationRatioD18: BigNumber;
-    liquidationRewardD18: BigNumber;
-    oracleNodeId: string;
-    tokenAddress: string;
-    minDelegationD18: BigNumber;
-  };
-}
-
-export declare namespace ILiquidationModule {
-  export type LiquidationDataStruct = {
-    debtLiquidated: BigNumberish;
-    collateralLiquidated: BigNumberish;
-    amountRewarded: BigNumberish;
-  };
-
-  export type LiquidationDataStructOutput = [BigNumber, BigNumber, BigNumber] & {
-    debtLiquidated: BigNumber;
-    collateralLiquidated: BigNumber;
-    amountRewarded: BigNumber;
-  };
-}
-
-export declare namespace PoolCollateralConfiguration {
-  export type DataStruct = { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish };
-
-  export type DataStructOutput = [BigNumber, BigNumber] & {
-    collateralLimitD18: BigNumber;
-    issuanceRatioD18: BigNumber;
-  };
-}
-
-export declare namespace MarketConfiguration {
-  export type DataStruct = {
-    marketId: BigNumberish;
-    weightD18: BigNumberish;
-    maxDebtShareValueD18: BigNumberish;
-  };
-
-  export type DataStructOutput = [BigNumber, BigNumber, BigNumber] & {
-    marketId: BigNumber;
-    weightD18: BigNumber;
-    maxDebtShareValueD18: BigNumber;
-  };
-}
-
 export interface CoreProxyInterface extends utils.Interface {
   functions: {
     'acceptOwnership()': FunctionFragment;
@@ -735,7 +619,15 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'ccipReceive',
-    values: [CcipClient.Any2EVMMessageStruct]
+    values: [
+      {
+        messageId: BytesLike;
+        sourceChainSelector: BigNumberish;
+        sender: BytesLike;
+        data: BytesLike;
+        tokenAmounts: { token: string; amount: BigNumberish }[];
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: 'cleanExpiredLocks',
@@ -767,7 +659,17 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'configureCollateral',
-    values: [CollateralConfiguration.DataStruct]
+    values: [
+      {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumberish;
+        liquidationRatioD18: BigNumberish;
+        liquidationRewardD18: BigNumberish;
+        oracleNodeId: BytesLike;
+        tokenAddress: string;
+        minDelegationD18: BigNumberish;
+      }
+    ]
   ): string;
   encodeFunctionData(functionFragment: 'getCollateralConfiguration', values: [string]): string;
   encodeFunctionData(functionFragment: 'getCollateralConfigurations', values: [boolean]): string;
@@ -897,7 +799,11 @@ export interface CoreProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'revokePoolNomination', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'setPoolCollateralConfiguration',
-    values: [BigNumberish, string, PoolCollateralConfiguration.DataStruct]
+    values: [
+      BigNumberish,
+      string,
+      { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: 'setPoolCollateralDisabledByDefault',
@@ -905,7 +811,10 @@ export interface CoreProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'setPoolConfiguration',
-    values: [BigNumberish, MarketConfiguration.DataStruct[]]
+    values: [
+      BigNumberish,
+      { marketId: BigNumberish; weightD18: BigNumberish; maxDebtShareValueD18: BigNumberish }[]
+    ]
   ): string;
   encodeFunctionData(functionFragment: 'setPoolName', values: [BigNumberish, string]): string;
   encodeFunctionData(
@@ -1428,10 +1337,29 @@ export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>;
 
 export interface CollateralConfiguredEventObject {
   collateralType: string;
-  config: CollateralConfiguration.DataStructOutput;
+  config: [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] & {
+    depositingEnabled: boolean;
+    issuanceRatioD18: BigNumber;
+    liquidationRatioD18: BigNumber;
+    liquidationRewardD18: BigNumber;
+    oracleNodeId: string;
+    tokenAddress: string;
+    minDelegationD18: BigNumber;
+  };
 }
 export type CollateralConfiguredEvent = TypedEvent<
-  [string, CollateralConfiguration.DataStructOutput],
+  [
+    string,
+    [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] & {
+      depositingEnabled: boolean;
+      issuanceRatioD18: BigNumber;
+      liquidationRatioD18: BigNumber;
+      liquidationRewardD18: BigNumber;
+      oracleNodeId: string;
+      tokenAddress: string;
+      minDelegationD18: BigNumber;
+    }
+  ],
   CollateralConfiguredEventObject
 >;
 
@@ -1495,12 +1423,27 @@ export interface LiquidationEventObject {
   accountId: BigNumber;
   poolId: BigNumber;
   collateralType: string;
-  liquidationData: ILiquidationModule.LiquidationDataStructOutput;
+  liquidationData: [BigNumber, BigNumber, BigNumber] & {
+    debtLiquidated: BigNumber;
+    collateralLiquidated: BigNumber;
+    amountRewarded: BigNumber;
+  };
   liquidateAsAccountId: BigNumber;
   sender: string;
 }
 export type LiquidationEvent = TypedEvent<
-  [BigNumber, BigNumber, string, ILiquidationModule.LiquidationDataStructOutput, BigNumber, string],
+  [
+    BigNumber,
+    BigNumber,
+    string,
+    [BigNumber, BigNumber, BigNumber] & {
+      debtLiquidated: BigNumber;
+      collateralLiquidated: BigNumber;
+      amountRewarded: BigNumber;
+    },
+    BigNumber,
+    string
+  ],
   LiquidationEventObject
 >;
 
@@ -1509,12 +1452,26 @@ export type LiquidationEventFilter = TypedEventFilter<LiquidationEvent>;
 export interface VaultLiquidationEventObject {
   poolId: BigNumber;
   collateralType: string;
-  liquidationData: ILiquidationModule.LiquidationDataStructOutput;
+  liquidationData: [BigNumber, BigNumber, BigNumber] & {
+    debtLiquidated: BigNumber;
+    collateralLiquidated: BigNumber;
+    amountRewarded: BigNumber;
+  };
   liquidateAsAccountId: BigNumber;
   sender: string;
 }
 export type VaultLiquidationEvent = TypedEvent<
-  [BigNumber, string, ILiquidationModule.LiquidationDataStructOutput, BigNumber, string],
+  [
+    BigNumber,
+    string,
+    [BigNumber, BigNumber, BigNumber] & {
+      debtLiquidated: BigNumber;
+      collateralLiquidated: BigNumber;
+      amountRewarded: BigNumber;
+    },
+    BigNumber,
+    string
+  ],
   VaultLiquidationEventObject
 >;
 
@@ -1670,10 +1627,14 @@ export type PreferredPoolSetEventFilter = TypedEventFilter<PreferredPoolSetEvent
 export interface PoolCollateralConfigurationUpdatedEventObject {
   poolId: BigNumber;
   collateralType: string;
-  config: PoolCollateralConfiguration.DataStructOutput;
+  config: [BigNumber, BigNumber] & { collateralLimitD18: BigNumber; issuanceRatioD18: BigNumber };
 }
 export type PoolCollateralConfigurationUpdatedEvent = TypedEvent<
-  [BigNumber, string, PoolCollateralConfiguration.DataStructOutput],
+  [
+    BigNumber,
+    string,
+    [BigNumber, BigNumber] & { collateralLimitD18: BigNumber; issuanceRatioD18: BigNumber }
+  ],
   PoolCollateralConfigurationUpdatedEventObject
 >;
 
@@ -1694,11 +1655,17 @@ export type PoolCollateralDisabledByDefaultSetEventFilter =
 
 export interface PoolConfigurationSetEventObject {
   poolId: BigNumber;
-  markets: MarketConfiguration.DataStructOutput[];
+  markets: [BigNumber, BigNumber, BigNumber] &
+    { marketId: BigNumber; weightD18: BigNumber; maxDebtShareValueD18: BigNumber }[];
   sender: string;
 }
 export type PoolConfigurationSetEvent = TypedEvent<
-  [BigNumber, MarketConfiguration.DataStructOutput[], string],
+  [
+    BigNumber,
+    [BigNumber, BigNumber, BigNumber] &
+      { marketId: BigNumber; weightD18: BigNumber; maxDebtShareValueD18: BigNumber }[],
+    string
+  ],
   PoolConfigurationSetEventObject
 >;
 
@@ -1980,8 +1947,8 @@ export interface CoreProxy extends BaseContract {
       accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [IAccountModule.AccountPermissionsStructOutput[]] & {
-        accountPerms: IAccountModule.AccountPermissionsStructOutput[];
+      [[string, string[]] & { user: string; permissions: string[] }[]] & {
+        accountPerms: [string, string[]] & { user: string; permissions: string[] }[];
       }
     >;
 
@@ -2066,7 +2033,13 @@ export interface CoreProxy extends BaseContract {
     ): Promise<ContractTransaction>;
 
     ccipReceive(
-      message: CcipClient.Any2EVMMessageStruct,
+      message: {
+        messageId: BytesLike;
+        sourceChainSelector: BigNumberish;
+        sender: BytesLike;
+        data: BytesLike;
+        tokenAmounts: { token: string; amount: BigNumberish }[];
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2117,7 +2090,11 @@ export interface CoreProxy extends BaseContract {
       offset: BigNumberish,
       count: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[CollateralLock.DataStructOutput[]] & { locks: CollateralLock.DataStructOutput[] }>;
+    ): Promise<
+      [[BigNumber, BigNumber] & { amountD18: BigNumber; lockExpirationTime: BigNumber }[]] & {
+        locks: [BigNumber, BigNumber] & { amountD18: BigNumber; lockExpirationTime: BigNumber }[];
+      }
+    >;
 
     withdraw(
       accountId: BigNumberish,
@@ -2127,19 +2104,52 @@ export interface CoreProxy extends BaseContract {
     ): Promise<ContractTransaction>;
 
     configureCollateral(
-      config: CollateralConfiguration.DataStruct,
+      config: {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumberish;
+        liquidationRatioD18: BigNumberish;
+        liquidationRewardD18: BigNumberish;
+        oracleNodeId: BytesLike;
+        tokenAddress: string;
+        minDelegationD18: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getCollateralConfiguration(
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<[CollateralConfiguration.DataStructOutput]>;
+    ): Promise<
+      [
+        [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] & {
+          depositingEnabled: boolean;
+          issuanceRatioD18: BigNumber;
+          liquidationRatioD18: BigNumber;
+          liquidationRewardD18: BigNumber;
+          oracleNodeId: string;
+          tokenAddress: string;
+          minDelegationD18: BigNumber;
+        }
+      ]
+    >;
 
     getCollateralConfigurations(
       hideDisabled: boolean,
       overrides?: CallOverrides
-    ): Promise<[CollateralConfiguration.DataStructOutput[]]>;
+    ): Promise<
+      [
+        [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] &
+          {
+            depositingEnabled: boolean;
+            issuanceRatioD18: BigNumber;
+            liquidationRatioD18: BigNumber;
+            liquidationRewardD18: BigNumber;
+            oracleNodeId: string;
+            tokenAddress: string;
+            minDelegationD18: BigNumber;
+          }[]
+      ]
+    >;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -2365,8 +2375,11 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       overrides?: CallOverrides
     ): Promise<
-      [PoolCollateralConfiguration.DataStructOutput] & {
-        config: PoolCollateralConfiguration.DataStructOutput;
+      [[BigNumber, BigNumber] & { collateralLimitD18: BigNumber; issuanceRatioD18: BigNumber }] & {
+        config: [BigNumber, BigNumber] & {
+          collateralLimitD18: BigNumber;
+          issuanceRatioD18: BigNumber;
+        };
       }
     >;
 
@@ -2379,7 +2392,12 @@ export interface CoreProxy extends BaseContract {
     getPoolConfiguration(
       poolId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[MarketConfiguration.DataStructOutput[]]>;
+    ): Promise<
+      [
+        [BigNumber, BigNumber, BigNumber] &
+          { marketId: BigNumber; weightD18: BigNumber; maxDebtShareValueD18: BigNumber }[]
+      ]
+    >;
 
     getPoolName(
       poolId: BigNumberish,
@@ -2418,7 +2436,7 @@ export interface CoreProxy extends BaseContract {
     setPoolCollateralConfiguration(
       poolId: BigNumberish,
       collateralType: string,
-      newConfig: PoolCollateralConfiguration.DataStruct,
+      newConfig: { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2430,7 +2448,11 @@ export interface CoreProxy extends BaseContract {
 
     setPoolConfiguration(
       poolId: BigNumberish,
-      newMarketConfigurations: MarketConfiguration.DataStruct[],
+      newMarketConfigurations: {
+        marketId: BigNumberish;
+        weightD18: BigNumberish;
+        maxDebtShareValueD18: BigNumberish;
+      }[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2667,7 +2689,7 @@ export interface CoreProxy extends BaseContract {
   getAccountPermissions(
     accountId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
+  ): Promise<[string, string[]] & { user: string; permissions: string[] }[]>;
 
   getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -2750,7 +2772,13 @@ export interface CoreProxy extends BaseContract {
   ): Promise<ContractTransaction>;
 
   ccipReceive(
-    message: CcipClient.Any2EVMMessageStruct,
+    message: {
+      messageId: BytesLike;
+      sourceChainSelector: BigNumberish;
+      sender: BytesLike;
+      data: BytesLike;
+      tokenAmounts: { token: string; amount: BigNumberish }[];
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2801,7 +2829,7 @@ export interface CoreProxy extends BaseContract {
     offset: BigNumberish,
     count: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<CollateralLock.DataStructOutput[]>;
+  ): Promise<[BigNumber, BigNumber] & { amountD18: BigNumber; lockExpirationTime: BigNumber }[]>;
 
   withdraw(
     accountId: BigNumberish,
@@ -2811,19 +2839,48 @@ export interface CoreProxy extends BaseContract {
   ): Promise<ContractTransaction>;
 
   configureCollateral(
-    config: CollateralConfiguration.DataStruct,
+    config: {
+      depositingEnabled: boolean;
+      issuanceRatioD18: BigNumberish;
+      liquidationRatioD18: BigNumberish;
+      liquidationRewardD18: BigNumberish;
+      oracleNodeId: BytesLike;
+      tokenAddress: string;
+      minDelegationD18: BigNumberish;
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getCollateralConfiguration(
     collateralType: string,
     overrides?: CallOverrides
-  ): Promise<CollateralConfiguration.DataStructOutput>;
+  ): Promise<
+    [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] & {
+      depositingEnabled: boolean;
+      issuanceRatioD18: BigNumber;
+      liquidationRatioD18: BigNumber;
+      liquidationRewardD18: BigNumber;
+      oracleNodeId: string;
+      tokenAddress: string;
+      minDelegationD18: BigNumber;
+    }
+  >;
 
   getCollateralConfigurations(
     hideDisabled: boolean,
     overrides?: CallOverrides
-  ): Promise<CollateralConfiguration.DataStructOutput[]>;
+  ): Promise<
+    [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] &
+      {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumber;
+        liquidationRatioD18: BigNumber;
+        liquidationRewardD18: BigNumber;
+        oracleNodeId: string;
+        tokenAddress: string;
+        minDelegationD18: BigNumber;
+      }[]
+  >;
 
   getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -3042,7 +3099,9 @@ export interface CoreProxy extends BaseContract {
     poolId: BigNumberish,
     collateralType: string,
     overrides?: CallOverrides
-  ): Promise<PoolCollateralConfiguration.DataStructOutput>;
+  ): Promise<
+    [BigNumber, BigNumber] & { collateralLimitD18: BigNumber; issuanceRatioD18: BigNumber }
+  >;
 
   getPoolCollateralIssuanceRatio(
     poolId: BigNumberish,
@@ -3053,7 +3112,10 @@ export interface CoreProxy extends BaseContract {
   getPoolConfiguration(
     poolId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<MarketConfiguration.DataStructOutput[]>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] &
+      { marketId: BigNumber; weightD18: BigNumber; maxDebtShareValueD18: BigNumber }[]
+  >;
 
   getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -3089,7 +3151,7 @@ export interface CoreProxy extends BaseContract {
   setPoolCollateralConfiguration(
     poolId: BigNumberish,
     collateralType: string,
-    newConfig: PoolCollateralConfiguration.DataStruct,
+    newConfig: { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -3101,7 +3163,11 @@ export interface CoreProxy extends BaseContract {
 
   setPoolConfiguration(
     poolId: BigNumberish,
-    newMarketConfigurations: MarketConfiguration.DataStruct[],
+    newMarketConfigurations: {
+      marketId: BigNumberish;
+      weightD18: BigNumberish;
+      maxDebtShareValueD18: BigNumberish;
+    }[],
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -3328,7 +3394,7 @@ export interface CoreProxy extends BaseContract {
     getAccountPermissions(
       accountId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
+    ): Promise<[string, string[]] & { user: string; permissions: string[] }[]>;
 
     getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -3410,7 +3476,16 @@ export interface CoreProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    ccipReceive(message: CcipClient.Any2EVMMessageStruct, overrides?: CallOverrides): Promise<void>;
+    ccipReceive(
+      message: {
+        messageId: BytesLike;
+        sourceChainSelector: BigNumberish;
+        sender: BytesLike;
+        data: BytesLike;
+        tokenAmounts: { token: string; amount: BigNumberish }[];
+      },
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     cleanExpiredLocks(
       accountId: BigNumberish,
@@ -3459,7 +3534,7 @@ export interface CoreProxy extends BaseContract {
       offset: BigNumberish,
       count: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<CollateralLock.DataStructOutput[]>;
+    ): Promise<[BigNumber, BigNumber] & { amountD18: BigNumber; lockExpirationTime: BigNumber }[]>;
 
     withdraw(
       accountId: BigNumberish,
@@ -3469,19 +3544,48 @@ export interface CoreProxy extends BaseContract {
     ): Promise<void>;
 
     configureCollateral(
-      config: CollateralConfiguration.DataStruct,
+      config: {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumberish;
+        liquidationRatioD18: BigNumberish;
+        liquidationRewardD18: BigNumberish;
+        oracleNodeId: BytesLike;
+        tokenAddress: string;
+        minDelegationD18: BigNumberish;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
     getCollateralConfiguration(
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<CollateralConfiguration.DataStructOutput>;
+    ): Promise<
+      [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] & {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumber;
+        liquidationRatioD18: BigNumber;
+        liquidationRewardD18: BigNumber;
+        oracleNodeId: string;
+        tokenAddress: string;
+        minDelegationD18: BigNumber;
+      }
+    >;
 
     getCollateralConfigurations(
       hideDisabled: boolean,
       overrides?: CallOverrides
-    ): Promise<CollateralConfiguration.DataStructOutput[]>;
+    ): Promise<
+      [boolean, BigNumber, BigNumber, BigNumber, string, string, BigNumber] &
+        {
+          depositingEnabled: boolean;
+          issuanceRatioD18: BigNumber;
+          liquidationRatioD18: BigNumber;
+          liquidationRewardD18: BigNumber;
+          oracleNodeId: string;
+          tokenAddress: string;
+          minDelegationD18: BigNumber;
+        }[]
+    >;
 
     getCollateralPrice(collateralType: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -3526,7 +3630,13 @@ export interface CoreProxy extends BaseContract {
       collateralType: string,
       liquidateAsAccountId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<ILiquidationModule.LiquidationDataStructOutput>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        debtLiquidated: BigNumber;
+        collateralLiquidated: BigNumber;
+        amountRewarded: BigNumber;
+      }
+    >;
 
     liquidateVault(
       poolId: BigNumberish,
@@ -3534,7 +3644,13 @@ export interface CoreProxy extends BaseContract {
       liquidateAsAccountId: BigNumberish,
       maxUsd: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<ILiquidationModule.LiquidationDataStructOutput>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        debtLiquidated: BigNumber;
+        collateralLiquidated: BigNumber;
+        amountRewarded: BigNumber;
+      }
+    >;
 
     configureMaximumMarketCollateral(
       marketId: BigNumberish,
@@ -3690,7 +3806,9 @@ export interface CoreProxy extends BaseContract {
       poolId: BigNumberish,
       collateralType: string,
       overrides?: CallOverrides
-    ): Promise<PoolCollateralConfiguration.DataStructOutput>;
+    ): Promise<
+      [BigNumber, BigNumber] & { collateralLimitD18: BigNumber; issuanceRatioD18: BigNumber }
+    >;
 
     getPoolCollateralIssuanceRatio(
       poolId: BigNumberish,
@@ -3701,7 +3819,10 @@ export interface CoreProxy extends BaseContract {
     getPoolConfiguration(
       poolId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<MarketConfiguration.DataStructOutput[]>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] &
+        { marketId: BigNumber; weightD18: BigNumber; maxDebtShareValueD18: BigNumber }[]
+    >;
 
     getPoolName(poolId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -3728,7 +3849,7 @@ export interface CoreProxy extends BaseContract {
     setPoolCollateralConfiguration(
       poolId: BigNumberish,
       collateralType: string,
-      newConfig: PoolCollateralConfiguration.DataStruct,
+      newConfig: { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish },
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -3740,7 +3861,11 @@ export interface CoreProxy extends BaseContract {
 
     setPoolConfiguration(
       poolId: BigNumberish,
-      newMarketConfigurations: MarketConfiguration.DataStruct[],
+      newMarketConfigurations: {
+        marketId: BigNumberish;
+        weightD18: BigNumberish;
+        maxDebtShareValueD18: BigNumberish;
+      }[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -4641,7 +4766,13 @@ export interface CoreProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     ccipReceive(
-      message: CcipClient.Any2EVMMessageStruct,
+      message: {
+        messageId: BytesLike;
+        sourceChainSelector: BigNumberish;
+        sender: BytesLike;
+        data: BytesLike;
+        tokenAmounts: { token: string; amount: BigNumberish }[];
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4696,7 +4827,15 @@ export interface CoreProxy extends BaseContract {
     ): Promise<BigNumber>;
 
     configureCollateral(
-      config: CollateralConfiguration.DataStruct,
+      config: {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumberish;
+        liquidationRatioD18: BigNumberish;
+        liquidationRewardD18: BigNumberish;
+        oracleNodeId: BytesLike;
+        tokenAddress: string;
+        minDelegationD18: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4966,7 +5105,7 @@ export interface CoreProxy extends BaseContract {
     setPoolCollateralConfiguration(
       poolId: BigNumberish,
       collateralType: string,
-      newConfig: PoolCollateralConfiguration.DataStruct,
+      newConfig: { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4978,7 +5117,11 @@ export interface CoreProxy extends BaseContract {
 
     setPoolConfiguration(
       poolId: BigNumberish,
-      newMarketConfigurations: MarketConfiguration.DataStruct[],
+      newMarketConfigurations: {
+        marketId: BigNumberish;
+        weightD18: BigNumberish;
+        maxDebtShareValueD18: BigNumberish;
+      }[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -5311,7 +5454,13 @@ export interface CoreProxy extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     ccipReceive(
-      message: CcipClient.Any2EVMMessageStruct,
+      message: {
+        messageId: BytesLike;
+        sourceChainSelector: BigNumberish;
+        sender: BytesLike;
+        data: BytesLike;
+        tokenAmounts: { token: string; amount: BigNumberish }[];
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -5366,7 +5515,15 @@ export interface CoreProxy extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     configureCollateral(
-      config: CollateralConfiguration.DataStruct,
+      config: {
+        depositingEnabled: boolean;
+        issuanceRatioD18: BigNumberish;
+        liquidationRatioD18: BigNumberish;
+        liquidationRewardD18: BigNumberish;
+        oracleNodeId: BytesLike;
+        tokenAddress: string;
+        minDelegationD18: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -5675,7 +5832,7 @@ export interface CoreProxy extends BaseContract {
     setPoolCollateralConfiguration(
       poolId: BigNumberish,
       collateralType: string,
-      newConfig: PoolCollateralConfiguration.DataStruct,
+      newConfig: { collateralLimitD18: BigNumberish; issuanceRatioD18: BigNumberish },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -5687,7 +5844,11 @@ export interface CoreProxy extends BaseContract {
 
     setPoolConfiguration(
       poolId: BigNumberish,
-      newMarketConfigurations: MarketConfiguration.DataStruct[],
+      newMarketConfigurations: {
+        marketId: BigNumberish;
+        weightD18: BigNumberish;
+        maxDebtShareValueD18: BigNumberish;
+      }[],
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

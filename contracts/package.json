@@ -1,51 +1,39 @@
 {
-  "name": "@synthetixio/v3-contracts",
-  "publishConfig": {
-    "access": "public"
-  },
-  "description": "peripheral smart contracts for frontend",
-  "version": "3.1.0",
+  "name": "@snx-v3/contracts",
+  "private": true,
+  "version": "0.0.0",
   "main": "./build/index.js",
   "files": [
     "build",
-    "deployments",
     "src"
   ],
   "scripts": {
-    "fetch-cannon-state": "./fetch-cannon-state.sh",
-    "upgrade-contracts": "node ./codegen.js",
-    "build": "tsc --build --verbose --force",
-    "start": "yarn cannon:start",
-    "cannon:build": "cannon build --wipe cannonfile.toml",
-    "cannon:start": "cannon run synthetix-local",
-    "start:mainnet": "cannon run synthetix-omnibus:latest@main --chain-id 1 --provider-url https://mainnet.infura.io/v3/$INFURA_KEY",
-    "start:goerli": "cannon run synthetix-omnibus:latest@main --chain-id 5 --provider-url https://goerli.infura.io/v3/$INFURA_KEY",
-    "start:sepolia": "cannon run synthetix-omnibus:latest@main --chain-id 11155111 --provider-url https://sepolia.infura.io/v3/$INFURA_KEY",
-    "start:optimism": "cannon run synthetix-omnibus:latest@main --chain-id 10 --provider-url https://optimism.infura.io/v3/$INFURA_KEY",
-    "start:optimism-goerli": "cannon run synthetix-omnibus:latest@main --chain-id 420 --provider-url https://optimism-goerli.infura.io/v3/$INFURA_KEY",
-    "start:base-goerli": "cannon run synthetix-omnibus:latest@main --chain-id 84531 --provider-url https://goerli.base.org",
-    "start:base-goerli-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84531 --provider-url https://goerli.base.org",
-    "start:base-sepolia-andromeda": "cannon run synthetix-omnibus:latest@andromeda --chain-id 84532 --provider-url https://sepolia.base.org",
-    "start:arbitrum-sepolia": "cannon run synthetix-omnibus:latest@arbthetix --chain-id 421614 --provider-url https://sepolia-rollup.arbitrum.io/rpc",
-    "start:arbitrum": "cannon run synthetix-omnibus:latest@arbthetix --chain-id 42161 --provider-url https://arb1.arbitrum.io/rpc",
-    "prepublishOnly": "yarn build"
+    "build": "DEBUG=codegen:* node ./codegen.js && tsc --build --verbose --force",
+    "start:mainnet": "anvil --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY",
+    "start:sepolia": "anvil --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
+    "start:optimism": "anvil --chain-id 10 --fork-url https://optimism.infura.io/v3/$INFURA_KEY",
+    "start:base": "anvil --chain-id 8453 --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY",
+    "start:base-sepolia": "anvil --chain-id 84532 --fork-url https://base-sepolia.infura.io/v3/$INFURA_KEY",
+    "start:arbitrum": "anvil --chain-id 42161 --fork-url https://arbitrum-mainnet.infura.io/v3/$INFURA_KEY",
+    "start:arbitrum-sepolia": "anvil --chain-id 421614 --fork-url https://arbitrum-sepolia.infura.io/v3/$INFURA_KEY"
+  },
+  "dependencies": {
+    "@synthetixio/v3-contracts": "^5.4.0"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@typechain/ethers-v5": "^11.1.2",
-    "@usecannon/cli": "2.12.5-alpha.0",
     "debug": "^4.3.4",
     "ethers": "^5.7.2",
     "prettier": "^3.1.0",
-    "solc": "0.8.21",
     "typechain": "^8.3.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "viem": "^2.13.5"
   },
   "depcheck": {
     "ignoreMatches": [
-      "solc"
+      "@synthetixio/v3-contracts"
     ]
-  },
-  "gitHead": "ac32cad1b58169ac1f335fd300c521d2bd7b96d7"
+  }
 }

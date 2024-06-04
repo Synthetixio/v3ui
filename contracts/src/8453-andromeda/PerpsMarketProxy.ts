@@ -244,115 +244,6 @@ import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export declare namespace IAccountModule {
-  export type AccountPermissionsStruct = { user: string; permissions: BytesLike[] };
-
-  export type AccountPermissionsStructOutput = [string, string[]] & {
-    user: string;
-    permissions: string[];
-  };
-}
-
-export declare namespace IPerpsMarketModule {
-  export type MarketSummaryStruct = {
-    skew: BigNumberish;
-    size: BigNumberish;
-    maxOpenInterest: BigNumberish;
-    currentFundingRate: BigNumberish;
-    currentFundingVelocity: BigNumberish;
-    indexPrice: BigNumberish;
-  };
-
-  export type MarketSummaryStructOutput = [
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber
-  ] & {
-    skew: BigNumber;
-    size: BigNumber;
-    maxOpenInterest: BigNumber;
-    currentFundingRate: BigNumber;
-    currentFundingVelocity: BigNumber;
-    indexPrice: BigNumber;
-  };
-}
-
-export declare namespace AsyncOrder {
-  export type OrderCommitmentRequestStruct = {
-    marketId: BigNumberish;
-    accountId: BigNumberish;
-    sizeDelta: BigNumberish;
-    settlementStrategyId: BigNumberish;
-    acceptablePrice: BigNumberish;
-    trackingCode: BytesLike;
-    referrer: string;
-  };
-
-  export type OrderCommitmentRequestStructOutput = [
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string,
-    string
-  ] & {
-    marketId: BigNumber;
-    accountId: BigNumber;
-    sizeDelta: BigNumber;
-    settlementStrategyId: BigNumber;
-    acceptablePrice: BigNumber;
-    trackingCode: string;
-    referrer: string;
-  };
-
-  export type DataStruct = {
-    commitmentTime: BigNumberish;
-    request: AsyncOrder.OrderCommitmentRequestStruct;
-  };
-
-  export type DataStructOutput = [BigNumber, AsyncOrder.OrderCommitmentRequestStructOutput] & {
-    commitmentTime: BigNumber;
-    request: AsyncOrder.OrderCommitmentRequestStructOutput;
-  };
-}
-
-export declare namespace SettlementStrategy {
-  export type DataStruct = {
-    strategyType: BigNumberish;
-    settlementDelay: BigNumberish;
-    settlementWindowDuration: BigNumberish;
-    priceVerificationContract: string;
-    feedId: BytesLike;
-    settlementReward: BigNumberish;
-    disabled: boolean;
-    commitmentPriceDelay: BigNumberish;
-  };
-
-  export type DataStructOutput = [
-    number,
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    BigNumber,
-    boolean,
-    BigNumber
-  ] & {
-    strategyType: number;
-    settlementDelay: BigNumber;
-    settlementWindowDuration: BigNumber;
-    priceVerificationContract: string;
-    feedId: string;
-    settlementReward: BigNumber;
-    disabled: boolean;
-    commitmentPriceDelay: BigNumber;
-  };
-}
-
 export interface PerpsMarketProxyInterface extends utils.Interface {
   functions: {
     'createAccount()': FunctionFragment;
@@ -697,7 +588,17 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'skew', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'commitOrder',
-    values: [AsyncOrder.OrderCommitmentRequestStruct]
+    values: [
+      {
+        marketId: BigNumberish;
+        accountId: BigNumberish;
+        sizeDelta: BigNumberish;
+        settlementStrategyId: BigNumberish;
+        acceptablePrice: BigNumberish;
+        trackingCode: BytesLike;
+        referrer: string;
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: 'computeOrderFees',
@@ -755,7 +656,19 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'liquidationCapacity', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'addSettlementStrategy',
-    values: [BigNumberish, SettlementStrategy.DataStruct]
+    values: [
+      BigNumberish,
+      {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      }
+    ]
   ): string;
   encodeFunctionData(functionFragment: 'getFundingParameters', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'getLiquidationParameters', values: [BigNumberish]): string;
@@ -802,7 +715,20 @@ export interface PerpsMarketProxyInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'setSettlementStrategy',
-    values: [BigNumberish, BigNumberish, SettlementStrategy.DataStruct]
+    values: [
+      BigNumberish,
+      BigNumberish,
+      {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: 'setSettlementStrategyEnabled',
@@ -1496,11 +1422,33 @@ export type OrderFeesSetEventFilter = TypedEventFilter<OrderFeesSetEvent>;
 
 export interface SettlementStrategyAddedEventObject {
   marketId: BigNumber;
-  strategy: SettlementStrategy.DataStructOutput;
+  strategy: [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+    strategyType: number;
+    settlementDelay: BigNumber;
+    settlementWindowDuration: BigNumber;
+    priceVerificationContract: string;
+    feedId: string;
+    settlementReward: BigNumber;
+    disabled: boolean;
+    commitmentPriceDelay: BigNumber;
+  };
   strategyId: BigNumber;
 }
 export type SettlementStrategyAddedEvent = TypedEvent<
-  [BigNumber, SettlementStrategy.DataStructOutput, BigNumber],
+  [
+    BigNumber,
+    [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+      strategyType: number;
+      settlementDelay: BigNumber;
+      settlementWindowDuration: BigNumber;
+      priceVerificationContract: string;
+      feedId: string;
+      settlementReward: BigNumber;
+      disabled: boolean;
+      commitmentPriceDelay: BigNumber;
+    },
+    BigNumber
+  ],
   SettlementStrategyAddedEventObject
 >;
 
@@ -1509,10 +1457,32 @@ export type SettlementStrategyAddedEventFilter = TypedEventFilter<SettlementStra
 export interface SettlementStrategySetEventObject {
   marketId: BigNumber;
   strategyId: BigNumber;
-  strategy: SettlementStrategy.DataStructOutput;
+  strategy: [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+    strategyType: number;
+    settlementDelay: BigNumber;
+    settlementWindowDuration: BigNumber;
+    priceVerificationContract: string;
+    feedId: string;
+    settlementReward: BigNumber;
+    disabled: boolean;
+    commitmentPriceDelay: BigNumber;
+  };
 }
 export type SettlementStrategySetEvent = TypedEvent<
-  [BigNumber, BigNumber, SettlementStrategy.DataStructOutput],
+  [
+    BigNumber,
+    BigNumber,
+    [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+      strategyType: number;
+      settlementDelay: BigNumber;
+      settlementWindowDuration: BigNumber;
+      priceVerificationContract: string;
+      feedId: string;
+      settlementReward: BigNumber;
+      disabled: boolean;
+      commitmentPriceDelay: BigNumber;
+    }
+  ],
   SettlementStrategySetEventObject
 >;
 
@@ -1655,8 +1625,8 @@ export interface PerpsMarketProxy extends BaseContract {
       accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [IAccountModule.AccountPermissionsStructOutput[]] & {
-        accountPerms: IAccountModule.AccountPermissionsStructOutput[];
+      [[string, string[]] & { user: string; permissions: string[] }[]] & {
+        accountPerms: [string, string[]] & { user: string; permissions: string[] }[];
       }
     >;
 
@@ -1879,8 +1849,24 @@ export interface PerpsMarketProxy extends BaseContract {
       marketId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [IPerpsMarketModule.MarketSummaryStructOutput] & {
-        summary: IPerpsMarketModule.MarketSummaryStructOutput;
+      [
+        [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+          skew: BigNumber;
+          size: BigNumber;
+          maxOpenInterest: BigNumber;
+          currentFundingRate: BigNumber;
+          currentFundingVelocity: BigNumber;
+          indexPrice: BigNumber;
+        }
+      ] & {
+        summary: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+          skew: BigNumber;
+          size: BigNumber;
+          maxOpenInterest: BigNumber;
+          currentFundingRate: BigNumber;
+          currentFundingVelocity: BigNumber;
+          indexPrice: BigNumber;
+        };
       }
     >;
 
@@ -1898,7 +1884,15 @@ export interface PerpsMarketProxy extends BaseContract {
     skew(marketId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     commitOrder(
-      commitment: AsyncOrder.OrderCommitmentRequestStruct,
+      commitment: {
+        marketId: BigNumberish;
+        accountId: BigNumberish;
+        sizeDelta: BigNumberish;
+        settlementStrategyId: BigNumberish;
+        acceptablePrice: BigNumberish;
+        trackingCode: BytesLike;
+        referrer: string;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -1918,7 +1912,57 @@ export interface PerpsMarketProxy extends BaseContract {
     getOrder(
       accountId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[AsyncOrder.DataStructOutput] & { order: AsyncOrder.DataStructOutput }>;
+    ): Promise<
+      [
+        [
+          BigNumber,
+          [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          }
+        ] & {
+          commitmentTime: BigNumber;
+          request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          };
+        }
+      ] & {
+        order: [
+          BigNumber,
+          [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          }
+        ] & {
+          commitmentTime: BigNumber;
+          request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          };
+        };
+      }
+    >;
 
     getSettlementRewardCost(
       marketId: BigNumberish,
@@ -2032,7 +2076,16 @@ export interface PerpsMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2093,8 +2146,37 @@ export interface PerpsMarketProxy extends BaseContract {
       strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [SettlementStrategy.DataStructOutput] & {
-        settlementStrategy: SettlementStrategy.DataStructOutput;
+      [
+        [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+          strategyType: number;
+          settlementDelay: BigNumber;
+          settlementWindowDuration: BigNumber;
+          priceVerificationContract: string;
+          feedId: string;
+          settlementReward: BigNumber;
+          disabled: boolean;
+          commitmentPriceDelay: BigNumber;
+        }
+      ] & {
+        settlementStrategy: [
+          number,
+          BigNumber,
+          BigNumber,
+          string,
+          string,
+          BigNumber,
+          boolean,
+          BigNumber
+        ] & {
+          strategyType: number;
+          settlementDelay: BigNumber;
+          settlementWindowDuration: BigNumber;
+          priceVerificationContract: string;
+          feedId: string;
+          settlementReward: BigNumber;
+          disabled: boolean;
+          commitmentPriceDelay: BigNumber;
+        };
       }
     >;
 
@@ -2152,7 +2234,16 @@ export interface PerpsMarketProxy extends BaseContract {
     setSettlementStrategy(
       marketId: BigNumberish,
       strategyId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -2293,7 +2384,7 @@ export interface PerpsMarketProxy extends BaseContract {
   getAccountPermissions(
     accountId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
+  ): Promise<[string, string[]] & { user: string; permissions: string[] }[]>;
 
   getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -2498,7 +2589,16 @@ export interface PerpsMarketProxy extends BaseContract {
   getMarketSummary(
     marketId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<IPerpsMarketModule.MarketSummaryStructOutput>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      skew: BigNumber;
+      size: BigNumber;
+      maxOpenInterest: BigNumber;
+      currentFundingRate: BigNumber;
+      currentFundingVelocity: BigNumber;
+      indexPrice: BigNumber;
+    }
+  >;
 
   indexPrice(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2514,7 +2614,15 @@ export interface PerpsMarketProxy extends BaseContract {
   skew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   commitOrder(
-    commitment: AsyncOrder.OrderCommitmentRequestStruct,
+    commitment: {
+      marketId: BigNumberish;
+      accountId: BigNumberish;
+      sizeDelta: BigNumberish;
+      settlementStrategyId: BigNumberish;
+      acceptablePrice: BigNumberish;
+      trackingCode: BytesLike;
+      referrer: string;
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2534,7 +2642,31 @@ export interface PerpsMarketProxy extends BaseContract {
   getOrder(
     accountId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<AsyncOrder.DataStructOutput>;
+  ): Promise<
+    [
+      BigNumber,
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+        marketId: BigNumber;
+        accountId: BigNumber;
+        sizeDelta: BigNumber;
+        settlementStrategyId: BigNumber;
+        acceptablePrice: BigNumber;
+        trackingCode: string;
+        referrer: string;
+      }
+    ] & {
+      commitmentTime: BigNumber;
+      request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+        marketId: BigNumber;
+        accountId: BigNumber;
+        sizeDelta: BigNumber;
+        settlementStrategyId: BigNumber;
+        acceptablePrice: BigNumber;
+        trackingCode: string;
+        referrer: string;
+      };
+    }
+  >;
 
   getSettlementRewardCost(
     marketId: BigNumberish,
@@ -2643,7 +2775,16 @@ export interface PerpsMarketProxy extends BaseContract {
 
   addSettlementStrategy(
     marketId: BigNumberish,
-    strategy: SettlementStrategy.DataStruct,
+    strategy: {
+      strategyType: BigNumberish;
+      settlementDelay: BigNumberish;
+      settlementWindowDuration: BigNumberish;
+      priceVerificationContract: string;
+      feedId: BytesLike;
+      settlementReward: BigNumberish;
+      disabled: boolean;
+      commitmentPriceDelay: BigNumberish;
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2697,7 +2838,18 @@ export interface PerpsMarketProxy extends BaseContract {
     marketId: BigNumberish,
     strategyId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<SettlementStrategy.DataStructOutput>;
+  ): Promise<
+    [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+      strategyType: number;
+      settlementDelay: BigNumber;
+      settlementWindowDuration: BigNumber;
+      priceVerificationContract: string;
+      feedId: string;
+      settlementReward: BigNumber;
+      disabled: boolean;
+      commitmentPriceDelay: BigNumber;
+    }
+  >;
 
   setFundingParameters(
     marketId: BigNumberish,
@@ -2753,7 +2905,16 @@ export interface PerpsMarketProxy extends BaseContract {
   setSettlementStrategy(
     marketId: BigNumberish,
     strategyId: BigNumberish,
-    strategy: SettlementStrategy.DataStruct,
+    strategy: {
+      strategyType: BigNumberish;
+      settlementDelay: BigNumberish;
+      settlementWindowDuration: BigNumberish;
+      priceVerificationContract: string;
+      feedId: BytesLike;
+      settlementReward: BigNumberish;
+      disabled: boolean;
+      commitmentPriceDelay: BigNumberish;
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -2888,7 +3049,7 @@ export interface PerpsMarketProxy extends BaseContract {
     getAccountPermissions(
       accountId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<IAccountModule.AccountPermissionsStructOutput[]>;
+    ): Promise<[string, string[]] & { user: string; permissions: string[] }[]>;
 
     getAccountTokenAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -3090,7 +3251,16 @@ export interface PerpsMarketProxy extends BaseContract {
     getMarketSummary(
       marketId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<IPerpsMarketModule.MarketSummaryStructOutput>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        skew: BigNumber;
+        size: BigNumber;
+        maxOpenInterest: BigNumber;
+        currentFundingRate: BigNumber;
+        currentFundingVelocity: BigNumber;
+        indexPrice: BigNumber;
+      }
+    >;
 
     indexPrice(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -3106,11 +3276,66 @@ export interface PerpsMarketProxy extends BaseContract {
     skew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     commitOrder(
-      commitment: AsyncOrder.OrderCommitmentRequestStruct,
+      commitment: {
+        marketId: BigNumberish;
+        accountId: BigNumberish;
+        sizeDelta: BigNumberish;
+        settlementStrategyId: BigNumberish;
+        acceptablePrice: BigNumberish;
+        trackingCode: BytesLike;
+        referrer: string;
+      },
       overrides?: CallOverrides
     ): Promise<
-      [AsyncOrder.DataStructOutput, BigNumber] & {
-        retOrder: AsyncOrder.DataStructOutput;
+      [
+        [
+          BigNumber,
+          [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          }
+        ] & {
+          commitmentTime: BigNumber;
+          request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          };
+        },
+        BigNumber
+      ] & {
+        retOrder: [
+          BigNumber,
+          [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          }
+        ] & {
+          commitmentTime: BigNumber;
+          request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+            marketId: BigNumber;
+            accountId: BigNumber;
+            sizeDelta: BigNumber;
+            settlementStrategyId: BigNumber;
+            acceptablePrice: BigNumber;
+            trackingCode: string;
+            referrer: string;
+          };
+        };
         fees: BigNumber;
       }
     >;
@@ -3131,7 +3356,31 @@ export interface PerpsMarketProxy extends BaseContract {
     getOrder(
       accountId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<AsyncOrder.DataStructOutput>;
+    ): Promise<
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+          marketId: BigNumber;
+          accountId: BigNumber;
+          sizeDelta: BigNumber;
+          settlementStrategyId: BigNumber;
+          acceptablePrice: BigNumber;
+          trackingCode: string;
+          referrer: string;
+        }
+      ] & {
+        commitmentTime: BigNumber;
+        request: [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+          marketId: BigNumber;
+          accountId: BigNumber;
+          sizeDelta: BigNumber;
+          settlementStrategyId: BigNumber;
+          acceptablePrice: BigNumber;
+          trackingCode: string;
+          referrer: string;
+        };
+      }
+    >;
 
     getSettlementRewardCost(
       marketId: BigNumberish,
@@ -3227,7 +3476,16 @@ export interface PerpsMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3281,7 +3539,18 @@ export interface PerpsMarketProxy extends BaseContract {
       marketId: BigNumberish,
       strategyId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<SettlementStrategy.DataStructOutput>;
+    ): Promise<
+      [number, BigNumber, BigNumber, string, string, BigNumber, boolean, BigNumber] & {
+        strategyType: number;
+        settlementDelay: BigNumber;
+        settlementWindowDuration: BigNumber;
+        priceVerificationContract: string;
+        feedId: string;
+        settlementReward: BigNumber;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumber;
+      }
+    >;
 
     setFundingParameters(
       marketId: BigNumberish,
@@ -3337,7 +3606,16 @@ export interface PerpsMarketProxy extends BaseContract {
     setSettlementStrategy(
       marketId: BigNumberish,
       strategyId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -4143,7 +4421,15 @@ export interface PerpsMarketProxy extends BaseContract {
     skew(marketId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     commitOrder(
-      commitment: AsyncOrder.OrderCommitmentRequestStruct,
+      commitment: {
+        marketId: BigNumberish;
+        accountId: BigNumberish;
+        sizeDelta: BigNumberish;
+        settlementStrategyId: BigNumberish;
+        acceptablePrice: BigNumberish;
+        trackingCode: BytesLike;
+        referrer: string;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4260,7 +4546,16 @@ export interface PerpsMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4343,7 +4638,16 @@ export interface PerpsMarketProxy extends BaseContract {
     setSettlementStrategy(
       marketId: BigNumberish,
       strategyId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -4688,7 +4992,15 @@ export interface PerpsMarketProxy extends BaseContract {
     skew(marketId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     commitOrder(
-      commitment: AsyncOrder.OrderCommitmentRequestStruct,
+      commitment: {
+        marketId: BigNumberish;
+        accountId: BigNumberish;
+        sizeDelta: BigNumberish;
+        settlementStrategyId: BigNumberish;
+        acceptablePrice: BigNumberish;
+        trackingCode: BytesLike;
+        referrer: string;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -4817,7 +5129,16 @@ export interface PerpsMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -4918,7 +5239,16 @@ export interface PerpsMarketProxy extends BaseContract {
     setSettlementStrategy(
       marketId: BigNumberish,
       strategyId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        settlementReward: BigNumberish;
+        disabled: boolean;
+        commitmentPriceDelay: BigNumberish;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

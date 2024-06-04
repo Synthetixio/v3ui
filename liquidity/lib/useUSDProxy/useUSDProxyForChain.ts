@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { Network, useProviderForChain } from '@snx-v3/useBlockchain';
-import { importUSDProxy, USDProxyType } from '@synthetixio/v3-contracts';
+import { importUSDProxy, USDProxyType } from '@snx-v3/contracts';
 
 export function useUSDProxyForChain(network?: Network) {
   const provider = useProviderForChain(network);

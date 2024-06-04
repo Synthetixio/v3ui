@@ -62,32 +62,6 @@ import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export declare namespace NodeDefinition {
-  export type DataStruct = { nodeType: BigNumberish; parameters: BytesLike; parents: BytesLike[] };
-
-  export type DataStructOutput = [number, string, string[]] & {
-    nodeType: number;
-    parameters: string;
-    parents: string[];
-  };
-}
-
-export declare namespace NodeOutput {
-  export type DataStruct = {
-    price: BigNumberish;
-    timestamp: BigNumberish;
-    __slotAvailableForFutureUse1: BigNumberish;
-    __slotAvailableForFutureUse2: BigNumberish;
-  };
-
-  export type DataStructOutput = [BigNumber, BigNumber, BigNumber, BigNumber] & {
-    price: BigNumber;
-    timestamp: BigNumber;
-    __slotAvailableForFutureUse1: BigNumber;
-    __slotAvailableForFutureUse2: BigNumber;
-  };
-}
-
 export interface OracleManagerProxyInterface extends utils.Interface {
   functions: {
     'acceptOwnership()': FunctionFragment;
@@ -261,7 +235,15 @@ export interface OracleManagerProxy extends BaseContract {
     getNode(
       nodeId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[NodeDefinition.DataStructOutput] & { node: NodeDefinition.DataStructOutput }>;
+    ): Promise<
+      [[number, string, string[]] & { nodeType: number; parameters: string; parents: string[] }] & {
+        node: [number, string, string[]] & {
+          nodeType: number;
+          parameters: string;
+          parents: string[];
+        };
+      }
+    >;
 
     getNodeId(
       nodeType: BigNumberish,
@@ -273,14 +255,46 @@ export interface OracleManagerProxy extends BaseContract {
     process(
       nodeId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[NodeOutput.DataStructOutput] & { node: NodeOutput.DataStructOutput }>;
+    ): Promise<
+      [
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          price: BigNumber;
+          timestamp: BigNumber;
+          __slotAvailableForFutureUse1: BigNumber;
+          __slotAvailableForFutureUse2: BigNumber;
+        }
+      ] & {
+        node: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          price: BigNumber;
+          timestamp: BigNumber;
+          __slotAvailableForFutureUse1: BigNumber;
+          __slotAvailableForFutureUse2: BigNumber;
+        };
+      }
+    >;
 
     processWithRuntime(
       nodeId: BytesLike,
       runtimeKeys: BytesLike[],
       runtimeValues: BytesLike[],
       overrides?: CallOverrides
-    ): Promise<[NodeOutput.DataStructOutput] & { node: NodeOutput.DataStructOutput }>;
+    ): Promise<
+      [
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          price: BigNumber;
+          timestamp: BigNumber;
+          __slotAvailableForFutureUse1: BigNumber;
+          __slotAvailableForFutureUse2: BigNumber;
+        }
+      ] & {
+        node: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          price: BigNumber;
+          timestamp: BigNumber;
+          __slotAvailableForFutureUse1: BigNumber;
+          __slotAvailableForFutureUse2: BigNumber;
+        };
+      }
+    >;
 
     registerNode(
       nodeType: BigNumberish,
@@ -315,7 +329,12 @@ export interface OracleManagerProxy extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeDefinition.DataStructOutput>;
+  getNode(
+    nodeId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [number, string, string[]] & { nodeType: number; parameters: string; parents: string[] }
+  >;
 
   getNodeId(
     nodeType: BigNumberish,
@@ -324,14 +343,31 @@ export interface OracleManagerProxy extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  process(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeOutput.DataStructOutput>;
+  process(
+    nodeId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      price: BigNumber;
+      timestamp: BigNumber;
+      __slotAvailableForFutureUse1: BigNumber;
+      __slotAvailableForFutureUse2: BigNumber;
+    }
+  >;
 
   processWithRuntime(
     nodeId: BytesLike,
     runtimeKeys: BytesLike[],
     runtimeValues: BytesLike[],
     overrides?: CallOverrides
-  ): Promise<NodeOutput.DataStructOutput>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      price: BigNumber;
+      timestamp: BigNumber;
+      __slotAvailableForFutureUse1: BigNumber;
+      __slotAvailableForFutureUse2: BigNumber;
+    }
+  >;
 
   registerNode(
     nodeType: BigNumberish,
@@ -357,7 +393,12 @@ export interface OracleManagerProxy extends BaseContract {
 
     upgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
 
-    getNode(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeDefinition.DataStructOutput>;
+    getNode(
+      nodeId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [number, string, string[]] & { nodeType: number; parameters: string; parents: string[] }
+    >;
 
     getNodeId(
       nodeType: BigNumberish,
@@ -366,14 +407,31 @@ export interface OracleManagerProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    process(nodeId: BytesLike, overrides?: CallOverrides): Promise<NodeOutput.DataStructOutput>;
+    process(
+      nodeId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        price: BigNumber;
+        timestamp: BigNumber;
+        __slotAvailableForFutureUse1: BigNumber;
+        __slotAvailableForFutureUse2: BigNumber;
+      }
+    >;
 
     processWithRuntime(
       nodeId: BytesLike,
       runtimeKeys: BytesLike[],
       runtimeValues: BytesLike[],
       overrides?: CallOverrides
-    ): Promise<NodeOutput.DataStructOutput>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        price: BigNumber;
+        timestamp: BigNumber;
+        __slotAvailableForFutureUse1: BigNumber;
+        __slotAvailableForFutureUse2: BigNumber;
+      }
+    >;
 
     registerNode(
       nodeType: BigNumberish,

@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { AccountProxyType, importAccountProxy } from '@synthetixio/v3-contracts';
+import { AccountProxyType, importAccountProxy } from '@snx-v3/contracts';
 
 export function useAccountProxy() {
   const { network } = useNetwork();

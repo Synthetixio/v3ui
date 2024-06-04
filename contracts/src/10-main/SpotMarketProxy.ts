@@ -181,100 +181,6 @@ import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
 
-export declare namespace OrderFees {
-  export type DataStruct = {
-    fixedFees: BigNumberish;
-    utilizationFees: BigNumberish;
-    skewFees: BigNumberish;
-    wrapperFees: BigNumberish;
-  };
-
-  export type DataStructOutput = [BigNumber, BigNumber, BigNumber, BigNumber] & {
-    fixedFees: BigNumber;
-    utilizationFees: BigNumber;
-    skewFees: BigNumber;
-    wrapperFees: BigNumber;
-  };
-}
-
-export declare namespace AsyncOrderClaim {
-  export type DataStruct = {
-    id: BigNumberish;
-    owner: string;
-    orderType: BigNumberish;
-    amountEscrowed: BigNumberish;
-    settlementStrategyId: BigNumberish;
-    settlementTime: BigNumberish;
-    minimumSettlementAmount: BigNumberish;
-    settledAt: BigNumberish;
-    referrer: string;
-  };
-
-  export type DataStructOutput = [
-    BigNumber,
-    string,
-    number,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string
-  ] & {
-    id: BigNumber;
-    owner: string;
-    orderType: number;
-    amountEscrowed: BigNumber;
-    settlementStrategyId: BigNumber;
-    settlementTime: BigNumber;
-    minimumSettlementAmount: BigNumber;
-    settledAt: BigNumber;
-    referrer: string;
-  };
-}
-
-export declare namespace SettlementStrategy {
-  export type DataStruct = {
-    strategyType: BigNumberish;
-    settlementDelay: BigNumberish;
-    settlementWindowDuration: BigNumberish;
-    priceVerificationContract: string;
-    feedId: BytesLike;
-    url: string;
-    settlementReward: BigNumberish;
-    priceDeviationTolerance: BigNumberish;
-    minimumUsdExchangeAmount: BigNumberish;
-    maxRoundingLoss: BigNumberish;
-    disabled: boolean;
-  };
-
-  export type DataStructOutput = [
-    number,
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    string,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    boolean
-  ] & {
-    strategyType: number;
-    settlementDelay: BigNumber;
-    settlementWindowDuration: BigNumber;
-    priceVerificationContract: string;
-    feedId: string;
-    url: string;
-    settlementReward: BigNumber;
-    priceDeviationTolerance: BigNumber;
-    minimumUsdExchangeAmount: BigNumber;
-    maxRoundingLoss: BigNumber;
-    disabled: boolean;
-  };
-}
-
 export interface SpotMarketProxyInterface extends utils.Interface {
   functions: {
     'acceptOwnership()': FunctionFragment;
@@ -538,7 +444,22 @@ export interface SpotMarketProxyInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'settlePythOrder', values: [BytesLike, BytesLike]): string;
   encodeFunctionData(
     functionFragment: 'addSettlementStrategy',
-    values: [BigNumberish, SettlementStrategy.DataStruct]
+    values: [
+      BigNumberish,
+      {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        url: string;
+        settlementReward: BigNumberish;
+        priceDeviationTolerance: BigNumberish;
+        minimumUsdExchangeAmount: BigNumberish;
+        maxRoundingLoss: BigNumberish;
+        disabled: boolean;
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: 'getSettlementStrategy',
@@ -916,13 +837,30 @@ export type SynthetixSystemSetEventFilter = TypedEventFilter<SynthetixSystemSetE
 export interface SynthBoughtEventObject {
   synthMarketId: BigNumber;
   synthReturned: BigNumber;
-  fees: OrderFees.DataStructOutput;
+  fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    fixedFees: BigNumber;
+    utilizationFees: BigNumber;
+    skewFees: BigNumber;
+    wrapperFees: BigNumber;
+  };
   collectedFees: BigNumber;
   referrer: string;
   price: BigNumber;
 }
 export type SynthBoughtEvent = TypedEvent<
-  [BigNumber, BigNumber, OrderFees.DataStructOutput, BigNumber, string, BigNumber],
+  [
+    BigNumber,
+    BigNumber,
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      fixedFees: BigNumber;
+      utilizationFees: BigNumber;
+      skewFees: BigNumber;
+      wrapperFees: BigNumber;
+    },
+    BigNumber,
+    string,
+    BigNumber
+  ],
   SynthBoughtEventObject
 >;
 
@@ -931,13 +869,30 @@ export type SynthBoughtEventFilter = TypedEventFilter<SynthBoughtEvent>;
 export interface SynthSoldEventObject {
   synthMarketId: BigNumber;
   amountReturned: BigNumber;
-  fees: OrderFees.DataStructOutput;
+  fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    fixedFees: BigNumber;
+    utilizationFees: BigNumber;
+    skewFees: BigNumber;
+    wrapperFees: BigNumber;
+  };
   collectedFees: BigNumber;
   referrer: string;
   price: BigNumber;
 }
 export type SynthSoldEvent = TypedEvent<
-  [BigNumber, BigNumber, OrderFees.DataStructOutput, BigNumber, string, BigNumber],
+  [
+    BigNumber,
+    BigNumber,
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      fixedFees: BigNumber;
+      utilizationFees: BigNumber;
+      skewFees: BigNumber;
+      wrapperFees: BigNumber;
+    },
+    BigNumber,
+    string,
+    BigNumber
+  ],
   SynthSoldEventObject
 >;
 
@@ -946,11 +901,46 @@ export type SynthSoldEventFilter = TypedEventFilter<SynthSoldEvent>;
 export interface OrderCancelledEventObject {
   marketId: BigNumber;
   asyncOrderId: BigNumber;
-  asyncOrderClaim: AsyncOrderClaim.DataStructOutput;
+  asyncOrderClaim: [
+    BigNumber,
+    string,
+    number,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    string
+  ] & {
+    id: BigNumber;
+    owner: string;
+    orderType: number;
+    amountEscrowed: BigNumber;
+    settlementStrategyId: BigNumber;
+    settlementTime: BigNumber;
+    minimumSettlementAmount: BigNumber;
+    settledAt: BigNumber;
+    referrer: string;
+  };
   sender: string;
 }
 export type OrderCancelledEvent = TypedEvent<
-  [BigNumber, BigNumber, AsyncOrderClaim.DataStructOutput, string],
+  [
+    BigNumber,
+    BigNumber,
+    [BigNumber, string, number, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string] & {
+      id: BigNumber;
+      owner: string;
+      orderType: number;
+      amountEscrowed: BigNumber;
+      settlementStrategyId: BigNumber;
+      settlementTime: BigNumber;
+      minimumSettlementAmount: BigNumber;
+      settledAt: BigNumber;
+      referrer: string;
+    },
+    string
+  ],
   OrderCancelledEventObject
 >;
 
@@ -975,7 +965,12 @@ export interface OrderSettledEventObject {
   marketId: BigNumber;
   asyncOrderId: BigNumber;
   finalOrderAmount: BigNumber;
-  fees: OrderFees.DataStructOutput;
+  fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    fixedFees: BigNumber;
+    utilizationFees: BigNumber;
+    skewFees: BigNumber;
+    wrapperFees: BigNumber;
+  };
   collectedFees: BigNumber;
   settler: string;
   price: BigNumber;
@@ -986,7 +981,12 @@ export type OrderSettledEvent = TypedEvent<
     BigNumber,
     BigNumber,
     BigNumber,
-    OrderFees.DataStructOutput,
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      fixedFees: BigNumber;
+      utilizationFees: BigNumber;
+      skewFees: BigNumber;
+      wrapperFees: BigNumber;
+    },
     BigNumber,
     string,
     BigNumber,
@@ -1023,11 +1023,26 @@ export type SettlementStrategyUpdatedEventFilter = TypedEventFilter<SettlementSt
 export interface SynthUnwrappedEventObject {
   synthMarketId: BigNumber;
   amountUnwrapped: BigNumber;
-  fees: OrderFees.DataStructOutput;
+  fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    fixedFees: BigNumber;
+    utilizationFees: BigNumber;
+    skewFees: BigNumber;
+    wrapperFees: BigNumber;
+  };
   feesCollected: BigNumber;
 }
 export type SynthUnwrappedEvent = TypedEvent<
-  [BigNumber, BigNumber, OrderFees.DataStructOutput, BigNumber],
+  [
+    BigNumber,
+    BigNumber,
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      fixedFees: BigNumber;
+      utilizationFees: BigNumber;
+      skewFees: BigNumber;
+      wrapperFees: BigNumber;
+    },
+    BigNumber
+  ],
   SynthUnwrappedEventObject
 >;
 
@@ -1036,11 +1051,26 @@ export type SynthUnwrappedEventFilter = TypedEventFilter<SynthUnwrappedEvent>;
 export interface SynthWrappedEventObject {
   synthMarketId: BigNumber;
   amountWrapped: BigNumber;
-  fees: OrderFees.DataStructOutput;
+  fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    fixedFees: BigNumber;
+    utilizationFees: BigNumber;
+    skewFees: BigNumber;
+    wrapperFees: BigNumber;
+  };
   feesCollected: BigNumber;
 }
 export type SynthWrappedEvent = TypedEvent<
-  [BigNumber, BigNumber, OrderFees.DataStructOutput, BigNumber],
+  [
+    BigNumber,
+    BigNumber,
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      fixedFees: BigNumber;
+      utilizationFees: BigNumber;
+      skewFees: BigNumber;
+      wrapperFees: BigNumber;
+    },
+    BigNumber
+  ],
   SynthWrappedEventObject
 >;
 
@@ -1406,9 +1436,22 @@ export interface SpotMarketProxy extends BaseContract {
       usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -1417,9 +1460,22 @@ export interface SpotMarketProxy extends BaseContract {
       synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         usdAmountCharged: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -1428,9 +1484,22 @@ export interface SpotMarketProxy extends BaseContract {
       synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         returnAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -1439,9 +1508,22 @@ export interface SpotMarketProxy extends BaseContract {
       usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthToBurn: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -1490,7 +1572,51 @@ export interface SpotMarketProxy extends BaseContract {
       asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [AsyncOrderClaim.DataStructOutput] & { asyncOrderClaim: AsyncOrderClaim.DataStructOutput }
+      [
+        [
+          BigNumber,
+          string,
+          number,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string
+        ] & {
+          id: BigNumber;
+          owner: string;
+          orderType: number;
+          amountEscrowed: BigNumber;
+          settlementStrategyId: BigNumber;
+          settlementTime: BigNumber;
+          minimumSettlementAmount: BigNumber;
+          settledAt: BigNumber;
+          referrer: string;
+        }
+      ] & {
+        asyncOrderClaim: [
+          BigNumber,
+          string,
+          number,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string
+        ] & {
+          id: BigNumber;
+          owner: string;
+          orderType: number;
+          amountEscrowed: BigNumber;
+          settlementStrategyId: BigNumber;
+          settlementTime: BigNumber;
+          minimumSettlementAmount: BigNumber;
+          settledAt: BigNumber;
+          referrer: string;
+        };
+      }
     >;
 
     PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -1509,7 +1635,19 @@ export interface SpotMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        url: string;
+        settlementReward: BigNumberish;
+        priceDeviationTolerance: BigNumberish;
+        minimumUsdExchangeAmount: BigNumberish;
+        maxRoundingLoss: BigNumberish;
+        disabled: boolean;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -1518,8 +1656,58 @@ export interface SpotMarketProxy extends BaseContract {
       strategyId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [SettlementStrategy.DataStructOutput] & {
-        settlementStrategy: SettlementStrategy.DataStructOutput;
+      [
+        [
+          number,
+          BigNumber,
+          BigNumber,
+          string,
+          string,
+          string,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          boolean
+        ] & {
+          strategyType: number;
+          settlementDelay: BigNumber;
+          settlementWindowDuration: BigNumber;
+          priceVerificationContract: string;
+          feedId: string;
+          url: string;
+          settlementReward: BigNumber;
+          priceDeviationTolerance: BigNumber;
+          minimumUsdExchangeAmount: BigNumber;
+          maxRoundingLoss: BigNumber;
+          disabled: boolean;
+        }
+      ] & {
+        settlementStrategy: [
+          number,
+          BigNumber,
+          BigNumber,
+          string,
+          string,
+          string,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          boolean
+        ] & {
+          strategyType: number;
+          settlementDelay: BigNumber;
+          settlementWindowDuration: BigNumber;
+          priceVerificationContract: string;
+          feedId: string;
+          url: string;
+          settlementReward: BigNumber;
+          priceDeviationTolerance: BigNumber;
+          minimumUsdExchangeAmount: BigNumber;
+          maxRoundingLoss: BigNumber;
+          disabled: boolean;
+        };
       }
     >;
 
@@ -1850,9 +2038,22 @@ export interface SpotMarketProxy extends BaseContract {
     usdAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, OrderFees.DataStructOutput] & {
+    [
+      BigNumber,
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      }
+    ] & {
       synthAmount: BigNumber;
-      fees: OrderFees.DataStructOutput;
+      fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      };
     }
   >;
 
@@ -1861,9 +2062,22 @@ export interface SpotMarketProxy extends BaseContract {
     synthAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, OrderFees.DataStructOutput] & {
+    [
+      BigNumber,
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      }
+    ] & {
       usdAmountCharged: BigNumber;
-      fees: OrderFees.DataStructOutput;
+      fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      };
     }
   >;
 
@@ -1872,9 +2086,22 @@ export interface SpotMarketProxy extends BaseContract {
     synthAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, OrderFees.DataStructOutput] & {
+    [
+      BigNumber,
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      }
+    ] & {
       returnAmount: BigNumber;
-      fees: OrderFees.DataStructOutput;
+      fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      };
     }
   >;
 
@@ -1883,9 +2110,22 @@ export interface SpotMarketProxy extends BaseContract {
     usdAmount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, OrderFees.DataStructOutput] & {
+    [
+      BigNumber,
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      }
+    ] & {
       synthToBurn: BigNumber;
-      fees: OrderFees.DataStructOutput;
+      fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        fixedFees: BigNumber;
+        utilizationFees: BigNumber;
+        skewFees: BigNumber;
+        wrapperFees: BigNumber;
+      };
     }
   >;
 
@@ -1933,7 +2173,19 @@ export interface SpotMarketProxy extends BaseContract {
     marketId: BigNumberish,
     asyncOrderId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<AsyncOrderClaim.DataStructOutput>;
+  ): Promise<
+    [BigNumber, string, number, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string] & {
+      id: BigNumber;
+      owner: string;
+      orderType: number;
+      amountEscrowed: BigNumber;
+      settlementStrategyId: BigNumber;
+      settlementTime: BigNumber;
+      minimumSettlementAmount: BigNumber;
+      settledAt: BigNumber;
+      referrer: string;
+    }
+  >;
 
   PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1951,7 +2203,19 @@ export interface SpotMarketProxy extends BaseContract {
 
   addSettlementStrategy(
     marketId: BigNumberish,
-    strategy: SettlementStrategy.DataStruct,
+    strategy: {
+      strategyType: BigNumberish;
+      settlementDelay: BigNumberish;
+      settlementWindowDuration: BigNumberish;
+      priceVerificationContract: string;
+      feedId: BytesLike;
+      url: string;
+      settlementReward: BigNumberish;
+      priceDeviationTolerance: BigNumberish;
+      minimumUsdExchangeAmount: BigNumberish;
+      maxRoundingLoss: BigNumberish;
+      disabled: boolean;
+    },
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -1959,7 +2223,33 @@ export interface SpotMarketProxy extends BaseContract {
     marketId: BigNumberish,
     strategyId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<SettlementStrategy.DataStructOutput>;
+  ): Promise<
+    [
+      number,
+      BigNumber,
+      BigNumber,
+      string,
+      string,
+      string,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      boolean
+    ] & {
+      strategyType: number;
+      settlementDelay: BigNumber;
+      settlementWindowDuration: BigNumber;
+      priceVerificationContract: string;
+      feedId: string;
+      url: string;
+      settlementReward: BigNumber;
+      priceDeviationTolerance: BigNumber;
+      minimumUsdExchangeAmount: BigNumber;
+      maxRoundingLoss: BigNumber;
+      disabled: boolean;
+    }
+  >;
 
   setSettlementStrategyEnabled(
     marketId: BigNumberish,
@@ -2230,9 +2520,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2243,9 +2546,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2256,9 +2572,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         usdAmountCharged: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2267,9 +2596,22 @@ export interface SpotMarketProxy extends BaseContract {
       usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2278,9 +2620,22 @@ export interface SpotMarketProxy extends BaseContract {
       synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         usdAmountCharged: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2289,9 +2644,22 @@ export interface SpotMarketProxy extends BaseContract {
       synthAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         returnAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2300,9 +2668,22 @@ export interface SpotMarketProxy extends BaseContract {
       usdAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthToBurn: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2313,9 +2694,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         usdAmountReceived: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2326,9 +2720,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         returnAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2339,9 +2746,22 @@ export interface SpotMarketProxy extends BaseContract {
       referrer: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         synthToBurn: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2359,13 +2779,37 @@ export interface SpotMarketProxy extends BaseContract {
       minimumSettlementAmount: BigNumberish,
       referrer: string,
       overrides?: CallOverrides
-    ): Promise<AsyncOrderClaim.DataStructOutput>;
+    ): Promise<
+      [BigNumber, string, number, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string] & {
+        id: BigNumber;
+        owner: string;
+        orderType: number;
+        amountEscrowed: BigNumber;
+        settlementStrategyId: BigNumber;
+        settlementTime: BigNumber;
+        minimumSettlementAmount: BigNumber;
+        settledAt: BigNumber;
+        referrer: string;
+      }
+    >;
 
     getAsyncOrderClaim(
       marketId: BigNumberish,
       asyncOrderId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<AsyncOrderClaim.DataStructOutput>;
+    ): Promise<
+      [BigNumber, string, number, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string] & {
+        id: BigNumber;
+        owner: string;
+        orderType: number;
+        amountEscrowed: BigNumber;
+        settlementStrategyId: BigNumber;
+        settlementTime: BigNumber;
+        minimumSettlementAmount: BigNumber;
+        settledAt: BigNumber;
+        referrer: string;
+      }
+    >;
 
     PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2374,9 +2818,22 @@ export interface SpotMarketProxy extends BaseContract {
       asyncOrderId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         finalOrderAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2385,15 +2842,40 @@ export interface SpotMarketProxy extends BaseContract {
       extraData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         finalOrderAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        url: string;
+        settlementReward: BigNumberish;
+        priceDeviationTolerance: BigNumberish;
+        minimumUsdExchangeAmount: BigNumberish;
+        maxRoundingLoss: BigNumberish;
+        disabled: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2401,7 +2883,33 @@ export interface SpotMarketProxy extends BaseContract {
       marketId: BigNumberish,
       strategyId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<SettlementStrategy.DataStructOutput>;
+    ): Promise<
+      [
+        number,
+        BigNumber,
+        BigNumber,
+        string,
+        string,
+        string,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        boolean
+      ] & {
+        strategyType: number;
+        settlementDelay: BigNumber;
+        settlementWindowDuration: BigNumber;
+        priceVerificationContract: string;
+        feedId: string;
+        url: string;
+        settlementReward: BigNumber;
+        priceDeviationTolerance: BigNumber;
+        minimumUsdExchangeAmount: BigNumber;
+        maxRoundingLoss: BigNumber;
+        disabled: boolean;
+      }
+    >;
 
     setSettlementStrategyEnabled(
       marketId: BigNumberish,
@@ -2423,9 +2931,22 @@ export interface SpotMarketProxy extends BaseContract {
       minAmountReceived: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         returnCollateralAmount: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -2435,9 +2956,22 @@ export interface SpotMarketProxy extends BaseContract {
       minAmountReceived: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, OrderFees.DataStructOutput] & {
+      [
+        BigNumber,
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        }
+      ] & {
         amountToMint: BigNumber;
-        fees: OrderFees.DataStructOutput;
+        fees: [BigNumber, BigNumber, BigNumber, BigNumber] & {
+          fixedFees: BigNumber;
+          utilizationFees: BigNumber;
+          skewFees: BigNumber;
+          wrapperFees: BigNumber;
+        };
       }
     >;
 
@@ -3186,7 +3720,19 @@ export interface SpotMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        url: string;
+        settlementReward: BigNumberish;
+        priceDeviationTolerance: BigNumberish;
+        minimumUsdExchangeAmount: BigNumberish;
+        maxRoundingLoss: BigNumberish;
+        disabled: boolean;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -3592,7 +4138,19 @@ export interface SpotMarketProxy extends BaseContract {
 
     addSettlementStrategy(
       marketId: BigNumberish,
-      strategy: SettlementStrategy.DataStruct,
+      strategy: {
+        strategyType: BigNumberish;
+        settlementDelay: BigNumberish;
+        settlementWindowDuration: BigNumberish;
+        priceVerificationContract: string;
+        feedId: BytesLike;
+        url: string;
+        settlementReward: BigNumberish;
+        priceDeviationTolerance: BigNumberish;
+        minimumUsdExchangeAmount: BigNumberish;
+        maxRoundingLoss: BigNumberish;
+        disabled: boolean;
+      },
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

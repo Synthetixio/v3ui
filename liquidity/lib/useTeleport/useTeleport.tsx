@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
+import { CoreProxyType } from '@snx-v3/contracts';
 import { useMutation } from '@tanstack/react-query';
 import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';

@@ -5,7 +5,7 @@ import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { z } from 'zod';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
+import { CoreProxyType } from '@snx-v3/contracts';
 import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';

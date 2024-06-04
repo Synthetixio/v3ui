@@ -7,7 +7,7 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { CoreProxyType, importCoreProxy } from '@synthetixio/v3-contracts';
+import { CoreProxyType, importCoreProxy } from '@snx-v3/contracts';
 
 export function useCoreProxy(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);

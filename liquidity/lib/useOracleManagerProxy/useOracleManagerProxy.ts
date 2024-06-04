@@ -7,7 +7,7 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
+import { importOracleManagerProxy, OracleManagerProxyType } from '@snx-v3/contracts';
 
 export function useOracleManagerProxy(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);
