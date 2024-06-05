@@ -30,6 +30,10 @@ const babelRule = {
     /contracts/,
     /liquidity\/lib/,
     /liquidity\/components/,
+
+    // fixes for borked 3rd party bundles
+    /@safe-global/,
+    /@web3-onboard/,
   ],
   resolve: {
     fullySpecified: false,
