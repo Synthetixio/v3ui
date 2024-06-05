@@ -1,9 +1,5 @@
 it('shows homepage to a not connected wallet', () => {
-  cy.on('window:before:load', (win) => {
-    win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
-  });
-
-  cy.viewport(1100, 900);
+  cy.viewport(1300, 900);
 
   cy.visit('/');
 

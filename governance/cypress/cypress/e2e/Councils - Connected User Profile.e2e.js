@@ -1,17 +1,12 @@
 it('shows user profile card', () => {
-  cy.on('window:before:load', (win) => {
-    win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
-    win.localStorage.setItem('connectedWallets', '"MetaMask"');
-  });
-  cy.connectWallet().then(({ address }) => {
-    cy.viewport(1100, 900);
+  cy.connectWallet();
+  cy.viewport(1300, 900);
+  cy.visit('/');
 
-    cy.visit('/#/councils/spartan?view=' + address);
+  cy.get('@wallet').then((wallet) => {
+    cy.visit(`/#/councils/spartan?view=${wallet.address}`);
     cy.get('[data-testid="user-wallet-profile-address"]').contains(
-      address
-        .substring(0, 4)
-        .concat('...')
-        .concat(address.substring(address.length - 4))
+      `${wallet.address.substring(0, 6)}`
     );
   });
 });

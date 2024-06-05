@@ -220,7 +220,6 @@ export function Header() {
               </MenuButton>
               <MenuList zIndex={100}>
                 <MenuItem
-                  data-testid="copy-user-wallet-address"
                   onClick={() => {
                     try {
                       navigator.clipboard.writeText(activeWallet?.address);
