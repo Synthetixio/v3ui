@@ -6,10 +6,14 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 
-const supportedNetworks = [8453];
+const supportedDeployments = [
+  //
+  '8453-andromeda',
+];
 
-// Filter networks to only supported ones
-export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
+export const chains = NETWORKS.filter(({ id, preset }) =>
+  supportedDeployments.includes(`${id}-${preset}`)
+).map((n) => ({
   id: n.id,
   token: n.token,
   label: n.label,
@@ -35,7 +39,7 @@ export const onboard = init({
     // gnosisModule(),
     coinbaseModule(),
   ],
-  chains: [...networks],
+  chains,
   appMetadata: {
     ...appMetadata,
     name: 'Synthetix Governance',
