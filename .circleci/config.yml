@@ -182,7 +182,7 @@ jobs:
 
       - run:
           working_directory: /tmp/app/governance/cypress
-          command: cypress run --e2e
+          command: cypress run --e2e --browser chrome
 
       - store_test_results:
           path: 'governance/cypress/cypress/reports'
@@ -235,7 +235,7 @@ jobs:
 
       - run:
           working_directory: /tmp/app/liquidity/cypress
-          command: cypress run --e2e
+          command: cypress run --e2e --browser chrome
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
