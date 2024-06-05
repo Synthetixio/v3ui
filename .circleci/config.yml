@@ -178,7 +178,7 @@ jobs:
 
       - run:
           working_directory: /tmp/app/governance/cypress
-          command: cypress run --e2e --browser chrome
+          command: cypress run --e2e
 
       - store_test_results:
           path: 'governance/cypress/cypress/reports'
