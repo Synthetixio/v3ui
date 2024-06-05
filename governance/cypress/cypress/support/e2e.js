@@ -14,7 +14,7 @@ beforeEach(() => {
     return subgraph(req);
   }).as('subgraph');
 
-  ['sepolia'].forEach((networkName) => {
+  ['sepolia', 'optimism-mainnet'].forEach((networkName) => {
     cy.intercept(`https://${networkName}.infura.io/v3/*`, (req) => {
       req.url = 'http://127.0.0.1:8545';
       req.continue();
