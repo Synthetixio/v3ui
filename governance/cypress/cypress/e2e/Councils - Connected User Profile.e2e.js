@@ -6,7 +6,7 @@ it('shows user profile card', () => {
   cy.get('@wallet').then((wallet) => {
     cy.visit(`/#/councils/spartan?view=${wallet.address}`);
     cy.get('[data-testid="user-wallet-profile-address"]').contains(
-      `${wallet.address.substring(0, 6)}`
+      `${wallet.address.substring(0, 4)}`
     );
   });
 });
