@@ -7,7 +7,7 @@ parameters:
 
   cypress-version:
     type: string
-    default: '13.6.4'
+    default: '13.11.0'
 
 commands:
   yarn-install:
