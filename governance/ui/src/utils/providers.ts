@@ -2,11 +2,9 @@ import { providers } from 'ethers';
 
 // Sepolia for testnet
 export const motherShipProvider = new providers.JsonRpcProvider(
-  process.env.DEV
-    ? 'https://ethereum-sepolia.publicnode.com'
-    : process.env.TESTNET
-      ? `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`
-      : 'https://mainnet.optimism.io'
+  process.env.TESTNET
+    ? `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`
+    : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
 );
 
 // // Mumbai for testnet

@@ -6,10 +6,10 @@
   "scripts": {
     "start": "anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
     "start:andromeda": "anvil --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY",
-    "cy": "NODE_ENV=test cypress open --component --browser chrome",
-    "cy:check": "NODE_ENV=test cypress run --component --browser chrome",
-    "e2e": "NODE_ENV=test cypress open --e2e --browser chrome",
-    "e2e:check": "NODE_ENV=test cypress run --e2e --browser chrome"
+    "cy": "NODE_ENV=test cypress open --component",
+    "cy:check": "NODE_ENV=test cypress run --component",
+    "e2e": "NODE_ENV=test cypress open --e2e",
+    "e2e:check": "NODE_ENV=test cypress run --e2e"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",

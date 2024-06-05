@@ -145,13 +145,17 @@ jobs:
             git diff --name-only --exit-code
       - run: yarn typecheck
 
-  governance-cy:
+  governance-e2e:
+    parameters:
+      chain:
+        type: string
     working_directory: /tmp/app
     docker:
       - image: cypress/included:<< pipeline.parameters.cypress-version >>
     resource_class: large
     environment:
       NODE_ENV: test
+      TESTNET: 1
     steps:
       - checkout
       - install-foundry
@@ -160,12 +164,12 @@ jobs:
       - run:
           name: Run server localhost:3000
           working_directory: /tmp/app/governance/ui
-          command: yarn dev:testnet
+          command: yarn start
           background: true
 
       - run:
           name: Run anvil localhost:8545
-          command: anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY
+          command: anvil --fork-url https://<< parameters.chain >>.infura.io/v3/$INFURA_KEY
           background: true
 
       - run:
@@ -231,7 +235,7 @@ jobs:
 
       - run:
           working_directory: /tmp/app/liquidity/cypress
-          command: cypress run --e2e --browser chrome
+          command: cypress run --e2e
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -260,7 +264,7 @@ jobs:
 
       - run:
           working_directory: /tmp/app/liquidity/cypress
-          command: cypress run --component --browser chrome
+          command: cypress run --component
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -337,7 +341,9 @@ workflows:
       - typecheck
       - tests
       - liquidity-cy
-      - governance-cy
+      - governance-e2e:
+          chain: sepolia
+          name: governance-e2e-sepolia
       - liquidity-e2e:
           chain: base-mainnet
           name: liquidity-e2e-base-mainnet
@@ -346,7 +352,13 @@ workflows:
           name: liquidity-e2e-sepolia
       - combine-coverage:
           requires:
-            [tests, liquidity-cy, governance-cy, liquidity-e2e-base-mainnet, liquidity-e2e-sepolia]
+            [
+              tests,
+              liquidity-cy,
+              governance-e2e-sepolia,
+              liquidity-e2e-base-mainnet,
+              liquidity-e2e-sepolia,
+            ]
       - liquidity-armada:
           requires:
             - checks
