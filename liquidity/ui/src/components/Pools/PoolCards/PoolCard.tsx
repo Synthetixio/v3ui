@@ -117,21 +117,6 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 lineHeight="36px"
               >
                 {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
-                <Tooltip
-                  label={
-                    <Flex flexDirection="column" alignItems="start">
-                      <Text fontWeight="bold" fontSize="14px">
-                        Total Value Locked:
-                      </Text>
-                      <Text textAlign="left" fontSize="14px">
-                        Is the total amount of assets locked as collateral on this Pool.
-                      </Text>
-                      <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                    </Flex>
-                  }
-                >
-                  <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
-                </Tooltip>
               </Text>
             </Flex>
             <Flex alignItems="center" gap={2}>
@@ -140,27 +125,6 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
               </Text>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {apr.combinedApr > 0 ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
-                {apr.combinedApr > 0 && (
-                  <Tooltip
-                    label={
-                      <Flex flexDirection="column" alignItems="start">
-                        <Text fontWeight="bold" fontSize="14px">
-                          Annual Percentage Yield (APY):
-                        </Text>
-                        <Text textAlign="left" fontSize="14px">
-                          Reflects the Pool PNL. It is calculated as an estimate derived from past
-                          week historical PNL, extrapolated as a year average.
-                        </Text>
-                        <Text fontWeight="bold" mt={2} fontSize="14px">
-                          Calculation
-                        </Text>
-                        <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                      </Flex>
-                    }
-                  >
-                    <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
-                  </Tooltip>
-                )}
               </Text>
             </Flex>
           </Flex>

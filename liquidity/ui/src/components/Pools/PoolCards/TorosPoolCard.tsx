@@ -1,8 +1,6 @@
 import { Flex, Heading, Tag, Text, Divider, Button, Link, Box, Fade } from '@chakra-ui/react';
-import { InfoIcon } from '@chakra-ui/icons';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
-import { Tooltip } from '@snx-v3/Tooltip';
 
 interface TorosPoolCardProps {
   tvl: string;
@@ -48,46 +46,12 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
             </Text>
             <Text fontSize="20px" fontWeight={700} color="white" mr="4">
               ${tvl}
-              <Tooltip
-                label={
-                  <Flex flexDirection="column" alignItems="start">
-                    <Text fontWeight="bold" fontSize="14px">
-                      Total Value Locked:
-                    </Text>
-                    <Text textAlign="left" fontSize="14px">
-                      Is the total amount of assets locked as collateral on this Pool.
-                    </Text>
-                    <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                  </Flex>
-                }
-              >
-                <InfoIcon ml={1} mb={0.5} w="10px" h="10px" />
-              </Tooltip>
             </Text>
             <Text fontSize="20px" fontWeight={700} color="gray.500">
               APY
             </Text>
             <Text fontSize="20px" fontWeight={700} color="white">
               Up to {apy}%
-              <Tooltip
-                label={
-                  <Flex flexDirection="column" alignItems="start">
-                    <Text fontWeight="bold" fontSize="14px">
-                      Annual Percentage Yield (APY):
-                    </Text>
-                    <Text textAlign="left" fontSize="14px">
-                      Reflects the Pool PNL. It is calculated as an estimate derived from past week
-                      historical PNL, extrapolated as a year average.
-                    </Text>
-                    <Text fontWeight="bold" mt={2} fontSize="14px">
-                      Calculation
-                    </Text>
-                    <Text fontSize="14px">Last 7 days Pool PNL * 52</Text>
-                  </Flex>
-                }
-              >
-                <InfoIcon ml={1} w="10px" h="10px" mb={0.5} />
-              </Tooltip>
             </Text>
           </Flex>
           <Divider />
