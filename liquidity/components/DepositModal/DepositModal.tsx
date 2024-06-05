@@ -9,30 +9,30 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { FC, useCallback, useEffect, useMemo } from 'react';
-import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-import { utils } from 'ethers';
-import { generatePath, useNavigate, useLocation } from 'react-router-dom';
-import { useApprove } from '@snx-v3/useApprove';
-import { useWrapEth } from '@snx-v3/useWrapEth';
+import { ContractError } from '@snx-v3/ContractError';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Multistep } from '@snx-v3/Multistep';
-import { Wei, wei } from '@synthetixio/wei';
+import { useApprove } from '@snx-v3/useApprove';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
-import { useParams } from '@snx-v3/useParams';
-import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
-import { useMachine } from '@xstate/react';
-import type { StateFrom } from 'xstate';
-import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { ContractError } from '@snx-v3/ContractError';
-import { usePool } from '@snx-v3/usePools';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useDepositBaseAndromeda } from '../../lib/useDepositBaseAndromeda';
-import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
+import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useParams } from '@snx-v3/useParams';
+import { usePool } from '@snx-v3/usePools';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
+import { useWrapEth } from '@snx-v3/useWrapEth';
+import { Wei, wei } from '@synthetixio/wei';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMachine } from '@xstate/react';
+import { utils } from 'ethers';
+import { FC, useCallback, useEffect, useMemo } from 'react';
+import { generatePath, useLocation, useNavigate } from 'react-router-dom';
+import type { StateFrom } from 'xstate';
+import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;

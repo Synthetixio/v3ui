@@ -5979,9 +5979,11 @@ __metadata:
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useDeposit": "workspace:*"
+    "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6113,6 +6115,8 @@ __metadata:
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
+    "@snx-v3/useRepayBaseAndromeda": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6169,6 +6173,7 @@ __metadata:
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useUndelegate": "workspace:*"
+    "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     "@xstate/react": "npm:^3.2.2"
@@ -6956,7 +6961,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
+"@snx-v3/useDepositBaseAndromeda@workspace:*, @snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda"
   dependencies:
@@ -7210,7 +7215,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
+"@snx-v3/useRepayBaseAndromeda@workspace:*, @snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRepayBaseAndromeda@workspace:liquidity/lib/useRepayBaseAndromeda"
   dependencies:
@@ -7346,7 +7351,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useUndelegateBaseAndromeda@workspace:liquidity/lib/useUndelegateBaseAndromeda":
+"@snx-v3/useUndelegateBaseAndromeda@workspace:*, @snx-v3/useUndelegateBaseAndromeda@workspace:liquidity/lib/useUndelegateBaseAndromeda":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useUndelegateBaseAndromeda@workspace:liquidity/lib/useUndelegateBaseAndromeda"
   dependencies:
