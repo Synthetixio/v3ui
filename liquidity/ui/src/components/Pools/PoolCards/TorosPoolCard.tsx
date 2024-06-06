@@ -83,18 +83,17 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
               <Button
                 size="sm"
                 variant="outline"
-                fontSize="14px"
-                lineHeight="20px"
+                colorScheme="gray"
                 height="32px"
                 py="10px"
                 px="12px"
-                fontWeight={700}
-                borderWidth="1px"
-                borderColor="gray.900"
+                whiteSpace="nowrap"
                 borderRadius="4px"
-                display="flex"
-                gap="2"
                 color="white"
+                fontFamily="heading"
+                fontWeight={700}
+                fontSize="14px"
+                lineHeight="20px"
               >
                 Deposit on Toros
                 <LinkOffIcon />

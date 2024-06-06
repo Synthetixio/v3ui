@@ -166,7 +166,6 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 </Flex>
               </Flex>
               <Button
-                size="sm"
                 onClick={async (e) => {
                   try {
                     e.stopPropagation();
@@ -175,6 +174,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                       setNetwork(network.id);
                       return;
                     }
+
                     if (currentNetwork?.id !== network.id) {
                       if (!(await setNetwork(network.id))) {
                         return;
@@ -187,6 +187,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                     });
                   } catch (error) {}
                 }}
+                size="sm"
                 variant="outline"
                 colorScheme="gray"
                 height="32px"
