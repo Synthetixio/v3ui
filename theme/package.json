@@ -18,7 +18,8 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc --build --verbose",
+    "build:ts": "tsc --build --force",
+    "build": "yarn build:ts",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
     "prepublishOnly": "yarn build"

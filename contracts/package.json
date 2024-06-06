@@ -2,14 +2,32 @@
   "name": "@snx-v3/contracts",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "typings": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/types/index.js",
+      "import": "./build/esm/index.js",
+      "default": "./build/esm/index.js"
+    },
+    "./src": {
+      "types": "./src/index.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "build",
     "src"
   ],
   "scripts": {
     "codegen": "DEBUG='codegen:*' node ./codegen.js",
-    "build": "tsc --build --verbose --force",
+    "build:ts": "rm -rf ./build && tsc --build --force",
+    "build": "yarn build:ts",
     "start:mainnet": "anvil --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY",
     "start:sepolia": "anvil --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
     "start:optimism": "anvil --chain-id 10 --fork-url https://optimism.infura.io/v3/$INFURA_KEY",

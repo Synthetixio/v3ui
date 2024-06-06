@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "module": "commonjs",
+    "module": "esnext",
     "outDir": "./build",
     "rootDir": "./src"
   },

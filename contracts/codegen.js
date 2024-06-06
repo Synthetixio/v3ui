@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const { readFileSync } = require('fs');
-const fs = require('fs/promises');
-const debug = require('debug');
-const ethers = require('ethers');
-const prettier = require('prettier');
-const { runTypeChain } = require('typechain');
-const { extractChain } = require('viem');
-const chains = require('viem/chains');
+import path from 'node:path';
+import { readFileSync } from 'node:fs';
+import fs from 'node:fs/promises';
+import debug from 'debug';
+import ethers from 'ethers';
+import prettier from 'prettier';
+import { runTypeChain } from 'typechain';
+import { extractChain } from 'viem';
+import * as chains from 'viem/chains';
 
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const ROOT = path.dirname(require.resolve(`./package.json`));
 const V3_CONTRACTS = path.dirname(require.resolve(`@synthetixio/v3-contracts`));
 
 const prettierOptions = JSON.parse(readFileSync('../.prettierrc', 'utf8'));
@@ -29,13 +32,13 @@ function readableAbi(abi) {
 async function codegen({ chainId, preset }) {
   const log = debug(`codegen:${chainId}-${preset}`);
 
-  const tsDir = `${__dirname}/src/${chainId}-${preset}`;
+  const tsDir = `${ROOT}/src/${chainId}-${preset}`;
   await fs.mkdir(tsDir, { recursive: true });
 
-  const deploymentsDir = `${__dirname}/cache/deployments/${chainId}-${preset}`;
+  const deploymentsDir = `${ROOT}/cache/deployments/${chainId}-${preset}`;
   await fs.mkdir(deploymentsDir, { recursive: true });
 
-  const tmpDir = `${__dirname}/cache/${chainId}-${preset}`;
+  const tmpDir = `${ROOT}/cache/${chainId}-${preset}`;
   await fs.mkdir(tmpDir, { recursive: true });
 
   const srcDir = `${V3_CONTRACTS}/${chainId}-${preset}`;
@@ -59,17 +62,14 @@ async function codegen({ chainId, preset }) {
   for (const contractName of contracts) {
     await fs.cp(`${srcDir}/${contractName}.json`, `${deploymentsDir}/${contractName}.json`);
   }
-  await fs.cp(`${__dirname}/manual/Multicall3.json`, `${deploymentsDir}/Multicall3.json`);
-  await fs.cp(
-    `${__dirname}/manual/RewardDistributor.json`,
-    `${deploymentsDir}/RewardDistributor.json`
-  );
+  await fs.cp(`${ROOT}/manual/Multicall3.json`, `${deploymentsDir}/Multicall3.json`);
+  await fs.cp(`${ROOT}/manual/RewardDistributor.json`, `${deploymentsDir}/RewardDistributor.json`);
 
   const files = (await fs.readdir(deploymentsDir, { withFileTypes: true }))
     .filter((dirent) => dirent.isFile() && path.extname(dirent.name) === '.json')
     .map((dirent) => `${dirent.path}/${dirent.name}`);
 
-  files.forEach((file) => log('->', path.relative(__dirname, file)));
+  files.forEach((file) => log('->', path.relative(ROOT, file)));
 
   await runTypeChain({
     cwd: process.cwd(),
@@ -80,9 +80,9 @@ async function codegen({ chainId, preset }) {
     target: require.resolve('@typechain/ethers-v5'),
   });
   await fs.copyFile(`${tmpDir}/common.ts`, `${tsDir}/common.ts`);
-  log('->', path.relative(__dirname, `${tsDir}/common.ts`));
+  log('->', path.relative(ROOT, `${tsDir}/common.ts`));
 
-  const meta = require(`${srcDir}/meta.json`);
+  const meta = JSON.parse(await fs.readFile(`${srcDir}/meta.json`, 'utf8'));
 
   async function withTypes({ contractName, address, abi }) {
     const code = await prettyTs(
@@ -111,10 +111,10 @@ async function codegen({ chainId, preset }) {
       await withTypes({
         contractName,
         address: meta.contracts[contractName],
-        abi: require(`${srcDir}/${contractName}.readable.json`),
+        abi: JSON.parse(await fs.readFile(`${srcDir}/${contractName}.readable.json`, 'utf8')),
       })
     );
-    log('->', path.relative(__dirname, `${tsDir}/${contractName}.ts`));
+    log('->', path.relative(ROOT, `${tsDir}/${contractName}.ts`));
   }
 
   const chainDef = extractChain({ chains: Object.values(chains), id: chainId });
@@ -124,10 +124,10 @@ async function codegen({ chainId, preset }) {
     await withTypes({
       contractName: 'Multicall3',
       address: chainDef.contracts.multicall3.address,
-      abi: readableAbi(require('./manual/Multicall3.json')),
+      abi: readableAbi(JSON.parse(await fs.readFile('./manual/Multicall3.json', 'utf8'))),
     })
   );
-  log('->', path.relative(__dirname, `${tsDir}/Multicall3.ts`));
+  log('->', path.relative(ROOT, `${tsDir}/Multicall3.ts`));
 
   addresses['RewardDistributor'] = null;
   await fs.writeFile(
@@ -135,10 +135,10 @@ async function codegen({ chainId, preset }) {
     await withTypes({
       contractName: 'RewardDistributor',
       address: null,
-      abi: readableAbi(require('./manual/RewardDistributor.json')),
+      abi: readableAbi(JSON.parse(await fs.readFile('./manual/RewardDistributor.json', 'utf8'))),
     })
   );
-  log('->', path.relative(__dirname, `${tsDir}/RewardDistributor.ts`));
+  log('->', path.relative(ROOT, `${tsDir}/RewardDistributor.ts`));
 
   return {
     chainId,
@@ -162,7 +162,7 @@ async function generateImporters(allDeployments) {
         await Promise.all(
           allDeployments.map(async ({ chainId, preset }) => {
             try {
-              await fs.access(`${__dirname}/src/${chainId}-${preset}/${name}.ts`);
+              await fs.access(`${ROOT}/src/${chainId}-${preset}/${name}.ts`);
               return { chainId, preset };
             } catch (_e) {
               return null;
@@ -197,7 +197,7 @@ async function generateImporters(allDeployments) {
       ];
 
       await fs.writeFile(
-        `${__dirname}/src/import${name}.ts`,
+        `${ROOT}/src/import${name}.ts`,
         await prettyTs(
           [
             '// !!! DO NOT EDIT !!! Automatically generated file',
@@ -215,7 +215,7 @@ async function generateImporters(allDeployments) {
   );
 
   await fs.writeFile(
-    `${__dirname}/src/index.ts`,
+    `${ROOT}/src/index.ts`,
     await prettyTs(
       Array.from(contracts)
         .map((name) => `export * from './import${name}'`)
@@ -225,10 +225,10 @@ async function generateImporters(allDeployments) {
 }
 
 async function run() {
-  await fs.rm(`${__dirname}/src`, { force: true, recursive: true });
-  await fs.mkdir(`${__dirname}/src`, { recursive: true });
-  await fs.rm(`${__dirname}/cache`, { force: true, recursive: true });
-  await fs.mkdir(`${__dirname}/cache`, { recursive: true });
+  await fs.rm(`${ROOT}/src`, { force: true, recursive: true });
+  await fs.mkdir(`${ROOT}/src`, { recursive: true });
+  await fs.rm(`${ROOT}/cache`, { force: true, recursive: true });
+  await fs.mkdir(`${ROOT}/cache`, { recursive: true });
 
   const deployments = [];
   deployments.push(await codegen({ chainId: 1, preset: 'main' }));

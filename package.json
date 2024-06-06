@@ -12,6 +12,7 @@
     "pretty:fix": "prettier . --write",
     "clean": "yarn workspaces foreach --parallel exec rm -rf dist coverage build && find . -name 'tsconfig.tsbuildinfo' -delete",
     "test": "jest",
+    "build:ts": "yarn workspaces foreach --topological-dev --all --verbose run build:ts",
     "build": "yarn workspaces foreach --topological-dev --all --verbose run build",
     "codegen": "yarn workspaces foreach --topological-dev --all --verbose run codegen",
     "typecheck": "tsc --noEmit",
