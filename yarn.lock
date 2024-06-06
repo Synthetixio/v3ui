@@ -6524,6 +6524,7 @@ __metadata:
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
