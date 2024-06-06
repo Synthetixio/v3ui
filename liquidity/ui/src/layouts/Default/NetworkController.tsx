@@ -16,7 +16,7 @@ import {
 import { WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-import { useLocalStorage } from '../../hooks';
+import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
