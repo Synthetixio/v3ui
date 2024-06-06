@@ -87,7 +87,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
         rounded="base"
         bg="navy.700"
         p="6"
-        _hover={{ cursor: 'pointer' }}
+        _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50' }}
         onClick={() => {
           navigate(`/pools/${pool.id}`);
         }}
