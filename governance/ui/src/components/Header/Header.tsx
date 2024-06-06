@@ -238,7 +238,7 @@ export function Header() {
               </MenuList>
             </Menu>
           ) : (
-            <Button onClick={() => connect()} ml="2" id="connect-wallet-button">
+            <Button onClick={() => connect()} ml="2" data-testid="connect-wallet-button">
               Connect Wallet
             </Button>
           )}

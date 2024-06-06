@@ -5,5 +5,5 @@ it('shows council card and header in nomination period', () => {
   });
   cy.viewport(1300, 900);
   cy.visit('/#/councils/spartan');
-  cy.get('[data-testid="period-countdown"]').contains('Voting starts');
+  cy.contains('[data-testid="period-countdown"]', 'Voting starts').should('exist');
 });

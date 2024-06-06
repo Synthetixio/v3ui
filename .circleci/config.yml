@@ -201,6 +201,8 @@ jobs:
 
   liquidity-e2e:
     parameters:
+      DEFAULT_NETWORK:
+        type: string
       chain:
         type: string
     working_directory: /tmp/app
@@ -209,6 +211,7 @@ jobs:
     resource_class: large
     environment:
       NODE_ENV: test
+      DEFAULT_NETWORK: << parameters.DEFAULT_NETWORK >>
     steps:
       - checkout
       - install-foundry
@@ -345,9 +348,11 @@ workflows:
           chain: sepolia
           name: governance-e2e-sepolia
       - liquidity-e2e:
+          DEFAULT_NETWORK: 10-main
           chain: base-mainnet
           name: liquidity-e2e-base-mainnet
       - liquidity-e2e:
+          DEFAULT_NETWORK: 11155111-main
           chain: sepolia
           name: liquidity-e2e-sepolia
       - combine-coverage:
