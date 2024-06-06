@@ -1,11 +1,10 @@
-import { Flex, Heading, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
+import { InfoIcon } from '@chakra-ui/icons';
+import { Flex, Heading, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNX } from './BurnSNX';
 import { Chart } from './Chart';
 import { CurrentSupplyStats } from './CurrentSupplyStats';
-import kainSvg from './svgs/kain.svg';
 import { SupplyChangeStats } from './SupplyChangeStats';
-import { InfoIcon } from '@chakra-ui/icons';
 
 export function Main() {
   const { data: events, isLoading } = useBurnEvents();
@@ -14,29 +13,24 @@ export function Main() {
     <Flex flexDir="column" mt="8" width="100%" maxW="1200px">
       <Flex justifyContent="space-between" flexWrap={{ base: 'wrap', xl: 'nowrap' }}>
         <Flex flexDir="column">
-          <Heading
-            fontSize={{ medium: '30px', base: '48px', xl: '72px' }}
-            fontWeight={700}
-            color="white"
-          >
-            ultrasound.homes
+          <Heading fontSize={{ base: '48px', xl: '56px' }} fontWeight={700} color="white">
+            Zero inflation, infinite burn
           </Heading>
-          <Heading fontSize="30px" fontWeight={700} color="white">
-            burning SNX for Kain&apos;s mansions
+          <Heading fontSize="36px" fontWeight={700} color="white">
+            Perps fuel SNX deflation
           </Heading>
         </Flex>
         <Flex alignItems="center" mt={{ base: 10, xl: 0 }}>
-          <Image src={kainSvg} />
           <Flex flexDir="column">
             <Flex alignItems="baseline" gap="2">
-              <Text fontSize="16px" fontWeight={700} color="white">
-                Mansion counter
+              <Text as="div" fontSize="16px" fontWeight={700} color="white">
+                Burn counter
               </Text>
               <Tooltip label="Times the BuyBack and Burn contract was triggered">
                 <InfoIcon w="10px" h="10px" />
               </Tooltip>
             </Flex>
-            <Text fontSize="24px" fontWeight={700} color="white">
+            <Text as="div" fontSize="24px" fontWeight={700} color="white">
               {isLoading ? <Spinner colorScheme="cyan" /> : events?.totalBurns}
             </Text>
           </Flex>
@@ -62,7 +56,7 @@ export function Main() {
         <Text fontWeight={700} fontSize="16px">
           Share
         </Text>
-        <Link href="https://twitter.com/intent/tweet?text=I%20am%20paying%20for%20Kains%20Mansion">
+        <Link href="https://twitter.com/intent/tweet?text=I%20am%20burning%20SNX">
           <svg
             width="48"
             height="48"

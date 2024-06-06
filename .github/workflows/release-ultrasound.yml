@@ -1,11 +1,11 @@
-name: release-ultrasound-homes
+name: release-ultrasound
 
 on:
   push:
     tags:
-      - 'release-ultrasound-homes-*'
+      - 'release-ultrasound-*'
     branches:
-      - 'release-ultrasound-homes'
+      - 'release-ultrasound'
       - 'releases'
 
 jobs:
@@ -28,10 +28,10 @@ jobs:
           ref: '${{ github.sha }}'
           ssh-key: '${{ secrets.V3UI_SSH_KEY }}'
 
-      - run: yarn workspaces focus @snx-v3/ultrasound-homes
+      - run: yarn workspaces focus @snx-v3/ultrasound
         working-directory: v3ui
 
-      - run: yarn workspace @snx-v3/ultrasound-homes build
+      - run: yarn workspace @snx-v3/ultrasound build
         working-directory: v3ui
 
       - run: rm -rf ./ultrasound/*

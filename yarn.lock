@@ -6602,9 +6602,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/ultrasound-homes@workspace:ultrasound/ui":
+"@snx-v3/ultrasound@workspace:ultrasound/ui":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/ultrasound-homes@workspace:ultrasound/ui"
+  resolution: "@snx-v3/ultrasound@workspace:ultrasound/ui"
   dependencies:
     "@babel/core": "npm:^7.23.3"
     "@babel/plugin-transform-runtime": "npm:^7.23.3"

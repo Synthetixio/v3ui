@@ -43,7 +43,7 @@ export function BurnSNX() {
         <Text fontWeight={700} fontSize="20px" display="flex" alignItems="center" gap="2">
           Buyback Price:{' '}
           {!SNXPrice ? (
-            <Skeleton h="20px" width="100px" ml="2" />
+            <Skeleton as="span" h="20px" width="100px" ml="2" />
           ) : (
             <>
               <s>$ {SNXPrice?.toNumber().toFixed(2)}</s> $

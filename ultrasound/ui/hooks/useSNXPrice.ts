@@ -12,46 +12,32 @@ export function useSNXPrice() {
 
   return useQuery({
     refetchInterval: 10000,
-    enabled: !!baseProvider,
-    queryKey: ['snx-price', !!baseProvider],
+    enabled: Boolean(baseProvider && baseNetwork?.id && baseNetwork?.preset),
+    queryKey: ['snx-price'],
     queryFn: async () => {
-      if (baseProvider && baseNetwork?.id && baseNetwork?.preset) {
-        try {
-          const { address, abi } = await importOracleManagerProxy(
-            baseNetwork.id,
-            baseNetwork.preset
+      if (!baseNetwork || !baseNetwork?.id || !baseNetwork?.preset) throw new Error('OMFG');
+      const { address, abi } = await importOracleManagerProxy(baseNetwork.id, baseNetwork.preset);
+      const OracleManagerProxy = new Contract(address, abi, baseProvider) as OracleManagerProxyType;
+
+      const price = [
+        await OracleManagerProxy.populateTransaction.process(
+          await BuyBack.connect(baseProvider!).getSnxNodeId()
+        ),
+      ];
+
+      price[0].from = '0x4200000000000000000000000000000000000006';
+
+      return await erc7412Call(
+        baseNetwork!,
+        baseProvider!,
+        price,
+        (txs) => {
+          return new Wei(
+            OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
           );
-          const OracleManagerProxy = new Contract(
-            address,
-            abi,
-            baseProvider
-          ) as OracleManagerProxyType;
-
-          const price = [
-            await OracleManagerProxy.populateTransaction.process(
-              await BuyBack.connect(baseProvider).getSnxNodeId()
-            ),
-          ];
-
-          price[0].from = '0x4200000000000000000000000000000000000006';
-
-          return await erc7412Call(
-            baseNetwork,
-            baseProvider,
-            price,
-            (txs) => {
-              return new Wei(
-                OracleManagerProxy.interface.decodeFunctionResult('process', txs[0])[0].price
-              );
-            },
-            'useSNXPrice'
-          );
-        } catch (error) {
-          console.error(error);
-          return new Wei(0);
-        }
-      }
-      return new Wei(0);
+        },
+        'useSNXPrice'
+      );
     },
   });
 }
