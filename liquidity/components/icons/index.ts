@@ -16,3 +16,8 @@ export * from './CCIP';
 export * from './BaseIcon';
 export * from './BitcoinIcon';
 export * from './ArbitrumIcon';
+export * from './DiscordIcon';
+export * from './XIcon';
+export * from './GithubIcon';
+export * from './WarpcastIcon';
+export * from './YoutubeIcon';
