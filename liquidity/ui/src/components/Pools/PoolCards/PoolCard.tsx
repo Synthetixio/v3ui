@@ -89,7 +89,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
         p="6"
         _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50' }}
         onClick={() => {
-          navigate(`/pools/${pool.id}`);
+          navigate(`/pools/${pool.id}`, { state: { networkId: network.id } });
         }}
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
@@ -168,7 +168,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 size="sm"
                 onClick={async (e) => {
                   try {
-                    e.preventDefault();
+                    e.stopPropagation();
                     if (currentNetwork?.id !== network.id) {
                       if (!(await setNetwork(network.id))) {
                         return;
