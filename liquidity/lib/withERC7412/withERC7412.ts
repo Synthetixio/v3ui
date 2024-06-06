@@ -206,7 +206,7 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id)
+    ? await importCoreProxy(network.id, network.preset)
     : await importMulticall3(network.id, network.preset);
 
   while (true) {
