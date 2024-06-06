@@ -2,7 +2,7 @@ import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/reac
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
-import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { CollateralIcon } from '@snx-v3/icons';
@@ -34,6 +34,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
   const [queryParams] = useSearchParams();
 
   const { network: currentNetwork, setNetwork } = useNetwork();
+  const { connect } = useWallet();
 
   const vaultTVL = collateralTypes.reduce((acc, type) => {
     const amount = wei(type.total_amount_deposited, type.decimals, true);
@@ -169,6 +170,11 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 onClick={async (e) => {
                   try {
                     e.stopPropagation();
+                    if (!currentNetwork) {
+                      connect();
+                      setNetwork(network.id);
+                      return;
+                    }
                     if (currentNetwork?.id !== network.id) {
                       if (!(await setNetwork(network.id))) {
                         return;
