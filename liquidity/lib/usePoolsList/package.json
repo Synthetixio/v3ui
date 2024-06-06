@@ -4,6 +4,10 @@
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
-    "@tanstack/react-query": "^5.8.3"
+    "@snx-v3/constants": "workspace:*",
+    "@snx-v3/useApr": "workspace:*",
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@tanstack/react-query": "^5.8.3",
+    "humanize-plus": "^1.8.2"
   }
 }

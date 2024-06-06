@@ -6466,6 +6466,7 @@ __metadata:
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useManagePermissions": "workspace:*"
+    "@snx-v3/useMarketNamesById": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
@@ -7140,7 +7141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById":
+"@snx-v3/useMarketNamesById@workspace:*, @snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMarketNamesById@workspace:liquidity/lib/useMarketNamesById"
   dependencies:
@@ -7233,7 +7234,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useApr": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    humanize-plus: "npm:^1.8.2"
   languageName: unknown
   linkType: soft
 
