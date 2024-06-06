@@ -33,13 +33,11 @@ beforeEach(() => {
     }).as(networkName);
   });
 
-  cy.on('window:before:load', async (win) => {
-    const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
-    const network = await provider.getNetwork();
+  cy.on('window:before:load', (win) => {
     win.sessionStorage.setItem('TERMS_CONDITIONS_ACCEPTED', 'true');
     win.localStorage.setItem(
       'DEFAULT_NETWORK',
-      process.env.DEFAULT_NETWORK || `${network.chainId}-main`
+      `${Cypress.env('CHAIN_ID')}-${Cypress.env('PRESET')}`
     );
     win.localStorage.setItem('UNSAFE_IMPORT', 'true');
     win.localStorage.setItem('connectedWallets', '"MetaMask"');
