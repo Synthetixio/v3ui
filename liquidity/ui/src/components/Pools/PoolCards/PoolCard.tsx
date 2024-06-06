@@ -1,6 +1,5 @@
-import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/react';
-import { Tooltip } from '@snx-v3/Tooltip';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
 import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';

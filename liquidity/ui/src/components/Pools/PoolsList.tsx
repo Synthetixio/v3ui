@@ -89,9 +89,10 @@ function poolsReducer(state: PoolsFilterState, action: PoolsFilterAction): Pools
 
     case 'ADD_CHAIN':
       if (action.payload?.chain) {
+        // Only one chain active at once
         return {
           ...state,
-          chain: [...state.chain, action.payload.chain],
+          chain: [action.payload.chain],
         };
       }
 
