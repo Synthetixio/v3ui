@@ -32,6 +32,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   const { data: snxBalance } = useTokenBalance('0x22e6966B799c4D5B13BE962E1D117b56327FDa66');
   const { data: usdcBalance } = useTokenBalance('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
+
   const { data: contractBalance } = SNXUSDBalanceOfBuyBackContract(
     '0x632cAa10A56343C5e6C0c066735840c096291B18'
   );
@@ -41,6 +42,7 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     amount: amount ? amount.toBN() : 0,
     spender: '0x632cAa10A56343C5e6C0c066735840c096291B18',
   });
+
   const { mutateAsync, isPending } = useSellSNX();
 
   return (
@@ -128,7 +130,8 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   Burnable:{' '}
                   {contractBalance &&
                     SNXPrice &&
-                    new Wei(contractBalance, 18).div(SNXPrice).toNumber().toFixed(2)}
+                    // Mul by 0.98 to account for 2% slippage
+                    new Wei(contractBalance, 18).mul(0.98).div(SNXPrice).toNumber().toFixed(2)}
                   <Button
                     size="xs"
                     variant="unstyled"
@@ -136,8 +139,11 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     ml="2"
                     fontSize="12px"
                     onClick={() => {
-                      setAmount(new Wei(contractBalance, 18).div(SNXPrice));
-                      setReceivingUSDCAmount(new Wei(contractBalance, 18).div(SNXPrice).toNumber());
+                      const balance = new Wei(contractBalance, 18);
+                      const snxAmount = balance.mul(0.98).div(SNXPrice);
+
+                      setAmount(snxAmount);
+                      setReceivingUSDCAmount(balance.toNumber());
                     }}
                   >
                     Max
