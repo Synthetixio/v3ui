@@ -41,6 +41,21 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
     return acc.add(amount);
   }, ZEROWEI);
 
+  const sanitizedCollateralTypes = collateralTypes.map((collateralType) => {
+    if (
+      isBaseAndromeda(network.id, network.preset) &&
+      collateralType.symbol.toUpperCase() === 'SUSDC'
+    ) {
+      return {
+        ...collateralType,
+        symbol: 'USDC',
+        displaySymbol: 'USDC',
+        name: 'USD Coin',
+      };
+    }
+    return collateralType;
+  });
+
   const isCollateralFiltered = useMemo(
     () =>
       collateralTypes?.some((collateralType) =>
@@ -131,7 +146,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
         </Flex>
         <Divider mt="18px" mb="10px" />
         <Flex flexWrap="wrap" gap={6}>
-          {collateralTypes?.map((type) => (
+          {sanitizedCollateralTypes?.map((type) => (
             <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
               <Flex alignItems="center">
                 <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
