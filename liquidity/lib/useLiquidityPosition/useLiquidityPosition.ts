@@ -4,6 +4,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
+import React from 'react';
 import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
@@ -84,6 +85,11 @@ export const useLiquidityPosition = ({
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
 
+  const priceUpdateTxHash = React.useMemo(
+    () => (priceUpdateTx?.data ? stringToHash(priceUpdateTx?.data) : null),
+    [priceUpdateTx?.data]
+  );
+
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
@@ -92,22 +98,31 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
+      { priceUpdateTxHash },
     ],
     enabled: Boolean(
-      CoreProxy && UsdProxy && poolId && accountId && tokenAddress && collateralPriceUpdates
+      CoreProxy &&
+        accountId &&
+        poolId &&
+        tokenAddress &&
+        collateralPriceUpdates &&
+        UsdProxy &&
+        network &&
+        provider
     ),
     queryFn: async () => {
       if (
-        !CoreProxy ||
-        !accountId ||
-        !poolId ||
-        !tokenAddress ||
-        !collateralPriceUpdates ||
-        !UsdProxy ||
-        !network ||
-        !provider
+        !(
+          CoreProxy &&
+          accountId &&
+          poolId &&
+          tokenAddress &&
+          collateralPriceUpdates &&
+          UsdProxy &&
+          network &&
+          provider
+        )
       ) {
         throw Error('useLiquidityPosition should not be enabled');
       }
@@ -149,7 +164,7 @@ export const useLiquidityPosition = ({
         provider,
         allCalls,
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array ');
+          if (!Array.isArray(encoded)) throw Error('Expected array');
 
           const startOfPrice = 0;
           const endOfPrice = priceCalls.length;
