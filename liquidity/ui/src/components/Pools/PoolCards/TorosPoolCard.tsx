@@ -1,4 +1,4 @@
-import { Flex, Heading, Tag, Text, Divider, Button, Link, Box, Fade } from '@chakra-ui/react';
+import { Flex, Heading, Tag, Text, Divider, Button, Box, Link, Fade } from '@chakra-ui/react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { CollateralIcon } from '@snx-v3/icons';
 
@@ -10,13 +10,29 @@ interface TorosPoolCardProps {
 export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
   return (
     <Fade in>
-      <Box bgGradient="linear(to-tr, green.700, cyan.800)" p="1px" rounded="base">
-        <Flex
-          flexDir="column"
-          border="1px solid"
-          borderColor="gray.900"
+      <Box
+        bgGradient="linear(to-tr, green.700, cyan.800)"
+        p="1px"
+        rounded="base"
+        position="relative"
+      >
+        {/* For overlay to not show gradient */}
+        <Box
+          position="absolute"
           rounded="base"
           bg="navy.700"
+          width="calc(100% - 2px)"
+          height="calc(100% - 2px)"
+        />
+        <Flex
+          position="relative"
+          as={Link}
+          href="https://toros.finance/synthetix-usdc-andromeda-yield"
+          target="_blank"
+          flexDir="column"
+          rounded="base"
+          bg="navy.700"
+          _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50', textDecoration: 'none' }}
           p="6"
         >
           <Flex w="100%" gap="2" alignItems="start" mb="4">
