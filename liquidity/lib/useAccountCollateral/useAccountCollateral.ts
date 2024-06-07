@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
-import { Wei, wei } from '@synthetixio/wei';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { erc7412Call } from '@snx-v3/withERC7412';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { erc7412Call } from '@snx-v3/withERC7412';
+import { Wei, wei } from '@synthetixio/wei';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -26,7 +26,7 @@ export const loadAccountCollateral = async ({
 }: {
   accountId: string;
   tokenAddresses: string[];
-  CoreProxy: CoreProxyType;
+  CoreProxy: ethers.Contract;
 }) => {
   const callsP = tokenAddresses.flatMap((tokenAddress) => [
     CoreProxy.populateTransaction.getAccountAvailableCollateral(accountId, tokenAddress),

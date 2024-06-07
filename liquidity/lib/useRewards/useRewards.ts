@@ -6,7 +6,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { importRewardDistributor } from '@synthetixio/v3-contracts';
+import { importRewardDistributor } from '@snx-v3/contracts';
 
 const RewardsResponseSchema = z.array(
   z.object({

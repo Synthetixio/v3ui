@@ -166,7 +166,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: 421614,
-    preset: 'arbthetix',
+    preset: 'main',
     hexId: `0x${Number(421614).toString(16)}`,
     token: 'ETH',
     name: 'arbitrum-sepolia',
@@ -179,7 +179,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: 42161,
-    preset: 'arbthetix',
+    preset: 'main',
     hexId: `0x${Number(42161).toString(16)}`,
     token: 'ETH',
     name: 'arbitrum',
@@ -190,11 +190,26 @@ export const NETWORKS: Network[] = [
     publicRpcUrl: 'https://arbiscan.io/',
     isTestnet: false,
   },
+  {
+    id: 42161,
+    preset: 'arbthetix',
+    hexId: `0x${Number(42161).toString(16)}`,
+    token: 'ETH',
+    name: 'arbitrum',
+    rpcUrl: (INFURA_KEY?: string) =>
+      `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+    label: 'Arbthetix (withdraw only)',
+    isSupported: true,
+    publicRpcUrl: 'https://arbiscan.io/',
+    isTestnet: false,
+  },
 ];
 
 export const deploymentsWithERC7412: string[] = [
   '8453-andromeda',
   '84532-andromeda',
+  '42161-main',
+  '421614-main',
   '42161-arbthetix',
 ];
 

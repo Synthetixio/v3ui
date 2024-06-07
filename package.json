@@ -12,6 +12,7 @@
     "pretty:fix": "prettier . --write",
     "clean": "yarn workspaces foreach --parallel exec rm -rf dist coverage build && find . -name 'tsconfig.tsbuildinfo' -delete",
     "test": "jest",
+    "build:ts": "yarn workspaces foreach --topological-dev --all --verbose run build:ts",
     "build": "yarn workspaces foreach --topological-dev --all --verbose run build",
     "codegen": "yarn workspaces foreach --topological-dev --all --verbose run codegen",
     "typecheck": "tsc --noEmit",
@@ -24,20 +25,14 @@
     "svg": "svgo --config svgo.config.js --recursive ./",
     "svg:check": "yarn svg && git diff --exit-code **/*.svg",
     "download-cci-coverage": "download-cci-coverage",
-    "publish:release": "lerna publish",
-    "publish:dev": "lerna publish --force-publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD)",
-    "prepublishOnly": "node ./prepublishOnly.js",
     "armada:bundle": "armada bundle create",
     "armada:checksum": "armada bundle checksum",
     "armada:publish": "armada project publish --network testnet-sepolia"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@lerna-lite/cli": "^2.6.0",
-    "@lerna-lite/publish": "^2.6.0",
-    "@lerna-lite/version": "^2.6.0",
+    "@babel/core": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
     "@synthetixio/deps": "workspace:*",
     "@synthetixio/download-cci-coverage": "workspace:*",
     "@tanstack/eslint-plugin-query": "^5.8.3",
@@ -59,7 +54,7 @@
     "nyc": "^15.1.0",
     "prettier": "^3.1.0",
     "svgo": "^3.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5"
   },
   "browserslist": [
     "last 1 Chrome version",

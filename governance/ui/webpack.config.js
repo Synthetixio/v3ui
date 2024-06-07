@@ -26,11 +26,17 @@ const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
     // Need to list all the folders in v3 and outside (if used)
-    /governance\/ui/,
+    /contracts/,
     /theme/,
+
     /liquidity\/lib/,
     /liquidity\/components/,
     /governance\/cypress/,
+    /governance\/ui/,
+
+    // fixes for borked 3rd party bundles
+    /@safe-global/,
+    /@web3-onboard/,
   ],
   resolve: {
     fullySpecified: false,
@@ -69,19 +75,25 @@ const cssRule = {
 
 const devServer = {
   port: '3000',
+
   hot: !isTest,
   liveReload: false,
+
   historyApiFallback: true,
+
   devMiddleware: {
     writeToDisk: !isTest,
     publicPath: '',
   },
+
   client: {
     logging: 'log',
     overlay: false,
     progress: false,
   },
+
   static: './public',
+
   headers: { 'Access-Control-Allow-Origin': '*' },
   allowedHosts: 'all',
   open: false,
@@ -121,16 +133,25 @@ module.exports = {
     innerGraph: true,
     emitOnErrors: false,
   },
+
   plugins: [htmlPlugin]
     .concat(isProd ? [new CopyWebpackPlugin({ patterns: [{ from: 'public', to: '' }] })] : [])
-    .concat([new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js'))])
+
+    .concat([
+      new webpack.NormalModuleReplacementPlugin(
+        /^@tanstack\/react-query$/,
+        require.resolve('@tanstack/react-query')
+      ),
+      new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js')),
+    ])
+
     .concat([
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
         path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
       ),
     ])
-    .concat([])
+
     .concat([
       new webpack.ProvidePlugin({
         Buffer: ['buffer', 'Buffer'],
@@ -152,15 +173,13 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env': {
-          INFURA_KEY: JSON.stringify(process.env.INFURA_KEY),
-          DEV: JSON.stringify(process.env.DEV),
-          TESTNET: JSON.stringify(process.env.TESTNET),
-          IPFS_INFURA_KEY: JSON.stringify(process.env.IPFS_INFURA_KEY),
-          IPFS_INFURA_SECRET: JSON.stringify(process.env.IPFS_INFURA_SECRET),
-          WC_PROJECT_ID: JSON.stringify(process.env.WC_PROJECT_ID),
-          BOARDROOM_KEY: JSON.stringify(process.env.BOARDROOM_KEY),
-        },
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.DEV': JSON.stringify(process.env.DEV),
+        'process.env.TESTNET': JSON.stringify(process.env.TESTNET),
+        'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
+        'process.env.IPFS_INFURA_SECRET': JSON.stringify(process.env.IPFS_INFURA_SECRET),
+        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
+        'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
       })
     ),
   resolve: {

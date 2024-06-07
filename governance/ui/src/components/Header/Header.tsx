@@ -220,7 +220,6 @@ export function Header() {
               </MenuButton>
               <MenuList zIndex={100}>
                 <MenuItem
-                  data-testid="copy-user-wallet-address"
                   onClick={() => {
                     try {
                       navigator.clipboard.writeText(activeWallet?.address);
@@ -239,7 +238,7 @@ export function Header() {
               </MenuList>
             </Menu>
           ) : (
-            <Button onClick={() => connect()} ml="2" id="connect-wallet-button">
+            <Button onClick={() => connect()} ml="2" data-testid="connect-wallet-button">
               Connect Wallet
             </Button>
           )}
