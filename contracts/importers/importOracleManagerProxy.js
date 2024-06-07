@@ -60,7 +60,7 @@ export async function importOracleManagerProxy(chainId, preset) {
       return { address: meta.contracts.OracleManagerProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for OracleManagerProxy`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for OracleManagerProxy`);
     }
   }
 }

@@ -60,7 +60,7 @@ export async function importCoreProxy(chainId, preset) {
       return { address: meta.contracts.CoreProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for CoreProxy`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for CoreProxy`);
     }
   }
 }

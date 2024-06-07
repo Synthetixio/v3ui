@@ -52,7 +52,7 @@ export async function importRewardDistributor(chainId, preset) {
       return { address: null, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for RewardsDistributor`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for RewardsDistributor`);
     }
   }
 }

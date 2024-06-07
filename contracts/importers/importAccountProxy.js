@@ -60,7 +60,7 @@ export async function importAccountProxy(chainId, preset) {
       return { address: meta.contracts.AccountProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for AccountProxy`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for AccountProxy`);
     }
   }
 }

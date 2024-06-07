@@ -60,7 +60,7 @@ export async function importUSDProxy(chainId, preset) {
       return { address: meta.contracts.USDProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for USDProxy`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for USDProxy`);
     }
   }
 }

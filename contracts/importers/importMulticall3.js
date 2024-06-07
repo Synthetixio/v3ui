@@ -49,7 +49,7 @@ export async function importMulticall3(chainId, preset = 'main') {
       return { address: arbitrumSepolia.contracts.multicall3.address, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for Multicall3`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for Multicall3`);
     }
   }
 }

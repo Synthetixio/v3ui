@@ -60,7 +60,7 @@ export async function importSpotMarketProxy(chainId, preset) {
       return { address: meta.contracts.SpotMarketProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for SpotMarketProxy`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for SpotMarketProxy`);
     }
   }
 }

@@ -48,7 +48,7 @@ export async function importExtras(chainId, preset) {
       return extras;
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId} for Extras`);
+      throw new Error(`Unsupported chain ${chainId}-${preset} for Extras`);
     }
   }
 }
