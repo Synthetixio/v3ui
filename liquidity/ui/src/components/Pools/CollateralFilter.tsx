@@ -3,7 +3,7 @@ import { Flex, Button } from '@chakra-ui/react';
 import { TokenIcon } from '../TokenIcon';
 import { PoolsFilterAction } from './PoolsList';
 
-const supportedCollateralTypes = ['WETH', 'SNX', 'USDC', 'DAI', 'ARB'];
+const supportedCollateralTypes = ['WETH', 'SNX', 'USDC', 'ARB'];
 
 interface CollateralFilterProps {
   activeCollateral: string[];
