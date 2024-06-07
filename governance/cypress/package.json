@@ -4,11 +4,9 @@
   "main": "index.ts",
   "version": "0.0.9",
   "scripts": {
-    "start": "anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
+    "anvil:sepolia": "anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
     "cy": "NODE_ENV=test cypress open --component --browser chrome",
-    "cy:check": "NODE_ENV=test cypress run --component --browser chrome",
-    "e2e": "NODE_ENV=test cypress open --e2e --browser chrome",
-    "e2e:check": "NODE_ENV=test cypress run --e2e --browser chrome"
+    "e2e:sepolia": "NODE_ENV=test CYPRESS_CHAIN_ID=8453 CYPRESS_PRESET=11155111 cypress open --e2e --browser chrome"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",

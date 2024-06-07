@@ -4,7 +4,6 @@
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
-    "@snx-v3/contracts": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",

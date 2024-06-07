@@ -2,32 +2,11 @@
   "name": "@snx-v3/contracts",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "main": "./build/index.js",
-  "module": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "typings": "./build/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/types/index.js",
-      "import": "./build/esm/index.js",
-      "default": "./build/esm/index.js"
-    },
-    "./src": {
-      "types": "./src/index.ts",
-      "import": "./src/index.js",
-      "default": "./src/index.js"
-    },
-    "./package.json": "./package.json"
-  },
+  "main": "index.js",
   "files": [
-    "build",
     "src"
   ],
   "scripts": {
-    "codegen": "DEBUG='codegen:*' node ./codegen.js",
-    "build:ts": "rm -rf ./build && tsc --build --force",
-    "build": "yarn build:ts",
     "start:mainnet": "anvil --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY",
     "start:sepolia": "anvil --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
     "start:optimism": "anvil --chain-id 10 --fork-url https://optimism.infura.io/v3/$INFURA_KEY",
@@ -37,22 +16,7 @@
     "start:arbitrum-sepolia": "anvil --chain-id 421614 --fork-url https://arbitrum-sepolia.infura.io/v3/$INFURA_KEY"
   },
   "dependencies": {
-    "@synthetixio/v3-contracts": "^5.4.0"
-  },
-  "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/providers": "^5.7.2",
-    "@typechain/ethers-v5": "^11.1.2",
-    "debug": "^4.3.4",
-    "ethers": "^5.7.2",
-    "prettier": "^3.1.0",
-    "typechain": "^8.3.2",
-    "typescript": "^5.4.5",
+    "@synthetixio/v3-contracts": "^5.4.0",
     "viem": "^2.13.5"
-  },
-  "depcheck": {
-    "ignoreMatches": [
-      "@synthetixio/v3-contracts"
-    ]
   }
 }

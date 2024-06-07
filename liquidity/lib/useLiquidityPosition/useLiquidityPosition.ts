@@ -1,19 +1,19 @@
+import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { stringToHash } from '@snx-v3/tsHelpers';
+import { AccountCollateralType, loadAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
+import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
+import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@snx-v3/contracts';
+import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { erc7412Call } from '@snx-v3/withERC7412';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
+import { ethers } from 'ethers';
 import React from 'react';
-import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
-import { erc7412Call } from '@snx-v3/withERC7412';
-import { loadPrices } from '@snx-v3/useCollateralPrices';
-import { loadAccountCollateral, AccountCollateralType } from '@snx-v3/useAccountCollateral';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { z } from 'zod';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
-import { stringToHash } from '@snx-v3/tsHelpers';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -28,7 +28,7 @@ export const loadPosition = async ({
   poolId,
   tokenAddress,
 }: {
-  CoreProxy: CoreProxyType;
+  CoreProxy: ethers.Contract;
   accountId: string;
   poolId: string;
   tokenAddress: string;

@@ -1,6 +1,6 @@
 import { generatePath } from 'react-router-dom';
 
-it.skip('should deposit additional USDC collateral', () => {
+it('should deposit additional USDC collateral', () => {
   cy.task('isBase').then((isBase) => {
     if (!isBase) {
       return;

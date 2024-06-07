@@ -7,7 +7,7 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { CoreProxyType, importCoreProxy } from '@snx-v3/contracts';
+import { importCoreProxy } from '@snx-v3/contracts';
 
 export function useCoreProxy(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);
@@ -28,12 +28,12 @@ export function useCoreProxy(customNetwork?: Network) {
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importCoreProxy(customNetwork.id, customNetwork.preset);
-        return new Contract(address, abi, providerForChain) as CoreProxyType;
+        return new Contract(address, abi, providerForChain);
       }
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
 
       const { address, abi } = await importCoreProxy(network?.id, network?.preset);
-      return new Contract(address, abi, signerOrProvider) as CoreProxyType;
+      return new Contract(address, abi, signerOrProvider);
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,

@@ -149,13 +149,6 @@ module.exports = {
         process: 'process/browser.js',
       }),
     ])
-    .concat([
-      new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@snx-v3/contracts$`),
-        path.resolve(path.dirname(require.resolve(`@snx-v3/contracts/package.json`)), 'src')
-      ),
-    ])
-
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
       process.env.GENERATE_BUNDLE_REPORT === 'true'
@@ -178,9 +171,6 @@ module.exports = {
     ),
 
   resolve: {
-    alias: {
-      '@snx-v3/contracts/build': '@snx-v3/contracts/src',
-    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

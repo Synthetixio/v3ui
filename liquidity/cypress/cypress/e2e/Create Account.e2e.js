@@ -6,6 +6,9 @@ it('Create Account', () => {
   cy.viewport(1200, 900);
   cy.visit('/');
 
+  cy.get('[data-cy="account-menu-button"]').click();
+  cy.contains('[data-cy="create-new-account-menu-item"]', 'Create Account').should('exist');
+
   // Create account
   cy.get('[data-cy="header-wallet-address-button"]').click();
   cy.get('[data-cy="create-new-account-menu-item"]').click();

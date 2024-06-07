@@ -27,7 +27,7 @@ beforeEach(() => {
     'arbitrum-mainnet',
     'arbitrum-sepolia',
   ].forEach((networkName) => {
-    cy.intercept(`https://${networkName}.infura.io/v3/*`, (req) => {
+    cy.intercept(`https://${networkName}.infura.io/v3/**`, (req) => {
       req.url = 'http://127.0.0.1:8545';
       req.continue();
     }).as(networkName);

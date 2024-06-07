@@ -13,8 +13,6 @@ it('Home Connected', () => {
   cy.contains('[data-cy="Total Delegated-stats-box"]', '$0.00').should('exist');
   cy.contains('[data-cy="Total Debt-stats-box"]', '$0.00').should('exist');
   cy.contains('[data-cy="position-empty-button"]', 'Explore all Pools').should('exist');
-  cy.get('[data-cy="account-menu-button"]').click();
-  cy.contains('[data-cy="create-new-account-menu-item"]', 'Create Account').should('exist');
 
   cy.get('@wallet').then((wallet) => {
     cy.contains('[data-cy="header-wallet-address-display"]', wallet.address.substring(0, 6)).should(

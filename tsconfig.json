@@ -19,11 +19,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": false
+    "incremental": false,
+    "types": []
   },
   "exclude": [
     "**/node_modules/**",
     "**/coverage/**",
+    "**/build/**",
+    "**/dist/**",
     "**/tests/**",
     "**/*.test.ts",
     "**/*.test.tsx",
