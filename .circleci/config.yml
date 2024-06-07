@@ -145,7 +145,7 @@ jobs:
   governance-e2e:
     parameters:
       chainId:
-        type: number
+        type: integer
       preset:
         type: string
       provider-url:
@@ -205,7 +205,7 @@ jobs:
   liquidity-e2e:
     parameters:
       chainId:
-        type: number
+        type: integer
       preset:
         type: string
       provider-url:
