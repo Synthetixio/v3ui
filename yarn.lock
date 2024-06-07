@@ -6184,7 +6184,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useAllCollateralPriceIds@workspace:liquidity/lib/useAllCollateralPriceIds"
   dependencies:
-    "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
