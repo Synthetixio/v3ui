@@ -2,7 +2,8 @@ export async function importExtras(chainId, preset) {
   if (!preset) {
     throw new Error(`Missing preset`);
   }
-  switch (`${chainId}-${preset}`) {
+  const deployment = `${Number(chainId).toFixed(0)}-${preset}`;
+  switch (deployment) {
     case '1-main': {
       const [extras] = await Promise.all([import('@synthetixio/v3-contracts/1-main/extras.json')]);
       return extras;
@@ -48,7 +49,7 @@ export async function importExtras(chainId, preset) {
       return extras;
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId}-${preset} for Extras`);
+      throw new Error(`Unsupported deployment ${deployment} for Extras`);
     }
   }
 }

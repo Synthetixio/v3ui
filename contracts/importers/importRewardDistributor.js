@@ -26,7 +26,8 @@ export async function importRewardDistributor(chainId, preset) {
   if (!preset) {
     throw new Error(`Missing preset`);
   }
-  switch (`${chainId}-${preset}`) {
+  const deployment = `${Number(chainId).toFixed(0)}-${preset}`;
+  switch (deployment) {
     case '1-main': {
       return { address: null, abi };
     }
@@ -52,7 +53,7 @@ export async function importRewardDistributor(chainId, preset) {
       return { address: null, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId}-${preset} for RewardsDistributor`);
+      throw new Error(`Unsupported deployment ${deployment} for RewardsDistributor`);
     }
   }
 }

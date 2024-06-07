@@ -2,7 +2,8 @@ export async function importOracleManagerProxy(chainId, preset) {
   if (!preset) {
     throw new Error(`Missing preset`);
   }
-  switch (`${chainId}-${preset}`) {
+  const deployment = `${Number(chainId).toFixed(0)}-${preset}`;
+  switch (deployment) {
     case '1-main': {
       const [{ default: meta }, { default: abi }] = await Promise.all([
         import('@synthetixio/v3-contracts/1-main/meta.json'),
@@ -60,7 +61,7 @@ export async function importOracleManagerProxy(chainId, preset) {
       return { address: meta.contracts.OracleManagerProxy, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId}-${preset} for OracleManagerProxy`);
+      throw new Error(`Unsupported deployment ${deployment} for OracleManagerProxy`);
     }
   }
 }

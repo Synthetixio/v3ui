@@ -18,7 +18,8 @@ const abi = [
 ];
 
 export async function importMulticall3(chainId, preset = 'main') {
-  switch (`${chainId}-${preset}`) {
+  const deployment = `${Number(chainId).toFixed(0)}-${preset}`;
+  switch (deployment) {
     case '1-main': {
       const { mainnet } = await import('viem/chains');
       return { address: mainnet.contracts.multicall3.address, abi };
@@ -49,7 +50,7 @@ export async function importMulticall3(chainId, preset = 'main') {
       return { address: arbitrumSepolia.contracts.multicall3.address, abi };
     }
     default: {
-      throw new Error(`Unsupported chain ${chainId}-${preset} for Multicall3`);
+      throw new Error(`Unsupported deployment ${deployment} for Multicall3`);
     }
   }
 }
