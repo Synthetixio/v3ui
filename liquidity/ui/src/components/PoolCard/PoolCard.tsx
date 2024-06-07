@@ -2,7 +2,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Button, Text, Image, Link, Divider, Heading, Skeleton } from '@chakra-ui/react';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { TokenIcon } from '../TokenIcon';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../utils/constants';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { PoolType } from '@snx-v3/usePools';
@@ -168,7 +168,11 @@ export const PoolCard = ({
               onClick={() => {
                 queryParams.set('manageAction', 'deposit');
                 navigate({
-                  pathname: `/positions/${type.symbol}/${pool.id}`,
+                  pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
+                    poolId: pool.id,
+                    collateralSymbol: type.symbol,
+                    collateralAddress: type.tokenAddress,
+                  }),
                   search: queryParams.toString(),
                 });
               }}

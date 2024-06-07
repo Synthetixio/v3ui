@@ -178,7 +178,11 @@ export const BasePoolCard = ({
               onClick={() => {
                 queryParams.set('manageAction', 'deposit');
                 navigate({
-                  pathname: `/positions/${type.symbol}/${pool.id}`,
+                  pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
+                    poolId: pool.id,
+                    collateralSymbol: type.symbol,
+                    collateralAddress: type.tokenAddress,
+                  }),
                   search: queryParams.toString(),
                 });
               }}

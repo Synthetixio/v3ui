@@ -12,7 +12,8 @@ const AccountVaultCollateralUi: FC<{
   collateralSymbol: string;
   poolId: string;
   isLoading: boolean;
-}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId }) => {
+  tokenAddress: string;
+}> = ({ collateralValue, collateralAmount, collateralSymbol, isLoading, poolId, tokenAddress }) => {
   const location = useLocation();
   return (
     <>
@@ -36,9 +37,10 @@ const AccountVaultCollateralUi: FC<{
       <Button
         as={Link}
         to={{
-          pathname: generatePath('/positions/:collateral/:poolId', {
-            collateral: collateralSymbol,
-            poolId,
+          pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
+            poolId: poolId,
+            collateralSymbol: collateralSymbol,
+            collateralAddress: tokenAddress,
           }),
           search: location.search,
         }}
@@ -66,6 +68,7 @@ export const AccountVaultCollateral: FC<{ collateral: CollateralType }> = ({ col
       collateralAmount={data?.collateralAmount.toNumber() || 0}
       collateralValue={data?.collateralPrice?.toNumber() || 0}
       collateralSymbol={collateral.symbol}
+      tokenAddress={collateral.tokenAddress}
       isLoading={isLoading}
       poolId={params.poolId}
     />

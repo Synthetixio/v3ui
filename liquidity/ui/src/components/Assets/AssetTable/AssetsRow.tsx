@@ -17,6 +17,7 @@ interface AssetsRowProps {
   delegatedBalance$: number;
   unlockDate?: Date;
   final: boolean; // Used for hiding bottom border
+  tokenAddress: string;
 }
 
 export const AssetsRow = ({
@@ -30,6 +31,7 @@ export const AssetsRow = ({
   delegatedBalance$,
   unlockDate = new Date(),
   final,
+  tokenAddress,
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const canWithdraw = unlockDate.getTime() < new Date().getTime();
@@ -160,9 +162,10 @@ export const AssetsRow = ({
               borderColor="gray.900"
               borderRadius="4px"
               to={{
-                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
                   poolId: '1',
                   collateralSymbol: 'USDC',
+                  collateralAddress: tokenAddress,
                 }),
                 search: location.search,
               }}

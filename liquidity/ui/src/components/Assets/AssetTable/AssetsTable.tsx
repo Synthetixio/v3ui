@@ -105,6 +105,7 @@ export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps)
                       key={collateral.tokenAddress
                         .concat(collateral?.symbol || index.toString())
                         .concat(index.toString())}
+                      tokenAddress={collateral.tokenAddress}
                       token={collateral.symbol || ''}
                       name={collateral.displaySymbol || ''}
                       walletBalance={balance!.toNumber()}

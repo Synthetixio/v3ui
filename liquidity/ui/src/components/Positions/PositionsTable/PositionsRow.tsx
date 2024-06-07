@@ -2,7 +2,7 @@ import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetBorrow } from '@snx-v3/useGetBorrow';
 import { utils } from 'ethers';
 
@@ -125,7 +125,11 @@ export function PositionRow({
               onClick={() => {
                 queryParams.set('manageAction', debt.gt(0) ? 'deposit' : 'repay');
                 navigate({
-                  pathname: `/positions/${collateralType.symbol}/${poolId}`,
+                  pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
+                    poolId: poolId,
+                    collateralSymbol: collateralType.symbol,
+                    collateralAddress: collateralType.tokenAddress,
+                  }),
                   search: queryParams.toString(),
                 });
               }}
@@ -166,7 +170,7 @@ export function PositionRow({
             w="100px"
             onClick={() => {
               navigate({
-                pathname: `/positions/${collateralType.symbol}/${poolId}`,
+                pathname: `/manage/${collateralType.symbol}/${poolId}`,
               });
             }}
             data-cy="manage-position-row-button"

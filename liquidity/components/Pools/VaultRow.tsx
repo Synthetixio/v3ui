@@ -97,9 +97,10 @@ function VaultRowUi({
           <Button
             as={Link}
             to={{
-              pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+              pathname: generatePath('/manage/:collateralSymbol/:collateralAddress/:poolId', {
                 poolId: poolId,
                 collateralSymbol: collateralType.symbol,
+                collateralAddress: collateralType.tokenAddress,
               }),
               search: location.search,
             }}
