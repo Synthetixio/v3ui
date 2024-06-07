@@ -3,9 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "main": "index.js",
-  "files": [
-    "src"
-  ],
   "scripts": {
     "start:mainnet": "anvil --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY",
     "start:sepolia": "anvil --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
