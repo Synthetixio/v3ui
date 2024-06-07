@@ -354,17 +354,17 @@ workflows:
           name: governance-e2e-sepolia
           chainId: 11155111
           preset: main
-          provider-url: https://sepolia.infura.io/v3/$INFURA_API_KEY
+          provider-url: https://sepolia.infura.io/v3/$INFURA_KEY
       - liquidity-e2e:
           name: liquidity-e2e-base-mainnet
           chainId: 8453
           preset: andromeda
-          provider-url: https://base-mainnet.infura.io/v3/$INFURA_API_KEY
+          provider-url: https://base-mainnet.infura.io/v3/$INFURA_KEY
       - liquidity-e2e:
           name: liquidity-e2e-sepolia
           chainId: 11155111
           preset: main
-          provider-url: https://sepolia.infura.io/v3/$INFURA_API_KEY
+          provider-url: https://sepolia.infura.io/v3/$INFURA_KEY
       - combine-coverage:
           requires:
             [
