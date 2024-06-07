@@ -6,7 +6,7 @@ export const PositionsNotConnected = () => {
   return (
     <Flex w="100%" justifyContent="space-between" alignItems="center">
       <Text color="gray.500" fontWeight={500} fontSize="14px" lineHeight="14px" my="4" pl="3">
-        Please connect wallet to view assets
+        Please connect wallet to view active positions
       </Text>
       <Button
         size="sm"
