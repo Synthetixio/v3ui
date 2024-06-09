@@ -1,15 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { ethers } from 'ethers';
-import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
-import { z } from 'zod';
-import { notNil } from '@snx-v3/tsHelpers';
+import { deploymentsWithERC7412, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { Network, deploymentsWithERC7412, useNetwork } from '@snx-v3/useBlockchain';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import { z } from 'zod';
 
 const NodeSchema = z.object({
   nodeType: z.number(),
@@ -25,23 +23,10 @@ const PythParametersSchema = z.object({
 
 const EXTERNAL_NODE_TYPE = 2;
 
-const loadConfigs = async ({ CoreProxy }: { CoreProxy: CoreProxyType }) => {
+const loadConfigs = async ({ CoreProxy }: { CoreProxy: ethers.Contract }) => {
   const hideDisabled = false;
   return await CoreProxy.getCollateralConfigurations(hideDisabled);
 };
-
-function removeDuplicatesByProp<T, K extends keyof T>(arr: T[], prop: K): T[] {
-  const seen = new Set<T[K]>();
-  return arr.filter((item) => {
-    const value = item[prop];
-    if (seen.has(value)) {
-      return false;
-    } else {
-      seen.add(value);
-      return true;
-    }
-  });
-}
 
 export const useAllCollateralPriceIds = (customNetwork?: Network) => {
   const { data: Multicall3 } = useMulticall3(customNetwork);
@@ -64,9 +49,9 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
 
       const configs = await loadConfigs({ CoreProxy });
 
-      const oracleNodeIds = configs.map((x) => x.oracleNodeId);
+      const oracleNodeIds = configs.map((x: { oracleNodeId: string }) => x.oracleNodeId);
 
-      const calls = oracleNodeIds.map((oracleNodeId) => ({
+      const calls = oracleNodeIds.map((oracleNodeId: string) => ({
         target: OracleProxy.address,
         callData: OracleProxy.interface.encodeFunctionData('getNode', [oracleNodeId]),
       }));
@@ -74,7 +59,7 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
       const { returnData } = await Multicall3.callStatic.aggregate(calls);
 
       const decoded = returnData
-        .map((bytes, i) => {
+        .map((bytes: ethers.utils.BytesLike, i: number) => {
           const nodeResp = OracleProxy.interface.decodeFunctionResult('getNode', bytes)[0];
 
           const { nodeType, parameters } = NodeSchema.parse({ ...nodeResp });
@@ -104,9 +89,16 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
             return null;
           }
         })
-        .filter(notNil);
+        .filter(Boolean);
 
-      return removeDuplicatesByProp(decoded, 'priceFeedId');
+      const seen = new Set();
+      return decoded.filter((item: { priceFeedId: string }) => {
+        if (seen.has(item.priceFeedId)) {
+          return false;
+        }
+        seen.add(item.priceFeedId);
+        return true;
+      });
     },
   });
 };

@@ -7,12 +7,19 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 
-// LP App Supported Networks
-// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, Arbitrum
-const supportedNetworks = [1, 11155111, 8453, 84532, 421614, 42161];
+const supportedDeployments = [
+  '1-main',
+  '11155111-main',
+  '8453-andromeda',
+  '84532-andromeda',
+  '42161-main',
+  '421614-main',
+];
 
 // Filter networks to only supported ones
-export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
+export const chains = NETWORKS.filter(({ id, preset }) =>
+  supportedDeployments.includes(`${id}-${preset}`)
+).map((n) => ({
   ...n,
 }));
 
@@ -36,7 +43,7 @@ export const onboard = init({
     coinbaseModule(),
   ],
   chains: [
-    ...networks.map((n) => ({
+    ...chains.map((n) => ({
       id: n.id,
       token: n.token,
       label: n.label,

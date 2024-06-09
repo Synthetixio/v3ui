@@ -6,7 +6,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
+import { importCoreProxy, importMulticall3 } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
 import * as viem from 'viem';
 import { parseTxError } from '../parser';
@@ -206,7 +206,7 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id)
+    ? await importCoreProxy(network.id, network.preset)
     : await importMulticall3(network.id, network.preset);
 
   while (true) {

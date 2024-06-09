@@ -33,6 +33,10 @@ const babelRule = {
     /liquidity\/components/,
 
     /ultrasound\/ui/,
+
+    // fixes for borked 3rd party bundles
+    /@safe-global/,
+    /@web3-onboard/,
   ],
   resolve: {
     fullySpecified: false,
@@ -143,10 +147,6 @@ module.exports = {
 
     .concat([
       new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-contracts$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
-      ),
-      new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
         path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
       ),
@@ -181,9 +181,6 @@ module.exports = {
     ),
 
   resolve: {
-    alias: {
-      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
-    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

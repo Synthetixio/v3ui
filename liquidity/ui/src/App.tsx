@@ -19,6 +19,16 @@ const queryClient = new QueryClient({
       refetchInterval: false, //  if queries needs refetching we should be explicit about it, given erc7412
       staleTime: DEFAULT_QUERY_STALE_TIME,
       refetchOnWindowFocus: false,
+      throwOnError: (e) => {
+        console.error(e);
+        return false;
+      },
+    },
+    mutations: {
+      throwOnError: (e) => {
+        console.error(e);
+        return false;
+      },
     },
   },
 });

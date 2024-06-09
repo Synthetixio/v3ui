@@ -14,10 +14,9 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { WalletIcon } from '@snx-v3/icons';
-import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-import { networks } from '../../utils/onboard';
-import { useLocalStorage } from '../../hooks';
+import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
@@ -89,50 +88,45 @@ export function NetworkController() {
   return (
     <Flex>
       <Menu>
-        {() => (
-          <>
-            <MenuButton
-              as={Button}
-              variant="outline"
-              colorScheme="gray"
-              sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
-              mr={1}
-              data-cy="account-menu-button"
-              px={3}
-            >
-              <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
-            </MenuButton>
-            <MenuList>
-              {networks.map(({ id, label }) => {
-                if ((id === 84532 || id === 11155111 || id === 421614) && !showTestnets)
-                  return null;
-                return (
-                  <MenuItem key={`${id}`} onClick={() => setNetwork(id)}>
-                    <NetworkIcon networkId={id} />
-                    <Text variant="nav" ml={2}>
-                      {label}
-                    </Text>
-                  </MenuItem>
-                );
-              })}
-              <MenuOptionGroup>
-                <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
-                  <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
-                    Show Testnets
-                  </Text>
-                  <Switch
-                    mr={2}
-                    size="sm"
-                    color="gray.900"
-                    colorScheme="gray"
-                    isChecked={showTestnets}
-                    onChange={() => setShowTestnets(!showTestnets)}
-                  />
-                </Flex>
-              </MenuOptionGroup>
-            </MenuList>
-          </>
-        )}
+        <MenuButton
+          as={Button}
+          variant="outline"
+          colorScheme="gray"
+          sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
+          mr={1}
+          data-cy="account-menu-button"
+          px={3}
+        >
+          <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
+        </MenuButton>
+        <MenuList>
+          {NETWORKS.map(({ id, preset, label, isTestnet }) => {
+            if (isTestnet && !showTestnets) return null;
+            return (
+              <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+                <NetworkIcon networkId={id} />
+                <Text variant="nav" ml={2}>
+                  {label}
+                </Text>
+              </MenuItem>
+            );
+          })}
+          <MenuOptionGroup>
+            <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
+              <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
+                Show Testnets
+              </Text>
+              <Switch
+                mr={2}
+                size="sm"
+                color="gray.900"
+                colorScheme="gray"
+                isChecked={showTestnets}
+                onChange={() => setShowTestnets(!showTestnets)}
+              />
+            </Flex>
+          </MenuOptionGroup>
+        </MenuList>
       </Menu>
       {activeWallet ? (
         <Menu placement="bottom-end">

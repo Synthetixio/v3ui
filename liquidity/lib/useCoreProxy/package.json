@@ -5,8 +5,8 @@
   "version": "0.0.1",
   "dependencies": {
     "@ethersproject/contracts": "^5.7.0",
+    "@snx-v3/contracts": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@synthetixio/v3-contracts": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "react": "^18.2.0"
   }

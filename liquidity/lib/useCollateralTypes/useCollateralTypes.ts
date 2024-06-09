@@ -1,6 +1,5 @@
-import { constants, utils } from 'ethers';
+import { constants, utils, Contract } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
@@ -39,7 +38,7 @@ async function loadSymbols({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -58,7 +57,7 @@ async function loadName({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -77,11 +76,12 @@ async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
 }: {
-  CoreProxy: CoreProxyType;
-  Multicall3: Multicall3Type;
+  CoreProxy: Contract;
+  Multicall3: Contract;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
-  const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+  const tokenConfigsRaw: CollateralType[] =
+    await CoreProxy.getCollateralConfigurations(hideDisabled);
 
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))

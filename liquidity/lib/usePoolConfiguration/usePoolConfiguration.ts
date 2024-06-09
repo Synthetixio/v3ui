@@ -38,7 +38,11 @@ export const usePoolConfiguration = (poolId?: string) => {
       if (!CoreProxy || !poolId || !collateralPriceUpdates || !network || !provider) {
         throw Error('usePoolConfiguration should not be enabled');
       }
-      const marketsData = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));
+      const marketsData: {
+        marketId: ethers.BigNumber;
+        maxDebtShareValueD18: ethers.BigNumber;
+        weightD18: ethers.BigNumber;
+      }[] = await CoreProxy.getPoolConfiguration(ethers.BigNumber.from(poolId));
       const markets = marketsData.map(({ marketId, maxDebtShareValueD18, weightD18 }) => ({
         id: marketId,
         weight: maxDebtShareValueD18,

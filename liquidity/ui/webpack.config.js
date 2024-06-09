@@ -33,6 +33,10 @@ const babelRule = {
     /liquidity\/components/,
     /liquidity\/cypress/,
     /liquidity\/ui/,
+
+    // fixes for borked 3rd party bundles
+    /@safe-global/,
+    /@web3-onboard/,
   ],
   resolve: {
     fullySpecified: false,
@@ -143,10 +147,6 @@ module.exports = {
 
     .concat([
       new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-contracts$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
-      ),
-      new webpack.NormalModuleReplacementPlugin(
         new RegExp(`^@synthetixio/v3-theme$`),
         path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
       ),
@@ -160,12 +160,10 @@ module.exports = {
     ])
     .concat(
       new webpack.DefinePlugin({
-        'process.env': {
-          INFURA_KEY: JSON.stringify(process.env.INFURA_KEY),
-          WC_PROJECT_ID: JSON.stringify(process.env.WC_PROJECT_ID),
-          PYTH_MAINNET_ENDPOINT: JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
-          PYTH_TESTNET_ENDPOINT: JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
-        },
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
+        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
+        'process.env.PYTH_MAINNET_ENDPOINT': JSON.stringify(process.env.PYTH_MAINNET_ENDPOINT),
+        'process.env.PYTH_TESTNET_ENDPOINT': JSON.stringify(process.env.PYTH_TESTNET_ENDPOINT),
       })
     )
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
@@ -183,9 +181,6 @@ module.exports = {
     ),
 
   resolve: {
-    alias: {
-      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
-    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

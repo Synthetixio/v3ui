@@ -45,7 +45,7 @@ module.exports = {
         [
           require.resolve('@babel/preset-env'),
           {
-            modules: 'commonjs',
+            modules: false,
             targets: { node: 'current' },
           },
         ],

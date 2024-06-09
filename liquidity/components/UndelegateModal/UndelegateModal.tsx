@@ -9,25 +9,25 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { FC, useCallback, useContext, useEffect } from 'react';
-import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Amount } from '@snx-v3/Amount';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { Multistep } from '@snx-v3/Multistep';
-import { Wei, wei } from '@synthetixio/wei';
-import { useParams } from '@snx-v3/useParams';
-import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
-import { useMachine } from '@xstate/react';
-import { useUndelegate } from '@snx-v3/useUndelegate';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import type { StateFrom } from 'xstate';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { useUndelegateBaseAndromeda } from '../../lib/useUndelegateBaseAndromeda';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Multistep } from '@snx-v3/Multistep';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useParams } from '@snx-v3/useParams';
+import { useUndelegate } from '@snx-v3/useUndelegate';
+import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
+import { Wei, wei } from '@synthetixio/wei';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMachine } from '@xstate/react';
+import { FC, useCallback, useContext, useEffect } from 'react';
+import type { StateFrom } from 'xstate';
+import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;

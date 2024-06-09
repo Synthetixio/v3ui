@@ -1,8 +1,4 @@
 it('Home Not Connected', () => {
-  cy.on('window:before:load', (win) => {
-    win.sessionStorage.TERMS_CONDITIONS_ACCEPTED = 'true';
-  });
-
   cy.viewport(1200, 900);
   cy.visit('/');
   cy.get('[data-cy="header-connect-wallet"]').contains('Connect Wallet');
