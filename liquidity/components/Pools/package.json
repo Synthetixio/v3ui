@@ -17,7 +17,7 @@
     "@snx-v3/useLiquidityPositions": "workspace:*",
     "@snx-v3/usePools": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
-    "@web3-onboard/react": "^2.8.17",
+    "@web3-onboard/react": "^2.9.1",
     "react": "^18.2.0",
     "react-router-dom": "^6.18.0"
   }

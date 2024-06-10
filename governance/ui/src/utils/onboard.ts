@@ -29,6 +29,7 @@ export const chains = NETWORKS.filter(({ id, preset }) =>
 
 export const onboard = init({
   wallets: [
+    coinbaseModule(),
     injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
     trezorModule({
       appUrl: 'https://governance.synthetix.io',
@@ -44,7 +45,6 @@ export const onboard = init({
       dappUrl: 'https://governance.synthetix.io',
     }),
     gnosisModule(),
-    coinbaseModule(),
   ],
   chains,
   appMetadata: {
