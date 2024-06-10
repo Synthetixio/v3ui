@@ -40,7 +40,7 @@ export function NetworkController() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!isAccountsLoading && !isAccountsFetching && accounts) {
+    if (!isAccountsLoading && !isAccountsFetching && !!accounts?.length) {
       const accountId = queryParams.get('accountId');
 
       if (accountId && !accounts?.includes(accountId)) {
@@ -70,11 +70,25 @@ export function NetworkController() {
 
   useEffect(() => {
     const accountId = queryParams.get('accountId');
+
     if (!accountId && !!accounts?.length) {
-      queryParams.set('accountId', accounts[0]);
+      const lastUsedAccount = localStorage.getItem('accountId');
+      if (lastUsedAccount && accounts.find((account) => String(account) === lastUsedAccount)) {
+        queryParams.set('accountId', lastUsedAccount);
+      } else {
+        queryParams.set('accountId', accounts[0]);
+      }
       navigate({ pathname, search: queryParams.toString() });
     }
   }, [accounts, navigate, pathname, queryParams]);
+
+  useEffect(() => {
+    const accountId = queryParams.get('accountId');
+
+    if (accountId) {
+      localStorage.setItem('accountId', accountId);
+    }
+  }, [queryParams]);
 
   const onDisconnect = () => {
     if (walletsInfo) {
