@@ -16,10 +16,12 @@ const supportedDeployments = [
   '421614-main',
 ];
 
-// Filter networks to only supported ones
-export const chains = NETWORKS.filter(({ id, preset }) =>
+export const supportedNetworks = NETWORKS.filter(({ id, preset }) =>
   supportedDeployments.includes(`${id}-${preset}`)
-).map((n) => ({
+);
+
+// Filter networks to only supported ones
+export const chains = supportedNetworks.map((n) => ({
   id: n.id,
   token: n.token,
   label: n.label,

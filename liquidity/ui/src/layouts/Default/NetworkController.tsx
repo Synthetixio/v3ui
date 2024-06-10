@@ -14,7 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { WalletIcon } from '@snx-v3/icons';
-import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
@@ -22,6 +22,7 @@ import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { supportedNetworks } from '../../utils/onboard';
 
 export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
@@ -100,7 +101,7 @@ export function NetworkController() {
           <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
         </MenuButton>
         <MenuList>
-          {NETWORKS.map(({ id, preset, label, isTestnet }) => {
+          {supportedNetworks.map(({ id, preset, label, isTestnet }) => {
             if (isTestnet && !showTestnets) return null;
             return (
               <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
