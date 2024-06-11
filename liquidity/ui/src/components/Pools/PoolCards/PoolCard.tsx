@@ -172,11 +172,21 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                     if (!currentNetwork) {
                       connect();
                       setNetwork(network.id);
+                      queryParams.set('manageAction', 'deposit');
+                      navigate({
+                        pathname: `/positions/${type.symbol}/${pool.id}`,
+                        search: queryParams.toString(),
+                      });
                       return;
                     }
 
                     if (currentNetwork?.id !== network.id) {
                       if (!(await setNetwork(network.id))) {
+                        queryParams.set('manageAction', 'deposit');
+                        navigate({
+                          pathname: `/positions/${type.symbol}/${pool.id}`,
+                          search: queryParams.toString(),
+                        });
                         return;
                       }
                     }
