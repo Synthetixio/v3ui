@@ -3,50 +3,33 @@ import { Helmet } from 'react-helmet';
 import { PoolHeader, MarketSection, CollateralSection, Rewards } from '../components';
 import { useParams } from '@snx-v3/useParams';
 import { HomeLink } from '@snx-v3/HomeLink';
-import { usePool } from '@snx-v3/usePools';
 import { useRewards } from '@snx-v3/useRewards';
-import { usePoolData } from '@snx-v3/usePoolData';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useLocation } from 'react-router-dom';
-import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { useEffect } from 'react';
+import { usePool } from '@snx-v3/usePoolsList';
+import { NETWORKS } from '@snx-v3/useBlockchain';
 
 export const Pool = () => {
-  const params = useParams();
-  const { state } = useLocation();
-  const { network, setNetwork } = useNetwork();
-  const { connect } = useWallet();
+  const { accountId, poolId, networkId } = useParams();
 
-  const { data: pool } = usePool(params.poolId);
+  const { data: pool, isLoading: isPoolLoading } = usePool(Number(networkId), String(poolId));
 
-  const { accountId, collateralSymbol, poolId } = useParams();
+  const { poolInfo } = pool || {};
 
-  const { isFetching: isCollateralLoading, data: collateralType } =
-    useCollateralType(collateralSymbol);
+  const registeredDistributors = poolInfo?.map((info) => info.pool.registered_distributors).flat();
+  const collateralTypes = poolInfo?.map((info) => info.collateral_type);
 
-  const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
+  const network = NETWORKS.find((n) => n.id === Number(networkId));
 
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
-    poolData?.registered_distributors,
+    registeredDistributors,
     poolId,
-    collateralType?.tokenAddress,
-    accountId
+    // For now we will just show the first collateral type, as this is how it is handled for andromeda
+    collateralTypes?.[0]?.id,
+    accountId,
+    network
   );
 
-  useEffect(() => {
-    if (state && network?.id !== state?.networkId) {
-      // Switch network
-      setNetwork(state.networkId);
-    } else if (state && !network) {
-      // Connect network
-      connect();
-      setNetwork(state.networkId);
-    }
-  }, [network, state, setNetwork, connect]);
-
-  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
-
-  const title = pool ? `Pool #${pool.id} / ${pool.name}` : 'Pool';
+  const title = poolInfo ? `Pool #${poolInfo[0].pool.id} / ${poolInfo[0].pool.name}` : 'Pool';
+  const isLoading = isRewardsLoading || isPoolLoading;
 
   return (
     <>
@@ -56,7 +39,7 @@ export const Pool = () => {
       </Helmet>
       <>
         <HomeLink mt={4} />
-        <PoolHeader />
+        <PoolHeader name={poolInfo && poolInfo[0].pool.name} />
         <Divider my={8} bg="gray.900" />
         <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }} mb={8}>
           <Box flexGrow={1}>

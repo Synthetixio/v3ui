@@ -26,8 +26,9 @@ export function useCoreProxy(customNetwork?: Network) {
         const { address, abi } = await importCoreProxy(customNetwork.id, customNetwork.preset);
         return new Contract(address, abi, providerForChain);
       }
+
       const signerOrProvider = signer || provider;
-      if (!signerOrProvider || !network) throw new Error('Should be disabled');
+      if (!signerOrProvider || !network) throw new Error('Should be disabled CP');
 
       const { address, abi } = await importCoreProxy(network?.id, network?.preset);
       return new Contract(address, abi, signerOrProvider);

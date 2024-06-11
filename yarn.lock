@@ -5783,7 +5783,6 @@ __metadata:
     "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
     "@snx-v3/useAccountPermissions": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
-    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useAprHistory": "workspace:*"
@@ -6100,17 +6099,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useAppReady@workspace:*, @snx-v3/useAppReady@workspace:liquidity/lib/useAppReady":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useAppReady@workspace:liquidity/lib/useAppReady"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useMulticall3": "workspace:*"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useApprove@workspace:*, @snx-v3/useApprove@workspace:liquidity/lib/useApprove":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useApprove@workspace:liquidity/lib/useApprove"
@@ -6263,7 +6251,6 @@ __metadata:
   resolution: "@snx-v3/useCollateralTypes@workspace:liquidity/lib/useCollateralTypes"
   dependencies:
     "@snx-v3/isBaseAndromeda": "workspace:*"
-    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
@@ -6559,7 +6546,6 @@ __metadata:
   resolution: "@snx-v3/usePools@workspace:liquidity/lib/usePools"
   dependencies:
     "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/zod": "workspace:*"
@@ -6634,7 +6620,6 @@ __metadata:
   dependencies:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useAppReady": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"

@@ -16,7 +16,7 @@ const supportedDeployments = [
   '421614-main',
 ];
 
-export const supportedNetworks = NETWORKS.filter(({ id, preset }) =>
+export const chains = NETWORKS.filter(({ id, preset }) =>
   supportedDeployments.includes(`${id}-${preset}`)
 ).map((n) => ({
   ...n,
@@ -42,7 +42,7 @@ export const onboard = init({
     // gnosisModule(),
   ],
   chains: [
-    ...supportedNetworks.map((n) => ({
+    ...chains.map((n) => ({
       id: n.id,
       token: n.token,
       label: n.label,

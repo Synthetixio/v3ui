@@ -7,7 +7,7 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useAppReady } from '@snx-v3/useAppReady';
+import { useMemo } from 'react';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -109,18 +109,11 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: Multicall3 } = useMulticall3(customNetwork);
-  const isAppReady = useAppReady();
 
-  const networkId = customNetwork
-    ? `${customNetwork?.id}-${customNetwork?.preset}`
-    : `${network?.id}-${network?.preset}`;
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
-    queryKey: [
-      networkId,
-      'CollateralTypes',
-      { includeDelegationOff, customNetwork: customNetwork?.id },
-    ],
+    queryKey: [targetNetwork?.id, 'CollateralTypes', { includeDelegationOff }],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
         throw Error('Query should not be enabled when contracts missing');
@@ -150,7 +143,6 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
 
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
-
       return collateralTypes.filter((collateralType) =>
         collateralType.minDelegationD18.lt(constants.MaxUint256)
       ) as CollateralType[];
@@ -158,7 +150,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(customNetwork ? true : isAppReady),
+    enabled: Boolean(targetNetwork),
   });
 }
 

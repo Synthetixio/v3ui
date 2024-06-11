@@ -90,7 +90,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
         p="6"
         _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50' }}
         onClick={() => {
-          navigate(`/pools/${pool.id}`, { state: { networkId: network.id } });
+          navigate(`/pools/${network.id}/${pool.id}`);
         }}
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>

@@ -26,9 +26,9 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
         />
         <Flex
           position="relative"
-          as={Link}
-          href="https://toros.finance/synthetix-usdc-andromeda-yield"
-          target="_blank"
+          onClick={() => {
+            window.open('https://toros.finance/synthetix-usdc-andromeda-yield', '_blank');
+          }}
           flexDir="column"
           rounded="base"
           bg="navy.700"

@@ -2,11 +2,10 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
 import { utils, BigNumber } from 'ethers';
 import { Wei, wei } from '@synthetixio/wei';
-import { useAppReady } from '@snx-v3/useAppReady';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { importRewardDistributor } from '@snx-v3/contracts';
 
 const RewardsResponseSchema = z.array(
@@ -59,15 +58,19 @@ export function useRewards(
   distributors?: RewardsInterface,
   poolId?: string,
   collateralAddress?: string,
-  accountId: string = '69'
+  accountId: string = '69',
+  customNetwork?: Network
 ) {
   const { network } = useNetwork();
-  const { data: Multicall3 } = useMulticall3();
-  const { data: CoreProxy } = useCoreProxy();
-  const isAppReady = useAppReady();
+
+  const networkToUse = customNetwork ? customNetwork : network;
+
+  const { data: Multicall3 } = useMulticall3(networkToUse || undefined);
+
+  const { data: CoreProxy } = useCoreProxy(networkToUse || undefined);
 
   return useQuery({
-    enabled: Boolean(isAppReady && distributors && poolId && collateralAddress && accountId),
+    enabled: Boolean(distributors && poolId && collateralAddress && accountId),
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'Rewards',
@@ -82,8 +85,7 @@ export function useRewards(
         !poolId ||
         !collateralAddress ||
         !accountId ||
-        !distributors ||
-        !network
+        !distributors
       ) {
         throw 'useRewards is missing required data';
       }
@@ -91,7 +93,7 @@ export function useRewards(
       if (distributors.length === 0) return [];
 
       try {
-        const { abi } = await importRewardDistributor(network?.id, network?.preset);
+        const { abi } = await importRewardDistributor(networkToUse?.id, networkToUse?.preset);
 
         const ifaceRD = new utils.Interface(abi);
         const ifaceERC20 = new utils.Interface(erc20Abi);

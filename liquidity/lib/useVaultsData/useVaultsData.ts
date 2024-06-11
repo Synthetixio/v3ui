@@ -21,7 +21,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const { network } = useNetwork();
   const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
-  const { data: CoreProxyContract } = useCoreProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);
 
   const provider = useProviderForChain(targetNetwork);
@@ -40,7 +40,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
     ],
     queryFn: async () => {
       if (
-        !CoreProxyContract ||
+        !CoreProxy ||
         !collateralTypes ||
         !poolId ||
         !collateralPriceUpdates ||
@@ -52,16 +52,13 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
 
       const collateralCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
-          CoreProxyContract.populateTransaction.getVaultCollateral(
-            poolId,
-            collateralType.tokenAddress
-          )
+          CoreProxy.populateTransaction.getVaultCollateral(poolId, collateralType.tokenAddress)
         )
       );
 
       const debtCallsP = Promise.all(
         collateralTypes.map((collateralType) =>
-          CoreProxyContract.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
+          CoreProxy.populateTransaction.getVaultDebt(poolId, collateralType.tokenAddress)
         )
       );
 
@@ -90,12 +87,9 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
             const debtBytes =
               debtResult[i] || '0x0000000000000000000000000000000000000000000000000000000000000000';
 
-            const decodedDebt = CoreProxyContract.interface.decodeFunctionResult(
-              'getVaultDebt',
-              debtBytes
-            );
+            const decodedDebt = CoreProxy.interface.decodeFunctionResult('getVaultDebt', debtBytes);
 
-            const decodedCollateral = CoreProxyContract.interface.decodeFunctionResult(
+            const decodedCollateral = CoreProxy.interface.decodeFunctionResult(
               'getVaultCollateral',
               bytes
             );
@@ -111,9 +105,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
         'useVaultsData'
       );
     },
-    enabled: Boolean(
-      collateralTypes?.length && CoreProxyContract && poolId && collateralPriceUpdates
-    ),
+    enabled: Boolean(collateralTypes?.length && CoreProxy && poolId && collateralPriceUpdates),
   });
 };
 

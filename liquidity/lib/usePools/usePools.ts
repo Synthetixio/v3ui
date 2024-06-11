@@ -5,7 +5,6 @@ import { NETWORKS, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { z } from 'zod';
 import { ethers } from 'ethers';
-import { useAppReady } from '@snx-v3/useAppReady';
 import { importCoreProxy } from '@snx-v3/contracts';
 
 export const PoolIdSchema = ZodBigNumber.transform((x) => x.toString());
@@ -24,12 +23,11 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy(customNetwork);
-  const isAppReady = useAppReady();
 
   const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
-    enabled: Boolean(customNetwork ? true : isAppReady),
+    enabled: Boolean(customNetwork || network),
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Pools'],
     queryFn: async () => {
       if (!CoreProxy) throw 'usePools is missing required data';

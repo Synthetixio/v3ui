@@ -22,7 +22,7 @@ import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { supportedNetworks } from '../../utils/onboard';
+import { chains } from '../../utils/onboard';
 
 export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
@@ -115,7 +115,7 @@ export function NetworkController() {
           <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
         </MenuButton>
         <MenuList>
-          {supportedNetworks.map(({ id, preset, label, isTestnet }) => {
+          {chains.map(({ id, preset, label, isTestnet }) => {
             if (isTestnet && !showTestnets) return null;
             return (
               <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>

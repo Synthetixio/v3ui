@@ -9,6 +9,7 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useApr } from '@snx-v3/useApr';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { NETWORKS } from '@snx-v3/useBlockchain';
 
 // TODO: Delete when new pool page merged
 
@@ -229,15 +230,19 @@ export const CollateralSectionUi: FC<{
 };
 
 export const CollateralSection = () => {
-  const params = useParams();
+  const { poolId, networkId } = useParams();
 
-  const { data: vaultsData } = useVaultsData(params.poolId ? parseFloat(params.poolId) : undefined);
-  const { data: collateralPriceByAddress } = useCollateralPrices();
-  const { data: aprData, isLoading: isAprLoading } = useApr();
+  const network = NETWORKS.find((n) => n.id === Number(networkId));
+
+  // const { data: vaultsData } = useVaultsData(Number(poolId), network);
+  const { data: aprData, isLoading: isAprLoading } = useApr(network);
+  const { data: collateralPriceByAddress } = useCollateralPrices(network);
+
+  console.log('collat', collateralPriceByAddress);
 
   return (
     <CollateralSectionUi
-      vaultsData={vaultsData}
+      vaultsData={[]}
       collateralPriceByAddress={collateralPriceByAddress}
       apr={aprData?.combinedApr}
       isAprLoading={isAprLoading}

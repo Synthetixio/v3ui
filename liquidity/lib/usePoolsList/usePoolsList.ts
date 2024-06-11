@@ -29,6 +29,17 @@ export function usePoolsList() {
   });
 }
 
+export function usePool(networkId: number, poolId: string) {
+  const { data, isLoading } = usePoolsList();
+
+  return {
+    data: data?.synthetixPools.find(
+      (p) => p.network.id === networkId && p.poolInfo[0].pool.id === poolId
+    ),
+    isLoading,
+  };
+}
+
 const supportedNetworks = [1, 8453, 42161];
 
 async function fetchTorosPool() {
@@ -60,13 +71,15 @@ async function fetchTorosPool() {
     });
 }
 
+const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id) && n.isSupported).map(
+  (n) => n
+);
+
 async function fetchAprs() {
-  const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => n);
   return Promise.all(networks.map((network) => fetchApr(network.id)));
 }
 
 async function fetchPoolsList() {
-  const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => n);
   const urls = networks.map((network) => getSubgraphUrl(network.name));
 
   // Fetch all the pools from the subgraphs
@@ -90,6 +103,7 @@ const PoolsListData = gql`
   query PoolsListData {
     vaults(where: { pool: "1" }) {
       collateral_type {
+        id
         oracle_node_id
         name
         decimals
@@ -99,6 +113,39 @@ const PoolsListData = gql`
       pool {
         name
         id
+        registered_distributors(where: { isActive: true }) {
+          id
+          total_distributed
+          rewards_distributions(orderBy: created_at, orderDirection: desc) {
+            amount
+            duration
+            created_at
+          }
+        }
+        total_weight
+        configurations {
+          id
+          weight
+          max_debt_share_value
+          market {
+            id
+            address
+            usd_deposited
+            usd_withdrawn
+            net_issuance
+            reported_debt
+            updated_at
+            market_snapshots_by_week(first: 2, orderBy: updated_at, orderDirection: desc) {
+              id
+              usd_deposited
+              usd_withdrawn
+              net_issuance
+              reported_debt
+              updated_at
+              updates_in_period
+            }
+          }
+        }
       }
     }
   }
@@ -106,6 +153,7 @@ const PoolsListData = gql`
 
 interface PoolInfo {
   collateral_type: {
+    id: string;
     oracle_node_id: string;
     name: string;
     decimals: number;
@@ -115,5 +163,38 @@ interface PoolInfo {
   pool: {
     name: string;
     id: string;
+    registered_distributors: {
+      id: string;
+      total_distributed: string;
+      rewards_distributions: {
+        amount: string;
+        duration: string;
+        created_at: string;
+      }[];
+    }[];
+    total_weight: string;
+    configurations: {
+      id: string;
+      weight: string;
+      max_debt_share_value: string;
+      market: {
+        id: string;
+        address: string;
+        usd_deposited: string;
+        usd_withdrawn: string;
+        net_issuance: string;
+        reported_debt: string;
+        updated_at: string;
+        market_snapshots_by_week: {
+          id: string;
+          usd_deposited: string;
+          usd_withdrawn: string;
+          net_issuance: string;
+          reported_debt: string;
+          updated_at: string;
+          updates_in_period: string;
+        }[];
+      };
+    }[];
   };
 }

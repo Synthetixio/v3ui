@@ -13,7 +13,7 @@ export const Router = () => {
           <Route path="/account/settings" element={<Settings />} />
           <Route path="/positions/:collateralSymbol/:poolId" element={<Manage />} />
           <Route path="/pools" element={<Pools />} />
-          <Route path="/pools/:poolId" element={<Pool />} />
+          <Route path="/pools/:networkId/:poolId" element={<Pool />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFoundPage />} />

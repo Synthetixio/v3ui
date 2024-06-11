@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -13,7 +14,8 @@ async function getPythFeedIds(network: Network) {
   const extras = await importExtras(network.id, network.preset);
   return Object.entries(extras)
     .filter(
-      ([key, value]) => key.startsWith('pyth') && key.endsWith('FeedId') && value.length === 66
+      ([key, value]) =>
+        key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
     )
     .map(([_key, value]) => value);
 }
@@ -43,16 +45,17 @@ const getPriceUpdates = async (
 
 export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const { network } = useNetwork();
-  const chain = customNetwork || network;
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
-    queryKey: [`${chain?.id}-${chain?.preset}`, 'all-price-updates'],
-    enabled: isBaseAndromeda(chain?.id, chain?.preset),
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
+    enabled: isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset),
     queryFn: async () => {
-      if (!(network?.id && network?.preset)) throw 'OMFG';
+      if (!(targetNetwork?.id && targetNetwork?.preset))
+        throw 'useAllCollateralPriceUpdates is missing required data';
       const stalenessTolerance = 60;
 
-      const pythFeedIds = await getPythFeedIds(network);
+      const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, network);
 
       return {
@@ -89,7 +92,7 @@ export const useCollateralPriceUpdates = () => {
           'function getLatestPrice(bytes32 priceId, uint256 stalenessTolerance) external view returns (int256)',
         ]);
 
-        const pythFeedIds = await getPythFeedIds(network);
+        const pythFeedIds = (await getPythFeedIds(network)) as string[];
 
         const txs = [
           ...pythFeedIds.map((priceId) => ({

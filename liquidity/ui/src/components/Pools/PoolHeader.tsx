@@ -1,18 +1,13 @@
-import { Flex, Heading } from '@chakra-ui/react';
-import { useParams } from '@snx-v3/useParams';
-import { usePool } from '@snx-v3/usePools';
+import { Flex, Heading, Skeleton } from '@chakra-ui/react';
 
-// TODO: Delete when new pool page merged
-
-export const PoolHeader = () => {
-  const params = useParams();
-  const { data: pool } = usePool(params.poolId);
-
+export const PoolHeader = ({ name }: { name?: string }) => {
   return (
     <Flex gap={2} alignItems="flex-end">
-      <Heading fontWeight={700} fontSize="3xl">
-        {pool ? pool.name : 'Unknown Pool'}
-      </Heading>
+      <Skeleton isLoaded={!!name}>
+        <Heading fontWeight={700} fontSize="3xl">
+          {name ? name : 'Unknown Pool'}
+        </Heading>
+      </Skeleton>
     </Flex>
   );
 };

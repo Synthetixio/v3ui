@@ -1,22 +1,44 @@
+import { useMemo } from 'react';
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import {
+  Network,
+  useNetwork,
+  useProvider,
+  useProviderForChain,
+  useSigner,
+} from '@snx-v3/useBlockchain';
 import { importSpotMarketProxy } from '@snx-v3/contracts';
 
-export function useSpotMarketProxy() {
+export function useSpotMarketProxy(customNetwork?: Network) {
   const { network } = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
+  const providerForChain = useProviderForChain(customNetwork);
   const signerOrProvider = signer || provider;
+
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'SpotMarketProxy', { withSigner }],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'SpotMarketProxy', { withSigner }],
     queryFn: async function () {
-      if (!signerOrProvider || !network) throw new Error('Should be disabled');
+      if (!signerOrProvider || !targetNetwork) throw new Error('Should be disabled');
 
-      const { address, abi } = await importSpotMarketProxy(network?.id, network?.preset);
+      if (providerForChain && customNetwork) {
+        const { address, abi } = await importSpotMarketProxy(
+          targetNetwork.id,
+          targetNetwork.preset
+        );
+        return new Contract(address, abi, providerForChain);
+      }
+
+      const { address, abi } = await importSpotMarketProxy(
+        targetNetwork?.id,
+        targetNetwork?.preset
+      );
+
       return new Contract(address, abi, signerOrProvider);
     },
     enabled: Boolean(signerOrProvider),

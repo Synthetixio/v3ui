@@ -12,13 +12,13 @@ import {
   Tbody,
   Skeleton,
 } from '@chakra-ui/react';
-import { PoolType, usePoolData } from '@snx-v3/usePoolData';
 import { formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { useMarketNamesById } from '@snx-v3/useMarketNamesById';
 import { BorderBox } from '@snx-v3/BorderBox';
-
-// TODO: Delete when new pool page merged
+import { NETWORKS } from '@snx-v3/useBlockchain';
+import { usePool } from '@snx-v3/usePoolsList';
+import { wei } from '@synthetixio/wei';
 
 const StyledTh: FC<TableCellProps> = (props) => (
   <Th
@@ -65,20 +65,20 @@ const LoadingRow = () => (
 );
 
 export function MarketSectionUi({
-  poolData,
   marketNamesById,
-  poolId,
-  poolDataFetched,
+  isLoading,
+  configurations,
+  total_weight,
 }: {
-  poolData?: PoolType;
   marketNamesById?: Record<string, string | undefined>;
-  poolId?: string;
-  poolDataFetched: boolean;
+  isLoading: boolean;
+  total_weight?: number;
+  configurations?: any[];
 }) {
-  if (poolDataFetched && !poolData) {
+  if (!isLoading && !total_weight) {
     return (
       <BorderBox padding={4}>
-        <Text>Pool with id: {poolId} does not exist</Text>
+        <Text>No markets found for this pool</Text>
       </BorderBox>
     );
   }
@@ -87,7 +87,6 @@ export function MarketSectionUi({
       <Text fontSize="xl" fontWeight={700}>
         Markets
       </Text>
-
       <Flex>
         <TableContainer w="100%">
           <Table variant="simple">
@@ -95,60 +94,55 @@ export function MarketSectionUi({
               <Tr>
                 <StyledTh>Market</StyledTh>
                 <StyledTh>Pool Allocation</StyledTh>
-                {/* <StyledTh>Total Deposited</StyledTh>
-                <StyledTh>Total Withdrawn</StyledTh> */}
               </Tr>
             </Thead>
             <Tbody>
-              {!poolData && <LoadingRow />}
-              {poolData?.configurations.length === 0 ? (
-                <Tr w="full">
-                  <Td colSpan={4} border="none">
-                    <Text textAlign="center" mt={4}>
-                      No markets configured for the pool
-                    </Text>
-                  </Td>
-                </Tr>
+              {isLoading ? (
+                <LoadingRow />
               ) : (
-                poolData?.configurations.map(({ id, market, weight }, i) => {
-                  const isLastItem = i + 1 === poolData.configurations.length;
-
-                  return (
-                    <Tr key={id} data-testid="pool market" data-market={id}>
-                      <StyledTd isLastItem={isLastItem}>
-                        <Text fontSize="sm" display="block" data-testid="market name">
-                          {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
+                <>
+                  {configurations?.length === 0 ? (
+                    <Tr w="full">
+                      <Td colSpan={4} border="none">
+                        <Text textAlign="center" mt={4}>
+                          No markets configured for the pool
                         </Text>
-                        <Text fontSize="xs" color="gray.500" data-testid="market id">
-                          ID: {market.id}
-                        </Text>
-                      </StyledTd>
-                      <StyledTd isLastItem={isLastItem} fontSize="sm" data-testid="pool allocation">
-                        {poolData.total_weight ? (
-                          <>
-                            <Text display="block">
-                              {formatPercent(weight.div(poolData.total_weight).toNumber())}
-                            </Text>
-                          </>
-                        ) : (
-                          '-'
-                        )}
-                      </StyledTd>
-                      {/* Total Deposited */}
-                      {/* <StyledTd isLastItem={isLastItem} data-testid="market growth">
-                        <Text fontSize="sm" display="block" color="gray.50">
-                          {formatNumberToUsd(market.usd_deposited.toNumber())}
-                        </Text>
-                      </StyledTd> */}
-                      {/* Total Withdrawn */}
-                      {/* <StyledTd isLastItem={isLastItem}>
-                        <Text fontSize="sm" display="block" color="gray.50">
-                          {formatNumberToUsd(market.usd_withdrawn.toNumber())}
-                        </Text>
-                      </StyledTd> */}
+                      </Td>
                     </Tr>
-                  );
-                })
+                  ) : (
+                    configurations?.map(({ id, market, weight }, i) => {
+                      const isLastItem = i + 1 === configurations.length;
+
+                      return (
+                        <Tr key={id} data-testid="pool market" data-market={id}>
+                          <StyledTd isLastItem={isLastItem}>
+                            <Text fontSize="sm" display="block" data-testid="market name">
+                              {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
+                            </Text>
+                            <Text fontSize="xs" color="gray.500" data-testid="market id">
+                              ID: {market.id}
+                            </Text>
+                          </StyledTd>
+                          <StyledTd
+                            isLastItem={isLastItem}
+                            fontSize="sm"
+                            data-testid="pool allocation"
+                          >
+                            {total_weight ? (
+                              <>
+                                <Text display="block">
+                                  {formatPercent(wei(weight).div(total_weight).toNumber())}
+                                </Text>
+                              </>
+                            ) : (
+                              '-'
+                            )}
+                          </StyledTd>
+                        </Tr>
+                      );
+                    })
+                  )}
+                </>
               )}
             </Tbody>
           </Table>
@@ -159,22 +153,26 @@ export function MarketSectionUi({
 }
 
 export const MarketSection = () => {
-  const params = useParams();
-  const { data: poolData, isFetched: poolDataFetched } = usePoolData(params.poolId);
+  const { poolId, networkId } = useParams();
+
+  const network = NETWORKS.find((n) => n.id === Number(networkId));
+  const { data, isLoading } = usePool(Number(networkId), String(poolId));
+
+  const poolData = data?.poolInfo[0].pool;
 
   const marketIdsAndAddresses = poolData?.configurations.map(({ market }) => ({
     marketId: market.id,
     address: market.address,
   }));
 
-  const { data: marketNamesById } = useMarketNamesById(marketIdsAndAddresses);
+  const { data: marketNamesById } = useMarketNamesById(marketIdsAndAddresses, network);
 
   return (
     <MarketSectionUi
-      poolId={params.poolId}
-      poolDataFetched={poolDataFetched}
-      poolData={poolData}
+      total_weight={poolData?.total_weight ? Number(poolData.total_weight) : 0}
       marketNamesById={marketNamesById}
+      isLoading={isLoading}
+      configurations={poolData?.configurations || []}
     />
   );
 };

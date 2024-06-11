@@ -7,14 +7,11 @@ import {
   Divider,
   Button,
 } from '@chakra-ui/react';
-import { useAppReady } from '@snx-v3/useAppReady';
 import { Link } from 'react-router-dom';
 
 export const UnsupportedCollateralAlert = ({ isOpen }: { isOpen: boolean }) => {
-  const isAppReady = useAppReady();
-
   return (
-    <Modal isOpen={isOpen && isAppReady} onClose={() => {}}>
+    <Modal isOpen={isOpen} onClose={() => {}}>
       <ModalOverlay />
       <ModalContent p={6} borderWidth="1px" borderColor="gray.900" mt="17.5%" bg="navy.700">
         <ModalHeader p={0}>Collateral Not Supported</ModalHeader>
