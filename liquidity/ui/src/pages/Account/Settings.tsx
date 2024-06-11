@@ -4,16 +4,28 @@ import Permissions from '../../components/Permissions/Permissions';
 import { useIsConnected } from '@snx-v3/useBlockchain';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAccounts } from '@snx-v3/useAccounts';
 
 export function Settings() {
   const navigate = useNavigate();
   const isConnected = useIsConnected();
+  const {
+    data: accounts,
+    isLoading: isAccountsLoading,
+    isFetching: isAccountsFetching,
+  } = useAccounts();
 
   useEffect(() => {
     if (!isConnected) {
       navigate('/');
     }
   }, [isConnected, navigate]);
+
+  useEffect(() => {
+    if (!isAccountsLoading && !isAccountsFetching && !accounts?.length) {
+      navigate('/');
+    }
+  }, [accounts?.length, isAccountsFetching, isAccountsLoading, isConnected, navigate]);
 
   return (
     <>

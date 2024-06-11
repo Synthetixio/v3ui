@@ -37,7 +37,7 @@ export function useAccountOwner(accountId: string | undefined) {
     queryKey: [`${network?.id}-${network?.preset}`, 'account-owner', accountId],
     queryFn: async function () {
       if (!AccountProxy || !accountId) throw new Error('Should be disabled');
-      return await AccountProxy.ownerOf(accountId);
+      return (await AccountProxy.ownerOf(accountId)) as string;
     },
     enabled: Boolean(AccountProxy?.address),
   });

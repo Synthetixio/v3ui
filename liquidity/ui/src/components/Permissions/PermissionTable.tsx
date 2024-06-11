@@ -188,16 +188,19 @@ export default function PermissionTable({
         accountId={accountId}
         refetch={refetch}
       />
-      <TransferOwnershipModal
-        isOpen={isTransferOpen}
-        onClose={onTransferClose}
-        accountId={accountId}
-        refetch={() => {
-          refetch();
-          refetchAccountOwner();
-          refetchAccounts();
-        }}
-      />
+      {accountOwner && (
+        <TransferOwnershipModal
+          isOpen={isTransferOpen}
+          onClose={onTransferClose}
+          accountId={accountId}
+          owner={accountOwner}
+          refetch={() => {
+            refetch();
+            refetchAccountOwner();
+            refetchAccounts();
+          }}
+        />
+      )}
     </>
   );
 }

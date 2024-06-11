@@ -55,8 +55,7 @@ export const PermissionRow: FC<Props> = ({
       <Td borderBottomColor="gray.900">
         <Flex py={2} flexWrap="wrap" gap={3}>
           {permissionsList.map((permission) => {
-            const isActive =
-              currentPermissions.includes(permission) || currentPermissions.includes('ADMIN');
+            const isActive = currentPermissions.includes(permission);
             return (
               <Badge
                 color={isActive ? 'cyan' : 'gray'}
