@@ -16,8 +16,7 @@ const supportedDeployments = [
   '421614-main',
 ];
 
-// Filter networks to only supported ones
-export const chains = NETWORKS.filter(({ id, preset }) =>
+export const supportedNetworks = NETWORKS.filter(({ id, preset }) =>
   supportedDeployments.includes(`${id}-${preset}`)
 ).map((n) => ({
   ...n,
@@ -25,6 +24,7 @@ export const chains = NETWORKS.filter(({ id, preset }) =>
 
 export const onboard = init({
   wallets: [
+    coinbaseModule(),
     injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
     trezorModule({
       appUrl: 'https://liquidity.synthetix.eth.limo',
@@ -40,10 +40,9 @@ export const onboard = init({
       dappUrl: 'liquidity.synthetix.eth.limo',
     }),
     // gnosisModule(),
-    coinbaseModule(),
   ],
   chains: [
-    ...chains.map((n) => ({
+    ...supportedNetworks.map((n) => ({
       id: n.id,
       token: n.token,
       label: n.label,

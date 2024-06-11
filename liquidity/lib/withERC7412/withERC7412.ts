@@ -313,7 +313,7 @@ export async function erc7412Call<T>(
 
   const res = await provider.call(newCall);
 
-  if (newCall.to === multicallAddress) {
+  if (newCall.to?.toLowerCase() === multicallAddress.toLowerCase()) {
     // If this was a multicall, decode and remove price updates.
     const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
       multicallAbi
@@ -323,6 +323,7 @@ export async function erc7412Call<T>(
     const responseWithoutPriceUpdates = decodedMultiCall.filter(
       ({ returnData }) => returnData !== '0x' // price updates have 0x as return data
     );
+
     return decode(responseWithoutPriceUpdates.map(({ returnData }) => returnData));
   }
 
