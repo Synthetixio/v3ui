@@ -1,15 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { stringToHash } from '@snx-v3/tsHelpers';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { erc7412Call } from '@snx-v3/withERC7412';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
-import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
-import { erc7412Call } from '@snx-v3/withERC7412';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
-import { stringToHash } from '@snx-v3/tsHelpers';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -17,7 +17,7 @@ export async function loadPrices({
   CoreProxy,
   collateralAddresses,
 }: {
-  CoreProxy: CoreProxyType;
+  CoreProxy: ethers.Contract;
   collateralAddresses: string[];
 }) {
   const calls = await Promise.all(

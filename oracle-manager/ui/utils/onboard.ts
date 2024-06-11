@@ -1,8 +1,20 @@
-import { init } from '@web3-onboard/react';
+import { appMetadata, NETWORKS } from '@snx-v3/useBlockchain';
 import injectedModule from '@web3-onboard/injected-wallets';
-import { NETWORKS, appMetadata } from '@snx-v3/useBlockchain';
+import { init } from '@web3-onboard/react';
 
-export const networks = NETWORKS.map((n) => ({
+const supportedDeployments = [
+  '1-main',
+  '11155111-main',
+  '8453-andromeda',
+  '84532-andromeda',
+  '42161-main',
+  '421614-main',
+];
+
+// Filter networks to only supported ones
+export const chains = NETWORKS.filter(({ id, preset }) =>
+  supportedDeployments.includes(`${id}-${preset}`)
+).map((n) => ({
   id: n.id,
   token: n.token,
   label: n.label,
@@ -11,7 +23,7 @@ export const networks = NETWORKS.map((n) => ({
 
 export const onboard = init({
   wallets: [injectedModule({})],
-  chains: [...networks],
+  chains,
   appMetadata: {
     ...appMetadata,
     name: 'Synthetix Oracle Manager',

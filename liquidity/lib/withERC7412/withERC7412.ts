@@ -6,7 +6,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importCoreProxy, importMulticall3 } from '@synthetixio/v3-contracts';
+import { importCoreProxy, importMulticall3 } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
 import * as viem from 'viem';
 import { parseTxError } from '../parser';
@@ -206,7 +206,7 @@ export const withERC7412 = async (
   const useCoreProxy = !networkHaveERC7412 && !isRead;
 
   const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id)
+    ? await importCoreProxy(network.id, network.preset)
     : await importMulticall3(network.id, network.preset);
 
   while (true) {
@@ -313,7 +313,7 @@ export async function erc7412Call<T>(
 
   const res = await provider.call(newCall);
 
-  if (newCall.to === multicallAddress) {
+  if (newCall.to?.toLowerCase() === multicallAddress.toLowerCase()) {
     // If this was a multicall, decode and remove price updates.
     const decodedMultiCall: { returnData: string }[] = new ethers.utils.Interface(
       multicallAbi
@@ -323,6 +323,7 @@ export async function erc7412Call<T>(
     const responseWithoutPriceUpdates = decodedMultiCall.filter(
       ({ returnData }) => returnData !== '0x' // price updates have 0x as return data
     );
+
     return decode(responseWithoutPriceUpdates.map(({ returnData }) => returnData));
   }
 

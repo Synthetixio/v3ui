@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { utils } from 'ethers';
+import { ethers } from 'ethers';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { z } from 'zod';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -7,7 +7,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 const MarketNamesSchema = z.array(z.string());
 
 const marketAbi = ['function name(uint128 marketId) external view returns (string memory)'];
-const marketInterface = new utils.Interface(marketAbi);
+const marketInterface = new ethers.utils.Interface(marketAbi);
 
 export const useMarketNamesById = (
   marketIdsAndAddresses?: { marketId: string; address: string }[]
@@ -35,7 +35,7 @@ export const useMarketNamesById = (
       }));
       const result = await MultiCall3.callStatic.aggregate(calls);
       const decoded = result.returnData.map(
-        (bytes) => marketInterface.decodeFunctionResult('name', bytes)[0]
+        (bytes: ethers.utils.BytesLike) => marketInterface.decodeFunctionResult('name', bytes)[0]
       );
       return MarketNamesSchema.parse(decoded);
     },

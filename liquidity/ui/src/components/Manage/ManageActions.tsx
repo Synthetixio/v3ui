@@ -74,25 +74,6 @@ const ActionButton: FC<
   </BorderBox>
 );
 
-const Action: FC<{
-  manageAction: ManageAction;
-  liquidityPosition?: LiquidityPosition;
-}> = ({ manageAction, liquidityPosition }) => {
-  switch (manageAction) {
-    case 'borrow':
-      return <Borrow liquidityPosition={liquidityPosition} />;
-    case 'deposit':
-      return <Deposit liquidityPosition={liquidityPosition} />;
-    case 'repay':
-      return <Repay liquidityPosition={liquidityPosition} />;
-    case 'undelegate':
-      return <Undelegate liquidityPosition={liquidityPosition} />;
-
-    default:
-      return null;
-  }
-};
-
 const ManageActionUi: FC<{
   setActiveAction: (action: ManageAction) => void;
   manageAction?: ManageAction;
@@ -131,11 +112,14 @@ const ManageActionUi: FC<{
           <BorrowIcon mr={1} /> {isBase ? 'Claim' : 'Borrow snxUSD'}
         </ActionButton>
       </Flex>
-      {manageAction ? (
-        <Flex direction="column" mt={6}>
-          <Action manageAction={manageAction} liquidityPosition={liquidityPosition} />
-        </Flex>
-      ) : null}
+      <Flex direction="column" mt={6}>
+        {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'undelegate' ? (
+          <Undelegate liquidityPosition={liquidityPosition} />
+        ) : null}
+      </Flex>
     </Box>
   );
 };
@@ -188,7 +172,8 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
     if (!collateralType) return;
 
     const cRatio = calculateCRatio(liquidityPosition.debt, liquidityPosition.collateralValue);
-    const canBorrow = liquidityPosition.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18);
+    const canBorrow =
+      !isBase && (liquidityPosition.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18));
 
     if (canBorrow) {
       queryParams.set('manageAction', 'borrow');
@@ -199,25 +184,14 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
     const cRatioIsCloseToLiqRatio = cRatio.mul(0.9).lt(collateralType.liquidationRatioD18);
 
     if (cRatioIsCloseToLiqRatio) {
-      queryParams.set(
-        'manageAction',
-        isBaseAndromeda(network?.id, network?.preset) ? 'deposit' : 'repay'
-      );
+      queryParams.set('manageAction', isBase ? 'deposit' : 'repay');
       navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
       return;
     }
 
     queryParams.set('manageAction', 'deposit');
     navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
-  }, [
-    collateralType,
-    liquidityPosition,
-    location.pathname,
-    location.search,
-    navigate,
-    network?.id,
-    network?.preset,
-  ]);
+  }, [collateralType, isBase, liquidityPosition, location.pathname, location.search, navigate]);
 
   return (
     <>

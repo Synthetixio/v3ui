@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
+import { ethers } from 'ethers';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
 import { useMutation } from '@tanstack/react-query';
 import { useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
@@ -22,7 +22,7 @@ export const estimateTeleport = async ({
   amount,
   ethBalance,
 }: {
-  CoreProxy: CoreProxyType;
+  CoreProxy: ethers.Contract;
   toNetworkId: number;
   amount: Wei;
   ethBalance: Wei;

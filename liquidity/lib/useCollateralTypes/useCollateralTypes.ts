@@ -1,14 +1,13 @@
-import { constants, utils } from 'ethers';
-import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
-import { z } from 'zod';
-import { useMemo } from 'react';
-import { ZodBigNumber } from '@snx-v3/zod';
-import { wei } from '@synthetixio/wei';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { ZodBigNumber } from '@snx-v3/zod';
+import { wei } from '@synthetixio/wei';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import { useMemo } from 'react';
+import { z } from 'zod';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -30,7 +29,7 @@ export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 const SymbolSchema = z.string();
 
-const ERC20Interface = new utils.Interface([
+const ERC20Interface = new ethers.utils.Interface([
   'function symbol() view returns (string)',
   'function name() view returns (string)',
 ]);
@@ -39,7 +38,7 @@ async function loadSymbols({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: ethers.Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -58,7 +57,7 @@ async function loadName({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: ethers.Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -77,11 +76,12 @@ async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
 }: {
-  CoreProxy: CoreProxyType;
-  Multicall3: Multicall3Type;
+  CoreProxy: ethers.Contract;
+  Multicall3: ethers.Contract;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
-  const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+  const tokenConfigsRaw: CollateralType[] =
+    await CoreProxy.getCollateralConfigurations(hideDisabled);
 
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
@@ -141,7 +141,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
       return collateralTypes.filter((collateralType) =>
-        collateralType.minDelegationD18.lt(constants.MaxUint256)
+        collateralType.minDelegationD18.lt(ethers.constants.MaxUint256)
       );
     },
     // one hour in ms

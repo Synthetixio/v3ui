@@ -15,14 +15,15 @@ export function useAccountPermissions(accountId: string | undefined) {
       const permissions = await CoreProxy.getAccountPermissions(accountId);
 
       return permissions.reduce(
-        (acc, { user, permissions }) => ({
+        (
+          acc: { [key: string]: string[] },
+          { user, permissions }: { user: string; permissions: string[] }
+        ) => ({
           ...acc,
           [user.toLowerCase()]: permissions.map((r: string) => utils.parseBytes32String(r)),
         }),
         {}
-      ) as {
-        [key: string]: string[];
-      };
+      );
     },
     enabled: Boolean(CoreProxy?.address),
   });

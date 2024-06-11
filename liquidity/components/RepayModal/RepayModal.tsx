@@ -10,29 +10,29 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import Wei from '@synthetixio/wei';
-import { Multistep } from '@snx-v3/Multistep';
-import { useCallback, useContext, useEffect } from 'react';
 import { ContractError } from '@snx-v3/ContractError';
-import { useRepay } from '@snx-v3/useRepay';
-import { useParams } from '@snx-v3/useParams';
+import { parseUnits } from '@snx-v3/format';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { Multistep } from '@snx-v3/Multistep';
 import { useApprove } from '@snx-v3/useApprove';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useParams } from '@snx-v3/useParams';
+import { useRepay } from '@snx-v3/useRepay';
+import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import Wei from '@synthetixio/wei';
+import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
+import { useCallback, useContext, useEffect } from 'react';
 import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { useRepayBaseAndromeda } from '../../lib/useRepayBaseAndromeda';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { parseUnits } from '@snx-v3/format';
-import { useSpotMarketProxy } from '../../lib/useSpotMarketProxy';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
