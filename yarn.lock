@@ -23760,6 +23760,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"victory-vendor@npm:^36.6.8":
+  version: 36.9.2
+  resolution: "victory-vendor@npm:36.9.2"
+  dependencies:
+    "@types/d3-array": "npm:^3.0.3"
+    "@types/d3-ease": "npm:^3.0.0"
+    "@types/d3-interpolate": "npm:^3.0.1"
+    "@types/d3-scale": "npm:^4.0.2"
+    "@types/d3-shape": "npm:^3.1.0"
+    "@types/d3-time": "npm:^3.0.0"
+    "@types/d3-timer": "npm:^3.0.0"
+    d3-array: "npm:^3.1.6"
+    d3-ease: "npm:^3.0.1"
+    d3-interpolate: "npm:^3.0.1"
+    d3-scale: "npm:^4.0.2"
+    d3-shape: "npm:^3.1.0"
+    d3-time: "npm:^3.0.0"
+    d3-timer: "npm:^3.0.1"
+  checksum: db67b3d9b8070d4eae4122edc72be7067b4e32363340cdd4d5b628e7dd65bea0c7c5b4116016658d223adaa575bcc6b7b3a71507aa4f34b2609ed61dbfbba1ea
+  languageName: node
+  linkType: hard
+
 "viem@npm:2.12.0":
   version: 2.12.0
   resolution: "viem@npm:2.12.0"
