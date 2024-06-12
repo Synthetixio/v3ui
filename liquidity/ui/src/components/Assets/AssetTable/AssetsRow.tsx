@@ -121,31 +121,6 @@ export const AssetsRow = ({
       </Td>
       <Td border="none">
         <Flex justifyContent="space-between">
-          <Fade in>
-            <Tooltip
-              label={
-                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H ${minutes}M`
-              }
-            >
-              <Button
-                isDisabled={isRunning}
-                variant="unstyled"
-                fontSize="0.75rem"
-                lineHeight="1rem"
-                height="1.75rem"
-                w="100%"
-                px={4}
-                fontWeight={700}
-                borderWidth="1px"
-                borderColor="gray.900"
-                borderRadius="4px"
-                _hover={{ bg: 'gray.900' }}
-                onClick={onOpen}
-              >
-                Withdraw
-              </Button>
-            </Tooltip>
-          </Fade>
           {/* TODO: Update when multiple pools for USDC LPing available */}
           <Fade in>
             <Button
@@ -169,6 +144,34 @@ export const AssetsRow = ({
             >
               Deposit
             </Button>
+          </Fade>
+
+          <Fade in>
+            <Tooltip
+              label={
+                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H ${minutes}M`
+              }
+            >
+              <Button
+                isDisabled={isRunning}
+                variant="unstyled"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                height="1.75rem"
+                w="100%"
+                px={4}
+                fontWeight={700}
+                borderWidth="1px"
+                borderColor="gray.900"
+                borderRadius="4px"
+                _hover={{ bg: 'gray.900' }}
+                onClick={onOpen}
+              >
+                {isRunning && accountBalance.gt(0)
+                  ? `Withdraw in ${hours}H ${minutes}M`
+                  : 'Withdraw'}
+              </Button>
+            </Tooltip>
           </Fade>
         </Flex>
         <WithdrawModal isOpen={isOpen} onClose={onClose} />
