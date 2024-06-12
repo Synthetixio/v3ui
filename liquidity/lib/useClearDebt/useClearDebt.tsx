@@ -104,7 +104,7 @@ export const useClearDebt = ({
           calls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, calls, 'useRepay', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, calls, 'useRepay');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
