@@ -7,6 +7,8 @@ import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
 import { getPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
+import { networksOffline } from '@snx-v3/usePoolsList';
+import { wei, Wei } from '@synthetixio/wei';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
@@ -18,6 +20,44 @@ async function getPythFeedIds(network: Network) {
         key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
     )
     .map(([_key, value]) => value);
+}
+
+async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
+  const queries = networksOffline.map((network) => importExtras(network.id, network.preset));
+  const extras = await Promise.all(queries);
+
+  // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
+  const priceIds = extras
+    .map((extra) => {
+      return Object.entries(extra).filter(
+        ([key, _value]) => key.startsWith('pyth') && key.endsWith('FeedId')
+      );
+    })
+    .flat();
+
+  const deduped = Array.from(
+    new Set(
+      priceIds.map((x) => ({
+        collateral: x[0].replace('pyth', '').replace('FeedId', '').toUpperCase(),
+        priceId: x[1],
+      }))
+    )
+  );
+
+  // Find the corresponding price feed id for each collateral
+  return collateralList.map((collateral) => {
+    let symbol = collateral;
+    if (collateral === 'WETH') {
+      symbol = 'ETH';
+    }
+
+    const id = deduped.find((x) => x.collateral === symbol);
+
+    return {
+      collateral,
+      priceId: id?.priceId,
+    };
+  });
 }
 
 const getPriceUpdates = async (
@@ -62,6 +102,59 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
         ...tx,
         value: tx.value * 10,
       };
+    },
+    refetchInterval: 60000,
+  });
+};
+
+interface Collaterals {
+  symbol: string;
+  oracleId: string;
+  id: string;
+}
+
+export const useOfflinePrices = (collaterals?: Collaterals[]) => {
+  return useQuery({
+    queryKey: ['offline-prices', collaterals?.map((collateral) => collateral.id).join('-')],
+    enabled: Boolean(collaterals),
+    queryFn: async () => {
+      if (!collaterals) {
+        throw 'useOfflinePrices is missing required data';
+      }
+
+      const returnData: { symbol: string; price: Wei }[] = [
+        {
+          symbol: 'sUSDC',
+          price: wei(1),
+        },
+      ];
+
+      const filteredCollaterals = collaterals.filter(
+        (collateral) => !collateral.symbol.includes('sUSDC')
+      );
+
+      if (!filteredCollaterals.length) {
+        return returnData;
+      }
+
+      const pythIds = await getPythFeedIdsFromCollateralList(
+        collaterals.map((collateral) => collateral.symbol)
+      );
+
+      const prices = await priceService.getLatestPriceFeeds(
+        pythIds.map((x) => x.priceId) as string[]
+      );
+
+      prices?.forEach((item, index) => {
+        const price = item.getPriceUnchecked();
+
+        returnData.unshift({
+          symbol: filteredCollaterals[index].symbol,
+          price: wei(price.price, price.expo),
+        });
+      });
+
+      return returnData;
     },
     refetchInterval: 60000,
   });

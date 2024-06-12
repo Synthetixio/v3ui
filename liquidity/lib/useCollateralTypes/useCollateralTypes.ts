@@ -113,14 +113,18 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
-    queryKey: [targetNetwork?.id, 'CollateralTypes', { includeDelegationOff }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'CollateralTypes',
+      { includeDelegationOff },
+    ],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
-        throw Error('Query should not be enabled when contracts missing');
+        throw Error('useCollateralTypes should not be enabled when contracts missing');
 
       const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
         .map((collateralType) => {
-          const isBase = isBaseAndromeda(network?.id, network?.preset);
+          const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
           if (isBase && collateralType.symbol === 'sUSDC') {
             return {
               ...collateralType,
@@ -150,7 +154,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(targetNetwork),
+    enabled: Boolean(targetNetwork && CoreProxy && Multicall3),
   });
 }
 

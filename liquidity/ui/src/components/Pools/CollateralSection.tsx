@@ -6,12 +6,11 @@ import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatte
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
-import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useApr } from '@snx-v3/useApr';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { NETWORKS } from '@snx-v3/useBlockchain';
-
-// TODO: Delete when new pool page merged
+import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
+import { usePool } from '@snx-v3/usePoolsList';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -28,10 +27,10 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
-  collateralPriceByAddress?: Record<string, Wei | undefined>;
+  collateralPrices?: { symbol: string; price: Wei }[];
   apr?: number;
   isAprLoading?: boolean;
-}> = ({ vaultsData, collateralPriceByAddress, apr, isAprLoading }) => {
+}> = ({ vaultsData, collateralPrices, apr, isAprLoading }) => {
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -110,7 +109,7 @@ export const CollateralSectionUi: FC<{
         </Flex>
       </BorderBox>
       <Flex flexDirection="column" justifyContent="space-between">
-        {!vaultsData || !collateralPriceByAddress ? (
+        {!vaultsData || !collateralPrices ? (
           <Box>
             <Skeleton mt={4} w="full" height={24} />
             <Skeleton mt={2} w="full" height={24} />
@@ -119,7 +118,9 @@ export const CollateralSectionUi: FC<{
           <>
             <Divider mt={6} mb={4} />
             {vaultsData.map((vaultCollateral) => {
-              const price = collateralPriceByAddress?.[vaultCollateral.collateralType.tokenAddress];
+              const price = collateralPrices?.find(
+                (item) => item.symbol === vaultCollateral.collateralType.symbol
+              )?.price;
               return (
                 <React.Fragment key={vaultCollateral.collateralType.tokenAddress}>
                   <Box
@@ -234,16 +235,22 @@ export const CollateralSection = () => {
 
   const network = NETWORKS.find((n) => n.id === Number(networkId));
 
-  // const { data: vaultsData } = useVaultsData(Number(poolId), network);
+  const { data: poolData } = usePool(Number(networkId), String(poolId));
+  const { data: vaultsData } = useVaultsData(Number(poolId), network);
   const { data: aprData, isLoading: isAprLoading } = useApr(network);
-  const { data: collateralPriceByAddress } = useCollateralPrices(network);
 
-  console.log('collat', collateralPriceByAddress);
+  const collaterals = poolData?.poolInfo.map(({ collateral_type }) => ({
+    symbol: collateral_type.symbol,
+    oracleId: collateral_type.oracle_node_id,
+    id: collateral_type.id,
+  }));
+
+  const { data: collateralPrices } = useOfflinePrices(collaterals);
 
   return (
     <CollateralSectionUi
-      vaultsData={[]}
-      collateralPriceByAddress={collateralPriceByAddress}
+      vaultsData={vaultsData}
+      collateralPrices={collateralPrices}
       apr={aprData?.combinedApr}
       isAprLoading={isAprLoading}
     />

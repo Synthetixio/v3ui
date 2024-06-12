@@ -22,9 +22,9 @@ export const Pool = () => {
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     registeredDistributors,
     poolId,
-    // For now we will just show the first collateral type, as this is how it is handled for andromeda
+    // TODO: Update this to support other collateral types
     collateralTypes?.[0]?.id,
-    accountId,
+    accountId || '69',
     network
   );
 

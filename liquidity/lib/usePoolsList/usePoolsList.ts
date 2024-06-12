@@ -71,16 +71,16 @@ async function fetchTorosPool() {
     });
 }
 
-const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id) && n.isSupported).map(
-  (n) => n
-);
+export const networksOffline = NETWORKS.filter(
+  (n) => supportedNetworks.includes(n.id) && n.isSupported
+).map((n) => n);
 
 async function fetchAprs() {
-  return Promise.all(networks.map((network) => fetchApr(network.id)));
+  return Promise.all(networksOffline.map((network) => fetchApr(network.id)));
 }
 
 async function fetchPoolsList() {
-  const urls = networks.map((network) => getSubgraphUrl(network.name));
+  const urls = networksOffline.map((network) => getSubgraphUrl(network.name));
 
   // Fetch all the pools from the subgraphs
   const responses = await Promise.all(
@@ -92,7 +92,7 @@ async function fetchPoolsList() {
   );
 
   return responses.map((response, i) => ({
-    network: networks[i],
+    network: networksOffline[i],
     poolInfo: response.data.vaults as PoolInfo[],
   }));
 }

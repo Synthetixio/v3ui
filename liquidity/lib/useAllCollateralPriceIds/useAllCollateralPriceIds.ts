@@ -29,11 +29,11 @@ const loadConfigs = async ({ CoreProxy }: { CoreProxy: ethers.Contract }) => {
 };
 
 export const useAllCollateralPriceIds = (customNetwork?: Network) => {
+  const { network } = useNetwork();
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
-  const { network } = useNetwork();
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),

@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { importRewardDistributor } from '@snx-v3/contracts';
+import { useMemo } from 'react';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -63,16 +64,17 @@ export function useRewards(
 ) {
   const { network } = useNetwork();
 
-  const networkToUse = customNetwork ? customNetwork : network;
+  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
 
-  const { data: Multicall3 } = useMulticall3(networkToUse || undefined);
-
-  const { data: CoreProxy } = useCoreProxy(networkToUse || undefined);
+  const { data: Multicall3 } = useMulticall3(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
 
   return useQuery({
-    enabled: Boolean(distributors && poolId && collateralAddress && accountId),
+    enabled: Boolean(
+      CoreProxy && Multicall3 && distributors && poolId && collateralAddress && accountId
+    ),
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
@@ -93,7 +95,7 @@ export function useRewards(
       if (distributors.length === 0) return [];
 
       try {
-        const { abi } = await importRewardDistributor(networkToUse?.id, networkToUse?.preset);
+        const { abi } = await importRewardDistributor(targetNetwork?.id, targetNetwork?.preset);
 
         const ifaceRD = new utils.Interface(abi);
         const ifaceERC20 = new utils.Interface(erc20Abi);

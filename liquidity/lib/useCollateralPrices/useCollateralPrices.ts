@@ -1,6 +1,11 @@
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { stringToHash } from '@snx-v3/tsHelpers';
-import { Network, useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import {
+  Network,
+  useDefaultProvider,
+  useNetwork,
+  useProviderForChain,
+} from '@snx-v3/useBlockchain';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
@@ -63,8 +68,11 @@ export const useCollateralPrices = (customNetwork?: Network) => {
       ? collateralData?.map((x) => x.tokenAddress).concat(usdTokens.sUSD)
       : collateralData?.map((x) => x.tokenAddress);
 
-  const provider = useDefaultProvider();
+  const connectedProvider = useDefaultProvider();
+  const offlineProvider = useProviderForChain(customNetwork);
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates(customNetwork);
+
+  const provider = customNetwork ? offlineProvider : connectedProvider;
 
   return useQuery({
     enabled: Boolean(CoreProxy && collateralAddresses && collateralAddresses?.length > 0),
