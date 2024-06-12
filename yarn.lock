@@ -6637,6 +6637,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useTokenInfo@workspace:liquidity/lib/useTokenInfo":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTokenInfo@workspace:liquidity/lib/useTokenInfo"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useMulticall3": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useTransferAccountId@workspace:*, @snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId"
