@@ -5804,7 +5804,7 @@ __metadata:
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
-    "@snx-v3/usePoolsList": "workspace:^"
+    "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -6562,7 +6562,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/usePoolsList@workspace:*, @snx-v3/usePoolsList@workspace:^, @snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList":
+"@snx-v3/usePoolsList@workspace:*, @snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePoolsList@workspace:liquidity/lib/usePoolsList"
   dependencies:
