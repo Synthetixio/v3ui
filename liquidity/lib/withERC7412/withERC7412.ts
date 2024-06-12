@@ -157,15 +157,13 @@ const getDefaultFromAddress = (chainName: string) => {
       return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here
     case 'mainnet':
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
-    case 'goerli':
-      return '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6';
     case 'sepolia':
       return '0x7b79995e5f793a07bc00c21412e50ecae098e7f9';
     case 'arbitrum':
-      return '0x82af49447d8a07e3bd95bd0d56f35241523fbab1';
+      return '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1';
+    case 'arbitrum-sepolia':
+      return '0x980B62Da83eFf3D4576C647993b0c1D7faf17c73';
     case 'optimism-mainnet':
-    case 'optimism-goerli':
-    case 'base-goerli':
     case 'base':
     case 'base-sepolia':
       return '0x4200000000000000000000000000000000000006';
