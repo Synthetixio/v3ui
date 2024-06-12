@@ -6,9 +6,10 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 // import gnosisModule from '@web3-onboard/gnosis';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
+import type { ChainWithDecimalId } from '@web3-onboard/common';
 
 // Filter networks to only supported ones
-export const chains = Object.values(
+export const chains: ChainWithDecimalId[] = Object.values(
   NETWORKS.reduce((result, network) => {
     if (!network.isSupported) {
       return result;

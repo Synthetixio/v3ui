@@ -5821,6 +5821,7 @@ __metadata:
     "@types/react": "npm:^18.2.37"
     "@types/react-helmet": "npm:^6.1.9"
     "@web3-onboard/coinbase": "npm:^2.4.1"
+    "@web3-onboard/common": "npm:^2.4.2"
     "@web3-onboard/injected-wallets": "npm:^2.11.1"
     "@web3-onboard/ledger": "npm:2.7.1"
     "@web3-onboard/react": "npm:^2.9.1"
@@ -9236,7 +9237,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/common@npm:^2.4.1":
+"@web3-onboard/common@npm:^2.4.1, @web3-onboard/common@npm:^2.4.2":
   version: 2.4.2
   resolution: "@web3-onboard/common@npm:2.4.2"
   dependencies:
