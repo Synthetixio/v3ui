@@ -1,5 +1,5 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Heading, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNX } from './BurnSNX';
 import { Chart } from './Chart';
@@ -84,6 +84,12 @@ export function Main() {
               </clipPath>
             </defs>
           </svg>
+        </Link>
+        <Link
+          href="https://warpcast.com/~/compose?text=Celebrate+the+deflationary+impact+on+SNX+supply+driven+by+the+fee+burn+from+Synthetix+Perps+fees.+Discover+how+the+SNX+supply+is+evolving,+the+mechanics+behind+the+fee+burn,+and+the+role+of+Perps+in+driving+SNX+deflation.&embeds[]=https://ultrasoundsnx.money"
+          target="_blank"
+        >
+          <Image src="/farcaster.png" w="32px" h="32px" rounded="50%" />
         </Link>
       </Flex>
     </Flex>
