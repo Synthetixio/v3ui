@@ -1,15 +1,14 @@
 import { Dispatch } from 'react';
 import { Flex, Button } from '@chakra-ui/react';
 import { PoolsFilterAction } from './PoolsList';
-import { NetworkIcon } from '@snx-v3/useBlockchain';
-import { chains } from '../../utils/onboard';
+import { NETWORKS, NetworkIcon } from '@snx-v3/useBlockchain';
 
 interface ChainFilterProps {
   activeChains: number[];
   dispatch: Dispatch<PoolsFilterAction>;
 }
 
-const supportedChains = chains.filter((network) => !network.isTestnet);
+const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet);
 
 export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
   const isAllActive = activeChains.length === 0;
@@ -30,7 +29,7 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
       >
         All
       </Flex>
-      {supportedChains.map((chain) => {
+      {mainnets.map((chain) => {
         const isActive = activeChains.includes(chain.id);
 
         const toggle = () => {
