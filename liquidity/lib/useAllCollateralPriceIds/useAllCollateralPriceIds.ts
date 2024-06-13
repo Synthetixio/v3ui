@@ -4,7 +4,6 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { z } from 'zod';
@@ -30,7 +29,7 @@ const loadConfigs = async ({ CoreProxy }: { CoreProxy: ethers.Contract }) => {
 
 export const useAllCollateralPriceIds = (customNetwork?: Network) => {
   const { network } = useNetwork();
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);

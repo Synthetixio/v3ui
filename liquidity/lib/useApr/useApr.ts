@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useApr(customNetwork?: Network) {
   const { network } = useNetwork();
-  const chain = network || customNetwork;
+  const chain = customNetwork || network;
 
   return useQuery({
     queryKey: ['apr', chain?.id],

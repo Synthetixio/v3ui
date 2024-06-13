@@ -7,7 +7,6 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { useMemo } from 'react';
 import { importCoreProxy } from '@snx-v3/contracts';
 
 export function useCoreProxy(customNetwork?: Network) {
@@ -15,7 +14,7 @@ export function useCoreProxy(customNetwork?: Network) {
   const { network } = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   const withSigner = Boolean(signer);
 

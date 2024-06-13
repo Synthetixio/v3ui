@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { importRewardDistributor } from '@snx-v3/contracts';
-import { useMemo } from 'react';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -64,7 +63,7 @@ export function useRewards(
 ) {
   const { network } = useNetwork();
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);

@@ -48,7 +48,7 @@ oneYear.setDate(oneYear.getDate() - 365);
 
 export function useAprHistory(customNetwork?: Network) {
   const { network } = useNetwork();
-  const chain = network || customNetwork;
+  const chain = customNetwork || network;
 
   return useQuery({
     queryKey: ['apr-history', chain?.id],

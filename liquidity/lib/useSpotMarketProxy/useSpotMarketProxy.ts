@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -17,7 +16,7 @@ export function useSpotMarketProxy(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);
   const signerOrProvider = signer || provider;
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   const withSigner = Boolean(signer);
 

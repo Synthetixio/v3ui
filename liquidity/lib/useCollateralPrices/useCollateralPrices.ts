@@ -15,7 +15,6 @@ import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
-import { useMemo } from 'react';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -60,7 +59,7 @@ export const useCollateralPrices = (customNetwork?: Network) => {
   const { data: collateralData } = useCollateralTypes(false, customNetwork);
   const { data: usdTokens } = useGetUSDTokens(customNetwork);
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
   const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
 
   const collateralAddresses =

@@ -10,7 +10,6 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
-import { useMemo } from 'react';
 
 const VaultCollateralSchema = z
   .object({ value: ZodBigNumber, amount: ZodBigNumber })
@@ -19,7 +18,8 @@ const VaultDebtSchema = ZodBigNumber.transform((x) => wei(x));
 
 export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const { network } = useNetwork();
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
+
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);

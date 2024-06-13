@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -85,8 +84,7 @@ const getPriceUpdates = async (
 
 export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const { network } = useNetwork();
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
-
+  const targetNetwork = customNetwork || network;
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
     enabled: isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset),

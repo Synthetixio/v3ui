@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
@@ -9,7 +8,7 @@ import { USDC_BASE_MARKET, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 export function useGetUSDTokens(customNetwork?: Network) {
   const { network } = useNetwork();
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);

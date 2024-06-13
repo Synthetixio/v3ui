@@ -7,7 +7,6 @@ import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useMemo } from 'react';
 
 const CollateralConfigurationSchema = z.object({
   depositingEnabled: z.boolean(),
@@ -110,7 +109,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: Multicall3 } = useMulticall3(customNetwork);
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [

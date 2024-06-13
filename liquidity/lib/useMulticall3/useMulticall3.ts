@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -18,7 +17,7 @@ export function useMulticall3(customNetwork?: Network) {
   const signerOrProvider = signer || provider || providerForChain;
   const withSigner = Boolean(signer);
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Multicall3', { withSigner }],

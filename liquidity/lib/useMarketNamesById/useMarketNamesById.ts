@@ -14,14 +14,13 @@ export const useMarketNamesById = (
   customNetwork?: Network
 ) => {
   const { network } = useNetwork();
+  const { data: MultiCall3 } = useMulticall3(customNetwork);
 
-  const networkToUse = customNetwork || network;
-
-  const { data: MultiCall3 } = useMulticall3(customNetwork ? customNetwork : undefined);
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [
-      `${networkToUse?.id}-${networkToUse?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'MarketNamesById',
       {
         markets: marketIdsAndAddresses

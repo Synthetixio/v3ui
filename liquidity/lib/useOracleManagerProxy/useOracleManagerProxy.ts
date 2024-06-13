@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -18,7 +17,7 @@ export function useOracleManagerProxy(customNetwork?: Network) {
   const signerOrProvider = providerForChain || signer || provider;
   const withSigner = Boolean(signer);
 
-  const targetNetwork = useMemo(() => customNetwork || network, [customNetwork, network]);
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [
