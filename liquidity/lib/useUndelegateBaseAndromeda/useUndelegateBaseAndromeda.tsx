@@ -113,7 +113,7 @@ export const useUndelegateBaseAndromeda = ({
           calls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, calls, 'useUndelegate', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, calls, 'useUndelegate');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

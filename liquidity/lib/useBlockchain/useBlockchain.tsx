@@ -83,7 +83,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base',
-    isSupported: false,
+    isSupported: true,
     publicRpcUrl: 'https://base.publicnode.com',
     isTestnet: false,
   },
@@ -135,7 +135,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Base Sepolia',
-    isSupported: false, // hidden by default but if wallet switched to Base Sepolia it will be visible
+    isSupported: true,
     publicRpcUrl: 'https://sepolia.base.org',
     isTestnet: true,
   },

@@ -6,27 +6,28 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 // import gnosisModule from '@web3-onboard/gnosis';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
-
-const supportedDeployments = [
-  '1-main',
-  '11155111-main',
-  '8453-andromeda',
-  '84532-andromeda',
-  '42161-main',
-  '421614-main',
-];
-
-export const supportedNetworks = NETWORKS.filter(({ id, preset }) =>
-  supportedDeployments.includes(`${id}-${preset}`)
-);
+import type { ChainWithDecimalId } from '@web3-onboard/common';
 
 // Filter networks to only supported ones
-export const chains = supportedNetworks.map((n) => ({
-  id: n.id,
-  token: n.token,
-  label: n.label,
-  rpcUrl: n.rpcUrl(),
-}));
+export const chains: ChainWithDecimalId[] = Object.values(
+  NETWORKS.reduce((result, network) => {
+    if (!network.isSupported) {
+      return result;
+    }
+    if (network.id in result) {
+      // We cannot have duplicate chains, but we can have multiple deployments per chain
+      return result;
+    }
+    return Object.assign(result, {
+      [network.id]: {
+        id: network.id,
+        token: network.token,
+        label: network.label,
+        rpcUrl: network.rpcUrl(),
+      },
+    });
+  }, {})
+);
 
 export const onboard = init({
   wallets: [

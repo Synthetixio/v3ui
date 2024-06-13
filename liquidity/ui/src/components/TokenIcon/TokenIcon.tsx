@@ -10,6 +10,7 @@ export const TokenIcon = ({ symbol, width = 30, height = 30, ...props }: TokenIc
   return (
     <Image
       src={`https://synthetixio.github.io/synthetix-assets/collateral/${symbol.toUpperCase()}.svg`}
+      fallbackSrc="https://synthetixio.github.io/synthetix-assets/collateral/UNKNOWN.svg"
       alt={symbol}
       style={{ width, height }}
       {...props}
