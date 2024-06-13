@@ -8,7 +8,9 @@ interface ChainFilterProps {
   dispatch: Dispatch<PoolsFilterAction>;
 }
 
-const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet);
+const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
+  ({ id }) => id !== 10
+);
 
 export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
   const isAllActive = activeChains.length === 0;
