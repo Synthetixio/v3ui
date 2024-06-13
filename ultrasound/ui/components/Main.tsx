@@ -56,7 +56,10 @@ export function Main() {
         <Text fontWeight={700} fontSize="16px">
           Share
         </Text>
-        <Link href="https://twitter.com/intent/tweet?text=I%20am%20burning%20SNX">
+        <Link
+          href="https://twitter.com/intent/tweet?text=Celebrate+the+deflationary+impact+on+SNX+supply+driven+by+the+fee+burn+from+Synthetix+Perps+fees.+Discover+how+the+SNX+supply+is+evolving,+the+mechanics+behind+the+fee+burn,+and+the+role+of+Perps+in+driving+SNX+deflation.&url=https://ultrasoundsnx.money/metatag.png"
+          target="_blank"
+        >
           <svg
             width="48"
             height="48"
