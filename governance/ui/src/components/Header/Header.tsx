@@ -12,7 +12,7 @@ import {
   Fade,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { BaseIcon, EthereumIcon, FailedIcon, OptimismIcon, WalletIcon } from '@snx-v3/icons';
+import { EthereumIcon, FailedIcon, WalletIcon } from '@snx-v3/icons';
 import { prettyString } from '@snx-v3/format';
 import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
@@ -28,16 +28,8 @@ const activeIcon = (currentNetwork: Network | null) => {
   switch (currentNetwork?.id) {
     case 1:
       return { icon: <EthereumIcon />, name: 'Ethereum' };
-    case 11155111:
-      return { icon: <EthereumIcon />, name: 'Sepolia Testnet' };
-    case 10:
-      return { icon: <OptimismIcon />, name: 'Optimism' };
-    case 8453:
-      return { icon: <BaseIcon />, name: 'Base' };
-    case 84532:
-      return { icon: <BaseIcon />, name: 'Base Sepolia' };
     default:
-      return { icon: <FailedIcon width="24px" height="24px" />, name: 'Unsupported Network' };
+      return { icon: <FailedIcon w="24px" h="24px" />, name: 'Unsupported Network' };
   }
 };
 
@@ -159,31 +151,6 @@ export function Header() {
                     <EthereumIcon />
                     <Text variant="nav" ml={2}>
                       Ethereum Mainnet
-                    </Text>
-                  </MenuItem>
-                  <MenuItem onClick={() => setNetwork(10)}>
-                    <OptimismIcon />
-                    <Text variant="nav" ml={2}>
-                      Optimism
-                    </Text>
-                  </MenuItem>
-                  <MenuItem onClick={() => setNetwork(8453)}>
-                    <BaseIcon />
-                    <Text variant="nav" ml={2}>
-                      Base
-                    </Text>
-                  </MenuItem>
-                  {/* Testnets */}
-                  <MenuItem onClick={() => setNetwork(11155111)}>
-                    <EthereumIcon />
-                    <Text variant="nav" ml={2}>
-                      Sepolia
-                    </Text>
-                  </MenuItem>
-                  <MenuItem onClick={() => setNetwork(84532)}>
-                    <BaseIcon />
-                    <Text variant="nav" ml={2}>
-                      Base Sepolia
                     </Text>
                   </MenuItem>
                 </MenuList>

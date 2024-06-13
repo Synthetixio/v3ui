@@ -8,14 +8,7 @@ import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-const supportedDeployments = [
-  '1-main',
-  '11155111-main',
-  '8453-andromeda',
-  '84532-andromeda',
-  '42161-main',
-  '421614-main',
-];
+const supportedDeployments = ['1-main'];
 
 // Filter networks to only supported ones
 export const chains = NETWORKS.filter(({ id, preset }) =>
