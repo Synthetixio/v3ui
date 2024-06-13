@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManageAction, UnsupportedCollateralAlert } from '../components';
+import { ManageAction } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -23,21 +23,12 @@ export const ManageUi: FC<{
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
   collateralSymbol?: string;
-  collateralSupported: boolean;
-}> = ({
-  isLoading,
-  rewards,
-  liquidityPosition,
-  network,
-  collateralSymbol,
-  collateralSupported,
-}) => {
+}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
   return (
     <Box mb={12} mt={8}>
       <Box mb="4">
         <HomeLink />
       </Box>
-      <UnsupportedCollateralAlert isOpen={!collateralSupported} />
       <Flex alignItems="center" mb="8px">
         <Flex
           bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
@@ -134,8 +125,6 @@ export const Manage = () => {
 
   const isLoading = isRewardsLoading || isCollateralFetching || isPoolGraphDataLoading;
 
-  const collateralSupported = !(!collateralType && !isCollateralFetching);
-
   return (
     <ManagePositionProvider>
       <ManageUi
@@ -144,7 +133,6 @@ export const Manage = () => {
         liquidityPosition={liquidityPosition}
         network={network}
         collateralSymbol={collateralSymbol}
-        collateralSupported={collateralSupported}
       />
     </ManagePositionProvider>
   );
