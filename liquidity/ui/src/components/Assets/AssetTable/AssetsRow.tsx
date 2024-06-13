@@ -121,7 +121,7 @@ export const AssetsRow = ({
       </Td>
       <Td border="none">
         <Flex justifyContent="space-between">
-          {/* TODO: Update when multiple pools for USDC LPing available */}
+          {/* TODO: Update when multiple pools for LPing available */}
           <Fade in>
             <Button
               as={NavLink}

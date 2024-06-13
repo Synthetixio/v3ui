@@ -1,0 +1,13 @@
+{
+  "name": "@snx-v3/useTokenInfo",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useMulticall3": "workspace:*",
+    "@tanstack/react-query": "^5.8.3",
+    "ethers": "^5.7.2",
+    "react": "^18.2.0"
+  }
+}

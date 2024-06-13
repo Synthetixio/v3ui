@@ -6,7 +6,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
-import { importCoreProxy, importMulticall3 } from '@snx-v3/contracts';
+import { importCoreProxy, importMulticall3, importAllErrors } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
 import * as viem from 'viem';
 import { parseTxError } from '../parser';
@@ -16,6 +16,51 @@ export const ERC7412_ABI = [
   'error FeeRequired(uint feeAmount)',
   'function oracleId() view external returns (bytes32)',
   'function fulfillOracleQuery(bytes calldata signedOffchainData) payable external',
+];
+
+export const PYTH_ERRORS = [
+  // Function arguments are invalid (e.g., the arguments lengths mismatch)
+  // Signature: 0xa9cb9e0d
+  'error InvalidArgument()',
+  // Update data is coming from an invalid data source.
+  // Signature: 0xe60dce71
+  'error InvalidUpdateDataSource()',
+  // Update data is invalid (e.g., deserialization error)
+  // Signature: 0xe69ffece
+  'error InvalidUpdateData()',
+  // Insufficient fee is paid to the method.
+  // Signature: 0x025dbdd4
+  'error InsufficientFee()',
+  // There is no fresh update, whereas expected fresh updates.
+  // Signature: 0xde2c57fa
+  'error NoFreshUpdate()',
+  // There is no price feed found within the given range or it does not exists.
+  // Signature: 0x45805f5d
+  'error PriceFeedNotFoundWithinRange()',
+  // Price feed not found or it is not pushed on-chain yet.
+  // Signature: 0x14aebe68
+  'error PriceFeedNotFound()',
+  // Requested price is stale.
+  // Signature: 0x19abf40e
+  'error StalePrice()',
+  // Given message is not a valid Wormhole VAA.
+  // Signature: 0x2acbe915
+  'error InvalidWormholeVaa()',
+  // Governance message is invalid (e.g., deserialization error).
+  // Signature: 0x97363b35
+  'error InvalidGovernanceMessage()',
+  // Governance message is not for this contract.
+  // Signature: 0x63daeb77
+  'error InvalidGovernanceTarget()',
+  // Governance message is coming from an invalid data source.
+  // Signature: 0x360f2d87
+  'error InvalidGovernanceDataSource()',
+  // Governance message is old.
+  // Signature: 0x88d1b847
+  'error OldGovernanceMessage()',
+  // The wormhole address to set in SetWormholeAddress governance is invalid.
+  // Signature: 0x13d3ed82
+  'error InvalidWormholeAddressToSet()',
 ];
 
 type TransactionRequest = ethers.providers.TransactionRequest;
@@ -106,21 +151,8 @@ const makeCoreProxyMulticall = (
   };
 };
 
-const ERC7412ErrorSchema = z.union([
-  z.object({
-    name: z.literal('OracleDataRequired'),
-    args: z.tuple([z.string(), z.string()]),
-  }),
-  z.object({
-    name: z.literal('FeeRequired'),
-    args: z.tuple([ZodBigNumber]),
-  }),
-]);
-const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
-
-const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
+const parseError = async (error: any, provider: providers.JsonRpcProvider, network: Network) => {
   let errorData = error.data || error.error?.data?.data || error.error?.error?.data;
-
   if (!errorData) {
     try {
       console.log('Error is missing revert data, trying provider.call, instead of estimate gas..');
@@ -130,14 +162,28 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider) => {
       errorData = lookedUpError;
     } catch (newError: any) {
       console.log('provider.call(error.transaction) failed, trying to extract error');
-      // I dont think we should end up here.. But it hard to know if some combo of wallets and rpc provider would....
-      errorData = error.data || error.error?.data?.data || error.error?.error?.data;
       console.log('Error data: ', errorData);
     }
   }
+
+  if (`${errorData}`.startsWith('0x08c379a0')) {
+    const content = `0x${errorData.substring(10)}`;
+    // reason: string; for standard revert error string
+    const reason = ethers.utils.defaultAbiCoder.decode(['string'], content);
+    console.log(`Reason`, reason);
+    return {
+      name: reason[0],
+      args: [],
+    };
+  }
+
   try {
-    const decodedError = erc7412Interface.parseError(errorData);
-    return ERC7412ErrorSchema.parse(decodedError);
+    const AllErrors = await importAllErrors(network.id, network.preset);
+    const AllErrorsInterface = new ethers.utils.Interface([...AllErrors.abi, ...PYTH_ERRORS]);
+    const decodedError = AllErrorsInterface.parseError(errorData);
+    console.log(`decodedError`, decodedError);
+    return decodedError;
+    // return ERC7412ErrorSchema.parse(decodedError);
   } catch (parseError) {
     console.error(
       'Error is not a ERC7412 error, re-throwing original error, for better parsing. Parse error reason: ',
@@ -157,15 +203,13 @@ const getDefaultFromAddress = (chainName: string) => {
       return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here
     case 'mainnet':
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
-    case 'goerli':
-      return '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6';
     case 'sepolia':
       return '0x7b79995e5f793a07bc00c21412e50ecae098e7f9';
     case 'arbitrum':
-      return '0x82af49447d8a07e3bd95bd0d56f35241523fbab1';
+      return '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1';
+    case 'arbitrum-sepolia':
+      return '0x980B62Da83eFf3D4576C647993b0c1D7faf17c73';
     case 'optimism-mainnet':
-    case 'optimism-goerli':
-    case 'base-goerli':
     case 'base':
     case 'base-sepolia':
       return '0x4200000000000000000000000000000000000006';
@@ -181,8 +225,7 @@ const getDefaultFromAddress = (chainName: string) => {
 export const withERC7412 = async (
   network: Network,
   tx: TransactionRequest | TransactionRequest[],
-  logLabel?: string,
-  abi?: any
+  logLabel?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
   // eslint-disable-next-line prefer-const
@@ -234,7 +277,8 @@ export const withERC7412 = async (
 
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
-      const parsedError = await parseError(error, jsonRpcProvider);
+      console.log({ error });
+      const parsedError = await parseError(error, jsonRpcProvider, network);
 
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
@@ -274,10 +318,12 @@ export const withERC7412 = async (
         txToUpdate.value = requiredFee;
       } else {
         const parsedError = parseTxError(error);
-        if (parsedError && abi) {
+
+        if (parsedError) {
+          const AllErrors = await importAllErrors(network.id, network.preset);
           try {
             const errorResult = viem.decodeErrorResult({
-              abi,
+              abi: [...AllErrors.abi, ...PYTH_ERRORS],
               data: parsedError,
             });
             console.log('error: ', errorResult.errorName, errorResult.args);
