@@ -57,7 +57,7 @@ export function Main() {
           Share
         </Text>
         <Link
-          href="https://twitter.com/intent/tweet?text=Celebrate+the+deflationary+impact+on+SNX+supply+driven+by+the+fee+burn+from+Synthetix+Perps+fees.+Discover+how+the+SNX+supply+is+evolving,+the+mechanics+behind+the+fee+burn,+and+the+role+of+Perps+in+driving+SNX+deflation.&url=https://ultrasoundsnx.money/metatag.png"
+          href="https://twitter.com/intent/tweet?text=Celebrate+the+deflationary+impact+on+SNX+supply+driven+by+the+fee+burn+from+Synthetix+Perps+fees.+Discover+how+the+SNX+supply+is+evolving,+the+mechanics+behind+the+fee+burn,+and+the+role+of+Perps+in+driving+SNX+deflation.&url=https://ultrasoundsnx.money"
           target="_blank"
         >
           <svg
