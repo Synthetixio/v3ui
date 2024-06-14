@@ -116,7 +116,8 @@ function RewardsRow({
               <TokenIcon symbol={data.symbol} />
               <Flex flexDirection="column" ml={3}>
                 <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-                  {data.rate}
+                  {/* Comment out until for now */}
+                  {/* {data.rate} */}
                 </Text>
                 <Text>{convertSecondsToDisplayString(data.duration)}</Text>
               </Flex>
