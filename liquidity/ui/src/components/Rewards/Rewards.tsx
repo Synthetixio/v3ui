@@ -106,7 +106,6 @@ export const Rewards = ({
                     symbol={item.symbol}
                     claimableAmount={item.claimableAmount.toNumber()}
                     frequency={item.duration}
-                    projectedAmount={item.rate / item.duration || 0}
                     lifetimeClaimed={item.lifetimeClaimed}
                     hasClaimed={item.lifetimeClaimed > 0}
                     address={item.distributorAddress}
