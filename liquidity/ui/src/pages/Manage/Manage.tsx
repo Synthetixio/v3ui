@@ -138,7 +138,7 @@ export const Manage = () => {
   const { network } = useNetwork();
 
   const { isLoading: isCollateralLoading, data: collateralType } =
-    useCollateralType(collateralSymbol);
+    useCollateralType(collateralSymbolRaw);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
