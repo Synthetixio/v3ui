@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
+  Divider,
   Flex,
   IconButton,
   Link,
@@ -114,17 +115,23 @@ export function NetworkController() {
           data-cy="account-menu-button"
           px={3}
         >
-          <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
+          <NetworkIcon
+            filter={activeNetwork?.isTestnet ? 'grayscale(1)' : ''}
+            networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
+          />
         </MenuButton>
-        <MenuList>
-          {mainnets.concat(showTestnets ? testnets : []).map(({ id, preset, label }) => (
+        <MenuList border="1px" borderColor="gray.900">
+          {mainnets.map(({ id, preset, label }) => (
             <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
-              <NetworkIcon networkId={id} />
+              <NetworkIcon networkId={id} size="20px" />
               <Text variant="nav" ml={2}>
                 {label}
               </Text>
             </MenuItem>
           ))}
+
+          {showTestnets && <Divider color="gray.900" />}
+
           <MenuOptionGroup>
             <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
               <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
@@ -140,6 +147,15 @@ export function NetworkController() {
               />
             </Flex>
           </MenuOptionGroup>
+
+          {(showTestnets ? testnets : []).map(({ id, preset, label }) => (
+            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+              <NetworkIcon filter="grayscale(1)" networkId={id} size="20px" />
+              <Text variant="nav" ml={2}>
+                {label}
+              </Text>
+            </MenuItem>
+          ))}
         </MenuList>
       </Menu>
       {activeWallet ? (
