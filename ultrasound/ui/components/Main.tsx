@@ -1,5 +1,5 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Image, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Heading, Link, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import { BurnSNX } from './BurnSNX';
 import { Chart } from './Chart';
