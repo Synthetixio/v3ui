@@ -17,7 +17,6 @@ describe('RewardsRow', () => {
   it('renders the component with the correct data', () => {
     const props = {
       symbol: 'ETH',
-      projectedAmount: 100,
       frequency: 3600,
       claimableAmount: 50,
       lifetimeClaimed: 25,
