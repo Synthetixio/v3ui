@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
@@ -16,6 +16,35 @@ import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPos
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 
+function useNormalisedCollateralSymbol(collateralSymbol?: string) {
+  const { network } = useNetwork();
+
+  return React.useMemo(() => {
+    if (collateralSymbol !== 'USDC') {
+      return collateralSymbol;
+    }
+    if (!network?.id && network?.preset) {
+      return undefined;
+    }
+    return isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'USDC'
+      ? 'sUSDC'
+      : collateralSymbol;
+  }, [network?.id, network?.preset, collateralSymbol]);
+}
+
+function useCollateralDisplayName(collateralSymbol?: string) {
+  const { network } = useNetwork();
+
+  return React.useMemo(() => {
+    if (!network?.id && network?.preset) {
+      return undefined;
+    }
+    return isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'sUSDC'
+      ? 'USDC'
+      : collateralSymbol;
+  }, [network?.id, network?.preset, collateralSymbol]);
+}
+
 export const ManageUi: FC<{
   collateralType?: CollateralType;
   isLoading: boolean;
@@ -24,6 +53,7 @@ export const ManageUi: FC<{
   network?: Network | null;
   collateralSymbol?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
+  const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   return (
     <Box mb={12} mt={8}>
       <Box mb="4">
@@ -56,7 +86,7 @@ export const ManageUi: FC<{
           alignItems="center"
           data-cy="manage-position-title"
         >
-          {collateralSymbol} Liquidity Position
+          {collateralDisplayName} Liquidity Position
         </Heading>
       </Flex>
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
@@ -102,7 +132,9 @@ export const ManageUi: FC<{
 };
 
 export const Manage = () => {
-  const { accountId, collateralSymbol, poolId } = useParams();
+  const { accountId, collateralSymbol: collateralSymbolRaw, poolId } = useParams();
+  const collateralSymbol = useNormalisedCollateralSymbol(collateralSymbolRaw);
+
   const { network } = useNetwork();
 
   const { isFetching: isCollateralFetching, data: collateralType } =

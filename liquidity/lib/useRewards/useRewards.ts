@@ -15,7 +15,6 @@ const RewardsResponseSchema = z.array(
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
     distributorAddress: z.string(),
-    rate: z.number(),
     duration: z.number(),
     lifetimeClaimed: z.number(),
     total: z.number(),
@@ -189,7 +188,7 @@ export function useRewards(
           : distributorResult;
 
         const { returnData: ercReturnData } = await Multicall3.callStatic.aggregate(
-          filteredDistributors.flatMap(({ token, distributorCollateralType, address }) => [
+          filteredDistributors.flatMap(({ token }) => [
             {
               target: token,
               callData: ifaceERC20.encodeFunctionData('name', []),
@@ -202,26 +201,13 @@ export function useRewards(
               target: token,
               callData: ifaceERC20.encodeFunctionData('decimals', []),
             },
-            {
-              target: CoreProxy.address,
-              callData: CoreProxy.interface.encodeFunctionData('getRewardRate', [
-                BigNumber.from(poolId),
-                distributorCollateralType,
-                address,
-              ]),
-            },
           ])
         );
 
         const result = filteredDistributors.map((item, i) => {
-          const [name] = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 4]);
-          const [symbol] = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 4 + 1]);
-          const [decimals] = ifaceERC20.decodeFunctionResult('decimals', ercReturnData[i * 4 + 2]);
-
-          const rewardRate = CoreProxy.interface.decodeFunctionResult(
-            'getRewardRate',
-            ercReturnData[i * 4 + 3]
-          );
+          const [name] = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 3]);
+          const [symbol] = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 3 + 1]);
+          const [decimals] = ifaceERC20.decodeFunctionResult('decimals', ercReturnData[i * 3 + 2]);
 
           const total = wei(item.total, 18, true).toNumber();
 
@@ -230,8 +216,6 @@ export function useRewards(
             name,
             symbol,
             decimals,
-            // Reward rate is the amount of rewards per second
-            rewardRate: wei(rewardRate),
             total,
           };
         });
@@ -252,14 +236,12 @@ export function useRewards(
               ...item,
               claimableAmount: wei(response),
               distributorAddress: item.address,
-              rate: item.rewardRate.toNumber(),
             });
           } catch (error) {
             balances.push({
               ...item,
               claimableAmount: wei(0),
               distributorAddress: item.address,
-              rate: item.rewardRate.toNumber(),
             });
           }
         }

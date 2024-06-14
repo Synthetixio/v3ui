@@ -13,7 +13,6 @@ import { Tooltip } from '@snx-v3/Tooltip';
 
 interface RewardsRowInterface {
   symbol: string;
-  projectedAmount: number; // The amount per frequency period
   frequency: number;
   claimableAmount: number; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
