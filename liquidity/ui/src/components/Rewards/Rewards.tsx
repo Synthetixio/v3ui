@@ -37,86 +37,84 @@ export const Rewards = ({
         REWARDS
       </Text>
       <TableContainer width="100%" mb="8px">
-        {!hasRewards ? (
-          <Fade in>
-            <Flex mt="20px" mb="8px" justifyContent="center">
-              <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
-                No Rewards Available
-              </Text>
-            </Flex>
-          </Fade>
-        ) : (
-          <Table>
-            <Thead>
-              <Tr borderBottom="1px solid #2D2D38">
-                <Th
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  letterSpacing={0.6}
-                  fontWeight={700}
-                  px={4}
-                  py={3}
-                >
-                  Active Rewards
-                  <Tooltip label="Total rewards active for the Pool">
-                    <InfoIcon ml={1} mb="1px" />
-                  </Tooltip>
-                </Th>
-                <Th
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  letterSpacing={0.6}
-                  fontWeight={700}
-                  px={4}
-                  py={3}
-                >
-                  Earnings
-                </Th>
-                <Th
-                  textTransform="unset"
-                  color="transparent"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  letterSpacing={0.6}
-                  fontWeight={700}
-                  px={4}
-                  py={3}
-                >
-                  Claim
-                </Th>
-              </Tr>
-            </Thead>
-            {isLoading ? (
-              <RewardsLoading />
-            ) : (
-              <Tbody>
-                {rewards?.map((item) => (
-                  <RewardsRow
-                    key={item.address}
-                    symbol={item.symbol}
-                    claimableAmount={item.claimableAmount.toNumber()}
-                    frequency={item.duration}
-                    lifetimeClaimed={item.lifetimeClaimed}
-                    hasClaimed={item.lifetimeClaimed > 0}
-                    address={item.distributorAddress}
-                    readOnly={readOnly}
-                    total={item.total}
-                  />
-                ))}
-              </Tbody>
-            )}
-          </Table>
-        )}
+        <Table>
+          <Thead>
+            <Tr borderBottom="1px solid #2D2D38">
+              <Th
+                textTransform="unset"
+                color="gray.600"
+                border="none"
+                fontFamily="heading"
+                fontSize="12px"
+                lineHeight="16px"
+                letterSpacing={0.6}
+                fontWeight={700}
+                px={4}
+                py={3}
+              >
+                Active Rewards
+                <Tooltip label="Total rewards active for the Pool">
+                  <InfoIcon ml={1} mb="1px" />
+                </Tooltip>
+              </Th>
+              <Th
+                textTransform="unset"
+                color="gray.600"
+                border="none"
+                fontFamily="heading"
+                fontSize="12px"
+                lineHeight="16px"
+                letterSpacing={0.6}
+                fontWeight={700}
+                px={4}
+                py={3}
+              >
+                Earnings
+              </Th>
+              <Th
+                textTransform="unset"
+                color="transparent"
+                border="none"
+                fontFamily="heading"
+                fontSize="12px"
+                lineHeight="16px"
+                letterSpacing={0.6}
+                fontWeight={700}
+                px={4}
+                py={3}
+              >
+                Claim
+              </Th>
+            </Tr>
+          </Thead>
+          {isLoading ? (
+            <RewardsLoading />
+          ) : hasRewards ? (
+            <Tbody>
+              {rewards?.map((item) => (
+                <RewardsRow
+                  key={item.address}
+                  symbol={item.symbol}
+                  claimableAmount={item.claimableAmount.toNumber()}
+                  frequency={item.duration}
+                  lifetimeClaimed={item.lifetimeClaimed}
+                  hasClaimed={item.lifetimeClaimed > 0}
+                  address={item.distributorAddress}
+                  readOnly={readOnly}
+                  total={item.total}
+                />
+              ))}
+            </Tbody>
+          ) : (
+            <Fade in>
+              <Flex mt="20px" mb="8px" justifyContent="center">
+                <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
+                  No Rewards Available
+                </Text>
+              </Flex>
+            </Fade>
+          )}
+        </Table>
       </TableContainer>
     </BorderBox>
   );
