@@ -20,16 +20,6 @@ const councils: {
     docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
   },
   {
-    title: 'Grants Council',
-    slug: 'grants',
-    image: '/councils/gc.svg',
-    address: getCouncilContract('grants').address,
-    description:
-      'The Grants Council, established via SIP 39, is responsible for public goods funding through grants, initiative bounties, or competition prizes. It is a value-based entity, whose ultimate goal in funding projects is to produce publicly accessible, beneficial, high-quality work where profit margins are not the priority. Projects are chosen not based on the value they can extract but instead on the value they can add to the community.',
-    stipends: '2,000 SNX',
-    docLink: 'https://docs.synthetix.io/v3/synthetix-v3',
-  },
-  {
     title: 'Ambassador Council',
     slug: 'ambassador',
     image: '/councils/ac.svg',
@@ -53,6 +43,6 @@ const councils: {
 
 export type Council = (typeof councils)[number];
 
-export type CouncilSlugs = 'spartan' | 'grants' | 'ambassador' | 'treasury';
+export type CouncilSlugs = 'spartan' | 'ambassador' | 'treasury';
 
 export default councils;

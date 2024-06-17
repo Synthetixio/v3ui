@@ -35,10 +35,8 @@ export default function UserTableView({
       borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
       rounded="base"
     >
-      {councilPeriod === '2' && (
-        <Th color="white">
-          #{councilSettings && councilSettings?.epochSeatCount > place ? place + 1 : '-'}
-        </Th>
+      {(councilPeriod === '2' || councilPeriod === '0') && (
+        <Th color="white">{place < 10 ? `#${place + 1}` : '-'}</Th>
       )}
       <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
         <ProfilePicture
@@ -48,18 +46,21 @@ export default function UserTableView({
           mr="0"
           ImageProps={{ w: '32px', h: '32px' }}
         />{' '}
-        {user.username ? user.username : shortAddress(user.address)}
+        {user.username ? user.username : shortAddress(user.address, 8, 8)}
       </Th>
-      <Th>
-        <Flex>
-          <Badge color="green">Nominee</Badge>
-          {councilSettings && councilSettings?.epochSeatCount > place && (
-            <Badge ml="2">Member</Badge>
-          )}
-        </Flex>
-      </Th>
-      {councilPeriod === '2' && <Th color="white">TODO</Th>}
-      {councilPeriod !== '2' && (
+      {councilPeriod !== '0' && (
+        <Th>
+          <Flex>
+            <Badge color="green">Nominee</Badge>
+            {councilSettings && councilSettings?.epochSeatCount > place && (
+              <Badge ml="2">Member</Badge>
+            )}
+          </Flex>
+        </Th>
+      )}
+      {(councilPeriod === '2' || councilPeriod === '0') && <Th color="white">TODO</Th>}
+      {(councilPeriod === '2' || councilPeriod === '0') && <Th color="white">TODO</Th>}
+      {councilPeriod !== '2' && councilPeriod !== '0' && (
         <Th textAlign="end">
           <Button
             size="xs"
@@ -74,6 +75,11 @@ export default function UserTableView({
           >
             {isNomination && 'View'}
           </Button>
+        </Th>
+      )}
+      {councilPeriod === '0' && (
+        <Th textAlign="end">
+          <Badge>Your Vote TODO</Badge>
         </Th>
       )}
     </Tr>

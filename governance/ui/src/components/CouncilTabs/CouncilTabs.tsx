@@ -17,7 +17,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
-    useGetUserBallot('grants'),
     useGetUserBallot('treasury'),
   ];
 
@@ -38,10 +37,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
     {
       council: votedNominees[2]?.council,
       userInformation: useGetUserDetailsQuery(votedNominees[2]?.votedCandidates[0]),
-    },
-    {
-      council: votedNominees[3]?.council,
-      userInformation: useGetUserDetailsQuery(votedNominees[3]?.votedCandidates[0]),
     },
   ];
 
@@ -122,15 +117,18 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                       newVoteCast={newVoteCast}
                     />
                   ) : (
-                    <Box
-                      borderRadius="50%"
-                      w="7"
-                      h="7"
-                      borderWidth="1px"
-                      bg="navy.700"
-                      borderStyle="dashed"
-                      borderColor="gray.500"
-                    />
+                    councilPeriod === '2' && (
+                      <Box
+                        data-cy="council-tab-vote-circle"
+                        borderRadius="50%"
+                        w="7"
+                        h="7"
+                        borderWidth="1px"
+                        bg="navy.700"
+                        borderStyle="dashed"
+                        borderColor="gray.500"
+                      />
+                    )
                   )}
                 </Flex>
               );

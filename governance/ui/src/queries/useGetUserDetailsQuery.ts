@@ -104,15 +104,24 @@ export async function getUserDetails<T extends string | string[]>(
       });
     }
 
-    return userProfile.map(({ data }) => {
-      delete data.delegationPitches;
-      return {
-        ...data,
-        delegationPitch: foundPitch,
-        // foundPitch.find(
-        // (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
-        // )[0]?.delegationPitch || '',
-      };
-    }) as T extends string ? GetUserDetails : GetUserDetails[];
+    return Array.from(
+      { length: 20 },
+      () =>
+        userProfile.map(({ data }) => {
+          try {
+            delete data.delegationPitches;
+            return {
+              ...data,
+              delegationPitch: foundPitch,
+              // foundPitch.find(
+              // (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
+              // )[0]?.delegationPitch || '',
+            };
+          } catch (error) {
+            console.error(error);
+            return userProfile;
+          }
+        })[0]
+    ) as T extends string ? GetUserDetails : GetUserDetails[];
   }
 }

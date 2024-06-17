@@ -5,5 +5,5 @@ it('shows council card and header in nomination period', () => {
   });
   cy.viewport(1300, 900);
   cy.visit('/');
-  cy.contains('[data-testid="period-countdown"]', 'Voting starts').should('exist');
+  cy.contains('[data-cy="period-countdown"]', 'Voting starts').should('exist');
 });

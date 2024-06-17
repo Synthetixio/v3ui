@@ -2,8 +2,8 @@ import { providers } from 'ethers';
 
 // Sepolia for testnet
 export const motherShipProvider = new providers.JsonRpcProvider(
-  process.env.TESTNET
-    ? `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`
+  process.env.DEV
+    ? process.env.DEV_RPC_MOTHERSHIP
     : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
 );
 

@@ -176,6 +176,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
           </Button>
         ) : (
           <Button
+            data-cy={`view-council-button-${council.slug}`}
             size="md"
             variant="outline"
             colorScheme="gray"

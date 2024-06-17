@@ -5,9 +5,8 @@ it('shows user profile card', () => {
 
   cy.get('@wallet').then((wallet) => {
     cy.visit(`/#/councils/spartan?view=${wallet.address}`);
-    cy.contains(
-      '[data-testid="user-wallet-profile-address"]',
-      wallet.address.substring(0, 4)
-    ).should('exist');
+    cy.contains('[data-cy="user-wallet-profile-address"]', wallet.address.substring(0, 4)).should(
+      'exist'
+    );
   });
 });
