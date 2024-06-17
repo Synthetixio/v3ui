@@ -4,10 +4,11 @@ import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useB
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
-import { getPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
 import { networksOffline } from '@snx-v3/usePoolsList';
 import { wei, Wei } from '@synthetixio/wei';
+import { importPythERC7412Wrapper } from '@snx-v3/contracts';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
@@ -74,9 +75,11 @@ const getPriceUpdates = async (
   );
   const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
+  const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
+
   return {
     // pyth wrapper
-    to: getPythWrapper(network?.id),
+    to: address,
     data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
     value: priceIds.length * 10,
   };
@@ -185,9 +188,11 @@ export const useCollateralPriceUpdates = () => {
 
         const pythFeedIds = (await getPythFeedIds(network)) as string[];
 
+        const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
+
         const txs = [
           ...pythFeedIds.map((priceId) => ({
-            target: getPythWrapper(network.id),
+            target: address,
             callData: pythInterface.encodeFunctionData('getLatestPrice', [
               priceId,
               stalenessTolerance,

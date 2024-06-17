@@ -22,6 +22,7 @@ const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
   name: z.string(),
+  decimals: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
@@ -31,6 +32,7 @@ const SymbolSchema = z.string();
 const ERC20Interface = new utils.Interface([
   'function symbol() view returns (string)',
   'function name() view returns (string)',
+  'function decimals() view returns (uint8)',
 ]);
 
 async function loadSymbols({
@@ -71,6 +73,25 @@ async function loadName({
   );
 }
 
+async function loadDecimals({
+  Multicall3,
+  tokenConfigs,
+}: {
+  Multicall3: Contract;
+  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
+}) {
+  const calls = tokenConfigs.map((tokenConfig) => ({
+    target: tokenConfig.tokenAddress,
+    callData: ERC20Interface.encodeFunctionData('decimals'),
+  }));
+
+  const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
+  return multicallResult.returnData.map(
+    (bytes: string) => ERC20Interface.decodeFunctionResult('decimals', bytes)[0]
+  );
+}
+
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
@@ -90,6 +111,8 @@ async function loadCollateralTypes({
 
   const names = await loadName({ Multicall3, tokenConfigs });
 
+  const decimals = await loadDecimals({ Multicall3, tokenConfigs });
+
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
     issuanceRatioD18: config.issuanceRatioD18,
@@ -101,6 +124,7 @@ async function loadCollateralTypes({
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
     name: names[i],
+    decimals: decimals[i].toString(),
   }));
 }
 

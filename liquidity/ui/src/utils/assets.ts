@@ -69,8 +69,9 @@ export function calculateAssets(
   if (associatedUserBalances && collateralPrices) {
     return filteredAccountCollaterals?.map((collateral) => {
       let balance =
-        associatedUserBalances.find((item) => item.tokenAddress === collateral.tokenAddress)
-          ?.balance || wei(0);
+        associatedUserBalances.find(
+          (item) => item.tokenAddress.toLowerCase() === collateral.tokenAddress.toLowerCase()
+        )?.balance || wei(0);
       const price = collateralPrices[collateral.tokenAddress] ?? ONEWEI;
 
       // ANDROMEDA CASE

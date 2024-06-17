@@ -54,6 +54,7 @@ export const loadAccountCollateral = async ({
         totalLocked: wei(totalLocked),
         symbol: '',
         displaySymbol: '',
+        decimals: '',
       };
     });
   };
@@ -139,6 +140,7 @@ export function useAccountCollateral({
         return Object.assign(x, {
           symbol: collateralType?.symbol ?? '',
           displaySymbol: collateralType?.displaySymbol ?? '',
+          decimals: collateralType?.decimals ?? '18',
         });
       });
     },
