@@ -89,8 +89,21 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
         bg="navy.700"
         p="6"
         _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50' }}
-        onClick={() => {
-          navigate(`/pools/${network.id}/${pool.id}`);
+        onClick={async () => {
+          try {
+            if (!currentNetwork) {
+              connect();
+              return;
+            }
+
+            if (currentNetwork.id !== network.id) {
+              if (!(await setNetwork(network.id))) {
+                return;
+              }
+            }
+
+            navigate(`/pools/${network.id}/${pool.id}`);
+          } catch (error) {}
         }}
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
@@ -169,27 +182,18 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 onClick={async (e) => {
                   try {
                     e.stopPropagation();
+
                     if (!currentNetwork) {
                       connect();
-                      setNetwork(network.id);
-                      queryParams.set('manageAction', 'deposit');
-                      navigate({
-                        pathname: `/positions/${type.symbol}/${pool.id}`,
-                        search: queryParams.toString(),
-                      });
                       return;
                     }
 
-                    if (currentNetwork?.id !== network.id) {
+                    if (currentNetwork.id !== network.id) {
                       if (!(await setNetwork(network.id))) {
-                        queryParams.set('manageAction', 'deposit');
-                        navigate({
-                          pathname: `/positions/${type.symbol}/${pool.id}`,
-                          search: queryParams.toString(),
-                        });
                         return;
                       }
                     }
+
                     queryParams.set('manageAction', 'deposit');
                     navigate({
                       pathname: `/positions/${type.symbol}/${pool.id}`,
