@@ -121,6 +121,31 @@ export const AssetsRow = ({
       </Td>
       <Td border="none">
         <Flex justifyContent="space-between">
+          {/* TODO: Update when multiple pools for LPing available */}
+          <Fade in>
+            <Button
+              as={NavLink}
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              height="1.75rem"
+              w="100%"
+              fontWeight={700}
+              borderWidth="1px"
+              borderColor="gray.900"
+              borderRadius="4px"
+              to={{
+                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                  poolId: '1',
+                  collateralSymbol: token,
+                }),
+                search: location.search,
+              }}
+              data-cy="assets-deposit-button"
+            >
+              Deposit
+            </Button>
+          </Fade>
+
           <Fade in>
             <Tooltip
               label={
@@ -142,33 +167,11 @@ export const AssetsRow = ({
                 _hover={{ bg: 'gray.900' }}
                 onClick={onOpen}
               >
-                Withdraw
+                {isRunning && accountBalance.gt(0)
+                  ? `Withdraw in ${hours}H ${minutes}M`
+                  : 'Withdraw'}
               </Button>
             </Tooltip>
-          </Fade>
-          {/* TODO: Update when multiple pools for USDC LPing available */}
-          <Fade in>
-            <Button
-              as={NavLink}
-              fontSize="0.75rem"
-              lineHeight="1rem"
-              height="1.75rem"
-              w="100%"
-              fontWeight={700}
-              borderWidth="1px"
-              borderColor="gray.900"
-              borderRadius="4px"
-              to={{
-                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
-                  poolId: '1',
-                  collateralSymbol: 'USDC',
-                }),
-                search: location.search,
-              }}
-              data-cy="assets-deposit-button"
-            >
-              Deposit
-            </Button>
           </Fade>
         </Flex>
         <WithdrawModal isOpen={isOpen} onClose={onClose} />

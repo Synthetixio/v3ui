@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
+  Divider,
   Flex,
   IconButton,
   Link,
@@ -14,7 +15,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { WalletIcon } from '@snx-v3/icons';
-import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
@@ -22,7 +23,9 @@ import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { supportedNetworks } from '../../utils/onboard';
+
+const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet);
+const testnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && isTestnet);
 
 export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
@@ -112,20 +115,23 @@ export function NetworkController() {
           data-cy="account-menu-button"
           px={3}
         >
-          <NetworkIcon networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id} />
+          <NetworkIcon
+            filter={activeNetwork?.isTestnet ? 'grayscale(1)' : ''}
+            networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
+          />
         </MenuButton>
-        <MenuList>
-          {supportedNetworks.map(({ id, preset, label, isTestnet }) => {
-            if (isTestnet && !showTestnets) return null;
-            return (
-              <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
-                <NetworkIcon networkId={id} />
-                <Text variant="nav" ml={2}>
-                  {label}
-                </Text>
-              </MenuItem>
-            );
-          })}
+        <MenuList border="1px" borderColor="gray.900">
+          {mainnets.map(({ id, preset, label }) => (
+            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+              <NetworkIcon networkId={id} size="20px" />
+              <Text variant="nav" ml={2}>
+                {label}
+              </Text>
+            </MenuItem>
+          ))}
+
+          {showTestnets && <Divider color="gray.900" />}
+
           <MenuOptionGroup>
             <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
               <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
@@ -141,6 +147,15 @@ export function NetworkController() {
               />
             </Flex>
           </MenuOptionGroup>
+
+          {(showTestnets ? testnets : []).map(({ id, preset, label }) => (
+            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+              <NetworkIcon filter="grayscale(1)" networkId={id} size="20px" />
+              <Text variant="nav" ml={2}>
+                {label}
+              </Text>
+            </MenuItem>
+          ))}
         </MenuList>
       </Menu>
       {activeWallet ? (

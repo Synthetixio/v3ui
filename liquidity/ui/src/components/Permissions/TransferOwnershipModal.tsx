@@ -1,6 +1,10 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Divider,
+  Flex,
   Input,
   Modal,
   ModalBody,
@@ -15,35 +19,45 @@ import {
 import { prettyString } from '@snx-v3/format';
 import { useTransferAccountId } from '@snx-v3/useTransferAccountId';
 import { utils } from 'ethers';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export function TransferOwnershipModal({
   isOpen,
   onClose,
   accountId,
   refetch,
+  owner,
 }: {
   isOpen: boolean;
   onClose: () => void;
   accountId: string;
+  owner: string;
   refetch: () => void;
 }) {
   const [to, setTo] = useState('');
   const { isPending, mutateAsync: submit } = useTransferAccountId(to, accountId);
 
+  const isTargetValid = useMemo(
+    () => !!utils.isAddress(to) && to.toLowerCase() !== owner.toLowerCase(),
+    [owner, to]
+  );
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent border="1px solid" rounded="base" borderColor="gray.900" bg="navy.700">
+      <ModalContent pb={1} border="1px solid" rounded="base" borderColor="gray.900" bg="navy.700">
         <ModalHeader>Transfer Ownership</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Divider />
-          <Text fontSize="14px" fontWeight={700} mt="2">
+          <Text fontSize="18px" fontWeight={700} mt="4">
             Account #{prettyString(accountId, 4, 4)}
           </Text>
           <Text fontSize="14px" color="white" mt="2">
-            Enter the wallet address you would like to transfer this account to:
+            Will be transfered from:
+          </Text>
+          <Input mt="2" bg="navy.900" disabled value={owner} />
+          <Text fontSize="14px" color="white" mt="2">
+            Will be transfered to:
           </Text>
           <Input
             mt="2"
@@ -54,7 +68,14 @@ export function TransferOwnershipModal({
             value={to}
           />
         </ModalBody>
-        <ModalFooter justifyContent="center">
+        <ModalFooter display="flex" flexDirection="column" gap={4} justifyContent="center">
+          <Alert status="warning">
+            <AlertIcon />
+            <Flex direction="column">
+              <AlertDescription>This action cannot be undone</AlertDescription>
+            </Flex>
+          </Alert>
+
           {isPending ? (
             <Spinner color="cyan" />
           ) : (
@@ -67,9 +88,9 @@ export function TransferOwnershipModal({
                   onClose();
                 })
               }
-              isDisabled={!utils.isAddress(to)}
+              isDisabled={!isTargetValid}
             >
-              Transfer Ownership
+              Confirm
             </Button>
           )}
         </ModalFooter>

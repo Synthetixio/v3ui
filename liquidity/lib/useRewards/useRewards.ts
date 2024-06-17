@@ -15,7 +15,6 @@ const RewardsResponseSchema = z.array(
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
     distributorAddress: z.string(),
-    rate: z.number(),
     duration: z.number(),
     lifetimeClaimed: z.number(),
     total: z.number(),
@@ -65,26 +64,16 @@ export function useRewards(
   const { data: CoreProxy } = useCoreProxy();
 
   return useQuery({
-    enabled: Boolean(
-      Multicall3 && CoreProxy && distributors && poolId && collateralAddress && accountId
-    ),
+    enabled: Boolean(Multicall3 && CoreProxy && poolId && accountId && distributors && network),
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
-      { distributors },
+      { distributors: distributors?.map(({ id }) => id).sort() },
     ],
     queryFn: async () => {
-      if (
-        !Multicall3 ||
-        !CoreProxy ||
-        !poolId ||
-        !collateralAddress ||
-        !accountId ||
-        !distributors ||
-        !network
-      ) {
+      if (!(Multicall3 && CoreProxy && poolId && accountId && distributors && network)) {
         throw 'useRewards is missing required data';
       }
       if (distributors.length === 0) return [];
@@ -96,7 +85,7 @@ export function useRewards(
         const ifaceERC20 = new utils.Interface(erc20Abi);
 
         const [{ returnData: distributorReturnData }, ...historicalData] = await Promise.all([
-          await Multicall3.callStatic.aggregate(
+          Multicall3.callStatic.aggregate(
             distributors.flatMap(({ id: address }) => [
               {
                 target: address,
@@ -106,34 +95,50 @@ export function useRewards(
                 target: address,
                 callData: ifaceRD.encodeFunctionData('token', []),
               },
+              {
+                target: address,
+                callData: ifaceRD.encodeFunctionData('collateralType', []),
+              },
             ])
           ),
-          ...distributors.map(async ({ id: address }) => {
-            return await fetch(getSubgraphUrl(network?.name), {
+          ...distributors.map(({ id: address }) =>
+            fetch(getSubgraphUrl(network?.name), {
               method: 'POST',
               body: JSON.stringify({
                 query: RewardsDataDocument,
                 variables: { accountId, distributor: address },
               }),
-            }).then((res) => res.json());
-          }),
+            }).then((res) => res.json())
+          ),
         ]);
 
         const distributorResult = distributors.map(({ id: address, rewards_distributions }, i) => {
-          const name = ifaceRD.decodeFunctionResult(
+          const [distributorName] = ifaceRD.decodeFunctionResult(
             'name',
-            distributorReturnData[i * 2]
-          )[0] as string;
-          const token = ifaceRD.decodeFunctionResult(
-            'token',
-            distributorReturnData[i * 2 + 1]
-          )[0] as string;
+            distributorReturnData[i * 3]
+          );
+          const [distributorPayoutToken] = ifaceRD.decodeFunctionResult(
+            'payoutToken',
+            distributorReturnData[i * 3 + 1]
+          );
+          const [distributorCollateralType] = ifaceRD.decodeFunctionResult(
+            'collateralType',
+            distributorReturnData[i * 3 + 2]
+          );
 
-          let duration = 0;
-
-          if (rewards_distributions.length > 0) {
-            duration = parseInt(rewards_distributions[0].duration);
+          if (!rewards_distributions.length) {
+            return {
+              address,
+              name: distributorName,
+              token: distributorPayoutToken,
+              distributorCollateralType,
+              duration: 0,
+              total: 0,
+              lifetimeClaimed: 0,
+            };
           }
+
+          const duration = parseInt(rewards_distributions[0].duration);
 
           const lifetimeClaimed: number = historicalData[i].data.rewardsClaimeds
             .reduce((acc: Wei, item: { amount: string; id: string }) => {
@@ -151,16 +156,25 @@ export function useRewards(
 
           return {
             address,
-            name,
-            token,
+            name: distributorName,
+            token: distributorPayoutToken,
+            distributorCollateralType,
             duration,
             total: hasExpired ? '0' : rewards_distributions[0].amount, // Take the latest amount
             lifetimeClaimed,
           };
         });
 
+        const filteredDistributors = collateralAddress
+          ? distributorResult.filter(
+              ({ distributorCollateralType }) =>
+                `${distributorCollateralType}`.toLowerCase() ===
+                `${collateralAddress}`.toLowerCase()
+            )
+          : distributorResult;
+
         const { returnData: ercReturnData } = await Multicall3.callStatic.aggregate(
-          distributorResult.flatMap(({ token, address }) => [
+          filteredDistributors.flatMap(({ token }) => [
             {
               target: token,
               callData: ifaceERC20.encodeFunctionData('name', []),
@@ -173,34 +187,13 @@ export function useRewards(
               target: token,
               callData: ifaceERC20.encodeFunctionData('decimals', []),
             },
-            {
-              target: CoreProxy.address,
-              callData: CoreProxy.interface.encodeFunctionData('getRewardRate', [
-                BigNumber.from(poolId),
-                token,
-                address,
-              ]),
-            },
           ])
         );
 
-        const result = distributorResult.map((item, i) => {
-          const name = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 4])[0] as string;
-
-          const symbol = ifaceERC20.decodeFunctionResult(
-            'symbol',
-            ercReturnData[i * 4 + 1]
-          )[0] as string;
-
-          const decimals = ifaceERC20.decodeFunctionResult(
-            'decimals',
-            ercReturnData[i * 4 + 2]
-          )[0] as number;
-
-          const rewardRate = CoreProxy.interface.decodeFunctionResult(
-            'getRewardRate',
-            ercReturnData[i * 4 + 3]
-          );
+        const result = filteredDistributors.map((item, i) => {
+          const [name] = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 3]);
+          const [symbol] = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 3 + 1]);
+          const [decimals] = ifaceERC20.decodeFunctionResult('decimals', ercReturnData[i * 3 + 2]);
 
           const total = wei(item.total, 18, true).toNumber();
 
@@ -209,8 +202,6 @@ export function useRewards(
             name,
             symbol,
             decimals,
-            // Reward rate is the amount of rewards per second
-            rewardRate: wei(rewardRate),
             total,
           };
         });
@@ -231,14 +222,12 @@ export function useRewards(
               ...item,
               claimableAmount: wei(response),
               distributorAddress: item.address,
-              rate: item.rewardRate.toNumber(),
             });
           } catch (error) {
             balances.push({
               ...item,
               claimableAmount: wei(0),
               distributorAddress: item.address,
-              rate: item.rewardRate.toNumber(),
             });
           }
         }
@@ -249,8 +238,7 @@ export function useRewards(
 
         return RewardsResponseSchema.parse(sortedBalances);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(error);
+        console.error(error);
         return [];
       }
     },

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import {
   Badge,
   Button,
@@ -18,11 +19,12 @@ import { PermissionRow } from './PermissionRow';
 import { useAccountOwner, useAccountPermissions } from '@snx-v3/useAccountPermissions';
 import { prettyString } from '@snx-v3/format';
 import { useWallet } from '@snx-v3/useBlockchain';
-import { AddPermissionModal } from './AddPermissionModal';
+import { PermissionModal } from './PermissionModal';
 import { TransferOwnershipModal } from './TransferOwnershipModal';
 import { PermissionTableLoading } from './PermissionTableLoading';
 import { useMemo } from 'react';
 import { Address } from '../Address';
+import PermissionsInfo from './PermissionsInfo';
 
 export default function PermissionTable({
   accountId,
@@ -107,6 +109,7 @@ export default function PermissionTable({
                 borderBottomColor="gray.900"
               >
                 Permissions
+                <PermissionsInfo />
               </Th>
               <Th
                 py={5}
@@ -122,7 +125,7 @@ export default function PermissionTable({
 
           <Tbody>
             <Tr>
-              <Td py={5} borderBottomColor="gray.900">
+              <Td width={240} py={5} borderBottomColor="gray.900">
                 <Skeleton isLoaded={!loadingOwner}>
                   {accountOwner && (
                     <Text fontWeight={400} color="white" fontSize="16px">
@@ -138,7 +141,6 @@ export default function PermissionTable({
                   bg="cyan.900"
                   size="sm"
                   textTransform="capitalize"
-                  mx="1"
                 >
                   OWNER
                 </Badge>
@@ -180,22 +182,25 @@ export default function PermissionTable({
         </Table>
       </TableContainer>
 
-      <AddPermissionModal
+      <PermissionModal
         isOpen={isPermissionOpen}
         onClose={onPermissionClose}
         accountId={accountId}
         refetch={refetch}
       />
-      <TransferOwnershipModal
-        isOpen={isTransferOpen}
-        onClose={onTransferClose}
-        accountId={accountId}
-        refetch={() => {
-          refetch();
-          refetchAccountOwner();
-          refetchAccounts();
-        }}
-      />
+      {accountOwner && (
+        <TransferOwnershipModal
+          isOpen={isTransferOpen}
+          onClose={onTransferClose}
+          accountId={accountId}
+          owner={accountOwner}
+          refetch={() => {
+            refetch();
+            refetchAccountOwner();
+            refetchAccounts();
+          }}
+        />
+      )}
     </>
   );
 }
