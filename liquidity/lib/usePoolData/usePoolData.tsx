@@ -140,14 +140,15 @@ const getPoolData = async (chainName: string, id: string) => {
   return PoolDataResultSchema.parse(json);
 };
 
-export const usePoolData = (poolId?: string, networkId?: string) => {
+export const usePoolData = (poolId?: string, networkName?: string) => {
   const { network } = useNetwork();
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'PoolData', { pool: poolId }],
     queryFn: async () => {
-      if (!poolId || !networkId) throw Error('No poolId or networkId');
-      const poolData = await getPoolData(networkId, poolId);
+      const name = networkName || network?.name;
+      if (!poolId || !name) throw Error('No poolId or networkId');
+      const poolData = await getPoolData(name, poolId);
 
       if (!poolData.data.pool) {
         throw Error(`Pool ${poolId} not found`);
