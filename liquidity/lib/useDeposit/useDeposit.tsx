@@ -81,12 +81,12 @@ export const useDeposit = ({
 
         // optionally deposit if available collateral not enough
         const deposit = collateralAmount.gt(0)
-          ? undefined
-          : CoreProxy.populateTransaction.deposit(
+          ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
               collateralTypeAddress,
               collateralAmount // only deposit what's needed
-            );
+            )
+          : undefined;
 
         const delegate = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(id),
@@ -102,6 +102,7 @@ export const useDeposit = ({
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );
+
         const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
           callsPromise,
           getGasPrice({ provider }),
