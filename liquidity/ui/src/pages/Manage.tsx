@@ -137,8 +137,8 @@ export const Manage = () => {
 
   const { network } = useNetwork();
 
-  const { isFetching: isCollateralFetching, data: collateralType } =
-    useCollateralType(collateralSymbol);
+  const { isFetching: isCollateralLoading, data: collateralType } =
+    useCollateralType(collateralSymbolRaw);
 
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
@@ -155,7 +155,7 @@ export const Manage = () => {
     poolId,
   });
 
-  const isLoading = isRewardsLoading || isCollateralFetching || isPoolGraphDataLoading;
+  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   return (
     <ManagePositionProvider>
