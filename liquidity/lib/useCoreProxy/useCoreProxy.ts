@@ -9,7 +9,7 @@ import {
 } from '@snx-v3/useBlockchain';
 import { importCoreProxy } from '@snx-v3/contracts';
 
-export function useCoreProxy(customNetwork?: Network) {
+export function useCoreProxy(customNetwork?: Network | null) {
   const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
   const provider = useProvider();
