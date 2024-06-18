@@ -6653,6 +6653,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useTeleport@workspace:liquidity/lib/useTeleport":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTeleport@workspace:liquidity/lib/useTeleport"
