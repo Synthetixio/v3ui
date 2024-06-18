@@ -11,7 +11,6 @@ export default function Admin() {
       {[
         getCouncilContract('spartan'),
         getCouncilContract('ambassador'),
-        getCouncilContract('grants'),
         getCouncilContract('treasury'),
       ].map((proxy, index) => {
         return (
