@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
@@ -7,8 +7,9 @@ import { ERC7412_ABI } from '@snx-v3/withERC7412';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
 import { networksOffline } from '@snx-v3/usePoolsList';
-import { wei, Wei } from '@synthetixio/wei';
+import { wei } from '@synthetixio/wei';
 import { importPythERC7412Wrapper } from '@snx-v3/contracts';
+import { parseUnits } from '@snx-v3/format';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
@@ -123,10 +124,14 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         throw 'useOfflinePrices is missing required data';
       }
 
-      const returnData: { symbol: string; price: Wei }[] = [
+      const returnData: { symbol: string; price: BigNumberish }[] = [
         {
           symbol: 'sUSDC',
-          price: wei(1),
+          price: wei(1).toBN(),
+        },
+        {
+          symbol: 'USDC',
+          price: wei(1).toBN(),
         },
       ];
 
@@ -149,9 +154,9 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
       prices?.forEach((item, index) => {
         const price = item.getPriceUnchecked();
 
-        returnData.unshift({
-          symbol: filteredCollaterals[index].symbol,
-          price: wei(price.price, price.expo),
+        returnData.push({
+          symbol: collaterals[index].symbol,
+          price: parseUnits(price.price, 18 + price.expo),
         });
       });
 
