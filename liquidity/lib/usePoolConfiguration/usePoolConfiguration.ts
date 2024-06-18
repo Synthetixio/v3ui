@@ -48,6 +48,7 @@ export const usePoolConfiguration = (poolId?: string) => {
         weight: maxDebtShareValueD18,
         maxDebtShareValue: weightD18,
       }));
+
       const collateralPriceCalls = await fetchPriceUpdates(
         collateralPriceUpdates,
         network.isTestnet

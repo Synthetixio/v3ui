@@ -29,14 +29,14 @@ export const AssetsRow = ({
   accountBalance$,
   delegatedBalance,
   delegatedBalance$,
-  unlockDate = new Date(),
+  unlockDate,
   final,
 }: AssetsRowProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { minutes, hours, isRunning } = useTimer({
-    expiryTimestamp: unlockDate,
-    autoStart: true,
+    expiryTimestamp: unlockDate || new Date(0),
+    autoStart: unlockDate && new Date().getTime() < unlockDate?.getTime(),
   });
 
   return (
@@ -119,7 +119,7 @@ export const AssetsRow = ({
           </Flex>
         </Fade>
       </Td>
-      <Td border="none">
+      <Td maxWidth="230px" border="none">
         <Flex justifyContent="space-between">
           {/* TODO: Update when multiple pools for LPing available */}
           <Fade in>
@@ -136,7 +136,7 @@ export const AssetsRow = ({
               to={{
                 pathname: generatePath('/positions/:collateralSymbol/:poolId', {
                   poolId: '1',
-                  collateralSymbol: token,
+                  collateralSymbol: token.toUpperCase(),
                 }),
                 search: location.search,
               }}

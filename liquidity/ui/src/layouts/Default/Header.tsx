@@ -32,7 +32,7 @@ export default function Header() {
         borderBottomColor="gray.900"
         px="10"
       >
-        <Container maxW="1024px" as={Flex} justifyContent="space-between" alignItems="center">
+        <Container maxW="1236px" as={Flex} justifyContent="space-between" alignItems="center">
           <Flex
             display={{ base: 'none', md: 'inline-block' }}
             flexDirection="row"
@@ -52,7 +52,7 @@ export default function Header() {
               ml={6}
               as={RouterLink}
               to={{
-                pathname: '/',
+                pathname: '/dashboard',
                 search: location.search,
               }}
               fontWeight={700}

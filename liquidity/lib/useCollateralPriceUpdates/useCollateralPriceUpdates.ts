@@ -4,8 +4,11 @@ import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useB
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
-import { getPythWrapper, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
+import { networksOffline } from '@snx-v3/usePoolsList';
+import { wei, Wei } from '@synthetixio/wei';
+import { importPythERC7412Wrapper } from '@snx-v3/contracts';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
@@ -13,9 +16,48 @@ async function getPythFeedIds(network: Network) {
   const extras = await importExtras(network.id, network.preset);
   return Object.entries(extras)
     .filter(
-      ([key, value]) => key.startsWith('pyth') && key.endsWith('FeedId') && value.length === 66
+      ([key, value]) =>
+        key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
     )
     .map(([_key, value]) => value);
+}
+
+async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
+  const queries = networksOffline.map((network) => importExtras(network.id, network.preset));
+  const extras = await Promise.all(queries);
+
+  // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
+  const priceIds = extras
+    .map((extra) => {
+      return Object.entries(extra).filter(
+        ([key, _value]) => key.startsWith('pyth') && key.endsWith('FeedId')
+      );
+    })
+    .flat();
+
+  const deduped = Array.from(
+    new Set(
+      priceIds.map((x) => ({
+        collateral: x[0].replace('pyth', '').replace('FeedId', '').toUpperCase(),
+        priceId: x[1],
+      }))
+    )
+  );
+
+  // Find the corresponding price feed id for each collateral
+  return collateralList.map((collateral) => {
+    let symbol = collateral;
+    if (collateral === 'WETH') {
+      symbol = 'ETH';
+    }
+
+    const id = deduped.find((x) => x.collateral === symbol);
+
+    return {
+      collateral,
+      priceId: id?.priceId,
+    };
+  });
 }
 
 const getPriceUpdates = async (
@@ -33,31 +75,87 @@ const getPriceUpdates = async (
   );
   const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
+  const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
+
   return {
     // pyth wrapper
-    to: getPythWrapper(network?.id),
+    to: address,
     data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
     value: priceIds.length * 10,
   };
 };
 
-export const useAllCollateralPriceUpdates = () => {
+export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const { network } = useNetwork();
-
+  const targetNetwork = customNetwork || network;
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'all-price-updates'],
-    enabled: isBaseAndromeda(network?.id, network?.preset),
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
+    enabled: isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset),
     queryFn: async () => {
-      if (!(network?.id && network?.preset)) throw 'OMFG';
+      if (!(targetNetwork?.id && targetNetwork?.preset))
+        throw 'useAllCollateralPriceUpdates is missing required data';
       const stalenessTolerance = 60;
 
-      const pythFeedIds = await getPythFeedIds(network);
+      const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, network);
 
       return {
         ...tx,
         value: tx.value * 10,
       };
+    },
+    refetchInterval: 60000,
+  });
+};
+
+interface Collaterals {
+  symbol: string;
+  oracleId: string;
+  id: string;
+}
+
+export const useOfflinePrices = (collaterals?: Collaterals[]) => {
+  return useQuery({
+    queryKey: ['offline-prices', collaterals?.map((collateral) => collateral.id).join('-')],
+    enabled: Boolean(collaterals),
+    queryFn: async () => {
+      if (!collaterals) {
+        throw 'useOfflinePrices is missing required data';
+      }
+
+      const returnData: { symbol: string; price: Wei }[] = [
+        {
+          symbol: 'sUSDC',
+          price: wei(1),
+        },
+      ];
+
+      const filteredCollaterals = collaterals.filter(
+        (collateral) => !collateral.symbol.includes('sUSDC')
+      );
+
+      if (!filteredCollaterals.length) {
+        return returnData;
+      }
+
+      const pythIds = await getPythFeedIdsFromCollateralList(
+        collaterals.map((collateral) => collateral.symbol)
+      );
+
+      const prices = await priceService.getLatestPriceFeeds(
+        pythIds.map((x) => x.priceId) as string[]
+      );
+
+      prices?.forEach((item, index) => {
+        const price = item.getPriceUnchecked();
+
+        returnData.unshift({
+          symbol: filteredCollaterals[index].symbol,
+          price: wei(price.price, price.expo),
+        });
+      });
+
+      return returnData;
     },
     refetchInterval: 60000,
   });
@@ -88,11 +186,13 @@ export const useCollateralPriceUpdates = () => {
           'function getLatestPrice(bytes32 priceId, uint256 stalenessTolerance) external view returns (int256)',
         ]);
 
-        const pythFeedIds = await getPythFeedIds(network);
+        const pythFeedIds = (await getPythFeedIds(network)) as string[];
+
+        const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
 
         const txs = [
           ...pythFeedIds.map((priceId) => ({
-            target: getPythWrapper(network.id),
+            target: address,
             callData: pythInterface.encodeFunctionData('getLatestPrice', [
               priceId,
               stalenessTolerance,

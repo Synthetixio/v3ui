@@ -1,9 +1,10 @@
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
-import { Link } from '@chakra-ui/react';
+import { Link, LinkProps } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
-export const HomeLink = () => {
+export const HomeLink = ({ ...props }: LinkProps) => {
   const location = useLocation();
+
   return (
     <Link
       width="fit-content"
@@ -18,6 +19,7 @@ export const HomeLink = () => {
       fontSize="sm"
       fontWeight={700}
       mb={2}
+      {...props}
     >
       <ArrowBackIcon mr={1} /> Home
     </Link>

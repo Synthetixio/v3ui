@@ -15,7 +15,8 @@ export function useSNXPrice() {
     enabled: Boolean(baseProvider && baseNetwork?.id && baseNetwork?.preset),
     queryKey: ['snx-price'],
     queryFn: async () => {
-      if (!baseNetwork || !baseNetwork?.id || !baseNetwork?.preset) throw new Error('OMFG');
+      if (!baseNetwork || !baseNetwork?.id || !baseNetwork?.preset)
+        throw new Error('useSNX Price is not enabled');
       const { address, abi } = await importOracleManagerProxy(baseNetwork.id, baseNetwork.preset);
       const OracleManagerProxy = new Contract(address, abi, baseProvider);
 

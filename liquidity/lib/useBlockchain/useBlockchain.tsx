@@ -199,7 +199,7 @@ export const NETWORKS: Network[] = [
     rpcUrl: (INFURA_KEY?: string) =>
       `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
     label: 'Arbthetix (withdraw only)',
-    isSupported: true,
+    isSupported: false,
     publicRpcUrl: 'https://arbiscan.io/',
     isTestnet: false,
   },
@@ -282,7 +282,7 @@ export function useNetwork() {
     async (networkId: number) => {
       const newNetwork = NETWORKS.find((n) => n.id === networkId);
       if (!newNetwork) return;
-      await setChain({ chainId: newNetwork?.hexId });
+      return await setChain({ chainId: newNetwork?.hexId });
     },
     [setChain]
   );

@@ -28,21 +28,23 @@ const loadConfigs = async ({ CoreProxy }: { CoreProxy: ethers.Contract }) => {
 };
 
 export const useAllCollateralPriceIds = (customNetwork?: Network) => {
+  const { network } = useNetwork();
+  const targetNetwork = customNetwork || network;
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
-  const { network } = useNetwork();
 
   return useQuery({
     enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
     staleTime: Infinity,
-    queryKey: [`${network?.id}-${network?.preset}`, 'AllCollateralPriceIds'],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'AllCollateralPriceIds'],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3 || !OracleProxy || !network) {
+      if (!CoreProxy || !Multicall3 || !OracleProxy || !targetNetwork) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!deploymentsWithERC7412.includes(`${network?.id}-${network?.preset}`)) return [];
+      if (!deploymentsWithERC7412.includes(`${targetNetwork?.id}-${targetNetwork?.preset}`))
+        return [];
 
       const configs = await loadConfigs({ CoreProxy });
 

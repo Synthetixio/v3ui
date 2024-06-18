@@ -4,7 +4,7 @@ import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { RewardsModal } from './RewardsModal';
-import { truncateAddress, convertSecondsToDisplayString } from '@snx-v3/formatters';
+import { truncateAddress, convertToReadableInterval } from '@snx-v3/formatters';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
 import { etherscanLink } from '@snx-v3/etherscanLink';
@@ -51,7 +51,8 @@ export const RewardsRow = ({
 
   const { txnStatus, txnHash } = txnState;
 
-  const frequencyString = convertSecondsToDisplayString(frequency);
+  // We want to pass in the total, as well as the
+  const { amount, frequencyString } = convertToReadableInterval(total, frequency);
 
   const claimButtonLabel = () => {
     if (claimableAmount > 0 || !hasClaimed) {
@@ -87,7 +88,7 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    <Amount showTooltip={false} value={wei(total)} suffix={` ${symbol}`} />
+                    <Amount showTooltip={false} value={wei(amount)} suffix={` ${symbol}`} />
                   </Text>
                 </Tooltip>
               </Link>

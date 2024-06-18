@@ -1,20 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { USDC_BASE_MARKET, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
-export function useGetUSDTokens() {
+export function useGetUSDTokens(customNetwork?: Network) {
   const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { data: collateralTypes } = useCollateralTypes();
-  const { data: CoreProxy } = useCoreProxy();
-  const { data: SpotMarket } = useSpotMarketProxy();
+
+  const targetNetwork = customNetwork || network;
+
+  const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
+  const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
+
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'GetUSDTokens'],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens'],
     queryFn: async () => {
-      if (!network?.id || !CoreProxy) {
+      if (!targetNetwork?.id || !CoreProxy) {
         throw 'useGetUSDTokens queries are not ready';
       }
       const USDProxy = await CoreProxy.getUsdToken();
@@ -30,6 +34,6 @@ export function useGetUSDTokens() {
         USDC,
       };
     },
-    enabled: Boolean(network?.id && CoreProxy && collateralTypes?.length),
+    enabled: Boolean(targetNetwork?.id && CoreProxy && collateralTypes?.length),
   });
 }

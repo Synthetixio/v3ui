@@ -36,16 +36,16 @@ export const Rewards = ({
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
         REWARDS
       </Text>
-      <TableContainer width="100%" mb="8px">
-        {!hasRewards ? (
-          <Fade in>
-            <Flex mt="20px" mb="8px" justifyContent="center">
-              <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
-                No Rewards Available
-              </Text>
-            </Flex>
-          </Fade>
-        ) : (
+      {!isLoading && !hasRewards ? (
+        <Fade in>
+          <Flex mt="20px" mb="8px" justifyContent="center">
+            <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
+              No Rewards Available
+            </Text>
+          </Flex>
+        </Fade>
+      ) : (
+        <TableContainer width="100%" mb="8px">
           <Table>
             <Thead>
               <Tr borderBottom="1px solid #2D2D38">
@@ -116,8 +116,8 @@ export const Rewards = ({
               </Tbody>
             )}
           </Table>
-        )}
-      </TableContainer>
+        </TableContainer>
+      )}
     </BorderBox>
   );
 };

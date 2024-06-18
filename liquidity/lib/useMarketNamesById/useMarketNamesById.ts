@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { z } from 'zod';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 
 const MarketNamesSchema = z.array(z.string());
 
@@ -10,14 +10,17 @@ const marketAbi = ['function name(uint128 marketId) external view returns (strin
 const marketInterface = new ethers.utils.Interface(marketAbi);
 
 export const useMarketNamesById = (
-  marketIdsAndAddresses?: { marketId: string; address: string }[]
+  marketIdsAndAddresses?: { marketId: string; address: string }[],
+  customNetwork?: Network
 ) => {
-  const { data: MultiCall3 } = useMulticall3();
   const { network } = useNetwork();
+  const { data: MultiCall3 } = useMulticall3(customNetwork);
+
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'MarketNamesById',
       {
         markets: marketIdsAndAddresses

@@ -5,7 +5,7 @@ import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { importRewardDistributor } from '@snx-v3/contracts';
 
 const RewardsResponseSchema = z.array(
@@ -26,7 +26,7 @@ type RewardsResponseArray = typeof RewardsResponseSchema._type;
 
 export type RewardsType = z.infer<typeof RewardsResponseSchema>;
 
-type RewardsInterface = {
+export type RewardsInterface = {
   id: string;
   total_distributed: string;
   rewards_distributions: {
@@ -57,29 +57,43 @@ export function useRewards(
   distributors?: RewardsInterface,
   poolId?: string,
   collateralAddress?: string,
-  accountId: string = '69'
+  accountId: string = '69',
+  customNetwork?: Network
 ) {
   const { network } = useNetwork();
-  const { data: Multicall3 } = useMulticall3();
-  const { data: CoreProxy } = useCoreProxy();
+
+  const targetNetwork = customNetwork || network;
+
+  const { data: Multicall3 } = useMulticall3(customNetwork);
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
 
   return useQuery({
-    enabled: Boolean(Multicall3 && CoreProxy && poolId && accountId && distributors && network),
+    enabled: Boolean(
+      CoreProxy && Multicall3 && distributors && poolId && collateralAddress && accountId
+    ),
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
       { distributors: distributors?.map(({ id }) => id).sort() },
     ],
     queryFn: async () => {
-      if (!(Multicall3 && CoreProxy && poolId && accountId && distributors && network)) {
+      if (
+        !Multicall3 ||
+        !CoreProxy ||
+        !poolId ||
+        !collateralAddress ||
+        !accountId ||
+        !distributors
+      ) {
         throw 'useRewards is missing required data';
       }
+
       if (distributors.length === 0) return [];
 
       try {
-        const { abi } = await importRewardDistributor(network?.id, network?.preset);
+        const { abi } = await importRewardDistributor(targetNetwork?.id, targetNetwork?.preset);
 
         const ifaceRD = new utils.Interface(abi);
         const ifaceERC20 = new utils.Interface(erc20Abi);
