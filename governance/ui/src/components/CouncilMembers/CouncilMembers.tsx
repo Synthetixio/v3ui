@@ -62,11 +62,30 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
         ? `Q${startQuarter} - ${endYear}`
         : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
 
-  let sortedNominees = useMemo(() => {
-    if (sortConfig[1] === 'ranking') {
-      return !!councilMemberDetails?.length ? councilMemberDetails.reverse() : [];
+  const sortedNominees = useMemo(() => {
+    // TODO @dev
+    // Sort user by voting power and add a place key to the object
+    if (!!councilMemberDetails?.length) {
+      if (sortConfig[1] === 'ranking') {
+        return councilMemberDetails.reverse();
+      }
+      if (sortConfig[1] === 'name') {
+        return councilMemberDetails.sort((a, b) => {
+          if (a.username && b.username) {
+            return sortConfig[0]
+              ? a.username.localeCompare(b.username)
+              : a.username.localeCompare(b.username) * -1;
+          } else {
+            return sortConfig[0]
+              ? a?.address.localeCompare(b.address)
+              : a?.address.localeCompare(b.address) * -1;
+          }
+        });
+      }
+      return councilMemberDetails;
     }
-  }, [sortConfig[0], sortConfig[1], councilMemberDetails]);
+    return [];
+  }, [sortConfig, councilMemberDetails]);
 
   return (
     <Flex
@@ -106,6 +125,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
               onClick={() => {
                 setSortConfig([!sortConfig[0], 'ranking']);
               }}
+              data-cy="number-table-header"
             >
               N° {sortConfig[1] === 'ranking' && <SortArrows up={sortConfig[0]} />}
             </Th>
@@ -114,18 +134,9 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
               w="200px"
               cursor="pointer"
               userSelect="none"
+              data-cy="name-table-header"
               onClick={() => {
                 setSortConfig([!sortConfig[0], 'name']);
-                sortedNominees = sortedNominees.sort((a, b) => {
-                  if (a.username && b.username) {
-                    return sortConfig[0]
-                      ? a.username.localeCompare(b.username)
-                      : a.username.localeCompare(b.username) * -1;
-                  }
-                  return sortConfig[0]
-                    ? a?.address.localeCompare(b.address)
-                    : a?.address.localeCompare(b.address) * -1;
-                });
               }}
             >
               Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
@@ -140,6 +151,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 w="120px"
                 userSelect="none"
                 textTransform="capitalize"
+                data-cy="votes-table-header"
                 px="6"
                 onClick={() => {
                   setSortConfig([!sortConfig[0], 'votes']);
@@ -156,6 +168,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 cursor="pointer"
                 userSelect="none"
                 textTransform="capitalize"
+                data-cy="voting-power-table-header"
                 w="180px"
                 px="6"
                 onClick={() => {

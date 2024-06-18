@@ -27,6 +27,7 @@ export default function UserTableView({
   if (!user) return <Spinner colorScheme="cyan" />;
   return (
     <Tr
+      data-cy={`user-table-row-${place}`}
       cursor="pointer"
       onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
