@@ -42,7 +42,7 @@ export const Pool = () => {
         <PoolHeader name={poolInfo && poolInfo[0].pool.name} />
         <Divider my={8} bg="gray.900" />
         <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }} mb={8}>
-          <Box width="55%">
+          <Box w={['100%', '100%', '55%']}>
             <CollateralSection />
           </Box>
           <Box flexGrow={1}>

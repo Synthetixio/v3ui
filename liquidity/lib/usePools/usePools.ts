@@ -33,8 +33,8 @@ export function usePools(customNetwork?: Network) {
       }
 
       const [prefferedPoolId, approvedPoolIds] = await Promise.all([
-        CoreProxy.getPreferredPool(),
-        CoreProxy.getApprovedPools(),
+        CoreProxy.callStatic.getPreferredPool(),
+        CoreProxy.callStatic.getApprovedPools(),
       ]);
 
       const incompletePools = [

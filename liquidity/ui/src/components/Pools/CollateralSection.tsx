@@ -1,7 +1,7 @@
 import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
-import Wei, { wei } from '@synthetixio/wei';
+import { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -11,6 +11,8 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { NETWORKS } from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { usePool } from '@snx-v3/usePoolsList';
+import { formatEther } from 'ethers/lib/utils';
+import { BigNumberish } from 'ethers';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -27,7 +29,7 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
-  collateralPrices?: { symbol: string; price: Wei }[];
+  collateralPrices?: { symbol: string; price: BigNumberish }[];
   apr?: number;
   isAprLoading?: boolean;
 }> = ({ vaultsData, collateralPrices, apr, isAprLoading }) => {
@@ -108,7 +110,7 @@ export const CollateralSectionUi: FC<{
           )}
         </Flex>
       </BorderBox>
-      <Flex flexDirection="column" justifyContent="space-between">
+      <Flex py={3} flexDirection="column" justifyContent="space-between">
         {!vaultsData || !collateralPrices ? (
           <Box>
             <Skeleton mt={4} w="full" height={24} />
@@ -116,19 +118,18 @@ export const CollateralSectionUi: FC<{
           </Box>
         ) : (
           <>
-            <Divider mt={6} mb={4} />
             {vaultsData.map((vaultCollateral) => {
               const price = collateralPrices?.find(
                 (item) => item.symbol === vaultCollateral.collateralType.symbol
               )?.price;
+
               return (
                 <React.Fragment key={vaultCollateral.collateralType.tokenAddress}>
+                  <Divider my={4} />
                   <Box
                     display="flex"
                     px={4}
-                    mb={2}
                     flexDirection="column"
-                    borderBottom="1px"
                     borderColor="gray.900"
                     _last={{ borderBottom: 'none' }}
                     data-testid="pool collateral"
@@ -151,11 +152,11 @@ export const CollateralSectionUi: FC<{
                         fontWeight="400"
                         data-testid="collateral price"
                       >
-                        {price ? formatNumberToUsd(price.toNumber()) : '-'}
+                        {price ? formatNumberToUsd(formatEther(price.toString())) : '-'}
                       </Text>
                     </Flex>
                     <Flex gap={2} justifyContent="space-between">
-                      <Flex flexBasis="50%" flexDirection="column">
+                      <Flex gap={1} flexBasis="50%" flexDirection="column">
                         <Text
                           mt={2}
                           fontSize="sm"
@@ -183,7 +184,7 @@ export const CollateralSectionUi: FC<{
                           {vaultCollateral.collateralType.displaySymbol}
                         </Text>
                       </Flex>
-                      <Flex flexBasis="50%" flexDirection="column">
+                      <Flex gap={1} flexBasis="50%" flexDirection="column">
                         <Text
                           mt={2}
                           fontSize="sm"
