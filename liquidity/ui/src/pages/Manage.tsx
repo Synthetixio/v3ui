@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManageAction } from '../components';
+import { AccountBanner, ManageAction } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -14,7 +14,7 @@ import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -54,11 +54,14 @@ export const ManageUi: FC<{
   collateralSymbol?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
+  const { activeWallet } = useWallet();
+
   return (
     <Box mb={12} mt={8}>
       <Box mb="4">
         <HomeLink />
       </Box>
+      {activeWallet && <AccountBanner mb={8} />}
       <Flex alignItems="center" mb="8px">
         <Flex
           bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
