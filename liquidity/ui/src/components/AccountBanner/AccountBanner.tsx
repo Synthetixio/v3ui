@@ -1,8 +1,8 @@
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Heading } from '@chakra-ui/react';
 import { useAccounts, useCreateAccount } from '@snx-v3/useAccounts';
 import { FC } from 'react';
 
-export const AccountBanner: FC = () => {
+export const AccountBanner: FC<FlexProps> = (props) => {
   const {
     data: accounts,
     isLoading: isAccountsLoading,
@@ -27,6 +27,7 @@ export const AccountBanner: FC = () => {
         bg="navy.700"
         alignItems="center"
         justifyContent="space-between"
+        {...props}
       >
         <Heading fontSize="18px">Create an account to deposit liquidity</Heading>
         <Button onClick={() => createAccount()} isLoading={isCreateAccountLoading}>
