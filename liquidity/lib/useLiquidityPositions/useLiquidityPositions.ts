@@ -161,9 +161,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         'useLiquidityPositions'
       );
     },
-    enabled: Boolean(
-      collateralPriceUpdates && CoreProxy && collateralTypes?.length && accountId && pools?.length
-    ),
+    enabled: Boolean(CoreProxy && collateralTypes?.length && accountId && pools?.length),
   });
 
   return {

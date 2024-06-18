@@ -21,19 +21,20 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 
 export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
-
   const targetNetwork = customNetwork || network;
+  const { data: CoreProxy } = useCoreProxy(targetNetwork);
 
   return useQuery({
     enabled: Boolean(targetNetwork),
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Pools'],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, CoreProxy?.address, 'Pools'],
     queryFn: async () => {
-      if (!CoreProxy) throw 'usePools is missing required data';
+      if (!CoreProxy) {
+        throw 'usePools is missing required data';
+      }
 
       const [prefferedPoolId, approvedPoolIds] = await Promise.all([
-        CoreProxy.callStatic.getPreferredPool(),
-        CoreProxy.callStatic.getApprovedPools(),
+        CoreProxy.getPreferredPool(),
+        CoreProxy.getApprovedPools(),
       ]);
 
       const incompletePools = [
