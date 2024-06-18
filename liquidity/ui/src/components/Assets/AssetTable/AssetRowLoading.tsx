@@ -68,19 +68,21 @@ export const AssetRowLoading = ({ final }: { final?: boolean }) => {
       </Td>
       <Td border="none">
         <Flex flexDirection="column">
-          <Button
-            variant="unstyled"
-            fontSize="0.75rem"
-            lineHeight="1rem"
-            height="1.75rem"
-            fontWeight={700}
-            borderWidth="1px"
-            borderColor="gray.900"
-            borderRadius="4px"
-            disabled
-          >
-            Withdraw
-          </Button>
+          <Skeleton height="1rem">
+            <Button
+              variant="unstyled"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              height="1.75rem"
+              fontWeight={700}
+              borderWidth="1px"
+              borderColor="gray.900"
+              borderRadius="4px"
+              disabled
+            >
+              Withdraw
+            </Button>
+          </Skeleton>
         </Flex>
       </Td>
     </Tr>

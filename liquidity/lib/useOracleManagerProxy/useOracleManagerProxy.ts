@@ -10,16 +10,21 @@ import {
 import { importOracleManagerProxy } from '@snx-v3/contracts';
 
 export function useOracleManagerProxy(customNetwork?: Network) {
-  const providerForChain = useProviderForChain(customNetwork);
-
   const { network } = useNetwork();
+  const providerForChain = useProviderForChain(customNetwork);
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const signerOrProvider = providerForChain || signer || provider;
   const withSigner = Boolean(signer);
 
+  const targetNetwork = customNetwork || network;
+
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'OracleManagerProxy', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'OracleManagerProxy',
+      { withSigner },
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importOracleManagerProxy(

@@ -9,6 +9,7 @@
     "@snx-v3/useCollateralTypes": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
     "@snx-v3/useSpotMarketProxy": "workspace:*",
-    "@tanstack/react-query": "^5.8.3"
+    "@tanstack/react-query": "^5.8.3",
+    "react": "^18.2.0"
   }
 }

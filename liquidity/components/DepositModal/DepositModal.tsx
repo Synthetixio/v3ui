@@ -244,7 +244,7 @@ export const DepositModal: DepositModalProps = ({
       ? isBaseAndromeda(network?.id, network?.preset)
         ? //Base USDC is 6 decimals
           utils.parseUnits(collateralNeeded.toString(), 6)
-        : collateralNeeded.toBN()
+        : utils.parseUnits(collateralNeeded.toString(), collateralType?.decimals)
       : 0,
     spender: isBaseAndromeda(network?.id, network?.preset)
       ? SpotProxy?.address
@@ -273,6 +273,7 @@ export const DepositModal: DepositModalProps = ({
     collateralChange,
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
+    decimals: Number(collateralType?.decimals) || 18,
   });
 
   const { exec: depositBaseAndromeda } = useDepositBaseAndromeda({

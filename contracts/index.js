@@ -9,3 +9,4 @@ export * from './importers/importSpotMarketProxy';
 export * from './importers/importPerpsMarketProxy';
 export * from './importers/importPerpsAccountProxy';
 export * from './importers/importExtras';
+export * from './importers/importPythERC7412Wrapper';

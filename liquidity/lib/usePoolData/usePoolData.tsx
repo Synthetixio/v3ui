@@ -72,7 +72,7 @@ export const PoolSchema = z.object({
 
 export type PoolType = z.infer<typeof PoolSchema>;
 
-const PoolDataResultSchema = z.object({
+export const PoolDataResultSchema = z.object({
   data: z.object({
     pool: z.union([PoolSchema, z.null()]),
   }),
@@ -136,17 +136,19 @@ const getPoolData = async (chainName: string, id: string) => {
     const { message } = json.errors[0];
     throw new Error(message);
   }
+
   return PoolDataResultSchema.parse(json);
 };
 
-export const usePoolData = (poolId?: string) => {
+export const usePoolData = (poolId?: string, networkName?: string) => {
   const { network } = useNetwork();
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'PoolData', { pool: poolId }],
     queryFn: async () => {
-      if (!poolId || !network) throw Error('No poolId or network');
-      const poolData = await getPoolData(network?.name, poolId);
+      const name = networkName || network?.name;
+      if (!poolId || !name) throw Error('No poolId or networkId');
+      const poolData = await getPoolData(name, poolId);
 
       if (!poolData.data.pool) {
         throw Error(`Pool ${poolId} not found`);
