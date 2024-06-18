@@ -7,6 +7,7 @@
     "@pythnetwork/pyth-evm-js": "^1.42.0",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/contracts": "workspace:*",
+    "@snx-v3/format": "workspace:*",
     "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/usePoolsList": "workspace:*",
