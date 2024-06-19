@@ -12,6 +12,7 @@ export const useGetBorrow = ({
   collateralTypeAddress?: string;
 }) => {
   const { network } = useNetwork();
+
   return useQuery({
     enabled: !isBaseAndromeda(network?.id, network?.preset),
     queryKey: ['useGetBorrow', accountId, poolId, collateralTypeAddress],

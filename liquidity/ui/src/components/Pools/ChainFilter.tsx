@@ -8,8 +8,9 @@ interface ChainFilterProps {
   dispatch: Dispatch<PoolsFilterAction>;
 }
 
+// TODO: Remove filter when mainnet and optimism are supported
 const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
-  ({ id }) => id !== 10
+  ({ id }) => id !== 10 && id !== 1
 );
 
 export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
