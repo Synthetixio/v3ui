@@ -10,6 +10,7 @@ interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
   apr?: number;
+  stablecoinSymbol?: string;
 }
 [];
 
@@ -22,14 +23,17 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
+  stablecoinSymbol,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType.tokenAddress,
     accountId,
     poolId,
   });
+
   const { data: borrow } = useGetBorrow({
     accountId,
     poolId,
@@ -37,6 +41,7 @@ export function PositionRow({
   });
 
   const parsedCRatio = collateralType.issuanceRatioD18.gt(cRatio) ? 'MANAGE' : 'HEALTHY';
+
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
@@ -103,7 +108,7 @@ export function PositionRow({
                   {parseFloat(
                     utils.formatEther(borrow?.position?.net_issuance.toString() || '0')
                   ).toFixed(2)}{' '}
-                  snxUSD
+                  {stablecoinSymbol}
                 </Text>
               </Flex>
             </Fade>
