@@ -40,7 +40,8 @@ export function usePool(networkId: number, poolId: string) {
   };
 }
 
-const supportedNetworks = [1, 8453, 42161];
+// TODO: Add 1 and 10 to support Mainnet and Optimism
+const supportedNetworks = [8453, 42161];
 
 async function fetchTorosPool() {
   return fetch('https://api-v2.dhedge.org/graphql', {

@@ -18,6 +18,7 @@ export const Pool = () => {
     ?.map((info) => info.pool.registered_distributors)
     .flat()
     ?.filter((item, pos, self) => self.findIndex((d) => d.id === item.id) === pos);
+
   const collateralTypes = poolInfo?.map((info) => info.collateral_type);
 
   const network = NETWORKS.find((n) => n.id === Number(networkId));
