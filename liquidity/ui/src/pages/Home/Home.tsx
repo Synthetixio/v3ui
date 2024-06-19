@@ -1,11 +1,17 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { Alert, Button, Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
 import { AssetsList, PositionsList, StatsList } from '../../components';
 import { AccountBanner } from '../../components/AccountBanner';
 import { useWallet } from '@snx-v3/useBlockchain';
 
+import { useSearchParams } from 'react-router-dom';
+
+import { MigrateModal } from '../../components/MigrateModal';
+
 export function Home() {
   const { activeWallet } = useWallet();
+
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <>
       <Helmet>
@@ -25,10 +31,18 @@ export function Home() {
         >
           Dashboard
         </Heading>
+        <Alert>
+          Need to migrate from Synthetix V2x?{' '}
+          <Button onClick={() => setSearchParams({ v2xmigrate: 'true' })}>Start Migration</Button>
+        </Alert>
         <StatsList />
         <AssetsList />
         <PositionsList />
       </Flex>
+      <MigrateModal
+        isOpen={searchParams.has('v2xmigrate')}
+        setIsOpen={(isOpen) => setSearchParams(isOpen ? { v2xmigrate: 'true' } : {})}
+      />
     </>
   );
 }

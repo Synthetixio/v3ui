@@ -1,18 +1,16 @@
 import { Box, Container, Flex, Link, useDisclosure } from '@chakra-ui/react';
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkController } from './NetworkController';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Balance } from '../../components';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
-import { MigrateModal } from '../../pages/Migrate/MigrateModal';
 
 export default function Header() {
   const { onClose } = useDisclosure();
-  const [isMigrateModalOpen, setIsMigrateModalOpen] = useState<boolean>(false);
   const location = useLocation();
   const { network } = useNetwork();
 
@@ -100,7 +98,6 @@ export default function Header() {
           </Flex>
         </Container>
       </Flex>
-      <MigrateModal isOpen={isMigrateModalOpen} setIsOpen={setIsMigrateModalOpen} />
     </>
   );
 }

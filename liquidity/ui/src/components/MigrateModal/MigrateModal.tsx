@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Modal,
   ModalBody,
@@ -22,13 +22,15 @@ export const MigrateModal: FC<{ isOpen: boolean; setIsOpen: (isOpen: boolean) =>
     send({ type: Events.RESET });
   };
 
+  const StepComponent = (Object.values(step.meta)[0] as any).component;
+
   return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+    <Modal size="md" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white">
+      <ModalContent bg="navy.900" borderColor="yellow" color="white">
         <ModalHeader>Migrate to Synthetix V3</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>{step.meta.component({ onClose, step, send })}</ModalBody>
+        <ModalCloseButton color="gray" />
+        <ModalBody>{StepComponent && StepComponent({ onClose, step, send })}</ModalBody>
       </ModalContent>
     </Modal>
   );

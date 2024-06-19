@@ -11,41 +11,26 @@ function StepSummary({
   send: (event: MigrateEvents) => void;
 }) {
   return (
-    <VStack spacing={6} p={6} align="start">
-      <Heading size="md">Migrate to Synthetix V3</Heading>
-
+    <VStack spacing={6} align="start">
       <Heading size="sm">Summary of your migration</Heading>
 
-      <Box p={4} borderWidth="1px" borderRadius="md" borderColor={BORDER_COLOR} width="100%">
+      <Box p={4} bg="gray" borderWidth="1px" borderRadius="md" width="100%">
         <HStack justifyContent="space-between">
-          <Text>
-            Your SNX Collateral will not appear on your wallet anymore as it will be deposited in
-            your atio (300%), your account will Account. You can see the details on your Dashboard.
-          </Text>
           <Tag colorScheme="green">420% HEALTHY</Tag>
         </HStack>
+      </Box>
 
+      <Text>
+        Warning: if your c-ratio is below V3 liquidation ratio (300%), your account will be
+        liquidated during the migration. We recommend to commence this migration only if you have a
+        healthy c-ratio.
+      </Text>
+
+      <Box>
         <VStack align="stretch" spacing={4} mt={4}>
           <HStack justifyContent="space-between">
-            <Text>SNX Collateral</Text>
-            <HStack>
-              <Text>Balance</Text>
-              <Text>10,000.00 ($20,000.00)</Text>
-            </HStack>
-            <HStack>
-              <Text>Escrowed</Text>
-              <Text>00</Text>
-            </HStack>
-          </HStack>
-
-          <Text fontSize="sm">
-            Escrowed SNX will be locked in the V3 system until the escrowed date. It can still be
-            delegated but not withdrawn.
-          </Text>
-
-          <HStack justifyContent="space-between">
             <VStack align="start">
-              <Text>Debt</Text>
+              <Text>SNX Collateral</Text>
               <Text>
                 Your debt amount will be the same on V3. Debt is however now determined by the
                 collateral deposited.
@@ -68,12 +53,12 @@ function StepSummary({
         </HStack>
       </Box>
 
-      <Box display="flex" justifyContent="space-between" width="100%">
-        <Button colorScheme="blue">Migrate</Button>
-        <Button variant="link" onClick={onClose}>
-          Cancel
-        </Button>
-      </Box>
+      <Button width="100%" onClick={() => {}}>
+        Migrate
+      </Button>
+      <Button variant="outline" colorScheme="gray" onClick={onClose} width="100%">
+        Cancel
+      </Button>
     </VStack>
   );
 }
