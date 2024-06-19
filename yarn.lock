@@ -6386,6 +6386,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
