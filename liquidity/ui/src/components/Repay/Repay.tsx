@@ -86,10 +86,12 @@ export const RepayUi: FC<{
                 label={
                   <Flex direction="column" alignItems="flex-start">
                     <Flex justifyContent="space-between" width="full" gap={1}>
-                      Wallet Balance: <Amount value={snxUSDBalance} suffix=" sUSD" />
+                      Wallet Balance:{' '}
+                      <Amount value={snxUSDBalance} suffix={` ${stablecoin?.symbol}`} />
                     </Flex>
                     <Flex justifyContent="space-between" width="full" gap={1}>
-                      Collateral Balance: <Amount value={availableUSDCollateral} suffix=" sUSD" />
+                      Collateral Balance:{' '}
+                      <Amount value={availableUSDCollateral} suffix={` ${stablecoin?.symbol}`} />
                     </Flex>
                   </Flex>
                 }
