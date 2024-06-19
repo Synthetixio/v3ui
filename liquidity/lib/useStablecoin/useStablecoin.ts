@@ -1,25 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useTokenInfo } from '@snx-v3/useTokenInfo';
 
 export function useStablecoin() {
   const { network } = useNetwork();
-  const { data: USDProxy } = useUSDProxy();
+
+  const { data: USDTokens } = useGetUSDTokens();
+  const { data: stablecoinInfo } = useTokenInfo(USDTokens?.snxUSD);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'stablecoin', USDProxy?.address],
+    queryKey: [`${network?.id}-${network?.preset}`, 'stablecoin', USDTokens?.snxUSD],
     queryFn: async function () {
-      const [symbol, name] = await Promise.all([
-        USDProxy?.callStatic?.symbol(),
-        USDProxy?.callStatic?.name(),
-      ]);
+      if (!stablecoinInfo) {
+        throw new Error('useStablecoin requires more information');
+      }
+
+      const { name, symbol } = stablecoinInfo;
 
       return {
         symbol,
         name,
-        address: USDProxy?.address,
+        address: USDTokens?.snxUSD,
       };
     },
-    enabled: Boolean(USDProxy),
+    enabled: Boolean(USDTokens?.snxUSD && stablecoinInfo),
   });
 }
