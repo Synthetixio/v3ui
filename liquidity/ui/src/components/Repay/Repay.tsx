@@ -13,7 +13,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { RepayAllDebt } from './';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { useStablecoin } from '../../../../lib/useStablecoin';
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 export const RepayUi: FC<{
   debtChange: Wei;

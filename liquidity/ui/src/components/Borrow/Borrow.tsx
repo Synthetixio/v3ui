@@ -13,7 +13,7 @@ import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
-import { useStablecoin } from '../../../../lib/useStablecoin';
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 const BorrowUi: FC<{
   debtChange: Wei;
