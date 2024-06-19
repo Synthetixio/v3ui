@@ -6659,7 +6659,8 @@ __metadata:
   resolution: "@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useUSDProxy": "workspace:*"
+    "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useTokenInfo": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
