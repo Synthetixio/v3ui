@@ -127,12 +127,7 @@ export const useWithdrawBaseAndromeda = ({
           allCalls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(
-          network,
-          [...allCalls],
-          'useWithdrawBase',
-          CoreProxy.interface
-        );
+        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdrawBase');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

@@ -79,12 +79,15 @@ export function useBurnEvents() {
           {} as Record<string, number>
         );
 
+      const totalBurned = events.reduce((cur, prev) => cur + prev.snxAmount, 0);
+      const currentSupply = Number(utils.formatEther(totalSupply)) - totalBurned;
+
       return {
         totalBurns: events.length,
         groupedByMonths,
         groupedByLast30Days,
         supplyChange7Days,
-        totalSupply: Number(utils.formatEther(totalSupply)).toLocaleString('en-US', {
+        totalSupply: currentSupply.toLocaleString('en-US', {
           maximumFractionDigits: 2,
         }),
         SNXPrice:

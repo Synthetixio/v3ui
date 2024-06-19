@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useGetNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
+import { importOracleManagerProxy } from '@snx-v3/contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 import { BuyBack } from '../mutations/useSellSNX';
@@ -15,9 +15,10 @@ export function useSNXPrice() {
     enabled: Boolean(baseProvider && baseNetwork?.id && baseNetwork?.preset),
     queryKey: ['snx-price'],
     queryFn: async () => {
-      if (!baseNetwork || !baseNetwork?.id || !baseNetwork?.preset) throw new Error('OMFG');
+      if (!baseNetwork || !baseNetwork?.id || !baseNetwork?.preset)
+        throw new Error('useSNX Price is not enabled');
       const { address, abi } = await importOracleManagerProxy(baseNetwork.id, baseNetwork.preset);
-      const OracleManagerProxy = new Contract(address, abi, baseProvider) as OracleManagerProxyType;
+      const OracleManagerProxy = new Contract(address, abi, baseProvider);
 
       const price = [
         await OracleManagerProxy.populateTransaction.process(

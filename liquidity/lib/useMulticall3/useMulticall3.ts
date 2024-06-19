@@ -7,26 +7,29 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { importMulticall3, Multicall3Type } from '@synthetixio/v3-contracts';
+import { importMulticall3 } from '@snx-v3/contracts';
 
 export function useMulticall3(customNetwork?: Network) {
-  const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
+  const providerForChain = useProviderForChain(customNetwork);
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const signerOrProvider = signer || provider || providerForChain;
   const withSigner = Boolean(signer);
 
+  const targetNetwork = customNetwork || network;
+
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'Multicall3', { withSigner }],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Multicall3', { withSigner }],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importMulticall3(customNetwork.id, customNetwork.preset);
-        return new Contract(address, abi, providerForChain) as Multicall3Type;
+        return new Contract(address, abi, providerForChain);
       }
+
       if (!network || !signerOrProvider) throw new Error('Network or signer not available');
       const { address, abi } = await importMulticall3(network.id, network.preset);
-      return new Contract(address, abi, signerOrProvider) as Multicall3Type;
+      return new Contract(address, abi, signerOrProvider);
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,

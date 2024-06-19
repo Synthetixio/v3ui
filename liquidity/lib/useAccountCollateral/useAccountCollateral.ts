@@ -1,13 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { CoreProxyType } from '@synthetixio/v3-contracts';
-import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
-import { Wei, wei } from '@synthetixio/wei';
-import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { erc7412Call } from '@snx-v3/withERC7412';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
+import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { erc7412Call } from '@snx-v3/withERC7412';
+import { useTokenInfo } from '@snx-v3/useTokenInfo';
+import { Wei, wei } from '@synthetixio/wei';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
 export type AccountCollateralType = {
   tokenAddress: string;
@@ -26,7 +27,7 @@ export const loadAccountCollateral = async ({
 }: {
   accountId: string;
   tokenAddresses: string[];
-  CoreProxy: CoreProxyType;
+  CoreProxy: ethers.Contract;
 }) => {
   const callsP = tokenAddresses.flatMap((tokenAddress) => [
     CoreProxy.populateTransaction.getAccountAvailableCollateral(accountId, tokenAddress),
@@ -53,6 +54,7 @@ export const loadAccountCollateral = async ({
         totalLocked: wei(totalLocked),
         symbol: '',
         displaySymbol: '',
+        decimals: '',
       };
     });
   };
@@ -70,26 +72,50 @@ export function useAccountCollateral({
 }) {
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
-  const collateralTypes = useCollateralTypes(includeDelegationOff);
+  const { data: collateralTypes } = useCollateralTypes(includeDelegationOff);
   const { data: USDTokens } = useGetUSDTokens();
 
   const provider = useDefaultProvider();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
+
+  const { data: stablecoinInfo } = useTokenInfo(USDTokens?.snxUSD);
 
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
-      { tokens: JSON.stringify(USDTokens), priceUpdateTx: stringToHash(priceUpdateTx?.data) },
+      { stablecoin: USDTokens?.snxUSD },
+      { priceUpdateTx: stringToHash(priceUpdateTx?.data) },
     ],
-    enabled: Boolean(CoreProxy && accountId && USDTokens?.snxUSD),
+    enabled: Boolean(
+      network &&
+        provider &&
+        CoreProxy &&
+        accountId &&
+        collateralTypes &&
+        collateralTypes.length > 0 &&
+        stablecoinInfo
+    ),
     queryFn: async function () {
-      if (!CoreProxy || !accountId || !network || !provider || !USDTokens || !USDTokens?.snxUSD) {
-        throw 'useAccountCollateral should be disabled';
+      if (
+        !(
+          network &&
+          provider &&
+          CoreProxy &&
+          accountId &&
+          collateralTypes &&
+          collateralTypes.length > 0 &&
+          stablecoinInfo
+        )
+      ) {
+        throw new Error('OMG');
       }
-      const tokenAddresses =
-        collateralTypes.data?.map((c) => c.tokenAddress).concat(USDTokens.snxUSD) ?? [];
+
+      const tokenAddresses = collateralTypes
+        .map((c) => c.tokenAddress)
+        .concat([stablecoinInfo.tokenAddress]);
+
       const { calls, decoder } = await loadAccountCollateral({
         accountId,
         tokenAddresses,
@@ -99,17 +125,24 @@ export function useAccountCollateral({
       if (priceUpdateTx) {
         allCalls.unshift(priceUpdateTx as any);
       }
+      const data = await erc7412Call(network, provider, allCalls, decoder, 'useAccountCollateral');
 
-      const data = await erc7412Call(network, provider, calls, decoder, 'useAccountCollateral');
-
-      return data.map((x) => ({
-        ...x,
-        symbol:
-          collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.symbol ?? 'sUSD',
-        displaySymbol:
-          collateralTypes.data?.find((c) => c.tokenAddress === x.tokenAddress)?.displaySymbol ??
-          'snxUSD',
-      }));
+      return data.map((x) => {
+        if (`${stablecoinInfo.tokenAddress}`.toLowerCase() === `${x.tokenAddress}`.toLowerCase()) {
+          return Object.assign(x, {
+            symbol: stablecoinInfo.symbol,
+            displaySymbol: stablecoinInfo.name,
+          });
+        }
+        const collateralType = collateralTypes.find(
+          (c) => `${c.tokenAddress}`.toLowerCase() === `${x.tokenAddress}`.toLowerCase()
+        );
+        return Object.assign(x, {
+          symbol: collateralType?.symbol ?? '',
+          displaySymbol: collateralType?.displaySymbol ?? '',
+          decimals: collateralType?.decimals ?? '18',
+        });
+      });
     },
   });
 }

@@ -19,6 +19,8 @@
     "@snx-v3/useGetUSDTokens": "workspace:*",
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/useRepay": "workspace:*",
+    "@snx-v3/useRepayBaseAndromeda": "workspace:*",
+    "@snx-v3/useSpotMarketProxy": "workspace:*",
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useUSDProxy": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

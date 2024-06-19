@@ -6,21 +6,32 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 // import gnosisModule from '@web3-onboard/gnosis';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
-
-// LP App Supported Networks
-// MAINNET, SEPOLIA, BASE, BASE SEPOLIA, Arbitrum
-const supportedNetworks = [1, 11155111, 8453, 84532, 421614, 42161];
+import type { ChainWithDecimalId } from '@web3-onboard/common';
 
 // Filter networks to only supported ones
-export const networks = NETWORKS.filter((n) => supportedNetworks.includes(n.id)).map((n) => ({
-  id: n.id,
-  token: n.token,
-  label: n.label,
-  rpcUrl: n.rpcUrl(),
-}));
+export const chains: ChainWithDecimalId[] = Object.values(
+  NETWORKS.reduce((result, network) => {
+    if (!network.isSupported) {
+      return result;
+    }
+    if (network.id in result) {
+      // We cannot have duplicate chains, but we can have multiple deployments per chain
+      return result;
+    }
+    return Object.assign(result, {
+      [network.id]: {
+        id: network.id,
+        token: network.token,
+        label: network.label,
+        rpcUrl: network.rpcUrl(),
+      },
+    });
+  }, {})
+);
 
 export const onboard = init({
   wallets: [
+    coinbaseModule(),
     injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
     trezorModule({
       appUrl: 'https://liquidity.synthetix.eth.limo',
@@ -36,9 +47,8 @@ export const onboard = init({
       dappUrl: 'liquidity.synthetix.eth.limo',
     }),
     // gnosisModule(),
-    coinbaseModule(),
   ],
-  chains: [...networks],
+  chains,
   appMetadata: {
     ...appMetadata,
     name: 'Synthetix Liquidity',

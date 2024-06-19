@@ -7,30 +7,35 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
+import { importOracleManagerProxy } from '@snx-v3/contracts';
 
 export function useOracleManagerProxy(customNetwork?: Network) {
-  const providerForChain = useProviderForChain(customNetwork);
-
   const { network } = useNetwork();
+  const providerForChain = useProviderForChain(customNetwork);
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const signerOrProvider = providerForChain || signer || provider;
   const withSigner = Boolean(signer);
 
+  const targetNetwork = customNetwork || network;
+
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'OracleManagerProxy', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'OracleManagerProxy',
+      { withSigner },
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importOracleManagerProxy(
           customNetwork.id,
           customNetwork.preset
         );
-        return new Contract(address, abi, providerForChain) as OracleManagerProxyType;
+        return new Contract(address, abi, providerForChain);
       }
       if (!network || !signerOrProvider) throw new Error('Network or signer not available');
       const { address, abi } = await importOracleManagerProxy(network?.id, network?.preset);
-      return new Contract(address, abi, signerOrProvider) as OracleManagerProxyType;
+      return new Contract(address, abi, signerOrProvider);
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,

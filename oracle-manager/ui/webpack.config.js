@@ -30,6 +30,10 @@ const babelRule = {
     /contracts/,
     /liquidity\/lib/,
     /liquidity\/components/,
+
+    // fixes for borked 3rd party bundles
+    /@safe-global/,
+    /@web3-onboard/,
   ],
   resolve: {
     fullySpecified: false,
@@ -145,13 +149,6 @@ module.exports = {
         process: 'process/browser.js',
       }),
     ])
-    .concat([
-      new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-contracts$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-contracts/package.json`)), 'src')
-      ),
-    ])
-
     .concat(isProd ? [] : isTest ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })])
     .concat(
       process.env.GENERATE_BUNDLE_REPORT === 'true'
@@ -174,9 +171,6 @@ module.exports = {
     ),
 
   resolve: {
-    alias: {
-      '@synthetixio/v3-contracts/build': '@synthetixio/v3-contracts/src',
-    },
     fallback: {
       buffer: require.resolve('buffer'),
       stream: require.resolve('stream-browserify'),

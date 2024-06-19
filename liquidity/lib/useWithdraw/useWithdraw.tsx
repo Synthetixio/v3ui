@@ -62,7 +62,7 @@ export const useWithdraw = ({
         ]);
         const allCalls = collateralPriceCalls.concat(populatedTxn);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, allCalls, 'useWithdraw');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

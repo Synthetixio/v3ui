@@ -122,7 +122,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
           const prices = priceDecoder(encoded.slice(0, priceCalls.length));
           const pricesByAddress = keyBy(
             'address',
-
             Array.isArray(prices)
               ? prices.map((price, i) => ({
                   price,
@@ -162,9 +161,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         'useLiquidityPositions'
       );
     },
-    enabled: Boolean(
-      collateralPriceUpdates && CoreProxy && collateralTypes?.length && accountId && pools?.length
-    ),
+    enabled: Boolean(CoreProxy && collateralTypes?.length && accountId && pools?.length),
   });
 
   return {

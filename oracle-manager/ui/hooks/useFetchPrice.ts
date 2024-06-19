@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useGetNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { importOracleManagerProxy, OracleManagerProxyType } from '@synthetixio/v3-contracts';
+import { importOracleManagerProxy } from '@snx-v3/contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
 
@@ -24,11 +24,7 @@ export function useFetchPrice(nodeId: string, networkId: number) {
             baseNetwork.preset
           );
 
-          const OracleManagerProxy = new Contract(
-            address,
-            abi,
-            baseProvider
-          ) as OracleManagerProxyType;
+          const OracleManagerProxy = new Contract(address, abi, baseProvider);
 
           const price = [await OracleManagerProxy.populateTransaction.process(nodeId)];
 

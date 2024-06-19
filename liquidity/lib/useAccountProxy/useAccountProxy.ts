@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
-import { AccountProxyType, importAccountProxy } from '@synthetixio/v3-contracts';
+import { importAccountProxy } from '@snx-v3/contracts';
 
 export function useAccountProxy() {
   const { network } = useNetwork();
@@ -15,7 +15,7 @@ export function useAccountProxy() {
     queryFn: async function () {
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
       const { address, abi } = await importAccountProxy(network.id, network?.preset);
-      return new Contract(address, abi, signerOrProvider) as AccountProxyType;
+      return new Contract(address, abi, signerOrProvider);
     },
     enabled: Boolean(signerOrProvider),
     staleTime: Infinity,

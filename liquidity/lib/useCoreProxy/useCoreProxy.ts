@@ -7,35 +7,32 @@ import {
   useProviderForChain,
   useSigner,
 } from '@snx-v3/useBlockchain';
-import { CoreProxyType, importCoreProxy } from '@synthetixio/v3-contracts';
+import { importCoreProxy } from '@snx-v3/contracts';
 
-export function useCoreProxy(customNetwork?: Network) {
+export function useCoreProxy(customNetwork?: Network | null) {
   const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
-  const signerOrProvider = signer || provider;
+  const targetNetwork = customNetwork || network;
 
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [
-      `${network?.id}-${network?.preset}`,
-      'CoreProxy',
-      { withSigner },
-      { providerForChain },
-    ],
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'CoreProxy', { withSigner }],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importCoreProxy(customNetwork.id, customNetwork.preset);
-        return new Contract(address, abi, providerForChain) as CoreProxyType;
+        return new Contract(address, abi, providerForChain);
       }
-      if (!signerOrProvider || !network) throw new Error('Should be disabled');
+
+      const signerOrProvider = signer || provider;
+      if (!signerOrProvider || !network) throw new Error('Should be disabled CP');
 
       const { address, abi } = await importCoreProxy(network?.id, network?.preset);
-      return new Contract(address, abi, signerOrProvider) as CoreProxyType;
+      return new Contract(address, abi, signerOrProvider);
     },
-    enabled: Boolean(signerOrProvider),
+    enabled: Boolean(signer || provider || providerForChain),
     staleTime: Infinity,
   });
 }

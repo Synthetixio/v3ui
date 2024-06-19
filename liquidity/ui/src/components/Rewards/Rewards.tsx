@@ -29,23 +29,23 @@ export const Rewards = ({
   readOnly = false,
   ...props
 }: RewardsDistributorsInterface) => {
-  const empty = rewards && rewards.length === 0;
+  const hasRewards = rewards && rewards.length > 0;
 
   return (
     <BorderBox bg="navy.700" py={4} px={4} flexDir="column" {...props}>
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
         REWARDS
       </Text>
-      <TableContainer width="100%" mb="8px">
-        {empty ? (
-          <Fade in>
-            <Flex mt="20px" mb="8px" justifyContent="center">
-              <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
-                No Rewards Available
-              </Text>
-            </Flex>
-          </Fade>
-        ) : (
+      {!isLoading && !hasRewards ? (
+        <Fade in>
+          <Flex mt="20px" mb="8px" justifyContent="center">
+            <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs">
+              No Rewards Available
+            </Text>
+          </Flex>
+        </Fade>
+      ) : (
+        <TableContainer width="100%" mb="8px">
           <Table>
             <Thead>
               <Tr borderBottom="1px solid #2D2D38">
@@ -106,7 +106,6 @@ export const Rewards = ({
                     symbol={item.symbol}
                     claimableAmount={item.claimableAmount.toNumber()}
                     frequency={item.duration}
-                    projectedAmount={item.rate / item.duration || 0}
                     lifetimeClaimed={item.lifetimeClaimed}
                     hasClaimed={item.lifetimeClaimed > 0}
                     address={item.distributorAddress}
@@ -117,8 +116,8 @@ export const Rewards = ({
               </Tbody>
             )}
           </Table>
-        )}
-      </TableContainer>
+        </TableContainer>
+      )}
     </BorderBox>
   );
 };

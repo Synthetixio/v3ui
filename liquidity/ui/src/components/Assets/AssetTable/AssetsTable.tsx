@@ -100,6 +100,7 @@ export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps)
               <>
                 {assets?.map((asset, index) => {
                   const { collateral, balance, price } = asset;
+
                   return (
                     <AssetsRow
                       key={collateral.tokenAddress

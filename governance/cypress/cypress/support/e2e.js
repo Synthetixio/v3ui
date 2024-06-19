@@ -14,7 +14,15 @@ beforeEach(() => {
     return subgraph(req);
   }).as('subgraph');
 
-  ['sepolia'].forEach((networkName) => {
+  [
+    'mainnet',
+    'optimism-mainnet',
+    'base-mainnet',
+    'sepolia',
+    'base-sepolia',
+    'arbitrum-mainnet',
+    'arbitrum-sepolia',
+  ].forEach((networkName) => {
     cy.intercept(`https://${networkName}.infura.io/v3/*`, (req) => {
       req.url = 'http://127.0.0.1:8545';
       req.continue();
@@ -22,9 +30,11 @@ beforeEach(() => {
   });
 
   cy.on('window:before:load', async (win) => {
-    const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
-    const network = await provider.getNetwork();
-    win.localStorage.setItem('DEFAULT_NETWORK', `${network.chainId}-main`);
+    win.sessionStorage.setItem('TERMS_CONDITIONS_ACCEPTED', 'true');
+    win.localStorage.setItem(
+      'DEFAULT_NETWORK',
+      `${Cypress.env('CHAIN_ID')}-${Cypress.env('PRESET')}`
+    );
     win.localStorage.setItem('UNSAFE_IMPORT', 'true');
     win.localStorage.setItem('connectedWallets', '"MetaMask"');
     win.localStorage.setItem('CONTRACT_ERROR_OPEN', 'true');
@@ -39,15 +49,5 @@ Cypress.Commands.add('connectWallet', (namespace = 'wallet') => {
     win.ethereum = metamask({ privateKey, address });
   });
 
-  return cy
-    .wrap(wallet.connect(new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545')))
-    .as(namespace);
-});
-
-Cypress.Commands.add('assertValueCopiedToClipboard', (value) => {
-  cy.window().then((win) => {
-    win.navigator.clipboard.readText().then((text) => {
-      expect(text).to.eq(value);
-    });
-  });
+  return cy.wrap(wallet).as(namespace);
 });

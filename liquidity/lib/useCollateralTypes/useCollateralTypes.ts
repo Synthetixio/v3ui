@@ -1,8 +1,6 @@
-import { constants, utils } from 'ethers';
+import { constants, utils, Contract } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { CoreProxyType, Multicall3Type } from '@synthetixio/v3-contracts';
 import { z } from 'zod';
-import { useMemo } from 'react';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
@@ -24,6 +22,7 @@ const CollateralTypeSchema = CollateralConfigurationSchema.extend({
   symbol: z.string(),
   displaySymbol: z.string(),
   name: z.string(),
+  decimals: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
@@ -33,13 +32,14 @@ const SymbolSchema = z.string();
 const ERC20Interface = new utils.Interface([
   'function symbol() view returns (string)',
   'function name() view returns (string)',
+  'function decimals() view returns (uint8)',
 ]);
 
 async function loadSymbols({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -58,7 +58,7 @@ async function loadName({
   Multicall3,
   tokenConfigs,
 }: {
-  Multicall3: Multicall3Type;
+  Multicall3: Contract;
   tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
 }) {
   const calls = tokenConfigs.map((tokenConfig) => ({
@@ -73,15 +73,35 @@ async function loadName({
   );
 }
 
+async function loadDecimals({
+  Multicall3,
+  tokenConfigs,
+}: {
+  Multicall3: Contract;
+  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
+}) {
+  const calls = tokenConfigs.map((tokenConfig) => ({
+    target: tokenConfig.tokenAddress,
+    callData: ERC20Interface.encodeFunctionData('decimals'),
+  }));
+
+  const multicallResult = await Multicall3.callStatic.aggregate(calls);
+
+  return multicallResult.returnData.map(
+    (bytes: string) => ERC20Interface.decodeFunctionResult('decimals', bytes)[0]
+  );
+}
+
 async function loadCollateralTypes({
   CoreProxy,
   Multicall3,
 }: {
-  CoreProxy: CoreProxyType;
-  Multicall3: Multicall3Type;
+  CoreProxy: Contract;
+  Multicall3: Contract;
 }): Promise<CollateralType[]> {
   const hideDisabled = true;
-  const tokenConfigsRaw = await CoreProxy.getCollateralConfigurations(hideDisabled);
+  const tokenConfigsRaw: CollateralType[] =
+    await CoreProxy.getCollateralConfigurations(hideDisabled);
 
   const tokenConfigs = tokenConfigsRaw
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
@@ -90,6 +110,8 @@ async function loadCollateralTypes({
   const symbols = await loadSymbols({ Multicall3, tokenConfigs });
 
   const names = await loadName({ Multicall3, tokenConfigs });
+
+  const decimals = await loadDecimals({ Multicall3, tokenConfigs });
 
   return tokenConfigs.map((config, i) => ({
     depositingEnabled: config.depositingEnabled,
@@ -102,6 +124,7 @@ async function loadCollateralTypes({
     symbol: symbols[i],
     displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
     name: names[i],
+    decimals: decimals[i].toString(),
   }));
 }
 
@@ -110,14 +133,21 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: Multicall3 } = useMulticall3(customNetwork);
 
+  const targetNetwork = customNetwork || network;
+
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'CollateralTypes', { includeDelegationOff }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'CollateralTypes',
+      { includeDelegationOff },
+    ],
     queryFn: async () => {
       if (!CoreProxy || !Multicall3)
-        throw Error('Query should not be enabled when contracts missing');
-      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 })).map(
-        (collateralType) => {
-          const isBase = isBaseAndromeda(network?.id, network?.preset);
+        throw Error('useCollateralTypes should not be enabled when contracts missing');
+
+      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
+        .map((collateralType) => {
+          const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
           if (isBase && collateralType.symbol === 'sUSDC') {
             return {
               ...collateralType,
@@ -131,8 +161,8 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
             symbol: collateralType.symbol,
             displaySymbol: collateralType.symbol,
           };
-        }
-      );
+        })
+        .filter((collateralType) => collateralType.symbol !== 'snxUSD');
 
       if (includeDelegationOff) {
         return collateralTypes;
@@ -142,30 +172,34 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
       return collateralTypes.filter((collateralType) =>
         collateralType.minDelegationD18.lt(constants.MaxUint256)
-      );
+      ) as CollateralType[];
     },
     // one hour in ms
     staleTime: 60 * 60 * 1000,
     placeholderData: [],
-    enabled: Boolean(CoreProxy && Multicall3),
+    enabled: Boolean(targetNetwork && CoreProxy && Multicall3),
   });
 }
 
 export function useCollateralType(collateralSymbol?: string) {
-  const { data: collateralTypes, isLoading, error } = useCollateralTypes();
+  const { data: collateralTypes, isFetching: isCollateralTypesFetching } = useCollateralTypes();
+
+  function getCollateralType(collateralSymbol?: string) {
+    if (!collateralTypes || !collateralTypes?.length) {
+      return;
+    }
+
+    if (!collateralSymbol) {
+      return collateralTypes[0];
+    }
+
+    return collateralTypes?.find(
+      (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
+    );
+  }
+
   return {
-    isLoading,
-    error,
-    data: useMemo(() => {
-      if (!collateralTypes || !collateralTypes?.length) {
-        return;
-      }
-      if (!collateralSymbol) {
-        return collateralTypes[0];
-      }
-      return collateralTypes.find(
-        (collateral) => `${collateral.symbol}`.toLowerCase() === `${collateralSymbol}`.toLowerCase()
-      );
-    }, [collateralSymbol, collateralTypes]),
+    isFetching: isCollateralTypesFetching,
+    data: getCollateralType(collateralSymbol),
   };
 }

@@ -18,7 +18,8 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc --build --verbose",
+    "build:ts": "tsc --build --force",
+    "build": "yarn build:ts",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
     "prepublishOnly": "yarn build"
@@ -42,7 +43,7 @@
     "framer-motion": "^10.16.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5"
   },
   "browserslist": [
     "last 1 Chrome version",

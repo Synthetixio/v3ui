@@ -13,6 +13,7 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { parseUnits } from '@snx-v3/format';
 
 export const useDeposit = ({
   accountId,
@@ -22,6 +23,7 @@ export const useDeposit = ({
   collateralChange,
   currentCollateral,
   availableCollateral,
+  decimals,
 }: {
   accountId?: string;
   newAccountId: string;
@@ -30,6 +32,7 @@ export const useDeposit = ({
   currentCollateral: Wei;
   availableCollateral?: Wei;
   collateralChange: Wei;
+  decimals: number;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -57,7 +60,9 @@ export const useDeposit = ({
       ) {
         return;
       }
-      if (collateralChange.eq(0)) return;
+      if (collateralChange.eq(0)) {
+        return;
+      }
 
       try {
         dispatch({ type: 'prompting' });
@@ -69,14 +74,20 @@ export const useDeposit = ({
           ? undefined
           : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
 
+        const amount = collateralChange.sub(availableCollateral);
+        const collateralAmount = amount.gt(0)
+          ? parseUnits(amount.toString(), decimals)
+          : BigNumber.from(0);
+
         // optionally deposit if available collateral not enough
-        const deposit = availableCollateral.gte(collateralChange)
-          ? undefined
-          : CoreProxy.populateTransaction.deposit(
+        const deposit = collateralAmount.gt(0)
+          ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
               collateralTypeAddress,
-              collateralChange.sub(availableCollateral).toBN() // only deposit what's needed
-            );
+              collateralAmount // only deposit what's needed
+            )
+          : undefined;
+
         const delegate = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(id),
           BigNumber.from(poolId),
@@ -91,6 +102,7 @@ export const useDeposit = ({
         ).then((signedData) =>
           priceUpdatesToPopulatedTx(walletAddress, collateralPriceUpdates, signedData)
         );
+
         const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
           callsPromise,
           getGasPrice({ provider }),
@@ -98,7 +110,7 @@ export const useDeposit = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useDeposit', CoreProxy.interface);
+        const erc7412Tx = await withERC7412(network, allCalls, 'useDeposit');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,
