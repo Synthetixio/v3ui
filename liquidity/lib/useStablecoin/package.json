@@ -1,0 +1,12 @@
+{
+  "name": "@snx-v3/useStablecoin",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useGetUSDTokens": "workspace:*",
+    "@snx-v3/useTokenInfo": "workspace:*",
+    "@tanstack/react-query": "^5.8.3"
+  }
+}

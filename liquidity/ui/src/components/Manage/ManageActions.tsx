@@ -29,6 +29,7 @@ import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -83,6 +84,7 @@ const ManageActionUi: FC<{
 }> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
   const debt = Number(liquidityPosition?.debt?.toString());
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: stablecoin } = useStablecoin();
 
   return (
     <Box as="form" onSubmit={onSubmit}>
@@ -96,7 +98,7 @@ const ManageActionUi: FC<{
           action="repay"
           activeAction={manageAction}
         >
-          <DollarCircle mr={1} /> Repay {isBase ? '' : 'snxUSD'}
+          <DollarCircle mr={1} /> Repay {isBase ? '' : stablecoin?.symbol}
         </ActionButton>
       </Flex>
       <Flex mt={2} gap={2}>
@@ -109,7 +111,7 @@ const ManageActionUi: FC<{
           action="borrow"
           activeAction={manageAction}
         >
-          <BorrowIcon mr={1} /> {isBase ? 'Claim' : 'Borrow snxUSD'}
+          <BorrowIcon mr={1} /> {isBase ? 'Claim' : `Borrow ${stablecoin?.symbol}`}
         </ActionButton>
       </Flex>
       <Flex direction="column" mt={6}>

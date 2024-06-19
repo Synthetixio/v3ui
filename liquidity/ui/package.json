@@ -59,6 +59,7 @@
     "@snx-v3/usePoolData": "workspace:*",
     "@snx-v3/usePoolsList": "workspace:*",
     "@snx-v3/useRewards": "workspace:^",
+    "@snx-v3/useStablecoin": "workspace:*",
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useTransferAccountId": "workspace:*",
     "@snx-v3/useTransferableSynthetix": "workspace:*",

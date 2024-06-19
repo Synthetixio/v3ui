@@ -5806,6 +5806,7 @@ __metadata:
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
+    "@snx-v3/useStablecoin": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
@@ -6650,6 +6651,17 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useStablecoin@workspace:*, @snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useTokenInfo": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 

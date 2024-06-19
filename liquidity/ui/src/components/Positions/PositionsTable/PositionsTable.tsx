@@ -16,9 +16,19 @@ interface PositionsTableInterface {
   isLoading: boolean;
   positions?: LiquidityPositionType[];
   apr?: number;
+  stablecoinInfo?: {
+    symbol?: string;
+    name?: string;
+    address?: string;
+  };
 }
 
-export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInterface) => {
+export const PositionsTable = ({
+  isLoading,
+  positions,
+  apr,
+  stablecoinInfo,
+}: PositionsTableInterface) => {
   const { activeWallet } = useWallet();
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
@@ -79,6 +89,7 @@ export const PositionsTable = ({ isLoading, positions, apr }: PositionsTableInte
                       final={index === positions.length - 1}
                       isBase={isBase}
                       apr={apr}
+                      stablecoinSymbol={stablecoinInfo?.symbol}
                     />
                   ))}
                 </>

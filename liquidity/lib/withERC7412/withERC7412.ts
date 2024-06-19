@@ -181,7 +181,6 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider, netwo
     const AllErrors = await importAllErrors(network.id, network.preset);
     const AllErrorsInterface = new ethers.utils.Interface([...AllErrors.abi, ...PYTH_ERRORS]);
     const decodedError = AllErrorsInterface.parseError(errorData);
-    console.log(`decodedError`, decodedError);
     return decodedError;
     // return ERC7412ErrorSchema.parse(decodedError);
   } catch (parseError) {

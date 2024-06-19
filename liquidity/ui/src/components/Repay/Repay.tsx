@@ -13,6 +13,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { RepayAllDebt } from './';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -26,20 +27,21 @@ export const RepayUi: FC<{
     snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: stablecoin } = useStablecoin();
 
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        Repay {isBase ? 'USDC' : 'snxUSD'}
+        Repay {isBase ? 'USDC' : stablecoin?.symbol}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Pay down your position’s debt with {isBase ? 'USDC' : 'snxUSD'}. This decreases your debt
-        and increases your C-Ratio.
+        Pay down your position’s debt with {isBase ? 'USDC' : stablecoin?.symbol}. This decreases
+        your debt and increases your C-Ratio.
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
-          {isBase ? 'USDC' : 'snxUSD'}
+          {isBase ? 'USDC' : stablecoin?.symbol}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           {/* TODO Figure out why repay is causing issues */}
@@ -97,8 +99,8 @@ export const RepayUi: FC<{
                   <Text display="inline">
                     <Amount
                       value={totalUsdBalance}
-                      data-testid="available snxUSD balance"
-                      suffix=" sUSD"
+                      data-testid={`available ${stablecoin?.symbol} balance`}
+                      suffix={` ${stablecoin?.symbol}`}
                     />
                   </Text>
                 </Flex>
@@ -112,7 +114,7 @@ export const RepayUi: FC<{
         type="submit"
         isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >
-        Repay {isBase ? 'USDC' : 'snxUSD'}
+        Repay {isBase ? 'USDC' : stablecoin?.symbol}
       </Button>
     </Flex>
   );
