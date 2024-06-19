@@ -139,11 +139,19 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     ml="2"
                     fontSize="12px"
                     onClick={() => {
-                      const balance = new Wei(contractBalance, 18);
-                      const snxAmount = balance.mul(0.98).div(SNXPrice);
-
-                      setAmount(snxAmount);
-                      setReceivingUSDCAmount(balance.toNumber());
+                      if (SNXPrice && snxBalance) {
+                        const balance = new Wei(contractBalance, 18);
+                        const snxAmount = balance.mul(0.98).div(SNXPrice);
+                        if (snxAmount.gt(snxBalance)) {
+                          setAmount(snxBalance);
+                          setReceivingUSDCAmount(
+                            snxBalance.mul(SNXPrice.add(SNXPrice.mul(0.01))).toNumber() || 0
+                          );
+                        } else {
+                          setAmount(snxAmount);
+                          setReceivingUSDCAmount(balance.toNumber());
+                        }
+                      }
                     }}
                   >
                     Max
