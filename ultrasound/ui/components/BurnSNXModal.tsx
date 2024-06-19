@@ -141,8 +141,11 @@ export function BurnSNXModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     onClick={() => {
                       const balance = new Wei(contractBalance, 18);
                       const snxAmount = balance.mul(0.98).div(SNXPrice);
-
-                      setAmount(snxAmount);
+                      if (snxAmount.gt(snxBalance)) {
+                        setAmount(snxBalance);
+                      } else {
+                        setAmount(snxAmount);
+                      }
                       setReceivingUSDCAmount(balance.toNumber());
                     }}
                   >
