@@ -124,6 +124,9 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         throw 'useOfflinePrices is missing required data';
       }
 
+      const stables = ['sUSDC', 'USDC'];
+      const filteredCollaterals = collaterals.filter((item) => !stables.includes(item.symbol));
+
       const returnData: { symbol: string; price: BigNumberish }[] = [
         {
           symbol: 'sUSDC',
@@ -135,16 +138,12 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         },
       ];
 
-      const filteredCollaterals = collaterals.filter(
-        (collateral) => !collateral.symbol.includes('sUSDC')
-      );
-
       if (!filteredCollaterals.length) {
         return returnData;
       }
 
       const pythIds = await getPythFeedIdsFromCollateralList(
-        collaterals.map((collateral) => collateral.symbol)
+        filteredCollaterals.map((collateral) => collateral.symbol)
       );
 
       const prices = await priceService.getLatestPriceFeeds(
@@ -155,7 +154,7 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         const price = item.getPriceUnchecked();
 
         returnData.push({
-          symbol: collaterals[index].symbol,
+          symbol: filteredCollaterals[index].symbol,
           price: parseUnits(price.price, 18 + price.expo),
         });
       });

@@ -8,6 +8,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { CollateralIcon } from '@snx-v3/icons';
 import { useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
+import { BigNumberish } from 'ethers';
 
 export interface PoolCardProps {
   pool: {
@@ -23,13 +24,24 @@ export interface PoolCardProps {
     symbol: string;
     total_amount_deposited: string;
   }[];
+  collateralPrices?: {
+    symbol: string;
+    price: BigNumberish;
+  }[];
   apr: {
     combinedApr: number;
     cumulativePnl: number;
   };
 }
 
-export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: PoolCardProps) => {
+export const PoolCard = ({
+  pool,
+  network,
+  collaterals,
+  apr,
+  collateralTypes,
+  collateralPrices,
+}: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
 
@@ -37,8 +49,10 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
   const { connect } = useWallet();
 
   const vaultTVL = collateralTypes.reduce((acc, type) => {
+    const price = wei(collateralPrices?.find((price) => price.symbol === type.symbol)?.price || 0);
     const amount = wei(type.total_amount_deposited, type.decimals, true);
-    return acc.add(amount);
+    const value = price.mul(amount);
+    return acc.add(value);
   }, ZEROWEI);
 
   const sanitizedCollateralTypes = collateralTypes.map((collateralType) => {
@@ -129,7 +143,7 @@ export const PoolCard = ({ pool, network, collaterals, apr, collateralTypes }: P
                 alignItems="center"
                 lineHeight="36px"
               >
-                {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 1)}`) || '-'}
+                {(vaultTVL?.toNumber() && `$${compactInteger(vaultTVL.toNumber(), 2)}`) || '-'}
               </Text>
             </Flex>
             <Flex alignItems="center" gap={2}>
