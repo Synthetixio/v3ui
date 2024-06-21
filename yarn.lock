@@ -5581,7 +5581,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/contracts@workspace:contracts"
   dependencies:
-    "@synthetixio/v3-contracts": "npm:^5.4.0"
+    "@synthetixio/v3-contracts": "npm:^6.0.0"
     viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
@@ -7170,10 +7170,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@synthetixio/v3-contracts@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "@synthetixio/v3-contracts@npm:5.4.0"
-  checksum: f73a74f63e0c769dfbc6fc6583290e77ee7d955c480a75acedcb66957d99fee7a2dbe589de33ed15887012e895e6cc610a51968edac6775e9f9a113b522e3f2b
+"@synthetixio/v3-contracts@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@synthetixio/v3-contracts@npm:6.0.0"
+  checksum: 2029fc473b9d1ce29821b13a05f8d5aa6787b6e10e87b6b0479b3a4b73405ae5374dcf45933a0bf6151aca2ffdfd6c58868e40590384c55c3854a2ffd3004f1f
   languageName: node
   linkType: hard
 
