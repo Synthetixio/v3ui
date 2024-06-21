@@ -39,7 +39,6 @@ export const CollateralSectionUi: FC<{
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { connect } = useWallet();
   const navigate = useNavigate();
-  const { networkId } = useParams();
   const [queryParams] = useSearchParams();
 
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
@@ -113,13 +112,7 @@ export const CollateralSectionUi: FC<{
           ) : (
             <Tooltip label="APR is a combination of past week pool performance and rewards.">
               <Text fontWeight={700} fontSize="xl" color="white">
-                {`${
-                  !!apr
-                    ? `${
-                        Number(networkId) === 42161 || network?.id === 42161 ? 'Up to ' : ''
-                      }${apr.toFixed(2)}`
-                    : '-'
-                }%`}
+                {`${!!apr ? `${network?.id === 42161 ? 'Up to ' : ''}${apr.toFixed(2)}` : '-'}%`}
               </Text>
             </Tooltip>
           )}
