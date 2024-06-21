@@ -23,7 +23,7 @@ export function useGetUSDTokens(customNetwork?: Network) {
       }
       const USDProxy = await CoreProxy.getUsdToken();
       const USDC: string = isBase
-        ? (await (SpotMarket as any).getWrapper(USDC_BASE_MARKET)).wrapCollateralType
+        ? (await (SpotMarket as any)?.getWrapper(USDC_BASE_MARKET))?.wrapCollateralType
         : undefined;
 
       return {

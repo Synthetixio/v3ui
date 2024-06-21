@@ -6814,6 +6814,7 @@ __metadata:
   resolution: "@snx-v3/useWithdraw@workspace:liquidity/lib/useWithdraw"
   dependencies:
     "@snx-v3/fetchPythPrices": "workspace:*"
+    "@snx-v3/format": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
