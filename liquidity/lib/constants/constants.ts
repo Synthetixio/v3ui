@@ -26,6 +26,17 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
   }
 };
 
+export const getAprUrl = (networkId = 8453) => {
+  switch (networkId) {
+    case 8453:
+      return 'https://api.synthetix.io/v3/base/sc-pool-apy';
+    case 42161:
+      return 'https://api.synthetix.io/v3/arbitrum/sc-pool-apy';
+    default:
+      return `https://api.synthetix.io/v3/base/sc-pool-apy`;
+  }
+};
+
 export const SESSION_STORAGE_KEYS = {
   TERMS_CONDITIONS_ACCEPTED: 'TERMS_CONDITIONS_ACCEPTED',
 };
