@@ -6081,6 +6081,7 @@ __metadata:
   resolution: "@snx-v3/useAllCollateralPriceIds@workspace:liquidity/lib/useAllCollateralPriceIds"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
     "@snx-v3/useOracleManagerProxy": "workspace:*"
