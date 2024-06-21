@@ -19,13 +19,13 @@ export function useApr(customNetwork?: Network) {
 }
 
 export async function fetchApr(networkId?: number) {
-  const response = await fetch('https://api.synthetix.io/v3/base/sc-pool-apy');
+  const response = networkId === 42161 ? await fetch('https://api.synthetix.io/v3/arbitrum/sc-pool-apy') : await fetch('https://api.synthetix.io/v3/base/sc-pool-apy');
 
   const data = await response.json();
 
   return {
     // 0 meaning not the right network
-    combinedApr: networkId === 8453 || networkId === 84532 || networkId === 42161 ? data.aprCombined * 100 : 0,
+    combinedApr: networkId === 8453 || networkId === 84532 ? data.aprCombined * 100 : networkId === 42161 ? data.aprCombined : 0,
     cumulativePnl: networkId === 8453 || networkId === 84532 || networkId === 42161 ? data.cumulativePnl : 0,
   };
 }
