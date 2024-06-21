@@ -25,7 +25,7 @@ export async function fetchApr(networkId?: number) {
 
   return {
     // 0 meaning not the right network
-    combinedApr: networkId === 8453 || networkId === 84532 ? data.aprCombined * 100 : 0,
-    cumulativePnl: networkId === 8453 || networkId === 84532 ? data.cumulativePnl : 0,
+    combinedApr: networkId === 8453 || networkId === 84532 || networkId === 42161 ? data.aprCombined * 100 : 0,
+    cumulativePnl: networkId === 8453 || networkId === 84532 || networkId === 42161 ? data.cumulativePnl : 0,
   };
 }
