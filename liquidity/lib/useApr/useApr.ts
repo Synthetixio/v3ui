@@ -1,3 +1,4 @@
+import { getAprUrl } from '@snx-v3/constants';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,14 +19,16 @@ export function useApr(customNetwork?: Network) {
   });
 }
 
+const supportedAprNetworks = [8453, 84532, 42161];
+
 export async function fetchApr(networkId?: number) {
-  const response = await fetch('https://api.synthetix.io/v3/base/sc-pool-apy');
+  const response = await fetch(getAprUrl(networkId));
 
   const data = await response.json();
 
   return {
     // 0 meaning not the right network
-    combinedApr: networkId === 8453 || networkId === 84532 ? data.aprCombined * 100 : 0,
-    cumulativePnl: networkId === 8453 || networkId === 84532 ? data.cumulativePnl : 0,
+    combinedApr: networkId && supportedAprNetworks.includes(networkId) ? data.apr28d * 100 : 0,
+    cumulativePnl: networkId && supportedAprNetworks.includes(networkId) ? data.cumulativePnl : 0,
   };
 }

@@ -1,5 +1,4 @@
 import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/react';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
 import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
