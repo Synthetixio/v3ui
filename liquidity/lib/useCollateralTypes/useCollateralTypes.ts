@@ -1,14 +1,16 @@
-import { constants, utils, Contract } from 'ethers';
-import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
+import { importCollateralTokens } from '@snx-v3/contracts';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import { z } from 'zod';
 
 const CollateralConfigurationSchema = z.object({
+  symbol: z.string(),
+  name: z.string(),
+  decimals: z.number().transform((x) => String(x)),
   depositingEnabled: z.boolean(),
   issuanceRatioD18: ZodBigNumber.transform((x) => wei(x)),
   liquidationRatioD18: ZodBigNumber.transform((x) => wei(x)),
@@ -19,133 +21,47 @@ const CollateralConfigurationSchema = z.object({
 });
 
 const CollateralTypeSchema = CollateralConfigurationSchema.extend({
-  symbol: z.string(),
   displaySymbol: z.string(),
-  name: z.string(),
-  decimals: z.string(),
 });
 
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
-const SymbolSchema = z.string();
-
-const ERC20Interface = new utils.Interface([
-  'function symbol() view returns (string)',
-  'function name() view returns (string)',
-  'function decimals() view returns (uint8)',
-]);
-
-async function loadSymbols({
-  Multicall3,
-  tokenConfigs,
-}: {
-  Multicall3: Contract;
-  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
-}) {
-  const calls = tokenConfigs.map((tokenConfig) => ({
-    target: tokenConfig.tokenAddress,
-    callData: ERC20Interface.encodeFunctionData('symbol'),
-  }));
-
-  const multicallResult = await Multicall3.callStatic.aggregate(calls);
-
-  return multicallResult.returnData.map((bytes: string) =>
-    SymbolSchema.parse(ERC20Interface.decodeFunctionResult('symbol', bytes)[0])
-  );
-}
-
-async function loadName({
-  Multicall3,
-  tokenConfigs,
-}: {
-  Multicall3: Contract;
-  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
-}) {
-  const calls = tokenConfigs.map((tokenConfig) => ({
-    target: tokenConfig.tokenAddress,
-    callData: ERC20Interface.encodeFunctionData('name'),
-  }));
-
-  const multicallResult = await Multicall3.callStatic.aggregate(calls);
-
-  return multicallResult.returnData.map((bytes: string) =>
-    SymbolSchema.parse(ERC20Interface.decodeFunctionResult('name', bytes)[0])
-  );
-}
-
-async function loadDecimals({
-  Multicall3,
-  tokenConfigs,
-}: {
-  Multicall3: Contract;
-  tokenConfigs: z.infer<typeof CollateralConfigurationSchema>[];
-}) {
-  const calls = tokenConfigs.map((tokenConfig) => ({
-    target: tokenConfig.tokenAddress,
-    callData: ERC20Interface.encodeFunctionData('decimals'),
-  }));
-
-  const multicallResult = await Multicall3.callStatic.aggregate(calls);
-
-  return multicallResult.returnData.map(
-    (bytes: string) => ERC20Interface.decodeFunctionResult('decimals', bytes)[0]
-  );
-}
-
-async function loadCollateralTypes({
-  CoreProxy,
-  Multicall3,
-}: {
-  CoreProxy: Contract;
-  Multicall3: Contract;
-}): Promise<CollateralType[]> {
-  const hideDisabled = true;
-  const tokenConfigsRaw: CollateralType[] =
-    await CoreProxy.getCollateralConfigurations(hideDisabled);
+async function loadCollateralTypes(chainId: number, preset: string): Promise<CollateralType[]> {
+  const tokenConfigsRaw: CollateralType[] = await importCollateralTokens(chainId, preset);
 
   const tokenConfigs = tokenConfigsRaw
+    .map((config) => ({
+      ...config,
+      issuanceRatioD18: ethers.BigNumber.from(config.issuanceRatioD18),
+      liquidationRatioD18: ethers.BigNumber.from(config.liquidationRatioD18),
+      liquidationRewardD18: ethers.BigNumber.from(config.liquidationRewardD18),
+      minDelegationD18: ethers.BigNumber.from(config.minDelegationD18),
+    }))
     .map((x) => CollateralConfigurationSchema.parse({ ...x }))
-    .filter(({ depositingEnabled }) => depositingEnabled); // sometimes we get back disabled ones, even though we ask for only enabled ones
+    .filter(({ depositingEnabled }) => depositingEnabled);
 
-  const symbols = await loadSymbols({ Multicall3, tokenConfigs });
-
-  const names = await loadName({ Multicall3, tokenConfigs });
-
-  const decimals = await loadDecimals({ Multicall3, tokenConfigs });
-
-  return tokenConfigs.map((config, i) => ({
-    depositingEnabled: config.depositingEnabled,
-    issuanceRatioD18: config.issuanceRatioD18,
-    liquidationRatioD18: config.liquidationRatioD18,
-    liquidationRewardD18: config.liquidationRewardD18,
-    minDelegationD18: config.minDelegationD18,
-    oracleNodeId: config.oracleNodeId,
-    tokenAddress: config.tokenAddress,
-    symbol: symbols[i],
-    displaySymbol: symbols[i] === 'WETH' ? 'ETH' : symbols[i],
-    name: names[i],
-    decimals: decimals[i].toString(),
+  return tokenConfigs.map((config) => ({
+    ...config,
+    displaySymbol: config.symbol === 'WETH' ? 'ETH' : config.symbol,
   }));
 }
 
 export function useCollateralTypes(includeDelegationOff = false, customNetwork?: Network) {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
-  const { data: Multicall3 } = useMulticall3(customNetwork);
-
   const targetNetwork = customNetwork || network;
 
   return useQuery({
+    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'CollateralTypes',
       { includeDelegationOff },
     ],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3)
+      if (!(targetNetwork?.id && targetNetwork?.preset))
         throw Error('useCollateralTypes should not be enabled when contracts missing');
 
-      const collateralTypes = (await loadCollateralTypes({ CoreProxy, Multicall3 }))
+      const collateralTypes = (await loadCollateralTypes(targetNetwork.id, targetNetwork.preset))
         .map((collateralType) => {
           const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
           if (isBase && collateralType.symbol === 'sUSDC') {
@@ -171,13 +87,12 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
       // By default we only return collateral types that have minDelegationD18 < MaxUint256
       // When minDelegationD18 === MaxUint256, delegation is effectively disabled
       return collateralTypes.filter((collateralType) =>
-        collateralType.minDelegationD18.lt(constants.MaxUint256)
+        collateralType.minDelegationD18.lt(ethers.constants.MaxUint256)
       ) as CollateralType[];
     },
     // one hour in ms
-    staleTime: 60 * 60 * 1000,
+    staleTime: Infinity,
     placeholderData: [],
-    enabled: Boolean(targetNetwork && CoreProxy && Multicall3),
   });
 }
 
