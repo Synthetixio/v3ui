@@ -3,7 +3,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
@@ -11,6 +11,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import Wei from '@synthetixio/wei';
+import { parseUnits } from '@snx-v3/format';
 
 export const useWithdraw = ({
   accountId,
@@ -43,10 +44,22 @@ export const useWithdraw = ({
 
         const gasPricesPromised = getGasPrice({ provider });
 
+        const contract = new ethers.Contract(
+          collateralTypeAddress,
+          ['function decimals() view returns (uint8)'],
+          provider
+        );
+
+        const decimals = await contract.decimals();
+
+        const collateralAmount = amount.gt(0)
+          ? parseUnits(amount.toString(), decimals)
+          : BigNumber.from(0);
+
         const populatedTxnPromised = CoreProxy.populateTransaction.withdraw(
           BigNumber.from(accountId),
           collateralTypeAddress,
-          amount.toBN()
+          collateralAmount
         );
 
         const collateralPriceCallsPromise = fetchPriceUpdates(
