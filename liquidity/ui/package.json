@@ -12,6 +12,8 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@safe-global/safe-apps-provider": "^0.18.3",
+    "@safe-global/safe-apps-sdk": "^9.1.0",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/BorderBox": "workspace:*",
     "@snx-v3/BorrowModal": "workspace:*",
