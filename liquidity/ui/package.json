@@ -74,6 +74,7 @@
     "@tanstack/react-query-devtools": "^5.8.3",
     "@web3-onboard/coinbase": "^2.4.1",
     "@web3-onboard/common": "^2.4.2",
+    "@web3-onboard/gnosis": "^2.3.1",
     "@web3-onboard/injected-wallets": "^2.11.1",
     "@web3-onboard/ledger": "2.7.1",
     "@web3-onboard/react": "^2.9.1",
