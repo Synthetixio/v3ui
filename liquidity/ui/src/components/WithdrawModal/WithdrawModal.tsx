@@ -30,9 +30,12 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { TokenIcon } from '../';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
+  const { data: stablecoin } = useStablecoin();
+
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
   const { data: collateralTypes } = useCollateralTypes();
   const { data: usdTokens } = useGetUSDTokens();
@@ -107,7 +110,7 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
   const collateralTypeDisplayName =
     collateralTypesHydated?.find((item) => item.tokenAddress === selectedCollateralType)?.symbol ||
-    'sUSD';
+    stablecoin?.symbol;
 
   return (
     <Modal
@@ -217,8 +220,13 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                             <MenuItem
                               onClick={() => setSelectedCollateralType(usdTokens?.snxUSD || '')}
                             >
-                              <TokenIcon mr={1} height={16} width={16} symbol="sUSD" />
-                              sUSD
+                              <TokenIcon
+                                mr={1}
+                                height={16}
+                                width={16}
+                                symbol={stablecoin?.symbol || ''}
+                              />
+                              {stablecoin?.symbol}
                             </MenuItem>
                           )}
                         </MenuList>
