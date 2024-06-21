@@ -150,7 +150,11 @@ export const PoolCard = ({
                 APR
               </Text>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-                {apr.combinedApr > 0 ? apr.combinedApr.toFixed(2)?.concat('%') : '-'}
+                {apr.combinedApr > 0
+                  ? `${network.id === 42161 ? 'Up to ' : ''}${apr.combinedApr
+                      .toFixed(2)
+                      ?.concat('%')}`
+                  : '-'}
               </Text>
             </Flex>
           </Flex>
