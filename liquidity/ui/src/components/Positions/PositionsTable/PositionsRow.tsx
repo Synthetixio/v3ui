@@ -101,12 +101,12 @@ export function PositionRow({
               <Flex flexDirection="column" alignItems="flex-end">
                 <Text color="white" lineHeight="1.25rem" fontFamily="heading">
                   {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance.toString() || '0')
+                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}
                 </Text>
                 <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
                   {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance.toString() || '0')
+                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}{' '}
                   {stablecoinSymbol}
                 </Text>
