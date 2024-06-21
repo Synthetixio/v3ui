@@ -28,7 +28,7 @@ export async function fetchApr(networkId?: number) {
 
   return {
     // 0 meaning not the right network
-    combinedApr: networkId && supportedAprNetworks.includes(networkId) ? data.apr28d * 100 : 0,
+    combinedApr: networkId && supportedAprNetworks.includes(networkId) && networkId !== 42161 ? data.apr28d * 100 : networkId === 42161 ? data.apr28d : 0,
     cumulativePnl: networkId && supportedAprNetworks.includes(networkId) ? data.cumulativePnl : 0,
   };
 }
