@@ -18,7 +18,8 @@ async function getPythFeedIds(network: Network) {
   return Object.entries(extras)
     .filter(
       ([key, value]) =>
-        key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
+        (key.startsWith('pyth_feed_id_') || (key.startsWith('pyth') && key.endsWith('FeedId'))) &&
+        String(value).length === 66
     )
     .map(([_key, value]) => value);
 }
