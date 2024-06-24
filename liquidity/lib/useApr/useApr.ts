@@ -22,18 +22,33 @@ export function useApr(customNetwork?: Network) {
 const supportedAprNetworks = [8453, 84532, 42161];
 
 export async function fetchApr(networkId?: number) {
-  const response = await fetch(getAprUrl(networkId));
+  try {
+    const isSupported = networkId && supportedAprNetworks.includes(networkId);
+    const response = await fetch(getAprUrl(networkId));
 
-  const data = await response.json();
+    const data = await response.json();
 
-  return {
-    // 0 meaning not the right network
-    combinedApr:
-      networkId && supportedAprNetworks.includes(networkId)
+    // Arbitrum has multiple collateral types
+    const highestAprCollateral =
+      networkId === 8453
+        ? data
+        : data?.sort((a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d)[0];
+
+    return {
+      combinedApr: isSupported
         ? networkId === 42161
-          ? data.apr24h * 100
-          : data.apr28d * 100
+          ? highestAprCollateral.apr24h * 100
+          : highestAprCollateral.apr28d * 100
         : 0,
-    cumulativePnl: networkId && supportedAprNetworks.includes(networkId) ? data.cumulativePnl : 0,
-  };
+      cumulativePnl: isSupported ? highestAprCollateral.cumulativePnl : 0,
+      collateralAprs: networkId === 8453 ? [data] : data,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      combinedApr: 0,
+      cumulativePnl: 0,
+      collateralAprs: [],
+    };
+  }
 }
