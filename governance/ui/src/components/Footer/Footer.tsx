@@ -26,7 +26,7 @@ export default function Footer() {
         </Link>
         <Link
           target="_blank"
-          href="https://www.youtube.com/@synthetix.v3"
+          href="https://warpcast.com/~/channel/synthetix"
           rel="noopener noreferrer"
         >
           <WarpcastIcon />
