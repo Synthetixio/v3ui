@@ -1,4 +1,4 @@
-import { Container, Flex } from '@chakra-ui/react';
+import { Container, Flex, Hide } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
 import { useParams } from 'react-router-dom';
@@ -6,7 +6,6 @@ import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
-import CouncilUser from '../components/CouncilUser/CouncilUser';
 import CouncilMembers from '../components/CouncilMembers/CouncilMembers';
 
 export default function Councils() {
@@ -31,7 +30,7 @@ export default function Councils() {
         flexDirection="row"
         w="100%"
       >
-        <Flex flexDir="column" maxW="735px" w="100%">
+        <Flex flexDir="column" w="100%">
           {councilPeriod === '1' || councilPeriod === '2' ? (
             <CouncilNominees activeCouncil={activeCouncil} />
           ) : (
@@ -43,7 +42,9 @@ export default function Councils() {
             )}
           /> */}
         </Flex>
-        <UserActionBox activeCouncil={activeCouncil} />
+        <Hide below="xl">
+          <UserActionBox activeCouncil={activeCouncil} />
+        </Hide>
       </Container>
     </Flex>
   );

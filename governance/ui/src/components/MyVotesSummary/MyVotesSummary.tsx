@@ -32,6 +32,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       onMouseEnter={() => setShowCart(true)}
       rounded="base"
       w="100%"
+      maxW="200px"
       borderColor="gray.900"
       borderWidth="1px"
       py={2}

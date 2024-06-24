@@ -47,7 +47,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
 
   return (
     <>
-      <Hide above="lg">
+      <Hide above="xl">
         <Flex
           w="100%"
           bg="navy.700"
@@ -67,7 +67,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           <MyVotesSummary isLoading={isLoading} councilPeriod={councilPeriod} schedule={schedule} />
         </Flex>
       </Hide>
-      <Show above="lg">
+      <Show above="xl">
         <Flex
           w="100%"
           gap="4"
