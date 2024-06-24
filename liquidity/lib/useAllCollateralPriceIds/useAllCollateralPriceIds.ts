@@ -1,6 +1,7 @@
 import { deploymentsWithERC7412, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useOracleManagerProxy } from '@snx-v3/useOracleManagerProxy';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
@@ -22,33 +23,43 @@ const PythParametersSchema = z.object({
 
 const EXTERNAL_NODE_TYPE = 2;
 
-const loadConfigs = async ({ CoreProxy }: { CoreProxy: ethers.Contract }) => {
-  const hideDisabled = false;
-  return await CoreProxy.getCollateralConfigurations(hideDisabled);
-};
-
 export const useAllCollateralPriceIds = (customNetwork?: Network) => {
   const { network } = useNetwork();
   const targetNetwork = customNetwork || network;
   const { data: Multicall3 } = useMulticall3(customNetwork);
   const { data: OracleProxy } = useOracleManagerProxy(customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: collateralConfigs } = useCollateralTypes(false, customNetwork);
 
   return useQuery({
-    enabled: Boolean(Multicall3 && OracleProxy && CoreProxy),
+    enabled: Boolean(
+      targetNetwork?.id &&
+        targetNetwork?.preset &&
+        Multicall3 &&
+        OracleProxy &&
+        CoreProxy &&
+        collateralConfigs
+    ),
     staleTime: Infinity,
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'AllCollateralPriceIds'],
     queryFn: async () => {
-      if (!CoreProxy || !Multicall3 || !OracleProxy || !targetNetwork) {
+      if (
+        !(
+          targetNetwork?.id &&
+          targetNetwork?.preset &&
+          Multicall3 &&
+          OracleProxy &&
+          CoreProxy &&
+          collateralConfigs
+        )
+      ) {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!deploymentsWithERC7412.includes(`${targetNetwork?.id}-${targetNetwork?.preset}`))
+      if (!deploymentsWithERC7412.includes(`${targetNetwork.id}-${targetNetwork.preset}`))
         return [];
 
-      const configs = await loadConfigs({ CoreProxy });
-
-      const oracleNodeIds = configs.map((x: { oracleNodeId: string }) => x.oracleNodeId);
+      const oracleNodeIds = collateralConfigs.map((x: { oracleNodeId: string }) => x.oracleNodeId);
 
       const calls = oracleNodeIds.map((oracleNodeId: string) => ({
         target: OracleProxy.address,
@@ -82,7 +93,7 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
               stalenessTolerance: parametersDecoded.stalenessTolerance,
             };
           } catch (error) {
-            console.error(`Decoding parameters failed, config:`, configs[i]);
+            console.error(`Decoding parameters failed, config:`, collateralConfigs[i]);
             console.error('parameters: ', parameters);
             console.error(error);
             return null;

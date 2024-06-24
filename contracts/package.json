@@ -13,7 +13,7 @@
     "start:arbitrum-sepolia": "anvil --chain-id 421614 --fork-url https://arbitrum-sepolia.infura.io/v3/$INFURA_KEY"
   },
   "dependencies": {
-    "@synthetixio/v3-contracts": "^5.4.0",
+    "@synthetixio/v3-contracts": "^6.0.0",
     "viem": "^2.13.5"
   }
 }
