@@ -40,7 +40,7 @@ export const WithdrawModalUi: FC<{
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="withdraw modal">
+      <ModalContent bg="black" color="white" data-cy="withdraw modal">
         <WithdrawIncrease />
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
@@ -81,7 +81,7 @@ export const WithdrawModalUi: FC<{
             onClick={onSubmit}
             width="100%"
             my="4"
-            data-testid="withdraw confirm button"
+            data-cy="withdraw confirm button"
           >
             {(() => {
               switch (true) {

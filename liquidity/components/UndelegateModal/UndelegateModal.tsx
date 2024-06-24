@@ -42,7 +42,7 @@ export const UndelegateModalUi: FC<{
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="undelegate modal">
+      <ModalContent bg="black" color="white" data-cy="undelegate modal">
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -69,7 +69,7 @@ export const UndelegateModalUi: FC<{
             onClick={onSubmit}
             width="100%"
             my="4"
-            data-testid="undelegate confirm button"
+            data-cy="undelegate confirm button"
           >
             {(() => {
               switch (true) {

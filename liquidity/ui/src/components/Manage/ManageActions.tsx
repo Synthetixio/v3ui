@@ -61,7 +61,7 @@ const ActionButton: FC<
       bg: 'unset',
     }}
     cursor={disabled ? 'not-allowed' : 'pointer'}
-    data-testid="manage action"
+    data-cy="manage action"
     data-action={action}
     data-active={action === activeAction ? 'true' : undefined}
     onClick={() => !disabled && onClick?.(action)}
@@ -69,7 +69,6 @@ const ActionButton: FC<
     width="50%"
     textAlign="center"
     opacity={disabled ? '50%' : '100%'}
-    data-cy={`manage-action-${action}`}
   >
     {children}
   </BorderBox>

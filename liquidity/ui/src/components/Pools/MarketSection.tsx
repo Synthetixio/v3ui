@@ -83,7 +83,7 @@ export function MarketSectionUi({
     );
   }
   return (
-    <BorderBox bg="navy.700" padding={4} flexDirection="column" data-testid="pool markets">
+    <BorderBox bg="navy.700" padding={4} flexDirection="column" data-cy="pool markets">
       <Text fontSize="xl" fontWeight={700}>
         Markets
       </Text>
@@ -114,20 +114,16 @@ export function MarketSectionUi({
                       const isLastItem = i + 1 === configurations.length;
 
                       return (
-                        <Tr key={id} data-testid="pool market" data-market={id}>
+                        <Tr key={id} data-cy="pool market" data-market={id}>
                           <StyledTd isLastItem={isLastItem}>
-                            <Text fontSize="sm" display="block" data-testid="market name">
+                            <Text fontSize="sm" display="block" data-cy="market name">
                               {marketNamesById?.[market.id] ? marketNamesById[market.id] : '-'}
                             </Text>
-                            <Text fontSize="xs" color="gray.500" data-testid="market id">
+                            <Text fontSize="xs" color="gray.500" data-cy="market id">
                               ID: {market.id}
                             </Text>
                           </StyledTd>
-                          <StyledTd
-                            isLastItem={isLastItem}
-                            fontSize="sm"
-                            data-testid="pool allocation"
-                          >
+                          <StyledTd isLastItem={isLastItem} fontSize="sm" data-cy="pool allocation">
                             {total_weight ? (
                               <>
                                 <Text display="block">

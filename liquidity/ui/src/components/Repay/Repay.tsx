@@ -47,7 +47,7 @@ export const RepayUi: FC<{
           <NumberInput
             InputProps={{
               isRequired: true,
-              'data-testid': 'repay amount input',
+              'data-cy': 'repay amount input',
               'data-max': max?.toString(),
             }}
             value={debtChange.abs()}
@@ -68,7 +68,7 @@ export const RepayUi: FC<{
             >
               <Text>Debt:</Text>
               <Text display="inline">
-                $<Amount value={currentDebt} data-testid="current debt" />
+                $<Amount value={currentDebt} data-cy="current debt" />
               </Text>
             </Flex>
             <Flex
@@ -100,7 +100,7 @@ export const RepayUi: FC<{
                   <Text display="inline">
                     <Amount
                       value={totalUsdBalance}
-                      data-testid={`available ${systemToken?.symbol} balance`}
+                      data-cy={`available ${systemToken?.symbol} balance`}
                       suffix={` ${systemToken?.symbol}`}
                     />
                   </Text>
@@ -111,7 +111,7 @@ export const RepayUi: FC<{
         </Flex>
       </BorderBox>
       <Button
-        data-testid="repay submit"
+        data-cy="repay submit"
         type="submit"
         isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >

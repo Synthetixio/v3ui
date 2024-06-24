@@ -77,7 +77,7 @@ export const DepositUi: FC<{
             <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
               <NumberInput
                 InputProps={{
-                  'data-testid': 'deposit amount input',
+                  'data-cy': 'deposit amount input',
                   'data-max': maxAmount?.toString(),
                 }}
                 value={collateralChange}
@@ -86,7 +86,6 @@ export const DepositUi: FC<{
                   setCollateralChange(value);
                 }}
                 max={maxAmount}
-                dataTestId="deposit-number-input"
               />
               <Flex
                 flexDirection="column"
@@ -158,12 +157,7 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      <Button
-        disabled={combinedTokenBalance === undefined}
-        data-testid="deposit submit"
-        data-cy="deposit-submit-button"
-        type="submit"
-      >
+      <Button disabled={combinedTokenBalance === undefined} data-cy="deposit submit" type="submit">
         Add {displaySymbol}
       </Button>
     </Flex>

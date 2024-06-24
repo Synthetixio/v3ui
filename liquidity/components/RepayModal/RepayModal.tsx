@@ -48,7 +48,7 @@ export const RepayModalUi: React.FC<{
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="repay modal">
+      <ModalContent bg="black" color="white" data-cy="repay modal">
         <ModalHeader>Complete this action</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -86,7 +86,7 @@ export const RepayModalUi: React.FC<{
             onClick={onSubmit}
             width="100%"
             my="4"
-            data-testid="repay confirm button"
+            data-cy="repay confirm button"
           >
             {(() => {
               switch (true) {

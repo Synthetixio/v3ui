@@ -52,7 +52,7 @@ export const CollateralSectionUi: FC<{
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
-    <BorderBox padding={4} bg="navy.700" flexDirection="column" data-testid="pool collateral types">
+    <BorderBox padding={4} bg="navy.700" flexDirection="column" data-cy="pool collateral types">
       <Text fontWeight={700} fontSize="xl">
         Pool Collateralization
       </Text>
@@ -74,7 +74,7 @@ export const CollateralSectionUi: FC<{
           {!vaultsData ? (
             <Skeleton w={16} h={6} />
           ) : (
-            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
+            <Text fontWeight={700} fontSize="xl" color="white" data-cy="pool tvl">
               {formatNumberToUsd(totalCollateral.value.toNumber())}
             </Text>
           )}
@@ -96,7 +96,7 @@ export const CollateralSectionUi: FC<{
           {!vaultsData ? (
             <Skeleton mt={1} w={16} h={6} />
           ) : (
-            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
+            <Text fontWeight={700} fontSize="xl" color="white" data-cy="pool total debt">
               {formatNumberToUsd(totalDebt.toNumber())}
             </Text>
           )}
@@ -157,7 +157,7 @@ export const CollateralSectionUi: FC<{
                     flexDirection="column"
                     borderColor="gray.900"
                     _last={{ borderBottom: 'none' }}
-                    data-testid="pool collateral"
+                    data-cy="pool collateral"
                     data-collateral={vaultCollateral.collateralType.symbol}
                   >
                     <Flex color="white" display="flex" gap={2} alignItems="center">
@@ -169,7 +169,7 @@ export const CollateralSectionUi: FC<{
                         fontSize="sm"
                         color="gray.400"
                         fontWeight="400"
-                        data-testid="collateral price"
+                        data-cy="collateral price"
                       >
                         {price ? formatNumberToUsd(formatEther(price.toString())) : '-'}
                       </Text>
@@ -229,7 +229,7 @@ export const CollateralSectionUi: FC<{
                           fontSize="md"
                           fontWeight={700}
                           color="white"
-                          data-testid="collateral value"
+                          data-cy="collateral value"
                         >
                           {formatNumberToUsd(vaultCollateral.collateral.value.toNumber())}
                         </Text>
@@ -237,7 +237,7 @@ export const CollateralSectionUi: FC<{
                           fontSize="sm"
                           color="gray.500"
                           fontWeight="400"
-                          data-testid="collateral amount"
+                          data-cy="collateral amount"
                         >
                           {formatNumber(vaultCollateral.collateral.amount.toNumber())}{' '}
                           {vaultCollateral.collateralType.displaySymbol}
@@ -257,7 +257,7 @@ export const CollateralSectionUi: FC<{
                           fontSize="md"
                           fontWeight={700}
                           color="white"
-                          data-testid="collateral debt"
+                          data-cy="collateral debt"
                         >
                           {formatNumberToUsd(vaultCollateral.debt.toNumber())}
                         </Text>
@@ -265,7 +265,7 @@ export const CollateralSectionUi: FC<{
                           fontSize="sm"
                           color="gray.500"
                           fontWeight="400"
-                          data-testid="collateral cratio"
+                          data-cy="collateral cratio"
                         >
                           VAULT C-RATIO:{' '}
                           {cRatio.lte(0)

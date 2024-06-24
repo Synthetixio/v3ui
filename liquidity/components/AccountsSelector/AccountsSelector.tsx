@@ -79,7 +79,7 @@ export function AccountsSelectorUi({
               variant="outline"
               w="100%"
               maxW="180px"
-              data-testid="current account id"
+              data-cy="current account id"
               data-account-id={accountId}
               onClick={accountId ? onCopy : createAccount}
             >

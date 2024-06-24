@@ -8,13 +8,13 @@ export function Amount({
   value,
   prefix = '',
   suffix = '',
-  'data-testid': testid,
+  'data-cy': testid,
   showTooltip,
 }: {
   prefix?: string;
   value?: Wei;
   suffix?: string;
-  'data-testid'?: string;
+  'data-cy'?: string;
   showTooltip?: boolean;
 }) {
   const { formattedValue, preciseValue, isMaxUint } = useMemo(() => {
@@ -49,7 +49,7 @@ export function Amount({
       }
       isDisabled={formattedValue === preciseValue || !showTooltip}
     >
-      <span data-testid={testid}>
+      <span data-cy={testid}>
         {prefix}
         {isMaxUint ? 'N/A' : formattedValue}
         {!isMaxUint && suffix}

@@ -44,7 +44,7 @@ const BorrowUi: FC<{
           <NumberInput
             InputProps={{
               isRequired: true,
-              'data-testid': 'borrow amount input',
+              'data-cy': 'borrow amount input',
               'data-max': maxDebt.toString(),
             }}
             value={debtChange}
@@ -68,7 +68,7 @@ const BorrowUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
-      <Button data-testid="borrow submit" type="submit">
+      <Button data-cy="borrow submit" type="submit">
         {isBase ? 'Claim USDC' : `Borrow ${systemToken?.symbol}`}
       </Button>
     </Flex>
