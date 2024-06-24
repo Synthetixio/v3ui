@@ -21,10 +21,7 @@ export function metamask({ chainId, pk, address }) {
               case 'eth_requestAccounts':
                 return [address];
               case 'eth_sendTransaction':
-                await provider.send('anvil_impersonateAccount', [address]);
-                const result = await provider.send(method, params);
-                await provider.send('anvil_stopImpersonatingAccount', [address]);
-                return result;
+                return await provider.send(method, params);
               default: {
                 return await provider.send(method, params);
               }
