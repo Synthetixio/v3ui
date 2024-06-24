@@ -30,7 +30,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
   return (
     <Flex
       p="6"
-      w={{ base: '100%', md: '45%', lg: '280px' }}
+      w={{ base: '100%' }}
       borderWidth="1px"
       borderStyle="solid"
       borderColor="gray.900"

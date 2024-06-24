@@ -1,12 +1,12 @@
 import { Button, Flex, Spinner, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
-import { shortAddress } from '../../utils/address';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { useGetElectionSettings } from '../../queries/useGetElectionSettings';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function UserTableView({
   user,
@@ -47,7 +47,7 @@ export default function UserTableView({
           mr="0"
           ImageProps={{ w: '32px', h: '32px' }}
         />{' '}
-        {user.username ? user.username : shortAddress(user.address, 8, 8)}
+        {user.username ? user.username : prettyString(user.address, 8, 8)}
       </Th>
       {councilPeriod !== '0' && (
         <Th>

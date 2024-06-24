@@ -1,17 +1,12 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-interface SnxIconProps extends IconProps {
-  color?: string;
-  fill?: string;
-}
-
 export const SNXIcon = ({
   width = '25px',
   height = '24px',
   color = '#2ED9FF',
   fill = '#0E052F',
   ...props
-}: SnxIconProps) => {
+}: IconProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 30 31" fill="none" {...props}>
       <path

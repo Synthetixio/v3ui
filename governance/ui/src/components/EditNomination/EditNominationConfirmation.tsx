@@ -7,8 +7,8 @@ import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useWallet } from '../../queries/useWallet';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { useGetUserDetailsQuery } from '../../queries';
-import { shortAddress } from '../../utils/address';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function EditNominationConfirmation({
   selectedCouncil,
@@ -52,9 +52,9 @@ export default function EditNominationConfirmation({
         <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || shortAddress(user?.address)}
+            {user?.ens || prettyString(user!.address)}
           </Text>
-          <Text fontSize="xs">Nomination Wallet: {shortAddress(user?.address)}</Text>
+          <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
         </Flex>
       </Flex>
       <Text>

@@ -1,5 +1,4 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
-import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetUserDetailsQuery } from '../../queries';
@@ -8,6 +7,7 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
 import { Badge } from '../Badge';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function UserListItem({
   address,
@@ -53,7 +53,7 @@ export default function UserListItem({
           mr="0"
         />
         <Text fontWeight="bold" fontSize="14px" ml="3">
-          {user?.username ? user.username : shortAddress(user?.address)}
+          {user?.username ? user.username : prettyString(user!.address)}
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (

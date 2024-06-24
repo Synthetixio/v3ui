@@ -5,9 +5,9 @@ import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useGetUserDetailsQuery } from '../../queries';
-import { shortAddress } from '../../utils/address';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
@@ -53,7 +53,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
                 {data?.username ? data.username : 'No Username'}
               </Text>
               <Text fontSize="12px" color="gray.500">
-                Nomination Wallet: {shortAddress(data?.address)}
+                Nomination Wallet: {prettyString(data!.address)}
               </Text>
             </Flex>
           </Flex>

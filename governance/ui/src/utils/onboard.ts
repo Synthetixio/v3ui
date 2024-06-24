@@ -1,24 +1,29 @@
-import { appMetadata, NETWORKS } from '@snx-v3/useBlockchain';
+import { NETWORKS, appMetadata } from '@snx-v3/useBlockchain';
 import coinbaseModule from '@web3-onboard/coinbase';
 import gnosisModule from '@web3-onboard/gnosis';
-
 import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets';
 import ledgerModule from '@web3-onboard/ledger';
 import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-const supportedDeployments = ['1-main'];
+export const supportedNetworks = [8453, 84532, 420, 11155111420, 999];
 
-// Filter networks to only supported ones
-export const chains = NETWORKS.filter(({ id, preset }) =>
-  supportedDeployments.includes(`${id}-${preset}`)
-).map((n) => ({
-  id: n.id,
-  token: n.token,
-  label: n.label,
-  rpcUrl: n.rpcUrl(),
-}));
+export const chains = NETWORKS.filter((network) => supportedNetworks.includes(network.id))
+  .map((network) => ({
+    id: network.id,
+    label: network.label,
+    rpcUrl: network.rpcUrl(),
+    token: network.token,
+  }))
+  .concat([
+    {
+      id: 999,
+      label: 'SNX Chain',
+      rpcUrl: 'http://127.0.0.1:19000',
+      token: 'SNX',
+    },
+  ]);
 
 export const onboard = init({
   wallets: [

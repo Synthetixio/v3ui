@@ -177,7 +177,6 @@ module.exports = {
         'process.env.DEV': JSON.stringify(process.env.DEV),
         'process.env.DEV_RPC_MOTHERSHIP': JSON.stringify(process.env.DEV_RPC_MOTHERSHIP),
         'process.env.TESTNET': JSON.stringify(process.env.TESTNET),
-        'process.env.IPFS_INFURA_KEY': JSON.stringify(process.env.IPFS_INFURA_KEY),
         'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
         'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
       })

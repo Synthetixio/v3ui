@@ -29,7 +29,7 @@ export function getCouncilContract(council: CouncilSlugs) {
       return AmbassadorCouncilContract;
     case 'treasury':
       if (process.env.DEV)
-        return AmbassadorCouncilContract.attach('0x4066a172DD5D21E4f787C07D3118D0876296750B');
+        return TreasuryCouncilContract.attach('0x4066a172DD5D21E4f787C07D3118D0876296750B');
       return TreasuryCouncilContract;
     default:
       throw new Error('could not find contract');
