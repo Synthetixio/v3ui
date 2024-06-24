@@ -4,11 +4,12 @@
   "main": "index.ts",
   "version": "0.0.9",
   "scripts": {
-    "anvil:sepolia": "anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
-    "anvil:base": "anvil --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY",
+    "anvil:arbitrum": "anvil --auto-impersonate --chain-id 42161 --fork-url https://arbitrum-mainnet.infura.io/v3/$INFURA_KEY",
+    "anvil:sepolia": "anvil --auto-impersonate --chain-id 11155111 --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
+    "anvil:base": "anvil --auto-impersonate --chain-id 8453 --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY",
     "cy": "NODE_ENV=test cypress open --component --browser chrome",
-    "e2e:sepolia": "NODE_ENV=test CYPRESS_CHAIN_ID=11155111 CYPRESS_PRESET=main cypress open --e2e --browser chrome",
-    "e2e:base": "NODE_ENV=test CYPRESS_CHAIN_ID=8453 CYPRESS_PRESET=andromeda cypress open --e2e --browser chrome"
+    "e2e:arbitrum": "NODE_ENV=test CYPRESS_CHAIN_ID=42161 CYPRESS_PRESET=main cypress open --e2e --browser chrome --config specPattern='./cypress/e2e/42161-main/*.e2e.js'",
+    "e2e:base": "NODE_ENV=test CYPRESS_CHAIN_ID=8453 CYPRESS_PRESET=andromeda cypress open --e2e --browser chrome --config specPattern='./cypress/e2e/8453-andromeda/*.e2e.js'"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",
