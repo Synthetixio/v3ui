@@ -14,7 +14,6 @@ import {
   Switch,
   Text,
 } from '@chakra-ui/react';
-import { WalletIcon } from '@snx-v3/icons';
 import { NetworkIcon, useNetwork, useWallet, NETWORKS, Network } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useLocalStorage } from '@snx-v3/useLocalStorage';
@@ -153,10 +152,8 @@ export function NetworkController() {
             data-cy="header-wallet-address-button"
           >
             {user?.pfpUrl ? (
-              <Image src={user.pfpUrl} w="24px" h="24px" borderRadius="50%" />
-            ) : (
-              <>
-                <WalletIcon color="white" />
+              <Flex alignItems="center" gap="1">
+                <Image src={user.pfpUrl} w="24px" h="24px" borderRadius="50%" />
                 <Text
                   as="span"
                   ml={1}
@@ -166,9 +163,24 @@ export function NetworkController() {
                   userSelect="none"
                   data-cy="header-wallet-address-display"
                 >
-                  {activeWallet.ens?.name || prettyString(activeWallet?.address || '')}
+                  {user?.username || prettyString(activeWallet?.address || '')}
                 </Text>
-              </>
+              </Flex>
+            ) : (
+              <Flex alignItems="center" gap="1">
+                <Blockies seed={activeWallet.address} scale={3} className="blockies-rounded" />
+                <Text
+                  as="span"
+                  ml={1}
+                  color="white"
+                  fontWeight={700}
+                  fontSize="xs"
+                  userSelect="none"
+                  data-cy="header-wallet-address-display"
+                >
+                  {user?.username || prettyString(activeWallet?.address || '')}
+                </Text>
+              </Flex>
             )}
           </MenuButton>
           <MenuList>
@@ -229,7 +241,9 @@ export function NetworkController() {
                   {user?.username ? (
                     <Flex flexDir="column">
                       {user.username}
-                      <Text>{user.about}</Text>
+                      <Text fontWeight={400} fontSize="12px" overflow="auto" h="20px">
+                        {user.about}
+                      </Text>
                     </Flex>
                   ) : (
                     prettyString(user?.address || '')

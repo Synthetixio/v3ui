@@ -6,15 +6,14 @@ import { useGetUserBallot } from '../../queries';
 import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
 import { useWallet, useNetwork } from '../../queries/useWallet';
-import governanceHeaderSvg from './governance-header.svg';
-import snxHeaderSvg from './snx-header.svg';
 import { NetworkController } from './NetworkController';
+import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
 
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
-  const { network, setNetwork } = useNetwork();
+  const { network } = useNetwork();
 
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -85,13 +84,6 @@ export function Header() {
     }
   }, [walletsInfo, connect]);
 
-  const onDisconnect = () => {
-    if (walletsInfo) {
-      disconnect(walletsInfo);
-      localStorage.removeItem('connectedWallets');
-    }
-  };
-
   return (
     <Flex
       as="header"
@@ -106,10 +98,10 @@ export function Header() {
       justifyContent="center"
     >
       <Flex maxW="1440px" w="100%" alignItems="center">
-        <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto">
-          <Image src={snxHeaderSvg} pr="10px" />
+        <Flex cursor="pointer" onClick={() => navigate('/')} mr="auto" alignItems="center">
+          <SNXHeaderIconSmall />
           <Show above="md">
-            <Image src={governanceHeaderSvg} />
+            <SNXHeaderIcon />
           </Show>
         </Flex>
         <PeriodCountdown council={councils[0].slug} />

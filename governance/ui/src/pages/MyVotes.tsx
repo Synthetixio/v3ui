@@ -97,7 +97,7 @@ export default function MyVotes() {
                   The voting period hasn’t started yet, come back later to vote for your councils.
                 </Text>
                 <Button
-                  onClick={() => navigate('/council/spartan')}
+                  onClick={() => navigate('/councils/spartan')}
                   variant="outline"
                   colorScheme="gray"
                   size="sm"
