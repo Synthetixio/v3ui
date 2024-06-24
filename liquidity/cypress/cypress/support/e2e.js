@@ -50,7 +50,7 @@ Cypress.Commands.add('connectWallet', (namespace = 'wallet') => {
   const privateKey = wallet.privateKey;
   const address = wallet.address;
   cy.on('window:before:load', (win) => {
-    win.ethereum = metamask({ privateKey, address });
+    win.ethereum = metamask({ chainId: Cypress.env('CHAIN_ID'), privateKey, address });
   });
 
   return cy.wrap(wallet).as(namespace);

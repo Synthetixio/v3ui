@@ -1,12 +1,12 @@
 import { ethers } from 'ethers';
 
-export function metamask({ pk, address }) {
+export function metamask({ chainId, pk, address }) {
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
   return new Proxy(provider, {
     get(target, prop) {
       switch (prop) {
         case 'chainId':
-          return `0x${Number(provider._network.chainId).toString(16)}`;
+          return `0x${Number(chainId).toString(16)}`;
         case 'isMetaMask':
           return true;
         case 'getSigner':
