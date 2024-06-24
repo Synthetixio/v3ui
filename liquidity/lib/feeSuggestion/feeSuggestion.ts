@@ -54,11 +54,6 @@ export const feeSuggestion = async (
   provider: ethers.providers.JsonRpcProvider,
   fromBlock = 'latest'
 ) => {
-  // If local or base-goerli, use defaults
-  // Base goerli sometimes doesn't have enough tx we can use to estimate the priority fee, when this happens the tx will get "tx underprices"
-  if (provider.network.chainId === 13370 || provider.network.chainId === 84531) {
-    return defaultForLocalProvider();
-  }
   const feeHistory = await provider
     .send('eth_feeHistory', [
       ethers.utils.hexStripZeros(ethers.utils.hexlify(10)),
@@ -74,8 +69,14 @@ export const feeSuggestion = async (
   const blocksRewards = feeHistory.reward;
   const baseFeePerGas = feeHistory.baseFeePerGas.at(-1);
 
-  if (!blocksRewards.length) throw new Error('Error: block reward was empty');
-  if (!baseFeePerGas) throw new Error('Error: currentBaseFee was empty');
+  if (!blocksRewards.length) {
+    console.error(new Error('Error: block reward was empty'));
+    return defaultForLocalProvider();
+  }
+  if (!baseFeePerGas) {
+    console.error(new Error('Error: currentBaseFee was empty'));
+    return defaultForLocalProvider();
+  }
 
   const outlierBlocks = getOutlierBlocksToRemove(blocksRewards, 0);
 
