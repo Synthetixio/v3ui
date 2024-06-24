@@ -18,6 +18,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -159,6 +160,8 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
+      <WithdrawIncrease />
+
       <Button
         disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"

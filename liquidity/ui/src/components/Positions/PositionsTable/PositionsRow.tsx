@@ -1,10 +1,12 @@
-import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetBorrow } from '@snx-v3/useGetBorrow';
 import { utils } from 'ethers';
+import { CRatioBadge } from '../../Manage/CRatioBadge';
+import { ZEROWEI } from '../../../utils/constants';
 
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
@@ -39,8 +41,6 @@ export function PositionRow({
     poolId,
     collateralTypeAddress: collateralType.tokenAddress,
   });
-
-  const parsedCRatio = collateralType.issuanceRatioD18.gt(cRatio) ? 'MANAGE' : 'HEALTHY';
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
@@ -147,13 +147,11 @@ export function PositionRow({
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
                 {(cRatio.toNumber() * 100).toFixed(2) + '%'}
               </Text>
-              <Badge
-                colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
-                border="1px solid"
-                bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
-              >
-                {parsedCRatio}
-              </Badge>
+
+              <CRatioBadge
+                cRatio={cRatio}
+                issuanceRatioD18={collateralType.issuanceRatioD18 || ZEROWEI}
+              />
             </Flex>
           </Fade>
         </Td>

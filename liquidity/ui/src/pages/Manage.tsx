@@ -113,22 +113,21 @@ export const ManageUi: FC<{
         first.
       </Text>
       <Divider mt="31px" mb="24px" color="gray.900" />
-      <Flex gap={4}>
-        <BorderBox p={6} flexDirection="column" bg="navy.700" height="fit-content">
-          <WithdrawIncrease />
-          <Text fontWeight="700" fontSize="xl" color="gray.50" mb="1" fontFamily="heading">
-            Manage Position
-          </Text>
-          <Text as="span" fontWeight="700" display="inline" color="white">
-            Manage your position so your debt never equals your collateral else your position might
-            get liquidated.
-          </Text>
-          <ManageAction liquidityPosition={liquidityPosition} />
-        </BorderBox>
-        <Box minW="450px">
+      <Flex flexDirection={['column', 'column', 'row']} gap={4}>
+        <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <ManageStats liquidityPosition={liquidityPosition} />
           <Rewards isLoading={isLoading} rewards={rewards} />
-        </Box>
+        </BorderBox>
+        <BorderBox
+          flex={1}
+          maxW={['100%', '100%', '501px']}
+          p={6}
+          flexDirection="column"
+          bg="navy.700"
+          height="fit-content"
+        >
+          <ManageAction liquidityPosition={liquidityPosition} />
+        </BorderBox>
       </Flex>
     </Box>
   );
