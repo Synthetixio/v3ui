@@ -68,8 +68,8 @@ export const usePoolConfiguration = (poolId?: string) => {
         provider,
         allCalls,
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array');
-          return encoded.map((x) =>
+          const result = Array.isArray(encoded) ? encoded : [encoded];
+          return result.map((x) =>
             isLockedSchema.parse(
               CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', x)[0]
             )

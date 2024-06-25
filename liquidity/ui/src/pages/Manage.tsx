@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { AccountBanner, ManageAction, NoAccount } from '../components';
+import { ManageAction, NoAccount } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { Rewards } from '../components';
@@ -12,7 +12,7 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { ARBITRUM, Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
@@ -55,13 +55,11 @@ export const ManageUi: FC<{
   poolId?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
-  const { activeWallet } = useWallet();
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
   return (
     <Box mb={12} mt={8}>
-      {activeWallet && <AccountBanner mb={8} />}
       <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
         <Flex alignItems="center">
           <Flex
