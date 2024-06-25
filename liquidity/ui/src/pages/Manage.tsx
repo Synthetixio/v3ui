@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -7,14 +7,12 @@ import { CollateralIcon } from '@snx-v3/icons';
 import { AccountBanner, ManageAction } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
-import { HomeLink } from '@snx-v3/HomeLink';
 import { Rewards } from '../components';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
-import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -52,17 +50,15 @@ export const ManageUi: FC<{
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
   collateralSymbol?: string;
-}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
+  poolName?: string;
+}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName }) => {
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   const { activeWallet } = useWallet();
 
   return (
     <Box mb={12} mt={8}>
-      <Box mb="4">
-        <HomeLink />
-      </Box>
       {activeWallet && <AccountBanner mb={8} />}
-      <Flex alignItems="center" mb="8px">
+      <Flex px={6} alignItems="center" mb="8px">
         <Flex
           bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
           height="34px"
@@ -74,47 +70,51 @@ export const ManageUi: FC<{
         >
           <CollateralIcon
             symbol={collateralSymbol}
-            width="28px"
-            height="28px"
+            width="42px"
+            height="42px"
             fill="#0B0B22"
             color="#00D1FF"
           />
         </Flex>
-        <Heading
-          ml={4}
-          fontWeight={700}
-          fontSize="3xl"
-          color="gray.50"
-          display="flex"
-          alignItems="center"
-          data-cy="manage-position-title"
-        >
-          {collateralDisplayName} Liquidity Position
-        </Heading>
+        <Flex direction="column" gap={0.5}>
+          <Heading
+            ml={4}
+            fontWeight={700}
+            fontSize="24px"
+            color="gray.50"
+            display="flex"
+            alignItems="center"
+            data-cy="manage-position-title"
+          >
+            {collateralDisplayName} Liquidity Position
+          </Heading>
+          <Heading
+            ml={4}
+            fontWeight={700}
+            fontSize="16px"
+            color="gray.50"
+            display="flex"
+            alignItems="center"
+            data-cy="manage-position-subtitle"
+          >
+            {poolName}
+            <Flex
+              ml={2}
+              alignItems="center"
+              fontSize="12px"
+              color="gray.500"
+              gap={1}
+              fontWeight="bold"
+            >
+              <NetworkIcon size="14px" networkId={network?.id} />
+              {network?.label} Network
+            </Flex>
+          </Heading>
+        </Flex>
       </Flex>
-      <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
-        {isBaseAndromeda(network?.id, network?.preset)
-          ? 'Deposit to '
-          : 'Deposit your collateral to borrow snxUSD and '}
-        contribute to the network collateral. If you&apos;ve never staked on Synthetix V3 before,
-        please read through this{' '}
-        <Link
-          fontWeight="600"
-          color="cyan.500"
-          href={
-            isBaseAndromeda(network?.id, network?.preset)
-              ? 'https://docs.synthetix.io/v/v3/for-liquidity-providers/base-lp-guide'
-              : 'https://docs.synthetix.io/v/v3/for-liquidity-providers/delegating-collateral'
-          }
-          target="_blank"
-        >
-          quick introduction
-        </Link>{' '}
-        first.
-      </Text>
-      <Divider mt="31px" mb="24px" color="gray.900" />
-      <Flex flexDirection={['column', 'column', 'row']} gap={4}>
-        <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
+
+      <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+        <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <ManageStats liquidityPosition={liquidityPosition} />
           <Rewards isLoading={isLoading} rewards={rewards} />
         </BorderBox>
@@ -164,6 +164,7 @@ export const Manage = () => {
       <ManageUi
         isLoading={isLoading}
         rewards={rewardsData}
+        poolName={poolData?.name}
         liquidityPosition={liquidityPosition}
         network={network}
         collateralSymbol={collateralSymbol}

@@ -89,7 +89,6 @@ export const ManageStatsUi: FC<{
           flexDirection="row"
           bg="navy.700"
           justifyContent="space-between"
-          mb={4}
           flex={1}
         >
           <Flex flexDirection="column" justifyContent="space-between" width="100%">
@@ -133,7 +132,7 @@ export const ManageStatsUi: FC<{
           </Flex>
         </BorderBox>
       )} */}
-        <BorderBox flex="1" p={4} flexDirection="column" bg="navy.700" mb={4}>
+        <BorderBox flex="1" p={4} flexDirection="column" bg="navy.700">
           <Flex alignItems="center" mb="4px">
             <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
               Collateral
@@ -189,7 +188,7 @@ export const ManageStatsUi: FC<{
         )}
       </Flex>
       {!isBaseAndromeda(network?.id, network?.preset) && (
-        <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
+        <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
           <CRatioBar
             currentCRatioPercentage={cRatio.toNumber() * 100}
             liquidationCratioPercentage={
