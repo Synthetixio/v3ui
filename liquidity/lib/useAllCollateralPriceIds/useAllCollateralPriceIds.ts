@@ -1,4 +1,4 @@
-import { deploymentsWithERC7412, Network, useNetwork } from '@snx-v3/useBlockchain';
+import { deploymentHasERC7412, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -56,8 +56,13 @@ export const useAllCollateralPriceIds = (customNetwork?: Network) => {
         throw Error('useAllCollateralPriceIds should not be enabled ');
       }
 
-      if (!deploymentsWithERC7412.includes(`${targetNetwork.id}-${targetNetwork.preset}`))
+      const doesDeploymentHaveERC7412 = await deploymentHasERC7412(
+        targetNetwork.id,
+        targetNetwork.preset
+      );
+      if (!doesDeploymentHaveERC7412) {
         return [];
+      }
 
       const oracleNodeIds = collateralConfigs.map((x: { oracleNodeId: string }) => x.oracleNodeId);
 
