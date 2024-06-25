@@ -5,26 +5,31 @@ import {
   Heading,
   IconButton,
   Input,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  Show,
   Spinner,
   Text,
   Textarea,
   Tooltip,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
-import { useGetUserDetailsQuery } from '../../queries/';
+import { GetUserDetails, useGetUserDetailsQuery } from '../../queries/';
 import { useEffect } from 'react';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import UserProfilePreview from './UserProfilePreview';
 
 export function UserProfileForm() {
-  const navigate = useNavigate();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { activeWallet } = useWallet();
   const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
   const mutation = useUpdateUserDetailsMutation();
 
-  const { register, getValues, setValue } = useForm({
+  const { register, getValues, setValue, watch } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -37,6 +42,8 @@ export function UserProfileForm() {
     },
   });
 
+  const userData = watch() as GetUserDetails;
+
   useEffect(() => {
     if (user) {
       setValue('username', user.username);
@@ -48,6 +55,30 @@ export function UserProfileForm() {
       setValue('delegationPitch', user.delegationPitch);
     }
   }, [user, setValue]);
+
+  const handleOnFormSave = () => {
+    mutation.mutateAsync({
+      about: getValues('about')!,
+      address: user!.address,
+      email: '',
+      associatedAddresses: '',
+      bannerImageId: '',
+      bannerUrl: '',
+      delegationPitch: getValues('delegationPitch')!,
+      discord: getValues('discord')!,
+      ens: '',
+      github: getValues('github')!,
+      bannerThumbnailUrl: '',
+      pfpUrl: getValues('pfpUrl')!,
+      website: '',
+      pfpImageId: '',
+      twitter: getValues('twitter')!,
+      pfpThumbnailUrl: '',
+      notificationPreferences: '',
+      type: '',
+      username: getValues('username')!,
+    });
+  };
 
   if (isLoading)
     return (
@@ -70,18 +101,6 @@ export function UserProfileForm() {
         border="1px solid"
         borderColor="gray.900"
       >
-        <IconButton
-          onClick={() => navigate('/councils')}
-          size="xs"
-          aria-label="close button"
-          icon={<CloseIcon />}
-          variant="ghost"
-          colorScheme="whiteAlpha"
-          color="white"
-          position="absolute"
-          top="5px"
-          right="5px"
-        />
         <Flex w="100%" alignItems="center">
           <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
           <Flex w="100%" flexDirection="column" ml="2" gap="2">
@@ -160,53 +179,78 @@ export function UserProfileForm() {
             </Button>
           </Tooltip>
         </Flex>
-        <div>
-          <Text color="gray.500" fontSize="12px">
-            Governance Pitch
-          </Text>
-          <Textarea
-            {...register('delegationPitch')}
-            placeholder="eg: How am I going to make a difference at Synthetix"
-          />
-        </div>
-      </Flex>
-      <Flex flexDir="column" maxW="451px" minW="40vw" gap="3">
-        <Heading fontSize="20px">Preview</Heading>
-        <Flex border="1px solid" borderColor="gray.900" rounded="base" bg="navy.700" p="4">
+        <Text color="gray.500" fontSize="12px">
+          Governance Pitch
+        </Text>
+        <Textarea
+          {...register('delegationPitch')}
+          placeholder="eg: How am I going to make a difference at Synthetix"
+        />
+        <Show below="xl">
           <Button
+            isLoading={mutation.isPending}
             w="100%"
             onClick={() => {
-              mutation
-                .mutateAsync({
-                  about: getValues('about')!,
-                  address: user!.address,
-                  email: '',
-                  associatedAddresses: '',
-                  bannerImageId: '',
-                  bannerUrl: '',
-                  delegationPitch: getValues('delegationPitch')!,
-                  discord: getValues('discord')!,
-                  ens: '',
-                  github: getValues('github')!,
-                  bannerThumbnailUrl: '',
-                  pfpUrl: getValues('pfpUrl')!,
-                  website: '',
-                  pfpImageId: '',
-                  twitter: getValues('twitter')!,
-                  pfpThumbnailUrl: '',
-                  notificationPreferences: '',
-                  type: '',
-                  username: getValues('username')!,
-                })
-                .then(() => {
-                  navigate('/councils/');
-                });
+              handleOnFormSave();
             }}
           >
             Save Changes
           </Button>
-        </Flex>
+          <Button variant="outline" colorScheme="gray" color="white" onClick={() => onOpen()}>
+            Preview
+          </Button>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent mx="4" minW="95%">
+              <Flex
+                flexDirection="column"
+                bg="navy.700"
+                minW="100%"
+                borderColor="cyan.500"
+                borderWidth="1px"
+                borderStyle="solid"
+                rounded="base"
+                p="6"
+                position="relative"
+              >
+                <IconButton
+                  onClick={() => onClose()}
+                  size="xs"
+                  aria-label="close button"
+                  icon={<CloseIcon />}
+                  variant="ghost"
+                  colorScheme="whiteAlpha"
+                  color="white"
+                  position="absolute"
+                  top="10px"
+                  right="10px"
+                />
+                <UserProfilePreview
+                  activeWallet={activeWallet?.address}
+                  isPending={mutation.isPending}
+                  userData={userData}
+                  onSave={() => {
+                    handleOnFormSave();
+                  }}
+                />
+              </Flex>
+            </ModalContent>
+          </Modal>
+        </Show>
       </Flex>
+      <Show above="xl">
+        <Flex flexDir="column" maxW="451px" minW="40vw" gap="3">
+          <Heading fontSize="20px">Preview</Heading>
+          <UserProfilePreview
+            activeWallet={activeWallet?.address}
+            isPending={mutation.isPending}
+            userData={userData}
+            onSave={() => {
+              handleOnFormSave();
+            }}
+          />
+        </Flex>
+      </Show>
     </Flex>
   );
 }
