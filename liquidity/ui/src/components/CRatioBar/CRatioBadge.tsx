@@ -11,7 +11,7 @@ const badgeColors = {
   error: {
     colorScheme: 'red',
     bg: 'red.900',
-    label: 'MANAGE',
+    label: 'Unhealthy',
   },
   warning: {
     colorScheme: 'orange',

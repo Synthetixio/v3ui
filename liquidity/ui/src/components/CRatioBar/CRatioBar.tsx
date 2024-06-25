@@ -56,7 +56,10 @@ export const CRatioBarUi: FC<{
     <Flex flexDir="column" gap="2">
       <Text color="gray.500">
         C-Ratio{' '}
-        <Tooltip label="TODO" p="3">
+        <Tooltip
+          label="Is a dynamic number that represents a ratio between the collateral Delegated for your position and the Borrowed assets for this position - the Pool PNL."
+          p="3"
+        >
           <InfoIcon w="12px" h="12px" />
         </Tooltip>
       </Text>
@@ -109,7 +112,7 @@ export const CRatioBarUi: FC<{
                 ? `Liquidation < ${liquidationCratioPercentage.toFixed(0)}%`
                 : 'Liquidation'
             }
-            tooltipText="You may be flagged for liquidation"
+            tooltipText="Point at which your Position gets liquidated."
             tooltipPosition="left"
           />
           <LineWithText
