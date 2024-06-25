@@ -13,47 +13,55 @@ import { parseUnits } from '@snx-v3/format';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
+function getAllPriceIdsEntries(extras: any) {
+  return Object.entries(extras).filter(
+    ([key, value]) =>
+      String(value).length === 66 &&
+      (key.startsWith('pyth_feed_id_') || (key.startsWith('pyth') && key.endsWith('FeedId')))
+  );
+}
+
 async function getPythFeedIds(network: Network) {
   const extras = await importExtras(network.id, network.preset);
-  return Object.entries(extras)
-    .filter(
-      ([key, value]) =>
-        key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
-    )
-    .map(([_key, value]) => value);
+  return getAllPriceIdsEntries(extras).map(([_key, value]) => value);
 }
 
 async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
-  const queries = networksOffline.map((network) => importExtras(network.id, network.preset));
-  const extras = await Promise.all(queries);
+  const extras = await Promise.all(
+    networksOffline.map((network) => importExtras(network.id, network.preset))
+  );
 
   // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
-  const priceIds = extras
-    .map((extra) => {
-      return Object.entries(extra).filter(
-        ([key, _value]) => key.startsWith('pyth') && key.endsWith('FeedId')
-      );
-    })
-    .flat();
-
+  const priceIds = extras.map(getAllPriceIdsEntries).flat();
   const deduped = Array.from(
     new Set(
-      priceIds.map((x) => ({
-        collateral: x[0].replace('pyth', '').replace('FeedId', '').toUpperCase(),
-        priceId: x[1],
-      }))
+      priceIds
+        .map(([key, priceId]) => {
+          if (key.startsWith('pyth_feed_id_')) {
+            return {
+              symbol: key.replace('pyth_feed_id_', '').toUpperCase(),
+              priceId,
+            };
+          }
+          if (key.startsWith('pyth') && key.endsWith('FeedId')) {
+            return {
+              symbol: key.replace('pyth', '').replace('FeedId', '').toUpperCase(),
+              priceId,
+            };
+          }
+          return { symbol: null, priceId: null };
+        })
+        .filter(({ symbol, priceId }) => symbol && priceId)
     )
   );
 
-  // Find the corresponding price feed id for each collateral
+  // Find the corresponding price feed id for each symbol
   return collateralList.map((collateral) => {
     let symbol = collateral;
     if (collateral === 'WETH') {
       symbol = 'ETH';
     }
-
-    const id = deduped.find((x) => x.collateral === symbol);
-
+    const id = deduped.find((x) => x.symbol === symbol);
     return {
       collateral,
       priceId: id?.priceId,
