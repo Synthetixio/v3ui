@@ -63,17 +63,11 @@ export const usePoolConfiguration = (poolId?: string) => {
         allCalls.unshift(priceUpdateTx as any);
       }
 
-      console.log({
-        allCalls,
-      });
       const decoded = await erc7412Call(
         network,
         provider,
         allCalls,
         (encoded) => {
-          console.log({
-            encoded,
-          });
           if (!Array.isArray(encoded)) throw Error('Expected array');
           return encoded.map((x) =>
             isLockedSchema.parse(
