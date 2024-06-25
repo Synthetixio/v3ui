@@ -60,38 +60,36 @@ export const CRatioBarUi: FC<{
           <InfoIcon w="12px" h="12px" />
         </Tooltip>
       </Text>
-      {!currentCRatioPercentage ? (
-        <Text color="gray.500" fontWeight={800} fontSize="20px">
-          N/A
-        </Text>
-      ) : (
-        <Flex gap="1" alignItems="center">
+      <Flex alignItems="center" gap={2}>
+        {!currentCRatioPercentage ? (
+          <Text color="white" fontWeight={800} fontSize="20px">
+            N/A
+          </Text>
+        ) : (
           <Text color="white" fontWeight={800} fontSize="20px">
             {ratioIsMaxUInt(currentCRatioPercentage)
               ? 'Infinite'
               : currentCRatioPercentage.toFixed(2)}
             %
           </Text>
-          {ratioIsMaxUInt(currentCRatioPercentage) ? (
-            <Text color="white" fontWeight={800} fontSize="20px">
-              &rarr; Infinite %
-            </Text>
-          ) : (
-            hasChanges && (
-              <Text color="white" fontWeight={800} fontSize="20px">
-                &rarr; {newCratioPercentage?.toFixed(2)}%
-              </Text>
-            )
-          )}
-          <CRatioBadge
-            currentCRatioPercentage={
-              hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage
-            }
-            liquidationCratioPercentage={liquidationCratioPercentage}
-            targetCratioPercentage={targetCratioPercentage}
-          />
-        </Flex>
-      )}
+        )}
+
+        {hasChanges && newCratioPercentage && (
+          <Text color="white" fontWeight={800} fontSize="20px">
+            &rarr;{' '}
+            {ratioIsMaxUInt(newCratioPercentage)
+              ? 'Infinite'
+              : `${newCratioPercentage.toFixed(2)} %`}
+          </Text>
+        )}
+
+        <CRatioBadge
+          currentCRatioPercentage={hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage}
+          liquidationCratioPercentage={liquidationCratioPercentage}
+          targetCratioPercentage={targetCratioPercentage}
+        />
+      </Flex>
+
       <Box
         position="relative"
         height="100px"
@@ -141,7 +139,7 @@ export const CRatioBarUi: FC<{
         >
           {newCratioPercentage !== undefined ? (
             <Progress
-              data-testid="non highlighted progress bar"
+              data-testid="highlighted progress bar"
               variant={newCratioPercentage === 0 ? 'white' : 'update-' + newVariant}
               top={0}
               bottom={0}
@@ -160,7 +158,7 @@ export const CRatioBarUi: FC<{
             position="absolute"
             margin="auto"
             width="100%"
-            data-testid="highlighted progress bar"
+            data-testid="non highlighted progress bar"
             display={newCratioPercentage === 0 ? 'none' : 'block'}
             value={highlightedProgressCRatio / scaleFactor}
           />

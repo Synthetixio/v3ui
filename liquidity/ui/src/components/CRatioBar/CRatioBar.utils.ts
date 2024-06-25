@@ -23,4 +23,4 @@ export const getHealthVariant = ({
   return 'success';
 };
 
-export const ratioIsMaxUInt = (ratio: number) => ratio > Number.MAX_SAFE_INTEGER;
+export const ratioIsMaxUInt = (ratio: number) => ratio >= Number.MAX_SAFE_INTEGER;

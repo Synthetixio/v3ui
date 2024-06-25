@@ -4,7 +4,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { AccountBanner, ManageAction } from '../components';
+import { AccountBanner, ManageAction, NoAccount } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { Rewards } from '../components';
@@ -30,7 +30,7 @@ function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 
-function useCollateralDisplayName(collateralSymbol?: string) {
+export function useCollateralDisplayName(collateralSymbol?: string) {
   const { network } = useNetwork();
 
   return React.useMemo(() => {
@@ -161,14 +161,19 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
-      <ManageUi
-        isLoading={isLoading}
-        rewards={rewardsData}
-        poolName={poolData?.name}
-        liquidityPosition={liquidityPosition}
-        network={network}
-        collateralSymbol={collateralSymbol}
-      />
+      {!accountId && (
+        <NoAccount collateralSymbol={collateralSymbol} collateralType={collateralType} />
+      )}
+      {accountId && (
+        <ManageUi
+          isLoading={isLoading}
+          rewards={rewardsData}
+          poolName={poolData?.name}
+          liquidityPosition={liquidityPosition}
+          network={network}
+          collateralSymbol={collateralSymbol}
+        />
+      )}
     </ManagePositionProvider>
   );
 };

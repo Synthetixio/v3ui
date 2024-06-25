@@ -9,22 +9,30 @@ import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei from '@synthetixio/wei';
 import { ZEROWEI } from '../../utils/constants';
 
-export const DebtStats: FC<{
+export const CollateralStats: FC<{
   liquidityPosition?: LiquidityPosition;
   collateralType?: CollateralType;
-  newDebt: Wei;
+  newCollateralAmount: Wei;
+  collateralValue: Wei;
   hasChanges: boolean;
   isLoading?: boolean;
-}> = ({ liquidityPosition, collateralType, newDebt, hasChanges, isLoading }) => (
+}> = ({
+  liquidityPosition,
+  collateralType,
+  newCollateralAmount,
+  collateralValue,
+  hasChanges,
+  isLoading,
+}) => (
   <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700">
     <Flex
-      opacity={!liquidityPosition && !isLoading ? '40%' : '100%'}
+      opacity={!liquidityPosition && !isLoading && !hasChanges ? '40%' : '100%'}
       flexDirection="column"
       width="100%"
     >
       <Flex alignItems="center" mb="4px">
         <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-          Debt
+          Collateral
         </Text>
         <Tooltip label="Your minted debt balance." textAlign="start" py={2} px={3}>
           <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
@@ -36,9 +44,27 @@ export const DebtStats: FC<{
         {isLoading ? (
           <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
         ) : liquidityPosition && collateralType ? (
+          <Flex direction="column">
+            <Flex justifyContent="space-between" alignItems="center">
+              <ChangeStat
+                value={liquidityPosition.collateralAmount}
+                newValue={newCollateralAmount}
+                formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
+                hasChanges={hasChanges}
+                dataTestId="manage stats collateral"
+              />
+            </Flex>
+            <Text fontWeight="400" color="white" fontSize="16px">
+              {currency(collateralValue, {
+                currency: 'USD',
+                style: 'currency',
+              })}
+            </Text>
+          </Flex>
+        ) : (
           <ChangeStat
-            value={liquidityPosition.debt}
-            newValue={newDebt}
+            value={ZEROWEI}
+            newValue={newCollateralAmount}
             formatFn={(val: Wei) =>
               currency(val, {
                 currency: 'USD',
@@ -47,20 +73,6 @@ export const DebtStats: FC<{
               })
             }
             hasChanges={hasChanges}
-            dataTestId="manage-stats-debt-value"
-          />
-        ) : (
-          <ChangeStat
-            value={ZEROWEI}
-            newValue={ZEROWEI}
-            formatFn={(val: Wei) =>
-              currency(val, {
-                currency: 'USD',
-                style: 'currency',
-                maximumFractionDigits: 4,
-              })
-            }
-            hasChanges={false}
           />
         )}
       </Flex>

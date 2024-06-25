@@ -1,22 +1,21 @@
 import { FC, useContext } from 'react';
-import { Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
-import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useApr } from '@snx-v3/useApr';
-import { Tooltip } from '@snx-v3/Tooltip';
 import { CRatioBar } from '../CRatioBar/CRatioBar';
 import { PnlStats } from './PnlStats';
 import { DebtStats } from './DebtStats';
+import { CollateralStats } from './CollateralStats';
 
 export const ChangeStat: FC<{
   value: Wei;
@@ -132,44 +131,15 @@ export const ManageStatsUi: FC<{
           </Flex>
         </BorderBox>
       )} */}
-        <BorderBox flex="1" p={4} flexDirection="column" bg="navy.700">
-          <Flex alignItems="center" mb="4px">
-            <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-              Collateral
-            </Text>
-            <Tooltip
-              label="Your total amount of collateral locked in this pool."
-              textAlign="start"
-              py={2}
-              px={3}
-            >
-              <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-                <InfoIcon color="white" height="9px" width="9px" />
-              </Flex>
-            </Tooltip>
-          </Flex>
-          {liquidityPosition && collateralType ? (
-            <>
-              <Flex justifyContent="space-between" alignItems="center">
-                <ChangeStat
-                  value={liquidityPosition.collateralAmount}
-                  newValue={newCollateralAmount}
-                  formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
-                  hasChanges={hasChanges}
-                  dataTestId="manage stats collateral"
-                />
-              </Flex>
-              <Text fontWeight="400" color="white" fontSize="16px">
-                {currency(collateralValue, {
-                  currency: 'USD',
-                  style: 'currency',
-                })}
-              </Text>
-            </>
-          ) : (
-            <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
-          )}
-        </BorderBox>
+
+        <CollateralStats
+          liquidityPosition={liquidityPosition}
+          collateralType={collateralType}
+          newCollateralAmount={newCollateralAmount}
+          collateralValue={collateralValue}
+          hasChanges={hasChanges}
+        />
+
         {isBaseAndromeda(network?.id, network?.preset) && (
           <PnlStats
             liquidityPosition={liquidityPosition}
