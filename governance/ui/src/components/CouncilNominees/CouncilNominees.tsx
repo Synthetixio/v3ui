@@ -1,5 +1,17 @@
-import { Divider, Flex, Heading, Input, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
-import { CouncilSlugs } from '../../utils/councils';
+import {
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  Input,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
+import councils, { CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
@@ -12,17 +24,20 @@ import { utils } from 'ethers';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
+import { CouncilImage } from '../CouncilImage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
 
-  const { activeWallet } = useWallet();
+  const { activeWallet, connect } = useWallet();
 
   const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
+
+  const council = councils.find((council) => council.slug === activeCouncil);
 
   const startDay =
     councilSchedule?.endDate && new Date(councilSchedule?.endDate * 1000).getUTCDate();
@@ -110,8 +125,30 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         </Flex>
       </Flex>
       <Divider />
-      {activeWallet?.address && (
+      {activeWallet?.address ? (
         <UserListItem address={activeWallet.address} activeCouncil={activeCouncil} />
+      ) : (
+        <Flex justifyContent="space-between" px="6" py="4">
+          <Text
+            fontSize="14px"
+            fontWeight={700}
+            color="white"
+            as={Flex}
+            alignItems="center"
+            gap="2"
+          >
+            <CouncilImage
+              imageUrl={council?.image || ''}
+              width="30px"
+              height="30px"
+              imageProps={{ w: '108px', h: '108px' }}
+            />
+            Nominate yourself for the {activeCouncil} Council
+          </Text>
+          <Button size="xs" onClick={() => connect()}>
+            Connect Wallet
+          </Button>
+        </Flex>
       )}
       <Divider />
       <Flex justifyContent="space-between" alignItems="center" p="6">

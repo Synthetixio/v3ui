@@ -28,6 +28,8 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       borderStyle="solid"
       rounded="base"
       p="6"
+      position="sticky"
+      top="81px"
     >
       {isSuccess ? (
         <>
@@ -121,7 +123,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
                 {data?.username ? data.username : 'No Username'}
               </Text>
               <Text fontSize="12px" color="gray.500">
-                Nomination Wallet: {shortAddress(data?.address)}
+                Nomination Wallet: {prettyString(data?.address || '')}
               </Text>
             </Flex>
           </Flex>

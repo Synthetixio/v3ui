@@ -100,7 +100,7 @@ export function NetworkController() {
             networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
           />
         </MenuButton>
-        <MenuList border="1px" borderColor="gray.900">
+        <MenuList border="1px" borderColor="gray.900" zIndex={999}>
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
               <NetworkIcon networkId={id} size="20px" />

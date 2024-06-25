@@ -31,7 +31,8 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       borderStyle="solid"
       rounded="base"
       p="6"
-      position="relative"
+      position="sticky"
+      top="81px"
     >
       <IconButton
         onClick={() => navigate(`/councils/${activeCouncil}`)}

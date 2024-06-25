@@ -53,7 +53,7 @@ export default function UserListItem({
           mr="0"
         />
         <Text fontWeight="bold" fontSize="14px" ml="3">
-          {user?.username ? user.username : prettyString(user!.address)}
+          {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (

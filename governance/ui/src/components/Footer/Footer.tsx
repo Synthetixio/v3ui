@@ -12,6 +12,7 @@ export default function Footer() {
       borderTop="1px solid"
       borderTopColor="gray.900"
       mt="auto"
+      bg="navy.700"
     >
       <SNXFooterSVG />
       <Flex gap="4">

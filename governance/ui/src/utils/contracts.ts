@@ -4,17 +4,17 @@ import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
   '0x4066a172DD5D21E4f787C07D3118D0876296750B',
-  process.env.DEV ? electionModuleABI : electionModuleABITest
+  process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
   '0x4066a172DD5D21E4f787C07D3118D0876296750B',
-  process.env.DEV ? electionModuleABI : electionModuleABITest
+  process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
   '0x4066a172DD5D21E4f787C07D3118D0876296750B',
-  process.env.DEV ? electionModuleABI : electionModuleABITest
+  process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 export function getCouncilContract(council: CouncilSlugs) {

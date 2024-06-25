@@ -29,6 +29,7 @@ export default function Councils() {
         as={Flex}
         flexDirection="row"
         w="100%"
+        mb="4"
       >
         <Flex flexDir="column" w="100%">
           {councilPeriod === '1' || councilPeriod === '2' ? (
@@ -42,9 +43,7 @@ export default function Councils() {
             )}
           /> */}
         </Flex>
-        <Hide below="xl">
-          <UserActionBox activeCouncil={activeCouncil} />
-        </Hide>
+        <UserActionBox activeCouncil={activeCouncil} />
       </Container>
     </Flex>
   );

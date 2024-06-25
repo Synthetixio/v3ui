@@ -187,7 +187,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
           </Tr>
         </Thead>
         <Tbody>
-          {userDetailsLoading ? (
+          {userDetailsLoading || !councilMemberDetails ? (
             <>
               <Tr>
                 <Th>

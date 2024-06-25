@@ -110,7 +110,7 @@ export const UserProfileDetails = ({
               colorScheme="gray"
               mb="1"
               w="100%"
-              onClick={() => navigate(`/councils/${activeCouncil}?editProfile=true`)}
+              onClick={() => navigate(`/profile`)}
               color="white"
             >
               Edit Profile

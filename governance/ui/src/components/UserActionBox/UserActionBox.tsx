@@ -1,7 +1,6 @@
 import { Flex, Show, Text, useDisclosure } from '@chakra-ui/react';
 import { useSearchParams } from 'react-router-dom';
 import { CouncilSlugs } from '../../utils/councils';
-import EditProfile from '../EditProfile/EditProfile';
 import { NominateSelfContainer } from '../NominateSelf/NominateSelfContainer';
 import { EditNominationContainer } from '../EditNomination/EditNominationContainer';
 import { SelectedContainer } from '../UserProfileCard/SelectedContainer';
@@ -18,13 +17,8 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
   const editNomination = searchParams.get('editNomination') === 'true' ? true : false;
   const nominate = searchParams.get('nominate') === 'true' ? true : false;
   const selectedUserAddress = searchParams.get('view') as string;
-  const editProfile = searchParams.get('editProfile') === 'true' ? true : false;
 
   const { onClose } = useDisclosure();
-
-  if (editProfile) {
-    return <EditProfile activeCouncil={activeCouncil} onClose={onClose} />;
-  }
 
   if (nominate && activeWallet?.address) {
     return <NominateSelfContainer activeCouncil={activeCouncil} onClose={onClose} />;
@@ -47,9 +41,9 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
 
   // Empty State
   return (
-    <Show above="md">
+    <Show above="xl">
       <Flex
-        w="451px"
+        minW="451px"
         h="612px"
         justifyContent="center"
         alignItems="center"
@@ -61,6 +55,8 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         mt={6}
         my="6"
         boxShadow="lg"
+        position="sticky"
+        top="81px"
       >
         <Text
           w="225px"

@@ -30,7 +30,7 @@ export default function UserProfileEditPreview({
         <Flex flexDir="column" w="100%" justifyContent="center">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
-              {prettyString(activeWallet || '')}
+              {userData.username ? userData.username : prettyString(activeWallet || '')}
             </Text>
           </Flex>
           <Text fontSize="12px" fontWeight="400" lineHeight="16px">
