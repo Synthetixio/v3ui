@@ -1,4 +1,4 @@
-import { Alert, Button, Flex, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
@@ -26,8 +26,8 @@ const BorrowUi: FC<{
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="0.5">
-        {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
+      <Text fontSize="md" fontWeight="700" mb="2">
+        {isBase ? 'Claim' : 'Borrow'}
       </Text>
 
       <BorderBox display="flex" py={2} px={3} mb="4">
@@ -64,15 +64,18 @@ const BorrowUi: FC<{
         </Flex>
       </BorderBox>
 
-      <Alert colorScheme="blue" mb="4">
-        <Text fontWeight="semibold">
-          As a security precaution, borrowed assets can only be withdrawn to your wallet after 24 hs
-          since your previous account activity.
-        </Text>
-      </Alert>
+      <Collapse in={debtChange.gt(0)} animateOpacity>
+        <Alert colorScheme="blue" mb="4">
+          <AlertIcon />
+          <Text>
+            As a security precaution, borrowed assets can only be withdrawn to your wallet after 24
+            hs since your previous account activity.
+          </Text>
+        </Alert>
+      </Collapse>
 
-      <Button data-testid="borrow submit" type="submit">
-        {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
+      <Button isDisabled={debtChange.lte(0)} data-testid="borrow submit" type="submit">
+        {debtChange.lte(0) ? 'Enter Amount' : isBase ? 'Claim' : 'Borrow'}
       </Button>
     </Flex>
   );

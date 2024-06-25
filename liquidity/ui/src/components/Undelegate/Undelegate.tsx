@@ -61,8 +61,8 @@ export const UndelegateUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="1">
-        Remove {displaySymbol}
+      <Text fontSize="md" fontWeight="700" mb="2">
+        Remove Collateral
       </Text>
 
       <BorderBox flexDirection="column" py={2} px={3} mb="4">
@@ -127,12 +127,13 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
+
       <Button
         data-testid="undelegate submit"
         type="submit"
-        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
+        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true || collateralChange.gte(0)}
       >
-        Remove {displaySymbol}
+        {collateralChange.gte(0) ? 'Enter Amount' : 'Remove Collateral'}
       </Button>
     </Flex>
   );

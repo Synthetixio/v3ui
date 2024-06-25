@@ -63,8 +63,8 @@ export const DepositUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="1">
-        Add {displaySymbol}
+      <Text fontSize="md" fontWeight="700" mb="2">
+        Deposit Collateral
       </Text>
       <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
         <Flex>
@@ -157,15 +157,15 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      <WithdrawIncrease />
+      {collateralChange.gt(0) && <WithdrawIncrease />}
 
       <Button
-        disabled={combinedTokenBalance === undefined}
         data-testid="deposit submit"
         data-cy="deposit-submit-button"
         type="submit"
+        disabled={collateralChange.lte(0) || combinedTokenBalance === undefined}
       >
-        Add {displaySymbol}
+        {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit Collateral'}
       </Button>
     </Flex>
   );

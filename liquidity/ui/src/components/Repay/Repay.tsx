@@ -31,8 +31,8 @@ export const RepayUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="1">
-        Repay {isBase ? 'USDC' : stablecoin?.symbol}
+      <Text fontSize="md" fontWeight="700" mb="2">
+        Repay Debt
       </Text>
 
       <BorderBox display="flex" py={2} px={3} mb="4">
@@ -111,9 +111,11 @@ export const RepayUi: FC<{
       <Button
         data-testid="repay submit"
         type="submit"
-        isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
+        isDisabled={
+          !(max && snxUSDBalance && currentDebt && availableUSDCollateral) || debtChange.gte(0)
+        }
       >
-        Repay {isBase ? 'USDC' : stablecoin?.symbol}
+        {debtChange.gte(0) ? 'Enter Amount' : 'Repay'}
       </Button>
     </Flex>
   );
