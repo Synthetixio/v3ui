@@ -21,7 +21,7 @@ import { GetUserDetails, useGetUserDetailsQuery } from '../../queries/';
 import { useEffect } from 'react';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import UserProfilePreview from './UserProfilePreview';
+import UserProfileEditPreview from './UserProfileEditPreview';
 
 export function UserProfileForm() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -225,7 +225,7 @@ export function UserProfileForm() {
                   top="10px"
                   right="10px"
                 />
-                <UserProfilePreview
+                <UserProfileEditPreview
                   activeWallet={activeWallet?.address}
                   isPending={mutation.isPending}
                   userData={userData}
@@ -241,7 +241,7 @@ export function UserProfileForm() {
       <Show above="xl">
         <Flex flexDir="column" maxW="451px" minW="40vw" gap="3">
           <Heading fontSize="20px">Preview</Heading>
-          <UserProfilePreview
+          <UserProfileEditPreview
             activeWallet={activeWallet?.address}
             isPending={mutation.isPending}
             userData={userData}

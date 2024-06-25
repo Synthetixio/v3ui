@@ -5,7 +5,7 @@ import { GetUserDetails } from '../../queries';
 import { Socials } from '../Socials';
 import { CopyIcon } from '@chakra-ui/icons';
 
-export default function UserProfilePreview({
+export default function UserProfileEditPreview({
   userData,
   activeWallet,
   isPending,
