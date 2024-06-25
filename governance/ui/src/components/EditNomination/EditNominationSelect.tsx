@@ -39,9 +39,9 @@ export default function EditNominationSelect({
         <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || prettyString(user!.address)}
+            {user?.ens || prettyString(user?.address || '')}
           </Text>
-          <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
+          <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
       </Flex>
       {nominationInformation?.isNominated && (

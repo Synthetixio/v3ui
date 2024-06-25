@@ -136,6 +136,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             as={Flex}
             alignItems="center"
             gap="2"
+            textTransform="capitalize"
           >
             <CouncilImage
               imageUrl={council?.image || ''}
@@ -143,7 +144,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               height="30px"
               imageProps={{ w: '108px', h: '108px' }}
             />
-            Nominate yourself for the {activeCouncil} Council
+            Nominate Yourself for the {activeCouncil} Council
           </Text>
           <Button size="xs" onClick={() => connect()}>
             Connect Wallet

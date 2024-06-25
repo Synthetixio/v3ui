@@ -183,7 +183,7 @@ export function NetworkController() {
               </Flex>
             )}
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex={999}>
             <Flex
               border="1px solid"
               rounded="base"

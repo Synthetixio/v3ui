@@ -104,6 +104,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
         />
       ) : (
         <EditNominationSelect
+          selectedCouncil={selectedCouncil}
           setSelectedCouncil={setSelectedCouncil}
           setShowConfirm={setShowConfirm}
         />

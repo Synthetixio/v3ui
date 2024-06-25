@@ -4,6 +4,7 @@ import { getCouncilContract } from '../utils/contracts';
 import { useSigner } from '../queries/useWallet';
 import { useToast } from '@chakra-ui/react';
 import { CustomToast } from '../components/CustomToast';
+import { devSigner } from '../utils/providers';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
   const query = useQueryClient();
@@ -13,7 +14,9 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
   return useMutation({
     mutationFn: async () => {
       if (signer) {
-        const tx = await getCouncilContract(council).connect(signer).nominate();
+        const tx = await getCouncilContract(council)
+          .connect(process.env.DEV ? devSigner : signer)
+          .nominate();
         await tx.wait();
       }
     },

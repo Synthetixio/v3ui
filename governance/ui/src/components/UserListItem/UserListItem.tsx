@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetUserDetailsQuery } from '../../queries';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
-import { useWallet, useNetwork } from '../../queries/useWallet';
+import { useWallet } from '../../queries/useWallet';
 import { Badge } from '../Badge';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
@@ -22,10 +22,7 @@ export default function UserListItem({
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: nominationInformation } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-
-  const { network } = useNetwork();
   const { activeWallet } = useWallet();
-
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
 
   return (
@@ -77,10 +74,7 @@ export default function UserListItem({
             }
           }}
         >
-          {nominationInformation?.isNominated &&
-          isOwn &&
-          // TODO @dev remove once live
-          (network?.id === 11155111 || network?.id === 10) ? (
+          {nominationInformation?.isNominated && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="black">Nominate Self</Text>

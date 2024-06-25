@@ -4,6 +4,7 @@ import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
 import { CustomToast } from '../components/CustomToast';
 import { useToast } from '@chakra-ui/react';
+import { devSigner } from '../utils/providers';
 
 export default function useEditNomination({
   currentNomination,
@@ -21,12 +22,14 @@ export default function useEditNomination({
       if (signer) {
         if ((nextNomination && currentNomination) || (!nextNomination && currentNomination)) {
           const tx1 = await getCouncilContract(currentNomination)
-            .connect(signer)
+            .connect(process.env.DEV ? devSigner : signer)
             .withdrawNomination();
           await tx1.wait();
         }
         if (nextNomination) {
-          const tx2 = await getCouncilContract(nextNomination).connect(signer).nominate();
+          const tx2 = await getCouncilContract(nextNomination)
+            .connect(process.env.DEV ? devSigner : signer)
+            .nominate();
           await tx2.wait();
         }
       }
