@@ -4,7 +4,6 @@ import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useB
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
 import { networksOffline } from '@snx-v3/usePoolsList';
 import { wei } from '@synthetixio/wei';
@@ -13,47 +12,55 @@ import { parseUnits } from '@snx-v3/format';
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 
+function getAllPriceIdsEntries(extras: any) {
+  return Object.entries(extras).filter(
+    ([key, value]) =>
+      String(value).length === 66 &&
+      (key.startsWith('pyth_feed_id_') || (key.startsWith('pyth') && key.endsWith('FeedId')))
+  );
+}
+
 async function getPythFeedIds(network: Network) {
   const extras = await importExtras(network.id, network.preset);
-  return Object.entries(extras)
-    .filter(
-      ([key, value]) =>
-        key.startsWith('pyth') && key.endsWith('FeedId') && String(value).length === 66
-    )
-    .map(([_key, value]) => value);
+  return getAllPriceIdsEntries(extras).map(([_key, value]) => value);
 }
 
 async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
-  const queries = networksOffline.map((network) => importExtras(network.id, network.preset));
-  const extras = await Promise.all(queries);
+  const extras = await Promise.all(
+    networksOffline.map((network) => importExtras(network.id, network.preset))
+  );
 
   // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
-  const priceIds = extras
-    .map((extra) => {
-      return Object.entries(extra).filter(
-        ([key, _value]) => key.startsWith('pyth') && key.endsWith('FeedId')
-      );
-    })
-    .flat();
-
+  const priceIds = extras.map(getAllPriceIdsEntries).flat();
   const deduped = Array.from(
     new Set(
-      priceIds.map((x) => ({
-        collateral: x[0].replace('pyth', '').replace('FeedId', '').toUpperCase(),
-        priceId: x[1],
-      }))
+      priceIds
+        .map(([key, priceId]) => {
+          if (key.startsWith('pyth_feed_id_')) {
+            return {
+              symbol: key.replace('pyth_feed_id_', '').toUpperCase(),
+              priceId,
+            };
+          }
+          if (key.startsWith('pyth') && key.endsWith('FeedId')) {
+            return {
+              symbol: key.replace('pyth', '').replace('FeedId', '').toUpperCase(),
+              priceId,
+            };
+          }
+          return { symbol: null, priceId: null };
+        })
+        .filter(({ symbol, priceId }) => symbol && priceId)
     )
   );
 
-  // Find the corresponding price feed id for each collateral
+  // Find the corresponding price feed id for each symbol
   return collateralList.map((collateral) => {
     let symbol = collateral;
     if (collateral === 'WETH') {
       symbol = 'ETH';
     }
-
-    const id = deduped.find((x) => x.collateral === symbol);
-
+    const id = deduped.find((x) => x.symbol === symbol);
     return {
       collateral,
       priceId: id?.priceId,
@@ -82,7 +89,7 @@ const getPriceUpdates = async (
     // pyth wrapper
     to: address,
     data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
-    value: priceIds.length * 10,
+    value: priceIds.length,
   };
 };
 
@@ -91,18 +98,18 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const targetNetwork = customNetwork || network;
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
-    enabled: isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset),
+    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
     queryFn: async () => {
       if (!(targetNetwork?.id && targetNetwork?.preset))
         throw 'useAllCollateralPriceUpdates is missing required data';
-      const stalenessTolerance = 60;
+      const stalenessTolerance = 600;
 
       const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, network);
 
       return {
         ...tx,
-        value: tx.value * 10,
+        value: tx.value,
       };
     },
     refetchInterval: 60000,
@@ -172,11 +179,11 @@ export const useCollateralPriceUpdates = () => {
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', activeWallet?.address],
-    enabled: isBaseAndromeda(network?.id, network?.preset),
+    enabled: Boolean(network?.id && network?.preset),
     queryFn: async () => {
-      const stalenessTolerance = 3300;
-      if (!network) {
-        return;
+      const stalenessTolerance = 600;
+      if (!(network?.id && network?.preset)) {
+        throw 'OMG';
       }
 
       try {
