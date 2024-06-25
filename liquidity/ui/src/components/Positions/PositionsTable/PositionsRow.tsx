@@ -5,9 +5,7 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetBorrow } from '@snx-v3/useGetBorrow';
 import { utils } from 'ethers';
-import { CRatioBadge } from '../../Manage/CRatioBadge';
-import { ZEROWEI } from '../../../utils/constants';
-
+import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -149,8 +147,11 @@ export function PositionRow({
               </Text>
 
               <CRatioBadge
-                cRatio={cRatio}
-                issuanceRatioD18={collateralType.issuanceRatioD18 || ZEROWEI}
+                currentCRatioPercentage={cRatio.toNumber() * 100}
+                liquidationCratioPercentage={
+                  (collateralType?.liquidationRatioD18?.toNumber() || 0) * 100
+                }
+                targetCratioPercentage={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
               />
             </Flex>
           </Fade>

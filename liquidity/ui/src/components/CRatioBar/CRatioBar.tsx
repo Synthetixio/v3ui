@@ -1,79 +1,15 @@
 import { TriangleDownIcon, TriangleUpIcon, InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { FC } from 'react';
-
-const getHealthVariant = ({
-  targetCratioPercentage,
-  liquidationCratioPercentage,
-  currentCRatioPercentage,
-  targetThreshold = 0.01,
-}: {
-  liquidationCratioPercentage: number | undefined;
-  targetCratioPercentage: number | undefined;
-  currentCRatioPercentage: number | undefined;
-  targetThreshold: number | undefined;
-}) => {
-  if (!liquidationCratioPercentage || !targetCratioPercentage || !currentCRatioPercentage)
-    return 'success';
-  if (currentCRatioPercentage === 0) return 'success';
-  const currentCRatioPercentageWithThresHold = currentCRatioPercentage * (1 + targetThreshold);
-  // You can claim rewards when you below target but within the targetThreshold, the threshold does NOT apply to the liquidationRatio
-  if (currentCRatioPercentage < liquidationCratioPercentage) return 'error';
-  if (currentCRatioPercentageWithThresHold < targetCratioPercentage) return 'warning';
-  return 'success';
-};
-
-const LineWithText: FC<{
-  left: number;
-  text: string;
-  tooltipText: string;
-  tooltipPosition: 'left' | 'right';
-}> = ({ left, text, tooltipText, tooltipPosition }) => {
-  return (
-    <>
-      <Box
-        position="absolute"
-        height="40%"
-        transform="translateX(-50%)"
-        left={`calc(${left}% ${tooltipPosition === 'left' ? '-' : '+'} 20px)`}
-        top={0}
-        bottom={0}
-        margin="auto"
-      >
-        <Text
-          color="gray.700"
-          whiteSpace="nowrap"
-          fontSize="xx-small"
-          transform="translateY(calc(-100% - 10px) )"
-        >
-          {text}{' '}
-          <Tooltip label={tooltipText} hasArrow>
-            <InfoIcon />
-          </Tooltip>
-        </Text>
-      </Box>
-      <Box
-        position="absolute"
-        height="40%"
-        width="1px"
-        bg="gray.900"
-        left={`${left}%`}
-        top={0}
-        bottom={0}
-        margin="auto"
-      />
-    </>
-  );
-};
-
-const ratioIsMaxUInt = (ratio: number) => ratio > Number.MAX_SAFE_INTEGER;
+import { LineWithText } from './LineWithText';
+import { getHealthVariant, ratioIsMaxUInt } from './CRatioBar.utils';
+import { CRatioBadge } from './CRatioBadge';
 
 export const CRatioBarUi: FC<{
   liquidationCratioPercentage: number;
   targetCratioPercentage: number;
   currentCRatioPercentage: number;
   newCratioPercentage?: number;
-  targetThreshold: number;
   isLoading: boolean;
   hasChanges: boolean;
 }> = ({
@@ -81,7 +17,6 @@ export const CRatioBarUi: FC<{
   liquidationCratioPercentage,
   currentCRatioPercentage,
   newCratioPercentage,
-  targetThreshold,
   isLoading,
   hasChanges,
 }) => {
@@ -98,13 +33,11 @@ export const CRatioBarUi: FC<{
     targetCratioPercentage,
     liquidationCratioPercentage,
     currentCRatioPercentage,
-    targetThreshold,
   });
   const newVariant = getHealthVariant({
     targetCratioPercentage,
     liquidationCratioPercentage,
     currentCRatioPercentage: newCratioPercentage,
-    targetThreshold,
   });
 
   const newCratioPercentageWithDefault = newCratioPercentage || 0;
@@ -150,6 +83,13 @@ export const CRatioBarUi: FC<{
               </Text>
             )
           )}
+          <CRatioBadge
+            currentCRatioPercentage={
+              hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage
+            }
+            liquidationCratioPercentage={liquidationCratioPercentage}
+            targetCratioPercentage={targetCratioPercentage}
+          />
         </Flex>
       )}
       <Box
@@ -268,13 +208,11 @@ export const CRatioBar: FC<{
   liquidationCratioPercentage?: number;
   targetCratioPercentage?: number;
   currentCRatioPercentage?: number;
-  targetThreshold: number;
   newCratioPercentage?: number;
   isLoading: boolean;
   hasChanges: boolean;
 }> = ({
   newCratioPercentage,
-  targetThreshold,
   currentCRatioPercentage,
   targetCratioPercentage,
   liquidationCratioPercentage,
@@ -286,7 +224,6 @@ export const CRatioBar: FC<{
       liquidationCratioPercentage={liquidationCratioPercentage || 100}
       targetCratioPercentage={targetCratioPercentage || 100}
       currentCRatioPercentage={currentCRatioPercentage || 0}
-      targetThreshold={targetThreshold}
       newCratioPercentage={newCratioPercentage}
       isLoading={isLoading}
       hasChanges={hasChanges}

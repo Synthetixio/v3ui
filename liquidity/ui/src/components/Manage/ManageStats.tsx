@@ -197,7 +197,6 @@ export const ManageStatsUi: FC<{
             }
             newCratioPercentage={newCratio.toNumber() * 100}
             targetCratioPercentage={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
-            targetThreshold={1}
             isLoading={false}
           />
         </BorderBox>
