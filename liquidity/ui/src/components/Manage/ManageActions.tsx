@@ -7,10 +7,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { wei } from '@synthetixio/wei';
 import { FC, FormEvent, lazy, Suspense, useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Borrow } from '../';
-import { Repay } from '../';
-import { Undelegate } from '../';
-import { Deposit } from '../';
+import { Borrow, Repay, Undelegate, Deposit, Claim } from '../';
 import { z } from 'zod';
 import { safeImport } from '@synthetixio/safe-import';
 import { calculateCRatio } from '@snx-v3/calculations';
@@ -20,6 +17,7 @@ import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
+const ClaimModal = lazy(() => safeImport(() => import('@snx-v3/ClaimModal')));
 const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal')));
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
 
@@ -139,6 +137,7 @@ const ManageActionUi: FC<{
 
       <Flex direction="column" mt={2}>
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'undelegate' ? (
@@ -258,6 +257,16 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'borrow'}
+          />
+        ) : null}
+        {txnModalOpen === 'claim' ? (
+          <ClaimModal
+            onClose={() => {
+              setCollateralChange(wei(0));
+              setDebtChange(wei(0));
+              setTxnModalOpen(null);
+            }}
+            isOpen={txnModalOpen === 'claim'}
           />
         ) : null}
         {txnModalOpen === 'deposit' ? (

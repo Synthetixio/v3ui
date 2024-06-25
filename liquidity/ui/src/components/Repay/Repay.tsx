@@ -31,13 +31,10 @@ export const RepayUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="0.5">
+      <Text fontSize="md" fontWeight="700" mb="1">
         Repay {isBase ? 'USDC' : stablecoin?.symbol}
       </Text>
-      <Text fontSize="sm" color="gray.400" mb="4">
-        Pay down your position’s debt with {isBase ? 'USDC' : stablecoin?.symbol}. This decreases
-        your debt and increases your C-Ratio.
-      </Text>
+
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />

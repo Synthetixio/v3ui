@@ -201,7 +201,7 @@ export const CRatioBarUi: FC<{
         >
           {newCratioPercentage !== undefined ? (
             <Progress
-              data-testId="non highlighted progress bar"
+              data-testid="non highlighted progress bar"
               variant={newCratioPercentage === 0 ? 'white' : 'update-' + newVariant}
               top={0}
               bottom={0}
@@ -220,7 +220,7 @@ export const CRatioBarUi: FC<{
             position="absolute"
             margin="auto"
             width="100%"
-            data-testId="highlighted progress bar"
+            data-testid="highlighted progress bar"
             display={newCratioPercentage === 0 ? 'none' : 'block'}
             value={highlightedProgressCRatio / scaleFactor}
           />

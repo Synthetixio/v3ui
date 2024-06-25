@@ -35,7 +35,7 @@ export const DebtStats: FC<{
               currency(val, {
                 currency: 'USD',
                 style: 'currency',
-                maximumFractionDigits: 8,
+                maximumFractionDigits: 4,
               })
             }
             hasChanges={hasChanges}

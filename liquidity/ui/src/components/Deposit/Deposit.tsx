@@ -63,11 +63,8 @@ export const DepositUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="0.5">
+      <Text fontSize="md" fontWeight="700" mb="1">
         Add {displaySymbol}
-      </Text>
-      <Text fontSize="sm" color="gray.400" mb="4">
-        Provide additional collateral to this position.
       </Text>
       <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
         <Flex>
