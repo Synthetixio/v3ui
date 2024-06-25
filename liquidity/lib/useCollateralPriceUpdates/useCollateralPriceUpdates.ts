@@ -4,7 +4,6 @@ import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useB
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint } from '@snx-v3/constants';
 import { ERC7412_ABI } from '@snx-v3/withERC7412';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { importMulticall3, importExtras } from '@snx-v3/contracts';
 import { networksOffline } from '@snx-v3/usePoolsList';
 import { wei } from '@synthetixio/wei';
@@ -90,7 +89,7 @@ const getPriceUpdates = async (
     // pyth wrapper
     to: address,
     data: erc7412Interface.encodeFunctionData('fulfillOracleQuery', [data]),
-    value: priceIds.length * 10,
+    value: priceIds.length,
   };
 };
 
@@ -99,18 +98,18 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const targetNetwork = customNetwork || network;
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
-    enabled: isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset),
+    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
     queryFn: async () => {
       if (!(targetNetwork?.id && targetNetwork?.preset))
         throw 'useAllCollateralPriceUpdates is missing required data';
-      const stalenessTolerance = 60;
+      const stalenessTolerance = 600;
 
       const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, network);
 
       return {
         ...tx,
-        value: tx.value * 10,
+        value: tx.value,
       };
     },
     refetchInterval: 60000,
@@ -180,11 +179,11 @@ export const useCollateralPriceUpdates = () => {
 
   return useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'price-updates', activeWallet?.address],
-    enabled: isBaseAndromeda(network?.id, network?.preset),
+    enabled: Boolean(network?.id && network?.preset),
     queryFn: async () => {
-      const stalenessTolerance = 3300;
-      if (!network) {
-        return;
+      const stalenessTolerance = 600;
+      if (!(network?.id && network?.preset)) {
+        throw 'OMG';
       }
 
       try {
