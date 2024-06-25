@@ -1,9 +1,9 @@
-import { Box, Button, Divider, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
-import { CheckIcon, CloseIcon } from '@snx-v3/Multistep';
-import { PropsWithChildren, useCallback, useContext } from 'react';
+import { Multistep } from '@snx-v3/Multistep';
+import { useCallback, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -15,36 +15,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useBorrow } from '@snx-v3/useBorrow';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-
-function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
-  switch (txnStatus) {
-    case 'error':
-      return <CloseIcon color="white" />;
-    case 'success':
-      return <CheckIcon color="white" />;
-    case 'prompting':
-    case 'pending':
-      return <Spinner color="white" width={6} height={6} />;
-    default:
-      return (
-        <Box
-          __css={{
-            display: 'inline',
-            fontWeight: 'medium',
-            textAlign: 'center',
-            fontSize: 'md',
-          }}
-        >
-          {children}
-        </Box>
-      );
-  }
-}
-
-const statusColor = (txnStatus: TransactionStatus) => {
-  if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
-  return 'gray.900';
-};
+import { useStablecoin } from '@snx-v3/useStablecoin';
 
 export const BorrowModalUi: React.FC<{
   onClose: () => void;
@@ -56,6 +27,8 @@ export const BorrowModalUi: React.FC<{
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
+  const { data: stablecoin } = useStablecoin();
+
   if (isOpen) {
     return (
       <div>
@@ -66,37 +39,26 @@ export const BorrowModalUi: React.FC<{
 
         <Divider my={4} />
 
-        <Flex
-          gap={2}
-          alignItems="center"
-          rounded="lg"
-          p="4"
-          border="2px solid"
-          transitionProperty="border-color"
-          transitionDuration="normal"
-          borderColor={statusColor(txnStatus)}
-        >
-          <Flex
-            width={10}
-            height={10}
-            justifyContent="center"
-            alignItems="center"
-            bg={statusColor(txnStatus)}
-            rounded="full"
-            transitionProperty="background"
-            transitionDuration="normal"
-          >
-            <StepIcon txnStatus={txnStatus}>1</StepIcon>
-          </Flex>
-          <Text>
-            {isBase ? 'Claim' : 'Borrow'}{' '}
-            <Amount value={debtChange} suffix={isBase ? ' USDC' : ' snxUSD'} />
-          </Text>
-        </Flex>
+        <Multistep
+          step={1}
+          title="Borrow"
+          subtitle={
+            <Text as="div">
+              {isBase ? 'Claim' : 'Borrow'}{' '}
+              <Amount value={debtChange} suffix={isBase ? ' USDC' : ` ${stablecoin?.symbol}`} />
+            </Text>
+          }
+          status={{
+            failed: txnStatus === 'error',
+            success: txnStatus === 'success',
+            loading: ['prompting', 'pending'].includes(txnStatus),
+          }}
+        />
+
         <Button
           isDisabled={txnStatus === 'pending'}
           onClick={() => {
-            if (txnStatus === 'unsent') {
+            if (['unsent', 'error'].includes(txnStatus)) {
               execBorrow();
             }
             if (txnStatus === 'success') {
@@ -112,6 +74,7 @@ export const BorrowModalUi: React.FC<{
               case 'error':
                 return 'Retry';
               case 'pending':
+              case 'prompting':
                 return 'Processing...';
               case 'success':
                 return 'Continue';

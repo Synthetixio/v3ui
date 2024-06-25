@@ -190,6 +190,7 @@ export const ManageStatsUi: FC<{
       {!isBaseAndromeda(network?.id, network?.preset) && (
         <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
           <CRatioBar
+            hasChanges={hasChanges}
             currentCRatioPercentage={cRatio.toNumber() * 100}
             liquidationCratioPercentage={
               (collateralType?.liquidationRatioD18?.toNumber() || 0) * 100

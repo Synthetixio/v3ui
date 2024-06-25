@@ -75,6 +75,7 @@ export const CRatioBarUi: FC<{
   newCratioPercentage?: number;
   targetThreshold: number;
   isLoading: boolean;
+  hasChanges: boolean;
 }> = ({
   targetCratioPercentage,
   liquidationCratioPercentage,
@@ -82,6 +83,7 @@ export const CRatioBarUi: FC<{
   newCratioPercentage,
   targetThreshold,
   isLoading,
+  hasChanges,
 }) => {
   const maxRatioShown = Math.min(
     Math.max(targetCratioPercentage, currentCRatioPercentage) * 1.1,
@@ -142,9 +144,11 @@ export const CRatioBarUi: FC<{
               &rarr; Infinite %
             </Text>
           ) : (
-            <Text color="white" fontWeight={800} fontSize="20px">
-              &rarr; {newCratioPercentage?.toFixed(2)}%
-            </Text>
+            hasChanges && (
+              <Text color="white" fontWeight={800} fontSize="20px">
+                &rarr; {newCratioPercentage?.toFixed(2)}%
+              </Text>
+            )
           )}
         </Flex>
       )}
@@ -267,6 +271,7 @@ export const CRatioBar: FC<{
   targetThreshold: number;
   newCratioPercentage?: number;
   isLoading: boolean;
+  hasChanges: boolean;
 }> = ({
   newCratioPercentage,
   targetThreshold,
@@ -274,6 +279,7 @@ export const CRatioBar: FC<{
   targetCratioPercentage,
   liquidationCratioPercentage,
   isLoading,
+  hasChanges,
 }) => {
   return (
     <CRatioBarUi
@@ -283,6 +289,7 @@ export const CRatioBar: FC<{
       targetThreshold={targetThreshold}
       newCratioPercentage={newCratioPercentage}
       isLoading={isLoading}
+      hasChanges={hasChanges}
     />
   );
 };

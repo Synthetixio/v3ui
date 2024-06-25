@@ -14,8 +14,8 @@ export const DebtStats: FC<{
   newDebt: Wei;
   hasChanges: boolean;
 }> = ({ liquidityPosition, collateralType, newDebt, hasChanges }) => (
-  <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700" justifyContent="space-between">
-    <Flex flexDirection="column" justifyContent="space-between" width="100%">
+  <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700">
+    <Flex flexDirection="column" width="100%">
       <Flex alignItems="center" mb="4px">
         <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
           Debt
