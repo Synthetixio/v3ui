@@ -36,7 +36,7 @@ export const RepayModalUi: React.FC<{
 }> = ({ onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
   const isProcessing = state.matches(State.approve) || state.matches(State.repay);
   const { infiniteApproval, requireApproval, error } = state.context;
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   if (isOpen) {
     return (
@@ -119,7 +119,7 @@ export const RepayModal: React.FC<{
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: balance } = useTokenBalance(USDProxy?.address);
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,

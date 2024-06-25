@@ -27,7 +27,7 @@ export const BorrowModalUi: React.FC<{
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   if (isOpen) {
     return (

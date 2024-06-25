@@ -36,7 +36,7 @@ const ManageActionUi: FC<{
 }> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
   // const debt = Number(liquidityPosition?.debt?.toString());
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-  // const { data: stablecoin } = useStablecoin();
+  // const stablecoin = useStablecoin();
 
   const [tab, setTab] = useState('debt');
 
@@ -67,7 +67,7 @@ const ManageActionUi: FC<{
         </TabList>
 
         <TabPanels>
-          <TabPanel>
+          <TabPanel px="0">
             <Flex flexDir="column">
               <Flex gap={4}>
                 {COLLATERALACTIONS.map((action) => (
@@ -117,7 +117,7 @@ const ManageActionUi: FC<{
                     borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
                     rounded="base"
                     cursor="pointer"
-                    data-cy={`tab-actions-button-${action.link}`}
+                    data-cy={`debt-actions-${action.link}`}
                     onClick={() => setActiveAction(action.link)}
                   >
                     {action.icon(manageAction === action.link ? 'cyan' : 'white')}

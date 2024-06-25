@@ -21,7 +21,7 @@ const BorrowUi: FC<{
   setDebtChange: (val: Wei) => void;
 }> = ({ debtChange, setDebtChange, maxDebt }) => {
   const { network } = useNetwork();
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   return (

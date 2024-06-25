@@ -27,7 +27,7 @@ export const RepayUi: FC<{
     snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   return (
     <Flex flexDirection="column">
