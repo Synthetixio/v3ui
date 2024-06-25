@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Alert, Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
@@ -29,12 +29,7 @@ const BorrowUi: FC<{
       <Text fontSize="md" fontWeight="700" mb="0.5">
         {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
       </Text>
-      <Text fontSize="sm" color="gray.400" mb="4">
-        {isBase
-          ? 'Claim USDC fees you have earned from providing liquidity. These will be available in 24h for withdrawal.'
-          : `Take an interest-free loan of ${stablecoin?.symbol} against your collateral. This
-              increases your debt and decreases your C-Ratio.`}
-      </Text>
+
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           {isBase ? <SUSDCIcon /> : <DollarCircle />}
@@ -68,6 +63,14 @@ const BorrowUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
+
+      <Alert colorScheme="blue" mb="4">
+        <Text fontWeight="semibold">
+          As a security precaution, borrowed assets can only be withdrawn to your wallet after 24 hs
+          since your previous account activity.
+        </Text>
+      </Alert>
+
       <Button data-testid="borrow submit" type="submit">
         {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
       </Button>

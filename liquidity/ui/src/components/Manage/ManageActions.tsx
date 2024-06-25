@@ -137,7 +137,7 @@ const ManageActionUi: FC<{
         </TabPanels>
       </Tabs>
 
-      <Flex direction="column" mt={6}>
+      <Flex direction="column" mt={2}>
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
