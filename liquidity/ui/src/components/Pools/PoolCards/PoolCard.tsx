@@ -1,7 +1,14 @@
 import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
-import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import {
+  ARBITRUM,
+  MAINNET,
+  Network,
+  NetworkIcon,
+  useNetwork,
+  useWallet,
+} from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { CollateralIcon } from '@snx-v3/icons';
@@ -17,6 +24,7 @@ export interface PoolCardProps {
   network: Network;
   collaterals: string[];
   collateralTypes: {
+    id: string;
     oracle_node_id: string;
     name: string;
     decimals: number;
@@ -30,6 +38,7 @@ export interface PoolCardProps {
   apr: {
     combinedApr: number;
     cumulativePnl: number;
+    collateralAprs: any[];
   };
 }
 
@@ -115,7 +124,7 @@ export const PoolCard = ({
                 {network.label} Network
               </Flex>
             </Flex>
-            {[1, 42161].includes(network.id) && (
+            {[MAINNET.id, ARBITRUM.id].includes(network.id) && (
               <Tag
                 ml={2}
                 mt="2px"
@@ -151,7 +160,7 @@ export const PoolCard = ({
               </Text>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {apr.combinedApr > 0
-                  ? `${network.id === 42161 ? 'Up to ' : ''}${apr.combinedApr
+                  ? `${network.id === ARBITRUM.id ? 'Up to ' : ''}${apr.combinedApr
                       .toFixed(2)
                       ?.concat('%')}`
                   : '-'}
@@ -161,66 +170,82 @@ export const PoolCard = ({
         </Flex>
         <Divider mt="18px" mb="10px" />
         <Flex flexWrap="wrap" gap={6}>
-          {sanitizedCollateralTypes?.map((type) => (
-            <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
-              <Flex alignItems="center">
-                <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
-                <Flex flexDirection="column" ml={3} mr="auto">
-                  <Text
-                    fontSize="14px"
-                    color="white"
-                    fontWeight={700}
-                    lineHeight="1.25rem"
-                    fontFamily="heading"
-                  >
-                    {type.symbol}
-                  </Text>
-                  <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                    {type.symbol}
-                  </Text>
+          {sanitizedCollateralTypes?.map((type) => {
+            const collateralApr = apr.collateralAprs.find(
+              (item) => item.collateralType === type.id
+            );
+
+            return (
+              <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
+                  <Flex flexDirection="column" ml={3} mr="auto">
+                    <Text
+                      fontSize="14px"
+                      color="white"
+                      fontWeight={700}
+                      lineHeight="1.25rem"
+                      fontFamily="heading"
+                    >
+                      {type.symbol}
+                    </Text>
+                    <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
+                      {type.symbol}
+                    </Text>
+                  </Flex>
+                  {network.id === ARBITRUM.id && collateralApr && (
+                    <Flex flexDirection="column" ml={6} mr={4}>
+                      <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
+                        APR
+                      </Text>
+                      <Text color="white" fontFamily="heading" fontSize="14px" fontWeight={700}>
+                        {`${(100 * collateralApr.apr24h).toFixed(2)}`}%
+                      </Text>
+                    </Flex>
+                  )}
                 </Flex>
-              </Flex>
-              <Button
-                onClick={async (e) => {
-                  try {
-                    e.stopPropagation();
+                <Button
+                  onClick={async (e) => {
+                    try {
+                      e.stopPropagation();
 
-                    if (!currentNetwork) {
-                      connect();
-                      return;
-                    }
-
-                    if (currentNetwork.id !== network.id) {
-                      if (!(await setNetwork(network.id))) {
+                      if (!currentNetwork) {
+                        connect();
                         return;
                       }
-                    }
 
-                    queryParams.set('manageAction', 'deposit');
-                    navigate({
-                      pathname: `/positions/${type.symbol}/${pool.id}`,
-                      search: queryParams.toString(),
-                    });
-                  } catch (error) {}
-                }}
-                size="sm"
-                variant="outline"
-                colorScheme="gray"
-                height="32px"
-                py="10px"
-                px="12px"
-                whiteSpace="nowrap"
-                borderRadius="4px"
-                color="white"
-                fontFamily="heading"
-                fontWeight={700}
-                fontSize="14px"
-                lineHeight="20px"
-              >
-                Deposit
-              </Button>
-            </Flex>
-          ))}
+                      if (currentNetwork.id !== network.id) {
+                        if (!(await setNetwork(network.id))) {
+                          return;
+                        }
+                      }
+
+                      queryParams.set('manageAction', 'deposit');
+                      navigate({
+                        pathname: `/positions/${type.symbol}/${pool.id}`,
+                        search: queryParams.toString(),
+                      });
+                    } catch (error) {}
+                  }}
+                  size="sm"
+                  variant="outline"
+                  colorScheme="gray"
+                  height="32px"
+                  py="10px"
+                  px="12px"
+                  whiteSpace="nowrap"
+                  borderRadius="4px"
+                  color="white"
+                  fontFamily="heading"
+                  fontWeight={700}
+                  fontSize="14px"
+                  lineHeight="20px"
+                >
+                  Deposit
+                </Button>
+              </Flex>
+            );
+          })}
         </Flex>
       </Flex>
     </Fade>
