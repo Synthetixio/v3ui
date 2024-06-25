@@ -80,7 +80,7 @@ export const ManageStatsUi: FC<{
 
   return (
     <Flex direction="column" gap={4}>
-      <Flex direction="row" gap={4}>
+      <Flex flexWrap="wrap" direction="row" gap={4}>
         {/* {isBaseAndromeda(network?.id, network?.preset) && (
         <BorderBox
           py={4}
