@@ -5262,6 +5262,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/BorrowModal@workspace:liquidity/components/BorrowModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5275,6 +5276,7 @@ __metadata:
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/useStablecoin": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
@@ -5308,6 +5310,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/DepositModal@workspace:liquidity/components/DepositModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5440,6 +5443,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/RepayModal@workspace:liquidity/components/RepayModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5457,6 +5461,7 @@ __metadata:
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRepayBaseAndromeda": "workspace:*"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
+    "@snx-v3/useStablecoin": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -5500,6 +5505,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/UndelegateModal@workspace:liquidity/components/UndelegateModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -6663,10 +6669,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin"
   dependencies:
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useTokenInfo": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
