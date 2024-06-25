@@ -1,17 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
@@ -27,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useBorrow } from '@snx-v3/useBorrow';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: TransactionStatus }>) {
   switch (txnStatus) {
@@ -55,7 +43,7 @@ function StepIcon({ txnStatus, children }: PropsWithChildren<{ txnStatus: Transa
 
 const statusColor = (txnStatus: TransactionStatus) => {
   if (txnStatus === 'error' || txnStatus === 'success') return txnStatus;
-  return 'gray.700';
+  return 'gray.900';
 };
 
 export const BorrowModalUi: React.FC<{
@@ -68,71 +56,73 @@ export const BorrowModalUi: React.FC<{
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay width="100%" height="100%" />
-      <ModalContent bg="black" color="white" data-testid="borrow modal">
-        <ModalHeader>Complete this action</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+  if (isOpen) {
+    return (
+      <div>
+        <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
+          Manage Debt
+        </Text>
+
+        <Divider my={4} />
+
+        <Flex
+          gap={2}
+          alignItems="center"
+          rounded="lg"
+          p="4"
+          border="2px solid"
+          transitionProperty="border-color"
+          transitionDuration="normal"
+          borderColor={statusColor(txnStatus)}
+        >
           <Flex
-            gap={2}
+            width={10}
+            height={10}
+            justifyContent="center"
             alignItems="center"
-            rounded="lg"
-            p="4"
-            border="2px solid"
-            transitionProperty="border-color"
+            bg={statusColor(txnStatus)}
+            rounded="full"
+            transitionProperty="background"
             transitionDuration="normal"
-            borderColor={statusColor(txnStatus)}
           >
-            <Flex
-              width={10}
-              height={10}
-              justifyContent="center"
-              alignItems="center"
-              bg={statusColor(txnStatus)}
-              rounded="full"
-              transitionProperty="background"
-              transitionDuration="normal"
-            >
-              <StepIcon txnStatus={txnStatus}>1</StepIcon>
-            </Flex>
-            <Text>
-              {isBase ? 'Claim' : 'Borrow'}{' '}
-              <Amount value={debtChange} suffix={isBase ? ' USDC' : ' snxUSD'} />
-            </Text>
+            <StepIcon txnStatus={txnStatus}>1</StepIcon>
           </Flex>
-          <Button
-            isDisabled={txnStatus === 'pending'}
-            onClick={() => {
-              if (txnStatus === 'unsent') {
-                execBorrow();
-              }
-              if (txnStatus === 'success') {
-                onClose();
-              }
-            }}
-            width="100%"
-            my="4"
-            data-testid="borrow confirm button"
-          >
-            {(() => {
-              switch (txnStatus) {
-                case 'error':
-                  return 'Retry';
-                case 'pending':
-                  return 'Processing...';
-                case 'success':
-                  return 'Done';
-                default:
-                  return 'Start';
-              }
-            })()}
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
+          <Text>
+            {isBase ? 'Claim' : 'Borrow'}{' '}
+            <Amount value={debtChange} suffix={isBase ? ' USDC' : ' snxUSD'} />
+          </Text>
+        </Flex>
+        <Button
+          isDisabled={txnStatus === 'pending'}
+          onClick={() => {
+            if (txnStatus === 'unsent') {
+              execBorrow();
+            }
+            if (txnStatus === 'success') {
+              onClose();
+            }
+          }}
+          width="100%"
+          mt="4"
+          data-testid="borrow confirm button"
+        >
+          {(() => {
+            switch (txnStatus) {
+              case 'error':
+                return 'Retry';
+              case 'pending':
+                return 'Processing...';
+              case 'success':
+                return 'Continue';
+              default:
+                return 'Execute Transaction';
+            }
+          })()}
+        </Button>
+      </div>
+    );
+  }
 };
 
 export const BorrowModal: React.FC<{

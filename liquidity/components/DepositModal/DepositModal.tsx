@@ -1,14 +1,4 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Button, Divider, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -33,6 +23,7 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 import type { StateFrom } from 'xstate';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -70,141 +61,141 @@ export const DepositModalUi: FC<{
     deposit: isWETH ? 3 : 2,
   };
 
-  return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay />
-      <ModalContent bg="black" color="white" data-cy="deposit-modal">
-        <ModalHeader>Complete this action</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Text mb="2">Please execute the following transactions:</Text>
-          {isWETH ? (
-            <Multistep
-              step={stepNumbers.wrap}
-              title="Wrap"
-              subtitle={
-                wrapAmount.eq(0) ? (
-                  <Text as="div">
-                    <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> from
-                    balance will be used.
-                  </Text>
-                ) : (
-                  <Text as="div">
-                    You must wrap additional <Amount value={wrapAmount} suffix=" ETH" /> before
-                    depositing.
-                  </Text>
-                )
-              }
-              status={{
-                failed: error?.step === State.wrap,
-                disabled: collateralType?.symbol !== 'WETH',
-                success: wrapAmount.eq(0) || state.matches(State.success),
-                loading: state.matches(State.wrap) && !error,
-              }}
-            />
-          ) : null}
-
+  if (isOpen) {
+    return (
+      <div>
+        <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
+          Manage Collateral
+        </Text>
+        <Divider my={4} />
+        {isWETH ? (
           <Multistep
-            step={stepNumbers.approve}
-            title={`Approve ${collateralType?.symbol} transfer`}
+            step={stepNumbers.wrap}
+            title="Wrap"
+            subtitle={
+              wrapAmount.eq(0) ? (
+                <Text as="div">
+                  <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> from
+                  balance will be used.
+                </Text>
+              ) : (
+                <Text as="div">
+                  You must wrap additional <Amount value={wrapAmount} suffix=" ETH" /> before
+                  depositing.
+                </Text>
+              )
+            }
             status={{
-              failed: error?.step === State.approve,
-              success: !requireApproval || state.matches(State.success),
-              loading: state.matches(State.approve) && !error,
-            }}
-            checkboxLabel={`Approve unlimited ${collateralType?.symbol} transfers to Synthetix.`}
-            checkboxProps={{
-              isChecked: infiniteApproval,
-              onChange: (e) => setInfiniteApproval(e.target.checked),
+              failed: error?.step === State.wrap,
+              disabled: collateralType?.symbol !== 'WETH',
+              success: wrapAmount.eq(0) || state.matches(State.success),
+              loading: state.matches(State.wrap) && !error,
             }}
           />
+        ) : null}
 
-          <Multistep
-            step={stepNumbers.deposit}
-            title={`Delegate ${collateralType?.symbol}`}
-            subtitle={
-              <>
-                {state.matches(State.success) ? (
-                  <Text>
-                    <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
-                    delegated to {poolName}.
-                  </Text>
-                ) : (
-                  <>
-                    {availableCollateral && availableCollateral.gt(wei(0)) ? (
-                      <>
-                        {availableCollateral.gte(collateralChange) ? (
+        <Multistep
+          step={stepNumbers.approve}
+          title={`Approve ${collateralType?.symbol} transfer`}
+          status={{
+            failed: error?.step === State.approve,
+            success: !requireApproval || state.matches(State.success),
+            loading: state.matches(State.approve) && !error,
+          }}
+          checkboxLabel={
+            requireApproval
+              ? `Approve unlimited ${collateralType?.symbol} transfers to Synthetix.`
+              : undefined
+          }
+          checkboxProps={{
+            isChecked: infiniteApproval,
+            onChange: (e) => setInfiniteApproval(e.target.checked),
+          }}
+        />
+
+        <Multistep
+          step={stepNumbers.deposit}
+          title={`Delegate ${collateralType?.symbol}`}
+          subtitle={
+            <>
+              {state.matches(State.success) ? (
+                <Text>
+                  <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
+                  delegated to {poolName}.
+                </Text>
+              ) : (
+                <>
+                  {availableCollateral && availableCollateral.gt(wei(0)) ? (
+                    <>
+                      {availableCollateral.gte(collateralChange) ? (
+                        <Text>
+                          This will delegate{' '}
+                          <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
+                          to {poolName}.
+                        </Text>
+                      ) : (
+                        <>
                           <Text>
                             This will delegate{' '}
                             <Amount
-                              value={collateralChange}
+                              value={availableCollateral}
                               suffix={` ${collateralType?.symbol}`}
                             />{' '}
                             to {poolName}.
                           </Text>
-                        ) : (
-                          <>
-                            <Text>
-                              This will delegate{' '}
-                              <Amount
-                                value={availableCollateral}
-                                suffix={` ${collateralType?.symbol}`}
-                              />{' '}
-                              to {poolName}.
-                            </Text>
-                            <Text>
-                              An additional{' '}
-                              <Amount
-                                value={collateralChange.sub(availableCollateral)}
-                                suffix={` ${collateralType?.symbol}`}
-                              />{' '}
-                              will be deposited and delegated from your wallet.
-                            </Text>
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      <Text>
-                        This will deposit and delegate{' '}
-                        <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> to{' '}
-                        {poolName}.
-                      </Text>
-                    )}
-                  </>
-                )}
-              </>
+                          <Text>
+                            An additional{' '}
+                            <Amount
+                              value={collateralChange.sub(availableCollateral)}
+                              suffix={` ${collateralType?.symbol}`}
+                            />{' '}
+                            will be deposited and delegated from your wallet.
+                          </Text>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <Text>
+                      This will deposit and delegate{' '}
+                      <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> to{' '}
+                      {poolName}.
+                    </Text>
+                  )}
+                </>
+              )}
+            </>
+          }
+          status={{
+            failed: error?.step === State.deposit,
+            disabled: state.matches(State.success) && requireApproval,
+            success: state.matches(State.success),
+            loading: state.matches(State.deposit) && !error,
+          }}
+        />
+        <Button
+          isDisabled={isProcessing}
+          onClick={onSubmit}
+          width="100%"
+          mt="4"
+          data-cy="deposit-confirm-button"
+        >
+          {(() => {
+            switch (true) {
+              case Boolean(error):
+                return 'Retry';
+              case isProcessing:
+                return 'Processing...';
+              case state.matches(State.success):
+                return 'Continue';
+              default:
+                return 'Execute Transaction';
             }
-            status={{
-              failed: error?.step === State.deposit,
-              disabled: state.matches(State.success) && requireApproval,
-              success: state.matches(State.success),
-              loading: state.matches(State.deposit) && !error,
-            }}
-          />
-          <Button
-            isDisabled={isProcessing}
-            onClick={onSubmit}
-            width="100%"
-            my="4"
-            data-cy="deposit-confirm-button"
-          >
-            {(() => {
-              switch (true) {
-                case Boolean(error):
-                  return 'Retry';
-                case isProcessing:
-                  return 'Processing...';
-                case state.matches(State.success):
-                  return 'Done';
-                default:
-                  return 'Start';
-              }
-            })()}
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
+          })()}
+        </Button>
+      </div>
+    );
+  }
 };
 
 export type DepositModalProps = FC<{

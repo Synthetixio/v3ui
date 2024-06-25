@@ -180,11 +180,12 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
 
     const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
 
-    if (collateralValue < minCollateralRequired)
+    if (collateralValue.lt(minCollateralRequired))
       // If you're below issuance ratio, you can't withdraw anything
       return wei(0);
 
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
+
     return Wei.min(collateralAmount, maxWithdrawable);
   }
   const max = maxUndelegate();

@@ -220,22 +220,24 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
 
   return (
     <>
-      <ManageActionUi
-        liquidityPosition={liquidityPosition}
-        onSubmit={onSubmit}
-        network={network}
-        setActiveAction={(action) => {
-          setCollateralChange(wei(0));
-          setDebtChange(wei(0));
-          const queryParams = new URLSearchParams(location.search);
-          queryParams.set('manageAction', action);
-          navigate(
-            { pathname: location.pathname, search: queryParams.toString() },
-            { replace: true }
-          );
-        }}
-        manageAction={parsedAction || undefined}
-      />
+      {!txnModalOpen && (
+        <ManageActionUi
+          liquidityPosition={liquidityPosition}
+          onSubmit={onSubmit}
+          network={network}
+          setActiveAction={(action) => {
+            setCollateralChange(wei(0));
+            setDebtChange(wei(0));
+            const queryParams = new URLSearchParams(location.search);
+            queryParams.set('manageAction', action);
+            navigate(
+              { pathname: location.pathname, search: queryParams.toString() },
+              { replace: true }
+            );
+          }}
+          manageAction={parsedAction || undefined}
+        />
+      )}
       <Suspense fallback={null}>
         {txnModalOpen === 'repay' ? (
           <RepayModal
