@@ -24,6 +24,7 @@ import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 import type { StateFrom } from 'xstate';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -62,6 +63,26 @@ export const DepositModalUi: FC<{
   };
 
   if (isOpen) {
+    if (state.matches(State.success)) {
+      return (
+        <LiquidityPositionUpdated
+          onClose={onSubmit}
+          title="Collateral successfully Updated"
+          subline={
+            <>
+              Your <b>Collateral</b> has been updated, read more about it in the Synthetix V3
+              Documentation.
+            </>
+          }
+          alertText={
+            <>
+              <b>Collateral</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
+
     return (
       <div>
         <Text color="gray.50" fontSize="20px" fontWeight={700}>

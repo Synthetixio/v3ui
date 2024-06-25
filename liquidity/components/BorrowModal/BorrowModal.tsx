@@ -16,6 +16,7 @@ import { useBorrow } from '@snx-v3/useBorrow';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useStablecoin } from '@snx-v3/useStablecoin';
+import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const BorrowModalUi: React.FC<{
   onClose: () => void;
@@ -30,6 +31,26 @@ export const BorrowModalUi: React.FC<{
   const stablecoin = useStablecoin();
 
   if (isOpen) {
+    if (txnStatus === 'success') {
+      return (
+        <LiquidityPositionUpdated
+          onClose={onClose}
+          title="Debt successfully Updated"
+          subline={
+            <>
+              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
+              Documentation.
+            </>
+          }
+          alertText={
+            <>
+              <b>Debt</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
+
     return (
       <div>
         <Text color="gray.50" fontSize="20px" fontWeight={700}>
@@ -50,7 +71,6 @@ export const BorrowModalUi: React.FC<{
           }
           status={{
             failed: txnStatus === 'error',
-            success: txnStatus === 'success',
             loading: ['prompting', 'pending'].includes(txnStatus),
           }}
         />
@@ -60,9 +80,6 @@ export const BorrowModalUi: React.FC<{
           onClick={() => {
             if (['unsent', 'error'].includes(txnStatus)) {
               execBorrow();
-            }
-            if (txnStatus === 'success') {
-              onClose();
             }
           }}
           width="100%"
@@ -76,8 +93,6 @@ export const BorrowModalUi: React.FC<{
               case 'pending':
               case 'prompting':
                 return 'Processing...';
-              case 'success':
-                return 'Continue';
               default:
                 return 'Execute Transaction';
             }

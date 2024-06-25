@@ -25,6 +25,7 @@ import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useStablecoin } from '@snx-v3/useStablecoin';
+import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -39,6 +40,26 @@ export const RepayModalUi: React.FC<{
   const stablecoin = useStablecoin();
 
   if (isOpen) {
+    if (state.matches(State.success)) {
+      return (
+        <LiquidityPositionUpdated
+          onClose={onSubmit}
+          title="Debt successfully Updated"
+          subline={
+            <>
+              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
+              Documentation.
+            </>
+          }
+          alertText={
+            <>
+              <b>Debt</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
+
     return (
       <div>
         <Text color="gray.50" fontSize="20px" fontWeight={700}>
