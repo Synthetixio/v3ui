@@ -266,7 +266,7 @@ export const DepositModal: DepositModalProps = ({
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   // TODO: Update logic on new account id
-  const newAccountId = useMemo(() => `${Math.floor(Math.random() * 10000000000)}`, []);
+  const newAccountId = useMemo(() => `${Math.floor(Math.random() * 1000000000000)}`, []);
 
   const { exec: wrapEth, wethBalance } = useWrapEth();
 

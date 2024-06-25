@@ -36,7 +36,7 @@ const ManageActionUi: FC<{
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   // const stablecoin = useStablecoin();
 
-  const [tab, setTab] = useState('debt');
+  const [tab, setTab] = useState('collateral');
 
   return (
     <Box as="form" onSubmit={onSubmit}>

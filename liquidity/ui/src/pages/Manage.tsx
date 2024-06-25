@@ -14,6 +14,7 @@ import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPos
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
+import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -179,6 +180,7 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
+      <WatchAccountBanner />
       {!accountId && (
         <NoAccount collateralSymbol={collateralSymbol} collateralType={collateralType} />
       )}
