@@ -40,7 +40,11 @@ export function PositionRow({
     collateralTypeAddress: collateralType.tokenAddress,
   });
 
-  const parsedCRatio = collateralType.issuanceRatioD18.gt(cRatio) ? 'MANAGE' : 'HEALTHY';
+  const parsedCRatio = cRatio.eq(0)
+    ? 'N/A'
+    : collateralType.issuanceRatioD18.gt(cRatio)
+      ? 'MANAGE'
+      : 'HEALTHY';
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
@@ -145,15 +149,17 @@ export function PositionRow({
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {(cRatio.toNumber() * 100).toFixed(2) + '%'}
+                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
-              <Badge
-                colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
-                border="1px solid"
-                bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
-              >
-                {parsedCRatio}
-              </Badge>
+              {parsedCRatio !== 'N/A' && (
+                <Badge
+                  colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
+                  border="1px solid"
+                  bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
+                >
+                  {parsedCRatio}
+                </Badge>
+              )}
             </Flex>
           </Fade>
         </Td>

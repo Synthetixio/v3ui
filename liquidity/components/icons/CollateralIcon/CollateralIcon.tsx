@@ -30,6 +30,7 @@ export const CollateralIcon = ({
       return <OptimismIcon {...props} />;
     case 'USDx':
     case 'sUSD':
+    case 'USDe':
     case 'snxUSD':
       return <DollarCircle {...props} />;
     case 'WBTC':
@@ -47,7 +48,7 @@ export const CollateralIcon = ({
   }
 };
 
-export const UnknownIcon = ({ width = '32px', height = '32px', ...props }: IconProps) => {
+export const UnknownIcon = ({ width = '24px', height = '24px', ...props }: IconProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 32 32" fill="none" {...props}>
       <circle cx="16" cy="16" r="15" fill="white" stroke="white" />

@@ -3,8 +3,7 @@ import { Box, Divider, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
-import { CollateralIcon } from '@snx-v3/icons';
-import { AccountBanner, ManageAction } from '../components';
+import { AccountBanner, ManageAction, TokenIcon } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { ManageStats } from '../components';
 import { HomeLink } from '@snx-v3/HomeLink';
@@ -72,10 +71,10 @@ export const ManageUi: FC<{
           borderRadius="100%"
           display="flex"
         >
-          <CollateralIcon
-            symbol={collateralSymbol}
-            width="28px"
-            height="28px"
+          <TokenIcon
+            symbol={collateralSymbol!}
+            width={28}
+            height={28}
             fill="#0B0B22"
             color="#00D1FF"
           />

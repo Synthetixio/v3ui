@@ -1,7 +1,6 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { PercentBadges } from '@snx-v3/PercentBadges';
@@ -12,7 +11,7 @@ import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert } from '../';
+import { CollateralAlert, TokenIcon } from '../';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -71,7 +70,7 @@ export const DepositUi: FC<{
       <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
         <Flex>
           <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-            <CollateralIcon symbol={symbol} />
+            <TokenIcon symbol={symbol} />
             {displaySymbol}
           </Text>
           <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
