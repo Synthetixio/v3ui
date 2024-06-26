@@ -100,12 +100,13 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
     enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
     queryFn: async () => {
-      if (!(targetNetwork?.id && targetNetwork?.preset))
+      if (!(targetNetwork?.id && targetNetwork?.preset)) {
         throw 'useAllCollateralPriceUpdates is missing required data';
-      const stalenessTolerance = 600;
+      }
+      const stalenessTolerance = 50;
 
       const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
-      const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, network);
+      const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, targetNetwork);
 
       return {
         ...tx,
