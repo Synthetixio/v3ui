@@ -1,5 +1,4 @@
 import { Flex, Td, Text, Button, Fade, Tr, Link } from '@chakra-ui/react';
-import { CollateralIcon } from '@snx-v3/icons';
 import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
@@ -10,6 +9,7 @@ import { wei } from '@synthetixio/wei';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { TokenIcon } from '../TokenIcon';
 
 interface RewardsRowInterface {
   symbol: string;
@@ -75,7 +75,7 @@ export const RewardsRow = ({
       <Tr>
         <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
           <Fade in>
-            <CollateralIcon height="30px" width="30px" symbol={symbol} />
+            <TokenIcon height={30} width={30} symbol={symbol} />
           </Fade>
           <Fade in>
             <Flex flexDirection="column" ml="12px">
