@@ -29,11 +29,11 @@ export default function UserProfileEditPreview({
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%" justifyContent="center">
           <Flex justifyContent="space-between">
-            <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
+            <Text fontSize="16px" fontWeight="700" data-cy="username-preview">
               {userData.username ? userData.username : prettyString(activeWallet || '')}
             </Text>
           </Flex>
-          <Text fontSize="12px" fontWeight="400" lineHeight="16px">
+          <Text fontSize="12px" fontWeight="400" lineHeight="16px" data-cy="about-preview">
             {userData?.about}
           </Text>
         </Flex>
@@ -77,10 +77,11 @@ export default function UserProfileEditPreview({
         maxH="50vh"
         overflow="scroll"
         mb="4"
+        data-cy="governance-pitch-preview"
       >
         {userData?.delegationPitch}
       </Text>
-      <Button isLoading={isPending} w="100%" onClick={onSave}>
+      <Button isLoading={isPending} w="100%" onClick={onSave} data-cy="save-profile-changes-button">
         Save Changes
       </Button>
     </Flex>

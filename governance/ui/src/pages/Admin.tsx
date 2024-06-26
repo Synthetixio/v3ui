@@ -105,6 +105,22 @@ export default function Admin() {
                           block.timestamp + 10000
                         );
                     });
+                  } else {
+                    try {
+                      wallet.provider.getBlock('latest').then((block) => {
+                        proxy
+                          .connect(wallet)
+                          .Epoch_setEpochDates(
+                            0,
+                            block.timestamp - 200,
+                            block.timestamp - 100,
+                            block.timestamp,
+                            block.timestamp + 10000
+                          );
+                      });
+                    } catch (error) {
+                      console.error(error);
+                    }
                   }
                 }}
               >

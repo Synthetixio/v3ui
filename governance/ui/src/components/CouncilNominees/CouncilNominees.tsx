@@ -21,7 +21,6 @@ import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
-import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
@@ -126,7 +125,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       </Flex>
       <Divider />
       {activeWallet?.address ? (
-        <UserListItem address={activeWallet.address} activeCouncil={activeCouncil} />
+        <UserListItem
+          address={activeWallet.address}
+          activeCouncil={activeCouncil}
+          data-cy="own-user-list-item"
+        />
       ) : (
         <Flex justifyContent="space-between" px="6" py="4">
           <Text
@@ -190,6 +193,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               w="200px"
               cursor="pointer"
               userSelect="none"
+              data-cy="name-table-header"
               onClick={() => {
                 setSortConfig([!sortConfig[0], 'name']);
                 sortedNominees = sortedNominees.sort((a, b) => {
@@ -207,7 +211,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
               {/* @ts-ignore */}
               {sortConfig[1] === 'start' && sortConfig[1] !== 'name' && (
-                <ArrowUpDownIcon color="cyan" />
+                <SortArrows up={sortConfig[0]} />
               )}
             </Th>
             <Th textTransform="capitalize">Role</Th>

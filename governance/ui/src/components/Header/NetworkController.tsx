@@ -251,7 +251,14 @@ export function NetworkController() {
                 </Text>
               </Flex>
               <Link href="/#/profile">
-                <Button variant="outline" colorScheme="gray" color="white" w="100%" size="sm">
+                <Button
+                  variant="outline"
+                  colorScheme="gray"
+                  color="white"
+                  w="100%"
+                  size="sm"
+                  data-cy="edit-profile-button-link-header"
+                >
                   Edit Profile
                 </Button>
               </Link>

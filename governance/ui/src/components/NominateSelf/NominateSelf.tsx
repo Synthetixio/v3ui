@@ -94,7 +94,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               {councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
-          <Button onClick={() => navigate(`/councils/${activeCouncil}`)} mt="auto">
+          <Button
+            onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
+            mt="auto"
+            data-cy="nominate-self-done-button"
+          >
             Done
           </Button>
         </>
@@ -144,6 +148,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
                 padding="2"
                 alignItems="center"
                 mb="2"
+                data-cy={`council-nomination-select-${council.slug}`}
               >
                 <Flex
                   borderRadius="50%"
@@ -169,7 +174,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               loading <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
-            <Button onClick={() => mutate()} mt="auto">
+            <Button
+              onClick={() => mutate()}
+              mt="auto"
+              data-cy="nominate-self-cast-nomination-button"
+            >
               Nominate Self
             </Button>
           )}

@@ -121,29 +121,34 @@ export function UserProfileForm() {
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Username
           </Text>
-          <Input {...register('username')} mb="1" placeholder="eg: DeFiLoard" />
+          <Input
+            {...register('username')}
+            mb="1"
+            placeholder="eg: DeFiLoard"
+            data-cy="username-input"
+          />
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             About
           </Text>
-          <Input {...register('about')} placeholder="eq: OG DeFi Member" />
+          <Input {...register('about')} placeholder="eq: OG DeFi Member" data-cy="about-input" />
         </Flex>
         <div>
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Discord
           </Text>
-          <Input {...register('discord')} placeholder="eg: https://discord.com/username" />
+          <Input {...register('discord')} placeholder="JohnDoe" data-cy="discord-input" />
         </div>
         <div>
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Twitter
           </Text>
-          <Input {...register('twitter')} placeholder="eg: https://twitter.com/username" />
+          <Input {...register('twitter')} placeholder="JohnDoe" data-cy="twitter-input" />
         </div>
         <div>
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Github
           </Text>
-          <Input {...register('github')} placeholder="eg: https://github.com/username" />
+          <Input {...register('github')} placeholder="JohnDoe" data-cy="github-input" />
         </div>
         <Flex flexDirection="column" alignItems="flex-start">
           <Text fontSize="12px" fontWeight="400" color="gray.500">
@@ -184,6 +189,7 @@ export function UserProfileForm() {
         <Textarea
           {...register('delegationPitch')}
           placeholder="eg: How am I going to make a difference at Synthetix"
+          data-cy="governance-pitch-input"
         />
         <Show below="xl">
           <Button

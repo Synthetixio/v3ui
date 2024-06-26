@@ -65,6 +65,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
           fontSize="md"
           fontWeight="700"
           textAlign="center"
+          data-cy="empty-state-user-action-box"
         >
           Click on nominee to see <br />
           their profile details

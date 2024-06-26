@@ -12,6 +12,7 @@ import { prettyString } from '@snx-v3/format';
 export default function UserListItem({
   address,
   activeCouncil,
+  ...props
 }: {
   address: string;
   activeCouncil: CouncilSlugs;
@@ -40,6 +41,7 @@ export default function UserListItem({
       borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
       rounded="base"
+      {...props}
     >
       <Flex alignItems="center">
         <ProfilePicture

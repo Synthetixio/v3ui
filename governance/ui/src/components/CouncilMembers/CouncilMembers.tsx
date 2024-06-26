@@ -16,7 +16,7 @@ import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
-import { ArrowUpDownIcon, ArrowUpIcon } from '@chakra-ui/icons';
+import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
 import { useGetCouncilMembers, useGetUserDetailsQuery } from '../../queries';
 
@@ -222,39 +222,6 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
             <>
               {!!sortedNominees?.length &&
                 sortedNominees.map((councilNominee, index) => {
-                  if (index === 8) {
-                    return (
-                      <>
-                        <Tr
-                          key={`${activeCouncil}-zone`}
-                          border="1px solid"
-                          borderTop="1px solid"
-                          borderColor="cyan.500"
-                          rounded="base"
-                        >
-                          <Th>
-                            <ArrowUpIcon color="cyan" w="24px" height="24px" />
-                          </Th>
-                          <Th>
-                            <Text fontWeight={700} color="cyan" w="180px">
-                              {activeCouncil} Election Zone
-                            </Text>
-                          </Th>
-                          <Th></Th>
-                          <Th></Th>
-                        </Tr>
-                        <UserTableView
-                          place={index}
-                          user={councilNominee!}
-                          isNomination
-                          activeCouncil={activeCouncil}
-                          key={councilNominee?.address
-                            .concat('council-nominees')
-                            .concat(index.toString())}
-                        />
-                      </>
-                    );
-                  }
                   return (
                     <UserTableView
                       place={index}

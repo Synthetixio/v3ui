@@ -132,6 +132,7 @@ export const UserProfileDetails = ({
                 colorScheme="gray"
                 w="100%"
                 color="white"
+                data-cy="nominate-self-button-user-profile-details"
                 onClick={() =>
                   navigate(
                     `/councils/${activeCouncil}?${
