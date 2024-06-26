@@ -48,7 +48,14 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
-          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+          <Flex
+            border="1px solid"
+            borderColor="gray.900"
+            p="2"
+            rounded="base"
+            my="2"
+            alignItems="center"
+          >
             <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
@@ -120,7 +127,14 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
             nominating the wallet below:
           </Text>
-          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+          <Flex
+            border="1px solid"
+            borderColor="gray.900"
+            p="2"
+            rounded="base"
+            my="2"
+            alignItems="center"
+          >
             <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">

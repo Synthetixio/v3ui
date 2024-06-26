@@ -5,6 +5,7 @@ import { useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
+import councils from '../../utils/councils';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -19,6 +20,7 @@ interface MyVotesSummary {
 
 export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSummary) => {
   const [showCart, setShowCart] = useState(false);
+  const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
 
   const votes = useGetUserSelectedVotes();
@@ -30,6 +32,11 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       cursor="pointer"
       onClick={() => navigate('/my-votes')}
       onMouseEnter={() => setShowCart(true)}
+      onMouseLeave={() =>
+        setTimeout(() => {
+          if (!mouseOnDropdown) setShowCart(false);
+        }, 1000)
+      }
       rounded="base"
       w="100%"
       maxW="200px"
@@ -48,7 +55,10 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       <Show above="md">
         <Text fontSize="x-small" ml={8} fontWeight="bold">
           {councilPeriod === '2' && (
-            <>{Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/4</>
+            <>
+              {Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/
+              {councils.length}
+            </>
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
@@ -57,7 +67,13 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
             </>
           )}
         </Text>
-        {showCart && <MyVotesBox closeCart={() => setShowCart(false)} votes={votes} />}
+        {showCart && (
+          <MyVotesBox
+            closeCart={() => setShowCart(false)}
+            votes={votes}
+            isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
+          />
+        )}
       </Show>
     </Flex>
   );

@@ -54,7 +54,7 @@ export default function MyVotes() {
 
   return (
     <>
-      <CouncilTabs />
+      <CouncilTabs activeCouncil="spartan" />
       <Flex justifyContent="center" gap="2" w="100%">
         <Flex maxW="1440px" w="100%" justifyContent="center" flexWrap="wrap" gap="6">
           <Flex

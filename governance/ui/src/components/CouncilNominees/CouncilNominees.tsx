@@ -222,7 +222,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 px="0"
                 userSelect="none"
                 textTransform="capitalize"
-                textAlign="center"
+                pl="6"
                 onClick={() => {
                   setSortConfig([!sortConfig[0], 'votes']);
                   // sortedNominees = sortedNominees.sort((a, b) => {
@@ -238,8 +238,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 cursor="pointer"
                 userSelect="none"
                 textTransform="capitalize"
-                textAlign="center"
-                px="0"
+                pl="6"
                 onClick={() => {
                   setSortConfig([!sortConfig[0], 'votingPower']);
                   // sortedNominees = sortedNominees.sort((a, b) => {

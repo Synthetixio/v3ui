@@ -82,17 +82,40 @@ export default function UserListItem({
             <Text color="black">Nominate Self</Text>
           )}
         </Button>
-      ) : (
+      ) : councilPeriod === '2' ? (
         <Button
+          ml="auto"
           size="xs"
           variant="outline"
           colorScheme="gray"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
+            if (nominationInformation?.isNominated) {
+              navigate(`/councils/${activeCouncil}?view=${address}`);
+            } else {
+              navigate({
+                pathname: `/councils/${activeCouncil}`,
+                search: 'nominate=true',
+              });
+            }
+          }}
+          color="white"
+        >
+          {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
+        </Button>
+      ) : (
+        <Button
+          ml="auto"
+          size="xs"
+          variant="outline"
+          colorScheme="gray"
+          onClick={(e) => {
+            e.stopPropagation();
             navigate(`/councils/${activeCouncil}?view=${address}`);
           }}
           color="white"
         >
-          View
+          {nominationInformation?.isNominated ? 'View' : 'NominateSelf'}
         </Button>
       )}
     </Flex>

@@ -16,7 +16,7 @@ export const ProfilePicture = ({
   address,
   ImageProps,
   size = 14,
-  mr = '4',
+  mr,
   ml,
   newVoteCast,
 }: ProfilePictureInterface) => {
