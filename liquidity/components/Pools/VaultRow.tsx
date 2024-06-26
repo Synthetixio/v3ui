@@ -5,12 +5,12 @@ import { generatePath, Link, useLocation } from 'react-router-dom';
 import { useConnectWallet } from '@web3-onboard/react';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { useIsConnected, useNetwork } from '@snx-v3/useBlockchain';
-import { CollateralIcon } from '@snx-v3/icons';
 import { wei } from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { TokenIcon } from '../../ui/src/components';
 
 function VaultRowUi({
   collateralType,
@@ -39,7 +39,7 @@ function VaultRowUi({
     <Tr>
       <Td>
         <Flex flexDir="row" py={4}>
-          <CollateralIcon width="40px" height="40px" symbol={collateralType.symbol} />
+          <TokenIcon width={40} height={40} symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
             <Text fontSize="sm" lineHeight="20px" fontWeight="500" data-testid="collateral-value">
               {liquidityPosition?.collateralValue.gt(0) ? (

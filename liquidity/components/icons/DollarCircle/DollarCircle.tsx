@@ -4,7 +4,7 @@ interface DollarCircleProps extends IconProps {
   fill?: string;
 }
 
-export const DollarCircle = ({ width = '15px', height = '15px', ...props }: DollarCircleProps) => {
+export const DollarCircle = ({ width = '24px', height = '24px', ...props }: DollarCircleProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 19 18" fill="none" {...props}>
       <path

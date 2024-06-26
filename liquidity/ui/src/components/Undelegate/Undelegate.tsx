@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -22,6 +21,7 @@ import React, { FC, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { TokenIcon } from '../TokenIcon';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -73,7 +73,7 @@ export const UndelegateUi: FC<{
       <BorderBox flexDirection="column" py={2} px={3} mb="4">
         <Flex flexDirection="row" justifyContent="space-between" width="100%">
           <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-            <CollateralIcon symbol={symbol} />
+            <TokenIcon symbol={symbol} />
             {displaySymbol}
           </Text>
           <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
