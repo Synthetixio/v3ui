@@ -44,7 +44,9 @@ beforeEach(() => {
 });
 
 Cypress.Commands.add('connectWallet', (namespace = 'wallet') => {
-  const wallet = ethers.Wallet.createRandom();
+  const wallet = new ethers.Wallet(
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+  );
   const privateKey = wallet.privateKey;
   const address = wallet.address;
   cy.on('window:before:load', (win) => {

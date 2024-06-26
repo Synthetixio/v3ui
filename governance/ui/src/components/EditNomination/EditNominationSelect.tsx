@@ -129,6 +129,7 @@ export default function EditNominationSelect({
           padding="2"
           alignItems="center"
           mb="2"
+          data-cy="withdraw-vote-select"
         >
           <Flex
             borderRadius="50%"
@@ -146,7 +147,7 @@ export default function EditNominationSelect({
           </Text>
         </Flex>
       </Flex>
-      <Button mt="auto" onClick={() => setShowConfirm(true)}>
+      <Button mt="auto" onClick={() => setShowConfirm(true)} data-cy="edit-nomination-button">
         Edit Nomination
       </Button>
     </>

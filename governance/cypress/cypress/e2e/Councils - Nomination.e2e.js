@@ -21,4 +21,12 @@ it('Councils - Administration', () => {
     'Click on nominee to see their profile details'
   );
   cy.get('[data-cy="user-table-view-button"]').click();
+  cy.get('[data-cy="nominate-self-button-user-profile-details"]').click();
+  cy.get('[data-cy="withdraw-vote-select"]').click();
+  cy.get('[data-cy="edit-nomination-button"]').click();
+  cy.get('[data-cy="confirm-edit-nomination-button"]').click();
+  cy.get('[data-cy="empty-state-user-action-box"]').contains(
+    'Click on nominee to see their profile details'
+  );
+  cy.get('[data-cy="user-table-row-0"]').should('not.exist');
 });

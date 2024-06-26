@@ -22,8 +22,13 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
     },
     mutationKey: ['nomination', council, address],
     onSuccess: async () => {
-      await query.invalidateQueries({ queryKey: ['nominees', 'spartan'] });
-      await query.invalidateQueries({ queryKey: ['nomineesDetails', 'spartan'] });
+      await query.invalidateQueries({
+        queryKey: ['isNominated', address],
+      });
+      await query.invalidateQueries({ queryKey: ['nominees', council], exact: false });
+      await query.invalidateQueries({ queryKey: ['nomineesDetails', council], exact: false });
+      await query.refetchQueries({ queryKey: ['nominees', council], exact: false });
+      await query.refetchQueries({ queryKey: ['nomineesDetails', council], exact: false });
       toast({
         description: 'Successfully nominated yourself.',
         status: 'success',

@@ -7,9 +7,9 @@ export function useGetCouncilNominees(council: CouncilSlugs) {
   return useQuery({
     queryKey: ['nominees', council],
     queryFn: async () => {
-      return (await getCouncilContract(council).connect(motherShipProvider).getNominees()) as
-        | string[]
-        | undefined;
+      return (await getCouncilContract(council)
+        .connect(motherShipProvider)
+        .getNominees()) as string[];
     },
     enabled: !!council,
     staleTime: 900000,

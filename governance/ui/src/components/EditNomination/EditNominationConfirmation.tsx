@@ -30,8 +30,11 @@ export default function EditNominationConfirmation({
   });
 
   useEffect(() => {
-    if (isSuccess) setShowConfirm(false);
-  }, [isSuccess, setShowConfirm]);
+    if (isSuccess) {
+      setShowConfirm(false);
+      navigate(`/councils/${activeCouncil}?nominate=false`);
+    }
+  }, [isSuccess, setShowConfirm, navigate, activeCouncil]);
 
   return (
     <>
@@ -169,6 +172,7 @@ export default function EditNominationConfirmation({
             onClick={() => {
               mutate();
             }}
+            data-cy="confirm-edit-nomination-button"
           >
             Edit Nomination
           </Button>
