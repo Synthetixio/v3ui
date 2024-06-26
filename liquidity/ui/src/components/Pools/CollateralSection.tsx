@@ -5,7 +5,6 @@ import { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { CollateralIcon } from '@snx-v3/icons';
 import { useApr } from '@snx-v3/useApr';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { NETWORKS, Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -14,6 +13,7 @@ import { usePool } from '@snx-v3/usePoolsList';
 import { formatEther } from 'ethers/lib/utils';
 import { BigNumberish } from 'ethers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { TokenIcon } from '../TokenIcon';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -148,17 +148,10 @@ export const CollateralSectionUi: FC<{
                     data-collateral={vaultCollateral.collateralType.symbol}
                   >
                     <Flex color="white" display="flex" gap={2} alignItems="center">
-                      <CollateralIcon
-                        width="30px"
-                        height="30px"
-                        fill="#0B0B22"
-                        color="#00D1FF"
-                        symbol={vaultCollateral.collateralType.symbol}
-                      />
+                      <TokenIcon symbol={vaultCollateral.collateralType.symbol} w={30} h={30} />
                       <Text fontWeight={700} fontSize="xl">
                         {vaultCollateral.collateralType.displaySymbol}
                       </Text>
-
                       <Text
                         fontSize="sm"
                         color="gray.400"

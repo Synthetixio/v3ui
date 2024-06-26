@@ -1,6 +1,6 @@
 import { Flex, Heading, Tag, Text, Divider, Button, Box, Link, Fade } from '@chakra-ui/react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
-import { CollateralIcon } from '@snx-v3/icons';
+import { TokenIcon } from '../../TokenIcon';
 
 interface TorosPoolCardProps {
   tvl: string;
@@ -73,7 +73,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           <Divider />
           <Flex alignItems="center" mt="4" gap="4">
             <Flex alignItems="center">
-              <CollateralIcon width="26px" height="26px" symbol="USDC" />
+              <TokenIcon w={26} h={26} symbol="USDC" />
               <Flex flexDirection="column" ml={3} mr="auto">
                 <Text
                   fontSize="14px"
