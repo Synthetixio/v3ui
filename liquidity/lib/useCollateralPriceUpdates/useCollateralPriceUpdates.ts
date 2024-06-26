@@ -60,7 +60,7 @@ async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
     if (collateral === 'WETH') {
       symbol = 'ETH';
     }
-    const id = deduped.find((x) => x.symbol === symbol);
+    const id = deduped.find((x) => x.symbol?.toUpperCase() === symbol.toUpperCase());
     return {
       collateral,
       priceId: id?.priceId,
