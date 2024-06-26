@@ -166,21 +166,21 @@ export const UserProfileDetails = ({
                   payload: userData?.address.toLowerCase(),
                 });
               }
+              if (userData?.address) {
+                const selection = localStorage.getItem('voteSelection');
+                if (!selection) localStorage.setItem('voteSelection', '');
+                const parsedSelection = JSON.parse(selection ? selection : '{}');
 
-              // if (userData?.address) {
-              //   const selection = localStorage.getItem('voteSelection');
-              //   if (!selection) localStorage.setItem('voteSelection', '');
-              //   const parsedSelection = JSON.parse(selection ? selection : '{}');
-              //   parsedSelection[activeCouncil] =
-              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-              //       ? ''
-              //       : userData.address;
-              //   localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-              //   queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
-              //   setRemoveOrSelect(
-              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-              //   );
-              // }
+                if (parsedSelection[activeCouncil]) {
+                  parsedSelection[activeCouncil] =
+                    parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+                      ? ''
+                      : userData.address;
+                } else {
+                  parsedSelection[activeCouncil] = userData.address;
+                }
+                localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+              }
             }}
           >
             {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
