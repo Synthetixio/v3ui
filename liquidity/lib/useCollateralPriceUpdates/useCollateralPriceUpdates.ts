@@ -103,7 +103,7 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
       if (!(targetNetwork?.id && targetNetwork?.preset)) {
         throw 'useAllCollateralPriceUpdates is missing required data';
       }
-      const stalenessTolerance = 50;
+      const stalenessTolerance = 1;
 
       const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, targetNetwork);
