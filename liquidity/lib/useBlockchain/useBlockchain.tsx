@@ -180,7 +180,7 @@ export const ARBITRUM_SEPOLIA: Network = {
     `https://arbitrum-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
   label: 'Arbitrum Sepolia',
   isSupported: true,
-  publicRpcUrl: 'https://sepolia.arbiscan.io/',
+  publicRpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
   isTestnet: true,
 };
 
@@ -194,7 +194,7 @@ export const ARBITRUM: Network = {
     `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
   label: 'Arbitrum',
   isSupported: true,
-  publicRpcUrl: 'https://arbiscan.io/',
+  publicRpcUrl: 'https://arb1.arbitrum.io/rpc',
   isTestnet: false,
 };
 

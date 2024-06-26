@@ -11,10 +11,10 @@ import {
 } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { CollateralIcon } from '@snx-v3/icons';
 import { useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
+import { TokenIcon } from '../../TokenIcon';
 
 export interface PoolCardProps {
   pool: {
@@ -178,7 +178,7 @@ export const PoolCard = ({
             return (
               <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
                 <Flex alignItems="center" justifyContent="space-between">
-                  <CollateralIcon width="26px" height="26px" symbol={type.symbol} />
+                  <TokenIcon width={26} height={26} symbol={type.symbol} />
                   <Flex flexDirection="column" ml={3} mr="auto">
                     <Text
                       fontSize="14px"
