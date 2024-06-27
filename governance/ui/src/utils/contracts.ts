@@ -1,5 +1,5 @@
 import { Contract } from 'ethers';
-import { electionModuleABI, electionModuleABITest } from './abi';
+import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(

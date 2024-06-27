@@ -5,7 +5,6 @@ import { CouncilSlugs } from '../utils/councils';
 import { CustomToast } from '../components/CustomToast';
 import { useToast } from '@chakra-ui/react';
 import { devSigner } from '../utils/providers';
-import { useGetNomineesDetails } from '../queries';
 
 export default function useEditNomination({
   currentNomination,

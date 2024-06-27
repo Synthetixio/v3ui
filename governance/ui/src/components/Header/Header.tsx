@@ -1,4 +1,4 @@
-import { Button, Flex, Image, useColorMode, Show, Link } from '@chakra-ui/react';
+import { Button, Flex, useColorMode, Show, Link } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
@@ -12,7 +12,7 @@ import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 export function Header() {
   const navigate = useNavigate();
 
-  const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
+  const { activeWallet, walletsInfo, connect } = useWallet();
   const { network } = useNetwork();
 
   const { colorMode, toggleColorMode } = useColorMode();

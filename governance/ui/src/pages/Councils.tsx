@@ -1,4 +1,4 @@
-import { Container, Flex, Hide } from '@chakra-ui/react';
+import { Container, Flex } from '@chakra-ui/react';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import { CouncilSlugs } from '../utils/councils';
 import { useParams } from 'react-router-dom';
