@@ -73,6 +73,7 @@ export const PoolCard = ({
         name: 'USD Coin',
       };
     }
+
     return collateralType;
   });
 
@@ -170,7 +171,7 @@ export const PoolCard = ({
         <Flex flexWrap="wrap" gap={6}>
           {sanitizedCollateralTypes?.map((type) => {
             const collateralApr = apr.collateralAprs.find(
-              (item) => item.collateralType === type.tokenAddress
+              (item) => item.collateralType.toLowerCase() === type.tokenAddress.toLowerCase()
             );
 
             return (
@@ -191,7 +192,7 @@ export const PoolCard = ({
                       {type.symbol}
                     </Text>
                   </Flex>
-                  {network.id === ARBITRUM.id && collateralApr && (
+                  {network.id === ARBITRUM.id && collateralApr && collateralApr.apr24h >= 0 && (
                     <Flex flexDirection="column" ml={6} mr={4}>
                       <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
                         APR
