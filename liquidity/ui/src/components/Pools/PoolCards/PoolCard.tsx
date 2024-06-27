@@ -15,6 +15,11 @@ import { useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
 import { TokenIcon } from '../../TokenIcon';
+import { CollateralType } from '@snx-v3/useCollateralTypes';
+
+interface CollateralTypeWithDeposited extends CollateralType {
+  collateralDeposited: string;
+}
 
 export interface PoolCardProps {
   pool: {
@@ -23,14 +28,7 @@ export interface PoolCardProps {
   };
   network: Network;
   collaterals: string[];
-  collateralTypes: {
-    id: string;
-    oracle_node_id: string;
-    name: string;
-    decimals: number;
-    symbol: string;
-    total_amount_deposited: string;
-  }[];
+  collateralTypes?: CollateralTypeWithDeposited[];
   collateralPrices?: {
     symbol: string;
     price: BigNumberish;
@@ -56,14 +54,14 @@ export const PoolCard = ({
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { connect } = useWallet();
 
-  const vaultTVL = collateralTypes.reduce((acc, type) => {
+  const vaultTVL = collateralTypes?.reduce((acc, type) => {
     const price = wei(collateralPrices?.find((price) => price.symbol === type.symbol)?.price || 0);
-    const amount = wei(type.total_amount_deposited, type.decimals, true);
+    const amount = wei(type.collateralDeposited, Number(type.decimals), true);
     const value = price.mul(amount);
     return acc.add(value);
   }, ZEROWEI);
 
-  const sanitizedCollateralTypes = collateralTypes.map((collateralType) => {
+  const sanitizedCollateralTypes = collateralTypes?.map((collateralType) => {
     if (
       isBaseAndromeda(network.id, network.preset) &&
       collateralType.symbol.toUpperCase() === 'SUSDC'
@@ -172,11 +170,11 @@ export const PoolCard = ({
         <Flex flexWrap="wrap" gap={6}>
           {sanitizedCollateralTypes?.map((type) => {
             const collateralApr = apr.collateralAprs.find(
-              (item) => item.collateralType === type.id
+              (item) => item.collateralType === type.tokenAddress
             );
 
             return (
-              <Flex alignItems="center" key={type.oracle_node_id} gap={4} mt={3}>
+              <Flex alignItems="center" key={type.oracleNodeId} gap={4} mt={3}>
                 <Flex alignItems="center" justifyContent="space-between">
                   <TokenIcon width={26} height={26} symbol={type.symbol} />
                   <Flex flexDirection="column" ml={3} mr="auto">
