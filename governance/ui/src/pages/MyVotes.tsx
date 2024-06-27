@@ -111,7 +111,9 @@ export default function MyVotes() {
             )}
             <Flex justifyContent="space-between" mb="4" opacity={period !== '2' ? '0.4' : '1'}>
               <Heading fontSize="2xl">My Votes</Heading>
-              <Heading fontSize="2xl">{Object.values(votingCandidates || {}).length}/4</Heading>
+              <Heading fontSize="2xl">
+                {Object.values(votingCandidates || {}).length}/{councils.length}
+              </Heading>
             </Flex>
             <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>
               You can cast 4 votes in one transaction. Continue voting if you want to add other

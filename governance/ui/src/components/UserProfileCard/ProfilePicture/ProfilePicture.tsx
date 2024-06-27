@@ -68,6 +68,7 @@ export const ProfilePicture = ({
                 borderRadius="100%"
                 position="absolute"
                 zIndex={11}
+                data-cy={`user-blockies-council-tabs-${address || newVoteCast}`}
               />
             )}
             <Blockies

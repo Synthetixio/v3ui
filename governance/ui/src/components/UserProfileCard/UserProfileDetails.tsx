@@ -149,6 +149,7 @@ export const UserProfileDetails = ({
         {councilPeriod === '2' && (
           <Button
             w="100%"
+            data-cy="select-user-to-vote-button"
             onClick={() => {
               if (isAlreadyVoted) {
                 dispatch({

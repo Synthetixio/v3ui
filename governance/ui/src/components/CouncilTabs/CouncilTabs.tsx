@@ -107,9 +107,10 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {userInformation[index].userInformation?.pfpUrl ||
-                  !!userInformation[index].userInformation?.address ||
-                  newVoteCast ? (
+                  {councilPeriod === '2' &&
+                  (userInformation[index].userInformation?.pfpUrl ||
+                    !!userInformation[index].userInformation?.address ||
+                    newVoteCast) ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}

@@ -88,6 +88,7 @@ export default function UserListItem({
           size="xs"
           variant="outline"
           colorScheme="gray"
+          data-cy="nominate-self-button-user-profile-details-voting-period"
           onClick={(e) => {
             e.stopPropagation();
             if (nominationInformation?.isNominated) {

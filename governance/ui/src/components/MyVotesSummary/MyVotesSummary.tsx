@@ -30,6 +30,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       position="relative"
       key="tab-my-votes"
       cursor="pointer"
+      data-cy="my-votes-button"
       onClick={() => navigate('/my-votes')}
       onMouseEnter={() => setShowCart(true)}
       onMouseLeave={() =>
@@ -67,7 +68,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
             </>
           )}
         </Text>
-        {showCart && (
+        {showCart && councilPeriod === '2' && (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
             votes={votes}

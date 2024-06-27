@@ -1,4 +1,4 @@
-import { Button, Flex, Image, useColorMode, Show } from '@chakra-ui/react';
+import { Button, Flex, Image, useColorMode, Show, Link } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
@@ -104,6 +104,7 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
+        {process.env.DEV === 'true' && <Link href="/#/admin">Admin</Link>}
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
 
