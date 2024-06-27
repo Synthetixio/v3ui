@@ -69,7 +69,7 @@ export function useRewards(
 
   return useQuery({
     enabled: Boolean(
-      CoreProxy && Multicall3 && distributors && poolId && collateralAddress && accountId
+      CoreProxy && Multicall3 && distributors && poolId && accountId
     ),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
@@ -83,7 +83,6 @@ export function useRewards(
         !Multicall3 ||
         !CoreProxy ||
         !poolId ||
-        !collateralAddress ||
         !accountId ||
         !distributors
       ) {
