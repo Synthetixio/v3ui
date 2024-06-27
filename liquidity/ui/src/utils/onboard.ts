@@ -3,7 +3,7 @@ import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets';
 import trezorModule from '@web3-onboard/trezor';
 import ledgerModule from '@web3-onboard/ledger';
 import walletConnectModule from '@web3-onboard/walletconnect';
-// import gnosisModule from '@web3-onboard/gnosis';
+import gnosisModule from '@web3-onboard/gnosis';
 import coinbaseModule from '@web3-onboard/coinbase';
 import { init } from '@web3-onboard/react';
 import type { ChainWithDecimalId } from '@web3-onboard/common';
@@ -24,6 +24,7 @@ export const chains: ChainWithDecimalId[] = Object.values(
         token: network.token,
         label: network.label,
         rpcUrl: network.rpcUrl(),
+        publicRpcUrl: network.publicRpcUrl,
       },
     });
   }, {})
@@ -46,7 +47,7 @@ export const onboard = init({
       projectId: 'd6eac005846a1c3be1f8eea3a294eed9',
       dappUrl: 'liquidity.synthetix.eth.limo',
     }),
-    // gnosisModule(),
+    gnosisModule(),
   ],
   chains,
   appMetadata: {

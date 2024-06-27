@@ -1,6 +1,6 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-export const SUSDCIcon = ({ width = '42px', height = '42px' }: IconProps) => {
+export const SUSDCIcon = ({ width = '24px', height = '24px' }: IconProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 30 30" fill="none">
       <g clipPath="url(#clip0_10043_2361)">

@@ -76,136 +76,156 @@ export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconP
   }
 };
 
+export const BASE_ANDROMEDA: Network = {
+  id: 8453,
+  preset: 'andromeda',
+  hexId: `0x${Number(8453).toString(16)}`,
+  token: 'ETH',
+  name: 'base',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Base',
+  isSupported: true,
+  publicRpcUrl: 'https://base.publicnode.com',
+  isTestnet: false,
+};
+
+export const MAINNET: Network = {
+  id: 1,
+  preset: 'main',
+  hexId: `0x${Number(1).toString(16)}`,
+  token: 'ETH',
+  name: 'mainnet',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Ethereum',
+  isSupported: true,
+  publicRpcUrl: 'https://ethereum.publicnode.com',
+  isTestnet: false,
+};
+
+export const OPTIMISM: Network = {
+  id: 10,
+  preset: 'main',
+  hexId: `0x${Number(10).toString(16)}`,
+  token: 'ETH',
+  name: 'optimism-mainnet',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://optimism-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Optimism',
+  isSupported: true,
+  publicRpcUrl: 'https://mainnet.optimism.io',
+  isTestnet: false,
+};
+
+export const SEPOLIA: Network = {
+  id: 11155111,
+  preset: 'main',
+  hexId: `0x${Number(11155111).toString(16)}`,
+  token: 'ETH',
+  name: 'sepolia',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Sepolia Testnet',
+  isSupported: true,
+  publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
+  isTestnet: true,
+};
+
+export const BASE_SEPOLIA: Network = {
+  id: 84532,
+  preset: 'andromeda',
+  hexId: `0x${Number(84532).toString(16)}`,
+  token: 'ETH',
+  name: 'base-sepolia',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Base Sepolia',
+  isSupported: true,
+  publicRpcUrl: 'https://sepolia.base.org',
+  isTestnet: true,
+};
+
+export const CANNON: Network = {
+  id: 13370,
+  preset: 'main',
+  hexId: `0x${Number(13370).toString(16)}`,
+  token: 'ETH',
+  name: 'cannon',
+  rpcUrl: () => `http://127.0.0.1:8545`,
+  label: 'Cannon',
+  isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
+  publicRpcUrl: 'http://127.0.0.1:8545',
+  isTestnet: true,
+};
+
+export const OPTIMISM_SEPOLIA: Network = {
+  id: 11155420,
+  preset: 'main',
+  hexId: `0x${Number(11155420).toString(16)}`,
+  token: 'ETH',
+  name: 'optimism-sepolia',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://optimism-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Optimism Sepolia',
+  isSupported: false,
+  publicRpcUrl: 'https://sepolia.optimism.io/',
+  isTestnet: true,
+};
+
+export const ARBITRUM_SEPOLIA: Network = {
+  id: 421614,
+  preset: 'main',
+  hexId: `0x${Number(421614).toString(16)}`,
+  token: 'ETH',
+  name: 'arbitrum-sepolia',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://arbitrum-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Arbitrum Sepolia',
+  isSupported: true,
+  publicRpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
+  isTestnet: true,
+};
+
+export const ARBITRUM: Network = {
+  id: 42161,
+  preset: 'main',
+  hexId: `0x${Number(42161).toString(16)}`,
+  token: 'ETH',
+  name: 'arbitrum',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Arbitrum',
+  isSupported: true,
+  publicRpcUrl: 'https://arb1.arbitrum.io/rpc',
+  isTestnet: false,
+};
+
+export const ARBTHETIX: Network = {
+  id: 42161,
+  preset: 'arbthetix',
+  hexId: `0x${Number(42161).toString(16)}`,
+  token: 'ETH',
+  name: 'arbitrum',
+  rpcUrl: (INFURA_KEY?: string) =>
+    `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
+  label: 'Arbthetix (withdraw only)',
+  isSupported: false,
+  publicRpcUrl: 'https://arbiscan.io/',
+  isTestnet: false,
+};
+
 export const NETWORKS: Network[] = [
-  {
-    id: 8453,
-    preset: 'andromeda',
-    hexId: `0x${Number(8453).toString(16)}`,
-    token: 'ETH',
-    name: 'base',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://base-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base',
-    isSupported: true,
-    publicRpcUrl: 'https://base.publicnode.com',
-    isTestnet: false,
-  },
-  {
-    id: 1,
-    preset: 'main',
-    hexId: `0x${Number(1).toString(16)}`,
-    token: 'ETH',
-    name: 'mainnet',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Ethereum',
-    isSupported: true,
-    publicRpcUrl: 'https://ethereum.publicnode.com',
-    isTestnet: false,
-  },
-  {
-    id: 10,
-    preset: 'main',
-    hexId: `0x${Number(10).toString(16)}`,
-    token: 'ETH',
-    name: 'optimism-mainnet',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://optimism-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Optimism',
-    isSupported: true,
-    publicRpcUrl: 'https://mainnet.optimism.io',
-    isTestnet: false,
-  },
-  {
-    id: 11155111,
-    preset: 'main',
-    hexId: `0x${Number(11155111).toString(16)}`,
-    token: 'ETH',
-    name: 'sepolia',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Sepolia Testnet',
-    isSupported: true,
-    publicRpcUrl: 'https://ethereum-sepolia.publicnode.com',
-    isTestnet: true,
-  },
-  {
-    id: 84532,
-    preset: 'andromeda',
-    hexId: `0x${Number(84532).toString(16)}`,
-    token: 'ETH',
-    name: 'base-sepolia',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://base-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Base Sepolia',
-    isSupported: true,
-    publicRpcUrl: 'https://sepolia.base.org',
-    isTestnet: true,
-  },
-  {
-    id: 13370,
-    preset: 'main',
-    hexId: `0x${Number(13370).toString(16)}`,
-    token: 'ETH',
-    name: 'cannon',
-    rpcUrl: () => `http://127.0.0.1:8545`,
-    label: 'Cannon',
-    isSupported: false, // hidden by default but if wallet switched to Cannon it will be visible
-    publicRpcUrl: 'http://127.0.0.1:8545',
-    isTestnet: true,
-  },
-  {
-    id: 11155420,
-    preset: 'main',
-    hexId: `0x${Number(11155420).toString(16)}`,
-    token: 'ETH',
-    name: 'optimism-sepolia',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://optimism-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Optimism Sepolia',
-    isSupported: false,
-    publicRpcUrl: 'https://sepolia.optimism.io/',
-    isTestnet: true,
-  },
-  {
-    id: 421614,
-    preset: 'main',
-    hexId: `0x${Number(421614).toString(16)}`,
-    token: 'ETH',
-    name: 'arbitrum-sepolia',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://arbitrum-sepolia.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Arbitrum Sepolia',
-    isSupported: true,
-    publicRpcUrl: 'https://sepolia.arbiscan.io/',
-    isTestnet: true,
-  },
-  {
-    id: 42161,
-    preset: 'main',
-    hexId: `0x${Number(42161).toString(16)}`,
-    token: 'ETH',
-    name: 'arbitrum',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Arbitrum',
-    isSupported: true,
-    publicRpcUrl: 'https://arbiscan.io/',
-    isTestnet: false,
-  },
-  {
-    id: 42161,
-    preset: 'arbthetix',
-    hexId: `0x${Number(42161).toString(16)}`,
-    token: 'ETH',
-    name: 'arbitrum',
-    rpcUrl: (INFURA_KEY?: string) =>
-      `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY ?? DEFAULT_INFURA_KEY}`,
-    label: 'Arbthetix (withdraw only)',
-    isSupported: false,
-    publicRpcUrl: 'https://arbiscan.io/',
-    isTestnet: false,
-  },
+  BASE_ANDROMEDA,
+  MAINNET,
+  OPTIMISM,
+  SEPOLIA,
+  BASE_SEPOLIA,
+  CANNON,
+  OPTIMISM_SEPOLIA,
+  ARBITRUM_SEPOLIA,
+  ARBITRUM,
+  ARBTHETIX,
 ];
 
 export const deploymentsWithERC7412: string[] = [

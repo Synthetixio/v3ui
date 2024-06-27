@@ -1,18 +1,19 @@
-import { Box, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC } from 'react';
 import { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { CollateralIcon } from '@snx-v3/icons';
 import { useApr } from '@snx-v3/useApr';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { NETWORKS } from '@snx-v3/useBlockchain';
+import { NETWORKS, Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { usePool } from '@snx-v3/usePoolsList';
 import { formatEther } from 'ethers/lib/utils';
 import { BigNumberish } from 'ethers';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { TokenIcon } from '../TokenIcon';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -32,7 +33,14 @@ export const CollateralSectionUi: FC<{
   collateralPrices?: { symbol: string; price: BigNumberish }[];
   apr?: number;
   isAprLoading?: boolean;
-}> = ({ vaultsData, collateralPrices, apr, isAprLoading }) => {
+  network: Network | undefined;
+  poolId: string | undefined;
+}> = ({ vaultsData, collateralPrices, apr, isAprLoading, network, poolId }) => {
+  const { network: currentNetwork, setNetwork } = useNetwork();
+  const { connect } = useWallet();
+  const navigate = useNavigate();
+  const [queryParams] = useSearchParams();
+
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
   return (
@@ -104,7 +112,11 @@ export const CollateralSectionUi: FC<{
           ) : (
             <Tooltip label="APR is a combination of past week pool performance and rewards.">
               <Text fontWeight={700} fontSize="xl" color="white">
-                {`${!!apr ? apr.toFixed(2) : '-'}%`}
+                {`${
+                  !!apr && apr > 0
+                    ? `${network?.id === 42161 ? 'Up to ' : ''}${apr.toFixed(2)}`
+                    : '-'
+                }%`}
               </Text>
             </Tooltip>
           )}
@@ -135,14 +147,8 @@ export const CollateralSectionUi: FC<{
                     data-testid="pool collateral"
                     data-collateral={vaultCollateral.collateralType.symbol}
                   >
-                    <Flex color="white" display="flex" gap={1} alignItems="center">
-                      <CollateralIcon
-                        width="30px"
-                        height="30px"
-                        fill="#0B0B22"
-                        color="#00D1FF"
-                        symbol={vaultCollateral.collateralType.symbol}
-                      />
+                    <Flex color="white" display="flex" gap={2} alignItems="center">
+                      <TokenIcon symbol={vaultCollateral.collateralType.symbol} w={30} h={30} />
                       <Text fontWeight={700} fontSize="xl">
                         {vaultCollateral.collateralType.displaySymbol}
                       </Text>
@@ -154,6 +160,46 @@ export const CollateralSectionUi: FC<{
                       >
                         {price ? formatNumberToUsd(formatEther(price.toString())) : '-'}
                       </Text>
+
+                      <Button
+                        onClick={async (e) => {
+                          try {
+                            e.stopPropagation();
+
+                            if (!currentNetwork) {
+                              connect();
+                              return;
+                            }
+
+                            if (network && currentNetwork.id !== network.id) {
+                              if (!(await setNetwork(network.id))) {
+                                return;
+                              }
+                            }
+
+                            queryParams.set('manageAction', 'deposit');
+                            navigate({
+                              pathname: `/positions/${vaultCollateral.collateralType.symbol}/${poolId}`,
+                              search: queryParams.toString(),
+                            });
+                          } catch (error) {}
+                        }}
+                        size="sm"
+                        variant="outline"
+                        colorScheme="gray"
+                        height="32px"
+                        py="10px"
+                        px="12px"
+                        whiteSpace="nowrap"
+                        borderRadius="4px"
+                        color="white"
+                        fontFamily="heading"
+                        fontWeight={700}
+                        fontSize="14px"
+                        lineHeight="20px"
+                      >
+                        Deposit
+                      </Button>
                     </Flex>
                     <Flex gap={2} justifyContent="space-between">
                       <Flex gap={1} flexBasis="50%" flexDirection="column">
@@ -254,6 +300,8 @@ export const CollateralSection = () => {
       collateralPrices={collateralPrices}
       apr={aprData?.combinedApr}
       isAprLoading={isAprLoading}
+      network={network}
+      poolId={poolId}
     />
   );
 };

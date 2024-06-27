@@ -181,7 +181,6 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider, netwo
     const AllErrors = await importAllErrors(network.id, network.preset);
     const AllErrorsInterface = new ethers.utils.Interface([...AllErrors.abi, ...PYTH_ERRORS]);
     const decodedError = AllErrorsInterface.parseError(errorData);
-    console.log(`decodedError`, decodedError);
     return decodedError;
     // return ERC7412ErrorSchema.parse(decodedError);
   } catch (parseError) {
@@ -254,6 +253,33 @@ export const withERC7412 = async (
 
   while (true) {
     try {
+      if (window.localStorage.getItem('DEBUG') === 'true') {
+        const CoryProxyInfo = await importCoreProxy(network.id, network.preset);
+        const CoreProxyInterface = new ethers.utils.Interface(CoryProxyInfo.abi);
+        console.log(
+          `withERC7412`,
+          multicallCalls.map(({ data, value, ...rest }) => {
+            try {
+              // @ts-ignore
+              const { name, args } = CoreProxyInterface.parseTransaction({ data, value });
+              if (Object.keys(args).filter(([key]) => `${key}` !== `${parseInt(key)}`).length > 0) {
+                const namedArgs = Object.fromEntries(
+                  Object.entries(args).filter(([key]) => `${key}` !== `${parseInt(key)}`)
+                );
+                return { $: name, ...namedArgs };
+              }
+
+              const unnamedArgs = Object.entries(args)
+                .filter(([key]) => `${key}` === `${parseInt(key)}`)
+                .map(([, value]) => value);
+              return { $: name, ...unnamedArgs };
+            } catch {
+              return { $: 'unknown', data, value, ...rest };
+            }
+          })
+        );
+      }
+
       if (multicallCalls.length == 1) {
         const initialCall = multicallCalls[0];
         // The normal flow would go in here, then if the estimate call fail, we catch the error and handle ERC7412
@@ -277,9 +303,11 @@ export const withERC7412 = async (
 
       return { ...multicallTxn, gasLimit };
     } catch (error: any) {
-      console.log({ error });
+      console.error(error);
       const parsedError = await parseError(error, jsonRpcProvider, network);
-
+      if (window.localStorage.getItem('DEBUG') === 'true') {
+        console.error('withERC7412', parsedError);
+      }
       if (parsedError.name === 'OracleDataRequired') {
         const [oracleAddress, oracleQuery] = parsedError.args;
         const ignoreCache = !isRead;
@@ -299,7 +327,6 @@ export const withERC7412 = async (
           // This will be a static call so no money would be withdrawn either way.
           value: isRead ? ethers.utils.parseEther('0.1') : BigNumber.from(0),
         };
-
         // If we get OracleDataRequired, add an extra transaction request just before the last element
         multicallCalls.splice(
           multicallCalls.length - initialMulticallLength,

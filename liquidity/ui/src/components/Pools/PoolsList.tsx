@@ -4,16 +4,34 @@ import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { TorosPoolCard } from './PoolCards/TorosPoolCard';
 import { usePoolsList } from '@snx-v3/usePoolsList';
 import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
+import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
-  const { data, isLoading } = usePoolsList();
+  const { data, isLoading: isPoolsListLoading } = usePoolsList();
+
+  const collaterals = data?.synthetixPools
+    .map((pool) =>
+      pool.poolInfo
+        .map((info) => ({
+          symbol: info.collateral_type.symbol,
+          oracleId: info.collateral_type.oracle_node_id,
+          id: info.collateral_type.id,
+        }))
+        .flat()
+    )
+    .flat();
+
+  const { data: collateralPrices, isLoading: isLoadingCollateralPrices } =
+    useOfflinePrices(collaterals);
 
   const { collateral, chain } = state;
 
   const showToros =
     (chain.length === 0 || chain.includes(8453)) &&
     (collateral.length === 0 || collateral.includes('USDC'));
+
+  const isLoading = isPoolsListLoading || isLoadingCollateralPrices;
 
   return (
     <Flex mt={6} flexDirection="column">
@@ -40,6 +58,7 @@ export const PoolsList = () => {
               <PoolCard
                 key={network.hexId}
                 collateralTypes={collateralTypes}
+                collateralPrices={collateralPrices}
                 apr={apr}
                 network={network}
                 pool={pool}

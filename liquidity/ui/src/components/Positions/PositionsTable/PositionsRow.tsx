@@ -10,6 +10,7 @@ interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
   apr?: number;
+  stablecoinSymbol?: string;
 }
 [];
 
@@ -22,21 +23,29 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
+  stablecoinSymbol,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
+
   const { data: liquidityPosition } = useLiquidityPosition({
     tokenAddress: collateralType.tokenAddress,
     accountId,
     poolId,
   });
+
   const { data: borrow } = useGetBorrow({
     accountId,
     poolId,
     collateralTypeAddress: collateralType.tokenAddress,
   });
 
-  const parsedCRatio = collateralType.issuanceRatioD18.gt(cRatio) ? 'MANAGE' : 'HEALTHY';
+  const parsedCRatio = cRatio.eq(0)
+    ? 'N/A'
+    : collateralType.issuanceRatioD18.gt(cRatio)
+      ? 'MANAGE'
+      : 'HEALTHY';
+
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
@@ -96,14 +105,14 @@ export function PositionRow({
               <Flex flexDirection="column" alignItems="flex-end">
                 <Text color="white" lineHeight="1.25rem" fontFamily="heading">
                   {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance.toString() || '0')
+                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}
                 </Text>
                 <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
                   {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance.toString() || '0')
+                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}{' '}
-                  snxUSD
+                  {stablecoinSymbol}
                 </Text>
               </Flex>
             </Fade>
@@ -140,15 +149,17 @@ export function PositionRow({
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {(cRatio.toNumber() * 100).toFixed(2) + '%'}
+                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
-              <Badge
-                colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
-                border="1px solid"
-                bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
-              >
-                {parsedCRatio}
-              </Badge>
+              {parsedCRatio !== 'N/A' && (
+                <Badge
+                  colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
+                  border="1px solid"
+                  bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
+                >
+                  {parsedCRatio}
+                </Badge>
+              )}
             </Flex>
           </Fade>
         </Td>
