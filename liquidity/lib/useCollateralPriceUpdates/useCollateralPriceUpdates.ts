@@ -71,7 +71,7 @@ async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
 const getPriceUpdates = async (
   priceIds: string[],
   stalenessTolerance: number,
-  network: Network | null
+  network: Network
 ) => {
   // network.id
 
@@ -83,7 +83,7 @@ const getPriceUpdates = async (
   );
   const erc7412Interface = new ethers.utils.Interface(ERC7412_ABI);
 
-  const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
+  const { address } = await importPythERC7412Wrapper(network.id, network.preset);
 
   return {
     // pyth wrapper
@@ -98,7 +98,7 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
   const targetNetwork = customNetwork || network;
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'all-price-updates'],
-    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
+    enabled: Boolean(network && targetNetwork?.id && targetNetwork?.preset),
     queryFn: async () => {
       if (!(targetNetwork?.id && targetNetwork?.preset)) {
         throw 'useAllCollateralPriceUpdates is missing required data';
@@ -200,7 +200,7 @@ export const useCollateralPriceUpdates = () => {
 
         const pythFeedIds = (await getPythFeedIds(network)) as string[];
 
-        const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
+        const { address } = await importPythERC7412Wrapper(network.id, network.preset);
 
         const txs = [
           ...pythFeedIds.map((priceId) => ({

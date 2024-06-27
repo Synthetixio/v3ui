@@ -28,5 +28,8 @@
     "ignoreMatches": [
       "ts-node"
     ]
+  },
+  "dependencies": {
+    "@pythnetwork/pyth-evm-js": "^1.42.0"
   }
 }

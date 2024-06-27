@@ -45,8 +45,9 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/setConfig'),
         ...require('./cypress/tasks/getSUSDC'),
         ...require('./cypress/tasks/getUSDC'),
+        ...require('./cypress/tasks/doAllPriceUpdates'),
+        ...require('./cypress/tasks/doPriceUpdateForPyth'),
       });
-
       return config;
     },
 

@@ -5732,6 +5732,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@cypress/code-coverage": "npm:^3.12.39"
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
     "@snx-cy/onLogAdded": "workspace:*"
     "@snx-cy/printBrowserLogs": "workspace:*"
     "@snx-v3/contracts": "workspace:*"
@@ -6157,6 +6158,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/contracts": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@web3-onboard/react": "npm:^2.9.1"
     ethers: "npm:^5.7.2"
