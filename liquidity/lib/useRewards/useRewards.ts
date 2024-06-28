@@ -68,9 +68,7 @@ export function useRewards(
   const { data: CoreProxy } = useCoreProxy(customNetwork);
 
   return useQuery({
-    enabled: Boolean(
-      CoreProxy && Multicall3 && distributors && poolId && collateralAddress && accountId
-    ),
+    enabled: Boolean(CoreProxy && Multicall3 && distributors && poolId && accountId),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'Rewards',
@@ -79,14 +77,7 @@ export function useRewards(
       { distributors: distributors?.map(({ id }) => id).sort() },
     ],
     queryFn: async () => {
-      if (
-        !Multicall3 ||
-        !CoreProxy ||
-        !poolId ||
-        !collateralAddress ||
-        !accountId ||
-        !distributors
-      ) {
+      if (!Multicall3 || !CoreProxy || !poolId || !accountId || !distributors) {
         throw 'useRewards is missing required data';
       }
 

@@ -126,7 +126,7 @@ interface Collaterals {
 export const useOfflinePrices = (collaterals?: Collaterals[]) => {
   return useQuery({
     queryKey: ['offline-prices', collaterals?.map((collateral) => collateral.id).join('-')],
-    enabled: Boolean(collaterals),
+    enabled: Boolean(collaterals && collaterals.length > 0),
     queryFn: async () => {
       if (!collaterals) {
         throw 'useOfflinePrices is missing required data';

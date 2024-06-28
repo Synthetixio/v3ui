@@ -19,15 +19,12 @@ export const Pool = () => {
     .flat()
     ?.filter((item, pos, self) => self.findIndex((d) => d.id === item.id) === pos);
 
-  const collateralTypes = poolInfo?.map((info) => info.collateral_type);
-
   const network = NETWORKS.find((n) => n.id === Number(networkId));
 
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
     registeredDistributors,
     poolId,
-    // TODO: Update this to support other collateral types
-    collateralTypes?.[0]?.id,
+    undefined,
     accountId || '69',
     network
   );

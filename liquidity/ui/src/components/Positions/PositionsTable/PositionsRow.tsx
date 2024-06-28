@@ -143,7 +143,7 @@ export function PositionRow({
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {(cRatio.toNumber() * 100).toFixed(2) + '%'}
+                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
 
               <CRatioBadge

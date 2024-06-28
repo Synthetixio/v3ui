@@ -13,7 +13,6 @@ import {
   calculateTotalAssetsDelegated,
 } from '../../utils/assets';
 import { calculateDebt } from '../../utils/positions';
-import { useApr } from '@snx-v3/useApr';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -24,7 +23,6 @@ export const StatsList = () => {
   const { network } = useNetwork();
 
   const { data: usdTokens } = useGetUSDTokens();
-  const { data: apr, isLoading: aprIsLoading } = useApr();
 
   const { data: positions, isLoading: isLiquidityPositionLoading } = useLiquidityPositions({
     accountId: params.get('accountId') || undefined,
@@ -87,7 +85,6 @@ export const StatsList = () => {
     tokenBalancesIsLoading ||
     isCollateralPricesLoading ||
     isLiquidityPositionLoading ||
-    aprIsLoading ||
     isCollateralTypesLoading;
 
   return (
@@ -131,24 +128,6 @@ export const StatsList = () => {
             </Text>
             <Text mt={1} textAlign="left">
               Aggregated Debt of all your Open Positions.
-            </Text>
-          </>
-        }
-      />
-      <StatBox
-        title="APR"
-        isLoading={isLoading}
-        value={!!apr?.combinedApr ? apr.combinedApr.toFixed(2) + '%' : '-'}
-        label={
-          <>
-            <Text fontWeight={600} textAlign="left">
-              APY Annual Percentage Yield:
-            </Text>
-            <Text mt={1} textAlign="left">
-              Aggregated APY from all your Positions.
-            </Text>
-            <Text mt={1} textAlign="left">
-              Sum(past 24 hourly pnls) * 365
             </Text>
           </>
         }

@@ -4,7 +4,7 @@ interface BitcoinIconProps extends IconProps {
   fill?: string;
 }
 
-export const BitcoinIcon = ({ width = '42px', height = '42px' }: BitcoinIconProps) => {
+export const BitcoinIcon = ({ width = '24px', height = '24px' }: BitcoinIconProps) => {
   return (
     <Icon width={width} height={height} viewBox="0 0 42 42" fill="none">
       <g clipPath="url(#a)">

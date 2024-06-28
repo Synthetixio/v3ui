@@ -106,9 +106,6 @@ const PoolsListData = gql`
       collateral_type {
         id
         oracle_node_id
-        name
-        decimals
-        symbol
         total_amount_deposited
       }
       pool {
