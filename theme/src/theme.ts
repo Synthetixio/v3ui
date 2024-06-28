@@ -52,6 +52,7 @@ const variantSolid = defineStyle((props) => {
     const bg = mode(`gray.100`, `whiteAlpha.200`)(props);
 
     return {
+      borderRadius: 'base',
       color: mode(`black`, `whiteAlpha.900`)(props),
       bg,
       _hover: {
@@ -66,6 +67,7 @@ const variantSolid = defineStyle((props) => {
 
   if (c === 'cyan') {
     return {
+      borderRadius: 'base',
       bgGradient: gradients['green-cyan'][500],
       color: 'black',
       _hover: {
@@ -87,6 +89,7 @@ const variantSolid = defineStyle((props) => {
   const background = mode(bg, `${c}.600`)(props);
 
   return {
+    borderRadius: 'base',
     bg: background,
     color: mode(color, `white`)(props),
     _hover: {
@@ -106,12 +109,13 @@ const Button: ComponentStyleConfig = {
   variants: {
     solid: variantSolid,
     outline: (props) => {
-      if (props.colorScheme === 'gray') {
+      if (props.colorScheme === 'gray' || props.colorScheme === 'grey') {
         return {
-          color: 'whiteAlpha.800',
+          color: 'white',
           borderColor: 'gray.900',
-          _hover: { bg: 'rgba(255, 255, 255, 0.12)' }, // white 0.12 opacity
-          _active: { bg: 'rgba(255, 255, 255, 0.24)' }, //white 0.24 opacity
+          _hover: { bg: 'whiteAlpha.200' },
+          _active: { bg: 'whiteAlpha.400' },
+          borderRadius: 'base',
         };
       }
       return {
@@ -120,12 +124,14 @@ const Button: ComponentStyleConfig = {
         borderColor: 'cyan.500', // needed for storybook for some reason
         _hover: { bg: 'rgb(0, 209, 255, 0.12)' }, // cyan.500 0.12 opacity
         _active: { bg: 'rgb(0, 209, 255, 0.24)' }, // cyan.500 0.24 opacity
+        borderRadius: 'base',
       };
     },
     ghost: {
       color: 'cyan.500', // needed for storybook for some reason
       _hover: { bg: 'rgb(0, 209, 255, 0.12)' }, // cyan.500 0.12 opacity
       _active: { bg: 'rgb(0, 209, 255, 0.24)' }, // cyan.500 0.24 opacity
+      borderRadius: 'base',
     },
   },
 };
@@ -134,6 +140,7 @@ const Menu: ComponentMultiStyleConfig = {
   parts: ['button', 'list', 'item'],
   baseStyle: {
     button: {
+      borderRadius: 'base',
       color: 'white',
       span: {
         display: 'flex',
@@ -301,6 +308,9 @@ const Badge: ComponentStyleConfig = {
   variants: {
     subtle: (props) => ({
       color: `${props.colorScheme}.500`,
+      border: '0px',
+      display: 'flex',
+      alignItems: 'center',
     }),
     solid: (props) => ({
       background: `${props.colorScheme}.500`,
@@ -309,20 +319,8 @@ const Badge: ComponentStyleConfig = {
     outline: (props) => ({
       borderColor: `${props.colorScheme}.500`,
       color: `${props.colorScheme}.500`,
+      boxShadow: 'unset',
     }),
-    percent: {
-      color: 'cyan.500',
-      bg: 'whiteAlpha.300',
-      fontFamily: 'heading',
-      py: 1,
-      px: 2,
-      borderRadius: 'base',
-      borderWidth: '1px',
-      borderColor: 'transparent',
-      width: '100%',
-      textAlign: 'center',
-      userSelect: 'none',
-    },
   },
 };
 
