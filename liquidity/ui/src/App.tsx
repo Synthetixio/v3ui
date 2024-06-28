@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
-import { ChakraProvider, useColorMode } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, useColorMode } from '@chakra-ui/react';
 import { Fonts, theme } from '@synthetixio/v3-theme';
 import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -11,6 +11,7 @@ import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from './utils/onboard';
+import { Progress } from './utils/theme';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,14 @@ const queryClient = new QueryClient({
   },
 });
 
+const extendedTheme = extendTheme({
+  ...theme,
+  components: {
+    ...theme.components,
+    Progress,
+  },
+});
+
 function ColorMode() {
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -50,7 +59,7 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={theme}>
+        <ChakraProvider theme={extendedTheme}>
           <ColorMode />
           <Fonts />
           <GasSpeedProvider>

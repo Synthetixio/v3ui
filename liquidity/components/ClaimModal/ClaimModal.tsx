@@ -18,7 +18,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useStablecoin } from '@snx-v3/useStablecoin';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
-export const BorrowModalUi: React.FC<{
+export const ClaimModalUi: React.FC<{
   onClose: () => void;
   debtChange: Wei;
   isOpen: boolean;
@@ -62,10 +62,10 @@ export const BorrowModalUi: React.FC<{
 
         <Multistep
           step={1}
-          title="Borrow"
+          title="Claim"
           subtitle={
             <Text as="div">
-              {isBase ? 'Claim' : 'Borrow'}{' '}
+              Claim{' '}
               <Amount value={debtChange} suffix={isBase ? ' USDC' : ` ${stablecoin?.symbol}`} />
             </Text>
           }
@@ -84,7 +84,7 @@ export const BorrowModalUi: React.FC<{
           }}
           width="100%"
           mt="4"
-          data-testid="borrow confirm button"
+          data-testid="claim-confirm-button"
         >
           {(() => {
             switch (txnStatus) {
@@ -103,7 +103,7 @@ export const BorrowModalUi: React.FC<{
   }
 };
 
-export const BorrowModal: React.FC<{
+export const ClaimModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
 }> = ({ onClose, isOpen }) => {
@@ -141,7 +141,7 @@ export const BorrowModal: React.FC<{
       }
       toast.closeAll();
       toast({
-        title: 'Borrow failed',
+        title: 'Claim failed',
         description: contractError ? (
           <ContractError contractError={contractError} />
         ) : (
@@ -149,7 +149,7 @@ export const BorrowModal: React.FC<{
         ),
         status: 'error',
       });
-      throw Error('Borrow failed', { cause: error });
+      throw Error('Claim failed', { cause: error });
     }
   }, [execBorrow, queryClient, network?.id, network?.preset, errorParserCoreProxy, toast]);
 
@@ -158,7 +158,7 @@ export const BorrowModal: React.FC<{
   if (!params.poolId || !params.accountId || !collateralType) return null;
 
   return (
-    <BorrowModalUi
+    <ClaimModalUi
       execBorrow={execBorrowWithErrorParser}
       debtChange={debtChange}
       txnStatus={txnStatus}

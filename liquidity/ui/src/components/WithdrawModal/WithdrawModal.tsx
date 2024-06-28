@@ -34,7 +34,7 @@ import { useStablecoin } from '@snx-v3/useStablecoin';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
-  const { data: stablecoin } = useStablecoin();
+  const stablecoin = useStablecoin();
 
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
   const { data: collateralTypes } = useCollateralTypes();

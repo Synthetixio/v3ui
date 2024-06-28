@@ -16,13 +16,13 @@ export const PositionsList = () => {
     accountId,
   });
   const { data: apr } = useApr();
-  const { data: stablecoinInfo, isLoading: isStablecoinLoading } = useStablecoin();
+  const stablecoinInfo = useStablecoin();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const positions = calculatePositions(positionsByKey, isBase);
   const parsedPositions = positions.filter((position) => position.collateralAmount.gt(0));
 
-  const isLoading = isLiquidityPositionsLoading || isStablecoinLoading;
+  const isLoading = isLiquidityPositionsLoading;
 
   return (
     <Flex flexDir="column">

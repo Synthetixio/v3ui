@@ -15,3 +15,4 @@ export * from './Repay';
 export * from './Undelegate';
 export * from './AccountBanner';
 export * from './Pools';
+export * from './Claim';

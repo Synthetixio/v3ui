@@ -1,7 +1,7 @@
 import { assertAddressType } from '@snx-v3/assertAddressType';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider, useWallet } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { ethers, providers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
 
@@ -14,7 +14,7 @@ export const abi = [
 
 export const useTokenBalance = (address?: string) => {
   const { activeWallet } = useWallet();
-  const provider = useProvider();
+  const provider = useDefaultProvider();
   const { network } = useNetwork();
 
   const tokenAddress = assertAddressType(address) ? address : undefined;
@@ -33,7 +33,7 @@ export const useTokenBalance = (address?: string) => {
 
 export const useTokenBalances = (addresses: string[]) => {
   const { activeWallet } = useWallet();
-  const provider = useProvider();
+  const provider = useDefaultProvider();
   const { network } = useNetwork();
 
   return useQuery({
@@ -55,7 +55,7 @@ export const useTokenBalances = (addresses: string[]) => {
 async function fetchTokenBalance(
   tokenAddress: string,
   walletAddress: string,
-  provider: providers.Web3Provider
+  provider: providers.JsonRpcProvider
 ) {
   const contract = new ethers.Contract(tokenAddress, abi, provider);
   const balance = wei(await contract.balanceOf(walletAddress), await contract.decimals());

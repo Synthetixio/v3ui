@@ -6,12 +6,12 @@ export function statusColor(status: MultistepStatus): string {
     case status.failed:
       return 'red.700';
     case status.disabled:
-      return 'gray.700';
+      return 'gray.900';
     case status.loading:
-      return 'gray.700';
+      return 'gray.900';
     case status.success:
       return 'green.700';
     default:
-      return 'gray.700';
+      return 'gray.900';
   }
 }

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useWallet, useNetwork, useProvider } from '@snx-v3/useBlockchain';
+import { useWallet, useNetwork, useDefaultProvider } from '@snx-v3/useBlockchain';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
 
@@ -7,7 +7,7 @@ const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
 
 export function useEthBalance(networkId?: number) {
   const { activeWallet } = useWallet();
-  const connectedProvider = useProvider();
+  const provider = useDefaultProvider();
   const { network } = useNetwork();
 
   return useQuery({
@@ -17,8 +17,8 @@ export function useEthBalance(networkId?: number) {
       { accountAddress: activeWallet?.address },
     ],
     queryFn: async () => {
-      if (!activeWallet || !connectedProvider) throw Error('useEthBalance should not be enabled');
-      return BalanceSchema.parse(await connectedProvider.getBalance(activeWallet.address));
+      if (!activeWallet || !provider) throw Error('useEthBalance should not be enabled');
+      return BalanceSchema.parse(await provider.getBalance(activeWallet.address));
     },
     enabled: Boolean((networkId ?? network?.id) && activeWallet?.address),
   });
