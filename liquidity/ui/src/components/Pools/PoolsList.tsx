@@ -1,37 +1,54 @@
-import { useReducer } from 'react';
+import { useReducer, useMemo } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { TorosPoolCard } from './PoolCards/TorosPoolCard';
 import { usePoolsList } from '@snx-v3/usePoolsList';
 import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
+import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
   const { data, isLoading: isPoolsListLoading } = usePoolsList();
 
-  const collaterals = data?.synthetixPools
-    .map((pool) =>
-      pool.poolInfo
-        .map((info) => ({
-          symbol: info.collateral_type.symbol,
-          oracleId: info.collateral_type.oracle_node_id,
-          id: info.collateral_type.id,
-        }))
-        .flat()
-    )
-    .flat();
+  const { data: BaseCollateralTypes, isLoading: isBaseCollateralLoading } = useCollateralTypes(
+    false,
+    BASE_ANDROMEDA
+  );
 
-  const { data: collateralPrices, isLoading: isLoadingCollateralPrices } =
-    useOfflinePrices(collaterals);
+  const { data: ArbitrumCollateralTypes, isLoading: isArbCollateralLoading } = useCollateralTypes(
+    false,
+    ARBITRUM
+  );
+
+  const allCollaterals: CollateralType[] = useMemo(() => {
+    if (!BaseCollateralTypes || !ArbitrumCollateralTypes) {
+      return [];
+    }
+
+    return BaseCollateralTypes.concat(ArbitrumCollateralTypes);
+  }, [ArbitrumCollateralTypes, BaseCollateralTypes]);
+
+  const { data: collateralPrices, isLoading: isLoadingCollateralPrices } = useOfflinePrices(
+    allCollaterals.map((item) => ({
+      id: item.tokenAddress,
+      oracleId: item.oracleNodeId,
+      symbol: item.symbol,
+    }))
+  );
 
   const { collateral, chain } = state;
 
   const showToros =
-    (chain.length === 0 || chain.includes(8453)) &&
+    (chain.length === 0 || chain.includes(BASE_ANDROMEDA.id)) &&
     (collateral.length === 0 || collateral.includes('USDC'));
 
-  const isLoading = isPoolsListLoading || isLoadingCollateralPrices;
+  const isLoading =
+    isPoolsListLoading ||
+    isLoadingCollateralPrices ||
+    isBaseCollateralLoading ||
+    isArbCollateralLoading;
 
   return (
     <Flex mt={6} flexDirection="column">
@@ -49,8 +66,23 @@ export const PoolsList = () => {
         )}
         {!isLoading &&
           data?.synthetixPools.map(({ network, poolInfo, apr }) => {
-            const collateralTypes = poolInfo.map((info) => info.collateral_type);
-            const pool = poolInfo[0].pool;
+            const { pool } = poolInfo[0];
+
+            const collateralDeposited = poolInfo.map(({ collateral_type }) => ({
+              collateralDeposited: collateral_type.total_amount_deposited,
+              tokenAddress: collateral_type.id,
+            }));
+
+            const collateralTypes = (
+              network.id === ARBITRUM.id ? ArbitrumCollateralTypes : BaseCollateralTypes
+            )?.map((item) => ({
+              ...item,
+              collateralDeposited:
+                collateralDeposited.find(
+                  ({ tokenAddress }) =>
+                    tokenAddress.toLowerCase() === item.tokenAddress.toLowerCase()
+                )?.collateralDeposited || '0',
+            }));
 
             if (chain.length > 0 && !chain.includes(network.id)) return null;
 

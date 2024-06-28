@@ -1,19 +1,26 @@
 import { Box, Button, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
 import { formatNumber, formatNumberToUsd, formatPercent } from '@snx-v3/formatters';
 import { useParams } from '@snx-v3/useParams';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useApr } from '@snx-v3/useApr';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { NETWORKS, Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import {
+  ARBITRUM,
+  BASE_ANDROMEDA,
+  NETWORKS,
+  Network,
+  useNetwork,
+  useWallet,
+} from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
-import { usePool } from '@snx-v3/usePoolsList';
 import { formatEther } from 'ethers/lib/utils';
 import { BigNumberish } from 'ethers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
+import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -281,18 +288,28 @@ export const CollateralSection = () => {
   const { poolId, networkId } = useParams();
 
   const network = NETWORKS.find((n) => n.id === Number(networkId));
-
-  const { data: poolData } = usePool(Number(networkId), String(poolId));
   const { data: vaultsData } = useVaultsData(Number(poolId), network);
   const { data: aprData, isLoading: isAprLoading } = useApr(network);
 
-  const collaterals = poolData?.poolInfo.map(({ collateral_type }) => ({
-    symbol: collateral_type.symbol,
-    oracleId: collateral_type.oracle_node_id,
-    id: collateral_type.id,
-  }));
+  const { data: BaseCollateralTypes } = useCollateralTypes(false, BASE_ANDROMEDA);
 
-  const { data: collateralPrices } = useOfflinePrices(collaterals);
+  const { data: ArbitrumCollateralTypes } = useCollateralTypes(false, ARBITRUM);
+
+  const allCollaterals: CollateralType[] = useMemo(() => {
+    if (!BaseCollateralTypes || !ArbitrumCollateralTypes) {
+      return [];
+    }
+
+    return BaseCollateralTypes.concat(ArbitrumCollateralTypes);
+  }, [ArbitrumCollateralTypes, BaseCollateralTypes]);
+
+  const { data: collateralPrices } = useOfflinePrices(
+    allCollaterals.map((item) => ({
+      id: item.tokenAddress,
+      oracleId: item.oracleNodeId,
+      symbol: item.symbol,
+    }))
+  );
 
   return (
     <CollateralSectionUi
