@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { CollateralIcon } from '@snx-v3/icons';
@@ -17,6 +17,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { formatNumber } from '@snx-v3/formatters';
 
 export const InitialDepositUi: FC<{
   collateralChange: Wei;
@@ -30,6 +31,7 @@ export const InitialDepositUi: FC<{
   symbol: string;
   setCollateralChange: (val: Wei) => void;
   onSubmit: () => void;
+  minDelegation: Wei;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -39,6 +41,7 @@ export const InitialDepositUi: FC<{
   ethBalance,
   snxBalance,
   onSubmit,
+  minDelegation,
 }) => {
   const [activeBadge, setActiveBadge] = useState(0);
 
@@ -143,13 +146,26 @@ export const InitialDepositUi: FC<{
       )}
       {collateralChange.gt(0) && <WithdrawIncrease />}
 
+      <Collapse in={collateralChange.gt(0) && collateralChange.lt(minDelegation)} animateOpacity>
+        <Alert mb={4} status="error">
+          <AlertIcon />
+          <AlertDescription>
+            Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
+          </AlertDescription>
+        </Alert>
+      </Collapse>
+
       <Button
         data-testid="deposit submit"
         data-cy="deposit-submit-button"
         onClick={() => {
           onSubmit();
         }}
-        isDisabled={collateralChange.lte(0) || combinedTokenBalance === undefined}
+        isDisabled={
+          collateralChange.lte(0) ||
+          combinedTokenBalance === undefined ||
+          collateralChange.lt(minDelegation)
+        }
       >
         {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit Collateral'}
       </Button>
@@ -180,6 +196,7 @@ export const InitialDeposit: FC<{ submit: () => void }> = ({ submit }) => {
       snxBalance={transferrableSnx}
       ethBalance={ethBalance}
       symbol={collateralType?.symbol || ''}
+      minDelegation={collateralType.minDelegationD18}
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
       onSubmit={submit}
