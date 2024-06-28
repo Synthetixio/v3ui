@@ -26,7 +26,21 @@ export const DebtStats: FC<{
         <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
           Debt
         </Text>
-        <Tooltip label="Your minted debt balance." textAlign="start" py={2} px={3}>
+        <Tooltip
+          label={
+            <Text>
+              Debt in Synthetix V3 consists of:
+              <br />
+              1. Your portion of the pool&apos;s total debt, which fluctuates based on trader
+              performance and market conditions.
+              <br />
+              2. The amount you&apos;ve borrowed against your collateral without incurring interest.
+            </Text>
+          }
+          textAlign="start"
+          py={2}
+          px={3}
+        >
           <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
             <InfoIcon color="white" height="9px" width="9px" />
           </Flex>

@@ -38,6 +38,19 @@ const ManageActionUi: FC<{
 
   const [tab, setTab] = useState('collateral');
 
+  const debtActions = DEBTACTIONS.filter((action) => {
+    if (action.title === 'Borrow' && isBase) return false;
+    return true;
+  });
+
+  useEffect(() => {
+    if (tab === 'collateral' && !COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
+      setActiveAction(COLLATERALACTIONS[0].link);
+    } else if (tab === 'debt' && !debtActions.find((aciton) => aciton.link === manageAction)) {
+      setActiveAction(debtActions[0].link);
+    }
+  }, [debtActions, manageAction, setActiveAction, tab]);
+
   return (
     <Box as="form" onSubmit={onSubmit}>
       <Tabs isFitted defaultIndex={tab === 'collateral' ? 0 : 1}>
@@ -100,10 +113,7 @@ const ManageActionUi: FC<{
           <TabPanel px="0">
             <Flex flexDir="column">
               <Flex gap={4}>
-                {DEBTACTIONS.filter((action) => {
-                  if (action.title === 'Borrow' && isBase) return false;
-                  return true;
-                }).map((action) => (
+                {debtActions.map((action) => (
                   <Flex
                     flex="1"
                     h="84px"

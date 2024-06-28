@@ -1,5 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
-import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Skeleton, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { FC } from 'react';
 import { ChangeStat } from './ManageStats';
@@ -34,11 +33,6 @@ export const CollateralStats: FC<{
         <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
           Collateral
         </Text>
-        <Tooltip label="Your minted debt balance." textAlign="start" py={2} px={3}>
-          <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-            <InfoIcon color="white" height="9px" width="9px" />
-          </Flex>
-        </Tooltip>
       </Flex>
       <Flex width="100%">
         {isLoading ? (
@@ -62,18 +56,20 @@ export const CollateralStats: FC<{
             </Text>
           </Flex>
         ) : (
-          <ChangeStat
-            value={ZEROWEI}
-            newValue={newCollateralAmount}
-            formatFn={(val: Wei) =>
-              currency(val, {
+          <Flex direction="column">
+            <ChangeStat
+              value={ZEROWEI}
+              newValue={newCollateralAmount}
+              formatFn={(val: Wei) => `${currency(val)} ${collateralType?.displaySymbol || ''}`}
+              hasChanges={hasChanges}
+            />
+            <Text fontWeight="400" color="white" fontSize="16px">
+              {currency(ZEROWEI, {
                 currency: 'USD',
                 style: 'currency',
-                maximumFractionDigits: 4,
-              })
-            }
-            hasChanges={hasChanges}
-          />
+              })}
+            </Text>
+          </Flex>
         )}
       </Flex>
     </Flex>

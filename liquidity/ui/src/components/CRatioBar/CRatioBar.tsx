@@ -57,7 +57,7 @@ export const CRatioBarUi: FC<{
       <Text color="gray.500">
         C-Ratio{' '}
         <Tooltip
-          label="Is a dynamic number that represents a ratio between the collateral Delegated for your position and the Borrowed assets for this position - the Pool PNL."
+          label="C-ratio is a dynamic number that represents a ratio between your collateral and your debt."
           p="3"
         >
           <InfoIcon w="12px" h="12px" />
@@ -86,11 +86,15 @@ export const CRatioBarUi: FC<{
           </Text>
         )}
 
-        <CRatioBadge
-          currentCRatioPercentage={hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage}
-          liquidationCratioPercentage={liquidationCratioPercentage}
-          targetCratioPercentage={targetCratioPercentage}
-        />
+        {(hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage) !== 0 && (
+          <CRatioBadge
+            currentCRatioPercentage={
+              hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage
+            }
+            liquidationCratioPercentage={liquidationCratioPercentage}
+            targetCratioPercentage={targetCratioPercentage}
+          />
+        )}
       </Flex>
 
       <Box
@@ -119,14 +123,14 @@ export const CRatioBarUi: FC<{
             left={!isLoading ? targetCratioPercentage / scaleFactor : 66}
             text={
               !isLoading
-                ? `Target ${
+                ? `Borrowing Ratio ${
                     ratioIsMaxUInt(targetCratioPercentage)
                       ? 'Infinite'
                       : targetCratioPercentage.toFixed(0)
                   }%`
-                : 'Target'
+                : 'Borrowing Ratio'
             }
-            tooltipText="Required to claim rewards"
+            tooltipText="Minimum point at which you can borrow assets"
             tooltipPosition="right"
           />
         </>
