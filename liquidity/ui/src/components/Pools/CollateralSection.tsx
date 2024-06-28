@@ -38,7 +38,11 @@ export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
 export const CollateralSectionUi: FC<{
   vaultsData: VaultsDataType;
   collateralPrices?: { symbol: string; price: BigNumberish }[];
-  apr?: number;
+  apr?: {
+    combinedApr: number;
+    cumulativePnl: number;
+    collateralAprs: any[];
+  };
   isAprLoading?: boolean;
   network: Network | undefined;
   poolId: string | undefined;
@@ -74,7 +78,7 @@ export const CollateralSectionUi: FC<{
             <Skeleton w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
-              {formatNumberToUsd(totalCollateral.value.toNumber())}
+              {formatNumberToUsd(totalCollateral.value.toNumber(), { maximumFractionDigits: 0 })}
             </Text>
           )}
         </Flex>
@@ -96,7 +100,7 @@ export const CollateralSectionUi: FC<{
             <Skeleton mt={1} w={16} h={6} />
           ) : (
             <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
-              {formatNumberToUsd(totalDebt.toNumber())}
+              {formatNumberToUsd(totalDebt.toNumber(), { maximumFractionDigits: 0 })}
             </Text>
           )}
         </Flex>
@@ -120,8 +124,8 @@ export const CollateralSectionUi: FC<{
             <Tooltip label="APR is a combination of past week pool performance and rewards.">
               <Text fontWeight={700} fontSize="xl" color="white">
                 {`${
-                  !!apr && apr > 0
-                    ? `${network?.id === 42161 ? 'Up to ' : ''}${apr.toFixed(2)}`
+                  !!apr && apr.combinedApr > 0
+                    ? `${network?.id === 42161 ? 'Up to ' : ''}${apr.combinedApr.toFixed(2)}`
                     : '-'
                 }%`}
               </Text>
@@ -167,7 +171,6 @@ export const CollateralSectionUi: FC<{
                       >
                         {price ? formatNumberToUsd(formatEther(price.toString())) : '-'}
                       </Text>
-
                       <Button
                         onClick={async (e) => {
                           try {
@@ -288,11 +291,11 @@ export const CollateralSection = () => {
   const { poolId, networkId } = useParams();
 
   const network = NETWORKS.find((n) => n.id === Number(networkId));
+
   const { data: vaultsData } = useVaultsData(Number(poolId), network);
   const { data: aprData, isLoading: isAprLoading } = useApr(network);
 
   const { data: BaseCollateralTypes } = useCollateralTypes(false, BASE_ANDROMEDA);
-
   const { data: ArbitrumCollateralTypes } = useCollateralTypes(false, ARBITRUM);
 
   const allCollaterals: CollateralType[] = useMemo(() => {
@@ -315,7 +318,7 @@ export const CollateralSection = () => {
     <CollateralSectionUi
       vaultsData={vaultsData}
       collateralPrices={collateralPrices}
-      apr={aprData?.combinedApr}
+      apr={aprData}
       isAprLoading={isAprLoading}
       network={network}
       poolId={poolId}
