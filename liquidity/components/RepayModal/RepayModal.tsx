@@ -26,7 +26,7 @@ import { useRepay } from '@snx-v3/useRepay';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import Wei from '@synthetixio/wei';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
@@ -118,10 +118,10 @@ export const RepayModal: React.FC<{
   const { network } = useNetwork();
   const { data: usdTokens } = useGetUSDTokens();
   const queryClient = useQueryClient();
-  const { data: USDProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: balance } = useTokenBalance(USDProxy?.address);
+  const { data: balance } = useTokenBalance(systemToken?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,
@@ -150,7 +150,7 @@ export const RepayModal: React.FC<{
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
     ? usdTokens?.USDC
-    : USDProxy?.address;
+    : systemToken?.address;
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
