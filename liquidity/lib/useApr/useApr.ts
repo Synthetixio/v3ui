@@ -16,6 +16,7 @@ export function useApr(customNetwork?: Network) {
       }
     },
     staleTime: 60000,
+    enabled: Boolean(chain?.id),
   });
 }
 
@@ -24,6 +25,8 @@ const supportedAprNetworks = [8453, 84532, 42161];
 export async function fetchApr(networkId?: number) {
   try {
     const isSupported = networkId && supportedAprNetworks.includes(networkId);
+    if (!isSupported) throw new Error('Apr endpoint not supported for this network');
+
     const response = await fetch(getAprUrl(networkId));
 
     const data = await response.json();
