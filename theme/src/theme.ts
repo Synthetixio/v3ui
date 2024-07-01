@@ -321,6 +321,19 @@ const Badge: ComponentStyleConfig = {
       color: `${props.colorScheme}.500`,
       boxShadow: 'unset',
     }),
+    percent: {
+      color: 'cyan.500',
+      bg: 'whiteAlpha.300',
+      fontFamily: 'heading',
+      py: 1,
+      px: 2,
+      borderRadius: 'base',
+      borderWidth: '1px',
+      borderColor: 'transparent',
+      width: '100%',
+      textAlign: 'center',
+      userSelect: 'none',
+    },
   },
 };
 

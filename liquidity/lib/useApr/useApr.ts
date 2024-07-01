@@ -1,5 +1,5 @@
 import { getAprUrl } from '@snx-v3/constants';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { ARBITRUM, BASE_ANDROMEDA, BASE_SEPOLIA, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
 export function useApr(customNetwork?: Network) {
@@ -20,7 +20,7 @@ export function useApr(customNetwork?: Network) {
   });
 }
 
-const supportedAprNetworks = [8453, 84532, 42161];
+const supportedAprNetworks = [BASE_ANDROMEDA.id, BASE_SEPOLIA.id, ARBITRUM.id];
 
 export async function fetchApr(networkId?: number) {
   try {
@@ -33,18 +33,18 @@ export async function fetchApr(networkId?: number) {
 
     // Arbitrum has multiple collateral types
     const highestAprCollateral =
-      networkId === 8453
+      networkId === BASE_ANDROMEDA.id
         ? data
-        : data?.sort((a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d)[0];
+        : data?.sort((a: { apr24h: number }, b: { apr24h: number }) => b.apr24h - a.apr24h)[0];
 
     return {
       combinedApr: isSupported
-        ? networkId === 42161
+        ? networkId === ARBITRUM.id
           ? highestAprCollateral.apr24h * 100
           : highestAprCollateral.apr28d * 100
         : 0,
       cumulativePnl: isSupported ? highestAprCollateral.cumulativePnl : 0,
-      collateralAprs: networkId === 8453 ? [data] : data,
+      collateralAprs: networkId === BASE_ANDROMEDA.id ? [data] : data,
     };
   } catch (error) {
     console.error(error);
