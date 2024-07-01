@@ -5580,7 +5580,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/contracts@workspace:contracts"
   dependencies:
-    "@synthetixio/v3-contracts": "npm:^6.2.0"
+    "@synthetixio/v3-contracts": "npm:^6.2.1"
     viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
@@ -5807,7 +5807,6 @@ __metadata:
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
-    "@snx-v3/useStablecoin": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
@@ -6657,13 +6656,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useStablecoin@workspace:*, @snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin":
+"@snx-v3/useSystemToken@workspace:liquidity/lib/useSystemToken":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/useStablecoin@workspace:liquidity/lib/useStablecoin"
+  resolution: "@snx-v3/useSystemToken@workspace:liquidity/lib/useSystemToken"
   dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/contracts": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useGetUSDTokens": "workspace:*"
-    "@snx-v3/useTokenInfo": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
@@ -7168,10 +7167,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@synthetixio/v3-contracts@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "@synthetixio/v3-contracts@npm:6.2.0"
-  checksum: f25bacc432aa538726f67e80e63a5b6a40c1be5aa183b3c21b39309c89672527bbaa7752775677b67b468753e9249a00047c5504b9381d6d31c13deb7bd3552c
+"@synthetixio/v3-contracts@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "@synthetixio/v3-contracts@npm:6.2.1"
+  checksum: eaff4d3178d9af78b23e59f63dce1ca18b1c64a941a3b798a6860d904c707efbba01bd409025d5b289671ba4dcb2b96a84bc0576522b973aec7291383dfa050d
   languageName: node
   linkType: hard
 
