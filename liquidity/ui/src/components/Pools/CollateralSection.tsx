@@ -21,6 +21,7 @@ import { BigNumberish } from 'ethers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { calculateCRatio } from '@snx-v3/calculations';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -146,6 +147,11 @@ export const CollateralSectionUi: FC<{
                 (item) => item.symbol === vaultCollateral.collateralType.symbol
               )?.price;
 
+              const cRatio = calculateCRatio(
+                vaultCollateral.debt,
+                vaultCollateral.collateral.value
+              );
+
               return (
                 <React.Fragment key={vaultCollateral.collateralType.tokenAddress}>
                   <Divider my={4} />
@@ -265,14 +271,9 @@ export const CollateralSectionUi: FC<{
                           data-testid="collateral cratio"
                         >
                           VAULT C-RATIO:{' '}
-                          {vaultCollateral.debt.eq(0)
-                            ? '-'
-                            : formatPercent(
-                                vaultCollateral.collateral.value
-                                  .div(vaultCollateral.debt)
-                                  .toNumber(),
-                                { maximumFractionDigits: 0 }
-                              )}
+                          {cRatio.lte(0)
+                            ? 'N/A'
+                            : formatPercent(cRatio.toNumber(), { maximumFractionDigits: 0 })}
                         </Text>
                       </Flex>
                     </Flex>
