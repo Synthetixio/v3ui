@@ -14,6 +14,7 @@ import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -54,6 +55,7 @@ export const ManageUi: FC<{
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol }) => {
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   const { activeWallet } = useWallet();
+  const { data: systemToken } = useSystemToken();
 
   return (
     <Box mb={12} mt={8}>
@@ -94,7 +96,7 @@ export const ManageUi: FC<{
       <Text color="gray.500" fontFamily="heading" fontSize="14px" lineHeight="20px" width="80%">
         {isBaseAndromeda(network?.id, network?.preset)
           ? 'Deposit to '
-          : 'Deposit your collateral to borrow snxUSD and '}
+          : `Deposit your collateral to borrow ${systemToken?.symbol} and `}
         contribute to the network collateral. If you&apos;ve never staked on Synthetix V3 before,
         please read through this{' '}
         <Link

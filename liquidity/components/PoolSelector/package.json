@@ -8,6 +8,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@snx-v3/Tooltip": "workspace:*",
     "@snx-v3/usePools": "workspace:*",
+    "@snx-v3/useSystemToken": "workspace:*",
     "react": "^18.2.0",
     "react-router-dom": "^6.18.0"
   }

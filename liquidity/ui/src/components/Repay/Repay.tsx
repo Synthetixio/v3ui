@@ -4,7 +4,6 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { DollarCircle } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei, { wei } from '@synthetixio/wei';
@@ -13,7 +12,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { RepayAllDebt } from './';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { useStablecoin } from '@snx-v3/useStablecoin';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -27,21 +26,21 @@ export const RepayUi: FC<{
     snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { data: stablecoin } = useStablecoin();
+  const { data: systemToken } = useSystemToken();
 
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        Repay {isBase ? 'USDC' : stablecoin?.symbol}
+        Repay {isBase ? 'USDC' : systemToken?.symbol}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
-        Pay down your position’s debt with {isBase ? 'USDC' : stablecoin?.symbol}. This decreases
+        Pay down your position’s debt with {isBase ? 'USDC' : systemToken?.symbol}. This decreases
         your debt and increases your C-Ratio.
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           <DollarCircle />
-          {isBase ? 'USDC' : stablecoin?.symbol}
+          {isBase ? 'USDC' : systemToken?.symbol}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           {/* TODO Figure out why repay is causing issues */}
@@ -87,11 +86,11 @@ export const RepayUi: FC<{
                   <Flex direction="column" alignItems="flex-start">
                     <Flex justifyContent="space-between" width="full" gap={1}>
                       Wallet Balance:{' '}
-                      <Amount value={snxUSDBalance} suffix={` ${stablecoin?.symbol}`} />
+                      <Amount value={snxUSDBalance} suffix={` ${systemToken?.symbol}`} />
                     </Flex>
                     <Flex justifyContent="space-between" width="full" gap={1}>
                       Collateral Balance:{' '}
-                      <Amount value={availableUSDCollateral} suffix={` ${stablecoin?.symbol}`} />
+                      <Amount value={availableUSDCollateral} suffix={` ${systemToken?.symbol}`} />
                     </Flex>
                   </Flex>
                 }
@@ -101,8 +100,8 @@ export const RepayUi: FC<{
                   <Text display="inline">
                     <Amount
                       value={totalUsdBalance}
-                      data-testid={`available ${stablecoin?.symbol} balance`}
-                      suffix={` ${stablecoin?.symbol}`}
+                      data-testid={`available ${systemToken?.symbol} balance`}
+                      suffix={` ${systemToken?.symbol}`}
                     />
                   </Text>
                 </Flex>
@@ -116,7 +115,7 @@ export const RepayUi: FC<{
         type="submit"
         isDisabled={!(max && snxUSDBalance && currentDebt && availableUSDCollateral)}
       >
-        Repay {isBase ? 'USDC' : stablecoin?.symbol}
+        Repay {isBase ? 'USDC' : systemToken?.symbol}
       </Button>
     </Flex>
   );
@@ -126,9 +125,9 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
 
-  const { data: USDProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
-  const { data: balance } = useTokenBalance(USDProxy?.address);
+  const { data: balance } = useTokenBalance(systemToken?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
