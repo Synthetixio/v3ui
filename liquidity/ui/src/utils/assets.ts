@@ -20,12 +20,13 @@ export function calculateAssets(
   collateralPrices?: Record<string, Wei | undefined>,
   collateralTypes?: CollateralType[],
   isBase?: boolean,
-  USDCAddress?: string
+  USDCAddress?: string,
+  systemToken?: { address: string }
 ): Asset[] | undefined {
-  if (!accountCollaterals && !associatedUserBalances && !collateralPrices) return;
+  if (!(accountCollaterals && associatedUserBalances && collateralPrices && systemToken)) return;
 
   const filteredAccountCollaterals = accountCollaterals?.filter(
-    (item) => item.displaySymbol !== 'snxUSD'
+    (item) => item.tokenAddress !== systemToken.address
   );
 
   // Empty state

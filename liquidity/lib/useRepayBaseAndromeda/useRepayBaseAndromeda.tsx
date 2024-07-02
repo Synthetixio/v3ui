@@ -8,7 +8,7 @@ import Wei from '@synthetixio/wei';
 import { BigNumber, ethers } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
@@ -33,7 +33,7 @@ export const useRepayBaseAndromeda = ({
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
-  const { data: UsdProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { data: usdTokens } = useGetUSDTokens();
@@ -53,7 +53,7 @@ export const useRepayBaseAndromeda = ({
           poolId &&
           accountId &&
           collateralTypeAddress &&
-          UsdProxy &&
+          systemToken &&
           SpotMarketProxy &&
           usdTokens?.sUSD
         )
@@ -98,7 +98,7 @@ export const useRepayBaseAndromeda = ({
           : undefined;
 
         // approve sUSD to Core
-        const sUSD_Contract = new ethers.Contract(UsdProxy.address, approveAbi, signer);
+        const sUSD_Contract = new ethers.Contract(systemToken.address, approveAbi, signer);
 
         const sUSD_Approval = amountToDeposit.gt(0)
           ? sUSD_Contract.populateTransaction.approve(CoreProxy.address, amountToDeposit.toBN())
@@ -109,7 +109,7 @@ export const useRepayBaseAndromeda = ({
           ? undefined
           : CoreProxy.populateTransaction.deposit(
               BigNumber.from(accountId),
-              UsdProxy.address,
+              systemToken.address,
               amountToDeposit.toBN() // only deposit what's needed
             );
 

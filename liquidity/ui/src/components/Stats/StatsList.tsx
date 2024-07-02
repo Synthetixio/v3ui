@@ -17,6 +17,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
@@ -56,6 +57,7 @@ export const StatsList = () => {
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
+  const { data: systemToken } = useSystemToken();
   const assets = useMemo(
     () =>
       calculateAssets(
@@ -64,7 +66,8 @@ export const StatsList = () => {
         collateralPrices,
         collateralTypes,
         isBase,
-        usdTokens?.USDC
+        usdTokens?.USDC,
+        systemToken
       ),
     [
       accountCollaterals,
@@ -73,6 +76,7 @@ export const StatsList = () => {
       collateralTypes,
       isBase,
       usdTokens?.USDC,
+      systemToken,
     ]
   );
 

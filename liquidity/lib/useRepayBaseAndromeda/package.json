@@ -15,7 +15,7 @@
     "@snx-v3/useGasPrice": "workspace:*",
     "@snx-v3/useGasSpeed": "workspace:*",
     "@snx-v3/useGetUSDTokens": "workspace:*",
-    "@snx-v3/useUSDProxy": "workspace:*",
+    "@snx-v3/useSystemToken": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
