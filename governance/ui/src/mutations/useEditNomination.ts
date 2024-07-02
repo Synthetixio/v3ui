@@ -22,13 +22,13 @@ export default function useEditNomination({
       if (signer) {
         if ((nextNomination && currentNomination) || (!nextNomination && currentNomination)) {
           const tx1 = await getCouncilContract(currentNomination)
-            .connect(process.env.DEV ? devSigner : signer)
+            .connect(process.env.DEV === 'true' ? devSigner : signer)
             .withdrawNomination();
           await tx1.wait();
         }
         if (nextNomination) {
           const tx2 = await getCouncilContract(nextNomination)
-            .connect(process.env.DEV ? devSigner : signer)
+            .connect(process.env.DEV === 'true' ? devSigner : signer)
             .nominate();
           await tx2.wait();
         }

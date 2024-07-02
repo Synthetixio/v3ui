@@ -13,7 +13,7 @@ export default function MyProfile() {
     );
   return (
     <>
-      <CouncilTabs />
+      <CouncilTabs activeCouncil="spartan" />
 
       <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
         <Heading size="lg" mt="6">

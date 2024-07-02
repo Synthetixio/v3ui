@@ -1,12 +1,11 @@
 import { Box, Spinner, Text } from '@chakra-ui/react';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import Timer from '../Timer/Timer';
+import { Timer } from '../Timer';
 import { CouncilSlugs } from '../../utils/councils';
 
 export default function PeriodCountdown({ council }: { council: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(council);
-
   const { data: schedule, isLoading } = useGetEpochSchedule(council);
 
   return councilPeriod !== '3' ? (
@@ -32,7 +31,7 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
       ) : councilPeriod === '0' && schedule ? (
         <Timer expiryTimestamp={schedule.nominationPeriodStartDate * 1000} />
       ) : (
-        (schedule?.votingPeriodStartDate || schedule?.votingPeriodStartDate) && (
+        schedule?.votingPeriodStartDate && (
           <Timer
             expiryTimestamp={
               councilPeriod === '1'

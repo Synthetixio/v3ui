@@ -27,7 +27,7 @@ export default function UserProfileEditPreview({
     >
       <Flex>
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
-        <Flex flexDir="column" w="100%" justifyContent="center">
+        <Flex flexDir="column" w="100%" justifyContent="center" ml="2">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700" data-cy="username-preview">
               {userData.username ? userData.username : prettyString(activeWallet || '')}

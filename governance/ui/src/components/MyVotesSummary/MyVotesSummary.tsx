@@ -1,6 +1,6 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 
-import Timer from '../Timer/Timer';
+import { Timer } from '../Timer';
 import { useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,9 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       cursor="pointer"
       data-cy="my-votes-button"
       onClick={() => navigate('/my-votes')}
-      onMouseEnter={() => setShowCart(true)}
+      onMouseEnter={() => {
+        if (councilPeriod === '2') setShowCart(true);
+      }}
       onMouseLeave={() =>
         setTimeout(() => {
           if (!mouseOnDropdown) setShowCart(false);
@@ -63,12 +65,10 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-            <>
-              <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
-            </>
+            <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
           )}
         </Text>
-        {showCart && councilPeriod === '2' && (
+        {showCart && (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
             votes={votes}

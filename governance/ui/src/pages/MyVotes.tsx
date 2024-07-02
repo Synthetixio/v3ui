@@ -6,7 +6,7 @@ import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
-import Timer from '../components/Timer/Timer';
+import { Timer } from '../components/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import {

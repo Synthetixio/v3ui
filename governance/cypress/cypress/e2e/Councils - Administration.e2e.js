@@ -3,6 +3,7 @@ it('Councils - Administration', () => {
   cy.viewport(1300, 900);
   cy.visit('/');
   cy.get('[data-cy="view-council-button-spartan"]').should('exist');
+  cy.get('[data-cy="countdown-timer"]').should('exist');
   cy.get('[data-cy="council-period-badge"]').contains('Closed - Council Elected');
   cy.get('[data-cy="council-tab-vote-circle"]').should('not.exist');
   cy.get('[data-cy="view-council-button-spartan"]').click();

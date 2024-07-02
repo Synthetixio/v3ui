@@ -2,9 +2,11 @@ import { Wallet, providers } from 'ethers';
 
 // Sepolia for testnet
 export const motherShipProvider = new providers.JsonRpcProvider(
-  process.env.DEV
+  process.env.DEV === 'true'
     ? process.env.DEV_RPC_MOTHERSHIP
-    : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+    : process.env.TESTNET === 'true'
+      ? 'https://ethereum-sepolia-rpc.publicnode.com'
+      : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
 );
 
 export const devSigner = new Wallet(

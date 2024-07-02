@@ -7,7 +7,7 @@ import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-export const supportedNetworks = [8453, 84532, 420, 11155111420, 999];
+export const supportedNetworks = [11155111, 11155420, 2192];
 
 export const chains = NETWORKS.filter((network) => supportedNetworks.includes(network.id))
   .map((network) => ({
@@ -18,7 +18,7 @@ export const chains = NETWORKS.filter((network) => supportedNetworks.includes(ne
   }))
   .concat([
     {
-      id: 999,
+      id: 2192,
       label: 'SNX Chain',
       rpcUrl: 'http://127.0.0.1:19000',
       token: 'SNX',

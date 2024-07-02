@@ -11,31 +11,6 @@ export function useGetNomineesDetails(activeCouncil: CouncilSlugs) {
       const nomineesDetails = await Promise.all(
         councilNominees?.map(async (nominee) => await getUserDetails(nominee)) || []
       );
-      // let counter = 0;
-      // while (counter < 10) {
-      //   nomineesDetails.push({
-      //     about: '123',
-      //     address: Wallet.createRandom().publicKey,
-      //     associatedAddresses: '',
-      //     bannerImageId: '',
-      //     bannerThumbnailUrl: '',
-      //     bannerUrl: '',
-      //     delegationPitch: '',
-      //     discord: '',
-      //     email: '',
-      //     ens: '',
-      //     github: '',
-      //     notificationPreferences: '',
-      //     pfpImageId: '',
-      //     pfpThumbnailUrl: '',
-      //     pfpUrl: '',
-      //     twitter: '',
-      //     type: '',
-      //     username: Math.random().toString(),
-      //     website: '',
-      //   });
-      //   counter++;
-      // }
       return nomineesDetails as GetUserDetails[];
     },
     enabled: !!activeCouncil && Array.isArray(councilNominees),

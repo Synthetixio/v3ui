@@ -15,7 +15,7 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
     mutationFn: async () => {
       if (signer) {
         const tx = await getCouncilContract(council)
-          .connect(process.env.DEV ? devSigner : signer)
+          .connect(process.env.DEV === 'true' ? devSigner : signer)
           .nominate();
         await tx.wait();
       }

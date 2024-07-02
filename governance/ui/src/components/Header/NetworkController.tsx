@@ -42,7 +42,7 @@ const SNXChain: Network = {
 const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet)
   .filter((network) => supportedNetworks.includes(network.id))
   .concat(SNXChain);
-const testnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && isTestnet)
+const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
   .filter((network) => supportedNetworks.includes(network.id))
   .concat(SNXChain);
 
