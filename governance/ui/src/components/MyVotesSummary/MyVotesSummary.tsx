@@ -24,7 +24,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
   const navigate = useNavigate();
 
   const votes = useGetUserSelectedVotes();
-
+  console.log(schedule?.votingPeriodStartDate);
   return (
     <Flex
       position="relative"

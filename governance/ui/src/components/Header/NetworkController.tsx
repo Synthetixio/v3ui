@@ -150,6 +150,8 @@ export function NetworkController() {
             px="2"
             whiteSpace="nowrap"
             data-cy="header-wallet-address-button"
+            maxW="200px"
+            overflow="scroll"
           >
             {user?.pfpUrl ? (
               <Flex alignItems="center" gap="1">
@@ -237,18 +239,32 @@ export function NetworkController() {
                   <Blockies seed={activeWallet.address} scale={7} className="blockies-rounded" />
                 )}
 
-                <Text fontSize="16px" fontWeight={700}>
-                  {user?.username ? (
-                    <Flex flexDir="column">
+                {user?.username ? (
+                  <Flex flexDir="column" maxW="200px" overflow="scroll">
+                    <Text
+                      fontSize="16px"
+                      fontWeight={700}
+                      maxW="300px"
+                      overflow="scroll"
+                      whiteSpace="nowrap"
+                    >
                       {user.username}
-                      <Text fontWeight={400} fontSize="12px" overflow="auto" h="20px">
-                        {user.about}
-                      </Text>
-                    </Flex>
-                  ) : (
-                    prettyString(user?.address || '')
-                  )}
-                </Text>
+                    </Text>
+                    <Text
+                      fontWeight={400}
+                      fontSize="12px"
+                      overflow="scroll"
+                      maxW="200px"
+                      whiteSpace="nowrap"
+                    >
+                      {user.about}
+                    </Text>
+                  </Flex>
+                ) : (
+                  <Text fontSize="16px" fontWeight={700} maxW="300px">
+                    {prettyString(user?.address || '')}
+                  </Text>
+                )}
               </Flex>
               <Link href="/#/profile">
                 <Button

@@ -3,17 +3,17 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0xdbA5E799d6B51509E9B2c6051fC1A47820C58d68',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0xdbA5E799d6B51509E9B2c6051fC1A47820C58d68',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0xdbA5E799d6B51509E9B2c6051fC1A47820C58d68',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -36,6 +36,19 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
-export const SnapshotRecordContractAddress = process.env.DEV
-  ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
-  : '0xCb31766607a28bb381064d82C8146B8245f2c3c0';
+export const SnapshotRecordContractAddress = (chainId: number) => {
+  switch (chainId) {
+    case 11155111:
+      return process.env.DEV === 'true'
+        ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
+        : process.env.TESTNET === 'true'
+          ? '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707'
+          : '';
+    case 11155420:
+      return process.env.DEV === 'true'
+        ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+        : process.env.TESTNET === 'true'
+          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+          : '';
+  }
+};

@@ -5,7 +5,7 @@ export const motherShipProvider = new providers.JsonRpcProvider(
   process.env.DEV === 'true'
     ? process.env.DEV_RPC_MOTHERSHIP
     : process.env.TESTNET === 'true'
-      ? 'https://ethereum-sepolia-rpc.publicnode.com'
+      ? 'https://sepolia.base.org'
       : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
 );
 

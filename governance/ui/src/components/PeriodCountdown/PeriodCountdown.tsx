@@ -7,7 +7,6 @@ import { CouncilSlugs } from '../../utils/councils';
 export default function PeriodCountdown({ council }: { council: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(council);
   const { data: schedule, isLoading } = useGetEpochSchedule(council);
-
   return councilPeriod !== '3' ? (
     <Box
       bg={councilPeriod === '1' ? 'orange.700' : councilPeriod === '2' ? 'teal.700' : 'gray.700'}
