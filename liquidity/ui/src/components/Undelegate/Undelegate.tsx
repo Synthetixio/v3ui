@@ -81,7 +81,7 @@ export const UndelegateUi: FC<{
               InputProps={{
                 isDisabled,
                 isRequired: true,
-                'data-testid': 'undelegate amount input',
+                'data-cy': 'undelegate amount input',
                 'data-max': max?.toString(),
               }}
               value={collateralChange.abs()}
@@ -99,7 +99,7 @@ export const UndelegateUi: FC<{
                 </Text>
                 <Amount
                   value={max}
-                  data-testid="available to undelegate"
+                  data-cy="available to undelegate"
                   suffix={` ${displaySymbol}`}
                 />
               </Flex>
@@ -135,7 +135,7 @@ export const UndelegateUi: FC<{
         </Collapse>
       </BorderBox>
       <Button
-        data-testid="undelegate submit"
+        data-cy="undelegate submit"
         type="submit"
         isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
       >

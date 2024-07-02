@@ -41,7 +41,7 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
         pb="3"
         borderWidth="1px"
         borderColor="gray.900"
-        data-testid="transaction modal"
+        data-cy="transaction modal"
       >
         <ModalHeader py={0} textAlign="center">
           Synthetix Terms of Service

@@ -14,6 +14,7 @@ import SynthetixLogo from './SynthetixLogo.svg';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import { useCallback } from 'react';
 import { IconProps } from '@chakra-ui/react';
+import { importPythERC7412Wrapper } from '@snx-v3/contracts';
 
 export type Network = {
   id: number;
@@ -225,13 +226,12 @@ export const NETWORKS: Network[] = [
   ARBTHETIX,
 ];
 
-export const deploymentsWithERC7412: string[] = [
-  '8453-andromeda',
-  '84532-andromeda',
-  '42161-main',
-  '421614-main',
-  '42161-arbthetix',
-];
+export async function deploymentHasERC7412(chainId: number, preset: string) {
+  return importPythERC7412Wrapper(chainId, preset).then(
+    () => true,
+    () => false
+  );
+}
 
 export const DEFAULT_NETWORK =
   NETWORKS.find(

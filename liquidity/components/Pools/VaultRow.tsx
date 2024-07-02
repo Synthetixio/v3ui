@@ -41,19 +41,14 @@ function VaultRowUi({
         <Flex flexDir="row" py={4}>
           <TokenIcon width={40} height={40} symbol={collateralType.symbol} />
           <Flex flexDirection="column" justifyContent="center" ml={2}>
-            <Text fontSize="sm" lineHeight="20px" fontWeight="500" data-testid="collateral-value">
+            <Text fontSize="sm" lineHeight="20px" fontWeight="500" data-cy="collateral-value">
               {liquidityPosition?.collateralValue.gt(0) ? (
                 <Amount value={liquidityPosition.collateralValue} prefix="$" />
               ) : (
                 '-'
               )}
             </Text>
-            <Text
-              fontSize="xs"
-              color="gray.500"
-              data-testid="collateral-amount"
-              whiteSpace="nowrap"
-            >
+            <Text fontSize="xs" color="gray.500" data-cy="collateral-amount" whiteSpace="nowrap">
               {liquidityPosition?.collateralAmount.gt(0) && (
                 <Amount value={liquidityPosition.collateralAmount} />
               )}{' '}
@@ -62,17 +57,17 @@ function VaultRowUi({
           </Flex>
         </Flex>
       </Td>
-      <Td data-testid="debt">
+      <Td data-cy="debt">
         {liquidityPosition?.debt.gt(0) ? <Amount value={liquidityPosition.debt} prefix="$" /> : '-'}
       </Td>
       {!isBaseAndromeda(network?.id, network?.preset) ? (
         <>
-          <Td data-testid="c-ratio">
+          <Td data-cy="c-ratio">
             {cRatio.gt(0) ? <Amount value={cRatio.mul(100)} suffix="%" /> : '-'}
           </Td>
           <Td>
             <Amount
-              data-testid="issuance-ratio"
+              data-cy="issuance-ratio"
               value={collateralType.issuanceRatioD18.mul(100)}
               suffix="%"
             />
@@ -80,7 +75,7 @@ function VaultRowUi({
           <Td>
             <Amount
               value={collateralType.liquidationRatioD18.mul(100)}
-              data-testid="liquidation-ratio"
+              data-cy="liquidation-ratio"
               suffix="%"
             />
           </Td>

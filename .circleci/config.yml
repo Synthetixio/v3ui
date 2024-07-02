@@ -231,7 +231,7 @@ jobs:
 
       - run:
           name: Run anvil localhost:8545
-          command: anvil --fork-url "<< parameters.provider-url >>"
+          command: anvil --auto-impersonate --chain-id "<< parameters.chainId >>" --fork-url "<< parameters.provider-url >>"
           background: true
 
       - run:
@@ -243,8 +243,13 @@ jobs:
           command: wget -q -O - --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 --post-data='{"method":"eth_chainId","params":[],"id":1,"jsonrpc":"2.0"}' --header='Content-Type:application/json' http://localhost:8545
 
       - run:
+          name: Update all prices
           working_directory: /tmp/app/liquidity/cypress
-          command: cypress run --e2e --browser chrome
+          command: yarn ts-node bin/doAllPriceUpdates.ts 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+      - run:
+          working_directory: /tmp/app/liquidity/cypress
+          command: cypress run --e2e --browser chrome --config specPattern="./cypress/e2e/<< parameters.chainId >>-<< parameters.preset >>/*.e2e.js"
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -360,18 +365,19 @@ workflows:
           chainId: 8453
           preset: andromeda
           provider-url: https://base-mainnet.infura.io/v3/$INFURA_KEY
-      #- liquidity-e2e:
-      #    name: liquidity-e2e-sepolia
-      #    chainId: 11155111
-      #    preset: main
-      #    provider-url: https://sepolia.infura.io/v3/$INFURA_KEY
+      - liquidity-e2e:
+          name: liquidity-e2e-arbitrum-mainnet
+          chainId: 42161
+          preset: main
+          provider-url: https://arbitrum-mainnet.infura.io/v3/$INFURA_KEY
       - combine-coverage:
-          requires: [
+          requires:
+            [
               tests,
               liquidity-cy,
               governance-e2e-sepolia,
               liquidity-e2e-base-mainnet,
-              #liquidity-e2e-sepolia,
+              liquidity-e2e-arbitrum-mainnet,
             ]
       - liquidity-armada:
           requires:
@@ -380,7 +386,7 @@ workflows:
             - tests
             - liquidity-cy
             - liquidity-e2e-base-mainnet
-            #- liquidity-e2e-sepolia
+            - liquidity-e2e-arbitrum-mainnet
           filters:
             branches:
               only:
@@ -394,7 +400,7 @@ workflows:
             - tests
             - liquidity-cy
             - liquidity-e2e-base-mainnet
-            #- liquidity-e2e-sepolia
+            - liquidity-e2e-arbitrum-mainnet
           filters:
             branches:
               only:
