@@ -2,8 +2,10 @@ import { ExternalLinkIcon, InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, Link, Radio, Text } from '@chakra-ui/react';
 import { generatePath, Link as NavLink } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export function PoolItem({ name, value }: { name: string; value: string }) {
+  const { data: systemToken } = useSystemToken();
   return (
     <Flex alignItems="center" mb="2.5" pb="2.5" borderBottom="1px solid rgba(255,255,255,0.3)">
       <Box>
@@ -17,9 +19,9 @@ export function PoolItem({ name, value }: { name: string; value: string }) {
           Pool #{value}{' '}
           {value == '0' ? (
             <Tooltip
-              label="This is typically used to take out a loan of snxUSD against your collateral. Your
+              label={`This is typically used to take out a loan of ${systemToken?.symbol} against your collateral. Your
               C-Ratio is only subject to fluctuations based on the value of your collateral, but you
-              receive no fees or rewards."
+              receive no fees or rewards.`}
             >
               <InfoIcon fontSize="sm" ml={1} />
             </Tooltip>

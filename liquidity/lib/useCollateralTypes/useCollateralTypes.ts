@@ -6,6 +6,7 @@ import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { z } from 'zod';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 const CollateralConfigurationSchema = z.object({
   symbol: z.string(),
@@ -49,16 +50,17 @@ async function loadCollateralTypes(chainId: number, preset: string): Promise<Col
 export function useCollateralTypes(includeDelegationOff = false, customNetwork?: Network) {
   const { network } = useNetwork();
   const targetNetwork = customNetwork || network;
+  const { data: systemToken } = useSystemToken();
 
   return useQuery({
-    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset),
+    enabled: Boolean(targetNetwork?.id && targetNetwork?.preset && systemToken),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'CollateralTypes',
-      { includeDelegationOff },
+      { systemToken: systemToken?.symbol, includeDelegationOff },
     ],
     queryFn: async () => {
-      if (!(targetNetwork?.id && targetNetwork?.preset))
+      if (!(targetNetwork?.id && targetNetwork?.preset && systemToken))
         throw Error('useCollateralTypes should not be enabled when contracts missing');
 
       const collateralTypes = (await loadCollateralTypes(targetNetwork.id, targetNetwork.preset))
@@ -78,7 +80,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
             displaySymbol: collateralType.symbol,
           };
         })
-        .filter((collateralType) => collateralType.symbol !== 'snxUSD');
+        .filter((collateralType) => collateralType.tokenAddress !== systemToken.address);
 
       if (includeDelegationOff) {
         return collateralTypes;

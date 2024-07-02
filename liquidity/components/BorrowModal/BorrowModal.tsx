@@ -99,7 +99,7 @@ export const BorrowModalUi: React.FC<{
             </Flex>
             <Text>
               {isBase ? 'Claim' : 'Borrow'}{' '}
-              <Amount value={debtChange} suffix={isBase ? ' USDC' : ' snxUSD'} />
+              <Amount value={debtChange} suffix={isBase ? ' USDC' : ' USDx'} />
             </Text>
           </Flex>
           <Button

@@ -11,7 +11,7 @@
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCollateralPrices": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
-    "@snx-v3/useUSDProxy": "workspace:*",
+    "@snx-v3/useSystemToken": "workspace:*",
     "@snx-v3/withERC7412": "workspace:*",
     "@snx-v3/zod": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

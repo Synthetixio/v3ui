@@ -13,7 +13,7 @@ import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
-import { useStablecoin } from '@snx-v3/useStablecoin';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 const BorrowUi: FC<{
   debtChange: Wei;
@@ -21,24 +21,24 @@ const BorrowUi: FC<{
   setDebtChange: (val: Wei) => void;
 }> = ({ debtChange, setDebtChange, maxDebt }) => {
   const { network } = useNetwork();
-  const { data: stablecoin } = useStablecoin();
+  const { data: systemToken } = useSystemToken();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
+        {isBase ? 'Claim USDC' : `Borrow ${systemToken?.symbol}`}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
         {isBase
           ? 'Claim USDC fees you have earned from providing liquidity. These will be available in 24h for withdrawal.'
-          : `Take an interest-free loan of ${stablecoin?.symbol} against your collateral. This
+          : `Take an interest-free loan of ${systemToken?.symbol} against your collateral. This
               increases your debt and decreases your C-Ratio.`}
       </Text>
       <BorderBox display="flex" py={2} px={3} mb="4">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           {isBase ? <SUSDCIcon /> : <DollarCircle />}
-          {isBase ? 'USDC' : stablecoin?.symbol}
+          {isBase ? 'USDC' : systemToken?.symbol}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           <NumberInput
@@ -63,13 +63,13 @@ const BorrowUi: FC<{
               }}
             >
               <Text>Max:</Text>
-              <Amount value={maxDebt} /> {isBase ? 'USDC' : stablecoin?.symbol}
+              <Amount value={maxDebt} /> {isBase ? 'USDC' : systemToken?.symbol}
             </Flex>
           </Flex>
         </Flex>
       </BorderBox>
       <Button data-testid="borrow submit" type="submit">
-        {isBase ? 'Claim USDC' : `Borrow ${stablecoin?.symbol}`}
+        {isBase ? 'Claim USDC' : `Borrow ${systemToken?.symbol}`}
       </Button>
     </Flex>
   );
