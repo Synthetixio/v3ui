@@ -1,7 +1,6 @@
 it('Home Connected', () => {
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
-    cy.task('doAllPriceUpdates', { privateKey });
     cy.task('createAccount', { privateKey }).then((accountId) => {
       cy.wrap(accountId).as('accountId');
     });

@@ -79,11 +79,13 @@ const PYTH_ABI = [
   'function version() pure returns (string)',
   'function wormhole() view returns (address)',
 ];
-const priceService = new EvmPriceServiceConnection(PYTH_MAINNET_ENDPOINT);
 
 export async function doPriceUpdateForPyth({ privateKey, feedId, priceVerificationContract }) {
+  const priceService = new EvmPriceServiceConnection(PYTH_MAINNET_ENDPOINT);
+
   const feedIds = Array.isArray(feedId) ? feedId : [feedId];
   const [offchainData] = await priceService.getPriceFeedsUpdateData(feedIds);
+  console.log({ offchainData });
 
   const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
   const wallet = new ethers.Wallet(privateKey, provider);

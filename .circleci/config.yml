@@ -243,6 +243,11 @@ jobs:
           command: wget -q -O - --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 --post-data='{"method":"eth_chainId","params":[],"id":1,"jsonrpc":"2.0"}' --header='Content-Type:application/json' http://localhost:8545
 
       - run:
+          name: Update all prices
+          working_directory: /tmp/app/liquidity/cypress
+          command: yarn ts-node bin/doAllPriceUpdates.ts 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+      - run:
           working_directory: /tmp/app/liquidity/cypress
           command: cypress run --e2e --browser chrome --config specPattern="./cypress/e2e/<< parameters.chainId >>-<< parameters.preset >>/*.e2e.js"
 

@@ -21,9 +21,11 @@ export async function doAllPriceUpdates({ privateKey }) {
         key.startsWith('pyth_feed_id_') || (key.startsWith('pyth') && key.endsWith('FeedId'))
     )
     .map(([_key, value]) => value);
+  console.log({ feedIds });
   const batches = splitIntoChunks(feedIds, 50);
 
   for (const batch of batches) {
+    console.log({ batch });
     await doPriceUpdateForPyth({ privateKey, feedId: batch, priceVerificationContract });
   }
   return true;
