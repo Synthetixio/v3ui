@@ -50,7 +50,7 @@ async function loadCollateralTypes(chainId: number, preset: string): Promise<Col
 export function useCollateralTypes(includeDelegationOff = false, customNetwork?: Network) {
   const { network } = useNetwork();
   const targetNetwork = customNetwork || network;
-  const { data: systemToken } = useSystemToken();
+  const { data: systemToken } = useSystemToken(customNetwork);
 
   return useQuery({
     enabled: Boolean(targetNetwork?.id && targetNetwork?.preset && systemToken),
