@@ -28,7 +28,7 @@ const CollateralTypeSchema = CollateralConfigurationSchema.extend({
 export type CollateralType = z.infer<typeof CollateralTypeSchema>;
 
 async function loadCollateralTypes(chainId: number, preset: string): Promise<CollateralType[]> {
-  const tokenConfigsRaw: CollateralType[] = await importCollateralTokens(chainId, preset);
+  const tokenConfigsRaw = await importCollateralTokens(chainId, preset);
 
   const tokenConfigs = tokenConfigsRaw
     .map((config) => ({
