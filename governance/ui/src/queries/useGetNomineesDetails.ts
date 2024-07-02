@@ -6,39 +6,14 @@ import { GetUserDetails, getUserDetails } from './useGetUserDetailsQuery';
 export function useGetNomineesDetails(activeCouncil: CouncilSlugs) {
   const { data: councilNominees } = useGetCouncilNominees(activeCouncil);
   return useQuery({
-    queryKey: ['nomineesDetails', activeCouncil],
+    queryKey: ['nomineesDetails', activeCouncil, councilNominees?.toString()],
     queryFn: async () => {
       const nomineesDetails = await Promise.all(
-        councilNominees!.map(async (nominee) => await getUserDetails(nominee))
+        councilNominees?.map(async (nominee) => await getUserDetails(nominee)) || []
       );
-      // let counter = 0;
-      // while (counter < 10) {
-      //   nomineesDetails.push({
-      //     about: '123',
-      //     address: Wallet.createRandom().publicKey,
-      //     associatedAddresses: '',
-      //     bannerImageId: '',
-      //     bannerThumbnailUrl: '',
-      //     bannerUrl: '',
-      //     delegationPitch: '',
-      //     discord: '',
-      //     email: '',
-      //     ens: '',
-      //     github: '',
-      //     notificationPreferences: '',
-      //     pfpImageId: '',
-      //     pfpThumbnailUrl: '',
-      //     pfpUrl: '',
-      //     twitter: '',
-      //     type: '',
-      //     username: Math.random().toString(),
-      //     website: '',
-      //   });
-      //   counter++;
-      // }
       return nomineesDetails as GetUserDetails[];
     },
-    enabled: !!activeCouncil && !!councilNominees?.length,
+    enabled: !!activeCouncil && Array.isArray(councilNominees),
     staleTime: 900000,
   });
 }

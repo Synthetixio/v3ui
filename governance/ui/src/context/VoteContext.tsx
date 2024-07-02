@@ -31,11 +31,6 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
         ...state,
         spartan: action.payload,
       };
-    case 'GRANTS':
-      return {
-        ...state,
-        grants: action.payload,
-      };
     case 'AMBASSADOR':
       return {
         ...state,

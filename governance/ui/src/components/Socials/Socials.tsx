@@ -14,17 +14,21 @@ export const Socials: FC<Props> = ({ discord, github, twitter }) => {
   return (
     <Flex gap={3} alignItems="center">
       {discord && (
-        <Link href={'https://discord.com/invite/' + discord} target="_blank">
+        <Link
+          href={'https://discord.com/user/' + discord}
+          target="_blank"
+          data-cy="discord-social-link"
+        >
           <Image src={discordSvg} />
         </Link>
       )}
       {twitter && (
-        <Link href={'https://twitter.com/' + twitter} target="_blank">
+        <Link href={'https://x.com/' + twitter} target="_blank" data-cy="twitter-social-link">
           <Image src={twitterSvg} />
         </Link>
       )}
       {github && (
-        <Link href={'https://github.com/' + github} target="_blank">
+        <Link href={'https://github.com/' + github} target="_blank" data-cy="github-social-link">
           <Image src={githubSvg} />
         </Link>
       )}

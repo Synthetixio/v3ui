@@ -13,7 +13,6 @@ export default function Header() {
   const { onClose } = useDisclosure();
   const location = useLocation();
   const { network } = useNetwork();
-
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: usdTokens } = useGetUSDTokens();
   const { data: balance } = useTokenBalance(isBase ? usdTokens?.USDC : usdTokens?.sUSD);

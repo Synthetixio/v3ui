@@ -11,7 +11,7 @@ export const NominateSelfContainer = ({
 }) => {
   return (
     <>
-      <Show below="md">
+      <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
@@ -19,7 +19,7 @@ export const NominateSelfContainer = ({
           </ModalContent>
         </Modal>
       </Show>
-      <Hide below="md">
+      <Hide below="xl">
         <NominateSelf activeCouncil={activeCouncil} />
       </Hide>
     </>

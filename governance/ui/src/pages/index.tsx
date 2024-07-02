@@ -15,6 +15,7 @@ import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from '../utils/onboard';
 import './index.css';
 import { VoteProvider } from '../context/VoteContext';
+import MyProfile from './MyProfile';
 
 const router = createHashRouter([
   {
@@ -27,6 +28,7 @@ const router = createHashRouter([
       { path: '/councils/:council', element: <Councils /> },
       { path: '/councils', element: <Navigate to="/councils/spartan" /> },
       { path: '/my-votes', element: <MyVotes /> },
+      { path: '/profile', element: <MyProfile /> },
     ],
   },
 ]);

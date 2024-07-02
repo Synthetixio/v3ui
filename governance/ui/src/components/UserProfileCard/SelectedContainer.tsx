@@ -17,7 +17,7 @@ export const SelectedContainer = ({
 }: SelectedContainerInterface) => {
   return (
     <>
-      <Show below="md">
+      <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
           <ModalContent mx="4">
@@ -29,8 +29,10 @@ export const SelectedContainer = ({
           </ModalContent>
         </Modal>
       </Show>
-      <Hide below="md">
+      <Hide below="xl">
         <UserProfileCard
+          position="sticky"
+          top="81px"
           mt={6}
           walletAddress={selectedUserAddress}
           activeCouncil={activeCouncil}

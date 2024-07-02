@@ -6,7 +6,7 @@ import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
-import Timer from '../components/Timer/Timer';
+import { Timer } from '../components/Timer';
 import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import {
@@ -54,7 +54,7 @@ export default function MyVotes() {
 
   return (
     <>
-      <CouncilTabs />
+      <CouncilTabs activeCouncil="spartan" />
       <Flex justifyContent="center" gap="2" w="100%">
         <Flex maxW="1440px" w="100%" justifyContent="center" flexWrap="wrap" gap="6">
           <Flex
@@ -97,7 +97,7 @@ export default function MyVotes() {
                   The voting period hasn’t started yet, come back later to vote for your councils.
                 </Text>
                 <Button
-                  onClick={() => navigate('/council/spartan')}
+                  onClick={() => navigate('/councils/spartan')}
                   variant="outline"
                   colorScheme="gray"
                   size="sm"
@@ -111,7 +111,9 @@ export default function MyVotes() {
             )}
             <Flex justifyContent="space-between" mb="4" opacity={period !== '2' ? '0.4' : '1'}>
               <Heading fontSize="2xl">My Votes</Heading>
-              <Heading fontSize="2xl">{Object.values(votingCandidates || {}).length}/4</Heading>
+              <Heading fontSize="2xl">
+                {Object.values(votingCandidates || {}).length}/{councils.length}
+              </Heading>
             </Flex>
             <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>
               You can cast 4 votes in one transaction. Continue voting if you want to add other

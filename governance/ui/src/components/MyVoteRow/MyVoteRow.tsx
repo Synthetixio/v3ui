@@ -1,6 +1,6 @@
 import { Flex, IconButton } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { AddIcon, ChevronRightIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserCurrentVotes } from '../../queries';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
@@ -32,22 +32,18 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
       <Flex alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
-          address={currentVotes[councilSlug]}
-          hideName={!selectedVotes[councilSlug]}
+          address={currentVotes[councilSlug] || selectedVotes[councilSlug]}
         />
-        {!selectedVotes[councilSlug] && (
-          <>
-            <ChevronRightIcon />
-            <CouncilUser councilSlug={councilSlug} address={selectedVotes[councilSlug]} />
-          </>
-        )}
       </Flex>
-      {currentVotes && !currentVotes[council.slug] ? (
+      {!selectedVotes[council.slug] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
           variant="outlined"
-          onClick={() => navigate(`/councils/${council.slug}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/councils/${council.slug}`);
+          }}
         />
       ) : (
         <IconButton

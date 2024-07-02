@@ -4,8 +4,6 @@ it('shows homepage to a connected wallet', () => {
   cy.visit('/');
 
   cy.get('@wallet').then((wallet) => {
-    cy.contains('[data-testid="user-wallet-address"]', wallet.address.substring(0, 6)).should(
-      'exist'
-    );
+    cy.contains('[data-cy="user-wallet-address"]', wallet.address.substring(0, 6)).should('exist');
   });
 });

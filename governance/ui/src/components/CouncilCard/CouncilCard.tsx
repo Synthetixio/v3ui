@@ -30,7 +30,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
   return (
     <Flex
       p="6"
-      w={{ base: '100%', md: '45%', lg: '280px' }}
+      w={{ base: '100%' }}
       borderWidth="1px"
       borderStyle="solid"
       borderColor="gray.900"
@@ -132,6 +132,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
         {councilPeriod === '1' ? (
           <>
             <Button
+              data-cy={`nominate-council-button-${council.slug}`}
               size="md"
               mb="1"
               onClick={(e) => {
@@ -155,6 +156,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
               size="md"
               variant="outline"
               colorScheme="gray"
+              data-cy={`view-council-button-${council.slug}`}
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/councils/${council.slug}`);
@@ -167,6 +169,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
           <Button
             size="md"
             mb="1"
+            data-cy={`vote-council-button-${council.slug}`}
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/councils/${council.slug}`);
@@ -176,6 +179,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
           </Button>
         ) : (
           <Button
+            data-cy={`view-council-button-${council.slug}`}
             size="md"
             variant="outline"
             colorScheme="gray"

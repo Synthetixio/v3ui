@@ -2,11 +2,9 @@
   "name": "@snx-v3/governance-cypress",
   "private": true,
   "main": "index.ts",
-  "version": "0.0.9",
+  "version": "0.0.1",
   "scripts": {
-    "anvil:sepolia": "anvil --fork-url https://sepolia.infura.io/v3/$INFURA_KEY",
-    "cy": "NODE_ENV=test cypress open --component --browser chrome",
-    "e2e:sepolia": "NODE_ENV=test CYPRESS_CHAIN_ID=8453 CYPRESS_PRESET=11155111 cypress open --e2e --browser chrome"
+    "e2e": "cypress open --e2e --browser chrome"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",
