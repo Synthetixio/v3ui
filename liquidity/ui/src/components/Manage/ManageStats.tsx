@@ -20,10 +20,10 @@ const ChangeStat: FC<{
   value: Wei;
   newValue: Wei;
   hasChanges: boolean;
-  dataTestId?: string;
+  ['data-cy']?: string;
   formatFn: (val: Wei) => string;
   withColor?: boolean;
-}> = ({ formatFn, value, newValue, hasChanges, dataTestId, withColor }) => {
+}> = ({ formatFn, value, newValue, hasChanges, 'data-cy': dataCy, withColor }) => {
   return (
     <Flex
       gap={4}
@@ -34,7 +34,7 @@ const ChangeStat: FC<{
       lineHeight="32px"
     >
       <Text
-        data-cy={dataTestId}
+        data-cy={dataCy}
         color={withColor && value.gt(0) ? 'green.700' : value.lt(0) ? 'red.700' : 'gray.50'}
       >
         {formatFn(value)}
@@ -154,7 +154,7 @@ export const ManageStatsUi: FC<{
                 newValue={newCollateralAmount}
                 formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
                 hasChanges={hasChanges}
-                dataTestId="manage stats collateral"
+                data-cy="manage stats collateral"
               />
               <Text
                 fontWeight="400"
@@ -215,7 +215,7 @@ export const ManageStatsUi: FC<{
                 }
                 withColor
                 hasChanges={hasChanges}
-                dataTestId="manage-stats-debt-value"
+                data-cy="manage stats debt value"
               />
             ) : (
               <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
