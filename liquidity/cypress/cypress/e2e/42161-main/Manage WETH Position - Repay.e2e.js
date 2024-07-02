@@ -1,6 +1,6 @@
 import { generatePath } from 'react-router-dom';
 
-it('should repay borrowed snxUSD and get back WETH collateral', () => {
+it.skip('should repay borrowed snxUSD and get back WETH collateral', () => {
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 105 });
 

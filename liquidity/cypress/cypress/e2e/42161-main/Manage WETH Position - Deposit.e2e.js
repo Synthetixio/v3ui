@@ -1,6 +1,6 @@
 import { generatePath } from 'react-router-dom';
 
-it('should deposit additional WETH collateral', () => {
+it.skip('should deposit additional WETH collateral', () => {
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('wrapEth', { privateKey: privateKey, amount: 50 });

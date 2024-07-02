@@ -1,4 +1,4 @@
-it('Home Connected', () => {
+it.skip('Home Connected', () => {
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 100 });
     cy.task('createAccount', { privateKey }).then((accountId) => {

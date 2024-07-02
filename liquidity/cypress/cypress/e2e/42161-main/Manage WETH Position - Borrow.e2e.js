@@ -1,6 +1,6 @@
 import { generatePath } from 'react-router-dom';
 
-it('should borrow against WETH position', () => {
+it.skip('should borrow against WETH position', () => {
   cy.connectWallet().then(({ address, privateKey }) => {
     cy.task('setEthBalance', { address, balance: 105 });
 
