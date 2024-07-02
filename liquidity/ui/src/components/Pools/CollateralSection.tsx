@@ -175,7 +175,12 @@ export const CollateralSectionUi: FC<{
                         fontWeight="400"
                         data-testid="collateral price"
                       >
-                        {price ? formatNumberToUsd(formatEther(price.toString())) : '-'}
+                        {price
+                          ? formatNumberToUsd(formatEther(price.toString()), {
+                              maximumFractionDigits: 4,
+                              minimumFractionDigits: 2,
+                            })
+                          : '-'}
                       </Text>
                       <Button
                         onClick={async (e) => {
@@ -234,7 +239,10 @@ export const CollateralSectionUi: FC<{
                           color="white"
                           data-testid="collateral value"
                         >
-                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber())}
+                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber(), {
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                          })}
                         </Text>
                         <Text
                           fontSize="sm"
@@ -242,7 +250,10 @@ export const CollateralSectionUi: FC<{
                           fontWeight="400"
                           data-testid="collateral amount"
                         >
-                          {formatNumber(vaultCollateral.collateral.amount.toNumber())}{' '}
+                          {formatNumber(vaultCollateral.collateral.amount.toNumber(), {
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                          })}{' '}
                           {vaultCollateral.collateralType.displaySymbol}
                         </Text>
                       </Flex>
@@ -262,7 +273,10 @@ export const CollateralSectionUi: FC<{
                           color="white"
                           data-testid="collateral debt"
                         >
-                          {formatNumberToUsd(vaultCollateral.debt.toNumber())}
+                          {formatNumberToUsd(vaultCollateral.debt.toNumber(), {
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                          })}
                         </Text>
                         <Text
                           fontSize="sm"
