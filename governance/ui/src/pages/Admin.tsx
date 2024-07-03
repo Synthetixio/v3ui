@@ -63,8 +63,8 @@ export default function Admin() {
                           0,
                           block.timestamp - 10,
                           block.timestamp,
-                          block.timestamp + 19000,
-                          block.timestamp + 29000
+                          block.timestamp + 10000,
+                          block.timestamp + 20000
                         );
                     });
                   } else {
