@@ -271,19 +271,49 @@ export const CollateralSectionUi: FC<{
                     borderBottomWidth="1px"
                   >
                     <Th borderBottom="none">
-                      <Skeleton height="26px" width="92px" />
+                      <Skeleton
+                        startColor="whiteAlpha.500"
+                        endColor="whiteAlpha.200"
+                        borderRadius={4}
+                        height="26px"
+                        width="92px"
+                      />
                     </Th>
                     <Th borderBottom="none">
-                      <Skeleton height="26px" width="92px" />
+                      <Skeleton
+                        startColor="whiteAlpha.500"
+                        endColor="whiteAlpha.200"
+                        borderRadius={4}
+                        height="26px"
+                        width="92px"
+                      />
                     </Th>
                     <Th borderBottom="none">
-                      <Skeleton height="26px" width="92px" />
+                      <Skeleton
+                        startColor="whiteAlpha.500"
+                        endColor="whiteAlpha.200"
+                        borderRadius={4}
+                        height="26px"
+                        width="92px"
+                      />
                     </Th>
                     <Th borderBottom="none">
-                      <Skeleton height="26px" width="92px" />
+                      <Skeleton
+                        startColor="whiteAlpha.500"
+                        endColor="whiteAlpha.200"
+                        borderRadius={4}
+                        height="26px"
+                        width="92px"
+                      />
                     </Th>
                     <Th borderBottom="none">
-                      <Skeleton height="26px" width="92px" />
+                      <Skeleton
+                        startColor="whiteAlpha.500"
+                        endColor="whiteAlpha.200"
+                        borderRadius={4}
+                        height="26px"
+                        width="92px"
+                      />
                     </Th>
                   </Tr>
                 ))}
