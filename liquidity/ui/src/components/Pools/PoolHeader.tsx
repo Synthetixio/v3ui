@@ -1,8 +1,12 @@
-import { Flex, Heading, Skeleton } from '@chakra-ui/react';
+import { Flex, Heading, Skeleton, FlexProps } from '@chakra-ui/react';
 
-export const PoolHeader = ({ name }: { name?: string }) => {
+interface PoolHeaderProps extends FlexProps {
+  name?: string;
+}
+
+export const PoolHeader = ({ name, ...props }: PoolHeaderProps) => {
   return (
-    <Flex gap={2} alignItems="flex-end">
+    <Flex gap={2} alignItems="flex-end" {...props}>
       <Skeleton isLoaded={!!name}>
         <Heading fontWeight={700} fontSize="3xl">
           {name ? name : 'Unknown Pool'}

@@ -1,4 +1,17 @@
-import { Box, Button, Divider, Flex, Skeleton, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Table,
+  Fade,
+  Flex,
+  Skeleton,
+  TableContainer,
+  Text,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  Td,
+} from '@chakra-ui/react';
 import { useVaultsData, VaultsDataType } from '@snx-v3/useVaultsData';
 import React, { FC, useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
@@ -16,7 +29,6 @@ import {
   useWallet,
 } from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
-import { formatEther } from 'ethers/lib/utils';
 import { BigNumberish } from 'ethers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
@@ -26,6 +38,7 @@ import { calculateCRatio } from '@snx-v3/calculations';
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
   if (!vaultsData) return zeroValues;
+
   return vaultsData.reduce((acc, { collateral, debt }) => {
     acc.collateral = {
       value: acc.collateral.value.add(collateral.value),
@@ -45,26 +58,36 @@ export const CollateralSectionUi: FC<{
     collateralAprs: any[];
   };
   isAprLoading?: boolean;
+  isVaultsLoading?: boolean;
   network: Network | undefined;
   poolId: string | undefined;
-}> = ({ vaultsData, collateralPrices, apr, isAprLoading, network, poolId }) => {
-  const { network: currentNetwork, setNetwork } = useNetwork();
-  const { connect } = useWallet();
+}> = ({ vaultsData, apr, isAprLoading, isVaultsLoading, network, poolId }) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
 
+  const { network: currentNetwork, setNetwork } = useNetwork();
+  const { connect } = useWallet();
+
   const { collateral: totalCollateral, debt: totalDebt } = calculateVaultTotals(vaultsData);
 
+  const isInTotalProfit = totalDebt.lt(0);
+
   return (
-    <BorderBox padding={4} bg="navy.700" flexDirection="column" data-testid="pool collateral types">
+    <Flex
+      bg="navy.700"
+      borderWidth="1px"
+      borderColor="gray.900"
+      borderRadius="base"
+      padding={6}
+      flexDirection="column"
+      data-testid="pool collateral types"
+    >
       <Text fontWeight={700} fontSize="xl">
         Pool Collateralization
       </Text>
       <BorderBox padding={4} mt={4} flexDirection="column">
-        <Flex
-          justifyContent="space-between"
-          flexDirection={{ base: 'row', md: 'column', lg: 'row' }}
-        >
+        {/* Total TVL */}
+        <Flex justifyContent="space-between" mb={2}>
           <Text
             display="flex"
             alignItems="center"
@@ -75,18 +98,30 @@ export const CollateralSectionUi: FC<{
           >
             Total TVL
           </Text>
-          {!vaultsData ? (
-            <Skeleton w={16} h={6} />
-          ) : (
-            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool tvl">
-              {formatNumberToUsd(totalCollateral.value.toNumber(), { maximumFractionDigits: 0 })}
-            </Text>
-          )}
+          <Skeleton
+            startColor="whiteAlpha.500"
+            endColor="whiteAlpha.200"
+            borderRadius={4}
+            isLoaded={Boolean(!isVaultsLoading && vaultsData)}
+            placeholder="$147,654,901.78"
+            width="163px"
+            height="26px"
+          >
+            <Fade in>
+              <Text
+                fontWeight={700}
+                fontSize="xl"
+                color="white"
+                data-testid="pool tvl"
+                textAlign="end"
+              >
+                {formatNumberToUsd(totalCollateral.value.toNumber(), { maximumFractionDigits: 0 })}
+              </Text>
+            </Fade>
+          </Skeleton>
         </Flex>
-        <Flex
-          justifyContent="space-between"
-          flexDirection={{ base: 'row', md: 'column', lg: 'row' }}
-        >
+        {/* Total Debt */}
+        <Flex justifyContent="space-between" mb={2}>
           <Text
             display="flex"
             alignItems="center"
@@ -95,20 +130,33 @@ export const CollateralSectionUi: FC<{
             gap={1}
             color="white"
           >
-            Total Debt
+            Total Debt/Profit
           </Text>
-          {!vaultsData ? (
-            <Skeleton mt={1} w={16} h={6} />
-          ) : (
-            <Text fontWeight={700} fontSize="xl" color="white" data-testid="pool total debt">
-              {formatNumberToUsd(totalDebt.toNumber(), { maximumFractionDigits: 0 })}
-            </Text>
-          )}
+          <Skeleton
+            startColor="whiteAlpha.500"
+            endColor="whiteAlpha.200"
+            borderRadius={4}
+            isLoaded={Boolean(!isVaultsLoading && vaultsData)}
+            placeholder="$147,654,901.78"
+            width="163px"
+            height="26px"
+          >
+            <Fade in>
+              <Text
+                fontWeight={700}
+                fontSize="xl"
+                data-testid="pool total debt"
+                textAlign="end"
+                color={isInTotalProfit ? 'green.500' : 'white'}
+              >
+                {isInTotalProfit ? '+' : '-'}
+                {formatNumberToUsd(totalDebt.abs().toNumber(), { maximumFractionDigits: 0 })}
+              </Text>
+            </Fade>
+          </Skeleton>
         </Flex>
-        <Flex
-          justifyContent="space-between"
-          flexDirection={{ base: 'row', md: 'column', lg: 'row' }}
-        >
+        {/* APR */}
+        <Flex justifyContent="space-between">
           <Text
             display="flex"
             alignItems="center"
@@ -119,186 +167,320 @@ export const CollateralSectionUi: FC<{
           >
             APR
           </Text>
-          {isAprLoading ? (
-            <Skeleton mt={1} w={16} h={6} />
-          ) : (
-            <Tooltip label="APR is a combination of past week pool performance and rewards.">
-              <Text fontWeight={700} fontSize="xl" color="white">
-                {`${
-                  !!apr && apr.combinedApr > 0
-                    ? `${network?.id === 42161 ? 'Up to ' : ''}${apr.combinedApr.toFixed(2)}`
-                    : '-'
-                }%`}
-              </Text>
-            </Tooltip>
-          )}
+          <Skeleton
+            startColor="whiteAlpha.500"
+            endColor="whiteAlpha.200"
+            borderRadius={4}
+            isLoaded={!isAprLoading}
+            width="163px"
+            height="26px"
+          >
+            <Fade in>
+              <Tooltip label="APR is a combination of past week pool performance and rewards.">
+                <Text fontWeight={700} fontSize="xl" color="white" textAlign="end">
+                  {formatApr(apr?.combinedApr, network?.id)}
+                </Text>
+              </Tooltip>
+            </Fade>
+          </Skeleton>
         </Flex>
       </BorderBox>
-      <Flex py={3} flexDirection="column" justifyContent="space-between">
-        {!vaultsData || !collateralPrices ? (
-          <Box>
-            <Skeleton mt={4} w="full" height={24} />
-            <Skeleton mt={2} w="full" height={24} />
-          </Box>
-        ) : (
-          <>
-            {vaultsData.map((vaultCollateral) => {
-              const price = collateralPrices?.find(
-                (item) => item.symbol === vaultCollateral.collateralType.symbol
-              )?.price;
-
+      <TableContainer
+        maxW="100%"
+        mt={4}
+        borderRadius="5px"
+        sx={{
+          borderCollapse: 'separate !important',
+          borderSpacing: 0,
+        }}
+      >
+        <Table>
+          <Thead>
+            <Tr>
+              <Th
+                borderBottom="none"
+                fontFamily="heading"
+                fontSize="12px"
+                fontWeight={700}
+                lineHeight="16px"
+                letterSpacing={0.6}
+                color="gray.600"
+                textTransform="none"
+              >
+                Asset
+              </Th>
+              <Th
+                borderBottom="none"
+                fontFamily="heading"
+                fontSize="12px"
+                fontWeight={700}
+                lineHeight="16px"
+                letterSpacing={0.6}
+                color="gray.600"
+                textTransform="none"
+              >
+                TVL
+              </Th>
+              <Th
+                borderBottom="none"
+                fontFamily="heading"
+                fontSize="12px"
+                fontWeight={700}
+                lineHeight="16px"
+                letterSpacing={0.6}
+                color="gray.600"
+                textTransform="none"
+              >
+                Debt/Profit
+              </Th>
+              <Th
+                borderBottom="none"
+                fontFamily="heading"
+                fontSize="12px"
+                fontWeight={700}
+                lineHeight="16px"
+                letterSpacing={0.6}
+                color="gray.600"
+                textTransform="none"
+              >
+                APR
+              </Th>
+              <Th
+                borderBottom="none"
+                fontFamily="heading"
+                fontSize="12px"
+                fontWeight={700}
+                lineHeight="16px"
+                letterSpacing={0.6}
+                color="gray.600"
+                textTransform="none"
+              >
+                {' '}
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {(isAprLoading || isVaultsLoading || !vaultsData) && (
+              <React.Fragment>
+                {[1, 2, 3].map((index) => (
+                  <Tr
+                    key={index}
+                    textAlign="left"
+                    borderBottomColor="gray.900"
+                    borderBottomWidth="1px"
+                  >
+                    <Th borderBottom="none">
+                      <Skeleton height="26px" width="92px" />
+                    </Th>
+                    <Th borderBottom="none">
+                      <Skeleton height="26px" width="92px" />
+                    </Th>
+                    <Th borderBottom="none">
+                      <Skeleton height="26px" width="92px" />
+                    </Th>
+                    <Th borderBottom="none">
+                      <Skeleton height="26px" width="92px" />
+                    </Th>
+                    <Th borderBottom="none">
+                      <Skeleton height="26px" width="92px" />
+                    </Th>
+                  </Tr>
+                ))}
+              </React.Fragment>
+            )}
+            {vaultsData?.map((vaultCollateral, i) => {
+              // Calculate c-ratio
               const cRatio = calculateCRatio(
                 vaultCollateral.debt,
                 vaultCollateral.collateral.value
               );
 
+              const collateralApr = apr?.collateralAprs.find(
+                (a) =>
+                  a.collateralType.toLowerCase() ===
+                  vaultCollateral.collateralType.tokenAddress.toLowerCase()
+              );
+
+              const { apr28d, apr28dRewards, apr28dPnl } = collateralApr || {
+                apr28d: 0,
+                apr28dRewards: 0,
+                apr28dPnl: 0,
+              };
+
+              const isInProfit = vaultCollateral.debt.lt(0);
+
+              const borderTopWidth = i === 0 ? '1px' : '0px';
+              const borderBottomWidth = i === vaultsData.length - 1 ? '1px' : '0px';
+
               return (
-                <React.Fragment key={vaultCollateral.collateralType.tokenAddress}>
-                  <Divider my={4} />
-                  <Box
-                    display="flex"
-                    px={4}
-                    flexDirection="column"
-                    borderColor="gray.900"
-                    _last={{ borderBottom: 'none' }}
-                    data-testid="pool collateral"
-                    data-collateral={vaultCollateral.collateralType.symbol}
-                  >
-                    <Flex color="white" display="flex" gap={2} alignItems="center">
+                <Tr
+                  key={vaultCollateral.collateralType.tokenAddress}
+                  borderTopWidth={borderTopWidth}
+                  borderTopColor="gray.900"
+                  borderBottomWidth={borderBottomWidth}
+                  borderBottomColor="gray.900"
+                >
+                  <Td borderBottom="none" py={1}>
+                    <Flex alignItems="center" gap={2}>
                       <TokenIcon symbol={vaultCollateral.collateralType.symbol} w={30} h={30} />
-                      <Text fontWeight={700} fontSize="xl">
-                        {vaultCollateral.collateralType.displaySymbol}
+                      <Flex>
+                        <Flex direction="column">
+                          <Text fontWeight={700} lineHeight="20px" fontSize="14px" color="white">
+                            {vaultCollateral.collateralType.displaySymbol}
+                          </Text>
+                          <Text
+                            fontFamily="heading"
+                            fontSize="12px"
+                            lineHeight="16px"
+                            color="gray.500"
+                          >
+                            {vaultCollateral.collateralType.name}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </Td>
+                  <Td borderBottom="none">
+                    <Flex direction="column">
+                      <Text
+                        fontSize="14px"
+                        fontWeight={500}
+                        color="white"
+                        lineHeight="20px"
+                        fontFamily="heading"
+                        data-testid="collateral value"
+                      >
+                        {formatNumberToUsd(vaultCollateral.collateral.value.toNumber(), {
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
+                        })}
                       </Text>
                       <Text
-                        fontSize="sm"
-                        color="gray.400"
-                        fontWeight="400"
-                        data-testid="collateral price"
-                      >
-                        {price
-                          ? formatNumberToUsd(formatEther(price.toString()), {
-                              maximumFractionDigits: 4,
-                              minimumFractionDigits: 2,
-                            })
-                          : '-'}
-                      </Text>
-                      <Button
-                        onClick={async (e) => {
-                          try {
-                            e.stopPropagation();
-
-                            if (!currentNetwork) {
-                              connect();
-                              return;
-                            }
-
-                            if (network && currentNetwork.id !== network.id) {
-                              if (!(await setNetwork(network.id))) {
-                                return;
-                              }
-                            }
-
-                            queryParams.set('manageAction', 'deposit');
-                            navigate({
-                              pathname: `/positions/${vaultCollateral.collateralType.symbol}/${poolId}`,
-                              search: queryParams.toString(),
-                            });
-                          } catch (error) {}
-                        }}
-                        size="sm"
-                        variant="outline"
-                        colorScheme="gray"
-                        height="32px"
-                        py="10px"
-                        px="12px"
-                        whiteSpace="nowrap"
-                        borderRadius="4px"
-                        color="white"
+                        fontSize="12px"
+                        color="gray.500"
+                        lineHeight="16px"
                         fontFamily="heading"
-                        fontWeight={700}
-                        fontSize="14px"
-                        lineHeight="20px"
+                        data-testid="collateral value"
                       >
-                        Deposit
-                      </Button>
+                        {formatNumber(vaultCollateral.collateral.amount.toNumber(), {
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
+                        })}{' '}
+                        {vaultCollateral.collateralType.symbol}
+                      </Text>
                     </Flex>
-                    <Flex gap={2} justifyContent="space-between">
-                      <Flex gap={1} flexBasis="50%" flexDirection="column">
+                  </Td>
+                  <Td borderBottom="none">
+                    <Tooltip
+                      label={
+                        isInProfit
+                          ? `This vault has a profit of ${formatNumberToUsd(
+                              vaultCollateral.debt.abs().toNumber(),
+                              {
+                                maximumFractionDigits: 0,
+                                minimumFractionDigits: 0,
+                              }
+                            )}`
+                          : ''
+                      }
+                    >
+                      <Flex direction="column">
                         <Text
-                          mt={2}
-                          fontSize="sm"
-                          color="gray.500"
-                          textTransform="uppercase"
-                          whiteSpace="nowrap"
-                        >
-                          TVL
-                        </Text>
-                        <Text
-                          fontSize="md"
+                          fontSize="14px"
                           fontWeight={700}
-                          color="white"
-                          data-testid="collateral value"
-                        >
-                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber(), {
-                            maximumFractionDigits: 0,
-                            minimumFractionDigits: 0,
-                          })}
-                        </Text>
-                        <Text
-                          fontSize="sm"
-                          color="gray.500"
-                          fontWeight="400"
-                          data-testid="collateral amount"
-                        >
-                          {formatNumber(vaultCollateral.collateral.amount.toNumber(), {
-                            maximumFractionDigits: 0,
-                            minimumFractionDigits: 0,
-                          })}{' '}
-                          {vaultCollateral.collateralType.displaySymbol}
-                        </Text>
-                      </Flex>
-                      <Flex gap={1} flexBasis="50%" flexDirection="column">
-                        <Text
-                          mt={2}
-                          fontSize="sm"
-                          color="gray.500"
-                          textTransform="uppercase"
-                          whiteSpace="nowrap"
-                        >
-                          Debt
-                        </Text>
-                        <Text
-                          fontSize="md"
-                          fontWeight={700}
-                          color="white"
+                          color={isInProfit ? 'green.500' : 'white'}
                           data-testid="collateral debt"
                         >
-                          {formatNumberToUsd(vaultCollateral.debt.toNumber(), {
+                          {isInProfit ? '+' : '-'}
+                          {formatNumberToUsd(vaultCollateral.debt.abs().toNumber(), {
                             maximumFractionDigits: 0,
                             minimumFractionDigits: 0,
                           })}
                         </Text>
                         <Text
-                          fontSize="sm"
+                          fontFamily="heading"
+                          fontSize="12px"
+                          lineHeight="14px"
                           color="gray.500"
-                          fontWeight="400"
-                          data-testid="collateral cratio"
                         >
-                          VAULT C-RATIO:{' '}
-                          {cRatio.lte(0)
-                            ? 'N/A'
-                            : formatPercent(cRatio.toNumber(), { maximumFractionDigits: 0 })}
+                          C-ratio {cRatio.lte(0) ? 'N/A' : formatPercent(cRatio.toNumber())}
                         </Text>
                       </Flex>
-                    </Flex>
-                  </Box>
-                </React.Fragment>
+                    </Tooltip>
+                  </Td>
+                  <Td borderBottom="none">
+                    <Tooltip
+                      label={
+                        <Flex direction="column">
+                          <Flex justifyContent="space-between">
+                            <Text mr={2}>Total APR:</Text>
+                            <Text>{formatApr(apr28d * 100, network?.id)}</Text>
+                          </Flex>
+                          <Flex justifyContent="space-between">
+                            <Text mr={2}>Performance:</Text>
+                            <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
+                          </Flex>
+                          <Flex justifyContent="space-between">
+                            <Text mr={2}>Rewards: </Text>
+                            <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
+                          </Flex>
+                        </Flex>
+                      }
+                    >
+                      <Text
+                        fontSize="md"
+                        fontWeight={700}
+                        color="white"
+                        data-testid="collateral apr"
+                      >
+                        {formatApr(apr28d * 100, network?.id)}
+                      </Text>
+                    </Tooltip>
+                  </Td>
+                  <Td borderBottom="none" textAlign="end">
+                    <Button
+                      onClick={async (e) => {
+                        try {
+                          e.stopPropagation();
+
+                          if (!currentNetwork) {
+                            connect();
+                            return;
+                          }
+
+                          if (network && currentNetwork.id !== network.id) {
+                            if (!(await setNetwork(network.id))) {
+                              return;
+                            }
+                          }
+
+                          queryParams.set('manageAction', 'deposit');
+                          navigate({
+                            pathname: `/positions/${vaultCollateral.collateralType.symbol}/${poolId}`,
+                            search: queryParams.toString(),
+                          });
+                        } catch (error) {}
+                      }}
+                      height="32px"
+                      py="10px"
+                      px="12px"
+                      whiteSpace="nowrap"
+                      borderRadius="4px"
+                      fontFamily="heading"
+                      fontWeight={700}
+                      fontSize="14px"
+                      lineHeight="20px"
+                    >
+                      Deposit
+                    </Button>
+                  </Td>
+                </Tr>
               );
             })}
-          </>
-        )}
-      </Flex>
-    </BorderBox>
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Flex>
   );
 };
 
@@ -307,7 +489,7 @@ export const CollateralSection = () => {
 
   const network = NETWORKS.find((n) => n.id === Number(networkId));
 
-  const { data: vaultsData } = useVaultsData(Number(poolId), network);
+  const { data: vaultsData, isLoading: isVaultsLoading } = useVaultsData(Number(poolId), network);
   const { data: aprData, isLoading: isAprLoading } = useApr(network);
 
   const { data: BaseCollateralTypes } = useCollateralTypes(false, BASE_ANDROMEDA);
@@ -335,8 +517,15 @@ export const CollateralSection = () => {
       collateralPrices={collateralPrices}
       apr={aprData}
       isAprLoading={isAprLoading}
+      isVaultsLoading={isVaultsLoading}
       network={network}
       poolId={poolId}
     />
   );
 };
+
+function formatApr(apr?: number, networkId?: number) {
+  if (!networkId || !apr || apr <= 0) return '-';
+
+  return `${networkId === ARBITRUM.id ? 'Up to ' : ''}${apr.toFixed(2)}%`;
+}

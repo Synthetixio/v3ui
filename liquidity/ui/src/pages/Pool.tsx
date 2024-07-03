@@ -22,9 +22,9 @@ export const Pool = () => {
       </Helmet>
       <>
         <HomeLink mt={4} />
-        <PoolHeader name={poolInfo && poolInfo[0].pool.name} />
+        <PoolHeader mt={3} name={poolInfo && poolInfo[0].pool.name} />
         <Divider my={8} bg="gray.900" />
-        <Flex gap={4} flexDirection={{ base: 'column', lg: 'row' }} mb={8}>
+        <Flex gap={4} mb={8}>
           <Box w="100%">
             <CollateralSection />
           </Box>

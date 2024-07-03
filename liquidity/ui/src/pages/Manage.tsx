@@ -74,7 +74,7 @@ export const ManageUi: FC<{
           display="flex"
         >
           <TokenIcon
-            symbol={collateralSymbol!}
+            symbol={collateralDisplayName!}
             width={28}
             height={28}
             fill="#0B0B22"
