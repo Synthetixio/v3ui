@@ -178,6 +178,7 @@ export const CollateralSectionUi: FC<{
             <Fade in>
               <Tooltip label="APR is a combination of past week pool performance and rewards.">
                 <Text fontWeight={700} fontSize="xl" color="white" textAlign="end">
+                  {network?.id === ARBITRUM.id ? 'Up to ' : ''}
                   {formatApr(apr?.combinedApr, network?.id)}
                 </Text>
               </Tooltip>
@@ -310,169 +311,178 @@ export const CollateralSectionUi: FC<{
               const isInProfit = vaultCollateral.debt.lt(0);
 
               const borderTopWidth = i === 0 ? '1px' : '0px';
-              const borderBottomWidth = i === vaultsData.length - 1 ? '1px' : '0px';
 
               return (
                 <Tr
                   key={vaultCollateral.collateralType.tokenAddress}
                   borderTopWidth={borderTopWidth}
                   borderTopColor="gray.900"
-                  borderBottomWidth={borderBottomWidth}
+                  borderBottomWidth="1px"
                   borderBottomColor="gray.900"
                 >
                   <Td borderBottom="none" py={1}>
-                    <Flex alignItems="center" gap={2}>
-                      <TokenIcon symbol={vaultCollateral.collateralType.symbol} w={30} h={30} />
-                      <Flex>
-                        <Flex direction="column">
-                          <Text fontWeight={700} lineHeight="20px" fontSize="14px" color="white">
-                            {vaultCollateral.collateralType.displaySymbol}
-                          </Text>
-                          <Text
-                            fontFamily="heading"
-                            fontSize="12px"
-                            lineHeight="16px"
-                            color="gray.500"
-                          >
-                            {vaultCollateral.collateralType.name}
-                          </Text>
+                    <Fade in>
+                      <Flex alignItems="center" gap={2}>
+                        <TokenIcon symbol={vaultCollateral.collateralType.symbol} w={30} h={30} />
+                        <Flex>
+                          <Flex direction="column">
+                            <Text fontWeight={700} lineHeight="20px" fontSize="14px" color="white">
+                              {vaultCollateral.collateralType.displaySymbol}
+                            </Text>
+                            <Text
+                              fontFamily="heading"
+                              fontSize="12px"
+                              lineHeight="16px"
+                              color="gray.500"
+                            >
+                              {vaultCollateral.collateralType.name}
+                            </Text>
+                          </Flex>
                         </Flex>
                       </Flex>
-                    </Flex>
+                    </Fade>
                   </Td>
                   <Td borderBottom="none">
-                    <Flex direction="column">
-                      <Text
-                        fontSize="14px"
-                        fontWeight={500}
-                        color="white"
-                        lineHeight="20px"
-                        fontFamily="heading"
-                        data-testid="collateral value"
-                      >
-                        {formatNumberToUsd(vaultCollateral.collateral.value.toNumber(), {
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0,
-                        })}
-                      </Text>
-                      <Text
-                        fontSize="12px"
-                        color="gray.500"
-                        lineHeight="16px"
-                        fontFamily="heading"
-                        data-testid="collateral value"
-                      >
-                        {formatNumber(vaultCollateral.collateral.amount.toNumber(), {
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0,
-                        })}{' '}
-                        {vaultCollateral.collateralType.symbol}
-                      </Text>
-                    </Flex>
-                  </Td>
-                  <Td borderBottom="none">
-                    <Tooltip
-                      label={
-                        isInProfit
-                          ? `This vault has a profit of ${formatNumberToUsd(
-                              vaultCollateral.debt.abs().toNumber(),
-                              {
-                                maximumFractionDigits: 0,
-                                minimumFractionDigits: 0,
-                              }
-                            )}`
-                          : ''
-                      }
-                    >
+                    <Fade in>
                       <Flex direction="column">
                         <Text
                           fontSize="14px"
-                          fontWeight={700}
-                          color={isInProfit ? 'green.500' : 'white'}
-                          data-testid="collateral debt"
+                          fontWeight={500}
+                          color="white"
+                          lineHeight="20px"
+                          fontFamily="heading"
+                          data-testid="collateral value"
                         >
-                          {isInProfit ? '+' : '-'}
-                          {formatNumberToUsd(vaultCollateral.debt.abs().toNumber(), {
+                          {formatNumberToUsd(vaultCollateral.collateral.value.toNumber(), {
                             maximumFractionDigits: 0,
                             minimumFractionDigits: 0,
                           })}
                         </Text>
                         <Text
-                          fontFamily="heading"
                           fontSize="12px"
-                          lineHeight="14px"
                           color="gray.500"
+                          lineHeight="16px"
+                          fontFamily="heading"
+                          data-testid="collateral value"
                         >
-                          C-ratio {cRatio.lte(0) ? 'N/A' : formatPercent(cRatio.toNumber())}
+                          {formatNumber(vaultCollateral.collateral.amount.toNumber(), {
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                          })}{' '}
+                          {vaultCollateral.collateralType.symbol}
                         </Text>
                       </Flex>
-                    </Tooltip>
+                    </Fade>
                   </Td>
                   <Td borderBottom="none">
-                    <Tooltip
-                      label={
-                        <Flex direction="column">
-                          <Flex justifyContent="space-between">
-                            <Text mr={2}>Total APR:</Text>
-                            <Text>{formatApr(apr28d * 100, network?.id)}</Text>
-                          </Flex>
-                          <Flex justifyContent="space-between">
-                            <Text mr={2}>Performance:</Text>
-                            <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
-                          </Flex>
-                          <Flex justifyContent="space-between">
-                            <Text mr={2}>Rewards: </Text>
-                            <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
-                          </Flex>
-                        </Flex>
-                      }
-                    >
-                      <Text
-                        fontSize="md"
-                        fontWeight={700}
-                        color="white"
-                        data-testid="collateral apr"
+                    <Fade in>
+                      <Tooltip
+                        label={
+                          isInProfit
+                            ? `This vault has a profit of ${formatNumberToUsd(
+                                vaultCollateral.debt.abs().toNumber(),
+                                {
+                                  maximumFractionDigits: 0,
+                                  minimumFractionDigits: 0,
+                                }
+                              )}`
+                            : ''
+                        }
                       >
-                        {formatApr(apr28d * 100, network?.id)}
-                      </Text>
-                    </Tooltip>
+                        <Flex direction="column">
+                          <Text
+                            fontSize="14px"
+                            fontWeight={700}
+                            color={isInProfit ? 'green.500' : 'white'}
+                            data-testid="collateral debt"
+                          >
+                            {isInProfit ? '+' : '-'}
+                            {formatNumberToUsd(vaultCollateral.debt.abs().toNumber(), {
+                              maximumFractionDigits: 0,
+                              minimumFractionDigits: 0,
+                            })}
+                          </Text>
+                          <Text
+                            fontFamily="heading"
+                            fontSize="12px"
+                            lineHeight="14px"
+                            color="gray.500"
+                          >
+                            C-ratio {cRatio.lte(0) ? 'N/A' : formatPercent(cRatio.toNumber())}
+                          </Text>
+                        </Flex>
+                      </Tooltip>
+                    </Fade>
+                  </Td>
+                  <Td borderBottom="none">
+                    <Fade in>
+                      <Tooltip
+                        label={
+                          <Flex direction="column">
+                            <Flex justifyContent="space-between">
+                              <Text mr={2}>Total APR:</Text>
+                              <Text>{formatApr(apr28d * 100, network?.id)}</Text>
+                            </Flex>
+                            <Flex justifyContent="space-between">
+                              <Text mr={2}>Performance:</Text>
+                              <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
+                            </Flex>
+                            <Flex justifyContent="space-between">
+                              <Text mr={2}>Rewards: </Text>
+                              <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
+                            </Flex>
+                          </Flex>
+                        }
+                      >
+                        <Text
+                          fontSize="md"
+                          fontWeight={700}
+                          color="white"
+                          data-testid="collateral apr"
+                        >
+                          {formatApr(apr28d * 100, network?.id)}
+                        </Text>
+                      </Tooltip>
+                    </Fade>
                   </Td>
                   <Td borderBottom="none" textAlign="end">
-                    <Button
-                      onClick={async (e) => {
-                        try {
-                          e.stopPropagation();
+                    <Fade in>
+                      <Button
+                        onClick={async (e) => {
+                          try {
+                            e.stopPropagation();
 
-                          if (!currentNetwork) {
-                            connect();
-                            return;
-                          }
-
-                          if (network && currentNetwork.id !== network.id) {
-                            if (!(await setNetwork(network.id))) {
+                            if (!currentNetwork) {
+                              connect();
                               return;
                             }
-                          }
 
-                          queryParams.set('manageAction', 'deposit');
-                          navigate({
-                            pathname: `/positions/${vaultCollateral.collateralType.symbol}/${poolId}`,
-                            search: queryParams.toString(),
-                          });
-                        } catch (error) {}
-                      }}
-                      height="32px"
-                      py="10px"
-                      px="12px"
-                      whiteSpace="nowrap"
-                      borderRadius="4px"
-                      fontFamily="heading"
-                      fontWeight={700}
-                      fontSize="14px"
-                      lineHeight="20px"
-                    >
-                      Deposit
-                    </Button>
+                            if (network && currentNetwork.id !== network.id) {
+                              if (!(await setNetwork(network.id))) {
+                                return;
+                              }
+                            }
+
+                            queryParams.set('manageAction', 'deposit');
+                            navigate({
+                              pathname: `/positions/${vaultCollateral.collateralType.symbol}/${poolId}`,
+                              search: queryParams.toString(),
+                            });
+                          } catch (error) {}
+                        }}
+                        height="32px"
+                        py="10px"
+                        px="12px"
+                        whiteSpace="nowrap"
+                        borderRadius="4px"
+                        fontFamily="heading"
+                        fontWeight={700}
+                        fontSize="14px"
+                        lineHeight="20px"
+                      >
+                        Deposit
+                      </Button>
+                    </Fade>
                   </Td>
                 </Tr>
               );
@@ -527,5 +537,5 @@ export const CollateralSection = () => {
 function formatApr(apr?: number, networkId?: number) {
   if (!networkId || !apr || apr <= 0) return '-';
 
-  return `${networkId === ARBITRUM.id ? 'Up to ' : ''}${apr.toFixed(2)}%`;
+  return `${apr.toFixed(2)}%`;
 }
