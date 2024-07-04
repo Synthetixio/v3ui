@@ -8,7 +8,7 @@ import Wei from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
@@ -31,7 +31,7 @@ export const useRepay = ({
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
-  const { data: UsdProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
   const { data: collateralPriceIds } = useAllCollateralPriceIds();
 
   const signer = useSigner();
@@ -48,7 +48,7 @@ export const useRepay = ({
           poolId &&
           accountId &&
           collateralTypeAddress &&
-          UsdProxy &&
+          systemToken &&
           collateralPriceIds
         )
       ) {
@@ -68,7 +68,7 @@ export const useRepay = ({
           ? undefined
           : CoreProxy.populateTransaction.deposit(
               BigNumber.from(accountId),
-              UsdProxy.address,
+              systemToken.address,
               amountToDeposit.toBN() // only deposit what's needed
             );
 

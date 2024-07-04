@@ -5,7 +5,7 @@ import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
@@ -80,7 +80,7 @@ export const useLiquidityPosition = ({
 }) => {
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
-  const { data: UsdProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
   const { network } = useNetwork();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
@@ -107,7 +107,7 @@ export const useLiquidityPosition = ({
         poolId &&
         tokenAddress &&
         collateralPriceUpdates &&
-        UsdProxy &&
+        systemToken &&
         network &&
         provider
     ),
@@ -119,7 +119,7 @@ export const useLiquidityPosition = ({
           poolId &&
           tokenAddress &&
           collateralPriceUpdates &&
-          UsdProxy &&
+          systemToken &&
           network &&
           provider
         )
@@ -141,7 +141,7 @@ export const useLiquidityPosition = ({
       const { calls: accountCollateralCalls, decoder: accountCollateralDecoder } =
         await loadAccountCollateral({
           accountId,
-          tokenAddresses: [tokenAddress, UsdProxy.address],
+          tokenAddresses: [tokenAddress, systemToken.address],
           CoreProxy,
         });
 

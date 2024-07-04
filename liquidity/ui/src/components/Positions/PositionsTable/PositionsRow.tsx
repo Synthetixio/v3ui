@@ -10,7 +10,7 @@ interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
   apr?: number;
-  stablecoinSymbol?: string;
+  systemTokenSymbol?: string;
 }
 [];
 
@@ -23,7 +23,7 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
-  stablecoinSymbol,
+  systemTokenSymbol,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
@@ -106,7 +106,7 @@ export function PositionRow({
                   {parseFloat(
                     utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}{' '}
-                  {stablecoinSymbol}
+                  {systemTokenSymbol}
                 </Text>
               </Flex>
             </Fade>

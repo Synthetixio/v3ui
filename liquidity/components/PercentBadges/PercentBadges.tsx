@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Flex, Badge } from '@chakra-ui/react';
+import { Flex, Button } from '@chakra-ui/react';
 export const PercentBadges: FC<{
   disabled: boolean;
   onBadgePress: (num: number) => void;
@@ -7,8 +7,7 @@ export const PercentBadges: FC<{
 }> = ({ onBadgePress, activeBadge, disabled }) => {
   return (
     <Flex w="100%" justifyContent="space-between" mt={2} mb={1}>
-      <Badge
-        variant="percent"
+      <Button
         sx={{
           bg: activeBadge >= 0.25 ? 'cyan.500' : 'whiteAlpha.300',
           color: activeBadge >= 0.25 ? 'black' : 'cyan.500',
@@ -16,10 +15,21 @@ export const PercentBadges: FC<{
         }}
         mr={1}
         onClick={disabled ? undefined : () => onBadgePress(0.25)}
+        color="cyan.500"
+        bg="whiteAlpha.300"
+        fontFamily="heading"
+        py={1}
+        px={2}
+        borderRadius="base"
+        borderWidth="1px"
+        borderColor="transparent"
+        width="100%"
+        textAlign="center"
+        userSelect="none"
       >
         25%
-      </Badge>
-      <Badge
+      </Button>
+      <Button
         variant="percent"
         sx={{
           bg: activeBadge >= 0.5 ? 'cyan.500' : 'whiteAlpha.300',
@@ -29,10 +39,21 @@ export const PercentBadges: FC<{
         mx={1}
         onClick={disabled ? undefined : () => onBadgePress(0.5)}
         data-cy="manage-percent-50"
+        color="cyan.500"
+        bg="whiteAlpha.300"
+        fontFamily="heading"
+        py={1}
+        px={2}
+        borderRadius="base"
+        borderWidth="1px"
+        borderColor="transparent"
+        width="100%"
+        textAlign="center"
+        userSelect="none"
       >
         50%
-      </Badge>
-      <Badge
+      </Button>
+      <Button
         variant="percent"
         sx={{
           bg: activeBadge >= 0.75 ? 'cyan.500' : 'whiteAlpha.300',
@@ -41,10 +62,21 @@ export const PercentBadges: FC<{
         }}
         mx={1}
         onClick={disabled ? undefined : () => onBadgePress(0.75)}
+        color="cyan.500"
+        bg="whiteAlpha.300"
+        fontFamily="heading"
+        py={1}
+        px={2}
+        borderRadius="base"
+        borderWidth="1px"
+        borderColor="transparent"
+        width="100%"
+        textAlign="center"
+        userSelect="none"
       >
         75%
-      </Badge>
-      <Badge
+      </Button>
+      <Button
         variant="percent"
         sx={{
           bg: activeBadge === 1 ? 'cyan.500' : 'whiteAlpha.300',
@@ -53,9 +85,20 @@ export const PercentBadges: FC<{
         }}
         ml={1}
         onClick={disabled ? undefined : () => onBadgePress(1)}
+        color="cyan.500"
+        bg="whiteAlpha.300"
+        fontFamily="heading"
+        py={1}
+        px={2}
+        borderRadius="base"
+        borderWidth="1px"
+        borderColor="transparent"
+        width="100%"
+        textAlign="center"
+        userSelect="none"
       >
         100%
-      </Badge>
+      </Button>
     </Flex>
   );
 };

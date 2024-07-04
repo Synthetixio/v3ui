@@ -4,6 +4,7 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { USDC_BASE_MARKET, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export function useGetUSDTokens(customNetwork?: Network) {
   const { network } = useNetwork();
@@ -14,26 +15,26 @@ export function useGetUSDTokens(customNetwork?: Network) {
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
+  const { data: systemToken } = useSystemToken(customNetwork);
 
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens'],
+    enabled: Boolean(targetNetwork?.id && CoreProxy && collateralTypes?.length && systemToken),
     queryFn: async () => {
-      if (!targetNetwork?.id || !CoreProxy) {
+      if (!targetNetwork?.id || !CoreProxy || !systemToken) {
         throw 'useGetUSDTokens queries are not ready';
       }
-      const USDProxy = await CoreProxy.getUsdToken();
       const USDC: string = isBase
         ? (await (SpotMarket as any)?.getWrapper(USDC_BASE_MARKET))?.wrapCollateralType
         : undefined;
 
       return {
-        snxUSD: USDProxy,
+        snxUSD: systemToken.address,
         sUSD: collateralTypes?.find((type) =>
           isBase ? type.symbol.toLowerCase() === 'usdc' : type.symbol.toLowerCase() === 'susdc'
         )?.tokenAddress,
         USDC,
       };
     },
-    enabled: Boolean(targetNetwork?.id && CoreProxy && collateralTypes?.length),
   });
 }

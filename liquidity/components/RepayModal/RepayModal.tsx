@@ -16,7 +16,7 @@ import { useRepay } from '@snx-v3/useRepay';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useUSDProxy } from '@snx-v3/useUSDProxy';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import Wei from '@synthetixio/wei';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
@@ -24,7 +24,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useStablecoin } from '@snx-v3/useStablecoin';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const RepayModalUi: React.FC<{
@@ -37,7 +36,7 @@ export const RepayModalUi: React.FC<{
 }> = ({ onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
   const isProcessing = state.matches(State.approve) || state.matches(State.repay);
   const { infiniteApproval, requireApproval, error } = state.context;
-  const stablecoin = useStablecoin();
+  const { data: systemToken } = useSystemToken();
 
   if (isOpen) {
     if (state.matches(State.success)) {
@@ -69,7 +68,7 @@ export const RepayModalUi: React.FC<{
         <Divider my={4} />
         <Multistep
           step={1}
-          title={`Approve ${stablecoin?.symbol} transfer`}
+          title={`Approve ${systemToken?.symbol} transfer`}
           status={{
             failed: error?.step === State.approve,
             success: !requireApproval || state.matches(State.success),
@@ -77,7 +76,7 @@ export const RepayModalUi: React.FC<{
           }}
           checkboxLabel={
             requireApproval
-              ? `Approve unlimited ${stablecoin?.symbol} transfers to Synthetix.`
+              ? `Approve unlimited ${systemToken?.symbol} transfers to Synthetix.`
               : undefined
           }
           checkboxProps={{
@@ -90,7 +89,7 @@ export const RepayModalUi: React.FC<{
           title="Repay"
           subtitle={
             <Text>
-              Repay <Amount value={debtChange.abs()} suffix={` ${stablecoin?.symbol}`} />
+              Repay <Amount value={debtChange.abs()} suffix={` ${systemToken?.symbol}`} />
             </Text>
           }
           status={{
@@ -136,11 +135,10 @@ export const RepayModal: React.FC<{
   const { network } = useNetwork();
   const { data: usdTokens } = useGetUSDTokens();
   const queryClient = useQueryClient();
-  const { data: USDProxy } = useUSDProxy();
+  const { data: systemToken } = useSystemToken();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const { data: balance } = useTokenBalance(USDProxy?.address);
-  const stablecoin = useStablecoin();
+  const { data: balance } = useTokenBalance(systemToken?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({
     accountId: params.accountId,
@@ -169,7 +167,7 @@ export const RepayModal: React.FC<{
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
     ? usdTokens?.USDC
-    : USDProxy?.address;
+    : systemToken?.address;
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
@@ -187,7 +185,7 @@ export const RepayModal: React.FC<{
       [ServiceNames.approveSUSD]: async () => {
         try {
           toast({
-            title: `Approve ${stablecoin?.symbol} for transfer`,
+            title: `Approve ${systemToken?.symbol} for transfer`,
             description: 'The next transaction will repay your debt.',
             status: 'info',
           });

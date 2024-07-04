@@ -4,7 +4,7 @@ import { NetworkIcon } from '@snx-v3/useBlockchain';
 export const PoolCardsLoading = () => {
   return (
     <>
-      {[1, 2, 3, 4].map((i) => (
+      {[1, 2, 3].map((i) => (
         <Flex
           flexDir="column"
           w="100%"

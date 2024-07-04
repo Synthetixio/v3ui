@@ -2,9 +2,8 @@ import { stringToHash } from '@snx-v3/tsHelpers';
 import { useDefaultProvider, useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { erc7412Call } from '@snx-v3/withERC7412';
-import { useTokenInfo } from '@snx-v3/useTokenInfo';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import { Wei, wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
@@ -73,19 +72,18 @@ export function useAccountCollateral({
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const { data: collateralTypes } = useCollateralTypes(includeDelegationOff);
-  const { data: USDTokens } = useGetUSDTokens();
 
   const provider = useDefaultProvider();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
 
-  const { data: stablecoinInfo } = useTokenInfo(USDTokens?.snxUSD);
+  const { data: systemToken } = useSystemToken();
 
   return useQuery({
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'AccountCollateral',
       { accountId },
-      { stablecoin: USDTokens?.snxUSD },
+      { systemToken: systemToken?.address },
       { priceUpdateTx: stringToHash(priceUpdateTx?.data) },
     ],
     enabled: Boolean(
@@ -95,7 +93,7 @@ export function useAccountCollateral({
         accountId &&
         collateralTypes &&
         collateralTypes.length > 0 &&
-        stablecoinInfo
+        systemToken
     ),
     queryFn: async function () {
       if (
@@ -106,7 +104,7 @@ export function useAccountCollateral({
           accountId &&
           collateralTypes &&
           collateralTypes.length > 0 &&
-          stablecoinInfo
+          systemToken
         )
       ) {
         throw new Error('OMG');
@@ -114,7 +112,7 @@ export function useAccountCollateral({
 
       const tokenAddresses = collateralTypes
         .map((c) => c.tokenAddress)
-        .concat([stablecoinInfo.tokenAddress]);
+        .concat([systemToken.address]);
 
       const { calls, decoder } = await loadAccountCollateral({
         accountId,
@@ -128,10 +126,10 @@ export function useAccountCollateral({
       const data = await erc7412Call(network, provider, allCalls, decoder, 'useAccountCollateral');
 
       return data.map((x) => {
-        if (`${stablecoinInfo.tokenAddress}`.toLowerCase() === `${x.tokenAddress}`.toLowerCase()) {
+        if (`${systemToken.address}`.toLowerCase() === `${x.tokenAddress}`.toLowerCase()) {
           return Object.assign(x, {
-            symbol: stablecoinInfo.symbol,
-            displaySymbol: stablecoinInfo.name,
+            symbol: systemToken.symbol,
+            displaySymbol: systemToken.name,
           });
         }
         const collateralType = collateralTypes.find(

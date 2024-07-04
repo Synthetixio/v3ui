@@ -6,7 +6,7 @@ import { useParams } from '@snx-v3/useParams';
 import { useApr } from '@snx-v3/useApr';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useStablecoin } from '@snx-v3/useStablecoin';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export const PositionsList = () => {
   const { accountId } = useParams();
@@ -16,13 +16,13 @@ export const PositionsList = () => {
     accountId,
   });
   const { data: apr } = useApr();
-  const stablecoinInfo = useStablecoin();
+  const { data: systemToken, isLoading: isSystemTokenLoading } = useSystemToken();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const positions = calculatePositions(positionsByKey, isBase);
   const parsedPositions = positions.filter((position) => position.collateralAmount.gt(0));
 
-  const isLoading = isLiquidityPositionsLoading;
+  const isLoading = isLiquidityPositionsLoading || isSystemTokenLoading;
 
   return (
     <Flex flexDir="column">
@@ -33,7 +33,7 @@ export const PositionsList = () => {
         isLoading={isLoading}
         positions={parsedPositions}
         apr={apr?.combinedApr}
-        stablecoinInfo={stablecoinInfo}
+        systemToken={systemToken}
       />
     </Flex>
   );

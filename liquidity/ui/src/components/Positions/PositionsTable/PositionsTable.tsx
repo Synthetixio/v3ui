@@ -16,7 +16,7 @@ interface PositionsTableInterface {
   isLoading: boolean;
   positions?: LiquidityPositionType[];
   apr?: number;
-  stablecoinInfo?: {
+  systemToken?: {
     symbol?: string;
     name?: string;
     address?: string;
@@ -27,7 +27,7 @@ export const PositionsTable = ({
   isLoading,
   positions,
   apr,
-  stablecoinInfo,
+  systemToken,
 }: PositionsTableInterface) => {
   const { activeWallet } = useWallet();
   const { network } = useNetwork();
@@ -89,7 +89,7 @@ export const PositionsTable = ({
                       final={index === positions.length - 1}
                       isBase={isBase}
                       apr={apr}
-                      stablecoinSymbol={stablecoinInfo?.symbol}
+                      systemTokenSymbol={systemToken?.symbol}
                     />
                   ))}
                 </>
