@@ -49,6 +49,11 @@ const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
 
 export function NetworkController() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isNetworkOpen,
+    onOpen: onNetworkOpen,
+    onClose: onNetworkClose,
+  } = useDisclosure({ id: 'network-select' });
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
@@ -87,7 +92,7 @@ export function NetworkController() {
 
   return (
     <Flex ml="2">
-      <Menu>
+      <Menu isOpen={isNetworkOpen} onOpen={() => onNetworkOpen()}>
         <MenuButton
           as={Button}
           variant="outline"
@@ -102,7 +107,12 @@ export function NetworkController() {
             networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
           />
         </MenuButton>
-        <MenuList border="1px" borderColor="gray.900" zIndex={999}>
+        <MenuList
+          border="1px"
+          borderColor="gray.900"
+          zIndex={999}
+          onMouseLeave={() => onNetworkClose()}
+        >
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
               <NetworkIcon networkId={id} size="20px" />
