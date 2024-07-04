@@ -34,6 +34,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { calculateCRatio } from '@snx-v3/calculations';
+import { Sparkles } from '@snx-v3/icons';
 
 export const calculateVaultTotals = (vaultsData: VaultsDataType) => {
   const zeroValues = { collateral: { value: wei(0), amount: wei(0) }, debt: wei(0) };
@@ -176,7 +177,7 @@ export const CollateralSectionUi: FC<{
             height="26px"
           >
             <Fade in>
-              <Tooltip label="APR is a combination of past week pool performance and rewards.">
+              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
                 <Text fontWeight={700} fontSize="xl" color="white" textAlign="end">
                   {network?.id === ARBITRUM.id ? 'Up to ' : ''}
                   {formatApr(apr?.combinedApr, network?.id)}
@@ -422,9 +423,9 @@ export const CollateralSectionUi: FC<{
                         <Flex direction="column">
                           <Text
                             fontSize="14px"
-                            fontWeight={700}
                             color={isInProfit ? 'green.500' : 'white'}
                             data-testid="collateral debt"
+                            fontWeight={500}
                           >
                             {isInProfit ? '+' : '-'}
                             {formatNumberToUsd(vaultCollateral.debt.abs().toNumber(), {
@@ -450,8 +451,10 @@ export const CollateralSectionUi: FC<{
                         label={
                           <Flex direction="column">
                             <Flex justifyContent="space-between">
-                              <Text mr={2}>Total APR:</Text>
-                              <Text>{formatApr(apr28d * 100, network?.id)}</Text>
+                              <Text fontWeight={700} mr={2}>
+                                Total APR:
+                              </Text>
+                              <Text fontWeight={700}>{formatApr(apr28d * 100, network?.id)}</Text>
                             </Flex>
                             <Flex justifyContent="space-between">
                               <Text mr={2}>Performance:</Text>
@@ -464,14 +467,17 @@ export const CollateralSectionUi: FC<{
                           </Flex>
                         }
                       >
-                        <Text
-                          fontSize="md"
-                          fontWeight={700}
-                          color="white"
-                          data-testid="collateral apr"
-                        >
-                          {formatApr(apr28d * 100, network?.id)}
-                        </Text>
+                        <Flex alignItems="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight={500}
+                            color="white"
+                            data-testid="collateral apr"
+                          >
+                            {formatApr(apr28d * 100, network?.id)}
+                          </Text>
+                          <Sparkles ml={0.5} width="20px" height="20px" />
+                        </Flex>
                       </Tooltip>
                     </Fade>
                   </Td>

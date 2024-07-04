@@ -95,7 +95,7 @@ export const ManageStatsUi: FC<{
                 APR
               </Text>
               <Tooltip
-                label="APR is a combination of past week pool performance and rewards."
+                label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards."
                 textAlign="start"
                 py={2}
                 px={3}
