@@ -13,6 +13,7 @@ import {
   MenuOptionGroup,
   Switch,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { NetworkIcon, useNetwork, useWallet, NETWORKS, Network } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
@@ -47,6 +48,7 @@ const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
   .concat(SNXChain);
 
 export function NetworkController() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
@@ -139,7 +141,7 @@ export function NetworkController() {
         </MenuList>
       </Menu>
       {activeWallet ? (
-        <Menu placement="bottom-end">
+        <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()}>
           <MenuButton
             as={Button}
             variant="outline"
@@ -185,7 +187,7 @@ export function NetworkController() {
               </Flex>
             )}
           </MenuButton>
-          <MenuList zIndex={999}>
+          <MenuList zIndex={999} onMouseLeave={() => onClose()}>
             <Flex
               border="1px solid"
               rounded="base"
@@ -266,7 +268,7 @@ export function NetworkController() {
                   </Text>
                 )}
               </Flex>
-              <Link href="/#/profile">
+              <Link href="/#/profile" onClick={() => onClose()}>
                 <Button
                   variant="outline"
                   colorScheme="gray"
