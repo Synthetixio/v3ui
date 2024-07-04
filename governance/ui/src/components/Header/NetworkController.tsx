@@ -187,7 +187,7 @@ export function NetworkController() {
               </Flex>
             )}
           </MenuButton>
-          <MenuList zIndex={999}>
+          <MenuList zIndex={999} onMouseLeave={() => onClose()}>
             <Flex
               border="1px solid"
               rounded="base"

@@ -56,7 +56,7 @@ export const UserProfileDetails = ({
           right="0px"
         />
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
-        <Flex flexDir="column" w="100%">
+        <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
               {prettyString(userData!.address)}

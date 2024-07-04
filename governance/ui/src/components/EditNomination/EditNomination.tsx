@@ -26,6 +26,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       flexDirection="column"
       bg="navy.700"
       w="100%"
+      maxW="451px"
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"
