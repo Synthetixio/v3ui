@@ -31,7 +31,7 @@ export const PoolHeader = ({ name, network, ...props }: PoolHeaderProps) => {
       </Flex>
       <Flex mt={2}>
         <NetworkIcon w="14px" h="14px" networkId={network?.id} />
-        <Text ml={1} fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="16px">
+        <Text ml={1} fontSize="xs" color="gray.500" fontFamily="heading" lineHeight="16px">
           {network?.name.charAt(0).toUpperCase() + network?.name.slice(1)} Network
         </Text>
       </Flex>
