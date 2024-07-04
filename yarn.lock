@@ -5701,7 +5701,6 @@ __metadata:
     react-hook-form: "npm:^7.48.2"
     react-refresh: "npm:^0.14.0"
     react-router-dom: "npm:^6.18.0"
-    react-timer-hook: "npm:^3.0.7"
     recoil: "npm:^0.7.7"
     siwe: "npm:^2.1.4"
     stream-browserify: "npm:^3.0.0"

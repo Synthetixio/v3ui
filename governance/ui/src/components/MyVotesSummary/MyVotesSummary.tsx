@@ -65,7 +65,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-            <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
+            <Timer expiryTimestamp={schedule.votingPeriodStartDate} />
           )}
         </Text>
         {showCart && (

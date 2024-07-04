@@ -88,9 +88,7 @@ export default function MyVotes() {
                 <Text fontSize="14px" textAlign="center">
                   Voting starts in:{' '}
                   <Text display="inline-block">
-                    <Timer
-                      expiryTimestamp={schedule ? schedule?.votingPeriodStartDate * 1000 : 0}
-                    />
+                    <Timer expiryTimestamp={schedule ? schedule?.votingPeriodStartDate : 0} />
                   </Text>
                 </Text>
                 <Text fontSize="12px" lineHeight="16px" textAlign="center" color="gray.500">
