@@ -21,3 +21,4 @@ export * from './XIcon';
 export * from './GithubIcon';
 export * from './WarpcastIcon';
 export * from './YoutubeIcon';
+export * from './Sparkles';

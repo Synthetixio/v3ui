@@ -5,4 +5,3 @@ export * from './PoolsList';
 export * from './PoolCards/BaseInfoCard';
 export * from './CollateralSection';
 export * from './PoolHeader';
-export * from './MarketSection';
