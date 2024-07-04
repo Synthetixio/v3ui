@@ -13,7 +13,6 @@ import {
   MenuOptionGroup,
   Switch,
   Text,
-  useDisclosure,
 } from '@chakra-ui/react';
 import { NetworkIcon, useNetwork, useWallet, NETWORKS, Network } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
@@ -48,12 +47,6 @@ const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
   .concat(SNXChain);
 
 export function NetworkController() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isNetworkOpen,
-    onOpen: onNetworkOpen,
-    onClose: onNetworkClose,
-  } = useDisclosure({ id: 'network-select' });
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
@@ -92,7 +85,7 @@ export function NetworkController() {
 
   return (
     <Flex ml="2">
-      <Menu isOpen={isNetworkOpen} onOpen={() => onNetworkOpen()}>
+      <Menu>
         <MenuButton
           as={Button}
           variant="outline"
@@ -107,12 +100,7 @@ export function NetworkController() {
             networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
           />
         </MenuButton>
-        <MenuList
-          border="1px"
-          borderColor="gray.900"
-          zIndex={999}
-          onMouseLeave={() => onNetworkClose()}
-        >
+        <MenuList border="1px" borderColor="gray.900" zIndex={999}>
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
               <NetworkIcon networkId={id} size="20px" />
@@ -151,7 +139,7 @@ export function NetworkController() {
         </MenuList>
       </Menu>
       {activeWallet ? (
-        <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()}>
+        <Menu placement="bottom-end">
           <MenuButton
             as={Button}
             variant="outline"
@@ -197,7 +185,7 @@ export function NetworkController() {
               </Flex>
             )}
           </MenuButton>
-          <MenuList zIndex={999} onMouseLeave={() => onClose()}>
+          <MenuList zIndex={999}>
             <Flex
               border="1px solid"
               rounded="base"
@@ -278,7 +266,7 @@ export function NetworkController() {
                   </Text>
                 )}
               </Flex>
-              <Link href="/#/profile" onClick={() => onClose()}>
+              <Link href="/#/profile">
                 <Button
                   variant="outline"
                   colorScheme="gray"
