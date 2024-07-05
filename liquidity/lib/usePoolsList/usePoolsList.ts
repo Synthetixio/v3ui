@@ -1,5 +1,5 @@
 import { getSubgraphUrl } from '@snx-v3/constants';
-import { NETWORKS } from '@snx-v3/useBlockchain';
+import { ARBITRUM, BASE_ANDROMEDA, NETWORKS } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { fetchApr } from '@snx-v3/useApr';
 import { useQuery } from '@tanstack/react-query';
@@ -32,6 +32,7 @@ export function usePoolsList() {
 export function usePool(networkId: number, poolId: string) {
   const { data, isLoading } = usePoolsList();
 
+  // TODO: In the future if we have multiple pools per network filter by poolId also
   return {
     data: data?.synthetixPools.find(
       (p) => p.network.id === networkId && p.poolInfo[0].pool.id === poolId
@@ -41,7 +42,7 @@ export function usePool(networkId: number, poolId: string) {
 }
 
 // TODO: Add 1 and 10 to support Mainnet and Optimism
-const supportedNetworks = [8453, 42161];
+const supportedNetworks = [BASE_ANDROMEDA.id, ARBITRUM.id];
 
 async function fetchTorosPool() {
   return fetch('https://api-v2.dhedge.org/graphql', {
@@ -111,39 +112,6 @@ const PoolsListData = gql`
       pool {
         name
         id
-        registered_distributors(where: { isActive: true }) {
-          id
-          total_distributed
-          rewards_distributions(orderBy: created_at, orderDirection: desc) {
-            amount
-            duration
-            created_at
-          }
-        }
-        total_weight
-        configurations {
-          id
-          weight
-          max_debt_share_value
-          market {
-            id
-            address
-            usd_deposited
-            usd_withdrawn
-            net_issuance
-            reported_debt
-            updated_at
-            market_snapshots_by_week(first: 2, orderBy: updated_at, orderDirection: desc) {
-              id
-              usd_deposited
-              usd_withdrawn
-              net_issuance
-              reported_debt
-              updated_at
-              updates_in_period
-            }
-          }
-        }
       }
     }
   }
@@ -153,46 +121,10 @@ interface PoolInfo {
   collateral_type: {
     id: string;
     oracle_node_id: string;
-    name: string;
-    decimals: number;
-    symbol: string;
     total_amount_deposited: string;
   };
   pool: {
     name: string;
     id: string;
-    registered_distributors: {
-      id: string;
-      total_distributed: string;
-      rewards_distributions: {
-        amount: string;
-        duration: string;
-        created_at: string;
-      }[];
-    }[];
-    total_weight: string;
-    configurations: {
-      id: string;
-      weight: string;
-      max_debt_share_value: string;
-      market: {
-        id: string;
-        address: string;
-        usd_deposited: string;
-        usd_withdrawn: string;
-        net_issuance: string;
-        reported_debt: string;
-        updated_at: string;
-        market_snapshots_by_week: {
-          id: string;
-          usd_deposited: string;
-          usd_withdrawn: string;
-          net_issuance: string;
-          reported_debt: string;
-          updated_at: string;
-          updates_in_period: string;
-        }[];
-      };
-    }[];
   };
 }

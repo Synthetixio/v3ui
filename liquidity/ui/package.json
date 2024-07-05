@@ -57,7 +57,6 @@
     "@snx-v3/useLiquidityPositions": "workspace:*",
     "@snx-v3/useLocalStorage": "workspace:*",
     "@snx-v3/useManagePermissions": "workspace:*",
-    "@snx-v3/useMarketNamesById": "workspace:*",
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/usePoolConfiguration": "workspace:*",
     "@snx-v3/usePoolData": "workspace:*",
