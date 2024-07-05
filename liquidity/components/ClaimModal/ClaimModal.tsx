@@ -15,8 +15,8 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useBorrow } from '@snx-v3/useBorrow';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useStablecoin } from '@snx-v3/useStablecoin';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 export const ClaimModalUi: React.FC<{
   onClose: () => void;
@@ -28,7 +28,7 @@ export const ClaimModalUi: React.FC<{
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const stablecoin = useStablecoin();
+  const { data: systemToken } = useSystemToken();
 
   if (isOpen) {
     if (txnStatus === 'success') {
@@ -66,7 +66,7 @@ export const ClaimModalUi: React.FC<{
           subtitle={
             <Text as="div">
               Claim{' '}
-              <Amount value={debtChange} suffix={isBase ? ' USDC' : ` ${stablecoin?.symbol}`} />
+              <Amount value={debtChange} suffix={isBase ? ' USDC' : ` ${systemToken?.symbol}`} />
             </Text>
           }
           status={{

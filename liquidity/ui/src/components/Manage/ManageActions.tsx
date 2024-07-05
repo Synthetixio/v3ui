@@ -34,7 +34,6 @@ const ManageActionUi: FC<{
 }> = ({ setActiveAction, manageAction, onSubmit, liquidityPosition, network }) => {
   // const debt = Number(liquidityPosition?.debt?.toString());
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-  // const stablecoin = useStablecoin();
 
   const [tab, setTab] = useState('collateral');
 
