@@ -60,7 +60,7 @@ export function SupplyChangeStats() {
               Burnt
             </Text>
             <Text fontSize="18px" color="gray.500" fontWeight={700}>
-              {events ? events[selectedTime] : 0} SNX
+              {events?.totalBurned} SNX
             </Text>
           </Flex>
           <Flex gap="2" alignItems="center">
