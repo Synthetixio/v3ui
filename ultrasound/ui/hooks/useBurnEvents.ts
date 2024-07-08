@@ -84,6 +84,9 @@ export function useBurnEvents() {
 
       return {
         totalBurns: events.length,
+        totalBurned: totalBurned.toLocaleString('en-US', {
+          maximumFractionDigits: 2,
+        }),
         groupedByMonths,
         groupedByLast30Days,
         supplyChange7Days,
