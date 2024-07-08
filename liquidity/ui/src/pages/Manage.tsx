@@ -164,7 +164,6 @@ export const Manage = () => {
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
   const { isFetching: isRewardsLoading, data: rewardsData } = useRewards(
-    poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
     accountId
