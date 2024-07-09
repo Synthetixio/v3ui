@@ -2,9 +2,13 @@ import { Flex, Image, Link, Spinner, Tab, TabList, Tabs, Text } from '@chakra-ui
 import { useBurnEvents } from '../hooks/useBurnEvents';
 import burnSvg from './svgs/burn.svg';
 import mintedSvg from './svgs/minted.svg';
+import { useState } from 'react';
 
 export function SupplyChangeStats() {
   const { data: events, isLoading } = useBurnEvents();
+  const [selectedTime, setSelectedTime] = useState<'totalBurned' | 'supplyChange7Days'>(
+    'supplyChange7Days'
+  );
 
   return (
     <Flex
@@ -30,14 +34,25 @@ export function SupplyChangeStats() {
             </Text>
             <Tabs variant="soft-rounded" size="sm">
               <TabList>
-                <Tab color="gray.500" _selected={{ color: 'white', bg: 'whiteAlpha.400' }}>
+                <Tab
+                  color="gray.500"
+                  _selected={{ color: 'white', bg: 'whiteAlpha.400' }}
+                  onClick={() => setSelectedTime('supplyChange7Days')}
+                >
                   7D
+                </Tab>
+                <Tab
+                  color="gray.500"
+                  _selected={{ color: 'white', bg: 'whiteAlpha.400' }}
+                  onClick={() => setSelectedTime('totalBurned')}
+                >
+                  All
                 </Tab>
               </TabList>
             </Tabs>
           </Flex>
           <Text fontWeight={700} fontSize="24px">
-            -{events?.supplyChange7Days} SNX
+            -{events ? events[selectedTime] : 0} SNX
           </Text>
           <Flex gap="2" alignItems="center">
             <Image src={burnSvg} />
@@ -45,7 +60,7 @@ export function SupplyChangeStats() {
               Burnt
             </Text>
             <Text fontSize="18px" color="gray.500" fontWeight={700}>
-              {events?.supplyChange7Days} SNX
+              {events?.totalBurned} SNX
             </Text>
           </Flex>
           <Flex gap="2" alignItems="center">
