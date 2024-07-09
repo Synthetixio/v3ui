@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    ignore:
+      # Ignore all the deps, except defined groups
+      - dependency-name: '*'
+    groups:
+      synthetix:
+        patterns:
+          - '@synthetixio/v3-contracts'
+    reviewers:
+      - 'noisekit'
