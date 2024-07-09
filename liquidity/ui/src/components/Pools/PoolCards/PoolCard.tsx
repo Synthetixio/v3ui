@@ -192,13 +192,13 @@ export const PoolCard = ({
                       {type.symbol}
                     </Text>
                   </Flex>
-                  {network.id === ARBITRUM.id && collateralApr && collateralApr.apr24h >= 0 && (
+                  {network.id === ARBITRUM.id && collateralApr && collateralApr.apr28d >= 0 && (
                     <Flex flexDirection="column" ml={6} mr={4}>
                       <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
                         APR
                       </Text>
                       <Text color="white" fontFamily="heading" fontSize="14px" fontWeight={700}>
-                        {`${(100 * collateralApr.apr24h).toFixed(2)}`}%
+                        {`${(100 * collateralApr.apr28d).toFixed(2)}`}%
                       </Text>
                     </Flex>
                   )}
