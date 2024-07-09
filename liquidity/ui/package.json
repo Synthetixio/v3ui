@@ -61,7 +61,7 @@
     "@snx-v3/usePoolConfiguration": "workspace:*",
     "@snx-v3/usePoolData": "workspace:*",
     "@snx-v3/usePoolsList": "workspace:*",
-    "@snx-v3/useRewards": "workspace:^",
+    "@snx-v3/useRewardsDistributor": "workspace:*",
     "@snx-v3/useSystemToken": "workspace:*",
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useTransferAccountId": "workspace:*",

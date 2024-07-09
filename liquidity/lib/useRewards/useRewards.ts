@@ -14,6 +14,7 @@ const RewardsResponseSchema = z.array(
     name: z.string(),
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
+    claimableValue: z.instanceof(Wei),
     distributorAddress: z.string(),
     duration: z.number(),
     lifetimeClaimed: z.number(),
@@ -52,6 +53,7 @@ const RewardsDistributionsDocument = `
       amount
       duration
       start
+      created_at
     }
   }
 `;
@@ -92,11 +94,17 @@ export function useRewards(
 
       if (RewardsDistributors.length === 0) return [];
 
+      // We need to filter the distributors, so we only query for this particular collateral type
+      const filteredDistributors = RewardsDistributors.filter(
+        (distributor: any) =>
+          distributor.collateralType.address.toLowerCase() === collateralAddress.toLowerCase()
+      );
+
       try {
         const returnData = await Promise.all([
           // Historical data for account id / distributor address pair
-          ...RewardsDistributors.map(({ address }: { address: string }) =>
-            fetch(getSubgraphUrl(network?.name), {
+          ...filteredDistributors.map(({ address }: { address: string }) =>
+            fetch(getSubgraphUrl(targetNetwork?.name), {
               method: 'POST',
               body: JSON.stringify({
                 query: RewardsDataDocument,
@@ -105,7 +113,7 @@ export function useRewards(
             }).then((res) => res.json())
           ),
           // Metadata for each distributor
-          ...RewardsDistributors.map(({ address: distributor }: { address: string }) =>
+          ...filteredDistributors.map(({ address: distributor }: { address: string }) =>
             fetch(getSubgraphUrl(network?.name), {
               method: 'POST',
               body: JSON.stringify({
@@ -118,19 +126,16 @@ export function useRewards(
           ),
         ]);
 
-        const historicalData = returnData.slice(0, RewardsDistributors.length);
-        const metaData = returnData.slice(RewardsDistributors.length);
-
-        console.log('Historical Data', historicalData);
-        console.log('Meta Data', metaData);
+        const historicalData = returnData.slice(0, filteredDistributors.length);
+        const metaData = returnData.slice(filteredDistributors.length);
 
         // Get claimable amount for each distributor
-        const calls = RewardsDistributors.map(({ address }: { address: string }) =>
+        const calls = filteredDistributors.map(({ address }: { address: string }) =>
           CoreProxy.populateTransaction.getAvailableRewards(
             BigNumber.from(accountId),
             BigNumber.from(poolId),
-            collateralAddress,
-            address
+            collateralAddress.toLowerCase(),
+            address.toLowerCase()
           )
         );
 
@@ -145,117 +150,63 @@ export function useRewards(
 
         const amounts = data.returnData.map((data: string) => {
           const amount = CoreProxy.interface.decodeFunctionResult('getAvailableRewards', data)[0];
-          return wei(amount).toString();
+          return wei(amount);
         });
 
-        console.log('Decoded', amounts);
+        const results: RewardsResponseArray = filteredDistributors.map((item: any, i: number) => {
+          // Amount claimable for this distributor
+          const claimableAmount = amounts[i];
+          const historicalClaims = historicalData[i]?.data?.rewardsClaimeds;
+          const distributions = metaData[i]?.data?.rewardsDistributions;
 
-        // const { returnData: claimableReturnData } = await Multicall3.callStatic.aggregate(
-        //   RewardsDistributors.flatMap(({ address }: { address: string }) => [
-        //     {
-        //       target: address,
-        //       callData: CoreProxy.populateTransaction.getAvailableRewards(
-        //         BigNumber.from(accountId),
-        //         BigNumber.from(poolId),
-        //         collateralAddress?.toLowerCase(),
-        //         address.toLowerCase()
-        //       ),
-        //     },
-        //   ])
-        // );
+          if (!distributions || !distributions.length) {
+            return {
+              address: item.address,
+              name: item.name,
+              symbol: item.payoutToken.symbol,
+              claimableAmount: wei(0),
+              distributorAddress: item.address,
+              duration: 0,
+              total: 0,
+              lifetimeClaimed: historicalClaims
+                .reduce(
+                  (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),
+                  wei(0)
+                )
+                .toNumber(),
+              decimals: item.payoutToken.decimals,
+            };
+          }
 
-        // console.log('Claimable Return Data', claimableReturnData);
+          const latestDistribution = distributions[distributions.length - 1];
+          const expiry =
+            parseInt(latestDistribution.duration) + parseInt(latestDistribution.created_at);
 
-        // // Decoded
-        // const claimableAmounts = claimableReturnData.map((data: string) =>
-        //   CoreProxy.interface.decodeFunctionResult('getAvailableRewards', data)
-        // );
+          const hasExpired = new Date().getTime() / 1000 > expiry;
 
-        // console.log('Claimable Amounts', claimableAmounts);
+          return {
+            address: item.address,
+            name: item.name,
+            symbol: item.payoutToken.symbol,
+            claimableAmount,
+            distributorAddress: item.address,
+            decimals: item.payoutToken.decimals,
+            duration: parseInt(latestDistribution.duration),
+            total: hasExpired ? 0 : latestDistribution.amount,
+            lifetimeClaimed: historicalClaims
+              .reduce(
+                (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),
+                wei(0)
+              )
+              .toNumber(),
+          };
+        });
 
-        // const distributorResult = distributors.map(({ id: address, rewards_distributions }, i) => {
-        //   const [distributorName] = ifaceRD.decodeFunctionResult(
-        //     'name',
-        //     distributorReturnData[i * 3]
-        //   );
-        //   const [distributorPayoutToken] = ifaceRD.decodeFunctionResult(
-        //     'payoutToken',
-        //     distributorReturnData[i * 3 + 1]
-        //   );
-        //   const [distributorCollateralType] = ifaceRD.decodeFunctionResult(
-        //     'collateralType',
-        //     distributorReturnData[i * 3 + 2]
-        //   );
+        const sortedBalances = results.sort(
+          (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
+        );
 
-        //   if (!rewards_distributions.length) {
-        //     return {
-        //       address,
-        //       name: distributorName,
-        //       token: distributorPayoutToken,
-        //       distributorCollateralType,
-        //       duration: 0,
-        //       total: 0,
-        //       lifetimeClaimed: 0,
-        //     };
-        //   }
-
-        //   const duration = parseInt(rewards_distributions[0].duration);
-
-        //   const lifetimeClaimed: number = historicalData[i].data.rewardsClaimeds
-        //     .reduce((acc: Wei, item: { amount: string; id: string }) => {
-        //       return acc.add(wei(item.amount, 18, true));
-        //     }, wei(0))
-        //     .toNumber();
-
-        //   // See if it is still active (i.e rewards are still being emitted)
-        //   const { duration: distribution_duration, created_at } = rewards_distributions[0];
-
-        //   const expiry = parseInt(distribution_duration) + parseInt(created_at);
-
-        //   // const total =
-        //   const hasExpired = new Date().getTime() / 1000 > expiry;
-
-        //   return {
-        //     address,
-        //     name: distributorName,
-        //     token: distributorPayoutToken,
-        //     distributorCollateralType,
-        //     duration,
-        //     total: hasExpired ? '0' : rewards_distributions[0].amount, // Take the latest amount
-        //     lifetimeClaimed,
-        //   };
-        // });
-
-        // const filteredDistributors = collateralAddress
-        //   ? distributorResult.filter(
-        //       ({ distributorCollateralType }) =>
-        //         `${distributorCollateralType}`.toLowerCase() ===
-        //         `${collateralAddress}`.toLowerCase()
-        //     )
-        //   : distributorResult;
-
-        // const result = filteredDistributors.map((item, i) => {
-        //   const [name] = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 3]);
-        //   const [symbol] = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 3 + 1]);
-        //   const [decimals] = ifaceERC20.decodeFunctionResult('decimals', ercReturnData[i * 3 + 2]);
-
-        //   const total = wei(item.total, 18, true).toNumber();
-
-        //   return {
-        //     ...item,
-        //     name,
-        //     symbol,
-        //     decimals,
-        //     total,
-        //   };
-        // });
-
-        // const sortedBalances = [...balances].sort(
-        //   (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
-        // );
-
-        // return RewardsResponseSchema.parse(sortedBalances);
-        return [];
+        return RewardsResponseSchema.parse(sortedBalances);
       } catch (error) {
         console.error(error);
         return [];

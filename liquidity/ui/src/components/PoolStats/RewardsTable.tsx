@@ -87,7 +87,6 @@ function RewardsRow({
   collateralType,
   accountId,
   poolId,
-  registered_distributors,
 }: {
   collateralType?: CollateralType;
   isLoading: boolean;
@@ -96,7 +95,6 @@ function RewardsRow({
   registered_distributors?: RewardsInterface;
 }) {
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
-    registered_distributors,
     poolId,
     collateralType?.tokenAddress,
     accountId
