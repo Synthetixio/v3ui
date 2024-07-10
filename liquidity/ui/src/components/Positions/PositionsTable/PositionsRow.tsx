@@ -40,8 +40,8 @@ export function PositionRow({
     collateralTypeAddress: collateralType.tokenAddress,
   });
 
-  const parsedCRatio = cRatio.eq(0)
-    ? 'N/A'
+  const parsedCRatio = cRatio.lte(0)
+    ? 'Infinite'
     : collateralType.issuanceRatioD18.gt(cRatio)
       ? 'MANAGE'
       : 'HEALTHY';
@@ -149,9 +149,9 @@ export function PositionRow({
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
               <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
-                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
+                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinity'}
               </Text>
-              {parsedCRatio !== 'N/A' && (
+              {parsedCRatio !== 'Infinite' && (
                 <Badge
                   colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
                   border="1px solid"
