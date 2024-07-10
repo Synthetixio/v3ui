@@ -6,6 +6,7 @@ import {
   useProvider,
   useProviderForChain,
   useSigner,
+  useWallet,
 } from '@snx-v3/useBlockchain';
 import { importSpotMarketProxy } from '@snx-v3/contracts';
 
@@ -15,13 +16,19 @@ export function useSpotMarketProxy(customNetwork?: Network) {
   const signer = useSigner();
   const providerForChain = useProviderForChain(customNetwork);
   const signerOrProvider = signer || provider;
+  const { activeWallet } = useWallet();
 
   const targetNetwork = customNetwork || network;
 
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'SpotMarketProxy', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'SpotMarketProxy',
+      { withSigner },
+      activeWallet?.address,
+    ],
     queryFn: async function () {
       if (!signerOrProvider || !targetNetwork) throw new Error('Should be disabled');
 
