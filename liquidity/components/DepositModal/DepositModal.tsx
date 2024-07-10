@@ -310,13 +310,14 @@ export const DepositModal: DepositModalProps = ({
           if (contractError) {
             console.error(new Error(contractError.name), contractError);
           }
+
           toast.closeAll();
           toast({
             title: 'Wrapping ETH failed',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
-              'Please try again.'
+              error.message || 'Please try again.'
             ),
             status: 'error',
           });
