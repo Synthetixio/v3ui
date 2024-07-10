@@ -6,6 +6,7 @@ import {
   useProvider,
   useProviderForChain,
   useSigner,
+  useWallet,
 } from '@snx-v3/useBlockchain';
 import { importOracleManagerProxy } from '@snx-v3/contracts';
 
@@ -16,6 +17,7 @@ export function useOracleManagerProxy(customNetwork?: Network) {
   const signer = useSigner();
   const signerOrProvider = providerForChain || signer || provider;
   const withSigner = Boolean(signer);
+  const { activeWallet } = useWallet();
 
   const targetNetwork = customNetwork || network;
 
@@ -24,7 +26,7 @@ export function useOracleManagerProxy(customNetwork?: Network) {
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'OracleManagerProxy',
       { withSigner },
-      signer?._address,
+      activeWallet?.address,
     ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {

@@ -6,6 +6,7 @@ import {
   useProvider,
   useProviderForChain,
   useSigner,
+  useWallet,
 } from '@snx-v3/useBlockchain';
 import { importCoreProxy } from '@snx-v3/contracts';
 
@@ -14,6 +15,7 @@ export function useCoreProxy(customNetwork?: Network | null) {
   const { network } = useNetwork();
   const provider = useProvider();
   const signer = useSigner();
+  const { activeWallet } = useWallet();
   const targetNetwork = customNetwork || network;
 
   const withSigner = Boolean(signer);
@@ -23,7 +25,7 @@ export function useCoreProxy(customNetwork?: Network | null) {
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'CoreProxy',
       { withSigner },
-      signer?._address,
+      activeWallet?.address,
     ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {

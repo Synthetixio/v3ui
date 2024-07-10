@@ -1,10 +1,11 @@
 import { Contract } from '@ethersproject/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider, useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { importAccountProxy } from '@snx-v3/contracts';
 
 export function useAccountProxy() {
   const { network } = useNetwork();
+  const { activeWallet } = useWallet();
   const provider = useProvider();
   const signer = useSigner();
   const signerOrProvider = signer || provider;
@@ -15,7 +16,7 @@ export function useAccountProxy() {
       `${network?.id}-${network?.preset}`,
       'AccountProxy',
       { withSigner },
-      signer?._address,
+      activeWallet?.address,
     ],
     queryFn: async function () {
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
