@@ -81,7 +81,7 @@ export default function UserTableView({
       )}
       {councilPeriod === '0' && (
         <Th textAlign="end">
-          <Badge>Your Vote TODO</Badge>
+          <Badge w="fit-content">Your Vote TODO</Badge>
         </Th>
       )}
     </Tr>
