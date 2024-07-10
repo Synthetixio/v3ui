@@ -20,7 +20,12 @@ export function useMulticall3(customNetwork?: Network) {
   const targetNetwork = customNetwork || network;
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Multicall3', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'Multicall3',
+      { withSigner },
+      signer?._address,
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importMulticall3(customNetwork.id, customNetwork.preset);

@@ -11,7 +11,7 @@ export function useUSDProxy() {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'USDProxy', { withSigner }],
+    queryKey: [`${network?.id}-${network?.preset}`, 'USDProxy', { withSigner }, signer?._address],
     queryFn: async function () {
       if (!signerOrProvider || !network) throw new Error('Should be disabled');
       const { address, abi } = await importUSDProxy(network.id, network.preset);

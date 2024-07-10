@@ -24,6 +24,7 @@ export function useOracleManagerProxy(customNetwork?: Network) {
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'OracleManagerProxy',
       { withSigner },
+      signer?._address,
     ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {

@@ -43,12 +43,16 @@ export function NetworkController() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!isAccountsLoading && !isAccountsFetching && !!accounts?.length) {
-      const accountId = queryParams.get('accountId');
+    if (!isAccountsLoading && !isAccountsFetching) {
+      if (!!accounts?.length) {
+        const accountId = queryParams.get('accountId');
 
-      if (accountId && !accounts?.includes(accountId)) {
-        queryParams.set('accountId', accounts[0]);
-        navigate({ pathname, search: accounts[0] ? queryParams.toString() : '' });
+        if (accountId && !accounts?.includes(accountId)) {
+          queryParams.set('accountId', accounts[0]);
+          navigate({ pathname, search: accounts[0] ? queryParams.toString() : '' });
+        }
+      } else {
+        navigate({ pathname, search: '' });
       }
     }
   }, [accounts, isAccountsLoading, isAccountsFetching, queryParams, navigate, pathname]);

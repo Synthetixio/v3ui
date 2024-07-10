@@ -21,7 +21,12 @@ export function useSpotMarketProxy(customNetwork?: Network) {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'SpotMarketProxy', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'SpotMarketProxy',
+      { withSigner },
+      signer?._address,
+    ],
     queryFn: async function () {
       if (!signerOrProvider || !targetNetwork) throw new Error('Should be disabled');
 

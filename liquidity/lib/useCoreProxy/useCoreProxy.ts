@@ -19,7 +19,12 @@ export function useCoreProxy(customNetwork?: Network | null) {
   const withSigner = Boolean(signer);
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'CoreProxy', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'CoreProxy',
+      { withSigner },
+      signer?._address,
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importCoreProxy(customNetwork.id, customNetwork.preset);
