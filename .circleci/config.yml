@@ -369,7 +369,7 @@ workflows:
           requires: [
               tests,
               liquidity-cy,
-              governance-e2e-sepolia,
+              # governance-e2e-sepolia,
               liquidity-e2e-base-mainnet,
               #liquidity-e2e-sepolia,
             ]

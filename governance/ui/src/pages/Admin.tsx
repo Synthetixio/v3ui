@@ -1,5 +1,5 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { Contract, Wallet, utils } from 'ethers';
+import { Wallet } from 'ethers';
 import { useSigner } from '../queries/useWallet';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
@@ -160,28 +160,6 @@ export default function Admin() {
                 }}
               >
                 LFG (only in Administration)
-              </Button>
-            </Flex>
-
-            <Flex alignItems="center" gap={2}>
-              <Text>Set Voting Power to current connected user</Text>
-              <Button
-                onClick={async () => {
-                  if (signer) {
-                    const address = await signer.getAddress();
-                    const electionId = await proxy.connect(signer).getEpochIndex();
-                    const snapshotId = await proxy
-                      .connect(signer)
-                      .getVotePowerSnapshotId(SnapshotRecordContractAddress, electionId);
-                    await new Contract(SnapshotRecordContractAddress, [
-                      'function setBalanceOfOnPeriod(address user, uint balance, uint periodId) external',
-                    ])
-                      .connect(signer)
-                      .setBalanceOfOnPeriod(address, utils.parseEther('100'), snapshotId);
-                  }
-                }}
-              >
-                set voting power
               </Button>
             </Flex>
 
