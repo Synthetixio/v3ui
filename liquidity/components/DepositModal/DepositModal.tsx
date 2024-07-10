@@ -236,6 +236,7 @@ export const DepositModal: DepositModalProps = ({
 }) => {
   const navigate = useNavigate();
   const { collateralSymbol, poolId, accountId } = useParams();
+
   const queryClient = useQueryClient();
   const { network } = useNetwork();
 

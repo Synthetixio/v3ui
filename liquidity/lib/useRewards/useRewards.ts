@@ -14,7 +14,6 @@ const RewardsResponseSchema = z.array(
     name: z.string(),
     symbol: z.string(),
     claimableAmount: z.instanceof(Wei),
-    claimableValue: z.instanceof(Wei),
     distributorAddress: z.string(),
     duration: z.number(),
     lifetimeClaimed: z.number(),
@@ -161,7 +160,7 @@ export function useRewards(
 
           if (!distributions || !distributions.length) {
             return {
-              address: item.address,
+              address: item.collateralType.address,
               name: item.name,
               symbol: item.payoutToken.symbol,
               claimableAmount: wei(0),
@@ -192,7 +191,7 @@ export function useRewards(
             distributorAddress: item.address,
             decimals: item.payoutToken.decimals,
             duration: parseInt(latestDistribution.duration),
-            total: hasExpired ? 0 : latestDistribution.amount,
+            total: hasExpired ? 0 : wei(latestDistribution.amount, 18, true).toNumber(),
             lifetimeClaimed: historicalClaims
               .reduce(
                 (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),

@@ -107,6 +107,7 @@ export type UndelegateModalProps = FC<{
 }>;
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
+
   const { collateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
 

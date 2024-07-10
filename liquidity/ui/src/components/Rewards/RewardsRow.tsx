@@ -1,8 +1,4 @@
-import { Flex, Td, Text, Button, Fade, Tr, Link } from '@chakra-ui/react';
-import { useClaimRewards } from '@snx-v3/useClaimRewards';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useParams } from '@snx-v3/useParams';
-import { RewardsModal } from './RewardsModal';
+import { Flex, Td, Text, Fade, Tr, Link } from '@chakra-ui/react';
 import { truncateAddress, convertToReadableInterval } from '@snx-v3/formatters';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
@@ -16,9 +12,7 @@ interface RewardsRowInterface {
   frequency: number;
   claimableAmount: number; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
-  hasClaimed: boolean;
   address: string;
-  readOnly: boolean;
   total: number;
 }
 
@@ -27,51 +21,18 @@ export const RewardsRow = ({
   frequency,
   claimableAmount,
   lifetimeClaimed,
-  hasClaimed,
   address,
-  readOnly,
   total,
 }: RewardsRowInterface) => {
-  const { accountId, collateralSymbol, poolId } = useParams();
-
-  const { data: collateralData } = useCollateralType(collateralSymbol);
   const { network } = useNetwork();
-
-  const { exec, txnState } = useClaimRewards(
-    poolId || '',
-    collateralData?.tokenAddress || '',
-    accountId,
-    address,
-    claimableAmount
-  );
-
-  const onClick = () => {
-    exec();
-  };
-
-  const { txnStatus, txnHash } = txnState;
 
   // We want to pass in the total, as well as the
   const { amount, frequencyString } = convertToReadableInterval(total, frequency);
-
-  const claimButtonLabel = () => {
-    if (claimableAmount > 0 || !hasClaimed) {
-      return 'Claim';
-    }
-
-    return 'Claimed';
-  };
 
   const link = etherscanLink({ chain: network?.name || 'mainnet', address });
 
   return (
     <>
-      <RewardsModal
-        amount={claimableAmount}
-        collateralSymbol={symbol}
-        txnStatus={txnStatus}
-        txnHash={txnHash}
-      />
       <Tr>
         <Td display="flex" alignItems="center" px="14px" border="none" w="100%">
           <Fade in>
@@ -121,28 +82,6 @@ export const RewardsRow = ({
             )}
           </Fade>
         </Td>
-        {!readOnly && (
-          <Td border="none" px="0px">
-            <Fade in>
-              <Button
-                w="100%"
-                size="sm"
-                variant="solid"
-                isDisabled={claimableAmount === 0}
-                _disabled={{
-                  bg: 'gray.900',
-                  backgroundImage: 'none',
-                  color: 'gray.500',
-                  opacity: 0.5,
-                  cursor: 'not-allowed',
-                }}
-                onClick={onClick}
-              >
-                {claimButtonLabel()}
-              </Button>
-            </Fade>
-          </Td>
-        )}
       </Tr>
     </>
   );
