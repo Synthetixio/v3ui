@@ -47,6 +47,7 @@ export default function MyVoteRow({
           aria-label="action-button"
           icon={<AddIcon />}
           variant="outlined"
+          isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/councils/${council.slug}`);
@@ -57,6 +58,7 @@ export default function MyVoteRow({
           aria-label="action-button"
           icon={<CloseIcon />}
           variant="outlined"
+          isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
 
