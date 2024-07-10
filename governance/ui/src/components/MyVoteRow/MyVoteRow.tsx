@@ -7,7 +7,13 @@ import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
 
-export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }) {
+export default function MyVoteRow({
+  councilSlug,
+  period,
+}: {
+  councilSlug: CouncilSlugs;
+  period?: string;
+}) {
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
 
@@ -28,6 +34,7 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
       justifyContent="space-between"
       border="1px solid"
       borderColor="gray.900"
+      opacity={period !== '2' ? '0.4' : '1'}
     >
       <Flex alignItems="center">
         <CouncilUser

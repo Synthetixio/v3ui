@@ -114,11 +114,15 @@ export default function MyVotes() {
               </Heading>
             </Flex>
             <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>
-              You can cast 4 votes in one transaction. Continue voting if you want to add other
+              You can cast 3 votes in one transaction. Continue voting if you want to add other
               nominee otherwise cast your vote to complete your voting.
             </Text>
             {councils.map((council) => (
-              <MyVoteRow key={council.slug} councilSlug={council.slug} />
+              <MyVoteRow
+                key={council.slug.concat('my-votes-page')}
+                councilSlug={council.slug}
+                period={period}
+              />
             ))}
             <Alert colorScheme="blue" opacity={period !== '2' ? '0.4' : '1'} rounded="base" mt="12">
               <WarningIcon color="cyan" mr="4" />
