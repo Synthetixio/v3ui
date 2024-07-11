@@ -79,73 +79,69 @@ const ManageActionUi: FC<{
 
         <TabPanels>
           <TabPanel px="0">
-            <Flex flexDir="column">
-              <Flex gap={4}>
-                {COLLATERALACTIONS.map((action) => (
-                  <Flex
-                    h="84px"
-                    justifyContent="center"
-                    key={action.title.concat('-tab-actions')}
-                    border="1px solid"
-                    flexDir="column"
-                    alignItems="center"
-                    borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
-                    rounded="base"
-                    cursor="pointer"
-                    data-cy={`collateral-action-${action.link}`}
-                    onClick={() => setActiveAction(action.link)}
-                    flex="1"
+            <Flex gap={4}>
+              {COLLATERALACTIONS.map((action) => (
+                <Flex
+                  h="84px"
+                  justifyContent="center"
+                  key={action.title.concat('-tab-actions')}
+                  border="1px solid"
+                  flexDir="column"
+                  alignItems="center"
+                  borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
+                  rounded="base"
+                  cursor="pointer"
+                  data-cy={`collateral-action-${action.link}`}
+                  onClick={() => setActiveAction(action.link)}
+                  flex="1"
+                >
+                  {action.icon(manageAction === action.link ? 'cyan' : 'white')}
+                  <Text
+                    fontSize="14px"
+                    fontWeight={700}
+                    mt="2"
+                    color={manageAction === action.link ? 'cyan.500' : 'white'}
                   >
-                    {action.icon(manageAction === action.link ? 'cyan' : 'white')}
-                    <Text
-                      fontSize="14px"
-                      fontWeight={700}
-                      mt="2"
-                      color={manageAction === action.link ? 'cyan.500' : 'white'}
-                    >
-                      {action.title}
-                    </Text>
-                  </Flex>
-                ))}
-              </Flex>
+                    {action.title}
+                  </Text>
+                </Flex>
+              ))}
             </Flex>
           </TabPanel>
           <TabPanel px="0">
-            <Flex flexDir="column">
-              <Flex gap={4}>
-                {debtActions.map((action) => (
-                  <Flex
-                    flex="1"
-                    h="84px"
-                    justifyContent="center"
-                    key={action.title.concat('-tab-actions')}
-                    border="1px solid"
-                    flexDir="column"
-                    alignItems="center"
-                    borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
-                    rounded="base"
-                    cursor="pointer"
-                    data-cy={`debt-actions-${action.link}`}
-                    onClick={() => setActiveAction(action.link)}
+            <Flex gap={4}>
+              {debtActions.map((action) => (
+                <Flex
+                  flex="1"
+                  h="84px"
+                  justifyContent="center"
+                  key={action.title.concat('-tab-actions')}
+                  border="1px solid"
+                  flexDir="column"
+                  alignItems="center"
+                  borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
+                  rounded="base"
+                  cursor="pointer"
+                  data-cy={`debt-actions-${action.link}`}
+                  onClick={() => setActiveAction(action.link)}
+                >
+                  {action.icon(manageAction === action.link ? 'cyan' : 'white')}
+                  <Text
+                    fontSize="14px"
+                    fontWeight={700}
+                    mt="2"
+                    color={manageAction === action.link ? 'cyan.500' : 'white'}
                   >
-                    {action.icon(manageAction === action.link ? 'cyan' : 'white')}
-                    <Text
-                      fontSize="14px"
-                      fontWeight={700}
-                      mt="2"
-                      color={manageAction === action.link ? 'cyan.500' : 'white'}
-                    >
-                      {action.title}
-                    </Text>
-                  </Flex>
-                ))}
-              </Flex>
+                    {action.title}
+                  </Text>
+                </Flex>
+              ))}
             </Flex>
           </TabPanel>
         </TabPanels>
       </Tabs>
 
-      <Flex direction="column" mt={2}>
+      <Flex direction="column">
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'withdraw' ? <Withdraw liquidityPosition={liquidityPosition} /> : null}

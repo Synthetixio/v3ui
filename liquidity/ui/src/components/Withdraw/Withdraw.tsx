@@ -50,15 +50,36 @@ const WithdrawUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="2">
+      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
         Withdraw Collateral
       </Text>
 
-      <BorderBox display="flex" py={2} px={3} mb="4">
-        <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-          <TokenIcon symbol={symbol} />
-          {displaySymbol}
-        </Text>
+      <BorderBox display="flex" p={3} mb="6">
+        <Flex alignItems="flex-start" flexDir="column" gap="1">
+          <BorderBox display="flex" py={1.5} px={2.5}>
+            <Text display="flex" gap={2} fontSize="16px" alignItems="center" fontWeight="600">
+              <TokenIcon symbol={symbol} width={16} height={16} />
+              {displaySymbol}
+            </Text>
+          </BorderBox>
+          <Flex fontSize="12px" gap="1">
+            <Text>Unlocked:</Text>
+            <Amount value={maWWithdrawable} /> {displaySymbol}
+            <Text
+              cursor="pointer"
+              onClick={() => {
+                if (!maWWithdrawable) {
+                  return;
+                }
+                setAmount(maWWithdrawable);
+              }}
+              color="cyan.500"
+              fontWeight={700}
+            >
+              &nbsp; Max
+            </Text>
+          </Flex>
+        </Flex>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           <NumberInput
             InputProps={{
@@ -70,21 +91,6 @@ const WithdrawUi: FC<{
             onChange={(val) => setAmount(val)}
             max={maWWithdrawable}
           />
-          <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
-            <Flex
-              gap="1"
-              cursor="pointer"
-              onClick={() => {
-                if (!maWWithdrawable) {
-                  return;
-                }
-                setAmount(maWWithdrawable);
-              }}
-            >
-              <Text>Max:</Text>
-              <Amount value={maWWithdrawable} /> {displaySymbol}
-            </Flex>
-          </Flex>
         </Flex>
       </BorderBox>
 
