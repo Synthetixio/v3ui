@@ -62,6 +62,7 @@ export const ManageUi: FC<{
   const { data: CollateralTypes } = useCollateralTypes();
 
   const notSupported =
+    poolData &&
     CollateralTypes &&
     collateralDisplayName &&
     !CollateralTypes.some((item) => item.symbol === collateralDisplayName);
