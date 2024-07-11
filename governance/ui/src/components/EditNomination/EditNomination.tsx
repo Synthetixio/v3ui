@@ -26,12 +26,14 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       flexDirection="column"
       bg="navy.700"
       w="100%"
+      maxW="451px"
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"
       rounded="base"
       p="6"
-      position="relative"
+      position="sticky"
+      top="81px"
     >
       <IconButton
         onClick={() => navigate(`/councils/${activeCouncil}`)}
@@ -103,6 +105,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
         />
       ) : (
         <EditNominationSelect
+          selectedCouncil={selectedCouncil}
           setSelectedCouncil={setSelectedCouncil}
           setShowConfirm={setShowConfirm}
         />

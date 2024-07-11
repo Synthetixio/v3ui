@@ -17,7 +17,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
-    useGetUserBallot('grants'),
     useGetUserBallot('treasury'),
   ];
 
@@ -39,10 +38,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
       council: votedNominees[2]?.council,
       userInformation: useGetUserDetailsQuery(votedNominees[2]?.votedCandidates[0]),
     },
-    {
-      council: votedNominees[3]?.council,
-      userInformation: useGetUserDetailsQuery(votedNominees[3]?.votedCandidates[0]),
-    },
   ];
 
   const userInformation = userInformationData.map((data) => ({
@@ -52,7 +47,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
 
   return (
     <>
-      <Hide above="lg">
+      <Hide above="xl">
         <Flex
           w="100%"
           bg="navy.700"
@@ -72,7 +67,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           <MyVotesSummary isLoading={isLoading} councilPeriod={councilPeriod} schedule={schedule} />
         </Flex>
       </Hide>
-      <Show above="lg">
+      <Show above="xl">
         <Flex
           w="100%"
           gap="4"
@@ -112,9 +107,10 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {userInformation[index].userInformation?.pfpUrl ||
-                  !!userInformation[index].userInformation?.address ||
-                  newVoteCast ? (
+                  {councilPeriod === '2' &&
+                  (userInformation[index].userInformation?.pfpUrl ||
+                    !!userInformation[index].userInformation?.address ||
+                    newVoteCast) ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
@@ -122,15 +118,18 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                       newVoteCast={newVoteCast}
                     />
                   ) : (
-                    <Box
-                      borderRadius="50%"
-                      w="7"
-                      h="7"
-                      borderWidth="1px"
-                      bg="navy.700"
-                      borderStyle="dashed"
-                      borderColor="gray.500"
-                    />
+                    councilPeriod === '2' && (
+                      <Box
+                        data-cy="council-tab-vote-circle"
+                        borderRadius="50%"
+                        w="7"
+                        h="7"
+                        borderWidth="1px"
+                        bg="navy.700"
+                        borderStyle="dashed"
+                        borderColor="gray.500"
+                      />
+                    )
                   )}
                 </Flex>
               );

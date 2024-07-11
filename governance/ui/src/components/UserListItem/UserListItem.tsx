@@ -1,17 +1,18 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
-import { shortAddress } from '../../utils/address';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGetUserDetailsQuery } from '../../queries';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
-import { useWallet, useNetwork } from '../../queries/useWallet';
+import { useWallet } from '../../queries/useWallet';
 import { Badge } from '../Badge';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function UserListItem({
   address,
   activeCouncil,
+  ...props
 }: {
   address: string;
   activeCouncil: CouncilSlugs;
@@ -22,10 +23,7 @@ export default function UserListItem({
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: nominationInformation } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-
-  const { network } = useNetwork();
   const { activeWallet } = useWallet();
-
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
 
   return (
@@ -43,6 +41,7 @@ export default function UserListItem({
       borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
       rounded="base"
+      {...props}
     >
       <Flex alignItems="center">
         <ProfilePicture
@@ -53,7 +52,7 @@ export default function UserListItem({
           mr="0"
         />
         <Text fontWeight="bold" fontSize="14px" ml="3">
-          {user?.username ? user.username : shortAddress(user?.address)}
+          {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
       </Flex>
       {nominationInformation?.isNominated && (
@@ -77,26 +76,47 @@ export default function UserListItem({
             }
           }}
         >
-          {nominationInformation?.isNominated &&
-          isOwn &&
-          // TODO @dev remove once live
-          (network?.id === 11155111 || network?.id === 10) ? (
+          {nominationInformation?.isNominated && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="black">Nominate Self</Text>
           )}
         </Button>
-      ) : (
+      ) : councilPeriod === '2' ? (
         <Button
+          ml="auto"
           size="xs"
           variant="outline"
           colorScheme="gray"
-          onClick={() => {
+          data-cy="nominate-self-button-user-profile-details-voting-period"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (nominationInformation?.isNominated) {
+              navigate(`/councils/${activeCouncil}?view=${address}`);
+            } else {
+              navigate({
+                pathname: `/councils/${activeCouncil}`,
+                search: 'nominate=true',
+              });
+            }
+          }}
+          color="white"
+        >
+          {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
+        </Button>
+      ) : (
+        <Button
+          ml="auto"
+          size="xs"
+          variant="outline"
+          colorScheme="gray"
+          onClick={(e) => {
+            e.stopPropagation();
             navigate(`/councils/${activeCouncil}?view=${address}`);
           }}
           color="white"
         >
-          View
+          {nominationInformation?.isNominated ? 'View' : 'NominateSelf'}
         </Button>
       )}
     </Flex>
