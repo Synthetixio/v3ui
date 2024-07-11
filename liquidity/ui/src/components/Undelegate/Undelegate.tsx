@@ -61,13 +61,8 @@ export const UndelegateUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="0.5">
-        Remove {displaySymbol}
-      </Text>
-      <Text fontSize="sm" color="gray.400" mb="4">
-        Removing collateral from this position will transfer it to the account’s Available
-        Collateral balance for withdrawal. Collateral may only be removed if the resulting C-Ratio
-        is above the Issuance C-Ratio.
+      <Text fontSize="md" fontWeight="700" mb="2">
+        Remove Collateral
       </Text>
 
       <BorderBox flexDirection="column" py={2} px={3} mb="4">
@@ -118,28 +113,27 @@ export const UndelegateUi: FC<{
             </Flex>
           </Alert>
         </Collapse>
-
-        <Collapse in={!isValidLeftover} animateOpacity>
-          <Alert mt={2} status="info">
-            <AlertIcon />
-            <Flex direction="column">
-              <AlertTitle>
-                The minimal delegated amount is{' '}
-                <Amount value={minDelegation} suffix={` ${symbol}`} />
-              </AlertTitle>
-              <AlertDescription>
-                You can close your position by removing all the collateral.
-              </AlertDescription>
-            </Flex>
-          </Alert>
-        </Collapse>
       </BorderBox>
+      <Collapse in={!isValidLeftover} animateOpacity>
+        <Alert mt={2} mb={4} status="info">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>
+              The minimal delegated amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
+            </AlertTitle>
+            <AlertDescription>
+              You can close your position by removing all the collateral.
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      </Collapse>
+
       <Button
         data-testid="undelegate submit"
         type="submit"
-        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
+        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true || collateralChange.gte(0)}
       >
-        Remove {displaySymbol}
+        {collateralChange.gte(0) ? 'Enter Amount' : 'Remove Collateral'}
       </Button>
     </Flex>
   );
@@ -180,11 +174,12 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
 
     const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
 
-    if (collateralValue < minCollateralRequired)
+    if (collateralValue.lt(minCollateralRequired))
       // If you're below issuance ratio, you can't withdraw anything
       return wei(0);
 
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
+
     return Wei.min(collateralAmount, maxWithdrawable);
   }
   const max = maxUndelegate();

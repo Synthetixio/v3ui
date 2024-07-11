@@ -1,14 +1,4 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Button, Divider, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { parseUnits } from '@snx-v3/format';
@@ -33,6 +23,8 @@ import { useMachine } from '@xstate/react';
 import { useCallback, useContext, useEffect } from 'react';
 import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -44,67 +36,92 @@ export const RepayModalUi: React.FC<{
 }> = ({ onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
   const isProcessing = state.matches(State.approve) || state.matches(State.repay);
   const { infiniteApproval, requireApproval, error } = state.context;
+  const { data: systemToken } = useSystemToken();
 
-  return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="repay modal">
-        <ModalHeader>Complete this action</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Multistep
-            step={1}
-            title="Approve sUSD transfer"
-            status={{
-              failed: error?.step === State.approve,
-              success: !requireApproval || state.matches(State.success),
-              loading: state.matches(State.approve) && !error,
-            }}
-            checkboxLabel="Approve unlimited sUSD transfers to Synthetix."
-            checkboxProps={{
-              isChecked: infiniteApproval,
-              onChange: (e) => setInfiniteApproval(e.target.checked),
-            }}
-          />
-          <Multistep
-            step={2}
-            title="Repay"
-            subtitle={
-              <Text>
-                Repay <Amount value={debtChange.abs()} suffix={` sUSD`} />
-              </Text>
+  if (isOpen) {
+    if (state.matches(State.success)) {
+      return (
+        <LiquidityPositionUpdated
+          onClose={onSubmit}
+          title="Debt successfully Updated"
+          subline={
+            <>
+              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
+              Documentation.
+            </>
+          }
+          alertText={
+            <>
+              <b>Debt</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
+
+    return (
+      <div>
+        <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
+          Manage Debt
+        </Text>
+        <Divider my={4} />
+        <Multistep
+          step={1}
+          title={`Approve ${systemToken?.symbol} transfer`}
+          status={{
+            failed: error?.step === State.approve,
+            success: !requireApproval || state.matches(State.success),
+            loading: state.matches(State.approve) && !error,
+          }}
+          checkboxLabel={
+            requireApproval
+              ? `Approve unlimited ${systemToken?.symbol} transfers to Synthetix.`
+              : undefined
+          }
+          checkboxProps={{
+            isChecked: infiniteApproval,
+            onChange: (e) => setInfiniteApproval(e.target.checked),
+          }}
+        />
+        <Multistep
+          step={2}
+          title="Repay"
+          subtitle={
+            <Text>
+              Repay <Amount value={debtChange.abs()} suffix={` ${systemToken?.symbol}`} />
+            </Text>
+          }
+          status={{
+            failed: error?.step === State.repay,
+            success: state.matches(State.success),
+            loading: state.matches(State.repay) && !error,
+          }}
+        />
+
+        <Button
+          isDisabled={isProcessing}
+          onClick={onSubmit}
+          width="100%"
+          mt="4"
+          data-testid="repay confirm button"
+        >
+          {(() => {
+            switch (true) {
+              case Boolean(error):
+                return 'Retry';
+              case isProcessing:
+                return 'Processing...';
+              case state.matches(State.success):
+                return 'Continue';
+              default:
+                return 'Execute Transaction';
             }
-            status={{
-              failed: error?.step === State.repay,
-              success: state.matches(State.success),
-              loading: state.matches(State.repay) && !error,
-            }}
-          />
-
-          <Button
-            isDisabled={isProcessing}
-            onClick={onSubmit}
-            width="100%"
-            my="4"
-            data-testid="repay confirm button"
-          >
-            {(() => {
-              switch (true) {
-                case Boolean(error):
-                  return 'Retry';
-                case isProcessing:
-                  return 'Processing...';
-                case state.matches(State.success):
-                  return 'Done';
-                default:
-                  return 'Start';
-              }
-            })()}
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
+          })()}
+        </Button>
+      </div>
+    );
+  }
 };
 
 export const RepayModal: React.FC<{
@@ -168,7 +185,7 @@ export const RepayModal: React.FC<{
       [ServiceNames.approveSUSD]: async () => {
         try {
           toast({
-            title: 'Approve sUSD for transfer',
+            title: `Approve ${systemToken?.symbol} for transfer`,
             description: 'The next transaction will repay your debt.',
             status: 'info',
           });

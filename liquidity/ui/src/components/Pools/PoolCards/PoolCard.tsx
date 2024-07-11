@@ -11,7 +11,6 @@ import {
 } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useMemo } from 'react';
 import { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
 import { TokenIcon } from '../../TokenIcon';
@@ -27,7 +26,6 @@ export interface PoolCardProps {
     id: string;
   };
   network: Network;
-  collaterals: string[];
   collateralTypes?: CollateralTypeWithDeposited[];
   collateralPrices?: {
     symbol: string;
@@ -43,7 +41,6 @@ export interface PoolCardProps {
 export const PoolCard = ({
   pool,
   network,
-  collaterals,
   apr,
   collateralTypes,
   collateralPrices,
@@ -76,28 +73,6 @@ export const PoolCard = ({
 
     return collateralType;
   });
-
-  const isCollateralFiltered = useMemo(
-    () =>
-      collateralTypes?.some((collateralType) =>
-        collaterals.length
-          ? !!collaterals.find((collateral) => {
-              if (
-                isBaseAndromeda(network.id, network.preset) &&
-                collateralType.symbol.toUpperCase() === 'SUSDC'
-              ) {
-                return collateral.toUpperCase() === 'USDC';
-              }
-              return collateral.toUpperCase() === collateralType.symbol.toUpperCase();
-            })
-          : true
-      ),
-    [collateralTypes, collaterals, network.id, network.preset]
-  );
-
-  if (!isCollateralFiltered) {
-    return null;
-  }
 
   return (
     <Fade in>
