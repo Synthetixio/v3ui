@@ -32,10 +32,9 @@ export async function fetchApr(networkId?: number) {
     const data = await response.json();
 
     // Arbitrum has multiple collateral types
-    const highestAprCollateral =
-      networkId === BASE_ANDROMEDA.id
-        ? data
-        : data?.sort((a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d)[0];
+    const highestAprCollateral = Array.isArray(data)
+      ? data?.sort((a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d)[0]
+      : data;
 
     return {
       combinedApr: highestAprCollateral.apr28d * 100,

@@ -252,7 +252,7 @@ export const ManageStatsUi: FC<{
                   lineHeight="24px"
                 >
                   {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
-                    ? 'N/A'
+                    ? 'Infinite'
                     : `Minimum ${currency(collateralType.issuanceRatioD18, {
                         style: 'percent',
                         minimumFractionDigits: 2,
