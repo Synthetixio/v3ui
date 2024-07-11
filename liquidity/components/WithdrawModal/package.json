@@ -4,11 +4,11 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
-    "@snx-v3/WithdrawIncrease": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useContractErrorParser": "workspace:*",

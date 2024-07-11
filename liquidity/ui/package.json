@@ -23,7 +23,6 @@
     "@snx-v3/ManagePositionContext": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
     "@snx-v3/NumberInput": "workspace:*",
-    "@snx-v3/PercentBadges": "workspace:*",
     "@snx-v3/RepayModal": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",

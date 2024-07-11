@@ -3,11 +3,10 @@ import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { PercentBadges } from '@snx-v3/PercentBadges';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useEthBalance } from '@snx-v3/useEthBalance';
 import Wei, { wei } from '@synthetixio/wei';
-import { FC, useContext, useMemo, useState } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
@@ -46,8 +45,6 @@ export const DepositUi: FC<{
   minDelegation,
   currentCollateral,
 }) => {
-  const [activeBadge, setActiveBadge] = useState(0);
-
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable;
@@ -68,14 +65,16 @@ export const DepositUi: FC<{
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="2">
-        Deposit Collateral
+        Deposit & Lock Collateral
       </Text>
       <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
-        <Flex>
-          <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-            <TokenIcon symbol={symbol} />
-            {displaySymbol}
-          </Text>
+        <Flex alignItems="center">
+          <BorderBox display="flex" p={3} alignItems="center">
+            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+              <TokenIcon symbol={symbol} />
+              {displaySymbol}
+            </Text>
+          </BorderBox>
           <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
             <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
               <NumberInput
@@ -85,7 +84,6 @@ export const DepositUi: FC<{
                 }}
                 value={collateralChange}
                 onChange={(value) => {
-                  setActiveBadge(0);
                   setCollateralChange(value);
                 }}
                 max={maxAmount}
@@ -141,22 +139,6 @@ export const DepositUi: FC<{
             </Flex>
           </Flex>
         </Flex>
-        <PercentBadges
-          disabled={maxAmount ? maxAmount.eq(0) : false}
-          onBadgePress={(badgeNum) => {
-            if (!maxAmount) {
-              return;
-            }
-            if (activeBadge === badgeNum) {
-              setCollateralChange(wei(0));
-              setActiveBadge(0);
-              return;
-            }
-            setActiveBadge(badgeNum);
-            setCollateralChange(maxAmount.mul(badgeNum));
-          }}
-          activeBadge={activeBadge}
-        />
       </BorderBox>
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
@@ -185,7 +167,7 @@ export const DepositUi: FC<{
           collateralChange.add(currentCollateral).lt(minDelegation)
         }
       >
-        {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit Collateral'}
+        {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit & Lock Collateral'}
       </Button>
     </Flex>
   );

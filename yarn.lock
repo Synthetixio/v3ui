@@ -5403,7 +5403,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/PercentBadges@workspace:*, @snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges":
+"@snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges":
   version: 0.0.0-use.local
   resolution: "@snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges"
   dependencies:
@@ -5543,11 +5543,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/WithdrawIncrease": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
@@ -5778,7 +5778,6 @@ __metadata:
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
-    "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"

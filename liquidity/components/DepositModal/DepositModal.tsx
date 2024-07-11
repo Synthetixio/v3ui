@@ -36,6 +36,7 @@ export const DepositModalUi: FC<{
   onSubmit: () => void;
   availableCollateral: Wei;
   poolName: string;
+  title?: string;
 }> = ({
   collateralChange,
   isOpen,
@@ -46,6 +47,7 @@ export const DepositModalUi: FC<{
   state,
   availableCollateral,
   poolName,
+  title = 'Manage Collateral',
 }) => {
   const wrapAmount = state.context.wrapAmount;
   const infiniteApproval = state.context.infiniteApproval;
@@ -87,7 +89,7 @@ export const DepositModalUi: FC<{
       <div>
         <Text color="gray.50" fontSize="20px" fontWeight={700}>
           <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
-          Manage Collateral
+          {title}
         </Text>
         <Divider my={4} />
         {isWETH ? (
@@ -225,6 +227,7 @@ export type DepositModalProps = FC<{
   availableCollateral: Wei;
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
 }>;
 
 export const DepositModal: DepositModalProps = ({
@@ -233,6 +236,7 @@ export const DepositModal: DepositModalProps = ({
   collateralChange,
   currentCollateral,
   availableCollateral,
+  title,
 }) => {
   const navigate = useNavigate();
   const { collateralSymbol, poolId, accountId } = useParams();
@@ -480,6 +484,7 @@ export const DepositModal: DepositModalProps = ({
       onSubmit={onSubmit}
       poolName={pool?.name || ''}
       availableCollateral={availableCollateral || wei(0)}
+      title={title}
     />
   );
 };
