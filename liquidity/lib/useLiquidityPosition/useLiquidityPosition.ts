@@ -67,6 +67,7 @@ export type LiquidityPosition = {
   accountCollateral: AccountCollateralType;
   usdCollateral: AccountCollateralType;
   tokenAddress: string;
+  accountId: string;
 };
 
 export const useLiquidityPosition = ({
@@ -186,6 +187,7 @@ export const useLiquidityPosition = ({
             tokenAddress,
             accountCollateral,
             usdCollateral,
+            accountId,
           };
         },
         `useLiquidityPosition`

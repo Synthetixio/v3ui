@@ -51,7 +51,7 @@ export function Amount({
     >
       <span data-testid={testid}>
         {prefix}
-        {isMaxUint ? 'N/A' : formattedValue}
+        {isMaxUint ? 'Infinite' : formattedValue}
         {!isMaxUint && suffix}
       </span>
     </Tooltip>

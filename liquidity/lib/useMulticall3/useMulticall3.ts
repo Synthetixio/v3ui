@@ -6,6 +6,7 @@ import {
   useProvider,
   useProviderForChain,
   useSigner,
+  useWallet,
 } from '@snx-v3/useBlockchain';
 import { importMulticall3 } from '@snx-v3/contracts';
 
@@ -16,11 +17,17 @@ export function useMulticall3(customNetwork?: Network) {
   const signer = useSigner();
   const signerOrProvider = signer || provider || providerForChain;
   const withSigner = Boolean(signer);
+  const { activeWallet } = useWallet();
 
   const targetNetwork = customNetwork || network;
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'Multicall3', { withSigner }],
+    queryKey: [
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      'Multicall3',
+      { withSigner },
+      activeWallet?.address,
+    ],
     queryFn: async function () {
       if (providerForChain && customNetwork) {
         const { address, abi } = await importMulticall3(customNetwork.id, customNetwork.preset);

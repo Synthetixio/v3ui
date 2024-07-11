@@ -1,5 +1,5 @@
 import { useReducer, useMemo } from 'react';
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Image, Text } from '@chakra-ui/react';
 import { ChainFilter, CollateralFilter, PoolCard } from './';
 import { TorosPoolCard } from './PoolCards/TorosPoolCard';
 import { usePoolsList } from '@snx-v3/usePoolsList';
@@ -7,6 +7,7 @@ import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -50,6 +51,62 @@ export const PoolsList = () => {
     isBaseCollateralLoading ||
     isArbCollateralLoading;
 
+  const filteredPools = useMemo(() => {
+    return (
+      data?.synthetixPools
+        .map(({ network, poolInfo, apr }) => {
+          const collateralDeposited = poolInfo.map(({ collateral_type }) => ({
+            collateralDeposited: collateral_type.total_amount_deposited,
+            tokenAddress: collateral_type.id,
+          }));
+
+          const collateralTypes = (
+            network.id === ARBITRUM.id ? ArbitrumCollateralTypes : BaseCollateralTypes
+          )?.map((item) => ({
+            ...item,
+            collateralDeposited:
+              collateralDeposited.find(
+                ({ tokenAddress }) => tokenAddress.toLowerCase() === item.tokenAddress.toLowerCase()
+              )?.collateralDeposited || '0',
+          }));
+
+          return {
+            network,
+            poolInfo,
+            apr,
+            collateralDeposited,
+            collateralTypes,
+          };
+        })
+        .filter((pool) => {
+          const { network, collateralTypes } = pool;
+          if (chain.length > 0 && !chain.includes(network.id)) {
+            return false;
+          }
+
+          const isCollateralFiltered = collateralTypes?.some((collateralType) =>
+            collateral.length
+              ? !!collateral.find((collateral) => {
+                  if (
+                    isBaseAndromeda(network.id, network.preset) &&
+                    collateralType.symbol.toUpperCase() === 'SUSDC'
+                  ) {
+                    return collateral.toUpperCase() === 'USDC';
+                  }
+                  return collateral.toUpperCase() === collateralType.symbol.toUpperCase();
+                })
+              : true
+          );
+
+          if (!isCollateralFiltered) {
+            return false;
+          }
+
+          return true;
+        }) || []
+    );
+  }, [ArbitrumCollateralTypes, BaseCollateralTypes, chain, collateral, data?.synthetixPools]);
+
   return (
     <Flex mt={6} flexDirection="column">
       <Heading fontWeight={700} fontSize={24}>
@@ -65,26 +122,8 @@ export const PoolsList = () => {
           <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} />
         )}
         {!isLoading &&
-          data?.synthetixPools.map(({ network, poolInfo, apr }) => {
+          filteredPools.map(({ network, poolInfo, apr, collateralTypes }) => {
             const { pool } = poolInfo[0];
-
-            const collateralDeposited = poolInfo.map(({ collateral_type }) => ({
-              collateralDeposited: collateral_type.total_amount_deposited,
-              tokenAddress: collateral_type.id,
-            }));
-
-            const collateralTypes = (
-              network.id === ARBITRUM.id ? ArbitrumCollateralTypes : BaseCollateralTypes
-            )?.map((item) => ({
-              ...item,
-              collateralDeposited:
-                collateralDeposited.find(
-                  ({ tokenAddress }) =>
-                    tokenAddress.toLowerCase() === item.tokenAddress.toLowerCase()
-                )?.collateralDeposited || '0',
-            }));
-
-            if (chain.length > 0 && !chain.includes(network.id)) return null;
 
             return (
               <PoolCard
@@ -94,10 +133,30 @@ export const PoolsList = () => {
                 apr={apr}
                 network={network}
                 pool={pool}
-                collaterals={collateral}
               />
             );
           })}
+
+        {!isLoading && !filteredPools.length && (
+          <Flex flexDir="column" alignItems="center">
+            <Image src="/ballon.png" w="241.52px" height="293.45px" mt={6} mb={12} />
+            <Text mb={2} color="gray.500">
+              No results found, select a different network or collateral
+            </Text>
+
+            <Text
+              onClick={() => {
+                dispatch({ type: 'RESET_CHAIN' });
+                dispatch({ type: 'RESET_COLLATERAL' });
+              }}
+              cursor="pointer"
+              fontWeight={700}
+              color="cyan.500"
+            >
+              Clear Filters
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

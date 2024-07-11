@@ -142,6 +142,7 @@ export const NoAccount: FC<{
                 refetch();
               }}
               isOpen={txnModalOpen === 'deposit'}
+              title="Open Liquidity Position"
             />
           ) : null}
         </BorderBox>

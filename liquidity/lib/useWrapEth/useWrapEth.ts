@@ -30,8 +30,9 @@ export const useWrapEth = () => {
   const exec = useCallback(
     async (amount: Wei) => {
       if (!ethBalance) return;
-      if (ethBalance.lt(amount)) return;
-
+      if (ethBalance.lt(amount)) {
+        throw new Error('Amount exceeds balance');
+      }
       await mutateAsync(amount);
       refetchETHBalance();
       refetchWETHBalance();

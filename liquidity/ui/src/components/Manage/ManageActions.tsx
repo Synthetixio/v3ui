@@ -14,6 +14,7 @@ import { calculateCRatio } from '@snx-v3/calculations';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
+import { Withdraw } from '../Withdraw/Withdraw';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
 const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
@@ -21,7 +22,7 @@ const ClaimModal = lazy(() => safeImport(() => import('@snx-v3/ClaimModal')));
 const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal')));
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
 
-const validActions = ['borrow', 'deposit', 'repay', 'claim', 'undelegate'] as const;
+const validActions = ['borrow', 'deposit', 'repay', 'claim', 'undelegate', 'withdraw'] as const;
 const ManageActionSchema = z.enum(validActions);
 type ManageAction = z.infer<typeof ManageActionSchema>;
 
@@ -55,7 +56,7 @@ const ManageActionUi: FC<{
       <Tabs isFitted defaultIndex={tab === 'collateral' ? 0 : 1}>
         <TabList>
           <Tab
-            color="white"
+            color={tab === 'collateral' ? 'white' : 'gray.500'}
             data-cy="tab-button-collateral"
             fontWeight={700}
             onClick={() => {
@@ -65,7 +66,7 @@ const ManageActionUi: FC<{
             Manage Collateral
           </Tab>
           <Tab
-            color="white"
+            color={tab === 'debt' ? 'white' : 'gray.500'}
             fontWeight={700}
             data-cy="tab-button-debt"
             onClick={() => {
@@ -147,6 +148,7 @@ const ManageActionUi: FC<{
       <Flex direction="column" mt={2}>
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'withdraw' ? <Withdraw liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'undelegate' ? (
