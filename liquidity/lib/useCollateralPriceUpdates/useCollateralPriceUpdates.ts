@@ -200,6 +200,10 @@ export const useCollateralPriceUpdates = () => {
 
         const pythFeedIds = (await getPythFeedIds(network)) as string[];
 
+        if (pythFeedIds.length === 0) {
+          return null;
+        }
+
         const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
 
         const txs = [

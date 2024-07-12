@@ -6181,10 +6181,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBorrow@workspace:liquidity/lib/useBorrow"
   dependencies:
-    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"

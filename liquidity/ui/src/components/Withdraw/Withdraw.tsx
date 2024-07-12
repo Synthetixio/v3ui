@@ -68,7 +68,7 @@ const WithdrawUi: FC<{
             </Text>
           </Flex>
         </Flex>
-        <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
+        <Flex flexGrow={1}>
           <NumberInput
             InputProps={{
               isRequired: true,

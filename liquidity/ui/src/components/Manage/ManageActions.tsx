@@ -47,10 +47,7 @@ const ManageActionUi: FC<{
 
   const [tab, setTab] = useState('collateral');
 
-  const debtActions = DEBTACTIONS.filter((action) => {
-    if (action.title === 'Borrow' && isBase) return false;
-    return true;
-  });
+  const debtActions = DEBTACTIONS(isBase);
 
   useEffect(() => {
     if (tab === 'collateral' && !COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
