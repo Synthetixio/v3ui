@@ -3,17 +3,17 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xD9fA68AD1Cc69EB1e72B043ABe313c0191a38cB1',
+  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
