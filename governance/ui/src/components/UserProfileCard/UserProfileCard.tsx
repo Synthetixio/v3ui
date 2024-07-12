@@ -41,6 +41,7 @@ export function UserProfileCard({
       w="100%"
       maxW="451px"
       h="612px"
+      data-cy={`user-profile-card-${walletAddress}`}
       {...props}
     >
       {error && <Text>{error.message}</Text>}

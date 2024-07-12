@@ -1,12 +1,11 @@
 import { Box, Spinner, Text } from '@chakra-ui/react';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import Timer from '../Timer/Timer';
+import { Timer } from '../Timer';
 import { CouncilSlugs } from '../../utils/councils';
 
 export default function PeriodCountdown({ council }: { council: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(council);
-
   const { data: schedule, isLoading } = useGetEpochSchedule(council);
 
   return councilPeriod !== '3' ? (
@@ -20,7 +19,7 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
       maxH="50px"
       maxW="fit-content"
     >
-      <Text fontSize="12px" lineHeight="short" data-testid="period-countdown">
+      <Text fontSize="12px" lineHeight="short" data-cy="period-countdown">
         {councilPeriod === '0'
           ? 'Next Elections:'
           : councilPeriod === '1'
@@ -30,14 +29,12 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
       {isLoading ? (
         <Spinner colorScheme="cyan" />
       ) : councilPeriod === '0' && schedule ? (
-        <Timer expiryTimestamp={schedule.nominationPeriodStartDate * 1000} />
+        <Timer expiryTimestamp={schedule.nominationPeriodStartDate} />
       ) : (
-        (schedule?.votingPeriodStartDate || schedule?.votingPeriodStartDate) && (
+        schedule?.votingPeriodStartDate && (
           <Timer
             expiryTimestamp={
-              councilPeriod === '1'
-                ? schedule.votingPeriodStartDate * 1000
-                : schedule.endDate * 1000
+              councilPeriod === '1' ? schedule.votingPeriodStartDate : schedule.endDate
             }
           />
         )

@@ -1,17 +1,21 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { Contract, utils } from 'ethers';
+import { Wallet } from 'ethers';
 import { useSigner } from '../queries/useWallet';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { motherShipProvider } from '../utils/providers';
 
 export default function Admin() {
   const signer = useSigner();
+  const wallet = new Wallet(
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
+    motherShipProvider
+  );
 
   return (
     <Flex flexDir="column" gap="5">
       {[
         getCouncilContract('spartan'),
         getCouncilContract('ambassador'),
-        getCouncilContract('grants'),
         getCouncilContract('treasury'),
       ].map((proxy, index) => {
         return (
@@ -63,6 +67,22 @@ export default function Admin() {
                           block.timestamp + 20000
                         );
                     });
+                  } else {
+                    try {
+                      wallet.provider.getBlock('latest').then((block) => {
+                        proxy
+                          .connect(wallet)
+                          .Epoch_setEpochDates(
+                            0,
+                            block.timestamp - 10,
+                            block.timestamp,
+                            block.timestamp + 10000,
+                            block.timestamp + 20000
+                          );
+                      });
+                    } catch (error) {
+                      console.error(error);
+                    }
                   }
                 }}
               >
@@ -85,6 +105,22 @@ export default function Admin() {
                           block.timestamp + 10000
                         );
                     });
+                  } else {
+                    try {
+                      wallet.provider.getBlock('latest').then((block) => {
+                        proxy
+                          .connect(wallet)
+                          .Epoch_setEpochDates(
+                            0,
+                            block.timestamp - 200,
+                            block.timestamp - 100,
+                            block.timestamp,
+                            block.timestamp + 10000
+                          );
+                      });
+                    } catch (error) {
+                      console.error(error);
+                    }
                   }
                 }}
               >
@@ -124,28 +160,6 @@ export default function Admin() {
                 }}
               >
                 LFG (only in Administration)
-              </Button>
-            </Flex>
-
-            <Flex alignItems="center" gap={2}>
-              <Text>Set Voting Power to current connected user</Text>
-              <Button
-                onClick={async () => {
-                  if (signer) {
-                    const address = await signer.getAddress();
-                    const electionId = await proxy.connect(signer).getEpochIndex();
-                    const snapshotId = await proxy
-                      .connect(signer)
-                      .getVotePowerSnapshotId(SnapshotRecordContractAddress, electionId);
-                    await new Contract(SnapshotRecordContractAddress, [
-                      'function setBalanceOfOnPeriod(address user, uint balance, uint periodId) external',
-                    ])
-                      .connect(signer)
-                      .setBalanceOfOnPeriod(address, utils.parseEther('100'), snapshotId);
-                  }
-                }}
-              >
-                set voting power
               </Button>
             </Flex>
 

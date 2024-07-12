@@ -1,3 +1,7 @@
 :root {
   --onboard-modal-z-index: 1000;
 }
+
+.blockies-rounded {
+  border-radius: 50%;
+}

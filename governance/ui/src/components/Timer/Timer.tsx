@@ -1,14 +1,16 @@
 import { Text } from '@chakra-ui/react';
-import { useTimer } from 'react-timer-hook';
+import useCountdown from '../../hooks/useCountdown';
 
-export default function Timer({ expiryTimestamp }: { expiryTimestamp: number }) {
-  const { minutes, hours, days } = useTimer({
-    expiryTimestamp: new Date(expiryTimestamp),
-    autoStart: true,
-  });
-
+export function Timer({ expiryTimestamp }: { expiryTimestamp: number }) {
+  const { days, hours, minutes } = useCountdown(expiryTimestamp);
   return (
-    <Text fontSize="12px" fontWeight="bold" textAlign="center" lineHeight="short">
+    <Text
+      fontSize="12px"
+      fontWeight="bold"
+      textAlign="center"
+      lineHeight="short"
+      data-cy="countdown-timer"
+    >
       {days}D {hours}H {minutes}M
     </Text>
   );
