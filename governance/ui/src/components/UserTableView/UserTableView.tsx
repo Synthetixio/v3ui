@@ -39,7 +39,15 @@ export default function UserTableView({
       {(councilPeriod === '2' || councilPeriod === '0') && (
         <Th color="white">{place < 10 ? `#${place + 1}` : '-'}</Th>
       )}
-      <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
+      <Th
+        color="white"
+        display="flex"
+        alignItems="center"
+        gap="2"
+        textTransform="unset"
+        overflow="scroll"
+        maxW="200px"
+      >
         <ProfilePicture
           imageSrc={user?.pfpUrl}
           address={user?.address}
