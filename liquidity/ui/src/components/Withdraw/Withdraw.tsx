@@ -2,41 +2,28 @@ import { Alert, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo } from 'react';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ZEROWEI } from '../../utils/constants';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useWithdraw } from '@snx-v3/useWithdraw';
-import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { useTimer } from 'react-timer-hook';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { TokenIcon } from '../TokenIcon';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from 'react-router-dom';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 
 const WithdrawUi: FC<{
-  isLoading: boolean;
-  onSubmit: () => void;
   setAmount: (val: Wei) => void;
   amount: Wei;
   maWWithdrawable: Wei;
   unlockDate?: Date | null;
   displaySymbol: string;
   symbol: string;
-}> = ({
-  displaySymbol,
-  symbol,
-  isLoading,
-  onSubmit,
-  unlockDate,
-  setAmount,
-  amount,
-  maWWithdrawable,
-}) => {
+}> = ({ displaySymbol, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
   const { minutes, hours, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
@@ -95,7 +82,7 @@ const WithdrawUi: FC<{
       </BorderBox>
 
       <Collapse in={isRunning && maWWithdrawable.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="red" mb="4">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}:{minutes}. Any account activity will
@@ -105,11 +92,6 @@ const WithdrawUi: FC<{
       </Collapse>
 
       <Button
-        onClick={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        isLoading={isLoading}
         isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maWWithdrawable)}
         data-testid="claim submit"
         type="submit"
@@ -121,45 +103,16 @@ const WithdrawUi: FC<{
 };
 
 export const Withdraw = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
+  const { setWithdrawAmount, withdrawAmount } = useContext(ManagePositionContext);
   const accountId = liquidityPosition?.accountId;
-  const [amount, setAmount] = useState<Wei>(ZEROWEI);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
-  const queryClient = useQueryClient();
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const { data: accountCollaterals } = useAccountCollateral({
     accountId,
   });
-
-  const { mutation: withdrawMain, isLoading } = useWithdraw({
-    amount,
-    accountId,
-    collateralTypeAddress: liquidityPosition?.accountCollateral.tokenAddress,
-  });
-
-  const { mutation: withdrawAndromeda, isLoading: isLoadingAndromeda } = useWithdrawBaseAndromeda({
-    accountId,
-    sUSDCCollateral:
-      accountCollaterals && accountCollaterals[0]
-        ? accountCollaterals[0].availableCollateral
-        : ZEROWEI,
-    snxUSDCollateral:
-      accountCollaterals && accountCollaterals[1]
-        ? accountCollaterals[1].availableCollateral
-        : ZEROWEI,
-    amountToWithdraw: amount,
-  });
-
-  const handleSubmit = useCallback(async () => {
-    if (!isBaseAndromeda(network?.id, network?.preset)) {
-      await withdrawMain.mutateAsync();
-    } else {
-      await withdrawAndromeda.mutateAsync();
-    }
-    queryClient.clear();
-  }, [network?.id, network?.preset, queryClient, withdrawAndromeda, withdrawMain]);
 
   const maWWithdrawable = useMemo(() => {
     if (isBase) {
@@ -178,14 +131,13 @@ export const Withdraw = ({ liquidityPosition }: { liquidityPosition?: LiquidityP
   if (!collateralType) {
     return null;
   }
+
   return (
     <WithdrawUi
       displaySymbol={collateralType.displaySymbol}
       symbol={collateralType.symbol}
-      setAmount={setAmount}
-      amount={amount}
-      onSubmit={handleSubmit}
-      isLoading={isBase ? isLoadingAndromeda : isLoading}
+      setAmount={setWithdrawAmount}
+      amount={withdrawAmount}
       maWWithdrawable={maWWithdrawable}
       unlockDate={!isLoadingDate ? accountCollateralUnlockDate : null}
     />

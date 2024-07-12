@@ -1,15 +1,9 @@
 import { Button, Divider, Text, useToast } from '@chakra-ui/react';
-import React, { FC, useCallback } from 'react';
-import { Amount } from '@snx-v3/Amount';
-import { useUnWrapEth } from '@snx-v3/useWrapEth';
+import React, { FC, useCallback, useContext, useState } from 'react';
 import { Multistep } from '@snx-v3/Multistep';
 import { Wei } from '@synthetixio/wei';
-import { useParams } from '@snx-v3/useParams';
-import { Events, ServiceNames, State, WithdrawMachine } from './WithdrawMachine';
-import { useMachine } from '@xstate/react';
 import { useWithdraw } from '@snx-v3/useWithdraw';
-import type { StateFrom } from 'xstate';
-import { AccountCollateralWithSymbol } from '@snx-v3/useAccountCollateral';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ContractError } from '@snx-v3/ContractError';
@@ -17,29 +11,41 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ZEROWEI } from '../../ui/src/utils/constants';
+import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useParams } from '@snx-v3/useParams';
+import { Amount } from '@snx-v3/Amount';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
   isOpen: boolean;
   onClose: () => void;
-  accountCollateral?: AccountCollateralWithSymbol;
-  state: StateFrom<typeof WithdrawMachine>;
-  error: { error: Error; step: string } | null;
+  symbol?: string;
+  state: {
+    step: number;
+    status: string;
+  };
   onSubmit: () => void;
-}> = ({ amount, isOpen, onClose, accountCollateral, onSubmit, state, error }) => {
-  const isProcessing = state.matches(State.withdraw) || state.matches(State.unwrap);
+}> = ({ amount, isOpen, onClose, onSubmit, state, symbol }) => {
+  const { data: collateralType } = useCollateralType(symbol);
+
   if (isOpen) {
-    if (state.matches(State.success)) {
+    if (state.step > 1) {
       return (
         <LiquidityPositionUpdated
           onClose={onSubmit}
-          title="Unlocked balance successfully withdrawn"
+          title="Collateral successfully Withdrawn"
           subline={
             <>
-              Your <b>Unlocked balance</b> has been withdrawn, read more about it in the Synthetix
-              V3 Documentation.
+              Your <b>Collateral</b> has been withdrawn, read more about it in the Synthetix V3
+              Documentation.
             </>
           }
+          alertText="Collateral successfully Withdrawn"
         />
       );
     }
@@ -57,47 +63,34 @@ export const WithdrawModalUi: FC<{
           title="Withdraw"
           subtitle={
             <Text as="div">
-              <Amount value={amount} suffix={` ${accountCollateral?.symbol}`} /> will be withdrawn
+              <Amount value={amount} />
+              {collateralType?.displaySymbol} will be withdrawn
             </Text>
           }
           status={{
-            failed: Boolean(error?.step === State.withdraw),
-            disabled: amount.eq(0),
-            success: state.matches(State.unwrap) || state.matches(State.success),
-            loading: state.matches(State.withdraw) && !error,
+            failed: state.step === 1 && state.status === 'error',
+            success: state.step > 1,
+            loading: state.step === 1 && state.status === 'pending',
           }}
         />
-        {accountCollateral?.symbol === 'WETH' ? (
-          <Multistep
-            step={2}
-            title={`Unwrap ${accountCollateral?.symbol}`}
-            subtitle="This will unwrap your WETH to ETH"
-            status={{
-              failed: Boolean(error?.step === State.unwrap),
-              disabled: accountCollateral?.symbol !== 'WETH',
-              success: state.matches(State.success),
-              loading: state.matches(State.unwrap),
-            }}
-          />
-        ) : null}
 
         <Button
-          isDisabled={isProcessing}
+          isDisabled={state.status === 'pending'}
           onClick={onSubmit}
           width="100%"
-          my="4"
+          mt="4"
           data-testid="withdraw confirm button"
         >
           {(() => {
             switch (true) {
-              case Boolean(error):
+              case state.status === 'error':
                 return 'Retry';
-              case isProcessing:
+              case state.status === 'pending':
                 return 'Processing...';
-              case state.matches(State.success):
+              case state.step > 1:
                 return 'Done';
               default:
-                return 'Start';
+                return 'Execute Transaction';
             }
           })()}
         </Button>
@@ -107,99 +100,116 @@ export const WithdrawModalUi: FC<{
 };
 
 export function WithdrawModal({
-  accountCollateral,
+  liquidityPosition,
   onClose,
   isOpen,
 }: {
-  accountCollateral: AccountCollateralWithSymbol;
+  liquidityPosition?: LiquidityPosition;
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const [txState, setTxState] = useState({
+    step: 1,
+    status: 'idle',
+  });
+  const { withdrawAmount } = useContext(ManagePositionContext);
   const params = useParams();
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { network } = useNetwork();
-
-  const { exec: unwrap } = useUnWrapEth();
-
-  const { exec: execWithdraw } = useWithdraw({
-    accountId: params.accountId,
-    collateralTypeAddress: accountCollateral?.tokenAddress,
-    amount: accountCollateral.availableCollateral,
-  });
-
   const queryClient = useQueryClient();
-
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
+  const accountId = liquidityPosition?.accountId;
 
-  const [state, send] = useMachine(WithdrawMachine, {
-    context: {
-      amount: accountCollateral?.availableCollateral,
-    },
-    services: {
-      [ServiceNames.withdraw]: async () => {
-        try {
-          await execWithdraw();
-          await queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
-          });
-        } catch (error: any) {
-          const contractError = errorParserCoreProxy(error);
-          if (contractError) {
-            console.error(new Error(contractError.name), contractError);
-          }
-          toast.closeAll();
-          toast({
-            title: 'Withdraw failed',
-            description: contractError ? (
-              <ContractError contractError={contractError} />
-            ) : (
-              'Please try again.'
-            ),
-            status: 'error',
-          });
-          throw Error('Withdraw failed', { cause: error });
-        }
-      },
-      [ServiceNames.unwrap]: async () => {
-        try {
-          toast({
-            title: 'Unwrap',
-            description: 'Unwrapping WETH to ETH.',
-            status: 'info',
-          });
+  const { data: accountCollaterals } = useAccountCollateral({
+    accountId,
+  });
 
-          await unwrap(state.context.amount);
-        } catch (e) {
-          toast.closeAll();
-          toast({ title: 'Unwrap failed', description: 'Please try again.', status: 'error' });
-          throw Error('Unwrap failed', { cause: e });
-        }
-      },
-    },
+  const { mutation: withdrawMain } = useWithdraw({
+    amount: withdrawAmount,
+    accountId,
+    collateralTypeAddress: liquidityPosition?.accountCollateral.tokenAddress,
+  });
+
+  const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
+    accountId,
+    sUSDCCollateral:
+      accountCollaterals && accountCollaterals[0]
+        ? accountCollaterals[0].availableCollateral
+        : ZEROWEI,
+    snxUSDCollateral:
+      accountCollaterals && accountCollaterals[1]
+        ? accountCollaterals[1].availableCollateral
+        : ZEROWEI,
+    amountToWithdraw: withdrawAmount,
   });
 
   const onSubmit = useCallback(async () => {
-    if (state.matches(State.success)) {
-      send(Events.RESET);
-      onClose();
-      return;
+    try {
+      if (txState.step === 1) {
+        setTxState({
+          step: 1,
+          status: 'pending',
+        });
+
+        if (!isBaseAndromeda(network?.id, network?.preset)) {
+          await withdrawMain.mutateAsync();
+        } else {
+          await withdrawAndromeda.mutateAsync();
+        }
+
+        setTxState({
+          step: 2,
+          status: 'success',
+        });
+
+        await queryClient.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
+        });
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      setTxState((state) => ({
+        ...state,
+        status: 'error',
+      }));
+
+      const contractError = errorParserCoreProxy(error);
+      if (contractError) {
+        console.error(new Error(contractError.name), contractError);
+      }
+      toast.closeAll();
+      toast({
+        title: 'Withdraw failed',
+        description: contractError ? (
+          <ContractError contractError={contractError} />
+        ) : (
+          'Please try again.'
+        ),
+        status: 'error',
+      });
+      throw Error('Withdraw failed', { cause: error });
     }
-    if (state.context.error) {
-      send(Events.RETRY);
-      return;
-    }
-    send(Events.RUN);
-  }, [onClose, send, state]);
+  }, [
+    errorParserCoreProxy,
+    network?.id,
+    network?.preset,
+    onClose,
+    queryClient,
+    toast,
+    txState.step,
+    withdrawAndromeda,
+    withdrawMain,
+  ]);
 
   return (
     <WithdrawModalUi
-      amount={state.context.amount}
+      amount={withdrawAmount}
       isOpen={isOpen}
       onClose={onClose}
-      accountCollateral={accountCollateral}
-      state={state}
-      error={state.context.error}
+      symbol={params.collateralSymbol}
+      state={txState}
       onSubmit={onSubmit}
     />
   );

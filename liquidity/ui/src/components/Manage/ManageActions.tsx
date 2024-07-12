@@ -21,6 +21,7 @@ const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
 const ClaimModal = lazy(() => safeImport(() => import('@snx-v3/ClaimModal')));
 const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal')));
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
+const WithdrawModal = lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
 
 const validActions = ['borrow', 'deposit', 'repay', 'claim', 'undelegate', 'withdraw'] as const;
 const ManageActionSchema = z.enum(validActions);
@@ -163,7 +164,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   const location = useLocation();
 
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
-  const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
+  const { debtChange, collateralChange, setCollateralChange, setDebtChange, setWithdrawAmount } =
     useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -298,6 +299,19 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'undelegate'}
+          />
+        ) : null}
+        {txnModalOpen === 'withdraw' ? (
+          <WithdrawModal
+            liquidityPosition={liquidityPosition}
+            onClose={() => {
+              setCollateralChange(wei(0));
+              setDebtChange(wei(0));
+              setWithdrawAmount(wei(0));
+              setTxnModalOpen(null);
+            }}
+            isOpen={txnModalOpen === 'withdraw'}
+            account
           />
         ) : null}
       </Suspense>
