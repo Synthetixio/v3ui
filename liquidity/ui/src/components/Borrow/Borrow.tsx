@@ -30,7 +30,7 @@ const BorrowUi: FC<{
         {isBase ? 'Claim' : 'Borrow'}
       </Text>
 
-      <BorderBox display="flex" py={2} px={3} mb="4">
+      <BorderBox display="flex" p={3} mb="6">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           {isBase ? <SUSDCIcon /> : <DollarCircle />}
           {isBase ? 'USDC' : systemToken?.symbol}
@@ -65,7 +65,7 @@ const BorrowUi: FC<{
       </BorderBox>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="orange" mb="4">
           <AlertIcon />
           <Text>
             As a security precaution, borrowed assets can only be withdrawn to your wallet after 24

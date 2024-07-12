@@ -83,7 +83,7 @@ export const InitialDepositUi: FC<{
             Deposit & Lock Collateral
           </Text>
 
-          <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
+          <BorderBox display="flex" flexDirection="column" p={3} mb="6">
             <Flex alignItems="center">
               <BorderBox display="flex" justifyContent="center" alignItems="center" p={3}>
                 <Text display="flex" gap={2} alignItems="center" fontWeight="600">

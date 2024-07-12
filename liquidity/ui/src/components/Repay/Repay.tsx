@@ -10,9 +10,9 @@ import { FC, useContext } from 'react';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { RepayAllDebt } from './';
-import { Tooltip } from '@snx-v3/Tooltip';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { TokenIcon } from '../TokenIcon';
+import { ZEROWEI } from '../../utils/constants';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -31,12 +31,6 @@ export const RepayUi: FC<{
   snxUSDBalance,
   availableUSDCollateral,
 }) => {
-  const totalUsdBalance =
-    snxUSDBalance && availableUSDCollateral ? snxUSDBalance.add(availableUSDCollateral) : undefined;
-  const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { data: systemToken } = useSystemToken();
-
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
@@ -66,57 +60,24 @@ export const RepayUi: FC<{
           </Flex>
         </Flex>
         <Flex fontSize="12px" gap="1">
-          <Flex
-            gap="1"
-            mr="3"
-            cursor="pointer"
-            onClick={() => {
-              if (!currentDebt) {
-                return;
-              }
-              setDebtChange(currentDebt.neg());
-            }}
-          >
+          <Flex gap="1" mr="3" cursor="pointer">
             <Text>Debt:</Text>
             <Text display="inline">
               $<Amount value={currentDebt} data-testid="current debt" />
             </Text>
-          </Flex>
-          <Flex
-            gap="1"
-            cursor="pointer"
-            onClick={() => {
-              if (!totalUsdBalance) {
-                return;
-              }
-              setDebtChange(totalUsdBalance.neg());
-            }}
-          >
-            <Tooltip
-              label={
-                <Flex direction="column" alignItems="flex-start">
-                  <Flex justifyContent="space-between" width="full" gap={1}>
-                    Wallet Balance:{' '}
-                    <Amount value={snxUSDBalance} suffix={` ${systemToken?.symbol}`} />
-                  </Flex>
-                  <Flex justifyContent="space-between" width="full" gap={1}>
-                    Collateral Balance:{' '}
-                    <Amount value={availableUSDCollateral} suffix={` ${systemToken?.symbol}`} />
-                  </Flex>
-                </Flex>
-              }
+            <Text
+              cursor="pointer"
+              onClick={() => {
+                if (!currentDebt) {
+                  return;
+                }
+                setDebtChange(currentDebt.neg());
+              }}
+              color="cyan.500"
+              fontWeight={700}
             >
-              <Flex gap={1}>
-                <Text>Balance:</Text>
-                <Text display="inline">
-                  <Amount
-                    value={totalUsdBalance}
-                    data-testid={`available ${systemToken?.symbol} balance`}
-                    suffix={` ${systemToken?.symbol}`}
-                  />
-                </Text>
-              </Flex>
-            </Tooltip>
+              &nbsp; Max
+            </Text>
           </Flex>
         </Flex>
       </BorderBox>
@@ -158,10 +119,7 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
       snxUSDBalance={flooredBalance}
       availableUSDCollateral={availableUSDCollateral}
       currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
-      max={Wei.max(
-        liquidityPosition?.debt || wei(0),
-        availableUSDCollateral?.add(balance || wei(0)) || wei(0)
-      )}
+      max={debtExists ? liquidityPosition?.debt : ZEROWEI}
     />
   );
 };

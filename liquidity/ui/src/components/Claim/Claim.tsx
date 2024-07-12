@@ -99,7 +99,7 @@ const ClaimUi: FC<{
       </Collapse>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="orange" mb="4">
           <AlertIcon />
           <Text>
             As a security precaution, claimed assets can only be withdrawn to your wallet after 24
