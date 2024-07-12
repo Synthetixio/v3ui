@@ -8,22 +8,23 @@ import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ZEROWEI } from '../../utils/constants';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useTimer } from 'react-timer-hook';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { TokenIcon } from '../TokenIcon';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from 'react-router-dom';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 
 const WithdrawUi: FC<{
   setAmount: (val: Wei) => void;
   amount: Wei;
   maWWithdrawable: Wei;
   unlockDate?: Date | null;
-  displaySymbol: string;
   symbol: string;
-}> = ({ displaySymbol, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
+  isDebtWithdrawal?: boolean;
+}> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
   const { minutes, hours, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
@@ -38,7 +39,7 @@ const WithdrawUi: FC<{
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Withdraw Collateral
+        Withdraw {!isDebtWithdrawal ? 'Collateral' : 'Debt'}
       </Text>
 
       <BorderBox display="flex" p={3} mb="6">
@@ -46,12 +47,12 @@ const WithdrawUi: FC<{
           <BorderBox display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} fontSize="16px" alignItems="center" fontWeight="600">
               <TokenIcon symbol={symbol} width={16} height={16} />
-              {displaySymbol}
+              {symbol}
             </Text>
           </BorderBox>
           <Flex fontSize="12px" gap="1">
             <Text>Unlocked:</Text>
-            <Amount value={maWWithdrawable} /> {displaySymbol}
+            <Amount value={maWWithdrawable} /> {symbol}
             <Text
               cursor="pointer"
               onClick={() => {
@@ -102,7 +103,13 @@ const WithdrawUi: FC<{
   );
 };
 
-export const Withdraw = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
+export const Withdraw = ({
+  liquidityPosition,
+  isDebtWithdrawal = false,
+}: {
+  liquidityPosition?: LiquidityPosition;
+  isDebtWithdrawal?: boolean;
+}) => {
   const { setWithdrawAmount, withdrawAmount } = useContext(ManagePositionContext);
   const accountId = liquidityPosition?.accountId;
   const params = useParams();
@@ -110,18 +117,28 @@ export const Withdraw = ({ liquidityPosition }: { liquidityPosition?: LiquidityP
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const { data: accountCollaterals } = useAccountCollateral({
+  const { data: systemToken } = useSystemToken();
+  const { data: systemTokenBalance } = useAccountSpecificCollateral(
     accountId,
-  });
+    systemToken?.address
+  );
 
   const maWWithdrawable = useMemo(() => {
     if (isBase) {
-      return ((accountCollaterals && accountCollaterals[0].availableCollateral) || ZEROWEI).add(
-        (accountCollaterals && accountCollaterals[1].availableCollateral) || ZEROWEI
+      return (liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI).add(
+        systemTokenBalance?.availableCollateral || ZEROWEI
       );
     }
+    if (isDebtWithdrawal) {
+      return systemTokenBalance?.availableCollateral || ZEROWEI;
+    }
     return liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI;
-  }, [accountCollaterals, isBase, liquidityPosition?.accountCollateral.availableCollateral]);
+  }, [
+    isBase,
+    isDebtWithdrawal,
+    liquidityPosition?.accountCollateral.availableCollateral,
+    systemTokenBalance?.availableCollateral,
+  ]);
 
   const { data: accountCollateralUnlockDate, isLoading: isLoadingDate } =
     useAccountCollateralUnlockDate({
@@ -134,8 +151,7 @@ export const Withdraw = ({ liquidityPosition }: { liquidityPosition?: LiquidityP
 
   return (
     <WithdrawUi
-      displaySymbol={collateralType.displaySymbol}
-      symbol={collateralType.symbol}
+      symbol={isDebtWithdrawal ? systemToken.symbol : collateralType.symbol}
       setAmount={setWithdrawAmount}
       amount={withdrawAmount}
       maWWithdrawable={maWWithdrawable}

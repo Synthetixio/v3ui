@@ -130,6 +130,7 @@ export function useAccountCollateral({
           return Object.assign(x, {
             symbol: systemToken.symbol,
             displaySymbol: systemToken.name,
+            decimals: systemToken.decimals,
           });
         }
         const collateralType = collateralTypes.find(

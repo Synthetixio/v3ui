@@ -69,7 +69,7 @@ const ClaimUi: FC<{
             <AlertIcon />
             <Text>
               Positive market performance has credited your position. Claim up to{' '}
-              {maxClaimble.toString()} without accruing debt.
+              <Amount value={maxClaimble} /> without accruing debt.
             </Text>
           </Alert>
         </Collapse>

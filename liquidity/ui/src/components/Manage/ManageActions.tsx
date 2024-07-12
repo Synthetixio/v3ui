@@ -23,7 +23,15 @@ const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal'))
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
 const WithdrawModal = lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
 
-const validActions = ['borrow', 'deposit', 'repay', 'claim', 'undelegate', 'withdraw'] as const;
+const validActions = [
+  'borrow',
+  'deposit',
+  'repay',
+  'claim',
+  'undelegate',
+  'withdraw',
+  'withdraw-debt',
+] as const;
 const ManageActionSchema = z.enum(validActions);
 type ManageAction = z.infer<typeof ManageActionSchema>;
 
@@ -146,6 +154,9 @@ const ManageActionUi: FC<{
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'withdraw' ? <Withdraw liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'withdraw-debt' ? (
+          <Withdraw liquidityPosition={liquidityPosition} isDebtWithdrawal />
+        ) : null}
         {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'undelegate' ? (
@@ -312,6 +323,21 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
             }}
             isOpen={txnModalOpen === 'withdraw'}
             account
+          />
+        ) : null}
+
+        {txnModalOpen === 'withdraw-debt' ? (
+          <WithdrawModal
+            liquidityPosition={liquidityPosition}
+            onClose={() => {
+              setCollateralChange(wei(0));
+              setDebtChange(wei(0));
+              setWithdrawAmount(wei(0));
+              setTxnModalOpen(null);
+            }}
+            isOpen={txnModalOpen === 'withdraw-debt'}
+            account
+            isDebtWithdrawal
           />
         ) : null}
       </Suspense>

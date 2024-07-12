@@ -3,7 +3,7 @@ import React, { FC, useCallback, useContext, useState } from 'react';
 import { Multistep } from '@snx-v3/Multistep';
 import { Wei } from '@synthetixio/wei';
 import { useWithdraw } from '@snx-v3/useWithdraw';
-import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { ContractError } from '@snx-v3/ContractError';
@@ -16,9 +16,10 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ZEROWEI } from '../../ui/src/utils/constants';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { Amount } from '@snx-v3/Amount';
+import { useSystemToken } from '@snx-v3/useSystemToken';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const WithdrawModalUi: FC<{
   amount: Wei;
@@ -30,22 +31,21 @@ export const WithdrawModalUi: FC<{
     status: string;
   };
   onSubmit: () => void;
-}> = ({ amount, isOpen, onClose, onSubmit, state, symbol }) => {
-  const { data: collateralType } = useCollateralType(symbol);
-
+  isDebtWithdrawal: boolean;
+}> = ({ isDebtWithdrawal, amount, isOpen, onClose, onSubmit, state, symbol }) => {
   if (isOpen) {
     if (state.step > 1) {
       return (
         <LiquidityPositionUpdated
           onClose={onSubmit}
-          title="Collateral successfully Withdrawn"
+          title={(isDebtWithdrawal ? 'Debt' : 'Collateral') + ' successfully Withdrawn'}
           subline={
             <>
-              Your <b>Collateral</b> has been withdrawn, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>{isDebtWithdrawal ? 'Debt' : 'Collateral'}</b> has been withdrawn, read more
+              about it in the Synthetix V3 Documentation.
             </>
           }
-          alertText="Collateral successfully Withdrawn"
+          alertText={(isDebtWithdrawal ? 'Debt' : 'Collateral') + ' successfully Withdrawn'}
         />
       );
     }
@@ -54,7 +54,7 @@ export const WithdrawModalUi: FC<{
       <div>
         <Text color="gray.50" fontSize="20px" fontWeight={700}>
           <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
-          Manage Collateral
+          Manage {isDebtWithdrawal ? 'Debt' : 'Collateral'}
         </Text>
         <Divider my={4} />
 
@@ -64,7 +64,7 @@ export const WithdrawModalUi: FC<{
           subtitle={
             <Text as="div">
               <Amount value={amount} />
-              {collateralType?.displaySymbol} will be withdrawn
+              {symbol} will be withdrawn
             </Text>
           }
           status={{
@@ -103,10 +103,12 @@ export function WithdrawModal({
   liquidityPosition,
   onClose,
   isOpen,
+  isDebtWithdrawal = false,
 }: {
   liquidityPosition?: LiquidityPosition;
   isOpen: boolean;
   onClose: () => void;
+  isDebtWithdrawal?: boolean;
 }) {
   const [txState, setTxState] = useState({
     step: 1,
@@ -114,6 +116,7 @@ export function WithdrawModal({
   });
   const { withdrawAmount } = useContext(ManagePositionContext);
   const params = useParams();
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { network } = useNetwork();
   const queryClient = useQueryClient();
@@ -121,26 +124,24 @@ export function WithdrawModal({
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const accountId = liquidityPosition?.accountId;
 
-  const { data: accountCollaterals } = useAccountCollateral({
+  const { data: systemToken } = useSystemToken();
+  const { data: systemTokenBalance } = useAccountSpecificCollateral(
     accountId,
-  });
+    systemToken?.address
+  );
 
   const { mutation: withdrawMain } = useWithdraw({
     amount: withdrawAmount,
     accountId,
-    collateralTypeAddress: liquidityPosition?.accountCollateral.tokenAddress,
+    collateralTypeAddress: isDebtWithdrawal
+      ? systemToken.address
+      : liquidityPosition?.accountCollateral.tokenAddress,
   });
 
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
     accountId,
-    sUSDCCollateral:
-      accountCollaterals && accountCollaterals[0]
-        ? accountCollaterals[0].availableCollateral
-        : ZEROWEI,
-    snxUSDCollateral:
-      accountCollaterals && accountCollaterals[1]
-        ? accountCollaterals[1].availableCollateral
-        : ZEROWEI,
+    sUSDCCollateral: liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI,
+    snxUSDCollateral: systemTokenBalance?.availableCollateral || ZEROWEI,
     amountToWithdraw: withdrawAmount,
   });
 
@@ -164,7 +165,14 @@ export function WithdrawModal({
         });
 
         await queryClient.invalidateQueries({
-          queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
+          queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition', { accountId }],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [
+            `${network?.id}-${network?.preset}`,
+            'AccountSpecificCollateral',
+            { accountId },
+          ],
         });
       } else {
         onClose();
@@ -192,6 +200,7 @@ export function WithdrawModal({
       throw Error('Withdraw failed', { cause: error });
     }
   }, [
+    accountId,
     errorParserCoreProxy,
     network?.id,
     network?.preset,
@@ -208,9 +217,10 @@ export function WithdrawModal({
       amount={withdrawAmount}
       isOpen={isOpen}
       onClose={onClose}
-      symbol={params.collateralSymbol}
+      symbol={isDebtWithdrawal ? systemToken.symbol : collateralType?.symbol}
       state={txState}
       onSubmit={onSubmit}
+      isDebtWithdrawal={isDebtWithdrawal}
     />
   );
 }
