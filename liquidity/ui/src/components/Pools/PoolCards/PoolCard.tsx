@@ -13,8 +13,9 @@ import {
   Th,
   Thead,
   Tooltip,
+  Link,
 } from '@chakra-ui/react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link as ReactRouterLink } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
 import {
   ARBITRUM,
@@ -104,13 +105,17 @@ export const PoolCard = ({
         rounded="base"
         bg="navy.700"
         p="6"
-        _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50' }}
-        onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
           <Flex>
             <Flex flexDir="column" gap={1} ml="12px">
-              <Heading fontSize="20px" fontWeight={700} color="white">
+              <Heading
+                fontSize="20px"
+                fontWeight={700}
+                color="white"
+                _hover={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
+              >
                 {pool?.name}
               </Heading>
               <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
@@ -161,6 +166,24 @@ export const PoolCard = ({
               </Text>
               <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
             </Flex>
+            <Link
+              px="16px"
+              py="8px"
+              fontSize="14px"
+              fontWeight={700}
+              lineHeight="20px"
+              variant="outline"
+              alignContent="center"
+              as={ReactRouterLink}
+              borderWidth="1px"
+              borderColor="gray.900"
+              _hover={{ textTransform: 'none', opacity: 0.9 }}
+              borderRadius="4px"
+              ml={3}
+              to={`/pools/${network.id}/${pool.id}`}
+            >
+              Details
+            </Link>
           </Flex>
         </Flex>
         <TableContainer mt={4}>
