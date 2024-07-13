@@ -46,19 +46,21 @@ const ClaimUi: FC<{
           <Flex fontSize="12px" gap="1">
             <Text>Max Claim:</Text>
             <Amount value={maxClaimble} />
-            <Text
-              cursor="pointer"
-              onClick={() => {
-                if (!maxClaimble) {
-                  return;
-                }
-                setDebtChange(maxClaimble);
-              }}
-              color="cyan.500"
-              fontWeight={700}
-            >
-              &nbsp; Max
-            </Text>
+            {maxClaimble?.gt(0) && (
+              <Text
+                cursor="pointer"
+                onClick={() => {
+                  if (!maxClaimble) {
+                    return;
+                  }
+                  setDebtChange(maxClaimble);
+                }}
+                color="cyan.500"
+                fontWeight={700}
+              >
+                &nbsp; Max
+              </Text>
+            )}
           </Flex>
         </Flex>
         <Flex flexGrow={1}>
@@ -99,12 +101,16 @@ const ClaimUi: FC<{
       </Collapse>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert colorScheme="orange" mb="4">
+        <Alert status="info" mb="4">
           <AlertIcon />
           <Text>
-            As a security precaution, claimed assets can only be withdrawn to your wallet after 24
-            hs since your previous account activity.
+            Assets will be available to withdraw 24 hours after your last interaction with this
+            position.
           </Text>
+        </Alert>
+        <Alert status="warning" mb="4">
+          <AlertIcon />
+          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
 

@@ -107,8 +107,6 @@ export const ManageUi: FC<{
                 display="flex"
                 alignItems="center"
                 data-cy="manage-position-title"
-                _hover={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
               >
                 {collateralDisplayName} Liquidity Position
               </Heading>
@@ -120,6 +118,8 @@ export const ManageUi: FC<{
                 display="flex"
                 alignItems="center"
                 data-cy="manage-position-subtitle"
+                _hover={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
               >
                 {poolName}
                 <Flex

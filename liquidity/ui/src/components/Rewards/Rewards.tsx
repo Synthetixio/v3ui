@@ -34,7 +34,7 @@ export const Rewards = ({
   return (
     <BorderBox bg="navy.700" py={4} px={4} flexDir="column" {...props}>
       <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
-        REWARDS
+        Rewards
       </Text>
       {!isLoading && !hasRewards ? (
         <Fade in>

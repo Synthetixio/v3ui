@@ -64,19 +64,21 @@ export const RepayUi: FC<{
             <Text>Debt:</Text>
             <Text display="inline">
               $<Amount value={currentDebt} data-testid="current debt" />
-            </Text>
-            <Text
-              cursor="pointer"
-              onClick={() => {
-                if (!currentDebt) {
-                  return;
-                }
-                setDebtChange(currentDebt.neg());
-              }}
-              color="cyan.500"
-              fontWeight={700}
-            >
-              &nbsp; Max
+              {currentDebt?.gt(0) && (
+                <Text
+                  cursor="pointer"
+                  onClick={() => {
+                    if (!currentDebt) {
+                      return;
+                    }
+                    setDebtChange(currentDebt.neg());
+                  }}
+                  color="cyan.500"
+                  fontWeight={700}
+                >
+                  &nbsp; Max
+                </Text>
+              )}
             </Text>
           </Flex>
         </Flex>

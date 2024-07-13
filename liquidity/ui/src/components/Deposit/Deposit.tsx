@@ -114,20 +114,22 @@ export const DepositUi: FC<{
           >
             <Text fontSize="12px">
               Balance: <Amount value={maxAmount} />
-              <Text
-                as="span"
-                cursor="pointer"
-                onClick={() => {
-                  if (!maxAmount) {
-                    return;
-                  }
-                  setCollateralChange(maxAmount);
-                }}
-                color="cyan.500"
-                fontWeight={700}
-              >
-                &nbsp; Max
-              </Text>
+              {maxAmount?.gt(0) && (
+                <Text
+                  as="span"
+                  cursor="pointer"
+                  onClick={() => {
+                    if (!maxAmount) {
+                      return;
+                    }
+                    setCollateralChange(maxAmount);
+                  }}
+                  color="cyan.500"
+                  fontWeight={700}
+                >
+                  &nbsp; Max
+                </Text>
+              )}
             </Text>
           </Tooltip>
         </Flex>

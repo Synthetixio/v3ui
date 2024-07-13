@@ -79,10 +79,17 @@ export const UndelegateUi: FC<{
               Locked:
             </Text>
             <Amount value={max} data-testid="available to undelegate" />
-
-            <Text as="span" cursor="pointer" onClick={onMaxClick} color="cyan.500" fontWeight={700}>
-              &nbsp; Max
-            </Text>
+            {max?.gt(0) && (
+              <Text
+                as="span"
+                cursor="pointer"
+                onClick={onMaxClick}
+                color="cyan.500"
+                fontWeight={700}
+              >
+                Max
+              </Text>
+            )}
           </Flex>
         </Flex>
         <Flex flexGrow={1}>
@@ -126,12 +133,16 @@ export const UndelegateUi: FC<{
       </Collapse>
 
       <Collapse in={isValidLeftover && collateralChange.lt(0)} animateOpacity>
-        <Alert colorScheme="orange" mb="4">
+        <Alert status="info" mb="4">
           <AlertIcon />
           <Text>
-            As a security precaution, borrowed assets can only be withdrawn to your wallet after 24
-            hs since your previous account activity.
+            Assets will be available to withdraw 24 hours after your last interaction with this
+            position.
           </Text>
+        </Alert>
+        <Alert status="warning" mb="4">
+          <AlertIcon />
+          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
 

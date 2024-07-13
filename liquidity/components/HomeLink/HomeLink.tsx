@@ -7,11 +7,19 @@ export const HomeLink = ({ ...props }: LinkProps) => {
 
   return (
     <Link
+      px={3}
+      py={2}
       width="fit-content"
       display="flex"
       alignItems="center"
-      color="cyan.500"
+      variant="outline"
+      lineHeight="20px"
+      color="white"
+      borderRadius="4px"
       as={ReactRouterLink}
+      borderWidth="1px"
+      borderColor="gray.900"
+      _hover={{ textTransform: 'none', opacity: 0.9 }}
       to={{
         pathname: '/',
         search: location.search,
@@ -21,7 +29,7 @@ export const HomeLink = ({ ...props }: LinkProps) => {
       mb={2}
       {...props}
     >
-      <ArrowBackIcon mr={1} /> Home
+      <ArrowBackIcon mr={1} /> All Pools
     </Link>
   );
 };
