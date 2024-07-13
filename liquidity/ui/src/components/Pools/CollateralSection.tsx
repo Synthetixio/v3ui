@@ -476,7 +476,7 @@ export const CollateralSectionUi: FC<{
                           >
                             {formatApr(apr28d * 100, network?.id)}
                           </Text>
-                          <Sparkles ml={0.5} width="20px" height="20px" />
+                          <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
                         </Flex>
                       </Tooltip>
                     </Fade>
