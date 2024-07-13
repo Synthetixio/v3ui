@@ -319,7 +319,7 @@ export const PoolCard = ({
                         >
                           {balances && balances[index]
                             ? formatNumber(balances[index].toNumber())
-                            : '-'}{' '}
+                            : ''}{' '}
                           {type.symbol}
                         </Text>
                       </Flex>
