@@ -164,7 +164,11 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
-              <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
+              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+                <Flex>
+                  <Sparkles w="18px" h="18px" mb={0.5} />
+                </Flex>
+              </Tooltip>
             </Flex>
             <Link
               px={4}
@@ -274,7 +278,7 @@ export const PoolCard = ({
 
                 return (
                   <Tr key={type.tokenAddress}>
-                    <Td border="none" px={4}>
+                    <Td border="none" px={4} w="20%">
                       <Flex alignItems="center">
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
                         <Flex flexDirection="column" ml={3} mr="auto">
