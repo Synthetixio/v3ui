@@ -110,7 +110,7 @@ export const PoolCard = ({
           <Flex>
             <Flex flexDir="column" gap={1} ml="12px">
               <Heading
-                fontSize="20px"
+                fontSize="xl"
                 fontWeight={700}
                 color="white"
                 _hover={{ cursor: 'pointer' }}
@@ -167,7 +167,7 @@ export const PoolCard = ({
               <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
             </Flex>
             <Link
-              px="16px"
+              px={4}
               py="8px"
               fontSize="14px"
               fontWeight={700}
@@ -288,7 +288,7 @@ export const PoolCard = ({
                             {type.symbol}
                           </Text>
                           <Text
-                            fontSize="12px"
+                            fontSize="xs"
                             color="gray.500"
                             fontFamily="heading"
                             lineHeight="1rem"
@@ -401,7 +401,7 @@ export const PoolCard = ({
                         size="sm"
                         height="32px"
                         py="10px"
-                        px="12px"
+                        px={3}
                         whiteSpace="nowrap"
                         borderRadius="4px"
                         fontFamily="heading"
