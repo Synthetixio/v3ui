@@ -366,7 +366,7 @@ export const PoolCard = ({
                           fontFamily="heading"
                           fontSize="14px"
                           lineHeight="20px"
-                          fontWeight={700}
+                          fontWeight={500}
                           color="white"
                         >
                           {formatApr(apr28d * 100, network?.id)}
