@@ -26,8 +26,9 @@ export const CollateralFilter = ({ activeCollateral, dispatch }: CollateralFilte
         fontWeight={600}
         borderRadius="9999px"
         mr={1.5}
+        fontSize="sm"
       >
-        All
+        All Collaterals
       </Flex>
       {supportedCollateralTypes.map((collateral) => {
         const isActive = activeCollateral.includes(collateral);

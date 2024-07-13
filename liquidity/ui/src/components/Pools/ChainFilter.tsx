@@ -29,8 +29,9 @@ export const ChainFilter = ({ activeChains, dispatch }: ChainFilterProps) => {
         fontWeight={600}
         borderRadius="9999px"
         mr={1.5}
+        fontSize="sm"
       >
-        All
+        All Networks
       </Flex>
       {mainnets.map((chain) => {
         const isActive = activeChains.includes(chain.id);
