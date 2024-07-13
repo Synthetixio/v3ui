@@ -19,6 +19,9 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
+import { useNavigate } from 'react-router-dom';
+import { InfoIcon } from '@chakra-ui/icons';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -62,8 +65,9 @@ export const ManageUi: FC<{
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
-
   const { data: CollateralTypes } = useCollateralTypes();
+
+  const navigate = useNavigate();
 
   const notSupported =
     poolData &&
@@ -103,6 +107,8 @@ export const ManageUi: FC<{
                 display="flex"
                 alignItems="center"
                 data-cy="manage-position-title"
+                _hover={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
               >
                 {collateralDisplayName} Liquidity Position
               </Heading>
@@ -125,16 +131,27 @@ export const ManageUi: FC<{
                   fontWeight="bold"
                 >
                   <NetworkIcon size="14px" networkId={network?.id} />
-                  {network?.label} Network
+                  <Text mt="1px" ml="1px">
+                    {network?.label} Network
+                  </Text>
                 </Flex>
               </Heading>
             </Flex>
           </Flex>
           {poolData && (
-            <Flex alignItems="center" gap={2}>
-              <Text fontSize="20px" fontWeight="bold" color="gray.500">
-                APR
-              </Text>
+            <Flex alignItems="flex-end" direction="column">
+              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+                <Text
+                  fontFamily="heading"
+                  fontSize="sm"
+                  lineHeight={5}
+                  fontWeight="medium"
+                  color="gray.500"
+                >
+                  Estimated APR
+                  <InfoIcon ml={1} w="10px" h="10px" />
+                </Text>
+              </Tooltip>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {poolData.apr.combinedApr > 0
                   ? `${network?.id === ARBITRUM.id ? 'Up to ' : ''}${poolData.apr.combinedApr
