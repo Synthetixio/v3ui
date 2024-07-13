@@ -62,7 +62,14 @@ export const UserProfileDetails = ({
               {prettyString(userData!.address)}
             </Text>
           </Flex>
-          <Text fontSize="12px" fontWeight="400" lineHeight="16px">
+          <Text
+            fontSize="12px"
+            fontWeight="400"
+            lineHeight="16px"
+            whiteSpace="nowrap"
+            maxW="300px"
+            overflow="scroll"
+          >
             {userData?.about}
           </Text>
         </Flex>
@@ -183,6 +190,8 @@ export const UserProfileDetails = ({
                 localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
               }
             }}
+            whiteSpace="nowrap"
+            overflow="scroll"
           >
             {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
             {userData?.ens || userData?.username || prettyString(userData!.address)}

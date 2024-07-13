@@ -8,10 +8,12 @@ export default function MyVotesBox({
   closeCart,
   votes,
   isMouseOnDropdown,
+  period,
 }: {
   closeCart: () => void;
   votes?: Record<string, string | undefined>;
   isMouseOnDropdown: (val: boolean) => void;
+  period?: string;
 }) {
   const navigate = useNavigate();
 
@@ -45,7 +47,11 @@ export default function MyVotesBox({
           </Heading>
         </Flex>
         {councils.map((council) => (
-          <MyVoteRow key={council.slug.concat('my-vote-row')} councilSlug={council.slug} />
+          <MyVoteRow
+            key={council.slug.concat('my-vote-row')}
+            councilSlug={council.slug}
+            period={period}
+          />
         ))}
         <Button
           onClick={(e) => {

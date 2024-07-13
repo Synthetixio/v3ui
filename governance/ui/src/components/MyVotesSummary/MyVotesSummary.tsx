@@ -72,6 +72,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
             closeCart={() => setShowCart(false)}
             votes={votes}
             isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
+            period={councilPeriod}
           />
         )}
       </Show>
