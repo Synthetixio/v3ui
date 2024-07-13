@@ -1,4 +1,19 @@
-import { Flex, Button, Text, Divider, Heading, Fade, Tag } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Text,
+  Heading,
+  Fade,
+  Tag,
+  Tr,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tooltip,
+} from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ZEROWEI } from '../../../utils/constants';
 import {
@@ -11,10 +26,13 @@ import {
 } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
 import { TokenIcon } from '../../TokenIcon';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
+import { Sparkles } from '@snx-v3/icons';
+import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
+import { formatApr } from '../CollateralSection';
 
 interface CollateralTypeWithDeposited extends CollateralType {
   collateralDeposited: string;
@@ -36,6 +54,7 @@ export interface PoolCardProps {
     cumulativePnl: number;
     collateralAprs: any[];
   };
+  balances?: Wei[];
 }
 
 export const PoolCard = ({
@@ -44,6 +63,7 @@ export const PoolCard = ({
   apr,
   collateralTypes,
   collateralPrices,
+  balances,
 }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
@@ -89,7 +109,7 @@ export const PoolCard = ({
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
           <Flex>
-            <Flex flexDir="column" gap={1}>
+            <Flex flexDir="column" gap={1} ml="12px">
               <Heading fontSize="20px" fontWeight={700} color="white">
                 {pool?.name}
               </Heading>
@@ -139,88 +159,242 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
+              <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
             </Flex>
           </Flex>
         </Flex>
-        <Divider mt="18px" mb="10px" />
-        <Flex flexWrap="wrap" gap={6}>
-          {sanitizedCollateralTypes?.map((type) => {
-            const collateralApr = apr.collateralAprs.find(
-              (item) => item.collateralType.toLowerCase() === type.tokenAddress.toLowerCase()
-            );
-
-            return (
-              <Flex alignItems="center" key={type.oracleNodeId} gap={4} mt={3}>
-                <Flex alignItems="center" justifyContent="space-between">
-                  <TokenIcon width={26} height={26} symbol={type.symbol} />
-                  <Flex flexDirection="column" ml={3} mr="auto">
-                    <Text
-                      fontSize="14px"
-                      color="white"
-                      fontWeight={700}
-                      lineHeight="1.25rem"
-                      fontFamily="heading"
-                    >
-                      {type.symbol}
-                    </Text>
-                    <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                      {type.symbol}
-                    </Text>
-                  </Flex>
-                  {network.id === ARBITRUM.id && collateralApr && collateralApr.apr28d >= 0 && (
-                    <Flex flexDirection="column" ml={6} mr={4}>
-                      <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                        APR
-                      </Text>
-                      <Text color="white" fontFamily="heading" fontSize="14px" fontWeight={700}>
-                        {`${(100 * collateralApr.apr28d).toFixed(2)}`}%
-                      </Text>
-                    </Flex>
-                  )}
-                </Flex>
-                <Button
-                  onClick={async (e) => {
-                    try {
-                      e.stopPropagation();
-
-                      if (!currentNetwork) {
-                        connect();
-                        return;
-                      }
-
-                      if (currentNetwork.id !== network.id) {
-                        if (!(await setNetwork(network.id))) {
-                          return;
-                        }
-                      }
-
-                      queryParams.set('manageAction', 'deposit');
-                      navigate({
-                        pathname: `/positions/${type.symbol}/${pool.id}`,
-                        search: queryParams.toString(),
-                      });
-                    } catch (error) {}
-                  }}
-                  size="sm"
-                  variant="outline"
-                  colorScheme="gray"
-                  height="32px"
-                  py="10px"
-                  px="12px"
-                  whiteSpace="nowrap"
-                  borderRadius="4px"
-                  color="white"
+        <TableContainer mt={4}>
+          <Table>
+            <Thead>
+              <Tr borderBottom="1px solid #2D2D38">
+                <Th
+                  textTransform="unset"
+                  color="gray.600"
+                  border="none"
                   fontFamily="heading"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  letterSpacing={0.6}
                   fontWeight={700}
-                  fontSize="14px"
-                  lineHeight="20px"
+                  px={4}
+                  py={3}
                 >
-                  Deposit
-                </Button>
-              </Flex>
-            );
-          })}
-        </Flex>
+                  Collateral
+                </Th>
+                <Th
+                  textTransform="unset"
+                  color="gray.600"
+                  border="none"
+                  fontFamily="heading"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  letterSpacing={0.6}
+                  fontWeight={700}
+                  px={4}
+                  py={3}
+                >
+                  Wallet Balance
+                </Th>
+                <Th
+                  textTransform="unset"
+                  color="gray.600"
+                  border="none"
+                  fontFamily="heading"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  letterSpacing={0.6}
+                  fontWeight={700}
+                  px={4}
+                  py={3}
+                >
+                  TVL
+                </Th>
+                <Th
+                  textTransform="unset"
+                  color="gray.600"
+                  border="none"
+                  fontFamily="heading"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  letterSpacing={0.6}
+                  fontWeight={700}
+                  px={4}
+                  py={3}
+                >
+                  APR
+                </Th>
+                <Th
+                  textTransform="unset"
+                  color="gray.600"
+                  border="none"
+                  fontFamily="heading"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  letterSpacing={0.6}
+                  fontWeight={700}
+                  px={4}
+                  py={3}
+                ></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {sanitizedCollateralTypes?.map((type, index) => {
+                const price = wei(
+                  collateralPrices?.find((price) => price.symbol === type.symbol)?.price
+                );
+
+                const collateralApr = apr.collateralAprs.find(
+                  (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
+                );
+
+                const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
+
+                return (
+                  <Tr key={type.tokenAddress}>
+                    <Td border="none" px={4}>
+                      <Flex alignItems="center">
+                        <TokenIcon w={26} h={26} symbol={type.symbol} />
+                        <Flex flexDirection="column" ml={3} mr="auto">
+                          <Text
+                            fontSize="14px"
+                            color="white"
+                            fontWeight={700}
+                            lineHeight="1.25rem"
+                            fontFamily="heading"
+                          >
+                            {type.symbol}
+                          </Text>
+                          <Text
+                            fontSize="12px"
+                            color="gray.500"
+                            fontFamily="heading"
+                            lineHeight="1rem"
+                          >
+                            {type.name}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Td>
+                    <Td border="none" textAlign="left" px={4}>
+                      <Flex direction="column">
+                        <Text
+                          fontFamily="heading"
+                          fontSize="14px"
+                          fontWeight={500}
+                          lineHeight="28px"
+                          color="white"
+                        >
+                          {balances && balances[index]
+                            ? formatNumberToUsd(balances[index].mul(price).toNumber())
+                            : '-'}
+                        </Text>
+                        <Text
+                          color="gray.500"
+                          fontFamily="heading"
+                          fontSize="12px"
+                          lineHeight="16px"
+                        >
+                          {balances && balances[index]
+                            ? formatNumber(balances[index].toNumber())
+                            : '-'}{' '}
+                          {type.symbol}
+                        </Text>
+                      </Flex>
+                    </Td>
+                    <Td border="none" textAlign="left" px={4}>
+                      <Text
+                        fontFamily="heading"
+                        fontSize="14px"
+                        lineHeight="20px"
+                        fontWeight={500}
+                        color="white"
+                      >
+                        {price
+                          ? formatNumberToUsd(
+                              wei(type.collateralDeposited, Number(type.decimals), true)
+                                .mul(price)
+                                .toNumber()
+                            )
+                          : 0}
+                      </Text>
+                    </Td>
+                    <Td border="none" textAlign="left" px={4}>
+                      <Tooltip
+                        label={
+                          <Flex direction="column">
+                            <Flex justifyContent="space-between">
+                              <Text fontWeight={700} mr={2}>
+                                Total APR:
+                              </Text>
+                              <Text fontWeight={700}>{formatApr(apr28d * 100, network?.id)}</Text>
+                            </Flex>
+                            <Flex justifyContent="space-between">
+                              <Text mr={2}>Performance:</Text>
+                              <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
+                            </Flex>
+                            <Flex justifyContent="space-between">
+                              <Text mr={2}>Rewards: </Text>
+                              <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
+                            </Flex>
+                          </Flex>
+                        }
+                      >
+                        <Text
+                          fontFamily="heading"
+                          fontSize="14px"
+                          lineHeight="20px"
+                          fontWeight={700}
+                          color="white"
+                        >
+                          {formatApr(apr28d * 100, network?.id)}
+                          <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
+                        </Text>
+                      </Tooltip>
+                    </Td>
+                    <Td border="none" textAlign="right" px={4}>
+                      <Button
+                        onClick={async (e) => {
+                          try {
+                            e.stopPropagation();
+
+                            if (!currentNetwork) {
+                              connect();
+                              return;
+                            }
+
+                            if (currentNetwork.id !== network.id) {
+                              if (!(await setNetwork(network.id))) {
+                                return;
+                              }
+                            }
+
+                            queryParams.set('manageAction', 'deposit');
+                            navigate({
+                              pathname: `/positions/${type.symbol}/${pool.id}`,
+                              search: queryParams.toString(),
+                            });
+                          } catch (error) {}
+                        }}
+                        size="sm"
+                        height="32px"
+                        py="10px"
+                        px="12px"
+                        whiteSpace="nowrap"
+                        borderRadius="4px"
+                        fontFamily="heading"
+                        fontWeight={700}
+                        fontSize="14px"
+                        lineHeight="20px"
+                      >
+                        Deposit
+                      </Button>
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
       </Flex>
     </Fade>
   );

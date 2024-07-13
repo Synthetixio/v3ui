@@ -8,6 +8,7 @@ import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useTokenBalances } from '@snx-v3/useTokenBalance';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -39,6 +40,18 @@ export const PoolsList = () => {
     }))
   );
 
+  // Arb Balances
+  const { data: ArbitrumTokenBalances, isLoading: isArbitrumBalancesLoading } = useTokenBalances(
+    ArbitrumCollateralTypes?.map((item) => item.tokenAddress) || [],
+    ARBITRUM
+  );
+
+  // Base Balances
+  const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
+    BaseCollateralTypes?.map((item) => item.tokenAddress) || [],
+    BASE_ANDROMEDA
+  );
+
   const { collateral, chain } = state;
 
   const showToros =
@@ -49,7 +62,9 @@ export const PoolsList = () => {
     isPoolsListLoading ||
     isLoadingCollateralPrices ||
     isBaseCollateralLoading ||
-    isArbCollateralLoading;
+    isArbCollateralLoading ||
+    isArbitrumBalancesLoading ||
+    isBaseBalancesLoading;
 
   const filteredPools = useMemo(() => {
     return (
@@ -70,12 +85,15 @@ export const PoolsList = () => {
               )?.collateralDeposited || '0',
           }));
 
+          const balances = network.id === ARBITRUM.id ? ArbitrumTokenBalances : BaseTokenBalances;
+
           return {
             network,
             poolInfo,
             apr,
             collateralDeposited,
             collateralTypes,
+            balances,
           };
         })
         .filter((pool) => {
@@ -105,7 +123,15 @@ export const PoolsList = () => {
           return true;
         }) || []
     );
-  }, [ArbitrumCollateralTypes, BaseCollateralTypes, chain, collateral, data?.synthetixPools]);
+  }, [
+    ArbitrumCollateralTypes,
+    BaseCollateralTypes,
+    chain,
+    collateral,
+    data?.synthetixPools,
+    ArbitrumTokenBalances,
+    BaseTokenBalances,
+  ]);
 
   return (
     <Flex mt={6} flexDirection="column">
@@ -122,7 +148,7 @@ export const PoolsList = () => {
           <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} />
         )}
         {!isLoading &&
-          filteredPools.map(({ network, poolInfo, apr, collateralTypes }) => {
+          filteredPools.map(({ network, poolInfo, apr, collateralTypes, balances }) => {
             const { pool } = poolInfo[0];
 
             return (
@@ -133,6 +159,7 @@ export const PoolsList = () => {
                 apr={apr}
                 network={network}
                 pool={pool}
+                balances={balances}
               />
             );
           })}
