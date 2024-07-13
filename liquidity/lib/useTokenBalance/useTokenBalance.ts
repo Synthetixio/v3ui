@@ -1,7 +1,7 @@
 import { assertAddressType } from '@snx-v3/assertAddressType';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { ethers, providers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
 
@@ -12,33 +12,42 @@ export const abi = [
   'function decimals() view returns (uint8)',
 ];
 
-export const useTokenBalance = (address?: string) => {
+export const useTokenBalance = (address?: string, customNetwork?: Network) => {
   const { activeWallet } = useWallet();
   const provider = useDefaultProvider();
   const { network } = useNetwork();
 
+  const targetNetwork = customNetwork || network;
+
   const tokenAddress = assertAddressType(address) ? address : undefined;
   return useQuery({
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'TokenBalance',
       { accountAddress: activeWallet?.address },
       { tokenAddress },
     ],
     queryFn: async () => await fetchTokenBalance(address!, activeWallet!.address, provider!),
-    enabled: Boolean(activeWallet?.address && tokenAddress && provider && network?.id),
+    enabled: Boolean(activeWallet?.address && tokenAddress && provider && targetNetwork?.id),
     refetchInterval: 15000,
   });
 };
 
-export const useTokenBalances = (addresses: string[]) => {
+export const useTokenBalances = (addresses: string[], customNetwork?: Network) => {
   const { activeWallet } = useWallet();
-  const provider = useDefaultProvider();
+  const defaultProvider = useDefaultProvider();
+
+  const provider = customNetwork
+    ? new ethers.providers.JsonRpcProvider(customNetwork.rpcUrl())
+    : defaultProvider;
+
   const { network } = useNetwork();
+
+  const targetNetwork = customNetwork || network;
 
   return useQuery({
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'TokenBalance',
       { accountAddress: activeWallet?.address },
       addresses.toString(),
@@ -47,7 +56,7 @@ export const useTokenBalances = (addresses: string[]) => {
       await Promise.all(
         addresses.map((address) => fetchTokenBalance(address, activeWallet!.address, provider!))
       ),
-    enabled: Boolean(activeWallet?.address && addresses.length && provider && network?.id),
+    enabled: Boolean(activeWallet?.address && addresses.length && provider && targetNetwork?.id),
     refetchInterval: 15000,
   });
 };

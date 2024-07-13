@@ -1,6 +1,25 @@
-import { Flex, Heading, Tag, Text, Divider, Button, Box, Link, Fade } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  Tag,
+  Text,
+  Button,
+  Box,
+  Link,
+  Fade,
+  TableContainer,
+  Th,
+  Table,
+  Thead,
+  Tr,
+  Tbody,
+  Td,
+  Icon,
+  IconProps,
+} from '@chakra-ui/react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../../TokenIcon';
+import { Sparkles } from '@snx-v3/icons';
 
 interface TorosPoolCardProps {
   tvl: string;
@@ -33,7 +52,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           rounded="base"
           bg="navy.700"
           _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50', textDecoration: 'none' }}
-          p="6"
+          p={6}
         >
           <Flex w="100%" gap="2" alignItems="start" mb="4">
             <Flex flexDirection="column" justifyContent="space-between">
@@ -56,7 +75,6 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
             >
               Auto Compound
             </Tag>
-
             <Text fontSize="20px" fontWeight={700} color="gray.500">
               TVL
             </Text>
@@ -66,56 +84,127 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
             <Text fontSize="20px" fontWeight={700} color="gray.500">
               APY
             </Text>
+
             <Text fontSize="20px" fontWeight={700} color="white">
               Up to {apy}%
+              <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
             </Text>
           </Flex>
-          <Divider />
-          <Flex alignItems="center" mt="4" gap="4">
-            <Flex alignItems="center">
-              <TokenIcon w={26} h={26} symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text
-                  fontSize="14px"
-                  color="white"
-                  fontWeight={700}
-                  lineHeight="1.25rem"
-                  fontFamily="heading"
-                >
-                  USDC
-                </Text>
-                <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                  USDC
-                </Text>
-              </Flex>
-            </Flex>
-            <Link
-              href="https://toros.finance/synthetix-usdc-andromeda-yield"
-              rel="noopener"
-              target="_blank"
-              _hover={{ textDecoration: 'none' }}
-              mr="auto"
-            >
-              <Button
-                size="sm"
-                variant="outline"
-                colorScheme="gray"
-                height="32px"
-                py="10px"
-                px="12px"
-                whiteSpace="nowrap"
-                borderRadius="4px"
-                color="white"
-                fontFamily="heading"
-                fontWeight={700}
-                fontSize="14px"
-                lineHeight="20px"
-              >
-                Deposit on Toros
-                <LinkOffIcon />
-              </Button>
-            </Link>
-            <Text fontSize="16px" color="gray.500">
+          <TableContainer>
+            <Table>
+              <Thead>
+                <Tr borderBottom="1px solid #2D2D38">
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  >
+                    Collateral
+                  </Th>
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  >
+                    APY
+                  </Th>
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  ></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td width="66%" border="none" px={0}>
+                    <Flex alignItems="center">
+                      <TokenIcon w={26} h={26} symbol="USDC" />
+                      <Flex flexDirection="column" ml={3} mr="auto">
+                        <Text
+                          fontSize="14px"
+                          color="white"
+                          fontWeight={700}
+                          lineHeight="1.25rem"
+                          fontFamily="heading"
+                        >
+                          USDC
+                        </Text>
+                        <Text
+                          fontSize="12px"
+                          color="gray.500"
+                          fontFamily="heading"
+                          lineHeight="1rem"
+                        >
+                          USD Coin
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </Td>
+                  <Td border="none" textAlign="left" px="12px">
+                    <Text
+                      fontFamily="heading"
+                      fontSize="14px"
+                      lineHeight="20px"
+                      fontWeight={700}
+                      color="white"
+                    >
+                      {apy}%
+                      <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
+                    </Text>
+                  </Td>
+                  <Td border="none" textAlign="right" px={0}>
+                    <Link
+                      href="https://toros.finance/synthetix-usdc-andromeda-yield"
+                      rel="noopener"
+                      target="_blank"
+                      _hover={{ textDecoration: 'none' }}
+                      mr="auto"
+                    >
+                      <Button
+                        size="sm"
+                        height="32px"
+                        py="10px"
+                        px="12px"
+                        whiteSpace="nowrap"
+                        borderRadius="4px"
+                        fontFamily="heading"
+                        fontWeight={700}
+                        fontSize="14px"
+                        lineHeight="20px"
+                      >
+                        Deposit on Toros
+                        <LinkOffIcon ml={1} />
+                      </Button>
+                    </Link>
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </TableContainer>
+          <Flex direction="row" alignItems="center" justifyContent="flex-end">
+            <Text fontSize="16px" color="gray.500" mr={2}>
               by
             </Text>
             <TorosIcon />
@@ -139,12 +228,12 @@ const TorosIcon = () => (
   </svg>
 );
 
-const LinkOffIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+const LinkOffIcon = ({ ...props }: IconProps) => (
+  <Icon width="14px" height="14px" viewBox="0 0 14 14" fill="none" {...props}>
     <g clipPath="url(#clip0_13614_19286)">
       <path
         d="M9.07955 4.47121L4.65447 4.47121L4.65447 3.30472L11.071 3.30472L11.071 9.72124L9.90451 9.72124L9.90451 5.29617L4.11719 11.325L3.29224 10.5L9.07955 4.47121Z"
-        fill="white"
+        fill="currentColor"
       />
     </g>
     <defs>
@@ -152,5 +241,5 @@ const LinkOffIcon = () => (
         <rect width="14" height="14" fill="white" />
       </clipPath>
     </defs>
-  </svg>
+  </Icon>
 );

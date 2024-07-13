@@ -1,13 +1,17 @@
-import React, { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManageAction, NoAccount, UnsupportedCollateralAlert } from '../components';
+import {
+  ManageAction,
+  NoAccount,
+  UnsupportedCollateralAlert,
+  Rewards,
+  ManageStats,
+} from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
-import { ManageStats } from '../components';
-import { Rewards } from '../components';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -19,7 +23,7 @@ import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccoun
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (collateralSymbol !== 'USDC') {
       return collateralSymbol;
     }
@@ -35,7 +39,7 @@ function useNormalisedCollateralSymbol(collateralSymbol?: string) {
 export function useCollateralDisplayName(collateralSymbol?: string) {
   const { network } = useNetwork();
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (!network?.id && network?.preset) {
       return undefined;
     }
@@ -141,7 +145,6 @@ export const ManageUi: FC<{
             </Flex>
           )}
         </Flex>
-
         <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
           <BorderBox
             gap={4}

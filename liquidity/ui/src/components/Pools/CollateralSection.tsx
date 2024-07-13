@@ -570,7 +570,7 @@ export const CollateralSection = () => {
   );
 };
 
-function formatApr(apr?: number, networkId?: number) {
+export function formatApr(apr?: number, networkId?: number) {
   if (!networkId || !apr || apr <= 0) return '-';
 
   return `${apr.toFixed(2)}%`;
