@@ -12,7 +12,13 @@ export const CouncilPeriodBadge = ({
   return (
     <Skeleton isLoaded={!isLoading} height="20px" mb="24px">
       <Fade in>
-        <Badge bg={color} color="white" mb="6" textTransform="uppercase">
+        <Badge
+          bg={color}
+          color="white"
+          mb="6"
+          textTransform="uppercase"
+          data-cy="council-period-badge"
+        >
           {text}
         </Badge>
       </Fade>

@@ -76,7 +76,7 @@ export const ClaimModalUi: React.FC<{
         />
 
         <Button
-          isDisabled={txnStatus === 'pending'}
+          isDisabled={['pending', 'prompting'].includes(txnStatus)}
           onClick={() => {
             if (['unsent', 'error'].includes(txnStatus)) {
               execBorrow();

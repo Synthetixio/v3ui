@@ -21,8 +21,17 @@ const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
 const ClaimModal = lazy(() => safeImport(() => import('@snx-v3/ClaimModal')));
 const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal')));
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
+const WithdrawModal = lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
 
-const validActions = ['borrow', 'deposit', 'repay', 'claim', 'undelegate', 'withdraw'] as const;
+const validActions = [
+  'borrow',
+  'deposit',
+  'repay',
+  'claim',
+  'undelegate',
+  'withdraw',
+  'withdraw-debt',
+] as const;
 const ManageActionSchema = z.enum(validActions);
 type ManageAction = z.infer<typeof ManageActionSchema>;
 
@@ -38,10 +47,7 @@ const ManageActionUi: FC<{
 
   const [tab, setTab] = useState('collateral');
 
-  const debtActions = DEBTACTIONS.filter((action) => {
-    if (action.title === 'Borrow' && isBase) return false;
-    return true;
-  });
+  const debtActions = DEBTACTIONS(isBase);
 
   useEffect(() => {
     if (tab === 'collateral' && !COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
@@ -79,76 +85,75 @@ const ManageActionUi: FC<{
 
         <TabPanels>
           <TabPanel px="0">
-            <Flex flexDir="column">
-              <Flex gap={4}>
-                {COLLATERALACTIONS.map((action) => (
-                  <Flex
-                    h="84px"
-                    justifyContent="center"
-                    key={action.title.concat('-tab-actions')}
-                    border="1px solid"
-                    flexDir="column"
-                    alignItems="center"
-                    borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
-                    rounded="base"
-                    cursor="pointer"
-                    data-cy={`collateral-action-${action.link}`}
-                    onClick={() => setActiveAction(action.link)}
-                    flex="1"
+            <Flex gap={4}>
+              {COLLATERALACTIONS.map((action) => (
+                <Flex
+                  h="84px"
+                  justifyContent="center"
+                  key={action.title.concat('-tab-actions')}
+                  border="1px solid"
+                  flexDir="column"
+                  alignItems="center"
+                  borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
+                  rounded="base"
+                  cursor="pointer"
+                  data-cy={`collateral-action-${action.link}`}
+                  onClick={() => setActiveAction(action.link)}
+                  flex="1"
+                >
+                  {action.icon(manageAction === action.link ? 'cyan' : 'white')}
+                  <Text
+                    fontSize="14px"
+                    fontWeight={700}
+                    mt="2"
+                    color={manageAction === action.link ? 'cyan.500' : 'white'}
                   >
-                    {action.icon(manageAction === action.link ? 'cyan' : 'white')}
-                    <Text
-                      fontSize="14px"
-                      fontWeight={700}
-                      mt="2"
-                      color={manageAction === action.link ? 'cyan.500' : 'white'}
-                    >
-                      {action.title}
-                    </Text>
-                  </Flex>
-                ))}
-              </Flex>
+                    {action.title}
+                  </Text>
+                </Flex>
+              ))}
             </Flex>
           </TabPanel>
           <TabPanel px="0">
-            <Flex flexDir="column">
-              <Flex gap={4}>
-                {debtActions.map((action) => (
-                  <Flex
-                    flex="1"
-                    h="84px"
-                    justifyContent="center"
-                    key={action.title.concat('-tab-actions')}
-                    border="1px solid"
-                    flexDir="column"
-                    alignItems="center"
-                    borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
-                    rounded="base"
-                    cursor="pointer"
-                    data-cy={`debt-actions-${action.link}`}
-                    onClick={() => setActiveAction(action.link)}
+            <Flex gap={4}>
+              {debtActions.map((action) => (
+                <Flex
+                  flex="1"
+                  h="84px"
+                  justifyContent="center"
+                  key={action.title.concat('-tab-actions')}
+                  border="1px solid"
+                  flexDir="column"
+                  alignItems="center"
+                  borderColor={manageAction === action.link ? 'cyan.500' : 'gray.900'}
+                  rounded="base"
+                  cursor="pointer"
+                  data-cy={`debt-actions-${action.link}`}
+                  onClick={() => setActiveAction(action.link)}
+                >
+                  {action.icon(manageAction === action.link ? 'cyan' : 'white')}
+                  <Text
+                    fontSize="14px"
+                    fontWeight={700}
+                    mt="2"
+                    color={manageAction === action.link ? 'cyan.500' : 'white'}
                   >
-                    {action.icon(manageAction === action.link ? 'cyan' : 'white')}
-                    <Text
-                      fontSize="14px"
-                      fontWeight={700}
-                      mt="2"
-                      color={manageAction === action.link ? 'cyan.500' : 'white'}
-                    >
-                      {action.title}
-                    </Text>
-                  </Flex>
-                ))}
-              </Flex>
+                    {action.title}
+                  </Text>
+                </Flex>
+              ))}
             </Flex>
           </TabPanel>
         </TabPanels>
       </Tabs>
 
-      <Flex direction="column" mt={2}>
+      <Flex direction="column">
         {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'withdraw' ? <Withdraw liquidityPosition={liquidityPosition} /> : null}
+        {manageAction === 'withdraw-debt' ? (
+          <Withdraw liquidityPosition={liquidityPosition} isDebtWithdrawal />
+        ) : null}
         {manageAction === 'deposit' ? <Deposit liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'repay' ? <Repay liquidityPosition={liquidityPosition} /> : null}
         {manageAction === 'undelegate' ? (
@@ -167,7 +172,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   const location = useLocation();
 
   const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
-  const { debtChange, collateralChange, setCollateralChange, setDebtChange } =
+  const { debtChange, collateralChange, setCollateralChange, setDebtChange, setWithdrawAmount } =
     useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -302,6 +307,34 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'undelegate'}
+          />
+        ) : null}
+        {txnModalOpen === 'withdraw' ? (
+          <WithdrawModal
+            liquidityPosition={liquidityPosition}
+            onClose={() => {
+              setCollateralChange(wei(0));
+              setDebtChange(wei(0));
+              setWithdrawAmount(wei(0));
+              setTxnModalOpen(null);
+            }}
+            isOpen={txnModalOpen === 'withdraw'}
+            account
+          />
+        ) : null}
+
+        {txnModalOpen === 'withdraw-debt' ? (
+          <WithdrawModal
+            liquidityPosition={liquidityPosition}
+            onClose={() => {
+              setCollateralChange(wei(0));
+              setDebtChange(wei(0));
+              setWithdrawAmount(wei(0));
+              setTxnModalOpen(null);
+            }}
+            isOpen={txnModalOpen === 'withdraw-debt'}
+            account
+            isDebtWithdrawal
           />
         ) : null}
       </Suspense>

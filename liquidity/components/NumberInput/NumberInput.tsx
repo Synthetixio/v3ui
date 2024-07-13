@@ -107,7 +107,7 @@ export function NumberInput({
       color="white"
       height="unset"
       autoFocus={true}
-      placeholder="Enter Amount"
+      placeholder="00.00"
       _focus={{ boxShadow: 'none !important' }}
       _placeholder={{ color: 'whiteAlpha.700' }}
       value={inputValue}

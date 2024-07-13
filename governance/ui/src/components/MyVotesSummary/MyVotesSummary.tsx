@@ -1,10 +1,11 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 
-import Timer from '../Timer/Timer';
+import { Timer } from '../Timer';
 import { useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
+import councils from '../../utils/councils';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -19,19 +20,28 @@ interface MyVotesSummary {
 
 export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSummary) => {
   const [showCart, setShowCart] = useState(false);
+  const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
 
   const votes = useGetUserSelectedVotes();
-
   return (
     <Flex
       position="relative"
       key="tab-my-votes"
       cursor="pointer"
+      data-cy="my-votes-button"
       onClick={() => navigate('/my-votes')}
-      onMouseEnter={() => setShowCart(true)}
+      onMouseEnter={() => {
+        if (councilPeriod === '2') setShowCart(true);
+      }}
+      onMouseLeave={() =>
+        setTimeout(() => {
+          if (!mouseOnDropdown) setShowCart(false);
+        }, 1000)
+      }
       rounded="base"
       w="100%"
+      maxW="200px"
       borderColor="gray.900"
       borderWidth="1px"
       py={2}
@@ -47,16 +57,23 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       <Show above="md">
         <Text fontSize="x-small" ml={8} fontWeight="bold">
           {councilPeriod === '2' && (
-            <>{Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/4</>
+            <>
+              {Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/
+              {councils.length}
+            </>
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-            <>
-              <Timer expiryTimestamp={schedule.votingPeriodStartDate * 1000} />
-            </>
+            <Timer expiryTimestamp={schedule.votingPeriodStartDate} />
           )}
         </Text>
-        {showCart && <MyVotesBox closeCart={() => setShowCart(false)} votes={votes} />}
+        {showCart && (
+          <MyVotesBox
+            closeCart={() => setShowCart(false)}
+            votes={votes}
+            isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
+          />
+        )}
       </Show>
     </Flex>
   );

@@ -1,13 +1,19 @@
 import { Flex, IconButton } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { AddIcon, ChevronRightIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserCurrentVotes } from '../../queries';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
 
-export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }) {
+export default function MyVoteRow({
+  councilSlug,
+  period,
+}: {
+  councilSlug: CouncilSlugs;
+  period?: string;
+}) {
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
 
@@ -28,32 +34,31 @@ export default function MyVoteRow({ councilSlug }: { councilSlug: CouncilSlugs }
       justifyContent="space-between"
       border="1px solid"
       borderColor="gray.900"
+      opacity={period !== '2' ? '0.4' : '1'}
     >
       <Flex alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
-          address={currentVotes[councilSlug]}
-          hideName={!selectedVotes[councilSlug]}
+          address={currentVotes[councilSlug] || selectedVotes[councilSlug]}
         />
-        {!selectedVotes[councilSlug] && (
-          <>
-            <ChevronRightIcon />
-            <CouncilUser councilSlug={councilSlug} address={selectedVotes[councilSlug]} />
-          </>
-        )}
       </Flex>
-      {currentVotes && !currentVotes[council.slug] ? (
+      {!selectedVotes[council.slug] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
           variant="outlined"
-          onClick={() => navigate(`/councils/${council.slug}`)}
+          isDisabled={period !== '2'}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/councils/${council.slug}`);
+          }}
         />
       ) : (
         <IconButton
           aria-label="action-button"
           icon={<CloseIcon />}
           variant="outlined"
+          isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
 

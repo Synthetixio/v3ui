@@ -2,9 +2,15 @@ import { FC, useMemo } from 'react';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
-import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
+import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { CollateralIcon } from '@snx-v3/icons';
-import { ManageAction, NoAccount, ManageStats, Rewards } from '../components';
+import {
+  ManageAction,
+  NoAccount,
+  UnsupportedCollateralAlert,
+  Rewards,
+  ManageStats,
+} from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
@@ -57,96 +63,113 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  return (
-    <Box mb={12} mt={8}>
-      <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
-        <Flex alignItems="center">
-          <Flex
-            bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
-            height="34px"
-            width="34px"
-            justifyContent="center"
-            alignItems="center"
-            borderRadius="100%"
-            display="flex"
-          >
-            <CollateralIcon
-              symbol={collateralSymbol}
-              width="42px"
-              height="42px"
-              fill="#0B0B22"
-              color="#00D1FF"
-            />
-          </Flex>
-          <Flex direction="column" gap={0.5}>
-            <Heading
-              ml={4}
-              fontWeight={700}
-              fontSize="24px"
-              color="gray.50"
-              display="flex"
-              alignItems="center"
-              data-cy="manage-position-title"
-            >
-              {collateralDisplayName} Liquidity Position
-            </Heading>
-            <Heading
-              ml={4}
-              fontWeight={700}
-              fontSize="16px"
-              color="gray.50"
-              display="flex"
-              alignItems="center"
-              data-cy="manage-position-subtitle"
-            >
-              {poolName}
-              <Flex
-                ml={2}
-                alignItems="center"
-                fontSize="12px"
-                color="gray.500"
-                gap={1}
-                fontWeight="bold"
-              >
-                <NetworkIcon size="14px" networkId={network?.id} />
-                {network?.label} Network
-              </Flex>
-            </Heading>
-          </Flex>
-        </Flex>
-        {poolData && (
-          <Flex alignItems="center" gap={2}>
-            <Text fontSize="20px" fontWeight="bold" color="gray.500">
-              APR
-            </Text>
-            <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-              {poolData.apr.combinedApr > 0
-                ? `${network?.id === ARBITRUM.id ? 'Up to ' : ''}${poolData.apr.combinedApr
-                    .toFixed(2)
-                    ?.concat('%')}`
-                : '-'}
-            </Text>
-          </Flex>
-        )}
-      </Flex>
+  const { data: CollateralTypes } = useCollateralTypes();
 
-      <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
-        <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
-          <ManageStats liquidityPosition={liquidityPosition} />
-          <Rewards isLoading={isLoading} rewards={rewards} />
-        </BorderBox>
-        <BorderBox
-          flex={1}
-          maxW={['100%', '100%', '501px']}
-          p={6}
-          flexDirection="column"
-          bg="navy.700"
-          height="fit-content"
-        >
-          <ManageAction liquidityPosition={liquidityPosition} />
-        </BorderBox>
-      </Flex>
-    </Box>
+  const notSupported =
+    poolData &&
+    CollateralTypes &&
+    collateralDisplayName &&
+    !CollateralTypes.some((item) => item.symbol === collateralDisplayName);
+
+  return (
+    <>
+      <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
+      <Box mb={12} mt={8}>
+        <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
+          <Flex alignItems="center">
+            <Flex
+              bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
+              height="34px"
+              width="34px"
+              justifyContent="center"
+              alignItems="center"
+              borderRadius="100%"
+              display="flex"
+            >
+              <CollateralIcon
+                symbol={collateralSymbol}
+                width="42px"
+                height="42px"
+                fill="#0B0B22"
+                color="#00D1FF"
+              />
+            </Flex>
+            <Flex direction="column" gap={0.5}>
+              <Heading
+                ml={4}
+                fontWeight={700}
+                fontSize="24px"
+                color="gray.50"
+                display="flex"
+                alignItems="center"
+                data-cy="manage-position-title"
+              >
+                {collateralDisplayName} Liquidity Position
+              </Heading>
+              <Heading
+                ml={4}
+                fontWeight={700}
+                fontSize="16px"
+                color="gray.50"
+                display="flex"
+                alignItems="center"
+                data-cy="manage-position-subtitle"
+              >
+                {poolName}
+                <Flex
+                  ml={2}
+                  alignItems="center"
+                  fontSize="12px"
+                  color="gray.500"
+                  gap={1}
+                  fontWeight="bold"
+                >
+                  <NetworkIcon size="14px" networkId={network?.id} />
+                  {network?.label} Network
+                </Flex>
+              </Heading>
+            </Flex>
+          </Flex>
+          {poolData && (
+            <Flex alignItems="center" gap={2}>
+              <Text fontSize="20px" fontWeight="bold" color="gray.500">
+                APR
+              </Text>
+              <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
+                {poolData.apr.combinedApr > 0
+                  ? `${network?.id === ARBITRUM.id ? 'Up to ' : ''}${poolData.apr.combinedApr
+                      .toFixed(2)
+                      ?.concat('%')}`
+                  : '-'}
+              </Text>
+            </Flex>
+          )}
+        </Flex>
+        <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+          <BorderBox
+            gap={4}
+            flex={1}
+            p={6}
+            flexDirection="column"
+            bg="navy.700"
+            height="fit-content"
+          >
+            <ManageStats liquidityPosition={liquidityPosition} />
+            <Rewards isLoading={isLoading} rewards={rewards} />
+          </BorderBox>
+          <BorderBox
+            flex={1}
+            maxW={['100%', '100%', '501px']}
+            p={6}
+            flexDirection="column"
+            bg="navy.700"
+            height="fit-content"
+          >
+            <ManageAction liquidityPosition={liquidityPosition} />
+          </BorderBox>
+        </Flex>
+      </Box>
+    </>
   );
 };
 

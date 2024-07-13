@@ -61,10 +61,10 @@ export const UndelegateModalUi: FC<{
         <Divider my={4} />
         <Multistep
           step={1}
-          title="Remove collateral"
+          title="Unlock collateral"
           subtitle={
             <Text as="div">
-              <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be removed from
+              <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be unlocked from
               the pool.
             </Text>
           }
@@ -160,7 +160,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
           }
           toast.closeAll();
           toast({
-            title: 'Remove collateral failed',
+            title: 'Unlock collateral failed',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
@@ -168,7 +168,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
             ),
             status: 'error',
           });
-          throw Error('Remove collateral failed', { cause: error });
+          throw Error('Unlock collateral failed', { cause: error });
         }
       },
     },

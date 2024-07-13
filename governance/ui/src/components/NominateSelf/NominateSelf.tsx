@@ -5,9 +5,9 @@ import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useGetUserDetailsQuery } from '../../queries';
-import { shortAddress } from '../../utils/address';
 import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
@@ -23,11 +23,14 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       flexDirection="column"
       bg="navy.700"
       w="100%"
+      maxW="451px"
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"
       rounded="base"
       p="6"
+      position="sticky"
+      top="81px"
     >
       {isSuccess ? (
         <>
@@ -46,14 +49,21 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           <Text fontSize="sm" color="gray.500" mt="2">
             Nominee:
           </Text>
-          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+          <Flex
+            border="1px solid"
+            borderColor="gray.900"
+            p="2"
+            rounded="base"
+            my="2"
+            alignItems="center"
+          >
             <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
                 {data?.username ? data.username : 'No Username'}
               </Text>
               <Text fontSize="12px" color="gray.500">
-                Nomination Wallet: {shortAddress(data?.address)}
+                Nomination Wallet: {prettyString(data!.address)}
               </Text>
             </Flex>
           </Flex>
@@ -92,7 +102,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               {councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
-          <Button onClick={() => navigate(`/councils/${activeCouncil}`)} mt="auto">
+          <Button
+            onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
+            mt="auto"
+            data-cy="nominate-self-done-button"
+          >
             Done
           </Button>
         </>
@@ -114,14 +128,21 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
             Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
             nominating the wallet below:
           </Text>
-          <Flex border="1px solid" borderColor="gray.900" p="2" rounded="base" my="2">
+          <Flex
+            border="1px solid"
+            borderColor="gray.900"
+            p="2"
+            rounded="base"
+            my="2"
+            alignItems="center"
+          >
             <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
             <Flex ml="2" flexDir="column">
               <Text fontWeight={700} fontSize="14px">
                 {data?.username ? data.username : 'No Username'}
               </Text>
               <Text fontSize="12px" color="gray.500">
-                Nomination Wallet: {shortAddress(data?.address)}
+                Nomination Wallet: {prettyString(data?.address || '')}
               </Text>
             </Flex>
           </Flex>
@@ -142,6 +163,7 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
                 padding="2"
                 alignItems="center"
                 mb="2"
+                data-cy={`council-nomination-select-${council.slug}`}
               >
                 <Flex
                   borderRadius="50%"
@@ -167,7 +189,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               loading <Spinner colorScheme="cyan" />
             </Flex>
           ) : (
-            <Button onClick={() => mutate()} mt="auto">
+            <Button
+              onClick={() => mutate()}
+              mt="auto"
+              data-cy="nominate-self-cast-nomination-button"
+            >
               Nominate Self
             </Button>
           )}

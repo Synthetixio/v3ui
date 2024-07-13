@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { CollateralIcon } from '@snx-v3/icons';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -21,7 +20,7 @@ import Wei from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert } from '..';
+import { CollateralAlert, TokenIcon } from '..';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -83,14 +82,40 @@ export const InitialDepositUi: FC<{
             Deposit & Lock Collateral
           </Text>
 
-          <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
+          <BorderBox display="flex" flexDirection="column" p={3} mb="6">
             <Flex alignItems="center">
-              <BorderBox display="flex" justifyContent="center" alignItems="center" p={3}>
-                <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-                  <CollateralIcon symbol={symbol} />
-                  {displaySymbol}
+              <Flex flexDir="column">
+                <BorderBox
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  py={1.5}
+                  px={2.5}
+                >
+                  <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+                    <TokenIcon symbol={symbol} width={16} height={16} />
+                    {displaySymbol}
+                  </Text>
+                </BorderBox>
+                <Text fontSize="12px">
+                  Balance: <Amount value={combinedTokenBalance} />
+                  <Text
+                    as="span"
+                    cursor="pointer"
+                    onClick={() => {
+                      if (!combinedTokenBalance) {
+                        return;
+                      }
+                      setCollateralChange(combinedTokenBalance);
+                    }}
+                    color="cyan.500"
+                    fontWeight={700}
+                  >
+                    &nbsp; Max
+                  </Text>
                 </Text>
-              </BorderBox>
+              </Flex>
+
               <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
                 <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
                   <NumberInput
@@ -105,43 +130,6 @@ export const InitialDepositUi: FC<{
                     max={combinedTokenBalance}
                     dataTestId="deposit-number-input"
                   />
-                  <Flex
-                    flexDirection="column"
-                    alignItems="flex-end"
-                    fontSize="xs"
-                    color="whiteAlpha.700"
-                  >
-                    <Flex
-                      gap="1"
-                      cursor="pointer"
-                      onClick={() => {
-                        const amount = symbol === 'SNX' ? snxBalance?.transferable : tokenBalance;
-                        if (!amount) {
-                          return;
-                        }
-
-                        setCollateralChange(amount);
-                      }}
-                    >
-                      <Text>{symbol} Balance:</Text>
-                      <Amount value={symbol === 'SNX' ? snxBalance?.transferable : tokenBalance} />
-                    </Flex>
-                    {symbol === 'WETH' ? (
-                      <Flex
-                        gap="1"
-                        cursor="pointer"
-                        onClick={() => {
-                          if (!ethBalance) {
-                            return;
-                          }
-                          setCollateralChange(ethBalance);
-                        }}
-                      >
-                        <Text>ETH Balance:</Text>
-                        <Amount value={ethBalance} />
-                      </Flex>
-                    ) : null}
-                  </Flex>
                 </Flex>
               </Flex>
             </Flex>

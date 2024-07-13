@@ -4,8 +4,8 @@ import { useGetUserDetailsQuery } from '../../queries';
 import { useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { Dispatch, SetStateAction } from 'react';
-import { shortAddress } from '../../utils/address';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { prettyString } from '@snx-v3/format';
 
 export default function EditNominationSelect({
   selectedCouncil,
@@ -39,9 +39,9 @@ export default function EditNominationSelect({
         <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
           <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || shortAddress(user?.address)}
+            {user?.ens || prettyString(user?.address || '')}
           </Text>
-          <Text fontSize="xs">Nomination Wallet: {shortAddress(user?.address)}</Text>
+          <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
       </Flex>
       {nominationInformation?.isNominated && (
@@ -129,6 +129,7 @@ export default function EditNominationSelect({
           padding="2"
           alignItems="center"
           mb="2"
+          data-cy="withdraw-vote-select"
         >
           <Flex
             borderRadius="50%"
@@ -146,7 +147,7 @@ export default function EditNominationSelect({
           </Text>
         </Flex>
       </Flex>
-      <Button mt="auto" onClick={() => setShowConfirm(true)}>
+      <Button mt="auto" onClick={() => setShowConfirm(true)} data-cy="edit-nomination-button">
         Edit Nomination
       </Button>
     </>

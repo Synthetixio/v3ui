@@ -17,7 +17,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
-import React, { FC, useContext } from 'react';
+import React, { FC, useCallback, useContext } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -45,7 +45,7 @@ export const UndelegateUi: FC<{
   isLoadingRequiredData,
   isAnyMarketLocked,
 }) => {
-  const onMaxClick = React.useCallback(() => {
+  const onMaxClick = useCallback(() => {
     if (!max) {
       return;
     }
@@ -61,45 +61,42 @@ export const UndelegateUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="2">
-        Remove Collateral
+      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
+        Unlock Collateral
       </Text>
 
-      <BorderBox flexDirection="column" py={2} px={3} mb="4">
-        <Flex flexDirection="row" justifyContent="space-between" width="100%">
-          <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-            <TokenIcon symbol={symbol} />
-            {displaySymbol}
-          </Text>
-          <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-            <NumberInput
-              InputProps={{
-                isDisabled,
-                isRequired: true,
-                'data-testid': 'undelegate amount input',
-                'data-max': max?.toString(),
-              }}
-              value={collateralChange.abs()}
-              onChange={(val) => setCollateralChange(val.mul(-1))}
-              max={max}
-            />
-            <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
-              <Flex
-                gap="1"
-                cursor={isDisabled ? 'not-allowed' : 'pointer'}
-                onClick={isDisabled ? undefined : onMaxClick}
-              >
-                <Text display="flex" alignItems="center" gap={1}>
-                  Max:
-                </Text>
-                <Amount
-                  value={max}
-                  data-testid="available to undelegate"
-                  suffix={` ${displaySymbol}`}
-                />
-              </Flex>
-            </Flex>
+      <BorderBox display="flex" p={3} mb="6">
+        <Flex alignItems="flex-start" flexDir="column" gap="1">
+          <BorderBox display="flex" py={1.5} px={2.5}>
+            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+              <TokenIcon symbol={symbol} width={16} height={16} />
+              {displaySymbol}
+            </Text>
+          </BorderBox>
+
+          <Flex gap="1" fontSize="12px">
+            <Text display="flex" alignItems="center" gap={1}>
+              Locked:
+            </Text>
+            <Amount value={max} data-testid="available to undelegate" />
+
+            <Text as="span" cursor="pointer" onClick={onMaxClick} color="cyan.500" fontWeight={700}>
+              &nbsp; Max
+            </Text>
           </Flex>
+        </Flex>
+        <Flex flexGrow={1}>
+          <NumberInput
+            InputProps={{
+              isDisabled,
+              isRequired: true,
+              'data-testid': 'undelegate amount input',
+              'data-max': max?.toString(),
+            }}
+            value={collateralChange.abs()}
+            onChange={(val) => setCollateralChange(val.mul(-1))}
+            max={max}
+          />
         </Flex>
         <Collapse in={isDisabled} animateOpacity>
           <Alert mt={2} status="warning">
@@ -108,7 +105,7 @@ export const UndelegateUi: FC<{
               <AlertTitle>Credit capacity reached</AlertTitle>
               <AlertDescription>
                 One of the markets has reached its credit capacity and is currently in a locked
-                state. You cannot remove collateral from the pool at this time.
+                state. You cannot unlock collateral from the pool at this time.
               </AlertDescription>
             </Flex>
           </Alert>
@@ -128,12 +125,27 @@ export const UndelegateUi: FC<{
         </Alert>
       </Collapse>
 
+      <Collapse in={isValidLeftover && collateralChange.lt(0)} animateOpacity>
+        <Alert colorScheme="orange" mb="4">
+          <AlertIcon />
+          <Text>
+            As a security precaution, borrowed assets can only be withdrawn to your wallet after 24
+            hs since your previous account activity.
+          </Text>
+        </Alert>
+      </Collapse>
+
       <Button
         data-testid="undelegate submit"
         type="submit"
-        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true || collateralChange.gte(0)}
+        isDisabled={
+          isLoadingRequiredData ||
+          isAnyMarketLocked === true ||
+          collateralChange.gte(0) ||
+          !isValidLeftover
+        }
       >
-        {collateralChange.gte(0) ? 'Enter Amount' : 'Remove Collateral'}
+        {collateralChange.gte(0) ? 'Enter Amount' : 'Unlock Collateral'}
       </Button>
     </Flex>
   );

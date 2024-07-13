@@ -1,7 +1,6 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Button, Text, Tooltip } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import { shortAddress } from '../../utils/address';
 import { Socials } from '../Socials';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { CouncilSlugs } from '../../utils/councils';
@@ -57,10 +56,10 @@ export const UserProfileDetails = ({
           right="0px"
         />
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
-        <Flex flexDir="column" w="100%">
+        <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
             <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
-              {shortAddress(userData?.address)}
+              {prettyString(userData!.address)}
             </Text>
           </Flex>
           <Text fontSize="12px" fontWeight="400" lineHeight="16px">
@@ -111,7 +110,7 @@ export const UserProfileDetails = ({
               colorScheme="gray"
               mb="1"
               w="100%"
-              onClick={() => navigate(`/councils/${activeCouncil}?editProfile=true`)}
+              onClick={() => navigate(`/profile`)}
               color="white"
             >
               Edit Profile
@@ -133,6 +132,7 @@ export const UserProfileDetails = ({
                 colorScheme="gray"
                 w="100%"
                 color="white"
+                data-cy="nominate-self-button-user-profile-details"
                 onClick={() =>
                   navigate(
                     `/councils/${activeCouncil}?${
@@ -149,6 +149,7 @@ export const UserProfileDetails = ({
         {councilPeriod === '2' && (
           <Button
             w="100%"
+            data-cy="select-user-to-vote-button"
             onClick={() => {
               if (isAlreadyVoted) {
                 dispatch({
@@ -166,25 +167,25 @@ export const UserProfileDetails = ({
                   payload: userData?.address.toLowerCase(),
                 });
               }
+              if (userData?.address) {
+                const selection = localStorage.getItem('voteSelection');
+                if (!selection) localStorage.setItem('voteSelection', '');
+                const parsedSelection = JSON.parse(selection ? selection : '{}');
 
-              // if (userData?.address) {
-              //   const selection = localStorage.getItem('voteSelection');
-              //   if (!selection) localStorage.setItem('voteSelection', '');
-              //   const parsedSelection = JSON.parse(selection ? selection : '{}');
-              //   parsedSelection[activeCouncil] =
-              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-              //       ? ''
-              //       : userData.address;
-              //   localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-              //   queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
-              //   setRemoveOrSelect(
-              //     parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-              //   );
-              // }
+                if (parsedSelection[activeCouncil]) {
+                  parsedSelection[activeCouncil] =
+                    parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+                      ? ''
+                      : userData.address;
+                } else {
+                  parsedSelection[activeCouncil] = userData.address;
+                }
+                localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
+              }
             }}
           >
             {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens || userData?.username || shortAddress(userData?.address)}
+            {userData?.ens || userData?.username || prettyString(userData!.address)}
           </Button>
         )}
       </Flex>

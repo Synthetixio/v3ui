@@ -1,4 +1,13 @@
-import { Alert, AlertDescription, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Button,
+  Collapse,
+  Flex,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
@@ -64,31 +73,20 @@ export const DepositUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="2">
+      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
         Deposit & Lock Collateral
       </Text>
-      <BorderBox display="flex" flexDirection="column" py={2} px={3} mb="4">
-        <Flex alignItems="center">
-          <BorderBox display="flex" p={3} alignItems="center">
+      <BorderBox display="flex" p={3} mb="6">
+        <Flex alignItems="flex-start" flexDir="column" gap="1">
+          <BorderBox display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-              <TokenIcon symbol={symbol} />
+              <TokenIcon symbol={symbol} width={16} height={16} />
               {displaySymbol}
             </Text>
           </BorderBox>
-          <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-            <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-              <NumberInput
-                InputProps={{
-                  'data-testid': 'deposit amount input',
-                  'data-max': maxAmount?.toString(),
-                }}
-                value={collateralChange}
-                onChange={(value) => {
-                  setCollateralChange(value);
-                }}
-                max={maxAmount}
-                dataTestId="deposit-number-input"
-              />
+
+          <Tooltip
+            label={
               <Flex
                 flexDirection="column"
                 alignItems="flex-end"
@@ -96,48 +94,56 @@ export const DepositUi: FC<{
                 color="whiteAlpha.700"
               >
                 {accountCollateral.availableCollateral.gt(0) ? (
-                  <Flex
-                    gap="1"
-                    cursor="pointer"
-                    onClick={() => setCollateralChange(accountCollateral.availableCollateral)}
-                  >
-                    <Text>Available {symbol} Collateral:</Text>
+                  <Flex>
+                    <Text>Unlocked Balance:</Text>
                     <Amount value={accountCollateral?.availableCollateral} />
                   </Flex>
                 ) : null}
-                <Flex
-                  gap="1"
-                  cursor="pointer"
-                  onClick={() => {
-                    const amount = symbol === 'SNX' ? snxBalance?.transferable : tokenBalance;
-                    if (!amount) {
-                      return;
-                    }
-
-                    setCollateralChange(amount);
-                  }}
-                >
-                  <Text>{symbol} Balance:</Text>
+                <Flex gap="1">
+                  <Text>Wallet Balance:</Text>
                   <Amount value={symbol === 'SNX' ? snxBalance?.transferable : tokenBalance} />
                 </Flex>
                 {symbol === 'WETH' ? (
-                  <Flex
-                    gap="1"
-                    cursor="pointer"
-                    onClick={() => {
-                      if (!ethBalance) {
-                        return;
-                      }
-                      setCollateralChange(ethBalance);
-                    }}
-                  >
+                  <Flex gap="1">
                     <Text>ETH Balance:</Text>
                     <Amount value={ethBalance} />
                   </Flex>
                 ) : null}
               </Flex>
-            </Flex>
-          </Flex>
+            }
+          >
+            <Text fontSize="12px">
+              Balance: <Amount value={maxAmount} />
+              <Text
+                as="span"
+                cursor="pointer"
+                onClick={() => {
+                  if (!maxAmount) {
+                    return;
+                  }
+                  setCollateralChange(maxAmount);
+                }}
+                color="cyan.500"
+                fontWeight={700}
+              >
+                &nbsp; Max
+              </Text>
+            </Text>
+          </Tooltip>
+        </Flex>
+        <Flex flexGrow={1}>
+          <NumberInput
+            InputProps={{
+              'data-testid': 'deposit amount input',
+              'data-max': maxAmount?.toString(),
+            }}
+            value={collateralChange}
+            onChange={(value) => {
+              setCollateralChange(value);
+            }}
+            max={maxAmount}
+            dataTestId="deposit-number-input"
+          />
         </Flex>
       </BorderBox>
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (

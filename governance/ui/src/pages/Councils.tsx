@@ -6,6 +6,7 @@ import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
+import CouncilMembers from '../components/CouncilMembers/CouncilMembers';
 
 export default function Councils() {
   const { council } = useParams();
@@ -26,13 +27,15 @@ export default function Councils() {
         maxW={{ base: '100%', md: '768px', lg: '1280px' }}
         gap={4}
         as={Flex}
-        // justifyContent="space"
         flexDirection="row"
         w="100%"
+        mb="4"
       >
-        <Flex flexDir="column" maxW="735px" w="100%">
-          {(councilPeriod === '1' || councilPeriod === '2') && (
+        <Flex flexDir="column" w="100%">
+          {councilPeriod === '1' || councilPeriod === '2' ? (
             <CouncilNominees activeCouncil={activeCouncil} />
+          ) : (
+            <CouncilMembers activeCouncil={activeCouncil} />
           )}
           {/* <PassedElectionAccordion
             activeCouncil={councils.find(

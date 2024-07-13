@@ -7,7 +7,6 @@ import { truncateAddress } from '@snx-v3/formatters';
 export default function CouncilUser({
   address,
   councilSlug,
-  hideName = false,
 }: {
   address?: string;
   councilSlug: CouncilSlugs;
@@ -19,7 +18,6 @@ export default function CouncilUser({
   if (!council) {
     return null;
   }
-
   return (
     <Flex alignItems="center">
       <Flex alignItems="center">
@@ -52,16 +50,14 @@ export default function CouncilUser({
           />
         )}
       </Flex>
-      {!hideName && (
-        <Flex flexDir="column" mr="auto" ml="1">
-          <Text fontSize="x-small" fontWeight="bold">
-            {council.title}
-          </Text>
-          <Text fontSize="x-small">
-            {user ? (user?.username ? user.username : truncateAddress(user?.address)) : 'not found'}
-          </Text>
-        </Flex>
-      )}
+      <Flex flexDir="column" mr="auto" ml="1">
+        <Text fontSize="x-small" fontWeight="bold">
+          {council.title}
+        </Text>
+        <Text fontSize="x-small">
+          {user ? (user?.username ? user.username : truncateAddress(user?.address)) : 'No Vote'}
+        </Text>
+      </Flex>
     </Flex>
   );
 }

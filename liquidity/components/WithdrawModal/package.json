@@ -8,18 +8,21 @@
     "@chakra-ui/react": "^2.8.2",
     "@snx-v3/Amount": "workspace:*",
     "@snx-v3/ContractError": "workspace:*",
+    "@snx-v3/ManagePositionContext": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
+    "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
+    "@snx-v3/useCollateralTypes": "workspace:*",
     "@snx-v3/useContractErrorParser": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
+    "@snx-v3/useLiquidityPosition": "workspace:*",
     "@snx-v3/useParams": "workspace:*",
+    "@snx-v3/useSystemToken": "workspace:*",
     "@snx-v3/useWithdraw": "workspace:*",
-    "@snx-v3/useWrapEth": "workspace:*",
+    "@snx-v3/useWithdrawBaseAndromeda": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
-    "@xstate/react": "^3.2.2",
-    "react": "^18.2.0",
-    "xstate": "^4.38.3"
+    "react": "^18.2.0"
   }
 }

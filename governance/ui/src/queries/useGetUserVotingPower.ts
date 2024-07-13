@@ -12,11 +12,10 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
   return useQuery({
     queryFn: async () => {
-      if (!activeWallet || !provider) return;
+      if (!activeWallet || !provider || !network?.id) return;
 
       try {
         const electionModule = getCouncilContract(council).connect(provider);
-        // const implementation = await electionModule.getImplementation();
 
         const electionId = electionModule.connect(provider).getEpochIndex();
 
@@ -29,14 +28,14 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         }
 
         const votingPower = await electionModule.callStatic.prepareBallotWithSnapshot(
-          SnapshotRecordContractAddress,
+          SnapshotRecordContractAddress(network.id),
           activeWallet?.address
         );
 
         return votingPower.toString();
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.log('ERROR IS', { error });
+        console.error('ERROR IS', { error });
         return ethers.BigNumber.from(0);
       }
     },
