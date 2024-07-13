@@ -27,6 +27,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
+import { ZEROWEI } from '../../utils/constants';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -56,13 +57,13 @@ export const DepositUi: FC<{
 }) => {
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
-      return snxBalance?.transferable;
+      return snxBalance?.transferable || ZEROWEI;
     }
     if (symbol !== 'WETH') {
-      return tokenBalance;
+      return tokenBalance || ZEROWEI;
     }
     if (!tokenBalance || !ethBalance) {
-      return undefined;
+      return ZEROWEI;
     }
     return tokenBalance.add(ethBalance);
   }, [symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
@@ -89,16 +90,14 @@ export const DepositUi: FC<{
             label={
               <Flex
                 flexDirection="column"
-                alignItems="flex-end"
+                alignItems="flex-start"
                 fontSize="xs"
                 color="whiteAlpha.700"
               >
-                {accountCollateral.availableCollateral.gt(0) ? (
-                  <Flex>
-                    <Text>Unlocked Balance:</Text>
-                    <Amount value={accountCollateral?.availableCollateral} />
-                  </Flex>
-                ) : null}
+                <Flex gap="1">
+                  <Text>Unlocked Balance:</Text>
+                  <Amount value={accountCollateral?.availableCollateral} />
+                </Flex>
                 <Flex gap="1">
                   <Text>Wallet Balance:</Text>
                   <Amount value={symbol === 'SNX' ? snxBalance?.transferable : tokenBalance} />

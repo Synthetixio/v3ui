@@ -6,7 +6,7 @@ import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/u
 import { CollateralIcon } from '@snx-v3/icons';
 import {
   ManageAction,
-  NoAccount,
+  NoPosition,
   UnsupportedCollateralAlert,
   Rewards,
   ManageStats,
@@ -202,10 +202,15 @@ export const Manage = () => {
   return (
     <ManagePositionProvider>
       <WatchAccountBanner />
-      {!accountId && (
-        <NoAccount collateralSymbol={collateralSymbol} collateralType={collateralType} />
+      {(!accountId || (liquidityPosition && liquidityPosition?.collateralAmount.eq(0))) && (
+        <NoPosition
+          collateralSymbol={collateralSymbol}
+          collateralType={collateralType}
+          accountId={accountId}
+          rewards={rewardsData}
+        />
       )}
-      {accountId && (
+      {accountId && liquidityPosition?.collateralAmount.gt(0) && (
         <ManageUi
           isLoading={isLoading}
           rewards={rewardsData}

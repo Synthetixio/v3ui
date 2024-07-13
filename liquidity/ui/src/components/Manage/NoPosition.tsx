@@ -13,12 +13,18 @@ import { InitialDeposit } from '../InitialDeposit';
 import { CRatioBar } from '../CRatioBar/CRatioBar';
 import DepositModal from '@snx-v3/DepositModal';
 import { useAccounts } from '@snx-v3/useAccounts';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { Rewards } from '../Rewards';
+import { RewardsType } from '@snx-v3/useRewards';
 
-export const NoAccount: FC<{
+export const NoPosition: FC<{
   collateralSymbol?: string;
   poolName?: string;
   collateralType?: CollateralType;
-}> = ({ collateralSymbol, poolName, collateralType }) => {
+  accountId: string | undefined;
+  liquidityPosition?: LiquidityPosition;
+  rewards?: RewardsType;
+}> = ({ rewards, liquidityPosition, collateralSymbol, poolName, collateralType, accountId }) => {
   const { refetch } = useAccounts();
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   const { network } = useNetwork();
@@ -56,7 +62,7 @@ export const NoAccount: FC<{
             alignItems="center"
             data-cy="manage-position-title"
           >
-            {collateralDisplayName} Liquidity Position
+            Open {collateralDisplayName} Liquidity Position
           </Heading>
           <Heading
             ml={4}
@@ -113,6 +119,7 @@ export const NoAccount: FC<{
               isLoading={false}
             />
           </BorderBox>
+          {rewards && <Rewards isLoading={false} rewards={rewards} />}
         </BorderBox>
         <BorderBox
           flex={1}
@@ -127,6 +134,8 @@ export const NoAccount: FC<{
               submit={() => {
                 setTxnModalOpen('deposit');
               }}
+              hasAccount={!!accountId}
+              liquidityPosition={liquidityPosition}
             />
           )}
 
