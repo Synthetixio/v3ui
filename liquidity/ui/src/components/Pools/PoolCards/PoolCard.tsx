@@ -12,7 +12,6 @@ import {
   Td,
   Th,
   Thead,
-  Tooltip,
   Link,
 } from '@chakra-ui/react';
 import { useNavigate, useSearchParams, Link as ReactRouterLink } from 'react-router-dom';
@@ -34,6 +33,7 @@ import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { Sparkles } from '@snx-v3/icons';
 import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
 import { formatApr } from '../CollateralSection';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface CollateralTypeWithDeposited extends CollateralType {
   collateralDeposited: string;
