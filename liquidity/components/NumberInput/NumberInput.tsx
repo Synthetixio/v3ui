@@ -25,6 +25,7 @@ export function NumberInput({
   max,
   InputProps,
   dataTestId,
+  disabled,
 }: {
   onChange?: (value: Wei) => void;
   value: Wei;
@@ -32,6 +33,7 @@ export function NumberInput({
   max?: Wei;
   InputProps?: NumberInputProps;
   dataTestId?: string;
+  disabled?: boolean;
 }) {
   const [inputValue, setInputValue] = useState(value.gt(0) ? value.toString() : '');
 
@@ -94,7 +96,7 @@ export function NumberInput({
     <Input
       ref={ref}
       flex="1"
-      type="text"
+      type="number"
       border="none"
       borderWidth="0px"
       textAlign="end"
@@ -110,8 +112,10 @@ export function NumberInput({
       placeholder="00.00"
       _focus={{ boxShadow: 'none !important' }}
       _placeholder={{ color: 'whiteAlpha.700' }}
+      _disabled={{ color: 'white' }}
       value={inputValue}
       onChange={onInputChange}
+      disabled={disabled}
       data-cy={dataTestId}
       {...InputProps}
     />

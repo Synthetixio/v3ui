@@ -1,5 +1,5 @@
-import { FC, useMemo } from 'react';
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { FC, useMemo, useState } from 'react';
+import { Box, Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -19,6 +19,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
+import { ClosePosition } from '../components/ClosePosition/ClosePosition';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -59,6 +60,7 @@ export const ManageUi: FC<{
   poolName?: string;
   poolId?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
+  const [closePosition, setClosePosition] = useState(false);
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
@@ -157,16 +159,44 @@ export const ManageUi: FC<{
             <ManageStats liquidityPosition={liquidityPosition} />
             <Rewards isLoading={isLoading} rewards={rewards} />
           </BorderBox>
-          <BorderBox
-            flex={1}
-            maxW={['100%', '100%', '501px']}
-            p={6}
-            flexDirection="column"
-            bg="navy.700"
-            height="fit-content"
-          >
-            <ManageAction liquidityPosition={liquidityPosition} />
-          </BorderBox>
+          {!closePosition && (
+            <Flex
+              maxW={['100%', '100%', '501px']}
+              flex={1}
+              alignSelf="flex-start"
+              flexDirection="column"
+            >
+              <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
+                <ManageAction liquidityPosition={liquidityPosition} />
+              </BorderBox>
+              <Text
+                textAlign="center"
+                cursor="pointer"
+                onClick={() => setClosePosition(true)}
+                color="cyan.500"
+                fontWeight={700}
+                mt="5"
+              >
+                Close Position
+              </Text>
+            </Flex>
+          )}
+
+          {closePosition && (
+            <BorderBox
+              flex={1}
+              maxW={['100%', '100%', '501px']}
+              p={6}
+              flexDirection="column"
+              bg="navy.700"
+              height="fit-content"
+            >
+              <ClosePosition
+                liquidityPosition={liquidityPosition}
+                onClose={() => setClosePosition(false)}
+              />
+            </BorderBox>
+          )}
         </Flex>
       </Box>
     </>
@@ -191,7 +221,7 @@ export const Manage = () => {
     accountId
   );
 
-  const { data: liquidityPosition } = useLiquidityPosition({
+  const { data: liquidityPosition, isLoading: isLoadingPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId,
     poolId,
@@ -202,12 +232,14 @@ export const Manage = () => {
   return (
     <ManagePositionProvider>
       <WatchAccountBanner />
-      {(!accountId || (liquidityPosition && liquidityPosition?.collateralAmount.eq(0))) && (
+      {(!accountId ||
+        (!isLoadingPosition && liquidityPosition && liquidityPosition?.collateralAmount.eq(0))) && (
         <NoPosition
           collateralSymbol={collateralSymbol}
           collateralType={collateralType}
           accountId={accountId}
           rewards={rewardsData}
+          liquidityPosition={liquidityPosition}
         />
       )}
       {accountId && liquidityPosition?.collateralAmount.gt(0) && (
@@ -221,6 +253,8 @@ export const Manage = () => {
           collateralSymbol={collateralSymbol}
         />
       )}
+
+      {isLoadingPosition && <Skeleton width="100%" height="80px" />}
     </ManagePositionProvider>
   );
 };

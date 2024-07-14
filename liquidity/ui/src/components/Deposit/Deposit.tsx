@@ -142,6 +142,7 @@ export const DepositUi: FC<{
             }}
             max={maxAmount}
             dataTestId="deposit-number-input"
+            min={ZEROWEI}
           />
         </Flex>
       </BorderBox>
