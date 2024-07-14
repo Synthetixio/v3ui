@@ -248,6 +248,7 @@ export const ClosePositionTransactions: FC<{
       }));
 
       const contractError = errorParserCoreProxy(error);
+
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
       }
