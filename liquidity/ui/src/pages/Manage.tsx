@@ -65,13 +65,15 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  const { data: CollateralTypes } = useCollateralTypes();
+  const { data: collateralTypes } = useCollateralTypes();
 
   const notSupported =
     poolData &&
-    CollateralTypes &&
+    collateralTypes &&
     collateralDisplayName &&
-    !CollateralTypes.some((item) => item.symbol === collateralDisplayName);
+    !collateralTypes.some(
+      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    );
 
   return (
     <>

@@ -2,55 +2,28 @@ import { TriangleDownIcon, TriangleUpIcon, InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Progress, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { FC } from 'react';
 import { LineWithText } from './LineWithText';
-import { getHealthVariant, ratioIsMaxUInt } from './CRatioBar.utils';
+import { getHealthVariant, getProgressSize, ratioIsMaxUInt } from './CRatioBar.utils';
 import { CRatioBadge } from './CRatioBadge';
 
 export const CRatioBarUi: FC<{
-  liquidationCratioPercentage: number;
-  targetCratioPercentage: number;
-  currentCRatioPercentage: number;
-  newCratioPercentage?: number;
+  liquidationCratio: number;
+  targetCratio: number;
+  currentCRatio: number;
+  newCratio?: number;
   isLoading: boolean;
   hasChanges: boolean;
-}> = ({
-  targetCratioPercentage,
-  liquidationCratioPercentage,
-  currentCRatioPercentage,
-  newCratioPercentage,
-  isLoading,
-  hasChanges,
-}) => {
-  const maxRatioShown = Math.min(
-    Math.max(targetCratioPercentage, currentCRatioPercentage) * 1.1,
-    // If the c-ratio is bigger than 2.5x the target ratio the target and liquidation labels will overlap due to the big scale difference.
-    // So when this is the case we opt not to show the current c-ratio arrows and set maxRatioShown to target * 2.5.
-    targetCratioPercentage * 1.1
-  );
-
-  const scaleFactor = maxRatioShown / 100;
-
-  const variant = getHealthVariant({
-    targetCratioPercentage,
-    liquidationCratioPercentage,
-    currentCRatioPercentage,
-  });
-  const newVariant = getHealthVariant({
-    targetCratioPercentage,
-    liquidationCratioPercentage,
-    currentCRatioPercentage: newCratioPercentage,
-  });
-
-  const newCratioPercentageWithDefault = newCratioPercentage || 0;
-  const highlightedProgressCRatio =
-    newCratioPercentage === undefined
-      ? currentCRatioPercentage
-      : newCratioPercentageWithDefault < currentCRatioPercentage
-        ? newCratioPercentageWithDefault
-        : currentCRatioPercentage;
-  const nonHighLightedProgressCRatio =
-    newCratioPercentageWithDefault < currentCRatioPercentage
-      ? currentCRatioPercentage
-      : newCratioPercentageWithDefault;
+}> = ({ targetCratio, liquidationCratio, currentCRatio, newCratio, isLoading, hasChanges }) => {
+  const variant = hasChanges
+    ? getHealthVariant({
+        targetCratio: targetCratio,
+        liquidationCratio: liquidationCratio,
+        cRatio: newCratio,
+      })
+    : getHealthVariant({
+        targetCratio: targetCratio,
+        liquidationCratio: liquidationCratio,
+        cRatio: currentCRatio,
+      });
 
   return (
     <Flex flexDir="column" gap="2">
@@ -64,35 +37,27 @@ export const CRatioBarUi: FC<{
         </Tooltip>
       </Text>
       <Flex alignItems="center" gap={2}>
-        {!currentCRatioPercentage ? (
+        {!currentCRatio ? (
           <Text color="white" fontWeight={800} fontSize="20px">
             N/A
           </Text>
         ) : (
           <Text color="white" fontWeight={800} fontSize="20px">
-            {ratioIsMaxUInt(currentCRatioPercentage)
-              ? 'Infinite'
-              : currentCRatioPercentage.toFixed(2)}
-            %
+            {ratioIsMaxUInt(currentCRatio) ? 'Infinite' : currentCRatio.toFixed(2)}%
           </Text>
         )}
 
-        {hasChanges && newCratioPercentage && (
+        {hasChanges && newCratio && (
           <Text color="white" fontWeight={800} fontSize="20px">
-            &rarr;{' '}
-            {ratioIsMaxUInt(newCratioPercentage)
-              ? 'Infinite'
-              : `${newCratioPercentage.toFixed(2)} %`}
+            &rarr; {ratioIsMaxUInt(newCratio) ? 'Infinite' : `${newCratio.toFixed(2)} %`}
           </Text>
         )}
 
-        {(hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage) !== 0 && (
+        {(hasChanges ? newCratio || 0 : currentCRatio) !== 0 && (
           <CRatioBadge
-            currentCRatioPercentage={
-              hasChanges ? newCratioPercentage || 0 : currentCRatioPercentage
-            }
-            liquidationCratioPercentage={liquidationCratioPercentage}
-            targetCratioPercentage={targetCratioPercentage}
+            cRatio={hasChanges ? newCratio || 0 : currentCRatio}
+            liquidationCratio={liquidationCratio}
+            targetCratio={targetCratio}
           />
         )}
       </Flex>
@@ -106,32 +71,20 @@ export const CRatioBarUi: FC<{
       >
         <>
           <LineWithText
-            left={
-              !isLoading && liquidationCratioPercentage > 10
-                ? liquidationCratioPercentage / scaleFactor
-                : 10
-            }
-            text={
-              !isLoading
-                ? `Liquidation < ${liquidationCratioPercentage.toFixed(0)}%`
-                : 'Liquidation'
-            }
+            left="25%"
+            text={!isLoading ? `Liquidation < ${liquidationCratio.toFixed(0)}%` : 'Liquidation'}
             tooltipText="Point at which your Position gets liquidated."
-            tooltipPosition="left"
           />
           <LineWithText
-            left={!isLoading ? targetCratioPercentage / scaleFactor : 66}
+            left="75%"
             text={
               !isLoading
                 ? `Borrowing Ratio ${
-                    ratioIsMaxUInt(targetCratioPercentage)
-                      ? 'Infinite'
-                      : targetCratioPercentage.toFixed(0)
+                    ratioIsMaxUInt(targetCratio) ? 'Infinite' : targetCratio.toFixed(0)
                   }%`
                 : 'Borrowing Ratio'
             }
             tooltipText="Minimum point at which you can borrow assets"
-            tooltipPosition="right"
           />
         </>
         <Skeleton
@@ -144,54 +97,62 @@ export const CRatioBarUi: FC<{
           width="100%"
           isLoaded={!isLoading}
         >
-          {newCratioPercentage !== undefined ? (
+          {newCratio !== undefined && hasChanges ? (
             <Progress
-              data-testid="highlighted progress bar"
-              variant={newCratioPercentage === 0 ? 'white' : 'update-' + newVariant}
+              variant={variant}
               top={0}
               bottom={0}
               height="12px"
               position="absolute"
               margin="auto"
               width="100%"
-              value={newCratioPercentage === 0 ? 0 : nonHighLightedProgressCRatio / scaleFactor}
+              value={getProgressSize({
+                cRatio: newCratio,
+                targetCratio: targetCratio,
+                liquidationCratio: liquidationCratio,
+              })}
+              zIndex={(newCratio || 0) <= currentCRatio ? 10 : 1}
             />
           ) : null}
           <Progress
-            variant={newCratioPercentage !== undefined ? newVariant : variant}
+            variant={hasChanges ? `update-${variant}` : variant}
             top={0}
             bottom={0}
             height="12px"
             position="absolute"
             margin="auto"
             width="100%"
-            data-testid="non highlighted progress bar"
-            display={newCratioPercentage === 0 ? 'none' : 'block'}
-            value={highlightedProgressCRatio / scaleFactor}
+            display={newCratio === 0 ? 'none' : 'block'}
+            value={getProgressSize({
+              cRatio: currentCRatio,
+              targetCratio: targetCratio,
+              liquidationCratio: liquidationCratio,
+            })}
+            zIndex={(newCratio || 0) <= currentCRatio ? 1 : 10}
           />
         </Skeleton>
         <Box
           bg={variant}
           height="12px"
           position="absolute"
-          left={`${
-            (newCratioPercentage !== undefined ? newCratioPercentage : currentCRatioPercentage) /
-            scaleFactor
-          }%`}
+          left={`${getProgressSize({
+            cRatio: newCratio,
+            targetCratio: targetCratio,
+            liquidationCratio: liquidationCratio,
+          })}%`}
           top={0}
           bottom={0}
           margin="auto"
-          display={newCratioPercentage === 0 ? 'none' : 'block'}
+          display={newCratio === 0 ? 'none' : 'block'}
         >
-          {currentCRatioPercentage > 0 && !isLoading && (
+          {currentCRatio > 0 && !isLoading && (
             <>
               <TriangleDownIcon
-                data-testid="current c-ration triangle"
                 position="absolute"
                 right={0}
                 top={0}
                 transform="translate(50%,-100%)"
-                color={newCratioPercentage !== undefined ? newVariant : variant}
+                color={variant}
               />
               <TriangleUpIcon
                 data-testid="current c-ration triangle"
@@ -199,7 +160,7 @@ export const CRatioBarUi: FC<{
                 right={0}
                 bottom={0}
                 transform="translate(50%,100%)"
-                color={newCratioPercentage !== undefined ? newVariant : variant}
+                color={variant}
               />
             </>
           )}
@@ -210,26 +171,19 @@ export const CRatioBarUi: FC<{
 };
 
 export const CRatioBar: FC<{
-  liquidationCratioPercentage?: number;
-  targetCratioPercentage?: number;
-  currentCRatioPercentage?: number;
-  newCratioPercentage?: number;
+  liquidationCratio?: number;
+  targetCratio?: number;
+  currentCRatio?: number;
+  newCratio?: number;
   isLoading: boolean;
   hasChanges: boolean;
-}> = ({
-  newCratioPercentage,
-  currentCRatioPercentage,
-  targetCratioPercentage,
-  liquidationCratioPercentage,
-  isLoading,
-  hasChanges,
-}) => {
+}> = ({ newCratio, currentCRatio, targetCratio, liquidationCratio, isLoading, hasChanges }) => {
   return (
     <CRatioBarUi
-      liquidationCratioPercentage={liquidationCratioPercentage || 100}
-      targetCratioPercentage={targetCratioPercentage || 100}
-      currentCRatioPercentage={currentCRatioPercentage || 0}
-      newCratioPercentage={newCratioPercentage}
+      liquidationCratio={liquidationCratio || 100}
+      targetCratio={targetCratio || 100}
+      currentCRatio={currentCRatio || 0}
+      newCratio={newCratio}
       isLoading={isLoading}
       hasChanges={hasChanges}
     />

@@ -110,12 +110,10 @@ export const NoPosition: FC<{
           <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
             <CRatioBar
               hasChanges={collateralChange.gt(0)}
-              currentCRatioPercentage={0}
-              liquidationCratioPercentage={
-                (collateralType?.liquidationRatioD18?.toNumber() || 0) * 100
-              }
-              newCratioPercentage={collateralChange.gt(0) ? Number.MAX_SAFE_INTEGER : 0}
-              targetCratioPercentage={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+              currentCRatio={0}
+              liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+              newCratio={collateralChange.gt(0) ? Number.MAX_SAFE_INTEGER : 0}
+              targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
               isLoading={false}
             />
           </BorderBox>

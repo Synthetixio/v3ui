@@ -161,12 +161,10 @@ export const ManageStatsUi: FC<{
         <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
           <CRatioBar
             hasChanges={hasChanges}
-            currentCRatioPercentage={cRatio.toNumber() * 100}
-            liquidationCratioPercentage={
-              (collateralType?.liquidationRatioD18?.toNumber() || 0) * 100
-            }
-            newCratioPercentage={newCratio.toNumber() * 100}
-            targetCratioPercentage={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+            currentCRatio={cRatio.toNumber() * 100}
+            liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+            newCratio={newCratio.toNumber() * 100}
+            targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
             isLoading={false}
           />
         </BorderBox>
