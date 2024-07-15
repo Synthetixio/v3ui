@@ -1,6 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { AssetsList, PositionsList, StatsList } from '../components';
+import { PositionsList, StatsList } from '../components';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 
 export function Dashboard() {
@@ -25,7 +25,8 @@ export function Dashboard() {
         <WatchAccountBanner />
 
         <StatsList />
-        <AssetsList />
+        {/* Leave commented out for now */}
+        {/* <AssetsList /> */}
         <PositionsList />
       </Flex>
     </>

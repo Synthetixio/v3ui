@@ -45,7 +45,7 @@ export const CRatioBarUi: FC<{
           label="C-ratio is a dynamic number that represents a ratio between your collateral and your debt."
           p="3"
         >
-          <InfoIcon w="12px" h="12px" />
+          <InfoIcon w="10px" h="10px" />
         </Tooltip>
       </Text>
       <Flex alignItems="center" gap={2}>

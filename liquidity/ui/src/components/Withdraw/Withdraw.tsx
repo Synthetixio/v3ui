@@ -52,20 +52,22 @@ const WithdrawUi: FC<{
           </BorderBox>
           <Flex fontSize="12px" gap="1">
             <Text>Unlocked:</Text>
-            <Amount value={maWWithdrawable} /> {symbol}
-            <Text
-              cursor="pointer"
-              onClick={() => {
-                if (!maWWithdrawable) {
-                  return;
-                }
-                setAmount(maWWithdrawable);
-              }}
-              color="cyan.500"
-              fontWeight={700}
-            >
-              &nbsp; Max
-            </Text>
+            <Amount value={maWWithdrawable} />
+            {maWWithdrawable.gt(0) && (
+              <Text
+                cursor="pointer"
+                onClick={() => {
+                  if (!maWWithdrawable) {
+                    return;
+                  }
+                  setAmount(maWWithdrawable);
+                }}
+                color="cyan.500"
+                fontWeight={700}
+              >
+                Max
+              </Text>
+            )}
           </Flex>
         </Flex>
         <Flex flexGrow={1}>
@@ -74,6 +76,7 @@ const WithdrawUi: FC<{
               isRequired: true,
               'data-testid': 'withdraw amount input',
               'data-max': maWWithdrawable.toString(),
+              type: 'number',
             }}
             value={amount}
             onChange={(val) => setAmount(val)}
@@ -81,7 +84,6 @@ const WithdrawUi: FC<{
           />
         </Flex>
       </BorderBox>
-
       <Collapse in={isRunning && maWWithdrawable.gt(0)} animateOpacity>
         <Alert colorScheme="red" mb="4">
           <AlertIcon />

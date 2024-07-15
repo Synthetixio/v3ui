@@ -42,7 +42,7 @@ export const DebtStats: FC<{
           px={3}
         >
           <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-            <InfoIcon color="white" height="9px" width="9px" />
+            <InfoIcon color="gray.500" height="10px" width="10px" />
           </Flex>
         </Tooltip>
       </Flex>

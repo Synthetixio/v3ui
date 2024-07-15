@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { stringToHash } from '@snx-v3/tsHelpers';
 import { AccountCollateralType, loadAccountCollateral } from '@snx-v3/useAccountCollateral';
@@ -11,7 +12,6 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import React from 'react';
 import { z } from 'zod';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 
@@ -86,7 +86,7 @@ export const useLiquidityPosition = ({
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
 
-  const priceUpdateTxHash = React.useMemo(
+  const priceUpdateTxHash = useMemo(
     () => (priceUpdateTx?.data ? stringToHash(priceUpdateTx?.data) : null),
     [priceUpdateTx?.data]
   );
@@ -112,6 +112,7 @@ export const useLiquidityPosition = ({
         network &&
         provider
     ),
+    staleTime: 60000 * 5,
     queryFn: async () => {
       if (
         !(

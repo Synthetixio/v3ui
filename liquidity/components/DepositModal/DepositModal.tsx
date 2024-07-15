@@ -324,6 +324,7 @@ export const DepositModal: DepositModalProps = ({
               error.message || 'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
           throw Error('Wrapping failed', { cause: error });
         }
@@ -336,6 +337,7 @@ export const DepositModal: DepositModalProps = ({
               ? 'The next transaction will delegate this collateral.'
               : 'The next transaction will create your account and and delegate this collateral',
             status: 'info',
+            variant: 'left-accent',
           });
 
           await approve(Boolean(state.context.infiniteApproval));
@@ -353,6 +355,7 @@ export const DepositModal: DepositModalProps = ({
               'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
           throw Error('Approve failed', { cause: error });
         }
@@ -365,6 +368,7 @@ export const DepositModal: DepositModalProps = ({
               ? 'Delegating your collateral'
               : 'Creating your account and depositing collateral',
             description: '',
+            variant: 'left-accent',
           });
           if (isBaseAndromeda(network?.id, network?.preset)) {
             await depositBaseAndromeda();
@@ -403,6 +407,7 @@ export const DepositModal: DepositModalProps = ({
             description: 'Your delegated collateral amount has been updated.',
             status: 'success',
             duration: 5000,
+            variant: 'left-accent',
           });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
@@ -417,6 +422,7 @@ export const DepositModal: DepositModalProps = ({
               'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
           throw Error('Delegate collateral failed', { cause: error });
         }

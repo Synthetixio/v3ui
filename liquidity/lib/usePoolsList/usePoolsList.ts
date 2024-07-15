@@ -25,7 +25,7 @@ export function usePoolsList() {
         throw error;
       }
     },
-    staleTime: 60000,
+    staleTime: 60000 * 10,
   });
 }
 

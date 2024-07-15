@@ -39,6 +39,8 @@ export function NumberInput({
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      // Define max length here
+      if (e.target.value.length > 15) return;
       setInputValue(e.target.value);
       if (!onChange) {
         // Could be a read-only input
@@ -104,7 +106,7 @@ export function NumberInput({
       outline="none"
       fontFamily="heading"
       fontSize="xl"
-      fontWeight="black"
+      fontWeight="700"
       lineHeight="2xl"
       color="white"
       height="unset"
@@ -118,6 +120,7 @@ export function NumberInput({
       disabled={disabled}
       data-cy={dataTestId}
       {...InputProps}
+      maxLength={10}
     />
   );
 }

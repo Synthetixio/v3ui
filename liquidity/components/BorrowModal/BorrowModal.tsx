@@ -126,7 +126,9 @@ export const BorrowModal: React.FC<{
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
+
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
+
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();
@@ -148,6 +150,7 @@ export const BorrowModal: React.FC<{
           'Please try again.'
         ),
         status: 'error',
+        variant: 'left-accent',
       });
       throw Error('Borrow failed', { cause: error });
     }

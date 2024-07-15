@@ -95,6 +95,7 @@ export function useAccountCollateral({
         collateralTypes.length > 0 &&
         systemToken
     ),
+    staleTime: 60000 * 5,
     queryFn: async function () {
       if (
         !(

@@ -16,12 +16,14 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { ARBITRUM, Network, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { ClosePosition } from '../components/ClosePosition/ClosePosition';
 import { ManageLoading } from '../components/Manage/ManageLoading';
 import { PositionTitle } from '../components/Manage/PositionTitle';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { InfoIcon } from '@chakra-ui/icons';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -82,18 +84,29 @@ export const ManageUi: FC<{
       <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
       <Box mb={12} mt={8}>
         <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
-          <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
-
+          <PositionTitle
+            collateralSymbol={collateralSymbol}
+            poolName={poolName}
+            isOpen
+            poolId={poolId}
+          />
           {poolData && (
-            <Flex alignItems="center" gap={2}>
-              <Text fontSize="20px" fontWeight="bold" color="gray.500">
-                APR
-              </Text>
+            <Flex alignItems="flex-end" direction="column">
+              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+                <Text
+                  fontFamily="heading"
+                  fontSize="sm"
+                  lineHeight={5}
+                  fontWeight="medium"
+                  color="gray.500"
+                >
+                  Estimated APR
+                  <InfoIcon ml={1} mb="2px" w="10px" h="10px" />
+                </Text>
+              </Tooltip>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {poolData.apr.combinedApr > 0
-                  ? `${network?.id === ARBITRUM.id ? 'Up to ' : ''}${poolData.apr.combinedApr
-                      .toFixed(2)
-                      ?.concat('%')}`
+                  ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
                   : '-'}
               </Text>
             </Flex>

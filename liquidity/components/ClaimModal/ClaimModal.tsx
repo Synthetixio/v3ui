@@ -148,6 +148,7 @@ export const ClaimModal: React.FC<{
           'Please try again.'
         ),
         status: 'error',
+        variant: 'left-accent',
       });
       throw Error('Claim failed', { cause: error });
     }

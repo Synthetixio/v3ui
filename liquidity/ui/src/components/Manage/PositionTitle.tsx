@@ -2,15 +2,18 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { FC } from 'react';
 import { useCollateralDisplayName } from '../../pages';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
-import { TokenIcon } from '../TokenIcon';
+import { CollateralIcon } from '@snx-v3/icons';
+import { useNavigate } from 'react-router-dom';
 
 export const PositionTitle: FC<{
   collateralSymbol?: string;
   poolName?: string;
   isOpen?: boolean;
-}> = ({ collateralSymbol, poolName, isOpen }) => {
+  poolId?: string;
+}> = ({ collateralSymbol, poolName, isOpen, poolId }) => {
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   const { network } = useNetwork();
+  const navigate = useNavigate();
 
   return (
     <Flex alignItems="center">
@@ -23,10 +26,10 @@ export const PositionTitle: FC<{
         borderRadius="100%"
         display="flex"
       >
-        <TokenIcon
-          symbol={collateralSymbol?.toUpperCase() || ''}
-          width={42}
-          height={42}
+        <CollateralIcon
+          symbol={collateralSymbol}
+          width="42px"
+          height="42px"
           fill="#0B0B22"
           color="#00D1FF"
         />
@@ -51,6 +54,8 @@ export const PositionTitle: FC<{
           display="flex"
           alignItems="center"
           data-cy="manage-position-subtitle"
+          _hover={{ cursor: 'pointer' }}
+          onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
         >
           {poolName}
           <Flex

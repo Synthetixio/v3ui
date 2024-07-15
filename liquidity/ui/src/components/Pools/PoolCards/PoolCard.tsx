@@ -12,7 +12,6 @@ import {
   Td,
   Th,
   Thead,
-  Tooltip,
   Link,
 } from '@chakra-ui/react';
 import { useNavigate, useSearchParams, Link as ReactRouterLink } from 'react-router-dom';
@@ -34,6 +33,7 @@ import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { Sparkles } from '@snx-v3/icons';
 import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
 import { formatApr } from '../CollateralSection';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface CollateralTypeWithDeposited extends CollateralType {
   collateralDeposited: string;
@@ -108,14 +108,14 @@ export const PoolCard = ({
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
           <Flex>
-            <Flex flexDir="column" gap={1} ml="12px">
-              <Heading
-                fontSize="xl"
-                fontWeight={700}
-                color="white"
-                _hover={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
-              >
+            <Flex
+              flexDir="column"
+              gap={1}
+              ml="12px"
+              _hover={{ cursor: 'pointer', opacity: 0.9 }}
+              onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
+            >
+              <Heading fontSize="xl" fontWeight={700} color="white">
                 {pool?.name}
               </Heading>
               <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
@@ -164,12 +164,16 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
-              <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
+              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+                <Flex>
+                  <Sparkles w="18px" h="18px" mb={0.5} />
+                </Flex>
+              </Tooltip>
             </Flex>
             <Link
-              px={4}
-              py="8px"
-              fontSize="14px"
+              px={3}
+              py={2}
+              fontSize="sm"
               fontWeight={700}
               lineHeight="20px"
               variant="outline"
@@ -181,6 +185,7 @@ export const PoolCard = ({
               borderRadius="4px"
               ml={3}
               to={`/pools/${network.id}/${pool.id}`}
+              color="white"
             >
               Details
             </Link>
@@ -274,7 +279,7 @@ export const PoolCard = ({
 
                 return (
                   <Tr key={type.tokenAddress}>
-                    <Td border="none" px={4}>
+                    <Td border="none" px={4} w="20%">
                       <Flex alignItems="center">
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
                         <Flex flexDirection="column" ml={3} mr="auto">
@@ -366,7 +371,7 @@ export const PoolCard = ({
                           fontFamily="heading"
                           fontSize="14px"
                           lineHeight="20px"
-                          fontWeight={700}
+                          fontWeight={500}
                           color="white"
                         >
                           {formatApr(apr28d * 100, network?.id)}
@@ -374,7 +379,7 @@ export const PoolCard = ({
                         </Text>
                       </Tooltip>
                     </Td>
-                    <Td border="none" textAlign="right" px={4}>
+                    <Td border="none" textAlign="right" pl={4} pr={0}>
                       <Button
                         onClick={async (e) => {
                           try {
