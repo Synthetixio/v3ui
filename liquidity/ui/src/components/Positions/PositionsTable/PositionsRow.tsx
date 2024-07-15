@@ -147,11 +147,9 @@ export function PositionRow({
               </Text>
 
               <CRatioBadge
-                currentCRatioPercentage={cRatio.toNumber() * 100}
-                liquidationCratioPercentage={
-                  (collateralType?.liquidationRatioD18?.toNumber() || 0) * 100
-                }
-                targetCratioPercentage={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+                cRatio={cRatio.toNumber() * 100}
+                liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+                targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
               />
             </Flex>
           </Fade>
