@@ -11,11 +11,11 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useApr } from '@snx-v3/useApr';
 import { CRatioBar } from '../CRatioBar/CRatioBar';
 import { PnlStats } from './PnlStats';
 import { DebtStats } from './DebtStats';
 import { CollateralStats } from './CollateralStats';
+import { ZEROWEI } from '../../utils/constants';
 
 export const ChangeStat: FC<{
   value: Wei;
@@ -59,13 +59,13 @@ export const ChangeStat: FC<{
 export const ManageStatsUi: FC<{
   liquidityPosition?: LiquidityPosition;
   collateralType?: CollateralType;
-  newCratio: Wei;
   newCollateralAmount: Wei;
   newDebt: Wei;
-  cRatio: Wei;
+  newCratio: Wei;
   collateralValue: Wei;
+  debt: Wei;
+  cRatio: Wei;
   hasChanges: boolean;
-  aprData?: number;
 }> = ({
   liquidityPosition,
   collateralType,
@@ -75,63 +75,13 @@ export const ManageStatsUi: FC<{
   newCratio,
   newDebt,
   hasChanges,
+  debt,
 }) => {
   const { network } = useNetwork();
 
   return (
     <Flex direction="column" gap={4}>
       <Flex flexWrap="wrap" direction="row" gap={4}>
-        {/* {isBaseAndromeda(network?.id, network?.preset) && (
-        <BorderBox
-          py={4}
-          px={6}
-          flexDirection="row"
-          bg="navy.700"
-          justifyContent="space-between"
-          flex={1}
-        >
-          <Flex flexDirection="column" justifyContent="space-between" width="100%">
-            <Flex alignItems="center" mb="4px">
-              <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-                APR
-              </Text>
-              <Tooltip
-                label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards."
-                textAlign="start"
-                py={2}
-                px={3}
-              >
-                <Flex
-                  height="12px"
-                  width="12px"
-                  ml="4px"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <InfoIcon color="white" height="9px" width="9px" />
-                </Flex>
-              </Tooltip>
-            </Flex>
-            <Flex width="100%">
-              {aprData ? (
-                <Flex
-                  gap={1}
-                  color="gray.50"
-                  fontSize="2xl"
-                  fontWeight="800"
-                  alignItems="center"
-                  lineHeight="32px"
-                >
-                  <Text>{!!aprData ? aprData.toFixed(2) : '-'}%</Text>
-                </Flex>
-              ) : (
-                <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
-              )}
-            </Flex>
-          </Flex>
-        </BorderBox>
-      )} */}
-
         <CollateralStats
           liquidityPosition={liquidityPosition}
           collateralType={collateralType}
@@ -161,9 +111,17 @@ export const ManageStatsUi: FC<{
         <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
           <CRatioBar
             hasChanges={hasChanges}
-            currentCRatio={cRatio.toNumber() * 100}
+            currentCRatio={
+              collateralValue.gt(0) && debt.eq(0)
+                ? Number.MAX_SAFE_INTEGER
+                : cRatio.toNumber() * 100
+            }
             liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
-            newCratio={newCratio.toNumber() * 100}
+            newCratio={
+              newCollateralAmount.gt(0) && newDebt.eq(0)
+                ? Number.MAX_SAFE_INTEGER
+                : newCratio.toNumber() * 100
+            }
             targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
             isLoading={false}
           />
@@ -178,8 +136,6 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(collateralSymbol);
-
-  const { data: aprData } = useApr();
 
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
@@ -204,7 +160,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
       collateralType={collateralType}
       cRatio={cRatio}
       collateralValue={collateralValue}
-      aprData={aprData?.combinedApr}
+      debt={liquidityPosition?.debt || ZEROWEI}
     />
   );
 };

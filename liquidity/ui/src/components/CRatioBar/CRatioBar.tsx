@@ -25,9 +25,21 @@ export const CRatioBarUi: FC<{
         cRatio: currentCRatio,
       });
 
+  const newBarSize = getProgressSize({
+    cRatio: newCratio,
+    targetCratio: targetCratio,
+    liquidationCratio: liquidationCratio,
+  });
+
+  const currentBarSize = getProgressSize({
+    cRatio: currentCRatio,
+    targetCratio: targetCratio,
+    liquidationCratio: liquidationCratio,
+  });
+
   return (
     <Flex flexDir="column" gap="2">
-      <Text color="gray.500">
+      <Text color="gray.500" fontSize="xs">
         C-Ratio{' '}
         <Tooltip
           label="C-ratio is a dynamic number that represents a ratio between your collateral and your debt."
@@ -43,7 +55,7 @@ export const CRatioBarUi: FC<{
           </Text>
         ) : (
           <Text color="white" fontWeight={800} fontSize="20px">
-            {ratioIsMaxUInt(currentCRatio) ? 'Infinite' : currentCRatio.toFixed(2)}%
+            {ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}
           </Text>
         )}
 
@@ -97,38 +109,28 @@ export const CRatioBarUi: FC<{
           width="100%"
           isLoaded={!isLoading}
         >
-          {newCratio !== undefined && hasChanges ? (
-            <Progress
-              variant={variant}
-              top={0}
-              bottom={0}
-              height="12px"
-              position="absolute"
-              margin="auto"
-              width="100%"
-              value={getProgressSize({
-                cRatio: newCratio,
-                targetCratio: targetCratio,
-                liquidationCratio: liquidationCratio,
-              })}
-              zIndex={(newCratio || 0) <= currentCRatio ? 10 : 1}
-            />
-          ) : null}
           <Progress
-            variant={hasChanges ? `update-${variant}` : variant}
+            variant={currentBarSize < newBarSize ? `update-${variant}` : variant}
+            top={0}
+            bottom={0}
+            height="12px"
+            position="absolute"
+            margin="auto"
+            left="0"
+            width="100%"
+            value={Math.min(newBarSize, currentBarSize)}
+          />
+          <Progress
+            variant={currentBarSize >= newBarSize ? `update-${variant}` : variant}
             top={0}
             bottom={0}
             height="12px"
             position="absolute"
             margin="auto"
             width="100%"
+            left={`${Math.min(newBarSize, currentBarSize)}%`}
             display={newCratio === 0 ? 'none' : 'block'}
-            value={getProgressSize({
-              cRatio: currentCRatio,
-              targetCratio: targetCratio,
-              liquidationCratio: liquidationCratio,
-            })}
-            zIndex={(newCratio || 0) <= currentCRatio ? 1 : 10}
+            value={Math.abs(newBarSize - currentBarSize)}
           />
         </Skeleton>
         <Box

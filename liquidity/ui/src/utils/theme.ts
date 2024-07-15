@@ -11,14 +11,14 @@ export const Progress: ComponentMultiStyleConfig = {
   variants: {
     error: (props) => ({
       filledTrack: {
-        boxShadow: `0px 0px 15px ${props.theme.colors.error}`,
         bg: 'error',
+        boxShadow: `0px 0px 15px ${props.theme.colors.error}`,
       },
     }),
     warning: (props) => ({
       filledTrack: {
-        boxShadow: `0px 0px 15px ${props.theme.colors.warning}`,
         bg: 'warning',
+        boxShadow: `0px 0px 15px ${props.theme.colors.warning}`,
       },
     }),
     success: (props) => ({
