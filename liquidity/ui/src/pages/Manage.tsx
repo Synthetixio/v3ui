@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react';
-import { Box, Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -10,17 +10,18 @@ import {
   UnsupportedCollateralAlert,
   Rewards,
   ManageStats,
-  TokenIcon,
 } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+import { ARBITRUM, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { ClosePosition } from '../components/ClosePosition/ClosePosition';
+import { ManageLoading } from '../components/Manage/ManageLoading';
+import { PositionTitle } from '../components/Manage/PositionTitle';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -81,60 +82,8 @@ export const ManageUi: FC<{
       <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
       <Box mb={12} mt={8}>
         <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
-          <Flex alignItems="center">
-            <Flex
-              bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
-              height="34px"
-              width="34px"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="100%"
-              display="flex"
-            >
-              <TokenIcon
-                symbol={collateralSymbol?.toUpperCase() || ''}
-                width={42}
-                height={42}
-                fill="#0B0B22"
-                color="#00D1FF"
-              />
-            </Flex>
-            <Flex direction="column" gap={0.5}>
-              <Heading
-                ml={4}
-                fontWeight={700}
-                fontSize="24px"
-                color="gray.50"
-                display="flex"
-                alignItems="center"
-                data-cy="manage-position-title"
-              >
-                {collateralDisplayName} Liquidity Position
-              </Heading>
-              <Heading
-                ml={4}
-                fontWeight={700}
-                fontSize="16px"
-                color="gray.50"
-                display="flex"
-                alignItems="center"
-                data-cy="manage-position-subtitle"
-              >
-                {poolName}
-                <Flex
-                  ml={2}
-                  alignItems="center"
-                  fontSize="12px"
-                  color="gray.500"
-                  gap={1}
-                  fontWeight="bold"
-                >
-                  <NetworkIcon size="14px" networkId={network?.id} />
-                  {network?.label} Network
-                </Flex>
-              </Heading>
-            </Flex>
-          </Flex>
+          <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
+
           {poolData && (
             <Flex alignItems="center" gap={2}>
               <Text fontSize="20px" fontWeight="bold" color="gray.500">
@@ -257,7 +206,9 @@ export const Manage = () => {
         />
       )}
 
-      {isLoadingPosition && <Skeleton width="100%" height="80px" />}
+      {isLoadingPosition && (
+        <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
+      )}
     </ManagePositionProvider>
   );
 };
