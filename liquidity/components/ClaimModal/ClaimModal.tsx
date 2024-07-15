@@ -83,7 +83,7 @@ export const ClaimModalUi: React.FC<{
             }
           }}
           width="100%"
-          mt="4"
+          mt="6"
           data-testid="claim-confirm-button"
         >
           {(() => {

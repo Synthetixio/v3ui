@@ -65,6 +65,7 @@ const ManageActionUi: FC<{
             color={tab === 'collateral' ? 'white' : 'gray.500'}
             data-cy="tab-button-collateral"
             fontWeight={700}
+            fontSize={['12px', '16px']}
             onClick={() => {
               setTab('collateral');
             }}
@@ -74,6 +75,7 @@ const ManageActionUi: FC<{
           <Tab
             color={tab === 'debt' ? 'white' : 'gray.500'}
             fontWeight={700}
+            fontSize={['12px', '16px']}
             data-cy="tab-button-debt"
             onClick={() => {
               setTab('debt');
@@ -85,10 +87,11 @@ const ManageActionUi: FC<{
 
         <TabPanels>
           <TabPanel px="0">
-            <Flex gap={4}>
+            <Flex flexDir={['column', 'row']} gap={4}>
               {COLLATERALACTIONS.map((action) => (
                 <Flex
                   h="84px"
+                  minH={['90px', '84px']}
                   justifyContent="center"
                   key={action.title.concat('-tab-actions')}
                   border="1px solid"
@@ -100,6 +103,7 @@ const ManageActionUi: FC<{
                   data-cy={`collateral-action-${action.link}`}
                   onClick={() => setActiveAction(action.link)}
                   flex="1"
+                  minWidth={['100%', 'auto']}
                 >
                   {action.icon(manageAction === action.link ? 'cyan' : 'white')}
                   <Text
@@ -115,11 +119,12 @@ const ManageActionUi: FC<{
             </Flex>
           </TabPanel>
           <TabPanel px="0">
-            <Flex gap={4}>
+            <Flex flexDir={['column', 'row']} gap={4}>
               {debtActions.map((action) => (
                 <Flex
                   flex="1"
                   h="84px"
+                  minH={['90px', '84px']}
                   justifyContent="center"
                   key={action.title.concat('-tab-actions')}
                   border="1px solid"
@@ -130,6 +135,7 @@ const ManageActionUi: FC<{
                   cursor="pointer"
                   data-cy={`debt-actions-${action.link}`}
                   onClick={() => setActiveAction(action.link)}
+                  minWidth={['100%', 'auto']}
                 >
                   {action.icon(manageAction === action.link ? 'cyan' : 'white')}
                   <Text

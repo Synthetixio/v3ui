@@ -113,7 +113,7 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
         value: tx.value,
       };
     },
-    refetchInterval: 60000,
+    refetchInterval: 5 * 60000,
   });
 };
 

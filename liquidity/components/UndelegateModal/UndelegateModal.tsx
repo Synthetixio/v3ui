@@ -80,7 +80,7 @@ export const UndelegateModalUi: FC<{
           isDisabled={isProcessing}
           onClick={onSubmit}
           width="100%"
-          mt="4"
+          mt="6"
           data-testid="undelegate confirm button"
         >
           {(() => {

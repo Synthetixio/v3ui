@@ -38,6 +38,10 @@ export const RepayModalUi: React.FC<{
   const { infiniteApproval, requireApproval, error } = state.context;
   const { data: systemToken } = useSystemToken();
 
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const symbol = isBase ? ' USDC' : ` ${systemToken?.symbol}`;
+
   if (isOpen) {
     if (state.matches(State.success)) {
       return (
@@ -68,16 +72,14 @@ export const RepayModalUi: React.FC<{
         <Divider my={4} />
         <Multistep
           step={1}
-          title={`Approve ${systemToken?.symbol} transfer`}
+          title={`Approve ${symbol} transfer`}
           status={{
             failed: error?.step === State.approve,
             success: !requireApproval || state.matches(State.success),
             loading: state.matches(State.approve) && !error,
           }}
           checkboxLabel={
-            requireApproval
-              ? `Approve unlimited ${systemToken?.symbol} transfers to Synthetix.`
-              : undefined
+            requireApproval ? `Approve unlimited ${symbol} transfers to Synthetix.` : undefined
           }
           checkboxProps={{
             isChecked: infiniteApproval,
@@ -89,7 +91,7 @@ export const RepayModalUi: React.FC<{
           title="Repay"
           subtitle={
             <Text>
-              Repay <Amount value={debtChange.abs()} suffix={` ${systemToken?.symbol}`} />
+              Repay <Amount value={debtChange.abs()} suffix={` ${symbol}`} />
             </Text>
           }
           status={{
@@ -103,7 +105,7 @@ export const RepayModalUi: React.FC<{
           isDisabled={isProcessing}
           onClick={onSubmit}
           width="100%"
-          mt="4"
+          mt="6"
           data-testid="repay confirm button"
         >
           {(() => {
@@ -135,9 +137,9 @@ export const RepayModal: React.FC<{
   const { network } = useNetwork();
   const { data: usdTokens } = useGetUSDTokens();
   const queryClient = useQueryClient();
-  const { data: systemToken } = useSystemToken();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: systemToken } = useSystemToken();
   const { data: balance } = useTokenBalance(systemToken?.address);
 
   const { exec: execRepay, settle: settleRepay } = useRepay({

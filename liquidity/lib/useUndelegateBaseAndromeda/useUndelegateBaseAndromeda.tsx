@@ -8,7 +8,7 @@ import { BigNumber, Contract, PopulatedTransaction } from 'ethers';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { withERC7412 } from '@snx-v3/withERC7412';
+import { TransactionRequest, withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useApprove } from '@snx-v3/useApprove';
@@ -75,27 +75,25 @@ export const useUndelegateBaseAndromeda = ({
 
         const transactions: Promise<PopulatedTransaction>[] = [];
 
-        if (debtExists) {
-          const repayer = new Contract(getRepayerContract(network.id), DEBT_REPAYER_ABI, signer);
+        const repayer = new Contract(getRepayerContract(network.id), DEBT_REPAYER_ABI, signer);
 
-          const depositDebtToRepay = repayer.populateTransaction.depositDebtToRepay(
-            CoreProxy.address,
-            SpotMarketProxy.address,
-            accountId,
-            poolId,
-            collateralTypeAddress,
-            USDC_BASE_MARKET
-          );
-          transactions.push(depositDebtToRepay);
+        const depositDebtToRepay = repayer.populateTransaction.depositDebtToRepay(
+          CoreProxy.address,
+          SpotMarketProxy.address,
+          accountId,
+          poolId,
+          collateralTypeAddress,
+          USDC_BASE_MARKET
+        );
+        transactions.push(depositDebtToRepay);
 
-          const burn = CoreProxy.populateTransaction.burnUsd(
-            BigNumber.from(accountId),
-            BigNumber.from(poolId),
-            collateralTypeAddress,
-            currentDebt?.mul(110).div(100).toBN().toString() || '0'
-          );
-          transactions.push(burn);
-        }
+        const burn = CoreProxy.populateTransaction.burnUsd(
+          BigNumber.from(accountId),
+          BigNumber.from(poolId),
+          collateralTypeAddress,
+          currentDebt.abs().mul(10).toBN()
+        );
+        transactions.push(burn);
 
         const populatedTxnPromised = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(accountId),
@@ -104,16 +102,20 @@ export const useUndelegateBaseAndromeda = ({
           currentCollateral.add(collateralChange).toBN(),
           wei(1).toBN()
         );
+        transactions.push(populatedTxnPromised);
 
-        const callsPromise = Promise.all([...transactions, populatedTxnPromised].filter(notNil));
+        const callsPromise = Promise.all([...transactions].filter(notNil));
 
         const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
 
+        const allCalls: TransactionRequest[] = [...calls];
+
+        allCalls[1].requireSuccess = false;
         if (priceUpdateTx) {
-          calls.unshift(priceUpdateTx as any);
+          allCalls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, calls, 'useUndelegate');
+        const erc7412Tx = await withERC7412(network, allCalls, 'useUndelegateBase');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

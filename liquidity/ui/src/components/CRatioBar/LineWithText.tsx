@@ -3,18 +3,17 @@ import { Box, Tooltip, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 
 export const LineWithText: FC<{
-  left: number;
+  left: string;
   text: string;
   tooltipText: string;
-  tooltipPosition: 'left' | 'right';
-}> = ({ left, text, tooltipText, tooltipPosition }) => {
+}> = ({ left, text, tooltipText }) => {
   return (
     <>
       <Box
         position="absolute"
         height="40%"
         transform="translateX(-50%)"
-        left={`calc(${left}% ${tooltipPosition === 'left' ? '-' : '+'} 20px)`}
+        left={left}
         top={0}
         bottom={0}
         margin="auto"
@@ -36,7 +35,7 @@ export const LineWithText: FC<{
         height="40%"
         width="1px"
         bg="gray.900"
-        left={`${left}%`}
+        left={left}
         top={0}
         bottom={0}
         margin="auto"

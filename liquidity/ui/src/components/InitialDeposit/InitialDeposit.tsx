@@ -8,6 +8,7 @@ import {
   Flex,
   ListItem,
   Text,
+  Tooltip,
   UnorderedList,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
@@ -28,6 +29,8 @@ import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { ZEROWEI } from '../../utils/constants';
 
 export const InitialDepositUi: FC<{
   collateralChange: Wei;
@@ -42,6 +45,8 @@ export const InitialDepositUi: FC<{
   setCollateralChange: (val: Wei) => void;
   onSubmit: () => void;
   minDelegation: Wei;
+  hasAccount: boolean;
+  availableCollateral: Wei;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -52,20 +57,26 @@ export const InitialDepositUi: FC<{
   snxBalance,
   onSubmit,
   minDelegation,
+  hasAccount,
+  availableCollateral,
 }) => {
   const [step, setStep] = useState(0);
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
-      return snxBalance?.transferable;
+      return snxBalance?.transferable || ZEROWEI;
     }
     if (symbol !== 'WETH') {
-      return tokenBalance;
+      return tokenBalance || ZEROWEI;
     }
     if (!tokenBalance || !ethBalance) {
-      return undefined;
+      return ZEROWEI;
     }
     return tokenBalance.add(ethBalance);
   }, [symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
+
+  const maxAmount = useMemo(() => {
+    return combinedTokenBalance?.add(availableCollateral);
+  }, [availableCollateral, combinedTokenBalance]);
 
   return (
     <Flex flexDirection="column">
@@ -97,23 +108,51 @@ export const InitialDepositUi: FC<{
                     {displaySymbol}
                   </Text>
                 </BorderBox>
-                <Text fontSize="12px">
-                  Balance: <Amount value={combinedTokenBalance} />
-                  <Text
-                    as="span"
-                    cursor="pointer"
-                    onClick={() => {
-                      if (!combinedTokenBalance) {
-                        return;
-                      }
-                      setCollateralChange(combinedTokenBalance);
-                    }}
-                    color="cyan.500"
-                    fontWeight={700}
-                  >
-                    &nbsp; Max
+                <Tooltip
+                  label={
+                    <Flex
+                      flexDirection="column"
+                      alignItems="flex-start"
+                      fontSize="xs"
+                      color="whiteAlpha.700"
+                    >
+                      <Flex gap="1">
+                        <Text>Unlocked Balance:</Text>
+                        <Amount value={availableCollateral} />
+                      </Flex>
+                      <Flex gap="1">
+                        <Text>Wallet Balance:</Text>
+                        <Amount
+                          value={symbol === 'SNX' ? snxBalance?.transferable : tokenBalance}
+                        />
+                      </Flex>
+                      {symbol === 'WETH' ? (
+                        <Flex gap="1">
+                          <Text>ETH Balance:</Text>
+                          <Amount value={ethBalance} />
+                        </Flex>
+                      ) : null}
+                    </Flex>
+                  }
+                >
+                  <Text fontSize="12px">
+                    Balance: <Amount value={maxAmount} />
+                    <Text
+                      as="span"
+                      cursor="pointer"
+                      onClick={() => {
+                        if (!maxAmount) {
+                          return;
+                        }
+                        setCollateralChange(maxAmount);
+                      }}
+                      color="cyan.500"
+                      fontWeight={700}
+                    >
+                      &nbsp; Max
+                    </Text>
                   </Text>
-                </Text>
+                </Tooltip>
               </Flex>
 
               <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
@@ -156,7 +195,11 @@ export const InitialDepositUi: FC<{
             data-testid="deposit submit"
             data-cy="deposit-submit-button"
             onClick={() => {
-              setStep(1);
+              if (hasAccount) {
+                onSubmit();
+              } else {
+                setStep(1);
+              }
             }}
             isDisabled={
               collateralChange.lte(0) ||
@@ -201,7 +244,11 @@ export const InitialDepositUi: FC<{
   );
 };
 
-export const InitialDeposit: FC<{ submit: () => void }> = ({ submit }) => {
+export const InitialDeposit: FC<{
+  submit: () => void;
+  hasAccount: boolean;
+  liquidityPosition?: LiquidityPosition;
+}> = ({ submit, hasAccount, liquidityPosition }) => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
   const { collateralSymbol } = useParams();
@@ -228,6 +275,8 @@ export const InitialDeposit: FC<{ submit: () => void }> = ({ submit }) => {
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
       onSubmit={submit}
+      hasAccount={hasAccount}
+      availableCollateral={liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI}
     />
   );
 };

@@ -1,12 +1,12 @@
-import { FC, useMemo } from 'react';
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { FC, useMemo, useState } from 'react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { CollateralIcon } from '@snx-v3/icons';
+
 import {
   ManageAction,
-  NoAccount,
+  NoPosition,
   UnsupportedCollateralAlert,
   Rewards,
   ManageStats,
@@ -16,12 +16,14 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
-import { useNavigate } from 'react-router-dom';
-import { InfoIcon } from '@chakra-ui/icons';
+import { ClosePosition } from '../components/ClosePosition/ClosePosition';
+import { ManageLoading } from '../components/Manage/ManageLoading';
+import { PositionTitle } from '../components/Manage/PositionTitle';
 import { Tooltip } from '@snx-v3/Tooltip';
+import { InfoIcon } from '@chakra-ui/icons';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -62,82 +64,28 @@ export const ManageUi: FC<{
   poolName?: string;
   poolId?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
+  const [closePosition, setClosePosition] = useState(false);
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
-  const { data: CollateralTypes } = useCollateralTypes();
 
-  const navigate = useNavigate();
+  const { data: collateralTypes } = useCollateralTypes();
 
   const notSupported =
     poolData &&
-    CollateralTypes &&
+    collateralTypes &&
     collateralDisplayName &&
-    !CollateralTypes.some((item) => item.symbol === collateralDisplayName);
+    !collateralTypes.some(
+      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    );
 
   return (
     <>
       <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
       <Box mb={12} mt={8}>
         <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
-          <Flex alignItems="center">
-            <Flex
-              bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
-              height="34px"
-              width="34px"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="100%"
-              display="flex"
-            >
-              <CollateralIcon
-                symbol={collateralSymbol}
-                width="42px"
-                height="42px"
-                fill="#0B0B22"
-                color="#00D1FF"
-              />
-            </Flex>
-            <Flex direction="column" gap={0.5}>
-              <Heading
-                ml={4}
-                fontWeight={700}
-                fontSize="24px"
-                color="gray.50"
-                display="flex"
-                alignItems="center"
-                data-cy="manage-position-title"
-              >
-                {collateralDisplayName} Liquidity Position
-              </Heading>
-              <Heading
-                ml={4}
-                fontWeight={700}
-                fontSize="16px"
-                color="gray.50"
-                display="flex"
-                alignItems="center"
-                data-cy="manage-position-subtitle"
-                _hover={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
-              >
-                {poolName}
-                <Flex
-                  ml={2}
-                  alignItems="center"
-                  fontSize="12px"
-                  color="gray.500"
-                  gap={1}
-                  fontWeight="bold"
-                >
-                  <NetworkIcon size="14px" networkId={network?.id} />
-                  <Text mt="1px" ml="1px">
-                    {network?.label} Network
-                  </Text>
-                </Flex>
-              </Heading>
-            </Flex>
-          </Flex>
+          <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
+
           {poolData && (
             <Flex alignItems="flex-end" direction="column">
               <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
@@ -172,16 +120,44 @@ export const ManageUi: FC<{
             <ManageStats liquidityPosition={liquidityPosition} />
             <Rewards isLoading={isLoading} rewards={rewards} />
           </BorderBox>
-          <BorderBox
-            flex={1}
-            maxW={['100%', '100%', '501px']}
-            p={6}
-            flexDirection="column"
-            bg="navy.700"
-            height="fit-content"
-          >
-            <ManageAction liquidityPosition={liquidityPosition} />
-          </BorderBox>
+          {!closePosition && (
+            <Flex
+              maxW={['100%', '100%', '501px']}
+              flex={1}
+              alignSelf="flex-start"
+              flexDirection="column"
+            >
+              <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
+                <ManageAction liquidityPosition={liquidityPosition} />
+              </BorderBox>
+              <Text
+                textAlign="center"
+                cursor="pointer"
+                onClick={() => setClosePosition(true)}
+                color="cyan.500"
+                fontWeight={700}
+                mt="5"
+              >
+                Close Position
+              </Text>
+            </Flex>
+          )}
+
+          {closePosition && (
+            <BorderBox
+              flex={1}
+              maxW={['100%', '100%', '501px']}
+              p={6}
+              flexDirection="column"
+              bg="navy.700"
+              height="fit-content"
+            >
+              <ClosePosition
+                liquidityPosition={liquidityPosition}
+                onClose={() => setClosePosition(false)}
+              />
+            </BorderBox>
+          )}
         </Flex>
       </Box>
     </>
@@ -206,7 +182,7 @@ export const Manage = () => {
     accountId
   );
 
-  const { data: liquidityPosition } = useLiquidityPosition({
+  const { data: liquidityPosition, isLoading: isLoadingPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId,
     poolId,
@@ -217,10 +193,17 @@ export const Manage = () => {
   return (
     <ManagePositionProvider>
       <WatchAccountBanner />
-      {!accountId && (
-        <NoAccount collateralSymbol={collateralSymbol} collateralType={collateralType} />
+      {(!accountId ||
+        (!isLoadingPosition && liquidityPosition && liquidityPosition?.collateralAmount.eq(0))) && (
+        <NoPosition
+          collateralSymbol={collateralSymbol}
+          collateralType={collateralType}
+          accountId={accountId}
+          rewards={rewardsData}
+          liquidityPosition={liquidityPosition}
+        />
       )}
-      {accountId && (
+      {accountId && liquidityPosition?.collateralAmount.gt(0) && (
         <ManageUi
           isLoading={isLoading}
           rewards={rewardsData}
@@ -230,6 +213,10 @@ export const Manage = () => {
           network={network}
           collateralSymbol={collateralSymbol}
         />
+      )}
+
+      {isLoadingPosition && (
+        <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
       )}
     </ManagePositionProvider>
   );

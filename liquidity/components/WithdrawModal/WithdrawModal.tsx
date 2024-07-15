@@ -78,7 +78,7 @@ export const WithdrawModalUi: FC<{
           isDisabled={state.status === 'pending'}
           onClick={onSubmit}
           width="100%"
-          mt="4"
+          mt="6"
           data-testid="withdraw confirm button"
         >
           {(() => {

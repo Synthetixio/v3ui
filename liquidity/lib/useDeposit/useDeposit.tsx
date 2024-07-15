@@ -75,6 +75,7 @@ export const useDeposit = ({
           : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
 
         const amount = collateralChange.sub(availableCollateral);
+
         const collateralAmount = amount.gt(0)
           ? parseUnits(amount.toString(), decimals)
           : BigNumber.from(0);

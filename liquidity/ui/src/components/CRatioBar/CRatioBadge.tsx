@@ -21,14 +21,14 @@ const badgeColors = {
 };
 
 export const CRatioBadge: FC<{
-  liquidationCratioPercentage: number;
-  targetCratioPercentage: number;
-  currentCRatioPercentage: number;
-}> = ({ liquidationCratioPercentage, targetCratioPercentage, currentCRatioPercentage }) => {
+  liquidationCratio: number;
+  targetCratio: number;
+  cRatio: number;
+}> = ({ liquidationCratio, targetCratio, cRatio }) => {
   const variant = getHealthVariant({
-    targetCratioPercentage,
-    liquidationCratioPercentage,
-    currentCRatioPercentage,
+    targetCratio,
+    liquidationCratio,
+    cRatio,
   });
   return (
     <Badge
