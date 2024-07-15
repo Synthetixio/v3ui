@@ -171,9 +171,9 @@ export const PoolCard = ({
               </Tooltip>
             </Flex>
             <Link
-              px={4}
-              py="8px"
-              fontSize="14px"
+              px={3}
+              py={2}
+              fontSize="sm"
               fontWeight={700}
               lineHeight="20px"
               variant="outline"
@@ -185,6 +185,7 @@ export const PoolCard = ({
               borderRadius="4px"
               ml={3}
               to={`/pools/${network.id}/${pool.id}`}
+              color="white"
             >
               Details
             </Link>

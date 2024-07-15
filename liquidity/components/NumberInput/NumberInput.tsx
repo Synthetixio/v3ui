@@ -102,7 +102,7 @@ export function NumberInput({
       outline="none"
       fontFamily="heading"
       fontSize="xl"
-      fontWeight="black"
+      fontWeight="700"
       lineHeight="2xl"
       color="white"
       height="unset"

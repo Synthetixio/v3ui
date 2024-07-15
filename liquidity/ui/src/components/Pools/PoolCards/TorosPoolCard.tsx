@@ -180,7 +180,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
                       fontFamily="heading"
                       fontSize="14px"
                       lineHeight="20px"
-                      fontWeight={700}
+                      fontWeight={500}
                       color="white"
                     >
                       {apy}%
