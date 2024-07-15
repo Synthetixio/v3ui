@@ -16,7 +16,7 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { ARBITRUM, Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { useNavigate } from 'react-router-dom';
@@ -149,14 +149,12 @@ export const ManageUi: FC<{
                   color="gray.500"
                 >
                   Estimated APR
-                  <InfoIcon ml={1} w="10px" h="10px" />
+                  <InfoIcon ml={1} mb="2px" w="10px" h="10px" />
                 </Text>
               </Tooltip>
               <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
                 {poolData.apr.combinedApr > 0
-                  ? `${network?.id === ARBITRUM.id ? 'Up to ' : ''}${poolData.apr.combinedApr
-                      .toFixed(2)
-                      ?.concat('%')}`
+                  ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
                   : '-'}
               </Text>
             </Flex>

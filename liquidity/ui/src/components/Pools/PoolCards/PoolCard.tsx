@@ -108,14 +108,14 @@ export const PoolCard = ({
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
           <Flex>
-            <Flex flexDir="column" gap={1} ml="12px">
-              <Heading
-                fontSize="xl"
-                fontWeight={700}
-                color="white"
-                _hover={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
-              >
+            <Flex
+              flexDir="column"
+              gap={1}
+              ml="12px"
+              _hover={{ cursor: 'pointer', opacity: 0.9 }}
+              onClick={() => navigate(`/pools/${network.id}/${pool.id}`)}
+            >
+              <Heading fontSize="xl" fontWeight={700} color="white">
                 {pool?.name}
               </Heading>
               <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
@@ -378,7 +378,7 @@ export const PoolCard = ({
                         </Text>
                       </Tooltip>
                     </Td>
-                    <Td border="none" textAlign="right" px={4}>
+                    <Td border="none" textAlign="right" pl={4} pr={0}>
                       <Button
                         onClick={async (e) => {
                           try {

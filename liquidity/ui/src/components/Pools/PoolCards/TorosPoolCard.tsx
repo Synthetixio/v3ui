@@ -151,7 +151,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
               </Thead>
               <Tbody>
                 <Tr>
-                  <Td width="66%" border="none" px={0}>
+                  <Td width="66%" border="none" px={4}>
                     <Flex alignItems="center">
                       <TokenIcon w={26} h={26} symbol="USDC" />
                       <Flex flexDirection="column" ml={3} mr="auto">
