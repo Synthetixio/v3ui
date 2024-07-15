@@ -439,7 +439,7 @@ export const CollateralSectionUi: FC<{
                             lineHeight="14px"
                             color="gray.500"
                           >
-                            C-ratio {cRatio.lte(0) ? 'Infinite' : formatPercent(cRatio.toNumber())}
+                            C-ratio: {cRatio.lte(0) ? 'Infinite' : formatPercent(cRatio.toNumber())}
                           </Text>
                         </Flex>
                       </Tooltip>

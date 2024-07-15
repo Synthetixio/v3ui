@@ -84,8 +84,12 @@ export const ManageUi: FC<{
       <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
       <Box mb={12} mt={8}>
         <Flex flexWrap="wrap" px={6} alignItems="center" justifyContent="space-between" mb="8px">
-          <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
-
+          <PositionTitle
+            collateralSymbol={collateralSymbol}
+            poolName={poolName}
+            isOpen
+            poolId={poolId}
+          />
           {poolData && (
             <Flex alignItems="flex-end" direction="column">
               <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
