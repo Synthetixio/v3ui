@@ -37,6 +37,8 @@ export function NumberInput({
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      // Define max length here
+      if (e.target.value.length > 15) return;
       setInputValue(e.target.value);
       if (!onChange) {
         // Could be a read-only input
@@ -114,6 +116,7 @@ export function NumberInput({
       onChange={onInputChange}
       data-cy={dataTestId}
       {...InputProps}
+      maxLength={10}
     />
   );
 }

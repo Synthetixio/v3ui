@@ -188,6 +188,7 @@ export const RepayModal: React.FC<{
             title: `Approve ${systemToken?.symbol} for transfer`,
             description: 'The next transaction will repay your debt.',
             status: 'info',
+            variant: 'left-accent',
           });
 
           await approve(Boolean(state.context.infiniteApproval));
@@ -205,6 +206,7 @@ export const RepayModal: React.FC<{
               'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
           throw Error('Approve failed', { cause: error });
         }
@@ -213,7 +215,7 @@ export const RepayModal: React.FC<{
       [ServiceNames.executeRepay]: async () => {
         try {
           toast.closeAll();
-          toast({ title: 'Repaying...' });
+          toast({ title: 'Repaying...', variant: 'left-accent' });
           if (isBaseAndromeda(network?.id, network?.preset)) {
             await execRepayBaseAndromeda();
           } else {
@@ -238,6 +240,7 @@ export const RepayModal: React.FC<{
             description: 'Your debt has been repaid.',
             status: 'success',
             duration: 5000,
+            variant: 'left-accent',
           });
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
@@ -252,6 +255,7 @@ export const RepayModal: React.FC<{
               'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
           throw Error('Repay failed', { cause: error });
         }

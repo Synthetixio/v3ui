@@ -62,6 +62,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         priceUpdateTx: stringToHash(priceUpdateTx?.data),
       },
     ],
+    staleTime: 60000 * 5,
     queryFn: async () => {
       if (
         !pools ||

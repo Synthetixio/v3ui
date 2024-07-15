@@ -69,6 +69,7 @@ const ClaimUi: FC<{
               isRequired: true,
               'data-testid': 'claim amount input',
               'data-max': maxClaimble.toString(),
+              type: 'number',
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}

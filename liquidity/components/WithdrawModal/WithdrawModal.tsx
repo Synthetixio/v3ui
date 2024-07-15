@@ -196,6 +196,7 @@ export function WithdrawModal({
           'Please try again.'
         ),
         status: 'error',
+        variant: 'left-accent',
       });
       throw Error('Withdraw failed', { cause: error });
     }

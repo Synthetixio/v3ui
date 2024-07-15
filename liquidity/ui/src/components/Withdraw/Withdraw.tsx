@@ -76,6 +76,7 @@ const WithdrawUi: FC<{
               isRequired: true,
               'data-testid': 'withdraw amount input',
               'data-max': maWWithdrawable.toString(),
+              type: 'number',
             }}
             value={amount}
             onChange={(val) => setAmount(val)}

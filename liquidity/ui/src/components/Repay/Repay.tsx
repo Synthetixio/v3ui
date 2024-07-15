@@ -52,6 +52,7 @@ export const RepayUi: FC<{
                 isRequired: true,
                 'data-testid': 'repay amount input',
                 'data-max': max?.toString(),
+                type: 'number',
               }}
               value={debtChange.abs()}
               onChange={(val) => setDebtChange(val.mul(-1))}

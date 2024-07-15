@@ -99,6 +99,7 @@ export const UndelegateUi: FC<{
               isRequired: true,
               'data-testid': 'undelegate amount input',
               'data-max': max?.toString(),
+              type: 'number',
             }}
             value={collateralChange.abs()}
             onChange={(val) => setCollateralChange(val.mul(-1))}

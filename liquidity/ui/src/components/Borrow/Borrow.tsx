@@ -41,6 +41,7 @@ const BorrowUi: FC<{
               isRequired: true,
               'data-testid': 'borrow amount input',
               'data-max': maxDebt.toString(),
+              type: 'number',
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}
