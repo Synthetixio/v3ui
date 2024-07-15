@@ -3,13 +3,14 @@ import { Box, Flex, Heading, Skeleton, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { CollateralIcon } from '@snx-v3/icons';
+
 import {
   ManageAction,
   NoPosition,
   UnsupportedCollateralAlert,
   Rewards,
   ManageStats,
+  TokenIcon,
 } from '../components';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { usePoolData } from '@snx-v3/usePoolData';
@@ -90,10 +91,10 @@ export const ManageUi: FC<{
               borderRadius="100%"
               display="flex"
             >
-              <CollateralIcon
-                symbol={collateralSymbol}
-                width="42px"
-                height="42px"
+              <TokenIcon
+                symbol={collateralSymbol?.toUpperCase() || ''}
+                width={42}
+                height={42}
                 fill="#0B0B22"
                 color="#00D1FF"
               />

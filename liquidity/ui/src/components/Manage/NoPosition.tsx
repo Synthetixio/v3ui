@@ -1,5 +1,4 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
-import { CollateralIcon } from '@snx-v3/icons';
 import { FC, useContext, useState } from 'react';
 import { useCollateralDisplayName } from '../../pages';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
@@ -16,6 +15,7 @@ import { useAccounts } from '@snx-v3/useAccounts';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Rewards } from '../Rewards';
 import { RewardsType } from '@snx-v3/useRewards';
+import { TokenIcon } from '../TokenIcon';
 
 export const NoPosition: FC<{
   collateralSymbol?: string;
@@ -44,10 +44,10 @@ export const NoPosition: FC<{
           borderRadius="100%"
           display="flex"
         >
-          <CollateralIcon
-            symbol={collateralSymbol}
-            width="42px"
-            height="42px"
+          <TokenIcon
+            symbol={collateralSymbol?.toUpperCase() || ''}
+            width={42}
+            height={42}
             fill="#0B0B22"
             color="#00D1FF"
           />
