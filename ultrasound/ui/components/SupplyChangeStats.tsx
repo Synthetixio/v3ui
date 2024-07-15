@@ -7,7 +7,7 @@ import { useState } from 'react';
 export function SupplyChangeStats() {
   const { data: events, isLoading } = useBurnEvents();
   const [selectedTime, setSelectedTime] = useState<'totalBurned' | 'supplyChange7Days'>(
-    'supplyChange7Days'
+    'totalBurned'
   );
 
   return (
@@ -32,7 +32,7 @@ export function SupplyChangeStats() {
             <Text fontSize="18px" fontWeight={700}>
               Supply Change
             </Text>
-            <Tabs variant="soft-rounded" size="sm">
+            <Tabs variant="soft-rounded" size="sm" defaultIndex={1}>
               <TabList>
                 <Tab
                   color="gray.500"
