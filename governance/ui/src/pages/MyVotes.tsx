@@ -3,11 +3,11 @@ import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
-import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
-import { useSigner } from '../queries/useWallet';
+import { useNetwork, useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
 import {
   useGetUserVotingPower,
@@ -17,11 +17,13 @@ import {
 } from '../queries/';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
+import { utils } from 'ethers';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const signer = useSigner();
+  const { network } = useNetwork();
 
   const [
     { data: spartanBallot },
@@ -174,15 +176,21 @@ export default function MyVotes() {
                     await getCouncilContract('spartan')
                       .connect(signer)
                       .prepareBallotWithSnapshot(
-                        SnapshotRecordContractAddress,
+                        SnapshotRecordContractAddress(network?.id || 1),
                         await signer.getAddress()
                       );
                   } catch (error) {
-                    console.error('already prepared ballot');
+                    console.error('already prepared ballot', error);
                   }
+
+                  console.log(spartanBallot?.votingPower);
                   await getCouncilContract('spartan')
                     .connect(signer)
-                    .cast([candidates?.spartan.address], [spartanBallot?.votingPower]);
+                    .cast(
+                      ['0x47872B16557875850a02C94B28d959515F894913'],
+                      [spartanBallot!.votingPower],
+                      { value: utils.parseEther('0.001') }
+                    );
                 }
               }}
             >

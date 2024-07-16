@@ -4,6 +4,7 @@ import { CouncilSlugs } from '../utils/councils';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useProvider, useWallet } from './';
 import { ethers } from 'ethers';
+import { motherShipProvider } from '../utils/providers';
 
 export function useGetUserVotingPower(council: CouncilSlugs) {
   const { network } = useNetwork();
@@ -15,13 +16,10 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       if (!activeWallet || !provider || !network?.id) return;
 
       try {
-        const electionModule = getCouncilContract(council).connect(provider);
+        const electionModule = getCouncilContract(council).connect(motherShipProvider);
 
-        const electionId = electionModule.connect(provider).getEpochIndex();
-
-        const ballot = await electionModule
-          .connect(provider)
-          .getBallot(activeWallet.address, network?.id, electionId);
+        const electionId = await electionModule.getEpochIndex();
+        const ballot = await electionModule.getBallot(activeWallet.address, network.id, electionId);
 
         if (ballot && ballot.votingPower.gt(0)) {
           return ballot.votingPower;
@@ -31,7 +29,6 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           SnapshotRecordContractAddress(network.id),
           activeWallet?.address
         );
-
         return votingPower.toString();
       } catch (error) {
         // eslint-disable-next-line no-console

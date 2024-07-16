@@ -170,11 +170,11 @@ export default function Admin() {
                   if (signer) {
                     await proxy
                       .connect(signer)
-                      .takeVotePowerSnapshot(SnapshotRecordContractAddress);
+                      .takeVotePowerSnapshot(SnapshotRecordContractAddress(421614));
                   }
                 }}
               >
-                LFG (only in Nomination)
+                LFG (only in Nomination & Voting)
               </Button>
             </Flex>
           </Flex>

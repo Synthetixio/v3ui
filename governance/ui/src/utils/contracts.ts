@@ -42,13 +42,13 @@ export const SnapshotRecordContractAddress = (chainId: number) => {
       return process.env.DEV === 'true'
         ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
         : process.env.TESTNET === 'true'
-          ? '0x1Ee971dc4f55c0F892a10F50b9901F89C792255A'
+          ? '0xba0d9440C3f103849f6428791cbFc28884c1A0Bc'
           : '';
     case 11155420:
       return process.env.DEV === 'true'
         ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
         : process.env.TESTNET === 'true'
-          ? '0x9E9498afA911df9afe91e851f148387244daF26C'
+          ? '0xba0d9440C3f103849f6428791cbFc28884c1A0Bc'
           : '';
   }
 };
