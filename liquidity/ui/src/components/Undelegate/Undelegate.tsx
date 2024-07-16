@@ -72,7 +72,6 @@ export const UndelegateUi: FC<{
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
         Unlock Collateral
       </Text>
-
       <BorderBox display="flex" p={3} mb="6">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
@@ -180,10 +179,10 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
-
   function maxUndelegate() {
     if (!liquidityPosition || !collateralType) return undefined;
     const { collateralAmount, collateralValue } = liquidityPosition;
