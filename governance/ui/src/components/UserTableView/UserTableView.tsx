@@ -46,6 +46,7 @@ export default function UserTableView({
         gap="2"
         textTransform="unset"
         overflow="scroll"
+        px="0"
         maxW="200px"
       >
         <ProfilePicture

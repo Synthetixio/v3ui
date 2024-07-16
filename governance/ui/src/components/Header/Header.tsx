@@ -11,18 +11,16 @@ import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { activeWallet, walletsInfo, connect } = useWallet();
   const { network } = useNetwork();
-
   const { colorMode, toggleColorMode } = useColorMode();
 
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
   const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
 
-  const queryClient = useQueryClient();
-
-  const [{ data: ballots, isFetched }] = [useGetUserBallot(['spartan', 'ambassador', 'treasury'])];
+  const { data: ballots, isFetched } = useGetUserBallot(['spartan', 'ambassador', 'treasury']);
 
   useEffect(() => {
     if (
@@ -104,7 +102,7 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        {process.env.DEV === 'true' && <Link href="/#/admin">Admin</Link>}
+        {process.env.TESTNET === 'true' && <Link href="/#/admin">Admin</Link>}
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
 
