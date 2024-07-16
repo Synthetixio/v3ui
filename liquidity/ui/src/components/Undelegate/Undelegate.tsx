@@ -57,15 +57,15 @@ export const UndelegateUi: FC<{
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
-  const showMinWithdrawable = collateralChange.abs().lt(minDelegation) && !collateralChange.eq(0);
-
   const isInputDisabled = isAnyMarketLocked === true;
+
   const isFormDisabled =
-    showMinWithdrawable ||
     isLoadingRequiredData ||
     isAnyMarketLocked === true ||
     collateralChange.gte(0) ||
     !isValidLeftover;
+
+  const overAvailableBalance = collateralChange.abs().gt(max);
 
   return (
     <Flex flexDirection="column">
@@ -81,7 +81,6 @@ export const UndelegateUi: FC<{
               {displaySymbol}
             </Text>
           </BorderBox>
-
           <Flex gap="1" fontSize="12px">
             <Text display="flex" alignItems="center" gap={1}>
               Locked:
@@ -127,7 +126,7 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-      <Collapse in={showMinWithdrawable} animateOpacity>
+      <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
         <Alert mt={2} mb={4} status="info">
           <AlertIcon />
           <Flex direction="column">
@@ -140,13 +139,20 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-      <Collapse
-        in={isValidLeftover && !showMinWithdrawable && !collateralChange.eq(0)}
-        animateOpacity
-      >
+      <Collapse in={isValidLeftover && !collateralChange.eq(0)} animateOpacity>
         <Alert status="warning" mb="4">
           <AlertIcon />
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
+        </Alert>
+      </Collapse>
+      <Collapse in={overAvailableBalance} animateOpacity>
+        <Alert mt={2} mb={4} status="error">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>
+              The max withdrawable amount is <Amount value={max} suffix={` ${symbol}`} />
+            </AlertTitle>
+          </Flex>
         </Alert>
       </Collapse>
       <Button data-testid="undelegate submit" type="submit" isDisabled={isFormDisabled}>
