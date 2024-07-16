@@ -41,7 +41,6 @@ const WithdrawUi: FC<{
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
         Withdraw {!isDebtWithdrawal ? 'Collateral' : 'Debt'}
       </Text>
-
       <BorderBox display="flex" p={3} mb="6">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
@@ -93,7 +92,6 @@ const WithdrawUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-
       <Button
         isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maWWithdrawable)}
         data-testid="claim submit"

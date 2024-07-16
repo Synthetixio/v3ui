@@ -57,7 +57,15 @@ export const UndelegateUi: FC<{
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
-  const isDisabled = isAnyMarketLocked === true;
+  const showMinWithdrawable = collateralChange.abs().lt(minDelegation) && !collateralChange.eq(0);
+
+  const isInputDisabled = isAnyMarketLocked === true;
+  const isFormDisabled =
+    showMinWithdrawable ||
+    isLoadingRequiredData ||
+    isAnyMarketLocked === true ||
+    collateralChange.gte(0) ||
+    !isValidLeftover;
 
   return (
     <Flex flexDirection="column">
@@ -95,7 +103,7 @@ export const UndelegateUi: FC<{
         <Flex flexGrow={1}>
           <NumberInput
             InputProps={{
-              isDisabled,
+              isDisabled: isInputDisabled,
               isRequired: true,
               'data-testid': 'undelegate amount input',
               'data-max': max?.toString(),
@@ -106,7 +114,7 @@ export const UndelegateUi: FC<{
             max={max}
           />
         </Flex>
-        <Collapse in={isDisabled} animateOpacity>
+        <Collapse in={isInputDisabled} animateOpacity>
           <Alert mt={2} status="warning">
             <AlertIcon />
             <Flex direction="column">
@@ -119,7 +127,7 @@ export const UndelegateUi: FC<{
           </Alert>
         </Collapse>
       </BorderBox>
-      <Collapse in={!isValidLeftover} animateOpacity>
+      <Collapse in={showMinWithdrawable} animateOpacity>
         <Alert mt={2} mb={4} status="info">
           <AlertIcon />
           <Flex direction="column">
@@ -132,31 +140,16 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-
-      <Collapse in={isValidLeftover && collateralChange.lt(0)} animateOpacity>
-        <Alert status="info" mb="4">
-          <AlertIcon />
-          <Text>
-            Assets will be available to withdraw 24 hours after your last interaction with this
-            position.
-          </Text>
-        </Alert>
+      <Collapse
+        in={isValidLeftover && !showMinWithdrawable && !collateralChange.eq(0)}
+        animateOpacity
+      >
         <Alert status="warning" mb="4">
           <AlertIcon />
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
-
-      <Button
-        data-testid="undelegate submit"
-        type="submit"
-        isDisabled={
-          isLoadingRequiredData ||
-          isAnyMarketLocked === true ||
-          collateralChange.gte(0) ||
-          !isValidLeftover
-        }
-      >
+      <Button data-testid="undelegate submit" type="submit" isDisabled={isFormDisabled}>
         {collateralChange.gte(0) ? 'Enter Amount' : 'Unlock Collateral'}
       </Button>
     </Flex>
