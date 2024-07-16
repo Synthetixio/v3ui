@@ -107,7 +107,7 @@ export const PoolCard = ({
         p="6"
       >
         <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={4}>
-          <Flex>
+          <Flex flexWrap="wrap">
             <Flex
               flexDir="column"
               gap={1}
@@ -137,7 +137,7 @@ export const PoolCard = ({
               </Tag>
             )}
           </Flex>
-          <Flex flexWrap="wrap">
+          <Flex flexWrap="wrap" gap={[1, 3]} flexDir={['column', 'row']}>
             <Flex alignItems="center" mr={6} gap={2}>
               <Text fontSize="20px" fontWeight="bold" color="gray.500">
                 TVL
@@ -183,9 +183,9 @@ export const PoolCard = ({
               borderColor="gray.900"
               _hover={{ textTransform: 'none', opacity: 0.9 }}
               borderRadius="4px"
-              ml={3}
               to={`/pools/${network.id}/${pool.id}`}
               color="white"
+              textAlign="center"
             >
               Details
             </Link>
@@ -280,7 +280,7 @@ export const PoolCard = ({
                 return (
                   <Tr key={type.tokenAddress}>
                     <Td border="none" px={4} w="20%">
-                      <Flex alignItems="center">
+                      <Flex minWidth="120px" alignItems="center">
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
                         <Flex flexDirection="column" ml={3} mr="auto">
                           <Text

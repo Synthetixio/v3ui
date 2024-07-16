@@ -55,8 +55,15 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50', textDecoration: 'none' }}
           p={6}
         >
-          <Flex w="100%" gap="2" alignItems="start" mb="4" justifyContent="space-between">
-            <Flex>
+          <Flex
+            flexDir={['column', 'row']}
+            w="100%"
+            gap="2"
+            alignItems="start"
+            mb="4"
+            justifyContent="space-between"
+          >
+            <Flex flexDir={['column', 'row']}>
               <Flex flexDirection="column" justifyContent="space-between">
                 <Heading fontSize="20px" fontWeight={700} color="white">
                   USDC Andromeda Yield
@@ -87,20 +94,24 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
                 </Link>
               </Tooltip>
             </Flex>
-            <Flex>
-              <Text fontSize="20px" fontWeight={700} color="gray.500" mr={2}>
-                TVL
-              </Text>
-              <Text fontSize="20px" fontWeight={700} color="white" mr={4}>
-                ${tvl}
-              </Text>
-              <Text fontSize="20px" fontWeight={700} color="gray.500" mr={2}>
-                APY
-              </Text>
-              <Text fontSize="20px" fontWeight={700} color="white">
-                Up to {apy}%
-                <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
-              </Text>
+            <Flex flexDir={['column', 'row']}>
+              <Flex alignItems="center" mr={6} gap={2}>
+                <Text fontSize="20px" fontWeight={700} color="gray.500">
+                  TVL
+                </Text>
+                <Text fontSize="20px" fontWeight={700} color="white">
+                  ${tvl}
+                </Text>
+              </Flex>
+              <Flex alignItems="center" mr={6} gap={2}>
+                <Text fontSize="20px" fontWeight={700} color="gray.500">
+                  APY
+                </Text>
+                <Text fontSize="20px" fontWeight={700} color="white">
+                  Up to {apy}%
+                  <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
           <TableContainer>
@@ -152,7 +163,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
               <Tbody>
                 <Tr>
                   <Td width="66%" border="none" px={4}>
-                    <Flex alignItems="center">
+                    <Flex minWidth="120px" alignItems="center">
                       <TokenIcon w={26} h={26} symbol="USDC" />
                       <Flex flexDirection="column" ml={3} mr="auto">
                         <Text
@@ -182,6 +193,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
                       lineHeight="20px"
                       fontWeight={500}
                       color="white"
+                      minWidth="100px"
                     >
                       {apy}%
                       <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
