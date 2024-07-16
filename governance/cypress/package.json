@@ -4,6 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "scripts": {
+    "anvil:op-sepolia": "anvil --fork-url https://optimism-sepolia.infura.io/v3/$INFURA_KEY --fork-block-number 14539112",
     "e2e": "cypress open --e2e --browser chrome"
   },
   "devDependencies": {
@@ -18,8 +19,6 @@
     "ts-node": "^10.9.1"
   },
   "depcheck": {
-    "ignoreMatches": [
-      "ts-node"
-    ]
+    "ignoreMatches": ["ts-node"]
   }
 }
