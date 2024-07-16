@@ -38,7 +38,7 @@ export const PositionTitle: FC<{
         <Heading
           ml={4}
           fontWeight={700}
-          fontSize="24px"
+          fontSize={['18px', '20px', '24px']}
           color="gray.50"
           display="flex"
           alignItems="center"
@@ -49,7 +49,7 @@ export const PositionTitle: FC<{
         <Heading
           ml={4}
           fontWeight={700}
-          fontSize="16px"
+          fontSize={['12px', '16px']}
           color="gray.50"
           display="flex"
           alignItems="center"
@@ -61,7 +61,7 @@ export const PositionTitle: FC<{
           <Flex
             ml={2}
             alignItems="center"
-            fontSize="12px"
+            fontSize={['10px', '12px']}
             color="gray.500"
             gap={1}
             fontWeight="bold"

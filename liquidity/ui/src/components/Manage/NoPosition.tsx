@@ -30,11 +30,12 @@ export const NoPosition: FC<{
 
   return (
     <Box mb={12} mt={8}>
-      <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
-
+      <Box px={[0, 6]}>
+        <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
+      </Box>
       <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
         <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
-          <Flex direction="row" gap={4}>
+          <Flex direction={['column', 'row']} gap={4}>
             <CollateralStats
               liquidityPosition={undefined}
               collateralType={collateralType}
