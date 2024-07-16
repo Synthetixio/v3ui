@@ -96,7 +96,7 @@ const ClaimUi: FC<{
             >
               <Amount value={maxClaimble} prefix="$" />
             </Box>
-            without accruing debt.
+            &nbsp;without accruing debt.
           </Text>
         </Alert>
       </Collapse>
