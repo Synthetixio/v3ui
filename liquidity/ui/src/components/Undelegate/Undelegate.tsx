@@ -73,14 +73,14 @@ export const UndelegateUi: FC<{
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
   const isInputDisabled = isAnyMarketLocked === true;
+  const overAvailableBalance = collateralChange.abs().gt(max);
 
   const isFormDisabled =
     isLoadingRequiredData ||
     isAnyMarketLocked === true ||
     collateralChange.gte(0) ||
-    !isValidLeftover;
-
-  const overAvailableBalance = collateralChange.abs().gt(max);
+    !isValidLeftover ||
+    overAvailableBalance;
 
   return (
     <Flex flexDirection="column">

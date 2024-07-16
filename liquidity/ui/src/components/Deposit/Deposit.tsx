@@ -180,7 +180,8 @@ export const DepositUi: FC<{
         isDisabled={
           collateralChange.lte(0) ||
           combinedTokenBalance === undefined ||
-          collateralChange.add(currentCollateral).lt(minDelegation)
+          collateralChange.add(currentCollateral).lt(minDelegation) ||
+          overAvailableBalance
         }
       >
         {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit & Lock Collateral'}

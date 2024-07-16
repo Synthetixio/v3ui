@@ -208,7 +208,8 @@ export const InitialDepositUi: FC<{
             isDisabled={
               collateralChange.lte(0) ||
               combinedTokenBalance === undefined ||
-              collateralChange.lt(minDelegation)
+              collateralChange.lt(minDelegation) ||
+              overAvailableBalance
             }
           >
             {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit & Lock'}
