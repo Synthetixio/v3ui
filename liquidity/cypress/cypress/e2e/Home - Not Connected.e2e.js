@@ -7,7 +7,8 @@ it('Home Not Connected', () => {
   cy.visit('/#/dashboard');
 
   cy.get('[data-cy="liquidity-dashboard"]').contains('Dashboard');
-  cy.get('[data-cy="connect-button-asset-table"]').contains('Connect Wallet');
+  // Assets are temporarily disabled
+  // cy.get('[data-cy="connect-button-asset-table"]').contains('Connect Wallet');
   cy.get('[data-cy="connect-button-position-table"]').contains('Connect Wallet');
   cy.get('[data-cy="Total Assets-stats-box"]').contains('$0.00');
   cy.get('[data-cy="Total Delegated-stats-box"]').contains('$0.00');

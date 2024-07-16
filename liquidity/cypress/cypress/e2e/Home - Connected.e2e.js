@@ -34,10 +34,11 @@ it('Home Connected', () => {
     // Check the dashboard
     cy.visit('/#/dashboard');
     cy.get('[data-cy="liquidity-dashboard"]').contains('Dashboard');
-    cy.get('[data-cy="asset-list-wallet-balance"]').contains('$0.00');
-    cy.get('[data-cy="asset-list-account-balance"]').contains('$0.00');
-    cy.get('[data-cy="asset-list-delegated-balance"]').contains('$0.00');
-    cy.get('[data-cy="assets-deposit-button"]').contains('Deposit');
+    // Assets are temporarily disabled
+    // cy.get('[data-cy="asset-list-wallet-balance"]').contains('$0.00');
+    // cy.get('[data-cy="asset-list-account-balance"]').contains('$0.00');
+    // cy.get('[data-cy="asset-list-delegated-balance"]').contains('$0.00');
+    // cy.get('[data-cy="assets-deposit-button"]').contains('Deposit');
     cy.get('[data-cy="Total Assets-stats-box"]').contains('$0.00');
     cy.get('[data-cy="Total Delegated-stats-box"]').contains('$0.00');
     cy.get('[data-cy="Total Debt-stats-box"]').contains('$0.00');
