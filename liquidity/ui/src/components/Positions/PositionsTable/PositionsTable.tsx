@@ -70,7 +70,7 @@ export const PositionsTable = ({
                 colorScheme="gray"
                 color="white"
               >
-                Pool Info
+                Details
               </Button>
             </Fade>
           </Flex>

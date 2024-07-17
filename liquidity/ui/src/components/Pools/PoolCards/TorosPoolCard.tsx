@@ -64,12 +64,12 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
             justifyContent="space-between"
           >
             <Flex flexDir={['column', 'row']}>
-              <Flex flexDirection="column" justifyContent="space-between">
+              <Flex flexDirection="column" justifyContent="space-between" ml="12px">
                 <Heading fontSize="20px" fontWeight={700} color="white">
                   USDC Andromeda Yield
                 </Heading>
                 <Flex alignItems="center" gap="1">
-                  <NetworkIcon networkId={8453} w="14px" height="14px" />
+                  <NetworkIcon networkId={8453} w="14px" height="14px" mr={1} />
                   <Text color="gray.500" fontSize="12px">
                     Base Network
                   </Text>
@@ -103,13 +103,12 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
                   ${tvl}
                 </Text>
               </Flex>
-              <Flex alignItems="center" mr={6} gap={2}>
+              <Flex alignItems="center" gap={2}>
                 <Text fontSize="20px" fontWeight={700} color="gray.500">
                   APY
                 </Text>
                 <Text fontSize="20px" fontWeight={700} color="white">
                   Up to {apy}%
-                  <Sparkles w="18px" h="18px" mb={1} ml="0.5px" />
                 </Text>
               </Flex>
             </Flex>
