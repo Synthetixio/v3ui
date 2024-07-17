@@ -12,6 +12,7 @@ export function useGetUSDTokens(customNetwork?: Network) {
   const targetNetwork = customNetwork || network;
 
   const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
+
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
   const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
@@ -19,9 +20,11 @@ export function useGetUSDTokens(customNetwork?: Network) {
 
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens'],
-    enabled: Boolean(targetNetwork?.id && CoreProxy && collateralTypes?.length && systemToken),
+    enabled: Boolean(
+      targetNetwork?.id && CoreProxy && collateralTypes?.length && systemToken && SpotMarket
+    ),
     queryFn: async () => {
-      if (!targetNetwork?.id || !CoreProxy || !systemToken) {
+      if (!targetNetwork?.id || !CoreProxy || !systemToken || !SpotMarket) {
         throw 'useGetUSDTokens queries are not ready';
       }
       const USDC: string = isBase

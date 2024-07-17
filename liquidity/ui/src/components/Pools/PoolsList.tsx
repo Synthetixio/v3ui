@@ -9,10 +9,12 @@ import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
+import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
   const { data, isLoading: isPoolsListLoading } = usePoolsList();
+  const { data: usdTokens } = useGetUSDTokens(BASE_ANDROMEDA);
 
   const { data: BaseCollateralTypes, isLoading: isBaseCollateralLoading } = useCollateralTypes(
     false,
@@ -48,11 +50,7 @@ export const PoolsList = () => {
 
   // Base Balances
   const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
-    BaseCollateralTypes?.map((item) => {
-      if (item.tokenAddress === '0xC74eA762cF06c9151cE074E6a569a5945b6302E7')
-        return '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-      return item.tokenAddress;
-    }) || [],
+    usdTokens?.USDC ? [usdTokens.USDC] : [],
     BASE_ANDROMEDA
   );
 
