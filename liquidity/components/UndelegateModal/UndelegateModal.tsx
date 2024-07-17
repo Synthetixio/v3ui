@@ -1,14 +1,4 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Button, Divider, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -28,6 +18,8 @@ import { useMachine } from '@xstate/react';
 import { FC, useCallback, useContext, useEffect } from 'react';
 import type { StateFrom } from 'xstate';
 import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -39,55 +31,74 @@ export const UndelegateModalUi: FC<{
   onSubmit: () => void;
 }> = ({ amount, isOpen, onClose, collateralType, onSubmit, state, error }) => {
   const isProcessing = state.matches(State.undelegate);
-  return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay />
-      <ModalContent bg="black" color="white" data-testid="undelegate modal">
-        <ModalHeader>Complete this action</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Text mb="2">Please execute the following transactions:</Text>
-          <Multistep
-            step={1}
-            title="Remove collateral"
-            subtitle={
-              <Text as="div">
-                <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be removed from
-                the pool.
-              </Text>
-            }
-            status={{
-              failed: Boolean(error?.step === State.undelegate),
-              disabled: amount.eq(0),
-              success: state.matches(State.success),
-              loading: state.matches(State.undelegate) && !error,
-            }}
-          />
+  if (isOpen) {
+    if (state.matches(State.success)) {
+      return (
+        <LiquidityPositionUpdated
+          onClose={onSubmit}
+          title="Collateral successfully Updated"
+          subline={
+            <>
+              Your <b>Collateral</b> has been updated, read more about it in the Synthetix V3
+              Documentation.
+            </>
+          }
+          alertText={
+            <>
+              <b>Collateral</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
 
-          <Button
-            isDisabled={isProcessing}
-            onClick={onSubmit}
-            width="100%"
-            my="4"
-            data-testid="undelegate confirm button"
-          >
-            {(() => {
-              switch (true) {
-                case Boolean(error):
-                  return 'Retry';
-                case isProcessing:
-                  return 'Processing...';
-                case state.matches(State.success):
-                  return 'Done';
-                default:
-                  return 'Start';
-              }
-            })()}
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
+    return (
+      <div>
+        <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
+          Manage Collateral
+        </Text>
+        <Divider my={4} />
+        <Multistep
+          step={1}
+          title="Unlock collateral"
+          subtitle={
+            <Text as="div">
+              <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be unlocked from
+              the pool.
+            </Text>
+          }
+          status={{
+            failed: Boolean(error?.step === State.undelegate),
+            disabled: amount.eq(0),
+            success: state.matches(State.success),
+            loading: state.matches(State.undelegate) && !error,
+          }}
+        />
+
+        <Button
+          isDisabled={isProcessing}
+          onClick={onSubmit}
+          width="100%"
+          mt="6"
+          data-testid="undelegate confirm button"
+        >
+          {(() => {
+            switch (true) {
+              case Boolean(error):
+                return 'Retry';
+              case isProcessing:
+                return 'Processing...';
+              case state.matches(State.success):
+                return 'Continue';
+              default:
+                return 'Execute Transaction';
+            }
+          })()}
+        </Button>
+      </div>
+    );
+  }
 };
 export type UndelegateModalProps = FC<{
   isOpen: boolean;
@@ -149,15 +160,16 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
           }
           toast.closeAll();
           toast({
-            title: 'Remove collateral failed',
+            title: 'Unlock collateral failed',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
               'Please try again.'
             ),
             status: 'error',
+            variant: 'left-accent',
           });
-          throw Error('Remove collateral failed', { cause: error });
+          throw Error('Unlock collateral failed', { cause: error });
         }
       },
     },

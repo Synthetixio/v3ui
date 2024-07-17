@@ -1,11 +1,10 @@
-import { Alert, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Text } from '@chakra-ui/react';
 
 export function WithdrawIncrease() {
   return (
-    <Alert colorScheme="orange" mb="4">
-      <Text fontWeight="bold">
-        This action will increase the timeout for withdrawing collateral
-      </Text>
+    <Alert status="warning" mb="4">
+      <AlertIcon />
+      <Text>This action will reset the withdrawal waiting period to 24 hours</Text>
     </Alert>
   );
 }

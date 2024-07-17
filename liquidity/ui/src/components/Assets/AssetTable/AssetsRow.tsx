@@ -4,8 +4,9 @@ import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 import Wei from '@synthetixio/wei';
 import { WithdrawModal } from '../../';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { NavLink, generatePath } from 'react-router-dom';
+import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
+import { useWallet } from '@snx-v3/useBlockchain';
 
 interface AssetsRowProps {
   token: string;
@@ -32,8 +33,10 @@ export const AssetsRow = ({
   unlockDate,
   final,
 }: AssetsRowProps) => {
+  const { connect, activeWallet } = useWallet();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const navigate = useNavigate();
+  const [queryParams] = useSearchParams();
   const { minutes, hours, isRunning } = useTimer({
     expiryTimestamp: unlockDate || new Date(0),
     autoStart: unlockDate && new Date().getTime() < unlockDate?.getTime(),
@@ -124,7 +127,6 @@ export const AssetsRow = ({
           {/* TODO: Update when multiple pools for LPing available */}
           <Fade in>
             <Button
-              as={NavLink}
               fontSize="0.75rem"
               lineHeight="1rem"
               height="1.75rem"
@@ -133,16 +135,23 @@ export const AssetsRow = ({
               borderWidth="1px"
               borderColor="gray.900"
               borderRadius="4px"
-              to={{
-                pathname: generatePath('/positions/:collateralSymbol/:poolId', {
-                  poolId: '1',
-                  collateralSymbol: token.toUpperCase(),
-                }),
-                search: location.search,
+              onClick={() => {
+                if (activeWallet?.address) {
+                  queryParams.set('manageAction', 'deposit');
+                  navigate({
+                    pathname: generatePath('/positions/:collateralSymbol/:poolId', {
+                      poolId: '1',
+                      collateralSymbol: token.toUpperCase(),
+                    }),
+                    search: queryParams.toString(),
+                  });
+                } else {
+                  connect();
+                }
               }}
               data-cy="assets-deposit-button"
             >
-              Deposit
+              {activeWallet?.address ? 'Deposit' : 'Connect'}
             </Button>
           </Fade>
 

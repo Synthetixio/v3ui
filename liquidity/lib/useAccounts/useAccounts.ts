@@ -18,6 +18,7 @@ export function useAccounts() {
     ],
     queryFn: async function () {
       if (!AccountProxy || !activeWallet?.address) throw new Error('Should be disabled');
+
       const numberOfAccountTokens = await AccountProxy.balanceOf(activeWallet.address);
 
       if (numberOfAccountTokens.eq(0)) {

@@ -1,10 +1,9 @@
 import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
-import { AssetsList, PositionsList, StatsList, AccountBanner } from '../components';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { PositionsList, StatsList } from '../components';
+import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 
 export function Dashboard() {
-  const { activeWallet } = useWallet();
   return (
     <>
       <Helmet>
@@ -12,7 +11,6 @@ export function Dashboard() {
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column" mb={16}>
-        {activeWallet && <AccountBanner />}
         <Heading
           mt={{
             base: 2,
@@ -24,8 +22,11 @@ export function Dashboard() {
         >
           Dashboard
         </Heading>
+        <WatchAccountBanner />
+
         <StatsList />
-        <AssetsList />
+        {/* Leave commented out for now */}
+        {/* <AssetsList /> */}
         <PositionsList />
       </Flex>
     </>

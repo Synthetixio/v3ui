@@ -5262,6 +5262,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/BorrowModal@workspace:liquidity/components/BorrowModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5275,6 +5276,32 @@ __metadata:
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/useSystemToken": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/ClaimModal@workspace:*, @snx-v3/ClaimModal@workspace:liquidity/components/ClaimModal":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/ClaimModal@workspace:liquidity/components/ClaimModal"
+  dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Amount": "workspace:*"
+    "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
+    "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useBorrow": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useContractErrorParser": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/useSystemToken": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
@@ -5308,6 +5335,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/DepositModal@workspace:liquidity/components/DepositModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5375,7 +5403,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/PercentBadges@workspace:*, @snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges":
+"@snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges":
   version: 0.0.0-use.local
   resolution: "@snx-v3/PercentBadges@workspace:liquidity/components/PercentBadges"
   dependencies:
@@ -5418,6 +5446,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/RepayModal@workspace:liquidity/components/RepayModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5478,6 +5507,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/UndelegateModal@workspace:liquidity/components/UndelegateModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
@@ -5509,27 +5539,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal":
+"@snx-v3/WithdrawModal@workspace:*, @snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal":
   version: 0.0.0-use.local
   resolution: "@snx-v3/WithdrawModal@workspace:liquidity/components/WithdrawModal"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
-    "@snx-v3/WithdrawIncrease": "workspace:*"
+    "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useWithdraw": "workspace:*"
-    "@snx-v3/useWrapEth": "workspace:*"
+    "@snx-v3/useWithdrawBaseAndromeda": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
-    "@xstate/react": "npm:^3.2.2"
     react: "npm:^18.2.0"
-    xstate: "npm:^4.38.3"
   languageName: unknown
   linkType: soft
 
@@ -5743,16 +5776,19 @@ __metadata:
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
     "@snx-v3/BorrowModal": "workspace:*"
+    "@snx-v3/ClaimModal": "workspace:*"
+    "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/DepositModal": "workspace:*"
     "@snx-v3/HomeLink": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
+    "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
-    "@snx-v3/PercentBadges": "workspace:*"
     "@snx-v3/RepayModal": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/UndelegateModal": "workspace:*"
     "@snx-v3/WithdrawIncrease": "workspace:*"
+    "@snx-v3/WithdrawModal": "workspace:*"
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/etherscanLink": "workspace:*"
@@ -5768,11 +5804,14 @@ __metadata:
     "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useAprHistory": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useBorrow": "workspace:*"
     "@snx-v3/useClaimRewards": "workspace:*"
     "@snx-v3/useClearDebt": "workspace:*"
     "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useContractErrorParser": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetBorrow": "workspace:*"
@@ -5785,11 +5824,14 @@ __metadata:
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
+    "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
+    "@snx-v3/useUndelegate": "workspace:*"
+    "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/useWithdraw": "workspace:*"
     "@snx-v3/useWithdrawBaseAndromeda": "workspace:*"
@@ -6146,10 +6188,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBorrow@workspace:liquidity/lib/useBorrow"
   dependencies:
-    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
@@ -6390,7 +6431,6 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"

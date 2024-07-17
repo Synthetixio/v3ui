@@ -17,11 +17,13 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
-import React, { FC, useContext } from 'react';
+import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../TokenIcon';
+import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
+import { useTimer } from 'react-timer-hook';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -34,6 +36,7 @@ export const UndelegateUi: FC<{
   setCollateralChange: (val: Wei) => void;
   isAnyMarketLocked?: boolean;
   isLoadingRequiredData: boolean;
+  unlockDate?: Date;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -44,102 +47,147 @@ export const UndelegateUi: FC<{
   minDelegation,
   isLoadingRequiredData,
   isAnyMarketLocked,
+  unlockDate,
 }) => {
-  const onMaxClick = React.useCallback(() => {
+  const onMaxClick = useCallback(() => {
     if (!max) {
       return;
     }
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
 
+  const { minutes, hours, seconds, isRunning, restart } = useTimer({
+    expiryTimestamp: new Date(0),
+    autoStart: false,
+  });
+
+  useEffect(() => {
+    if (unlockDate) {
+      restart(unlockDate, true);
+    }
+  }, [restart, unlockDate]);
+
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
 
   const isValidLeftover =
     leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
-  const isDisabled = isAnyMarketLocked === true;
+  const isInputDisabled = isAnyMarketLocked === true;
+  const overAvailableBalance = collateralChange.abs().gt(max);
+
+  const isFormDisabled =
+    isLoadingRequiredData ||
+    isAnyMarketLocked === true ||
+    collateralChange.gte(0) ||
+    !isValidLeftover ||
+    overAvailableBalance;
 
   return (
     <Flex flexDirection="column">
-      <Text fontSize="md" fontWeight="700" mb="0.5">
-        Remove {displaySymbol}
+      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
+        Unlock Collateral
       </Text>
-      <Text fontSize="sm" color="gray.400" mb="4">
-        Removing collateral from this position will transfer it to the account’s Available
-        Collateral balance for withdrawal. Collateral may only be removed if the resulting C-Ratio
-        is above the Issuance C-Ratio.
-      </Text>
-
-      <BorderBox flexDirection="column" py={2} px={3} mb="4">
-        <Flex flexDirection="row" justifyContent="space-between" width="100%">
-          <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
-            <TokenIcon symbol={symbol} />
-            {displaySymbol}
-          </Text>
-          <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-            <NumberInput
-              InputProps={{
-                isDisabled,
-                isRequired: true,
-                'data-testid': 'undelegate amount input',
-                'data-max': max?.toString(),
-              }}
-              value={collateralChange.abs()}
-              onChange={(val) => setCollateralChange(val.mul(-1))}
-              max={max}
-            />
-            <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
-              <Flex
-                gap="1"
-                cursor={isDisabled ? 'not-allowed' : 'pointer'}
-                onClick={isDisabled ? undefined : onMaxClick}
+      <BorderBox display="flex" p={3} mb="6">
+        <Flex alignItems="flex-start" flexDir="column" gap="1">
+          <BorderBox display="flex" py={1.5} px={2.5}>
+            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+              <TokenIcon symbol={symbol} width={16} height={16} />
+              {displaySymbol}
+            </Text>
+          </BorderBox>
+          <Flex gap="1" fontSize="12px">
+            <Text display="flex" alignItems="center" gap={1}>
+              Locked:
+            </Text>
+            <Amount value={max} data-testid="available to undelegate" />
+            {max?.gt(0) && (
+              <Text
+                as="span"
+                cursor="pointer"
+                onClick={onMaxClick}
+                color="cyan.500"
+                fontWeight={700}
               >
-                <Text display="flex" alignItems="center" gap={1}>
-                  Max:
-                </Text>
-                <Amount
-                  value={max}
-                  data-testid="available to undelegate"
-                  suffix={` ${displaySymbol}`}
-                />
-              </Flex>
-            </Flex>
+                Max
+              </Text>
+            )}
           </Flex>
         </Flex>
-        <Collapse in={isDisabled} animateOpacity>
+        <Flex flexGrow={1}>
+          <NumberInput
+            InputProps={{
+              isDisabled: isInputDisabled,
+              isRequired: true,
+              'data-testid': 'undelegate amount input',
+              'data-max': max?.toString(),
+              type: 'number',
+            }}
+            value={collateralChange.abs()}
+            onChange={(val) => setCollateralChange(val.mul(-1))}
+            max={max}
+          />
+        </Flex>
+        <Collapse in={isInputDisabled} animateOpacity>
           <Alert mt={2} status="warning">
             <AlertIcon />
             <Flex direction="column">
               <AlertTitle>Credit capacity reached</AlertTitle>
               <AlertDescription>
                 One of the markets has reached its credit capacity and is currently in a locked
-                state. You cannot remove collateral from the pool at this time.
-              </AlertDescription>
-            </Flex>
-          </Alert>
-        </Collapse>
-
-        <Collapse in={!isValidLeftover} animateOpacity>
-          <Alert mt={2} status="info">
-            <AlertIcon />
-            <Flex direction="column">
-              <AlertTitle>
-                The minimal delegated amount is{' '}
-                <Amount value={minDelegation} suffix={` ${symbol}`} />
-              </AlertTitle>
-              <AlertDescription>
-                You can close your position by removing all the collateral.
+                state. You cannot unlock collateral from the pool at this time.
               </AlertDescription>
             </Flex>
           </Alert>
         </Collapse>
       </BorderBox>
-      <Button
-        data-testid="undelegate submit"
-        type="submit"
-        isDisabled={isLoadingRequiredData || isAnyMarketLocked === true}
+      <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
+        <Alert mt={2} mb={4} status="info">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>
+              The minimal delegated amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
+            </AlertTitle>
+            <AlertDescription>
+              You can close your position by removing all the collateral.
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      </Collapse>
+      <Collapse
+        in={
+          isRunning &&
+          max?.gt(0) &&
+          !isLoadingRequiredData &&
+          !![minutes, hours, seconds].find((a) => a > 0)
+        }
+        animateOpacity
       >
-        Remove {displaySymbol}
+        <Alert colorScheme="blue" mb="4">
+          <AlertIcon />
+          <Text>
+            You will be able to withdraw assets in {hours}:{minutes}. Any account activity will
+            reset this timer to 24H.
+          </Text>
+        </Alert>
+      </Collapse>
+      <Collapse in={isValidLeftover && !collateralChange.eq(0) && !isRunning} animateOpacity>
+        <Alert status="warning" mb="4">
+          <AlertIcon />
+          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
+        </Alert>
+      </Collapse>
+      <Collapse in={overAvailableBalance} animateOpacity>
+        <Alert mt={2} mb={4} status="error">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>
+              The max withdrawable amount is <Amount value={max} suffix={` ${symbol}`} />
+            </AlertTitle>
+          </Flex>
+        </Alert>
+      </Collapse>
+      <Button data-testid="undelegate submit" type="submit" isDisabled={isFormDisabled}>
+        {collateralChange.gte(0) ? 'Enter Amount' : 'Unlock Collateral'}
       </Button>
     </Flex>
   );
@@ -147,14 +195,20 @@ export const UndelegateUi: FC<{
 
 export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
-  const params = useParams();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { poolId, accountId, collateralSymbol } = useParams();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
+  const { data: accountCollateralUnlockDate, isLoading: isLoadingAccountUnlockDate } =
+    useAccountCollateralUnlockDate({
+      accountId,
+    });
 
-  const poolConfiguration = usePoolConfiguration(params.poolId);
+  const poolConfiguration = usePoolConfiguration(poolId);
   const { network } = useNetwork();
 
   if (!collateralType) return null;
+
   const collateralPrice = liquidityPosition?.collateralPrice;
+
   const { newDebt } = validatePosition({
     issuanceRatioD18: collateralType.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
@@ -163,10 +217,10 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
-
   function maxUndelegate() {
     if (!liquidityPosition || !collateralType) return undefined;
     const { collateralAmount, collateralValue } = liquidityPosition;
@@ -180,13 +234,15 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
 
     const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
 
-    if (collateralValue < minCollateralRequired)
+    if (collateralValue.lt(minCollateralRequired))
       // If you're below issuance ratio, you can't withdraw anything
       return wei(0);
 
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
+
     return Wei.min(collateralAmount, maxWithdrawable);
   }
+
   const max = maxUndelegate();
 
   return (
@@ -199,7 +255,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
       max={max}
-      isLoadingRequiredData={poolConfiguration.isLoading || !max}
+      unlockDate={accountCollateralUnlockDate}
+      isLoadingRequiredData={poolConfiguration.isLoading || isLoadingAccountUnlockDate || !max}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
     />
   );

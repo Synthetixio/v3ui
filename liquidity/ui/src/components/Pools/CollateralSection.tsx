@@ -439,7 +439,7 @@ export const CollateralSectionUi: FC<{
                             lineHeight="14px"
                             color="gray.500"
                           >
-                            C-ratio {cRatio.lte(0) ? 'Infinite' : formatPercent(cRatio.toNumber())}
+                            C-ratio: {cRatio.lte(0) ? 'Infinite' : formatPercent(cRatio.toNumber())}
                           </Text>
                         </Flex>
                       </Tooltip>
@@ -476,7 +476,7 @@ export const CollateralSectionUi: FC<{
                           >
                             {formatApr(apr28d * 100, network?.id)}
                           </Text>
-                          <Sparkles ml={0.5} width="20px" height="20px" />
+                          <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
                         </Flex>
                       </Tooltip>
                     </Fade>
@@ -570,7 +570,7 @@ export const CollateralSection = () => {
   );
 };
 
-function formatApr(apr?: number, networkId?: number) {
+export function formatApr(apr?: number, networkId?: number) {
   if (!networkId || !apr || apr <= 0) return '-';
 
   return `${apr.toFixed(2)}%`;
