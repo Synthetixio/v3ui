@@ -72,6 +72,8 @@ export const DepositUi: FC<{
     return combinedTokenBalance?.add(accountCollateral.availableCollateral.toString());
   }, [accountCollateral.availableCollateral, combinedTokenBalance]);
 
+  const overAvailableBalance = collateralChange.abs().gt(maxAmount);
+
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
@@ -85,7 +87,6 @@ export const DepositUi: FC<{
               {displaySymbol}
             </Text>
           </BorderBox>
-
           <Tooltip
             label={
               <Flex
@@ -152,8 +153,7 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      {collateralChange.gt(0) && <WithdrawIncrease />}
-
+      {collateralChange.gt(0) && !overAvailableBalance && <WithdrawIncrease />}
       <Collapse
         in={collateralChange.gt(0) && collateralChange.add(currentCollateral).lt(minDelegation)}
         animateOpacity
@@ -165,7 +165,14 @@ export const DepositUi: FC<{
           </AlertDescription>
         </Alert>
       </Collapse>
-
+      <Collapse in={overAvailableBalance} animateOpacity>
+        <Alert mb={4} status="error">
+          <AlertIcon />
+          <AlertDescription>
+            You cannot Deposit & Lock more collateral than your balance amount
+          </AlertDescription>
+        </Alert>
+      </Collapse>
       <Button
         data-testid="deposit submit"
         data-cy="deposit-submit-button"
@@ -173,7 +180,8 @@ export const DepositUi: FC<{
         isDisabled={
           collateralChange.lte(0) ||
           combinedTokenBalance === undefined ||
-          collateralChange.add(currentCollateral).lt(minDelegation)
+          collateralChange.add(currentCollateral).lt(minDelegation) ||
+          overAvailableBalance
         }
       >
         {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit & Lock Collateral'}

@@ -48,7 +48,7 @@ const TableHeader = [
               Debt.
             </Text>
             <Text textAlign="left" fontSize="14px">
-              Represents Pool PNL - Borrowed.
+              Represents PNL - Borrowed.
             </Text>
             <Text fontWeight="bold" mt={2} fontSize="14px">
               Claim Credit:
@@ -62,8 +62,8 @@ const TableHeader = [
               Repay debt:
             </Text>
             <Text fontSize="14px" textAlign="left">
-              You have debt if the Pool PNL has not yet paid back your borrowed assets, or if the
-              Pool PNL is Negative.
+              You have debt if the PNL has not yet paid back your borrowed assets, or if the PNL is
+              Negative.
             </Text>
           </Flex>
         }
@@ -86,7 +86,7 @@ const TableHeader = [
             <Text textAlign="left" fontSize="14px">
               Manage your Position by Adding or Removing collateral to this position. BorrowIs a
               dynamic number that represents a ratio between the collateral Delegated for your
-              position and the Borrowed assets for this position - the Pool PNL.
+              position and the Borrowed assets for this position - PNL.
             </Text>
           </Flex>
         }

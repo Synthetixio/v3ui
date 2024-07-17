@@ -44,7 +44,7 @@ const ClaimUi: FC<{
           </BorderBox>
 
           <Flex fontSize="12px" gap="1">
-            <Text>Max Claim:</Text>
+            <Text>Credit:</Text>
             <Amount value={maxClaimble} />
             {maxClaimble?.gt(0) && (
               <Text
@@ -96,7 +96,7 @@ const ClaimUi: FC<{
             >
               <Amount value={maxClaimble} prefix="$" />
             </Box>
-            without accruing debt.
+            &nbsp;without accruing debt.
           </Text>
         </Alert>
       </Collapse>

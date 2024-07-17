@@ -47,7 +47,13 @@ export function PositionRow({
           <Flex alignItems="center">
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+              <Text
+                color="white"
+                fontWeight={700}
+                lineHeight="1.25rem"
+                fontFamily="heading"
+                fontSize="sm"
+              >
                 {collateralType.symbol}
               </Text>
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -60,7 +66,7 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {liquidityPosition?.collateralAmount
                 .toNumber()
                 .toLocaleString('en-US', { maximumFractionDigits: 2 })}
@@ -74,7 +80,7 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {!!apr ? apr.toFixed(2).concat('%') : '-'}
             </Text>
           </Flex>
@@ -85,7 +91,7 @@ export function PositionRow({
           <Td border="none">
             <Fade in>
               <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+                <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
                   ${liquidityPosition?.debt.toNumber().toLocaleString()}
                 </Text>
                 <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -97,7 +103,7 @@ export function PositionRow({
           <Td border="none">
             <Fade in>
               <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+                <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
                   {parseFloat(
                     utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
                   ).toFixed(2)}
@@ -116,7 +122,7 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
             </Text>
             <Text
@@ -133,7 +139,7 @@ export function PositionRow({
                 });
               }}
             >
-              {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
+              {debt.gt(0) ? 'Repay Debt' : debt.lt(0) ? 'Claim Credit' : ''}
             </Text>
           </Flex>
         </Fade>
@@ -142,7 +148,7 @@ export function PositionRow({
         <Td border="none">
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+              <Text color="white" fontSize="sm" lineHeight="1.25rem" fontFamily="heading">
                 {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
 
@@ -155,7 +161,7 @@ export function PositionRow({
           </Fade>
         </Td>
       )}
-      <Td border="none">
+      <Td border="none" pr={0}>
         <Flex justifyContent="flex-end">
           <Button
             fontSize="0.75rem"
@@ -165,7 +171,6 @@ export function PositionRow({
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
-            w="100px"
             onClick={() => {
               navigate({
                 pathname: `/positions/${collateralType.symbol}/${poolId}`,

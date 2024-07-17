@@ -78,21 +78,20 @@ export const InitialDepositUi: FC<{
     return combinedTokenBalance?.add(availableCollateral);
   }, [availableCollateral, combinedTokenBalance]);
 
+  const overAvailableBalance = collateralChange.gt(maxAmount);
+
   return (
     <Flex flexDirection="column">
       <Text color="gray.50" fontSize="20px" fontWeight={700}>
         {step > 0 && <ArrowBackIcon cursor="pointer" onClick={() => setStep(0)} mr={2} />}
         Open Liquidity Position
       </Text>
-
       <Divider my={5} bg="gray.900" />
-
       {step === 0 && (
         <>
           <Text color="gray.50" fontSize="sm" fontWeight="700" mb={2}>
             Deposit & Lock Collateral
           </Text>
-
           <BorderBox display="flex" flexDirection="column" p={3} mb="6">
             <Flex alignItems="center">
               <Flex flexDir="column">
@@ -154,7 +153,6 @@ export const InitialDepositUi: FC<{
                   </Text>
                 </Tooltip>
               </Flex>
-
               <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
                 <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
                   <NumberInput
@@ -178,7 +176,6 @@ export const InitialDepositUi: FC<{
             <CollateralAlert tokenBalance={snxBalance.collateral} />
           )}
           {collateralChange.gt(0) && <WithdrawIncrease />}
-
           <Collapse
             in={collateralChange.gt(0) && collateralChange.lt(minDelegation)}
             animateOpacity
@@ -190,7 +187,14 @@ export const InitialDepositUi: FC<{
               </AlertDescription>
             </Alert>
           </Collapse>
-
+          <Collapse in={overAvailableBalance} animateOpacity>
+            <Alert mb={4} status="error">
+              <AlertIcon />
+              <AlertDescription>
+                You cannot Deposit & Lock more collateral than your balance amount
+              </AlertDescription>
+            </Alert>
+          </Collapse>
           <Button
             data-testid="deposit submit"
             data-cy="deposit-submit-button"
@@ -204,14 +208,14 @@ export const InitialDepositUi: FC<{
             isDisabled={
               collateralChange.lte(0) ||
               combinedTokenBalance === undefined ||
-              collateralChange.lt(minDelegation)
+              collateralChange.lt(minDelegation) ||
+              overAvailableBalance
             }
           >
             {collateralChange.lte(0) ? 'Enter Amount' : 'Deposit & Lock'}
           </Button>
         </>
       )}
-
       {step === 1 && (
         <>
           <Text>
@@ -228,7 +232,6 @@ export const InitialDepositUi: FC<{
             <br />
             <ListItem>Simplify collaborative liquidity positions management</ListItem>
           </UnorderedList>
-
           <Button
             onClick={() => {
               onSubmit();
