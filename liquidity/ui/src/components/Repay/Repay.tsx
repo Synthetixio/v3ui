@@ -63,7 +63,7 @@ export const RepayUi: FC<{
         <Flex fontSize="12px" gap="1">
           <Flex gap="1" mr="3" cursor="pointer">
             <Text>Debt:</Text>
-            <Text display="inline">
+            <Text display="flex" alignItems="center">
               $<Amount value={currentDebt} data-testid="current debt" />
               {currentDebt?.gt(0) && (
                 <Text

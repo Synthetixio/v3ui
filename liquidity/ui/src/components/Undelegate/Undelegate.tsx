@@ -56,7 +56,7 @@ export const UndelegateUi: FC<{
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
 
-  const { minutes, hours, isRunning, restart } = useTimer({
+  const { minutes, hours, seconds, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
   });
@@ -153,8 +153,16 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-      <Collapse in={isRunning && max?.gt(0) && !isLoadingRequiredData} animateOpacity>
-        <Alert colorScheme="info" mb="4">
+      <Collapse
+        in={
+          isRunning &&
+          max?.gt(0) &&
+          !isLoadingRequiredData &&
+          !![minutes, hours, seconds].find((a) => a > 0)
+        }
+        animateOpacity
+      >
+        <Alert colorScheme="blue" mb="4">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}:{minutes}. Any account activity will

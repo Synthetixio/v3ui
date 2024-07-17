@@ -142,16 +142,18 @@ export const ManageUi: FC<{
               <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
                 <ManageAction liquidityPosition={liquidityPosition} />
               </BorderBox>
-              <Text
-                textAlign="center"
-                cursor="pointer"
-                onClick={() => setClosePosition(true)}
-                color="cyan.500"
-                fontWeight={700}
-                mt="5"
-              >
-                Close Position
-              </Text>
+              {liquidityPosition?.collateralAmount.gt(0) && (
+                <Text
+                  textAlign="center"
+                  cursor="pointer"
+                  onClick={() => setClosePosition(true)}
+                  color="cyan.500"
+                  fontWeight={700}
+                  mt="5"
+                >
+                  Close Position
+                </Text>
+              )}
             </Flex>
           )}
 
@@ -206,7 +208,10 @@ export const Manage = () => {
     <ManagePositionProvider>
       <WatchAccountBanner />
       {(!accountId ||
-        (!isLoadingPosition && liquidityPosition && liquidityPosition?.collateralAmount.eq(0))) && (
+        (!isLoadingPosition &&
+          liquidityPosition &&
+          liquidityPosition.collateralAmount.eq(0) &&
+          liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
         <NoPosition
           collateralSymbol={collateralSymbol}
           collateralType={collateralType}
@@ -215,17 +220,19 @@ export const Manage = () => {
           liquidityPosition={liquidityPosition}
         />
       )}
-      {accountId && liquidityPosition?.collateralAmount.gt(0) && (
-        <ManageUi
-          isLoading={isLoading}
-          rewards={rewardsData}
-          poolName={poolData?.name}
-          poolId={poolId}
-          liquidityPosition={liquidityPosition}
-          network={network}
-          collateralSymbol={collateralSymbol}
-        />
-      )}
+      {accountId &&
+        (liquidityPosition?.collateralAmount.gt(0) ||
+          liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
+          <ManageUi
+            isLoading={isLoading}
+            rewards={rewardsData}
+            poolName={poolData?.name}
+            poolId={poolId}
+            liquidityPosition={liquidityPosition}
+            network={network}
+            collateralSymbol={collateralSymbol}
+          />
+        )}
 
       {isLoadingPosition && (
         <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />

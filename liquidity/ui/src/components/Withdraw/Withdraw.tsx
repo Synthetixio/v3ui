@@ -25,7 +25,7 @@ const WithdrawUi: FC<{
   symbol: string;
   isDebtWithdrawal?: boolean;
 }> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
-  const { minutes, hours, isRunning, restart } = useTimer({
+  const { minutes, hours, seconds, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
   });
@@ -39,7 +39,7 @@ const WithdrawUi: FC<{
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Withdraw {!isDebtWithdrawal ? 'Collateral' : 'Debt'}
+        Withdraw {!isDebtWithdrawal ? 'Collateral' : ''}
       </Text>
       <BorderBox display="flex" p={3} mb="6">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
@@ -50,7 +50,7 @@ const WithdrawUi: FC<{
             </Text>
           </BorderBox>
           <Flex fontSize="12px" gap="1">
-            <Text>Unlocked:</Text>
+            <Text>{isDebtWithdrawal ? 'Max Withdraw:' : 'Unlocked:'}</Text>
             <Amount value={maWWithdrawable} />
             {maWWithdrawable.gt(0) && (
               <Text
@@ -83,7 +83,10 @@ const WithdrawUi: FC<{
           />
         </Flex>
       </BorderBox>
-      <Collapse in={isRunning && maWWithdrawable.gt(0)} animateOpacity>
+      <Collapse
+        in={isRunning && maWWithdrawable.gt(0) && !![minutes, hours, seconds].find((a) => a > 0)}
+        animateOpacity
+      >
         <Alert colorScheme="red" mb="4">
           <AlertIcon />
           <Text>
@@ -156,6 +159,7 @@ export const Withdraw = ({
       amount={withdrawAmount}
       maWWithdrawable={maWWithdrawable}
       unlockDate={!isLoadingDate ? accountCollateralUnlockDate : null}
+      isDebtWithdrawal={isDebtWithdrawal}
     />
   );
 };
