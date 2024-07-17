@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { USDC_BASE_MARKET, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -14,17 +13,14 @@ export function useGetUSDTokens(customNetwork?: Network) {
   const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
 
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
   const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
   const { data: systemToken } = useSystemToken(customNetwork);
 
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens'],
-    enabled: Boolean(
-      targetNetwork?.id && CoreProxy && collateralTypes?.length && systemToken && SpotMarket
-    ),
+    enabled: Boolean(targetNetwork?.id && collateralTypes?.length && systemToken && SpotMarket),
     queryFn: async () => {
-      if (!targetNetwork?.id || !CoreProxy || !systemToken || !SpotMarket) {
+      if (!targetNetwork?.id || !systemToken || !SpotMarket) {
         throw 'useGetUSDTokens queries are not ready';
       }
       const USDC: string = isBase
