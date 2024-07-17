@@ -48,7 +48,11 @@ export const PoolsList = () => {
 
   // Base Balances
   const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
-    BaseCollateralTypes?.map((item) => item.tokenAddress) || [],
+    BaseCollateralTypes?.map((item) => {
+      if (item.tokenAddress === '0xC74eA762cF06c9151cE074E6a569a5945b6302E7')
+        return '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+      return item.tokenAddress;
+    }) || [],
     BASE_ANDROMEDA
   );
 
