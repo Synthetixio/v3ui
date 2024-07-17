@@ -118,7 +118,7 @@ export const PoolCard = ({
               <Heading fontSize="xl" fontWeight={700} color="white">
                 {pool?.name}
               </Heading>
-              <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1} fontWeight="bold">
+              <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1}>
                 <NetworkIcon size="14px" networkId={network.id} mr={1} />
                 {network.label} Network
               </Flex>

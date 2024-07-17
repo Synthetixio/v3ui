@@ -60,11 +60,11 @@ export const PositionTitle: FC<{
           {poolName}
           <Flex
             ml={2}
-            alignItems="center"
+            alignItems="normal"
             fontSize={['10px', '12px']}
             color="gray.500"
             gap={1}
-            fontWeight="bold"
+            fontWeight="500"
           >
             <NetworkIcon size="14px" networkId={network?.id} />
             {network?.label} Network
