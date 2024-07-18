@@ -58,7 +58,13 @@ export const PositionsTable = ({
               Spartan Council Pool
               {network && (
                 <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1}>
-                  <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1}>
+                  <Flex
+                    alignItems="center"
+                    fontSize="12px"
+                    fontWeight="500"
+                    color="gray.500"
+                    gap={1}
+                  >
                     <NetworkIcon size="14px" networkId={network.id} mr={1} />
                     {network.label} Network
                   </Flex>
