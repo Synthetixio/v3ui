@@ -68,14 +68,14 @@ export const App = () => {
           property="og:description"
           content="The Liquidity Layer of DeFi. Provide liquidity for the next generation of permissionless protocols"
         />
-        <meta property="og:image" content="/meta.png" />
+        <meta property="og:image" content="/Liquidity.jpg" />
         <meta property="og:image:alt" content="Synthetix | Liquidity" />
         <meta property="og:site_name" content="" />
         {/* twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@synthetix_io" />
         <meta name="twitter:creator" content="@synthetix_io" />
-        <meta name="twitter:image" content="/meta.png" />
+        <meta name="twitter:image" content="/Liquidity.jpg" />
         <meta name="twitter:url" content="https://liquidity.synthetix.eth.limo/" />
       </Head>
       <QueryClientProvider client={queryClient}>
