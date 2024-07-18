@@ -14,6 +14,9 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { Rewards } from '../Rewards';
 import { RewardsType } from '@snx-v3/useRewards';
 import { PositionTitle } from './PositionTitle';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { PnlStats } from './PnlStats';
 
 export const NoPosition: FC<{
   collateralSymbol?: string;
@@ -27,6 +30,7 @@ export const NoPosition: FC<{
   const { collateralChange, setCollateralChange, setDebtChange } =
     useContext(ManagePositionContext);
   const [txnModalOpen, setTxnModalOpen] = useState<'deposit' | null>(null);
+  const { network } = useNetwork();
 
   return (
     <Box mb={12} mt={8}>
@@ -37,30 +41,43 @@ export const NoPosition: FC<{
         <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <Flex direction={['column', 'row']} gap={4}>
             <CollateralStats
-              liquidityPosition={undefined}
+              liquidityPosition={liquidityPosition}
               collateralType={collateralType}
               newCollateralAmount={collateralChange}
               collateralValue={ZEROWEI}
               hasChanges={collateralChange.gt(0)}
             />
-            <DebtStats
-              liquidityPosition={undefined}
-              collateralType={collateralType}
-              newDebt={ZEROWEI}
-              hasChanges={false}
-            />
+
+            {isBaseAndromeda(network?.id, network?.preset) && (
+              <PnlStats
+                liquidityPosition={liquidityPosition}
+                collateralType={collateralType}
+                newDebt={ZEROWEI}
+                hasChanges={false}
+              />
+            )}
+            {!isBaseAndromeda(network?.id, network?.preset) && (
+              <DebtStats
+                liquidityPosition={liquidityPosition}
+                collateralType={collateralType}
+                newDebt={ZEROWEI}
+                hasChanges={false}
+              />
+            )}
           </Flex>
 
-          <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
-            <CRatioBar
-              hasChanges={collateralChange.gt(0)}
-              currentCRatio={0}
-              liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
-              newCratio={collateralChange.gt(0) ? Number.MAX_SAFE_INTEGER : 0}
-              targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
-              isLoading={false}
-            />
-          </BorderBox>
+          {!isBaseAndromeda(network?.id, network?.preset) && (
+            <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
+              <CRatioBar
+                hasChanges={collateralChange.gt(0)}
+                currentCRatio={0}
+                liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+                newCratio={collateralChange.gt(0) ? Number.MAX_SAFE_INTEGER : 0}
+                targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+                isLoading={false}
+              />
+            </BorderBox>
+          )}
           {rewards && <Rewards isLoading={false} rewards={rewards} />}
         </BorderBox>
         <BorderBox

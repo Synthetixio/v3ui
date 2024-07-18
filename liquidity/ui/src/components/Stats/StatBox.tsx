@@ -8,7 +8,7 @@ interface StatBoxProps {
   isLoading: boolean;
   title: string;
   label?: string | ReactNode;
-  value?: string;
+  value?: ReactNode;
 }
 
 export const StatBox = ({ isLoading, title, label, value }: StatBoxProps) => {

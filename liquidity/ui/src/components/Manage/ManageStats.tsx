@@ -81,6 +81,9 @@ export const ManageStatsUi: FC<{
 
   return (
     <Flex direction="column" gap={4}>
+      <Text color="white" fontSize="lg" fontFamily="heading" fontWeight="bold" lineHeight="16px">
+        Overview
+      </Text>
       <Flex flexWrap="wrap" direction={['column', 'row']} gap={4}>
         <CollateralStats
           liquidityPosition={liquidityPosition}

@@ -64,7 +64,7 @@ export const WithdrawModalUi: FC<{
           subtitle={
             <Text as="div">
               <Amount value={amount} />
-              {symbol} will be withdrawn
+              &nbsp;{symbol} will be withdrawn
             </Text>
           }
           status={{

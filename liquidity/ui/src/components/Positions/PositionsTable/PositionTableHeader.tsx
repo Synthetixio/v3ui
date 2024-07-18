@@ -50,94 +50,25 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Tooltip>
           </Flex>
         </Th>
-        {!isBase && (
-          <>
-            <Th border="none" textTransform="unset" py={5}>
-              <Flex justifyContent="flex-end" alignItems="center">
-                <Text
-                  color="gray.600"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  mr={1}
-                >
-                  PNL
-                </Text>
-                {/* <Tooltip
-                  label={
-                    <Flex flexDirection="column" alignItems="start">
-                      <Text fontWeight="bold" fontSize="14px">
-                        PNL Profit and Loss Lifetime:
-                      </Text>
-                      <Text textAlign="left" fontSize="14px">
-                        Reflects how the PNL is impacted by trading activities (Fees paid,
-                        profits and losses taken by traders).
-                      </Text>
-                      <Text fontWeight="bold" mt={2} fontSize="14px">
-                        Positive PNL:
-                      </Text>
-                      <Text fontSize="14px" textAlign="left">
-                        Means the traders have paid fees to the Pool. All this fees are collected to
-                        reward Liquidity Providers as Claim Credit.
-                      </Text>
-                    </Flex>
-                  }
-                >
-                  <Flex width="12px" height="12px" justifyContent="center" alignItems="center">
-                    <InfoIcon w="10px" h="10px" />
-                  </Flex>
-                </Tooltip> */}
-              </Flex>
-            </Th>
-            <Th border="none" textTransform="unset" py={5}>
-              <Flex justifyContent="flex-end" alignItems="center">
-                <Text
-                  color="gray.600"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  mr={1}
-                >
-                  Borrowed
-                </Text>
-                <Tooltip
-                  label={
-                    <Flex flexDirection="column" alignItems="start">
-                      <Text fontWeight="bold" fontSize="14px">
-                        Borrowed:
-                      </Text>
-                      <Text textAlign="left" fontSize="14px">
-                        After Delegating assets in a Position, you can then borrow assets based on
-                        your Position C-Ratio.
-                      </Text>
-                      <Text mt={2} fontSize="14px" textAlign="left">
-                        Borrowed assets are required to be Repaid in order to close your Position
-                        and unlock your Collateral.
-                      </Text>
-                    </Flex>
-                  }
-                >
-                  <InfoIcon w="10px" h="10px" />
-                </Tooltip>
-              </Flex>
-            </Th>
-          </>
-        )}
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-              Debt
+              {isBase ? 'PNL' : 'Debt'}
             </Text>
             <Tooltip
               label={
                 <Flex flexDirection="column" alignItems="start">
+                  {!isBase && (
+                    <>
+                      <Text fontWeight="bold" fontSize="14px">
+                        Debt.
+                      </Text>
+                      <Text textAlign="left" fontSize="14px" mb={2}>
+                        Represents PNL - Borrowed.
+                      </Text>
+                    </>
+                  )}
                   <Text fontWeight="bold" fontSize="14px">
-                    Debt.
-                  </Text>
-                  <Text textAlign="left" fontSize="14px">
-                    Represents PNL - Borrowed.
-                  </Text>
-                  <Text fontWeight="bold" mt={2} fontSize="14px">
                     Claim Credit:
                   </Text>
                   <Text fontSize="14px" textAlign="left">

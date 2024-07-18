@@ -18,6 +18,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { Amount } from '@snx-v3/Amount';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
@@ -122,16 +123,16 @@ export const StatsList = () => {
         }
       />
       <StatBox
-        title="Total Debt"
+        title={`Total ${isBase ? 'PNL' : 'Debt'}`}
         isLoading={isLoading}
-        value={debt && formatNumberToUsd(debt?.toNumber().toFixed(2))}
+        value={<Amount prefix="$" value={debt?.abs()} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
-              Total Debt:
+              Total {isBase ? 'PNL' : 'Debt'}:
             </Text>
             <Text mt={1} textAlign="left">
-              Aggregated Debt of all your Open Positions.
+              Aggregated {isBase ? 'PNL' : 'Debt'} of all your Open Positions.
             </Text>
           </>
         }

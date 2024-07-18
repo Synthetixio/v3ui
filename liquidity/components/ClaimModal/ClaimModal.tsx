@@ -62,11 +62,15 @@ export const ClaimModalUi: React.FC<{
 
         <Multistep
           step={1}
-          title="Claim"
+          title={isBase ? 'Claim' : 'Borrow'}
           subtitle={
             <Text as="div">
-              Claim{' '}
-              <Amount value={debtChange} suffix={isBase ? ' USDC' : ` ${systemToken?.symbol}`} />
+              {isBase ? 'Claim' : 'Borrow'}
+              <Amount
+                prefix=" "
+                value={debtChange}
+                suffix={isBase ? ' USDC' : ` ${systemToken?.symbol}`}
+              />
             </Text>
           }
           status={{
