@@ -65,116 +65,96 @@ export const ManageUi: FC<{
   poolId?: string;
 }> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
   const [closePosition, setClosePosition] = useState(false);
-  const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  const { data: collateralTypes } = useCollateralTypes();
-
-  const notSupported =
-    poolData &&
-    collateralTypes &&
-    collateralDisplayName &&
-    !collateralTypes.some(
-      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
-    );
-
   return (
-    <>
-      <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
-      <Box mb={12} mt={8}>
-        <Flex
-          flexDir={['column', 'row']}
-          flexWrap="wrap"
-          px={[0, 6]}
-          alignItems="center"
-          justifyContent="space-between"
-          mb="8px"
-          gap={4}
-        >
-          <PositionTitle
-            collateralSymbol={collateralSymbol}
-            poolName={poolName}
-            isOpen
-            poolId={poolId}
-          />
-          {poolData && (
-            <Flex alignItems={['center', 'flex-end']} direction="column">
-              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
-                <Text
-                  fontFamily="heading"
-                  fontSize="sm"
-                  lineHeight={5}
-                  fontWeight="medium"
-                  color="gray.500"
-                >
-                  Estimated APR
-                  <InfoIcon ml={1} mb="2px" w="10px" h="10px" />
-                </Text>
-              </Tooltip>
-              <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-                {poolData.apr.combinedApr > 0
-                  ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
-                  : '-'}
+    <Box mb={12} mt={8}>
+      <Flex
+        flexDir={['column', 'row']}
+        flexWrap="wrap"
+        px={[0, 6]}
+        alignItems="center"
+        justifyContent="space-between"
+        mb="8px"
+        gap={4}
+      >
+        <PositionTitle
+          collateralSymbol={collateralSymbol}
+          poolName={poolName}
+          isOpen={false}
+          poolId={poolId}
+        />
+
+        {poolData && (
+          <Flex alignItems={['center', 'flex-end']} direction="column">
+            <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+              <Text
+                fontFamily="heading"
+                fontSize="sm"
+                lineHeight={5}
+                fontWeight="medium"
+                color="gray.500"
+              >
+                Estimated APR
+                <InfoIcon ml={1} mb="2px" w="10px" h="10px" />
               </Text>
-            </Flex>
-          )}
-        </Flex>
-        <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
-          <BorderBox
-            gap={4}
+            </Tooltip>
+            <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
+              {poolData.apr.combinedApr > 0
+                ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
+                : '-'}
+            </Text>
+          </Flex>
+        )}
+      </Flex>
+      <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+        <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
+          <ManageStats liquidityPosition={liquidityPosition} />
+          <Rewards isLoading={isLoading} rewards={rewards} />
+        </BorderBox>
+        {!closePosition && (
+          <Flex
+            maxW={['100%', '100%', '501px']}
             flex={1}
+            alignSelf="flex-start"
+            flexDirection="column"
+          >
+            <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
+              <ManageAction liquidityPosition={liquidityPosition} />
+            </BorderBox>
+            {liquidityPosition?.collateralAmount.gt(0) && (
+              <Text
+                textAlign="center"
+                cursor="pointer"
+                onClick={() => setClosePosition(true)}
+                color="cyan.500"
+                fontWeight={700}
+                mt="5"
+              >
+                Close Position
+              </Text>
+            )}
+          </Flex>
+        )}
+
+        {closePosition && (
+          <BorderBox
+            flex={1}
+            maxW={['100%', '100%', '501px']}
             p={6}
             flexDirection="column"
             bg="navy.700"
             height="fit-content"
           >
-            <ManageStats liquidityPosition={liquidityPosition} />
-            <Rewards isLoading={isLoading} rewards={rewards} />
+            <ClosePosition
+              liquidityPosition={liquidityPosition}
+              onClose={() => setClosePosition(false)}
+            />
           </BorderBox>
-          {!closePosition && (
-            <Flex
-              maxW={['100%', '100%', '501px']}
-              flex={1}
-              alignSelf="flex-start"
-              flexDirection="column"
-            >
-              <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
-                <ManageAction liquidityPosition={liquidityPosition} />
-              </BorderBox>
-              {liquidityPosition?.collateralAmount.gt(0) && (
-                <Text
-                  textAlign="center"
-                  cursor="pointer"
-                  onClick={() => setClosePosition(true)}
-                  color="cyan.500"
-                  fontWeight={700}
-                  mt="5"
-                >
-                  Close Position
-                </Text>
-              )}
-            </Flex>
-          )}
-
-          {closePosition && (
-            <BorderBox
-              flex={1}
-              maxW={['100%', '100%', '501px']}
-              p={6}
-              flexDirection="column"
-              bg="navy.700"
-              height="fit-content"
-            >
-              <ClosePosition
-                liquidityPosition={liquidityPosition}
-                onClose={() => setClosePosition(false)}
-              />
-            </BorderBox>
-          )}
-        </Flex>
-      </Box>
-    </>
+        )}
+      </Flex>
+    </Box>
   );
 };
 
@@ -204,8 +184,21 @@ export const Manage = () => {
 
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
+  const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
+  const { data: collateralTypes } = useCollateralTypes();
+
+  const notSupported =
+    poolData &&
+    collateralTypes &&
+    collateralDisplayName &&
+    !collateralTypes.some(
+      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    );
+
   return (
     <ManagePositionProvider>
+      <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
+
       <WatchAccountBanner />
       {(!accountId ||
         (!isLoadingPosition &&
@@ -221,7 +214,7 @@ export const Manage = () => {
         />
       )}
       {accountId &&
-        (liquidityPosition?.collateralAmount.gt(0) ||
+        ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
           liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
           <ManageUi
             isLoading={isLoading}

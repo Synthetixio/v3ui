@@ -21,7 +21,7 @@ export const WatchAccountBanner: FC = () => {
     return (
       <Alert colorScheme="blue" my="4">
         <AlertIcon />
-        <Flex>
+        <Flex flex={1} gap={4} alignItems="center" justifyContent="space-between">
           <div>
             <Heading fontSize="16px">You are currently watching Account #{accountId}</Heading>
             <Heading fontSize="14px">

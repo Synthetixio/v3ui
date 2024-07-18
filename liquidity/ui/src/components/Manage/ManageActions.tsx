@@ -35,6 +35,14 @@ const validActions = [
 const ManageActionSchema = z.enum(validActions);
 type ManageAction = z.infer<typeof ManageActionSchema>;
 
+const getInitialTab = (manageAction?: ManageAction) => {
+  if (!manageAction || COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
+    return 'collateral';
+  }
+
+  return 'debt';
+};
+
 const ManageActionUi: FC<{
   setActiveAction: (action: string) => void;
   manageAction?: ManageAction;
@@ -45,7 +53,7 @@ const ManageActionUi: FC<{
   // const debt = Number(liquidityPosition?.debt?.toString());
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const [tab, setTab] = useState('collateral');
+  const [tab, setTab] = useState(getInitialTab(manageAction));
 
   const debtActions = DEBTACTIONS(isBase);
 
@@ -213,7 +221,10 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
   useEffect(() => {
     // This is just for initial state, if we have a manage action selected return
     const queryParams = new URLSearchParams(location.search);
-    if (queryParams.get('manageAction')) return;
+
+    if (queryParams.get('manageAction')) {
+      return;
+    }
     if (!liquidityPosition) return;
     if (!collateralType) return;
 

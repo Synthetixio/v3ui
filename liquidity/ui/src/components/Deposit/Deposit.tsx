@@ -172,7 +172,7 @@ export const DepositUi: FC<{
         <Alert mb={4} status="error">
           <AlertIcon />
           <AlertDescription>
-            You cannot Deposit & Lock more collateral than your balance amount
+            You cannot Deposit & Lock more Collateral than your balance amount
           </AlertDescription>
         </Alert>
       </Collapse>

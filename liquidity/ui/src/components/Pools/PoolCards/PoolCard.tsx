@@ -268,7 +268,9 @@ export const PoolCard = ({
             <Tbody>
               {sanitizedCollateralTypes?.map((type, index) => {
                 const price = wei(
-                  collateralPrices?.find((price) => price.symbol === type.symbol)?.price
+                  collateralPrices?.find(
+                    (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
+                  )?.price
                 );
 
                 const collateralApr = apr.collateralAprs.find(

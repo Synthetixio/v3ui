@@ -5,7 +5,7 @@ import { NumberInput } from '@snx-v3/NumberInput';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { FC, useContext, useMemo } from 'react';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ZEROWEI } from '../../utils/constants';
@@ -25,7 +25,6 @@ const ClaimUi: FC<{
   const { data: systemToken } = useSystemToken();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-
   const max = useMemo(() => maxClaimble.add(maxDebt), [maxClaimble, maxDebt]);
 
   return (
@@ -137,8 +136,16 @@ const ClaimUi: FC<{
         </Alert>
       </Collapse>
 
-      <Button isDisabled={debtChange.lte(0)} data-testid="claim submit" type="submit">
-        {debtChange.gt(0) ? 'Claim' : 'Enter Amount'}
+      <Button
+        isDisabled={debtChange.lte(0) || debtChange.gt(max)}
+        data-testid="claim submit"
+        type="submit"
+      >
+        {debtChange.lte(0)
+          ? 'Enter Amount'
+          : debtChange.gt(maxClaimble) && !isBase
+            ? 'Borrow'
+            : 'Claim'}
       </Button>
     </Flex>
   );
@@ -149,12 +156,12 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
   const { network } = useNetwork();
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
   const maxClaimble = useMemo(() => {
-    if (liquidityPosition?.debt.gte(0)) {
+    if (!liquidityPosition || liquidityPosition?.debt.gte(0)) {
       return ZEROWEI;
     } else {
-      return liquidityPosition?.debt.mul(-1) || ZEROWEI;
+      return wei(liquidityPosition.debt.mul(-1).toBN().sub(1));
     }
-  }, [liquidityPosition?.debt]);
+  }, [liquidityPosition]);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 

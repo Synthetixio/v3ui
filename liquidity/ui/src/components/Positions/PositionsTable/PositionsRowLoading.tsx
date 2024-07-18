@@ -2,7 +2,7 @@ import { Badge, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { SynthSkeleton as Skeleton, SynthCircle as SkeletonCircle } from '../../';
 import { TokenIcon } from '../../';
 
-export function PositionsRowLoading({ isBase }: { isBase: boolean }) {
+export function PositionsRowLoading() {
   const rows = Array.from({ length: 2 }, (_, i) => i);
   return (
     <>
@@ -33,72 +33,7 @@ export function PositionsRowLoading({ isBase }: { isBase: boolean }) {
                 </Flex>
               </Flex>
             </Td>
-            {!isBase && (
-              <>
-                <Td border="none">
-                  <Flex flexDirection="column" alignItems="flex-end">
-                    <Skeleton height="1rem" mb={1}>
-                      <Text
-                        color="white"
-                        fontWeight={700}
-                        lineHeight="1.25rem"
-                        fontFamily="heading"
-                      >
-                        $100,000,00
-                      </Text>
-                    </Skeleton>
-                    <Skeleton height="0.75rem">
-                      <Text
-                        color="gray.500"
-                        fontFamily="heading"
-                        fontSize="0.75rem"
-                        lineHeight="1rem"
-                      >
-                        100,000 SNX
-                      </Text>
-                    </Skeleton>
-                  </Flex>
-                </Td>
-                <Td border="none">
-                  <Flex flexDirection="column" alignItems="flex-end">
-                    <Skeleton height="1rem" width="80%">
-                      <Text
-                        color="white"
-                        fontWeight={700}
-                        lineHeight="1.25rem"
-                        fontFamily="heading"
-                      >
-                        15%
-                      </Text>
-                    </Skeleton>
-                  </Flex>
-                </Td>
-                <Td border="none">
-                  <Flex flexDirection="column" alignItems="flex-end">
-                    <Skeleton height="1rem" mb={1}>
-                      <Text
-                        color="white"
-                        fontWeight={700}
-                        lineHeight="1.25rem"
-                        fontFamily="heading"
-                      >
-                        $5,000
-                      </Text>
-                    </Skeleton>
-                    <Skeleton height="0.75rem">
-                      <Text
-                        color="gray.500"
-                        fontFamily="heading"
-                        fontSize="0.75rem"
-                        lineHeight="1rem"
-                      >
-                        22%
-                      </Text>
-                    </Skeleton>
-                  </Flex>
-                </Td>
-              </>
-            )}
+
             <Td border="none">
               <Flex flexDirection="column" alignItems="flex-end">
                 <Skeleton height="1rem" mb={1}>
