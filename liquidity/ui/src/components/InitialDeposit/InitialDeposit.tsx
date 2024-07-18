@@ -175,9 +175,20 @@ export const InitialDepositUi: FC<{
           {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
             <CollateralAlert tokenBalance={snxBalance.collateral} />
           )}
-          {collateralChange.gt(0) && <WithdrawIncrease />}
+
           <Collapse
-            in={collateralChange.gt(0) && collateralChange.lt(minDelegation)}
+            in={
+              collateralChange.gt(0) && !overAvailableBalance && collateralChange.gte(minDelegation)
+            }
+            animateOpacity
+          >
+            <WithdrawIncrease />
+          </Collapse>
+
+          <Collapse
+            in={
+              collateralChange.gt(0) && collateralChange.lt(minDelegation) && !overAvailableBalance
+            }
             animateOpacity
           >
             <Alert mb={4} status="error">
@@ -187,6 +198,7 @@ export const InitialDepositUi: FC<{
               </AlertDescription>
             </Alert>
           </Collapse>
+
           <Collapse in={overAvailableBalance} animateOpacity>
             <Alert mb={4} status="error">
               <AlertIcon />
@@ -195,6 +207,7 @@ export const InitialDepositUi: FC<{
               </AlertDescription>
             </Alert>
           </Collapse>
+
           <Button
             data-testid="deposit submit"
             data-cy="deposit-submit-button"
