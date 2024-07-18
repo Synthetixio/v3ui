@@ -10,6 +10,7 @@ import { TermsModal } from '@snx-v3/TermsModal';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
 import { Router } from './Router';
 import { Web3OnboardProvider } from '@web3-onboard/react';
+import Head from 'react-helmet';
 import { onboard } from './utils/onboard';
 import { Progress } from './utils/theme';
 
@@ -57,20 +58,41 @@ export const App = () => {
     sessionStorage.getItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED) === 'true';
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Web3OnboardProvider web3Onboard={onboard}>
-        <ChakraProvider theme={extendedTheme}>
-          <ColorMode />
-          <Fonts />
-          <GasSpeedProvider>
-            <HashRouter>
-              <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
-              <Router />
-            </HashRouter>
-          </GasSpeedProvider>
-          <ReactQueryDevtools />
-        </ChakraProvider>
-      </Web3OnboardProvider>
-    </QueryClientProvider>
+    <>
+      <Head>
+        {/* open graph */}
+        <meta property="og:url" content="https://liquidity.synthetix.eth.limo/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Synthetix | Liquidity" />
+        <meta
+          property="og:description"
+          content="The Liquidity Layer of DeFi. Provide liquidity for the next generation of permissionless protocols"
+        />
+        <meta property="og:image" content="/Liquidity.jpg" />
+        <meta property="og:image:alt" content="Synthetix | Liquidity" />
+        <meta property="og:site_name" content="" />
+        {/* twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@synthetix_io" />
+        <meta name="twitter:creator" content="@synthetix_io" />
+        <meta name="twitter:image" content="/Liquidity.jpg" />
+        <meta name="twitter:url" content="https://liquidity.synthetix.eth.limo/" />
+      </Head>
+      <QueryClientProvider client={queryClient}>
+        <Web3OnboardProvider web3Onboard={onboard}>
+          <ChakraProvider theme={extendedTheme}>
+            <ColorMode />
+            <Fonts />
+            <GasSpeedProvider>
+              <HashRouter>
+                <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
+                <Router />
+              </HashRouter>
+            </GasSpeedProvider>
+            <ReactQueryDevtools />
+          </ChakraProvider>
+        </Web3OnboardProvider>
+      </QueryClientProvider>
+    </>
   );
 };
