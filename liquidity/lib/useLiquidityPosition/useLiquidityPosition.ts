@@ -120,7 +120,7 @@ export const useLiquidityPosition = ({
           provider
         )
       ) {
-        throw Error('useLiquidityPosition should not be enabled');
+        throw Error('useLiquidityPosition not ready');
       }
       const { calls: priceCalls, decoder: priceDecoder } = await loadPrices({
         collateralAddresses: [tokenAddress],

@@ -100,11 +100,7 @@ export const NoPosition: FC<{
 
           {txnModalOpen === 'deposit' ? (
             <DepositModal
-              availableCollateral={
-                liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI
-              }
-              currentCollateral={ZEROWEI}
-              collateralChange={collateralChange}
+              liquidityPosition={liquidityPosition}
               onClose={() => {
                 setCollateralChange(ZEROWEI);
                 setDebtChange(ZEROWEI);

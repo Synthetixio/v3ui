@@ -16,6 +16,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from 'react-router-dom';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 const WithdrawUi: FC<{
   setAmount: (val: Wei) => void;
@@ -25,6 +26,8 @@ const WithdrawUi: FC<{
   symbol: string;
   isDebtWithdrawal?: boolean;
 }> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
+  const price = useTokenPrice(symbol);
+
   const { minutes, hours, seconds, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
@@ -69,7 +72,7 @@ const WithdrawUi: FC<{
             )}
           </Flex>
         </Flex>
-        <Flex flexGrow={1}>
+        <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
               isRequired: true,
@@ -81,6 +84,9 @@ const WithdrawUi: FC<{
             onChange={(val) => setAmount(val)}
             max={maWWithdrawable}
           />
+          <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+            {price.gt(0) && <Amount prefix="$" value={amount.abs().mul(price)} />}
+          </Flex>
         </Flex>
       </BorderBox>
       <Collapse

@@ -5339,7 +5339,9 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5349,6 +5351,7 @@ __metadata:
     "@snx-v3/useDeposit": "workspace:*"
     "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
@@ -6724,6 +6727,17 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice"
+  dependencies:
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft

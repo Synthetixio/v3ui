@@ -144,6 +144,10 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
           symbol: 'USDC',
           price: wei(1).toBN(),
         },
+        {
+          symbol: 'USDx',
+          price: wei(1).toBN(),
+        },
       ];
 
       if (!filteredCollaterals.length) {
