@@ -32,11 +32,23 @@ export function PositionRow({
     poolId,
   });
 
+  const onClick = () => {
+    queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
+    navigate({
+      pathname: `/positions/${collateralType.symbol}/${poolId}`,
+      search: queryParams.toString(),
+    });
+  };
+
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
         <Fade in>
-          <Flex alignItems="center">
+          <Flex
+            alignItems="center"
+            _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={onClick}
+          >
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
               <Text
@@ -89,13 +101,7 @@ export function PositionRow({
               fontSize="0.75rem"
               lineHeight="1rem"
               cursor="pointer"
-              onClick={() => {
-                queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
-                navigate({
-                  pathname: `/positions/${collateralType.symbol}/${poolId}`,
-                  search: queryParams.toString(),
-                });
-              }}
+              onClick={onClick}
             >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
@@ -109,7 +115,6 @@ export function PositionRow({
               <Text color="white" fontSize="sm" lineHeight="1.25rem" fontFamily="heading">
                 {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
-
               <CRatioBadge
                 cRatio={cRatio.toNumber() * 100}
                 liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}

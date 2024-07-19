@@ -279,10 +279,36 @@ export const PoolCard = ({
 
                 const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
+                const onClick = async () => {
+                  try {
+                    if (!currentNetwork) {
+                      connect();
+                      return;
+                    }
+
+                    if (currentNetwork.id !== network.id) {
+                      if (!(await setNetwork(network.id))) {
+                        return;
+                      }
+                    }
+
+                    queryParams.set('manageAction', 'deposit');
+                    navigate({
+                      pathname: `/positions/${type.symbol}/${pool.id}`,
+                      search: queryParams.toString(),
+                    });
+                  } catch (error) {}
+                };
+
                 return (
                   <Tr key={type.tokenAddress}>
                     <Td border="none" px={4} w="20%">
-                      <Flex minWidth="120px" alignItems="center">
+                      <Flex
+                        minWidth="120px"
+                        alignItems="center"
+                        _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+                        onClick={onClick}
+                      >
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
                         <Flex flexDirection="column" ml={3} mr="auto">
                           <Text
@@ -383,28 +409,7 @@ export const PoolCard = ({
                     </Td>
                     <Td border="none" textAlign="right" pl={4} pr={0}>
                       <Button
-                        onClick={async (e) => {
-                          try {
-                            e.stopPropagation();
-
-                            if (!currentNetwork) {
-                              connect();
-                              return;
-                            }
-
-                            if (currentNetwork.id !== network.id) {
-                              if (!(await setNetwork(network.id))) {
-                                return;
-                              }
-                            }
-
-                            queryParams.set('manageAction', 'deposit');
-                            navigate({
-                              pathname: `/positions/${type.symbol}/${pool.id}`,
-                              search: queryParams.toString(),
-                            });
-                          } catch (error) {}
-                        }}
+                        onClick={onClick}
                         size="sm"
                         height="32px"
                         py="10px"
@@ -416,7 +421,7 @@ export const PoolCard = ({
                         fontSize="14px"
                         lineHeight="20px"
                       >
-                        Deposit
+                        {!currentNetwork ? 'Connect Wallet' : 'Deposit'}
                       </Button>
                     </Td>
                   </Tr>

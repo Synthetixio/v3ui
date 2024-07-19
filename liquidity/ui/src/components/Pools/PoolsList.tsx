@@ -216,7 +216,8 @@ function poolsReducer(state: PoolsFilterState, action: PoolsFilterAction): Pools
       if (action.payload?.collateral) {
         return {
           ...state,
-          collateral: [...state.collateral, action.payload.collateral],
+          // Only one collateral active at once
+          collateral: [action.payload.collateral],
         };
       }
 
