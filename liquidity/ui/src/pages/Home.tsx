@@ -11,10 +11,10 @@ export function Home() {
       </Helmet>
       <Flex flexDir="column" mb={16}>
         <Heading
-          mt={10}
+          mt={[6, 10]}
           color="gray.50"
           maxWidth="20rem"
-          fontSize="3rem"
+          fontSize={['2rem', '3rem']}
           data-cy="liquidity-home"
           lineHeight="120%"
         >

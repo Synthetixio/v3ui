@@ -1,6 +1,26 @@
-import { Flex, Heading, Tag, Text, Divider, Button, Box, Link, Fade } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  Tag,
+  Text,
+  Button,
+  Box,
+  Link,
+  Fade,
+  TableContainer,
+  Th,
+  Table,
+  Thead,
+  Tr,
+  Tbody,
+  Td,
+  Icon,
+  IconProps,
+} from '@chakra-ui/react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../../TokenIcon';
+import { Sparkles } from '@snx-v3/icons';
+import { Tooltip } from '@snx-v3/Tooltip';
 
 interface TorosPoolCardProps {
   tvl: string;
@@ -33,89 +53,182 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           rounded="base"
           bg="navy.700"
           _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50', textDecoration: 'none' }}
-          p="6"
+          p={6}
         >
-          <Flex w="100%" gap="2" alignItems="start" mb="4">
-            <Flex flexDirection="column" justifyContent="space-between">
-              <Heading fontSize="20px" fontWeight={700} color="white">
-                USDC Andromeda Yield
-              </Heading>
-              <Flex alignItems="center" gap="1">
-                <NetworkIcon networkId={8453} w="14px" height="14px" />
-                <Text color="gray.500" fontSize="12px">
-                  Base Network
-                </Text>
+          <Flex
+            flexDir={['column', 'row']}
+            w="100%"
+            gap="2"
+            alignItems="start"
+            mb="4"
+            justifyContent="space-between"
+          >
+            <Flex flexDir={['column', 'row']}>
+              <Flex flexDirection="column" justifyContent="space-between" ml="12px">
+                <Heading fontSize="20px" fontWeight={700} color="white">
+                  USDC Andromeda Yield
+                </Heading>
+                <Flex alignItems="center" gap="1">
+                  <NetworkIcon networkId={8453} w="14px" height="14px" mr={1} />
+                  <Text color="gray.500" fontSize="12px">
+                    Base Network
+                  </Text>
+                </Flex>
               </Flex>
-            </Flex>
-            <Tag
-              mt="2px"
-              size="sm"
-              bgGradient="linear(to-tr, green.700, cyan.800)"
-              mr="auto"
-              color="white"
-            >
-              Auto Compound
-            </Tag>
-
-            <Text fontSize="20px" fontWeight={700} color="gray.500">
-              TVL
-            </Text>
-            <Text fontSize="20px" fontWeight={700} color="white" mr="4">
-              ${tvl}
-            </Text>
-            <Text fontSize="20px" fontWeight={700} color="gray.500">
-              APY
-            </Text>
-            <Text fontSize="20px" fontWeight={700} color="white">
-              Up to {apy}%
-            </Text>
-          </Flex>
-          <Divider />
-          <Flex alignItems="center" mt="4" gap="4">
-            <Flex alignItems="center">
-              <TokenIcon w={26} h={26} symbol="USDC" />
-              <Flex flexDirection="column" ml={3} mr="auto">
-                <Text
-                  fontSize="14px"
-                  color="white"
-                  fontWeight={700}
-                  lineHeight="1.25rem"
-                  fontFamily="heading"
-                >
-                  USDC
-                </Text>
-                <Text fontSize="12px" color="gray.500" fontFamily="heading" lineHeight="1rem">
-                  USDC
-                </Text>
-              </Flex>
-            </Flex>
-            <Link
-              href="https://toros.finance/synthetix-usdc-andromeda-yield"
-              rel="noopener"
-              target="_blank"
-              _hover={{ textDecoration: 'none' }}
-              mr="auto"
-            >
-              <Button
+              <Tag
+                mx={2}
+                mt="2px"
                 size="sm"
-                variant="outline"
-                colorScheme="gray"
-                height="32px"
-                py="10px"
-                px="12px"
-                whiteSpace="nowrap"
-                borderRadius="4px"
+                bgGradient="linear(to-tr, green.700, cyan.800)"
                 color="white"
-                fontFamily="heading"
-                fontWeight={700}
-                fontSize="14px"
-                lineHeight="20px"
+                alignSelf="flex-start"
               >
-                Deposit on Toros
-                <LinkOffIcon />
-              </Button>
-            </Link>
-            <Text fontSize="16px" color="gray.500">
+                Auto Compound
+              </Tag>
+              <Tooltip
+                placement="top"
+                label="This vault is earning OP tokens via the Optimism Superfest"
+              >
+                <Link href="https://superfest.optimism.io/" target="_blank" alignItems="center">
+                  <OpSuperfestIcon mb="1px" />
+                </Link>
+              </Tooltip>
+            </Flex>
+            <Flex flexDir={['column', 'row']}>
+              <Flex alignItems="center" mr={6} gap={2}>
+                <Text fontSize="20px" fontWeight={700} color="gray.500">
+                  TVL
+                </Text>
+                <Text fontSize="20px" fontWeight={700} color="white">
+                  ${tvl}
+                </Text>
+              </Flex>
+              <Flex alignItems="center" gap={2}>
+                <Text fontSize="20px" fontWeight={700} color="gray.500">
+                  APY
+                </Text>
+                <Text fontSize="20px" fontWeight={700} color="white">
+                  Up to {apy}%
+                </Text>
+              </Flex>
+            </Flex>
+          </Flex>
+          <TableContainer>
+            <Table>
+              <Thead>
+                <Tr borderBottom="1px solid #2D2D38">
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  >
+                    Collateral
+                  </Th>
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  >
+                    APY
+                  </Th>
+                  <Th
+                    textTransform="unset"
+                    color="gray.600"
+                    border="none"
+                    fontFamily="heading"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    letterSpacing={0.6}
+                    fontWeight={700}
+                    px={4}
+                    py={3}
+                  ></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td width="66%" border="none" px={4}>
+                    <Flex minWidth="120px" alignItems="center">
+                      <TokenIcon w={26} h={26} symbol="USDC" />
+                      <Flex flexDirection="column" ml={3} mr="auto">
+                        <Text
+                          fontSize="14px"
+                          color="white"
+                          fontWeight={700}
+                          lineHeight="1.25rem"
+                          fontFamily="heading"
+                        >
+                          USDC
+                        </Text>
+                        <Text
+                          fontSize="12px"
+                          color="gray.500"
+                          fontFamily="heading"
+                          lineHeight="1rem"
+                        >
+                          USD Coin
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </Td>
+                  <Td border="none" textAlign="left" px="12px">
+                    <Text
+                      fontFamily="heading"
+                      fontSize="14px"
+                      lineHeight="20px"
+                      fontWeight={500}
+                      color="white"
+                      minWidth="100px"
+                    >
+                      {apy}%
+                      <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
+                    </Text>
+                  </Td>
+                  <Td border="none" textAlign="right" px={0}>
+                    <Link
+                      href="https://toros.finance/synthetix-usdc-andromeda-yield"
+                      rel="noopener"
+                      target="_blank"
+                      _hover={{ textDecoration: 'none' }}
+                      mr="auto"
+                    >
+                      <Button
+                        size="sm"
+                        height="32px"
+                        py="10px"
+                        px="12px"
+                        whiteSpace="nowrap"
+                        borderRadius="4px"
+                        fontFamily="heading"
+                        fontWeight={700}
+                        fontSize="14px"
+                        lineHeight="20px"
+                      >
+                        Deposit on Toros
+                        <LinkOffIcon ml={1} />
+                      </Button>
+                    </Link>
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </TableContainer>
+          <Flex direction="row" alignItems="center" justifyContent="flex-end">
+            <Text fontSize="16px" color="gray.500" mr={2}>
               by
             </Text>
             <TorosIcon />
@@ -139,12 +252,12 @@ const TorosIcon = () => (
   </svg>
 );
 
-const LinkOffIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+const LinkOffIcon = ({ ...props }: IconProps) => (
+  <Icon width="14px" height="14px" viewBox="0 0 14 14" fill="none" {...props}>
     <g clipPath="url(#clip0_13614_19286)">
       <path
         d="M9.07955 4.47121L4.65447 4.47121L4.65447 3.30472L11.071 3.30472L11.071 9.72124L9.90451 9.72124L9.90451 5.29617L4.11719 11.325L3.29224 10.5L9.07955 4.47121Z"
-        fill="white"
+        fill="currentColor"
       />
     </g>
     <defs>
@@ -152,5 +265,29 @@ const LinkOffIcon = () => (
         <rect width="14" height="14" fill="white" />
       </clipPath>
     </defs>
-  </svg>
+  </Icon>
+);
+
+const OpSuperfestIcon = ({ ...props }: IconProps) => (
+  <Icon width="20px" height="20px" viewBox="0 0 20 20" fill="none" {...props}>
+    <g clipPath="url(#clip0_16561_34101)">
+      <path
+        d="M8.23338 3.38925L9.4785 1.79248L10.9154 3.20745L12.6791 2.20823L13.4609 4.06847L15.4693 3.81802L15.4799 5.8408L17.4289 6.37567L16.6633 8.25274L18.2587 9.493L16.8364 10.9372L17.8319 12.6943L15.9681 13.4884L16.2149 15.493L14.1913 15.5154L13.6497 17.4641L11.7783 16.708L10.5332 18.3046L9.09627 16.8897L7.33684 17.8879L6.55078 16.0287L4.54655 16.2781L4.53604 14.2552L2.58704 13.7203L3.3483 11.8445L1.75732 10.603L3.17956 9.15879L2.184 7.40172L4.04354 6.60879L3.80095 4.60308L5.82036 4.58182L6.36202 2.63314L8.23338 3.38925Z"
+        fill="#FF0420"
+      />
+      <path
+        d="M8.58532 4.63462L9.5961 3.33838L10.7626 4.48704L12.1943 3.67588L12.829 5.18603L14.4595 4.9827L14.468 6.62481L16.0503 7.05901L15.4288 8.58281L16.7237 9.58965L15.5692 10.7621L16.3775 12.1885L14.8644 12.8331L15.0648 14.4605L13.422 14.4786L12.9823 16.0606L11.4631 15.4468L10.4523 16.743L9.28581 15.5943L7.85752 16.4046L7.21938 14.8954L5.59236 15.0978L5.58382 13.4556L4.00162 13.0214L4.61961 11.4986L3.32806 10.4908L4.48262 9.31835L3.67444 7.89195L5.18401 7.24826L4.98706 5.62002L6.62642 5.60277L7.06614 4.02082L8.58532 4.63462Z"
+        fill="#FFF2AF"
+      />
+      <path
+        d="M8.93823 5.90234L9.70733 4.91602L10.5949 5.79004L11.6843 5.17282L12.1673 6.32189L13.4079 6.16718L13.4144 7.41666L14.6183 7.74705L14.1455 8.9065L15.1308 9.67262L14.2523 10.5647L14.8672 11.6501L13.716 12.1406L13.8685 13.3788L12.6185 13.3926L12.2839 14.5963L11.1279 14.1292L10.3588 15.1157L9.47124 14.2416L8.38444 14.8581L7.89889 13.7097L6.66088 13.8637L6.6544 12.6142L5.45051 12.2839L5.92072 11.1251L4.93799 10.3583L5.81649 9.46618L5.20155 8.38083L6.35017 7.89104L6.20032 6.65212L7.44772 6.639L7.78229 5.43529L8.93823 5.90234Z"
+        fill="#69D7FF"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_16561_34101">
+        <rect width="20" height="20" fill="white" />
+      </clipPath>
+    </defs>
+  </Icon>
 );

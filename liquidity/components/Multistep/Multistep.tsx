@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 import { Box, Checkbox, CheckboxProps, Flex, Text } from '@chakra-ui/react';
 import { Step } from './Step';
 import { statusColor } from './statusColor';
@@ -26,8 +26,8 @@ export function Multistep({
   children,
 }: PropsWithChildren<{
   step: number;
-  title: string | ReactElement;
-  subtitle?: string | ReactElement;
+  title: string | ReactNode;
+  subtitle?: string | ReactNode;
   checkboxLabel?: string;
   checkboxProps?: CheckboxProps;
   status: MultistepStatus;
@@ -38,7 +38,7 @@ export function Multistep({
       alignItems="center"
       gap={4}
       rounded="lg"
-      mt="4"
+      mt="6"
       p="4"
       border="2px solid"
       transitionProperty="border-color"

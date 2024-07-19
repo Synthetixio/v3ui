@@ -63,7 +63,9 @@ export const PYTH_ERRORS = [
   'error InvalidWormholeAddressToSet()',
 ];
 
-type TransactionRequest = ethers.providers.TransactionRequest;
+export type TransactionRequest = ethers.providers.TransactionRequest & {
+  requireSuccess?: boolean;
+};
 type TransactionRequestWithGasLimit = Modify<TransactionRequest, { gasLimit: ethers.BigNumber }>;
 
 const PRICE_CACHE_LENGTH = 5000;
@@ -107,8 +109,8 @@ function makeMulticall(
       target: call.to,
       callData: call.data,
       value: call.value || ethers.BigNumber.from(0),
-      requireSuccess: true,
-      allowFailure: false,
+      requireSuccess: call.requireSuccess ?? true,
+      allowFailure: !(call.requireSuccess ?? true),
     })),
   ]);
 

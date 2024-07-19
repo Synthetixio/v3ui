@@ -25,6 +25,7 @@ export function NumberInput({
   max,
   InputProps,
   dataTestId,
+  disabled,
 }: {
   onChange?: (value: Wei) => void;
   value: Wei;
@@ -32,11 +33,14 @@ export function NumberInput({
   max?: Wei;
   InputProps?: NumberInputProps;
   dataTestId?: string;
+  disabled?: boolean;
 }) {
   const [inputValue, setInputValue] = useState(value.gt(0) ? value.toString() : '');
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      // Define max length here
+      if (e.target.value.length > 15) return;
       setInputValue(e.target.value);
       if (!onChange) {
         // Could be a read-only input
@@ -94,7 +98,7 @@ export function NumberInput({
     <Input
       ref={ref}
       flex="1"
-      type="text"
+      type="number"
       border="none"
       borderWidth="0px"
       textAlign="end"
@@ -102,18 +106,21 @@ export function NumberInput({
       outline="none"
       fontFamily="heading"
       fontSize="xl"
-      fontWeight="black"
+      fontWeight="700"
       lineHeight="2xl"
       color="white"
       height="unset"
       autoFocus={true}
-      placeholder="Enter Amount"
+      placeholder="00.00"
       _focus={{ boxShadow: 'none !important' }}
       _placeholder={{ color: 'whiteAlpha.700' }}
+      _disabled={{ color: 'white' }}
       value={inputValue}
       onChange={onInputChange}
+      disabled={disabled}
       data-cy={dataTestId}
       {...InputProps}
+      maxLength={10}
     />
   );
 }

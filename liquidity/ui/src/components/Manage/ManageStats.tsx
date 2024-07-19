@@ -1,22 +1,23 @@
 import { FC, useContext } from 'react';
-import { Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType, useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
-import { ArrowForwardIcon, InfoIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
-import { constants } from 'ethers';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useApr } from '@snx-v3/useApr';
-import { Tooltip } from '@snx-v3/Tooltip';
+import { CRatioBar } from '../CRatioBar/CRatioBar';
+import { PnlStats } from './PnlStats';
+import { DebtStats } from './DebtStats';
+import { CollateralStats } from './CollateralStats';
+import { ZEROWEI } from '../../utils/constants';
 
-const ChangeStat: FC<{
+export const ChangeStat: FC<{
   value: Wei;
   newValue: Wei;
   hasChanges: boolean;
@@ -26,9 +27,9 @@ const ChangeStat: FC<{
 }> = ({ formatFn, value, newValue, hasChanges, dataTestId, withColor }) => {
   return (
     <Flex
-      gap={4}
-      color="gray.50"
-      fontSize="2xl"
+      gap={1.5}
+      color="white"
+      fontSize="20px"
       fontWeight="800"
       alignItems="center"
       lineHeight="32px"
@@ -58,13 +59,13 @@ const ChangeStat: FC<{
 export const ManageStatsUi: FC<{
   liquidityPosition?: LiquidityPosition;
   collateralType?: CollateralType;
-  newCratio: Wei;
   newCollateralAmount: Wei;
   newDebt: Wei;
-  cRatio: Wei;
+  newCratio: Wei;
   collateralValue: Wei;
+  debt: Wei;
+  cRatio: Wei;
   hasChanges: boolean;
-  aprData?: number;
 }> = ({
   liquidityPosition,
   collateralType,
@@ -74,196 +75,59 @@ export const ManageStatsUi: FC<{
   newCratio,
   newDebt,
   hasChanges,
-  aprData,
+  debt,
 }) => {
   const { network } = useNetwork();
 
   return (
-    <Flex direction="column">
-      {isBaseAndromeda(network?.id, network?.preset) && (
-        <BorderBox
-          py={4}
-          px={6}
-          flexDirection="row"
-          bg="navy.700"
-          justifyContent="space-between"
-          mb={4}
-        >
-          <Flex flexDirection="column" justifyContent="space-between" width="100%">
-            <Flex alignItems="center" mb="4px">
-              <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-                APR
-              </Text>
-              <Tooltip
-                label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards."
-                textAlign="start"
-                py={2}
-                px={3}
-              >
-                <Flex
-                  height="12px"
-                  width="12px"
-                  ml="4px"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <InfoIcon color="white" height="9px" width="9px" />
-                </Flex>
-              </Tooltip>
-            </Flex>
-            <Flex width="100%">
-              {aprData ? (
-                <Flex
-                  gap={1}
-                  color="gray.50"
-                  fontSize="2xl"
-                  fontWeight="800"
-                  alignItems="center"
-                  lineHeight="32px"
-                >
-                  <Text>{!!aprData ? aprData.toFixed(2) : '-'}%</Text>
-                </Flex>
-              ) : (
-                <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
-              )}
-            </Flex>
-          </Flex>
-        </BorderBox>
-      )}
-      <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" mb={4}>
-        <Flex alignItems="center" mb="4px">
-          <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-            COLLATERAL
-          </Text>
-          <Tooltip
-            label="Your total amount of collateral locked in this pool."
-            textAlign="start"
-            py={2}
-            px={3}
-          >
-            <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-              <InfoIcon color="white" height="9px" width="9px" />
-            </Flex>
-          </Tooltip>
-        </Flex>
-        {liquidityPosition && collateralType ? (
-          <>
-            <Flex justifyContent="space-between" alignItems="center">
-              <ChangeStat
-                value={liquidityPosition.collateralAmount}
-                newValue={newCollateralAmount}
-                formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
-                hasChanges={hasChanges}
-                dataTestId="manage stats collateral"
-              />
-              <Text
-                fontWeight="400"
-                color="gray.500"
-                fontSize="md"
-                fontFamily="heading"
-                lineHeight="24px"
-                data-cy="manage-stats-collateral-value"
-              >
-                {currency(liquidityPosition.collateralValue, {
-                  currency: 'USD',
-                  style: 'currency',
-                })}
-              </Text>
-            </Flex>
-            <Text fontWeight="400" color="gray.500" fontSize="xs">
-              Current Value:{' '}
-              {currency(collateralValue, {
-                currency: 'USD',
-                style: 'currency',
-              })}
-            </Text>
-          </>
-        ) : (
-          <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
+    <Flex direction="column" gap={4}>
+      <Text color="white" fontSize="lg" fontFamily="heading" fontWeight="bold" lineHeight="16px">
+        Overview
+      </Text>
+      <Flex flexWrap="wrap" direction={['column', 'row']} gap={4}>
+        <CollateralStats
+          liquidityPosition={liquidityPosition}
+          collateralType={collateralType}
+          newCollateralAmount={newCollateralAmount}
+          collateralValue={collateralValue}
+          hasChanges={hasChanges}
+        />
+
+        {isBaseAndromeda(network?.id, network?.preset) && (
+          <PnlStats
+            liquidityPosition={liquidityPosition}
+            collateralType={collateralType}
+            newDebt={newDebt}
+            hasChanges={hasChanges}
+          />
         )}
-      </BorderBox>
-      <BorderBox
-        py={4}
-        px={6}
-        flexDirection="row"
-        bg="navy.700"
-        justifyContent="space-between"
-        mb={4}
-      >
-        <Flex flexDirection="column" justifyContent="space-between" width="100%">
-          <Flex alignItems="center" mb="4px">
-            <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
-              PnL
-            </Text>
-            <Tooltip label="Your minted debt balance." textAlign="start" py={2} px={3}>
-              <Flex height="12px" width="12px" ml="4px" alignItems="center" justifyContent="center">
-                <InfoIcon color="white" height="9px" width="9px" />
-              </Flex>
-            </Tooltip>
-          </Flex>
-          <Flex width="100%">
-            {liquidityPosition && collateralType ? (
-              <ChangeStat
-                value={liquidityPosition.debt.mul(-1)}
-                newValue={newDebt.mul(-1)}
-                formatFn={(val: Wei) =>
-                  currency(val, {
-                    currency: 'USD',
-                    style: 'currency',
-                    maximumFractionDigits: 8,
-                  })
-                }
-                withColor
-                hasChanges={hasChanges}
-                dataTestId="manage-stats-debt-value"
-              />
-            ) : (
-              <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
-            )}
-          </Flex>
-        </Flex>
-      </BorderBox>
+        {!isBaseAndromeda(network?.id, network?.preset) && (
+          <DebtStats
+            liquidityPosition={liquidityPosition}
+            collateralType={collateralType}
+            newDebt={newDebt}
+            hasChanges={hasChanges}
+          />
+        )}
+      </Flex>
       {!isBaseAndromeda(network?.id, network?.preset) && (
-        <BorderBox py={4} px={6} flexDirection="column" bg="navy.700" my={0} mb={4}>
-          <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px" mb="4px">
-            C-RATIO
-          </Text>
-          <Flex justifyContent="space-between" alignItems="center">
-            {collateralType ? (
-              <>
-                <ChangeStat
-                  // TODO, need a function to burn to target so dust debt not left over
-                  value={cRatio.lt(0.01) || cRatio.gt(50000) ? wei(0) : cRatio}
-                  newValue={newCratio}
-                  formatFn={(val: Wei) =>
-                    currency(val, {
-                      style: 'percent',
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  }
-                  hasChanges={hasChanges}
-                />
-                <Text
-                  fontWeight="400"
-                  color="gray.500"
-                  fontSize="md"
-                  fontFamily="heading"
-                  lineHeight="24px"
-                >
-                  {collateralType.issuanceRatioD18.eq(constants.MaxUint256)
-                    ? 'Infinite'
-                    : `Minimum ${currency(collateralType.issuanceRatioD18, {
-                        style: 'percent',
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}`}
-                </Text>
-              </>
-            ) : (
-              <Skeleton width="100%">Lorem ipsum (this wont be displayed) </Skeleton>
-            )}
-          </Flex>
+        <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
+          <CRatioBar
+            hasChanges={hasChanges}
+            currentCRatio={
+              collateralValue.gt(0) && debt.eq(0)
+                ? Number.MAX_SAFE_INTEGER
+                : cRatio.toNumber() * 100
+            }
+            liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+            newCratio={
+              newCollateralAmount.gt(0) && newDebt.eq(0)
+                ? Number.MAX_SAFE_INTEGER
+                : newCratio.toNumber() * 100
+            }
+            targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+            isLoading={false}
+          />
         </BorderBox>
       )}
     </Flex>
@@ -275,8 +139,6 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
   const { debtChange, collateralChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(collateralSymbol);
-
-  const { data: aprData } = useApr();
 
   const collateralValue = liquidityPosition?.collateralValue || wei(0);
 
@@ -301,7 +163,7 @@ export const ManageStats = ({ liquidityPosition }: { liquidityPosition?: Liquidi
       collateralType={collateralType}
       cRatio={cRatio}
       collateralValue={collateralValue}
-      aprData={aprData?.combinedApr}
+      debt={liquidityPosition?.debt || ZEROWEI}
     />
   );
 };

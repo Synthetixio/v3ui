@@ -60,8 +60,10 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         tokens: collateralTypes ? collateralTypes.map((x) => x.tokenAddress).sort() : [],
         collateralPriceUpdatesLength: collateralPriceUpdates?.length,
         priceUpdateTx: stringToHash(priceUpdateTx?.data),
+        CoreProxy: !!CoreProxy,
       },
     ],
+    staleTime: 60000 * 5,
     queryFn: async () => {
       if (
         !pools ||
@@ -161,7 +163,6 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         'useLiquidityPositions'
       );
     },
-    enabled: Boolean(CoreProxy && collateralTypes?.length && accountId && pools?.length),
   });
 
   return {

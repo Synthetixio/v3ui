@@ -49,10 +49,14 @@ export function NetworkController() {
 
         if (accountId && !accounts?.includes(accountId)) {
           queryParams.set('accountId', accounts[0]);
-          navigate({ pathname, search: accounts[0] ? queryParams.toString() : '' });
+          navigate({ pathname, search: queryParams.toString() });
         }
       } else {
-        navigate({ pathname, search: '' });
+        const accountId = queryParams.get('accountId');
+        if (!!accountId) {
+          queryParams.delete('accountId');
+          navigate({ pathname, search: queryParams.toString() });
+        }
       }
     }
   }, [accounts, isAccountsLoading, isAccountsFetching, queryParams, navigate, pathname]);

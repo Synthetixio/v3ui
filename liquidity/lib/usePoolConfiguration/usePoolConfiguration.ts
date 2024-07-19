@@ -62,13 +62,14 @@ export const usePoolConfiguration = (poolId?: string) => {
       if (priceUpdateTx) {
         allCalls.unshift(priceUpdateTx as any);
       }
+
       const decoded = await erc7412Call(
         network,
         provider,
         allCalls,
         (encoded) => {
-          if (!Array.isArray(encoded)) throw Error('Expected array');
-          return encoded.map((x) =>
+          const result = Array.isArray(encoded) ? encoded : [encoded];
+          return result.map((x) =>
             isLockedSchema.parse(
               CoreProxy.interface.decodeFunctionResult('isMarketCapacityLocked', x)[0]
             )

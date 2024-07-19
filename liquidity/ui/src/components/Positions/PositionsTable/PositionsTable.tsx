@@ -1,6 +1,6 @@
 import { Button, Fade, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { Link, generatePath } from 'react-router-dom';
-import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import {
   PositionsNotConnected,
@@ -56,6 +56,20 @@ export const PositionsTable = ({
           <Flex alignItems="center" justifyContent="space-between">
             <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
               Spartan Council Pool
+              {network && (
+                <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1}>
+                  <Flex
+                    alignItems="center"
+                    fontSize="12px"
+                    fontWeight="500"
+                    color="gray.500"
+                    gap={1}
+                  >
+                    <NetworkIcon size="14px" networkId={network.id} mr={1} />
+                    {network.label} Network
+                  </Flex>
+                </Flex>
+              )}
             </Heading>
             <Fade in>
               <Button
@@ -70,7 +84,7 @@ export const PositionsTable = ({
                 colorScheme="gray"
                 color="white"
               >
-                Pool Info
+                Details
               </Button>
             </Fade>
           </Flex>
@@ -79,7 +93,7 @@ export const PositionsTable = ({
             <Tbody>
               <TableDivider />
               {isLoading ? (
-                <PositionsRowLoading isBase={isBase} />
+                <PositionsRowLoading />
               ) : (
                 <>
                   {positions?.map((position, index) => (

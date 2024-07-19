@@ -67,7 +67,9 @@ export const PoolCardsLoading = () => {
           <Flex justifyContent="space-between">
             {[1, 2, 3, 4, 5].map((i) => (
               <Flex key={i} alignItems="center">
-                <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" mr={3} />
+                {i === 1 && (
+                  <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" mr={3} />
+                )}
                 <Skeleton
                   height="25px"
                   width="80px"

@@ -9,8 +9,7 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export const useBorrow = ({
   accountId,
@@ -25,7 +24,7 @@ export const useBorrow = ({
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
-  const { data: collateralPriceIds } = useAllCollateralPriceIds();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
 
   const signer = useSigner();
   const { gasSpeed } = useGasSpeed();
@@ -41,13 +40,16 @@ export const useBorrow = ({
           poolId &&
           accountId &&
           collateralTypeAddress &&
-          collateralPriceIds &&
           network &&
           provider
         )
-      )
+      ) {
         return;
-      if (debtChange.eq(0)) return;
+      }
+
+      if (debtChange.eq(0)) {
+        return;
+      }
 
       try {
         dispatch({ type: 'prompting' });
@@ -58,22 +60,15 @@ export const useBorrow = ({
           collateralTypeAddress,
           debtChange.toBN()
         );
-        const walletAddress = await signer.getAddress();
-        const collateralPriceCallsPromise = fetchPriceUpdates(
-          collateralPriceIds,
-          network.isTestnet
-        ).then((signedData) =>
-          priceUpdatesToPopulatedTx(walletAddress, collateralPriceIds, signedData)
-        );
 
-        const [calls, gasPrices, collateralPriceCalls] = await Promise.all([
-          populatedTxnPromised,
-          getGasPrice({ provider }),
-          collateralPriceCallsPromise,
-        ]);
-        const allCalls = collateralPriceCalls.concat(calls);
+        const callsPromise = Promise.all([populatedTxnPromised]);
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'borrow');
+        if (priceUpdateTx) {
+          calls.unshift(priceUpdateTx as any);
+        }
+
+        const erc7412Tx = await withERC7412(network, calls, 'borrow');
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

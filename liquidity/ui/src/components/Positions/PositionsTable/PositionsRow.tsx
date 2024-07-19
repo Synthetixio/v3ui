@@ -1,11 +1,10 @@
-import { Badge, Button, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Collapse, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useGetBorrow } from '@snx-v3/useGetBorrow';
-import { utils } from 'ethers';
-
+import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
+import { Amount } from '@snx-v3/Amount';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -23,7 +22,6 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
-  systemTokenSymbol,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
@@ -34,18 +32,6 @@ export function PositionRow({
     poolId,
   });
 
-  const { data: borrow } = useGetBorrow({
-    accountId,
-    poolId,
-    collateralTypeAddress: collateralType.tokenAddress,
-  });
-
-  const parsedCRatio = cRatio.lte(0)
-    ? 'Infinite'
-    : collateralType.issuanceRatioD18.gt(cRatio)
-      ? 'MANAGE'
-      : 'HEALTHY';
-
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
@@ -53,7 +39,13 @@ export function PositionRow({
           <Flex alignItems="center">
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+              <Text
+                color="white"
+                fontWeight={700}
+                lineHeight="1.25rem"
+                fontFamily="heading"
+                fontSize="sm"
+              >
                 {collateralType.symbol}
               </Text>
               <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
@@ -66,10 +58,8 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-              {liquidityPosition?.collateralAmount
-                .toNumber()
-                .toLocaleString('en-US', { maximumFractionDigits: 2 })}
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+              <Amount value={liquidityPosition?.collateralAmount} />
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {collateralType.symbol.toString()}
@@ -80,51 +70,19 @@ export function PositionRow({
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
+            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {!!apr ? apr.toFixed(2).concat('%') : '-'}
             </Text>
           </Flex>
         </Fade>
       </Td>
-      {!isBase && (
-        <>
-          <Td border="none">
-            <Fade in>
-              <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-                  ${liquidityPosition?.debt.toNumber().toLocaleString()}
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  {liquidityPosition?.debt.toNumber().toLocaleString()}
-                </Text>
-              </Flex>
-            </Fade>
-          </Td>
-          <Td border="none">
-            <Fade in>
-              <Flex flexDirection="column" alignItems="flex-end">
-                <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-                  {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
-                  ).toFixed(2)}
-                </Text>
-                <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-                  {parseFloat(
-                    utils.formatEther(borrow?.position?.net_issuance?.toString() || '0')
-                  ).toFixed(2)}{' '}
-                  {systemTokenSymbol}
-                </Text>
-              </Flex>
-            </Fade>
-          </Td>
-        </>
-      )}
+
       <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading">
-              ${debt.toNumber().toLocaleString('en-US', { maximumFractionDigits: 2 })}
-            </Text>
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+            <Amount prefix="$" value={debt.abs()} />
+          </Text>
+          <Collapse in={!debt.eq(0)}>
             <Text
               color="cyan.500"
               fontFamily="heading"
@@ -132,7 +90,7 @@ export function PositionRow({
               lineHeight="1rem"
               cursor="pointer"
               onClick={() => {
-                queryParams.set('manageAction', debt.gt(0) ? 'deposit' : 'repay');
+                queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
                 navigate({
                   pathname: `/positions/${collateralType.symbol}/${poolId}`,
                   search: queryParams.toString(),
@@ -141,30 +99,27 @@ export function PositionRow({
             >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
-          </Flex>
-        </Fade>
+          </Collapse>
+        </Flex>
       </Td>
       {!isBase && (
         <Td border="none">
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
-              <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+              <Text color="white" fontSize="sm" lineHeight="1.25rem" fontFamily="heading">
                 {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
-              {parsedCRatio !== 'Infinite' && (
-                <Badge
-                  colorScheme={parsedCRatio === 'MANAGE' ? 'red' : 'green'}
-                  border="1px solid"
-                  bg={parsedCRatio === 'MANAGE' ? 'red.900' : 'green.900'}
-                >
-                  {parsedCRatio}
-                </Badge>
-              )}
+
+              <CRatioBadge
+                cRatio={cRatio.toNumber() * 100}
+                liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
+                targetCratio={(collateralType?.issuanceRatioD18.toNumber() || 0) * 100}
+              />
             </Flex>
           </Fade>
         </Td>
       )}
-      <Td border="none">
+      <Td border="none" pr={0}>
         <Flex justifyContent="flex-end">
           <Button
             fontSize="0.75rem"
@@ -174,10 +129,11 @@ export function PositionRow({
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
-            w="100px"
             onClick={() => {
+              queryParams.set('manageAction', 'deposit');
               navigate({
                 pathname: `/positions/${collateralType.symbol}/${poolId}`,
+                search: queryParams.toString(),
               });
             }}
             data-cy="manage-position-row-button"

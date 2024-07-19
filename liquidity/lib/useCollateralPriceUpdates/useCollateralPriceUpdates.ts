@@ -113,7 +113,7 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
         value: tx.value,
       };
     },
-    refetchInterval: 60000,
+    refetchInterval: 5 * 60000,
   });
 };
 
@@ -199,6 +199,10 @@ export const useCollateralPriceUpdates = () => {
         ]);
 
         const pythFeedIds = (await getPythFeedIds(network)) as string[];
+
+        if (pythFeedIds.length === 0) {
+          return null;
+        }
 
         const { address } = await importPythERC7412Wrapper(network?.id, network?.preset);
 

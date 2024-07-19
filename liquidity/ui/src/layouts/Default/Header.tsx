@@ -3,19 +3,10 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkController } from './NetworkController';
 import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Balance } from '../../components';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export default function Header() {
   const { onClose } = useDisclosure();
   const location = useLocation();
-  const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const { data: usdTokens } = useGetUSDTokens();
-  const { data: balance } = useTokenBalance(isBase ? usdTokens?.USDC : usdTokens?.sUSD);
 
   useEffect(() => {
     onClose();
@@ -92,7 +83,8 @@ export default function Header() {
             </Link>
           </Box>
           <Flex gap={3} flexWrap="wrap-reverse" justifyContent="center" alignItems="center">
-            <Balance isBase={isBase} balance={balance} />
+            {/* Hide balance */}
+            {/* <Balance isBase={isBase} balance={balance} /> */}
             <NetworkController />
           </Flex>
         </Container>
