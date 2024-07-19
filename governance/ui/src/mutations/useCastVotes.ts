@@ -1,44 +1,48 @@
 import { useMutation } from '@tanstack/react-query';
-import { useReducer } from 'react';
-// import { useMulticall } from '../hooks/useMulticall';
-import { initialState, reducer } from '@snx-v3/txnReducer';
-// import { useGetUserVotingPower } from '../queries';
-// import { useProvider } from '@snx-v3/useBlockchain';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useNetwork, useSigner, useWallet } from '../queries';
+import { CouncilSlugs } from '../utils/councils';
+import {
+  getCouncilContract,
+  getWormwholeChainId,
+  SnapshotRecordContractAddress,
+} from '../utils/contracts';
+import { BigNumber, utils } from 'ethers';
 
-export function useCastVotes() {
-  // const { makeMulticall } = useMulticall();
-  // const provider = useProvider();
+export function useCastVotes(council: CouncilSlugs, votingPower: BigNumber) {
+  const { data: multicall } = useMulticall3();
+  const signer = useSigner();
+  const { network } = useNetwork();
+  const { activeWallet } = useWallet();
 
-  // const votingPower = useGetUserVotingPower('spartan');
-
-  const [txnState, dispatch] = useReducer(reducer, initialState);
-
-  return {
-    ...useMutation({
-      mutationFn: async () => {
-        // (await getCouncilContract(council).connect(motherShipProvider).getCouncilMembers()) as
-        //   | string[]
-        //   | undefined;
-
+  return useMutation({
+    mutationFn: async () => {
+      if (signer && network) {
         try {
-          dispatch({ type: 'prompting' });
-          // const txn = await Synthetix.signer.sendTransaction({
-          //   ...populatedTransaction,
-          //   ...gasOptionsForTransaction,
-          // });
-          dispatch({ type: 'pending', payload: { txnHash: '123' } });
-          // await txn.wait();
-          dispatch({ type: 'success' });
-        } catch (error: any) {
-          dispatch({ type: 'error', payload: { error } });
-          throw error;
+          const electionModule = getCouncilContract(council).connect(signer);
+          const prepareBallotData = electionModule.interface.encodeFunctionData(
+            'prepareBallotWithSnapshot',
+            [SnapshotRecordContractAddress(network.id), activeWallet?.address]
+          );
+
+          // TODO @dev get quote from contract
+          const quote = await electionModule.quoteCrossChainDeliveryPrice(
+            getWormwholeChainId(network.id)
+          );
+
+          const castData = electionModule.interface.encodeFunctionData('cast', [
+            ['0x47872B16557875850a02C94B28d959515F894913'],
+            [votingPower],
+            { value: utils.parseEther('0.001') },
+          ]);
+
+          multicall.aggregateV3([prepareBallotData, castData]);
+        } catch (error) {
+          console.error(error);
         }
-      },
-    }),
-    // transactionFee: transactionPrice,
-    // isGasEnabledAndNotFetched: gasFetching && !isGasFetched,
-    // gasError: gasError as Error | null,
-    settle: () => dispatch({ type: 'settled' }),
-    ...txnState,
-  };
+      } else {
+        console.error('signer not connected');
+      }
+    },
+  });
 }

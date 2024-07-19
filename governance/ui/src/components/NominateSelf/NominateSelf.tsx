@@ -144,7 +144,13 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
           >
             <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
             <Flex ml="2" flexDir="column">
-              <Text fontWeight={700} fontSize="14px">
+              <Text
+                fontWeight={700}
+                fontSize="14px"
+                overflow="scroll"
+                maxW="300px"
+                whiteSpace="nowrap"
+              >
                 {data?.username ? data.username : 'No Username'}
               </Text>
               <Text fontSize="12px" color="gray.500">

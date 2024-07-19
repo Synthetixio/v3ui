@@ -194,7 +194,9 @@ export const UserProfileDetails = ({
             overflow="scroll"
           >
             {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens || userData?.username || prettyString(userData!.address)}
+            {userData?.ens ||
+              userData?.username.slice(0, 20).concat('...') ||
+              prettyString(userData!.address)}
           </Button>
         )}
       </Flex>

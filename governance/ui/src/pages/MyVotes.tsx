@@ -25,16 +25,10 @@ export default function MyVotes() {
   const signer = useSigner();
   const { network } = useNetwork();
 
-  const [
-    { data: spartanBallot },
-    // { data: grantsBallot },
-    // { data: ambassadorBallot },
-    // { data: treasuryBallot },
-  ] = [
+  const [{ data: spartanBallot }, { data: ambassadorBallot }, { data: treasuryBallot }] = [
     useGetUserBallot('spartan'),
-    // useGetUserBallot('grants'),
-    // useGetUserBallot('ambassador'),
-    // useGetUserBallot('treasury'),
+    useGetUserBallot('ambassador'),
+    useGetUserBallot('treasury'),
   ];
   const { data: votingPower } = useGetUserVotingPower('spartan');
 
@@ -183,7 +177,6 @@ export default function MyVotes() {
                     console.error('already prepared ballot', error);
                   }
 
-                  console.log(spartanBallot?.votingPower);
                   await getCouncilContract('spartan')
                     .connect(signer)
                     .cast(

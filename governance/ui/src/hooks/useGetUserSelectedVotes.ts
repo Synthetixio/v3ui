@@ -10,7 +10,6 @@ export const useGetUserSelectedVotes = () => {
   const { data: treasuryNominees } = useGetCouncilNominees('treasury');
 
   const localstorageState = localStorage.getItem('voteSelection');
-
   return useMemo(() => {
     const parsedLocalstorageState = localstorageState ? JSON.parse(localstorageState) : {};
     const allNominees = spartanNominees

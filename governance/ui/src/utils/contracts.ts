@@ -52,3 +52,12 @@ export const SnapshotRecordContractAddress = (chainId: number) => {
           : '';
   }
 };
+
+export const getWormwholeChainId = (supportedNetworks: number) => {
+  switch (supportedNetworks) {
+    case 421614:
+      return '10003-421614';
+    case 11155420:
+      return '10005-11155420';
+  }
+};

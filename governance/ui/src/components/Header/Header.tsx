@@ -43,7 +43,9 @@ export function Header() {
               : index === 2
                 ? 'grants'
                 : 'treasury';
-        parsedSelection[council] = ballot.votedCandidates[0];
+        parsedSelection[council] = ballot.votedCandidates[0]
+          ? ballot.votedCandidates[0]
+          : parsedSelection[council];
       });
       localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
       queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
@@ -102,7 +104,9 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        {process.env.TESTNET === 'true' && <Link href="/#/admin">Admin</Link>}
+        {(process.env.TESTNET === 'true' || process.env.DEV === 'true') && (
+          <Link href="/#/admin">Admin</Link>
+        )}
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
 
