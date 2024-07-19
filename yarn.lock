@@ -5814,7 +5814,6 @@ __metadata:
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
-    "@snx-v3/useGetBorrow": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
@@ -6403,7 +6402,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useGetBorrow@workspace:*, @snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow":
+"@snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetBorrow@workspace:liquidity/lib/useGetBorrow"
   dependencies:

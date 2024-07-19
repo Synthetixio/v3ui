@@ -99,20 +99,14 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
+        collateralPriceUpdates,
+        systemToken: systemToken?.address,
+        provider: !!provider,
       },
       { priceUpdateTxHash },
     ],
-    enabled: Boolean(
-      CoreProxy &&
-        accountId &&
-        poolId &&
-        tokenAddress &&
-        collateralPriceUpdates &&
-        systemToken &&
-        network &&
-        provider
-    ),
     staleTime: 60000 * 5,
+    enabled: !!tokenAddress,
     queryFn: async () => {
       if (
         !(

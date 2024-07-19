@@ -22,7 +22,7 @@ export function Amount({
       return { formattedValue: '-', preciseValue: '-' };
     }
 
-    const formattedValue = currency(value);
+    const formattedValue = value.eq(0) ? '0.00' : currency(value);
     const cleanNumber = wei(formattedValue.replaceAll(',', ''));
 
     return {

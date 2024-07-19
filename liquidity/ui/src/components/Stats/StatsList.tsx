@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
-import { formatNumberToUsd } from '@snx-v3/formatters';
 import { StatBox } from './StatBox';
 import { useSearchParams } from 'react-router-dom';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
@@ -18,6 +17,9 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { Amount } from '@snx-v3/Amount';
+import { ZEROWEI } from '../../utils/constants';
+import { wei } from '@synthetixio/wei';
 
 export const StatsList = () => {
   const [params] = useSearchParams();
@@ -96,7 +98,7 @@ export const StatsList = () => {
       <StatBox
         title="Total Assets"
         isLoading={isLoading}
-        value={totalAssets && formatNumberToUsd(totalAssets)}
+        value={<Amount prefix="$" value={wei(totalAssets || '0')} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
@@ -109,7 +111,7 @@ export const StatsList = () => {
       <StatBox
         title="Total Locked"
         isLoading={isLoading}
-        value={totalDelegated && formatNumberToUsd(totalDelegated)}
+        value={<Amount prefix="$" value={wei(totalDelegated || '0')} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
@@ -122,16 +124,16 @@ export const StatsList = () => {
         }
       />
       <StatBox
-        title="Total Debt"
+        title={`Total ${isBase ? 'PNL' : 'Debt'}`}
         isLoading={isLoading}
-        value={debt && formatNumberToUsd(debt?.toNumber().toFixed(2))}
+        value={<Amount prefix="$" value={debt?.abs() || ZEROWEI} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
-              Total Debt:
+              Total {isBase ? 'PNL' : 'Debt'}:
             </Text>
             <Text mt={1} textAlign="left">
-              Aggregated Debt of all your Open Positions.
+              Aggregated {isBase ? 'PNL' : 'Debt'} of all your Open Positions.
             </Text>
           </>
         }

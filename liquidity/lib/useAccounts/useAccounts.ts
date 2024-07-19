@@ -14,7 +14,7 @@ export function useAccounts() {
     queryKey: [
       `${network?.id}-${network?.preset}`,
       'Accounts',
-      { accountAddress: activeWallet?.address },
+      { accountAddress: activeWallet?.address, AccountProxy: AccountProxy?.address },
     ],
     queryFn: async function () {
       if (!AccountProxy || !activeWallet?.address) throw new Error('Should be disabled');
@@ -34,7 +34,6 @@ export function useAccounts() {
       );
       return accounts.map((accountId) => accountId.toString());
     },
-    enabled: Boolean(AccountProxy?.address && activeWallet?.address),
     placeholderData: [],
   });
 }

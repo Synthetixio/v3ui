@@ -153,7 +153,10 @@ export const DepositUi: FC<{
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
         <CollateralAlert tokenBalance={snxBalance.collateral} />
       )}
-      {collateralChange.gt(0) && !overAvailableBalance && <WithdrawIncrease />}
+      <Collapse in={collateralChange.gt(0) && !overAvailableBalance} animateOpacity>
+        <WithdrawIncrease />
+      </Collapse>
+
       <Collapse
         in={collateralChange.gt(0) && collateralChange.add(currentCollateral).lt(minDelegation)}
         animateOpacity
