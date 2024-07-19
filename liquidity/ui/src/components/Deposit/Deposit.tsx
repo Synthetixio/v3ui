@@ -28,6 +28,7 @@ import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ZEROWEI } from '../../utils/constants';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -55,6 +56,8 @@ export const DepositUi: FC<{
   minDelegation,
   currentCollateral,
 }) => {
+  const price = useTokenPrice(symbol);
+
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable || ZEROWEI;
@@ -68,9 +71,10 @@ export const DepositUi: FC<{
     return tokenBalance.add(ethBalance);
   }, [symbol, tokenBalance, ethBalance, snxBalance?.transferable]);
 
-  const maxAmount = useMemo(() => {
-    return combinedTokenBalance?.add(accountCollateral.availableCollateral.toString());
-  }, [accountCollateral.availableCollateral, combinedTokenBalance]);
+  const maxAmount = useMemo(
+    () => combinedTokenBalance?.add(accountCollateral.availableCollateral.toString()),
+    [accountCollateral.availableCollateral, combinedTokenBalance]
+  );
 
   const overAvailableBalance = collateralChange.abs().gt(maxAmount);
 
@@ -133,12 +137,13 @@ export const DepositUi: FC<{
             </Text>
           </Tooltip>
         </Flex>
-        <Flex flexGrow={1}>
+        <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
               'data-testid': 'deposit amount input',
               'data-max': maxAmount?.toString(),
               type: 'number',
+              step: '0.01',
             }}
             value={collateralChange}
             onChange={(value) => {
@@ -148,6 +153,9 @@ export const DepositUi: FC<{
             dataTestId="deposit-number-input"
             min={ZEROWEI}
           />
+          <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+            {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
+          </Flex>
         </Flex>
       </BorderBox>
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (

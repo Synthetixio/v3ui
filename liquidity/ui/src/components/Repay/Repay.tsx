@@ -13,6 +13,7 @@ import { RepayAllDebt } from './';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { TokenIcon } from '../TokenIcon';
 import { ZEROWEI } from '../../utils/constants';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -31,56 +32,58 @@ export const RepayUi: FC<{
   snxUSDBalance,
   availableUSDCollateral,
 }) => {
+  const price = useTokenPrice(symbol);
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
         Repay Debt
       </Text>
-
-      <BorderBox gap={1} display="flex" flexDirection="column" p={3} mb="6">
-        <Flex>
+      <BorderBox display="flex" p={3} mb="6">
+        <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} fontSize="16px" alignItems="center" fontWeight="600">
               <TokenIcon symbol={symbol} width={16} height={16} />
               {symbol}
             </Text>
           </BorderBox>
-          <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-            {/* TODO Figure out why repay is causing issues */}
-            <NumberInput
-              InputProps={{
-                isRequired: true,
-                'data-testid': 'repay amount input',
-                'data-max': max?.toString(),
-                type: 'number',
-              }}
-              value={debtChange.abs()}
-              onChange={(val) => setDebtChange(val.mul(-1))}
-              max={max}
-            />
+          <Flex fontSize="12px" gap="1">
+            <Flex gap="1" mr="3" cursor="pointer">
+              <Text>Debt:</Text>
+              <Text display="flex" alignItems="center">
+                $<Amount value={currentDebt} data-testid="current debt" />
+                {currentDebt?.gt(0) && (
+                  <Text
+                    cursor="pointer"
+                    onClick={() => {
+                      if (!currentDebt) {
+                        return;
+                      }
+                      setDebtChange(currentDebt.neg());
+                    }}
+                    color="cyan.500"
+                    fontWeight={700}
+                  >
+                    &nbsp; Max
+                  </Text>
+                )}
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
-        <Flex fontSize="12px" gap="1">
-          <Flex gap="1" mr="3" cursor="pointer">
-            <Text>Debt:</Text>
-            <Text display="flex" alignItems="center">
-              $<Amount value={currentDebt} data-testid="current debt" />
-              {currentDebt?.gt(0) && (
-                <Text
-                  cursor="pointer"
-                  onClick={() => {
-                    if (!currentDebt) {
-                      return;
-                    }
-                    setDebtChange(currentDebt.neg());
-                  }}
-                  color="cyan.500"
-                  fontWeight={700}
-                >
-                  &nbsp; Max
-                </Text>
-              )}
-            </Text>
+        <Flex flexDirection="column" flexGrow={1}>
+          <NumberInput
+            InputProps={{
+              isRequired: true,
+              'data-testid': 'repay amount input',
+              'data-max': max?.toString(),
+              type: 'number',
+            }}
+            value={debtChange.abs()}
+            onChange={(val) => setDebtChange(val.mul(-1))}
+            max={max}
+          />
+          <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+            {price.gt(0) && <Amount prefix="$" value={debtChange.abs().mul(price)} />}
           </Flex>
         </Flex>
       </BorderBox>

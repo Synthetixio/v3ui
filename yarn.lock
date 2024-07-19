@@ -6727,6 +6727,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice"
+  dependencies:
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useTransferAccountId@workspace:*, @snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTransferAccountId@workspace:liquidity/lib/useTransferAccountId"
