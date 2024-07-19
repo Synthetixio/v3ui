@@ -2,12 +2,12 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { FC } from 'react';
-import { ChangeStat } from './ManageStats';
 import { currency } from '@snx-v3/format';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei from '@synthetixio/wei';
 import { ZEROWEI } from '../../utils/constants';
+import { ChangeStat } from './ChangeStat';
 
 export const DebtStats: FC<{
   liquidityPosition?: LiquidityPosition;

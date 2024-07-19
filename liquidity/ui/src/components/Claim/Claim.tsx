@@ -14,6 +14,7 @@ import { TokenIcon } from '../TokenIcon';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from 'react-router-dom';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 const ClaimUi: FC<{
   maxClaimble: Wei;
@@ -23,9 +24,9 @@ const ClaimUi: FC<{
 }> = ({ maxDebt, debtChange, setDebtChange, maxClaimble }) => {
   const { network } = useNetwork();
   const { data: systemToken } = useSystemToken();
-
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const max = useMemo(() => maxClaimble.add(maxDebt), [maxClaimble, maxDebt]);
+  const price = useTokenPrice(isBase ? 'USDC' : systemToken?.symbol);
 
   return (
     <Flex flexDirection="column">
@@ -62,7 +63,7 @@ const ClaimUi: FC<{
             )}
           </Flex>
         </Flex>
-        <Flex flexGrow={1}>
+        <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
               isRequired: true,
@@ -74,6 +75,9 @@ const ClaimUi: FC<{
             onChange={(val) => setDebtChange(val)}
             max={max}
           />
+          <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+            {price.gt(0) && <Amount prefix="$" value={debtChange.abs().mul(price)} />}
+          </Flex>
         </Flex>
       </BorderBox>
 
