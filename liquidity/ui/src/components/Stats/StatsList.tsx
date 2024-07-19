@@ -107,13 +107,13 @@ export const StatsList = () => {
         }
       />
       <StatBox
-        title="Total Delegated"
+        title="Total Locked"
         isLoading={isLoading}
         value={totalDelegated && formatNumberToUsd(totalDelegated)}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
-              Total Delegated:
+              Total Locked:
             </Text>
             <Text textAlign="left" mt={1}>
               All assets in your Account that have been Delegated to a Pool.
