@@ -5829,6 +5829,7 @@ __metadata:
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
+    "@snx-v3/useRewardsDistributors": "workspace:^"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -6667,7 +6668,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
+"@snx-v3/useRewardsDistributors@workspace:^, @snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors"
   dependencies:

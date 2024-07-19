@@ -56,6 +56,7 @@ export interface PoolCardProps {
     collateralAprs: any[];
   };
   balances?: Wei[];
+  rewardsPayoutTokens?: string[];
 }
 
 export const PoolCard = ({
@@ -65,6 +66,7 @@ export const PoolCard = ({
   collateralTypes,
   collateralPrices,
   balances,
+  rewardsPayoutTokens,
 }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
@@ -164,7 +166,23 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
-              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+              <Tooltip
+                label={
+                  <Flex direction="column">
+                    <Text color="white" fontFamily="heading" fontSize="sm" lineHeight={5}>
+                      Rewards Available
+                    </Text>
+                    {rewardsPayoutTokens?.map((token) => (
+                      <Flex key={token} alignItems="center" mt={1}>
+                        <TokenIcon mr={1} width={16} height={16} mt={1} symbol={token} />
+                        <Text mt={1} fontSize="sm" lineHeight={5}>
+                          {token}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                }
+              >
                 <Flex>
                   <Sparkles w="18px" h="18px" mb={0.5} />
                 </Flex>
