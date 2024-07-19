@@ -6667,6 +6667,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useSpotMarketProxy@workspace:*, @snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
