@@ -6,13 +6,13 @@ export function LiquidityPositionUpdated({
   title,
   subline,
   alertText,
-  extra,
+  summary,
   onClose,
 }: {
   title?: ReactNode;
   subline?: ReactNode;
   alertText?: ReactNode;
-  extra?: ReactNode;
+  summary?: ReactNode;
   onClose: () => void;
 }) {
   return (
@@ -39,7 +39,7 @@ export function LiquidityPositionUpdated({
         </Text>
       </Alert>
 
-      {extra}
+      {summary}
 
       <Button w="100%" onClick={onClose} data-cy="liquidity-position-success-button">
         Continue

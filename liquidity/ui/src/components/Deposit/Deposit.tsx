@@ -14,12 +14,12 @@ import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useEthBalance } from '@snx-v3/useEthBalance';
-import Wei, { wei } from '@synthetixio/wei';
+import Wei from '@synthetixio/wei';
 import { FC, useContext, useMemo } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert, TokenIcon } from '../';
+import { ChangeStat, CollateralAlert, TokenIcon } from '../';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -29,6 +29,9 @@ import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ZEROWEI } from '../../utils/constants';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
+import { currency } from '@snx-v3/format';
+import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
 
 export const DepositUi: FC<{
   accountCollateral: AccountCollateralType;
@@ -44,6 +47,8 @@ export const DepositUi: FC<{
   setCollateralChange: (val: Wei) => void;
   minDelegation: Wei;
   currentCollateral: Wei;
+  currentDebt: Wei;
+  collateralPrice: Wei;
 }> = ({
   accountCollateral,
   collateralChange,
@@ -55,6 +60,8 @@ export const DepositUi: FC<{
   snxBalance,
   minDelegation,
   currentCollateral,
+  currentDebt,
+  collateralPrice,
 }) => {
   const price = useTokenPrice(symbol);
 
@@ -159,7 +166,7 @@ export const DepositUi: FC<{
         </Flex>
       </BorderBox>
       {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
-        <CollateralAlert tokenBalance={snxBalance.collateral} />
+        <CollateralAlert mb="6" tokenBalance={snxBalance.collateral} />
       )}
       <Collapse in={collateralChange.gt(0) && !overAvailableBalance} animateOpacity>
         <WithdrawIncrease />
@@ -169,7 +176,7 @@ export const DepositUi: FC<{
         in={collateralChange.gt(0) && collateralChange.add(currentCollateral).lt(minDelegation)}
         animateOpacity
       >
-        <Alert mb={4} status="error">
+        <Alert mb={6} status="error">
           <AlertIcon />
           <AlertDescription>
             Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
@@ -177,12 +184,45 @@ export const DepositUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={overAvailableBalance} animateOpacity>
-        <Alert mb={4} status="error">
+        <Alert mb={6} status="error">
           <AlertIcon />
           <AlertDescription>
             You cannot Deposit & Lock more Collateral than your balance amount
           </AlertDescription>
         </Alert>
+      </Collapse>
+
+      <Collapse in={collateralChange.abs().gt(0)} animateOpacity>
+        <TransactionSummary
+          mb={6}
+          items={[
+            {
+              label: 'Total Collateral',
+              value: (
+                <ChangeStat
+                  value={currentCollateral}
+                  newValue={currentCollateral.add(collateralChange)}
+                  formatFn={(val: Wei) => currency(val)}
+                  hasChanges={collateralChange.abs().gt(0)}
+                  size="sm"
+                />
+              ),
+            },
+            {
+              label: 'C-ratio',
+              value: (
+                <CRatioChangeStat
+                  currentCollateral={currentCollateral}
+                  currentDebt={currentDebt}
+                  collateralChange={collateralChange}
+                  collateralPrice={collateralPrice}
+                  debtChange={ZEROWEI}
+                  size="sm"
+                />
+              ),
+            },
+          ]}
+        />
       </Collapse>
       <Button
         data-testid="deposit submit"
@@ -230,7 +270,9 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
       setCollateralChange={setCollateralChange}
       collateralChange={collateralChange}
       minDelegation={collateralType.minDelegationD18}
-      currentCollateral={liquidityPosition?.collateralAmount ?? wei(0)}
+      currentCollateral={liquidityPosition?.collateralAmount ?? ZEROWEI}
+      currentDebt={liquidityPosition?.debt ?? ZEROWEI}
+      collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
     />
   );
 };
