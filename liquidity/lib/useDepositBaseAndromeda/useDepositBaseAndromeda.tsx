@@ -116,7 +116,13 @@ export const useDepositBaseAndromeda = ({
           calls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, calls, 'useDepositBaseAndromeda');
+        const walletAddress = await signer.getAddress();
+        const erc7412Tx = await withERC7412(
+          network,
+          calls,
+          'useDepositBaseAndromeda',
+          walletAddress
+        );
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

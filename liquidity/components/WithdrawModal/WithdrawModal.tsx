@@ -159,8 +159,6 @@ export function WithdrawModal({
           await withdrawAndromeda.mutateAsync();
         }
 
-        setWithdrawAmount(ZEROWEI);
-
         setTxState({
           step: 2,
           status: 'success',
@@ -176,6 +174,8 @@ export function WithdrawModal({
             { accountId },
           ],
         });
+
+        setWithdrawAmount(ZEROWEI);
       } else {
         onClose();
       }

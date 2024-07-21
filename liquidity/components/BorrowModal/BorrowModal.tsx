@@ -17,6 +17,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const BorrowModalUi: React.FC<{
   onClose: () => void;
@@ -107,7 +108,7 @@ export const BorrowModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
 }> = ({ onClose, isOpen }) => {
-  const { debtChange } = useContext(ManagePositionContext);
+  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const queryClient = useQueryClient();
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -136,6 +137,7 @@ export const BorrowModal: React.FC<{
         queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
       });
+      setDebtChange(ZEROWEI);
     } catch (error: any) {
       const contractError = errorParserCoreProxy(error);
       if (contractError) {
@@ -154,7 +156,15 @@ export const BorrowModal: React.FC<{
       });
       throw Error('Borrow failed', { cause: error });
     }
-  }, [execBorrow, queryClient, network?.id, network?.preset, errorParserCoreProxy, toast]);
+  }, [
+    execBorrow,
+    queryClient,
+    network?.id,
+    network?.preset,
+    setDebtChange,
+    errorParserCoreProxy,
+    toast,
+  ]);
 
   const { txnStatus } = txnState;
 

@@ -37,10 +37,6 @@ export function usePools(customNetwork?: Network) {
         CoreProxy.callStatic.getPreferredPool(),
         CoreProxy.callStatic.getApprovedPools(),
       ]);
-      console.log({
-        prefferedPoolId,
-        approvedPoolIds,
-      });
 
       const incompletePools = [
         {

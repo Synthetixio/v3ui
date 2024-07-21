@@ -150,12 +150,13 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
           } else {
             await execUndelegate();
           }
-          setCollateralChange(ZEROWEI);
 
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,
           });
+
+          setCollateralChange(ZEROWEI);
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {

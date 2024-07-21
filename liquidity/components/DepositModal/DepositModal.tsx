@@ -392,8 +392,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
             await execDeposit();
           }
 
-          setCollateralChange(ZEROWEI);
-
           await Promise.all([
             queryClient.invalidateQueries({
               queryKey: [`${network?.id}-${network?.preset}`, 'EthBalance'],
@@ -418,6 +416,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
                 })
               : Promise.resolve(),
           ]);
+
+          setCollateralChange(ZEROWEI);
 
           toast.closeAll();
           toast({

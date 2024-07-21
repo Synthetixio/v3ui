@@ -226,11 +226,14 @@ const getDefaultFromAddress = (chainName: string) => {
 export const withERC7412 = async (
   network: Network,
   tx: TransactionRequest | TransactionRequest[],
-  logLabel?: string
+  logLabel?: string,
+  _from?: string
 ): Promise<TransactionRequestWithGasLimit> => {
   const initialMulticallLength = Array.isArray(tx) ? tx.length : 1;
+
+  const from = ([tx].flat()[0].from || _from) as string;
   // eslint-disable-next-line prefer-const
-  let multicallCalls = [...[tx].flat()]; // Use let to communicate that we mutate this array
+  let multicallCalls = [...[tx].flat()].map((tx) => ({ from, ...tx })); // Use let to communicate that we mutate this array
 
   if (multicallCalls.some((x) => !x.to)) {
     throw Error(`Make sure all txs have 'to' field set`);
@@ -238,8 +241,6 @@ export const withERC7412 = async (
   if (multicallCalls.some((x) => !x.from)) {
     throw Error(`Make sure all txs have 'from' field set`);
   }
-
-  const from = multicallCalls[0].from as string;
 
   // Make sure we're always using JSONRpcProvider, the web3 provider coming from the signer might have bugs causing errors to miss revert data
   const jsonRpcProvider = new ethers.providers.JsonRpcProvider(network?.rpcUrl());

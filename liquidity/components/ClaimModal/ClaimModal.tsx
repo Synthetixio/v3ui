@@ -136,11 +136,11 @@ export const ClaimModal: React.FC<{
     try {
       await execBorrow();
 
-      setDebtChange(ZEROWEI);
       await queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
       });
+      setDebtChange(ZEROWEI);
     } catch (error: any) {
       const contractError = errorParserCoreProxy(error);
       if (contractError) {

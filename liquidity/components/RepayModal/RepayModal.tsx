@@ -224,7 +224,6 @@ export const RepayModal: React.FC<{
           } else {
             await execRepay();
           }
-          setDebtChange(ZEROWEI);
 
           await Promise.all([
             queryClient.invalidateQueries({
@@ -237,6 +236,7 @@ export const RepayModal: React.FC<{
               queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             }),
           ]);
+          setDebtChange(ZEROWEI);
 
           toast.closeAll();
           toast({
