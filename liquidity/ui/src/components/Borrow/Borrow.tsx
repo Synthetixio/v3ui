@@ -9,7 +9,7 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
@@ -100,5 +100,11 @@ export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPos
     debtChange: debtChange,
   });
 
-  return <BorrowUi setDebtChange={setDebtChange} debtChange={debtChange} maxDebt={maxDebt} />;
+  return (
+    <BorrowUi
+      setDebtChange={setDebtChange}
+      debtChange={debtChange}
+      maxDebt={wei(maxDebt.toBN().sub(1))}
+    />
+  );
 };

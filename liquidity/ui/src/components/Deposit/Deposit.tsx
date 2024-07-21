@@ -149,8 +149,6 @@ export const DepositUi: FC<{
             InputProps={{
               'data-testid': 'deposit amount input',
               'data-max': maxAmount?.toString(),
-              type: 'number',
-              step: '0.01',
               min: 0,
             }}
             value={collateralChange}

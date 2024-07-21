@@ -108,8 +108,8 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const { data: systemToken } = useSystemToken();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
+  const { data: systemToken } = useSystemToken();
   const { data: balance } = useTokenBalance(systemToken?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0);

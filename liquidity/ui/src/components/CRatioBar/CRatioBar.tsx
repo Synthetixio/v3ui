@@ -62,10 +62,16 @@ export const CRatioBarUi: FC<{
           <Text>{ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}</Text>
         )}
 
-        {hasChanges && newCratio && (
+        {!!hasChanges && (
           <>
             <span>&rarr;</span>
-            <Text>{ratioIsMaxUInt(newCratio) ? 'Infinite' : `${newCratio.toFixed(2)} %`}</Text>
+            <Text>
+              {!newCratio
+                ? 'N/A'
+                : ratioIsMaxUInt(newCratio)
+                  ? 'Infinite'
+                  : `${newCratio.toFixed(2)} %`}
+            </Text>
           </>
         )}
 

@@ -108,6 +108,7 @@ export function NumberInput({
       ref={ref}
       flex="1"
       type="number"
+      step="any"
       border="none"
       borderWidth="0px"
       textAlign="end"

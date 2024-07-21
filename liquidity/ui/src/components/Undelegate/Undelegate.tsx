@@ -125,7 +125,6 @@ export const UndelegateUi: FC<{
               'data-testid': 'undelegate amount input',
               'data-max': max?.toString(),
               type: 'number',
-              step: '0.01',
               min: 0,
             }}
             value={collateralChange.abs()}

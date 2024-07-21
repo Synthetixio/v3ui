@@ -58,7 +58,7 @@ export const useBorrow = ({
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
-          debtChange.toBN()
+          debtChange.abs().toBN()
         );
 
         const callsPromise = Promise.all([populatedTxnPromised]);

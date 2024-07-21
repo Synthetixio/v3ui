@@ -162,7 +162,6 @@ export const InitialDepositUi: FC<{
                     'data-testid': 'deposit amount input',
                     'data-max': combinedTokenBalance?.toString(),
                     type: 'number',
-                    step: '0.01',
                     min: 0,
                   }}
                   value={collateralChange}

@@ -23,8 +23,8 @@ const ClaimUi: FC<{
   setDebtChange: (val: Wei) => void;
 }> = ({ maxDebt, debtChange, setDebtChange, maxClaimble }) => {
   const { network } = useNetwork();
-  const { data: systemToken } = useSystemToken();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: systemToken } = useSystemToken();
   const max = useMemo(() => maxClaimble.add(maxDebt), [maxClaimble, maxDebt]);
   const price = useTokenPrice(isBase ? 'USDC' : systemToken?.symbol);
 
