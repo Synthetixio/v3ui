@@ -37,7 +37,7 @@ it('Home Connected', () => {
     // Assets are temporarily disabled
     // cy.get('[data-cy="asset-list-wallet-balance"]').contains('$0.00');
     // cy.get('[data-cy="asset-list-account-balance"]').contains('$0.00');
-    // cy.get('[data-cy="asset-list-delegated-balance"]').contains('$0.00');
+    // cy.get('[data-cy="asset-list-locked-balance"]').contains('$0.00');
     // cy.get('[data-cy="assets-deposit-button"]').contains('Deposit');
     cy.get('[data-cy="Total Assets-stats-box"]').contains('$0.00');
     cy.get('[data-cy="Total Delegated-stats-box"]').contains('$0.00');

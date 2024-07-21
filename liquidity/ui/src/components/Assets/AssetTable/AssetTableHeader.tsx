@@ -54,7 +54,7 @@ export const AssetTableHeader = () => {
                   </Text>
                   <Text textAlign="left" mt={1}>
                     Assets deposited in your Synthetix Account. These assets are available to be
-                    delegated to a pool.
+                    locked to a pool.
                   </Text>
                 </>
               }

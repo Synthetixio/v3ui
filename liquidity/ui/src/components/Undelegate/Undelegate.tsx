@@ -102,7 +102,7 @@ export const UndelegateUi: FC<{
             <Text display="flex" alignItems="center" gap={1}>
               Locked:
             </Text>
-            <Amount value={max} data-testid="available to undelegate" />
+            <Amount value={max} data-testid="available to unlock" />
             {max?.gt(0) && (
               <Text
                 as="span"
@@ -152,7 +152,7 @@ export const UndelegateUi: FC<{
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>
-              The minimal delegated amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
+              The minimal locked amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
             </AlertTitle>
             <AlertDescription>
               You can close your position by removing all the collateral.

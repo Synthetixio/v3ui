@@ -15,6 +15,7 @@ export const PositionsList = () => {
   const { data: positionsByKey, isLoading: isLiquidityPositionsLoading } = useLiquidityPositions({
     accountId,
   });
+
   const { data: apr } = useApr();
   const { data: systemToken, isLoading: isSystemTokenLoading } = useSystemToken();
 

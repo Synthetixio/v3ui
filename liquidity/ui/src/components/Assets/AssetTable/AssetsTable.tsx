@@ -112,8 +112,8 @@ export const AssetsTable = ({ isLoading, assets, unlockDate }: AssetsTableProps)
                       walletBalance$={balance.mul(price).toNumber()}
                       accountBalance={collateral.availableCollateral}
                       accountBalance$={collateral.availableCollateral.mul(price).toNumber()}
-                      delegatedBalance={collateral.totalAssigned.toNumber()}
-                      delegatedBalance$={collateral.totalAssigned.mul(price).toNumber()}
+                      lockedBalance={collateral.totalAssigned.toNumber()}
+                      lockedBalance$={collateral.totalAssigned.mul(price).toNumber()}
                       unlockDate={unlockDate}
                       final={index === assets.length - 1}
                     />

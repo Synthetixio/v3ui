@@ -30,7 +30,7 @@ export default function Permissions() {
         </Heading>
         <Text color="gray.500" fontSize="12px" mb="6">
           Delegation enables a wallet to execute functions on behalf of another wallet/account:
-          delegate, borrow, withdraw, claim, but not transfer. Manage addresses and their powers
+          lock, borrow, withdraw, claim, but not transfer. Manage addresses and their powers
           below.
         </Text>
         <Link

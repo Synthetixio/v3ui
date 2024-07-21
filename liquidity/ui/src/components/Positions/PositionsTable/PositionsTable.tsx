@@ -1,5 +1,5 @@
 import { Button, Fade, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
-import { Link, generatePath } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import {
@@ -77,7 +77,7 @@ export const PositionsTable = ({
                 mt={{ base: 2, md: 0 }}
                 size="sm"
                 to={{
-                  pathname: generatePath('/pools/:poolId', { poolId: '1' }),
+                  pathname: `/pools/${network?.id}/1`,
                   search: location.search,
                 }}
                 variant="outline"

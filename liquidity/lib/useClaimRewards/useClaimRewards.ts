@@ -13,7 +13,9 @@ export function useClaimRewards(
   amount?: number
 ) {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy();
+  const { data: CoreProxy } = useCoreProxy({
+    isWrite: true,
+  });
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const client = useQueryClient();
 
