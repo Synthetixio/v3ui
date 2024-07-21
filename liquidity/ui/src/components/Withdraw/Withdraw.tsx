@@ -79,10 +79,12 @@ const WithdrawUi: FC<{
               'data-testid': 'withdraw amount input',
               'data-max': maWWithdrawable.toString(),
               type: 'number',
+              min: 0,
             }}
             value={amount}
             onChange={(val) => setAmount(val)}
             max={maWWithdrawable}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={amount.abs().mul(price)} />}

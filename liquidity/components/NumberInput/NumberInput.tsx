@@ -41,17 +41,26 @@ export function NumberInput({
     (e: ChangeEvent<HTMLInputElement>) => {
       // Define max length here
       if (e.target.value.length > 15) return;
-      setInputValue(e.target.value);
+
+      let _value = e.target.value;
+
+      if (!isNaN(Number(e.target.value))) {
+        if (!!min && min.gt(Number(e.target.value))) {
+          _value = min.toNumber().toString();
+        }
+      }
+
+      setInputValue(_value);
       if (!onChange) {
         // Could be a read-only input
         return;
       }
-      if (!NUMBER_REGEX.test(`${e.target.value}`)) {
+      if (!NUMBER_REGEX.test(`${_value}`)) {
         return;
       }
       let nextValue = value;
       try {
-        nextValue = wei(e.target.value || 0);
+        nextValue = wei(_value || 0);
       } catch (_err) {
         // whatever
       }
@@ -59,7 +68,7 @@ export function NumberInput({
         onChange(nextValue);
       }
     },
-    [onChange, value]
+    [min, onChange, value]
   );
 
   const ref = useRef<HTMLInputElement>(null);

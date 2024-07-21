@@ -151,14 +151,15 @@ export const DepositUi: FC<{
               'data-max': maxAmount?.toString(),
               type: 'number',
               step: '0.01',
+              min: 0,
             }}
             value={collateralChange}
             onChange={(value) => {
               setCollateralChange(value);
             }}
             max={maxAmount}
-            dataTestId="deposit-number-input"
             min={ZEROWEI}
+            dataTestId="deposit-number-input"
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}

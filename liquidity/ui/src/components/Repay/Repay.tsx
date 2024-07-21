@@ -77,10 +77,12 @@ export const RepayUi: FC<{
               'data-testid': 'repay amount input',
               'data-max': max?.toString(),
               type: 'number',
+              min: 0,
             }}
             value={debtChange.abs()}
             onChange={(val) => setDebtChange(val.mul(-1))}
             max={max}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={debtChange.abs().mul(price)} />}

@@ -70,10 +70,12 @@ const ClaimUi: FC<{
               'data-testid': 'claim amount input',
               'data-max': maxClaimble.toString(),
               type: 'number',
+              min: 0,
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}
             max={max}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={debtChange.abs().mul(price)} />}

@@ -14,6 +14,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { ZEROWEI } from '../../utils/constants';
 
 const BorrowUi: FC<{
   debtChange: Wei;
@@ -42,10 +43,12 @@ const BorrowUi: FC<{
               'data-testid': 'borrow amount input',
               'data-max': maxDebt.toString(),
               type: 'number',
+              min: 0,
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}
             max={maxDebt}
+            min={ZEROWEI}
           />
           <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
             <Flex

@@ -25,6 +25,7 @@ import { TokenIcon } from '../TokenIcon';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { useTimer } from 'react-timer-hook';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { ZEROWEI } from '../../utils/constants';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -125,10 +126,12 @@ export const UndelegateUi: FC<{
               'data-max': max?.toString(),
               type: 'number',
               step: '0.01',
+              min: 0,
             }}
             value={collateralChange.abs()}
             onChange={(val) => setCollateralChange(val.mul(-1))}
             max={max}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
