@@ -56,6 +56,7 @@ export interface PoolCardProps {
     collateralAprs: any[];
   };
   balances?: Wei[];
+  rewardsPayoutTokens?: string[];
 }
 
 export const PoolCard = ({
@@ -65,6 +66,7 @@ export const PoolCard = ({
   collateralTypes,
   collateralPrices,
   balances,
+  rewardsPayoutTokens,
 }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
@@ -164,7 +166,23 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
-              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+              <Tooltip
+                label={
+                  <Flex direction="column">
+                    <Text color="white" fontFamily="heading" fontSize="sm" lineHeight={5}>
+                      Rewards Available
+                    </Text>
+                    {rewardsPayoutTokens?.map((token) => (
+                      <Flex key={token} alignItems="center" mt={1}>
+                        <TokenIcon mr={1} width={16} height={16} mt={1} symbol={token} />
+                        <Text mt={1} fontSize="sm" lineHeight={5}>
+                          {token}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                }
+              >
                 <Flex>
                   <Sparkles w="18px" h="18px" mb={0.5} />
                 </Flex>
@@ -279,10 +297,36 @@ export const PoolCard = ({
 
                 const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
+                const onClick = async () => {
+                  try {
+                    if (!currentNetwork) {
+                      connect();
+                      return;
+                    }
+
+                    if (currentNetwork.id !== network.id) {
+                      if (!(await setNetwork(network.id))) {
+                        return;
+                      }
+                    }
+
+                    queryParams.set('manageAction', 'deposit');
+                    navigate({
+                      pathname: `/positions/${type.symbol}/${pool.id}`,
+                      search: queryParams.toString(),
+                    });
+                  } catch (error) {}
+                };
+
                 return (
                   <Tr key={type.tokenAddress}>
                     <Td border="none" px={4} w="20%">
-                      <Flex minWidth="120px" alignItems="center">
+                      <Flex
+                        minWidth="120px"
+                        alignItems="center"
+                        _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+                        onClick={onClick}
+                      >
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
                         <Flex flexDirection="column" ml={3} mr="auto">
                           <Text
@@ -383,28 +427,7 @@ export const PoolCard = ({
                     </Td>
                     <Td border="none" textAlign="right" pl={4} pr={0}>
                       <Button
-                        onClick={async (e) => {
-                          try {
-                            e.stopPropagation();
-
-                            if (!currentNetwork) {
-                              connect();
-                              return;
-                            }
-
-                            if (currentNetwork.id !== network.id) {
-                              if (!(await setNetwork(network.id))) {
-                                return;
-                              }
-                            }
-
-                            queryParams.set('manageAction', 'deposit');
-                            navigate({
-                              pathname: `/positions/${type.symbol}/${pool.id}`,
-                              search: queryParams.toString(),
-                            });
-                          } catch (error) {}
-                        }}
+                        onClick={onClick}
                         size="sm"
                         height="32px"
                         py="10px"
@@ -416,7 +439,7 @@ export const PoolCard = ({
                         fontSize="14px"
                         lineHeight="20px"
                       >
-                        Deposit
+                        {!currentNetwork ? 'Connect Wallet' : 'Deposit'}
                       </Button>
                     </Td>
                   </Tr>

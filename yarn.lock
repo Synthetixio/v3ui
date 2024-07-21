@@ -5829,6 +5829,7 @@ __metadata:
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
+    "@snx-v3/useRewardsDistributors": "workspace:^"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -6664,6 +6665,16 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useRewardsDistributors@workspace:^, @snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
