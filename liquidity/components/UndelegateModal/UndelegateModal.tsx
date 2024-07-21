@@ -20,6 +20,7 @@ import type { StateFrom } from 'xstate';
 import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -107,7 +108,7 @@ export type UndelegateModalProps = FC<{
 }>;
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
-  const { collateralChange } = useContext(ManagePositionContext);
+  const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
 
   const queryClient = useQueryClient();
@@ -149,6 +150,8 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
           } else {
             await execUndelegate();
           }
+          setCollateralChange(ZEROWEI);
+
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,

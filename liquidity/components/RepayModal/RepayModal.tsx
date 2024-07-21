@@ -25,6 +25,7 @@ import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -131,7 +132,7 @@ export const RepayModal: React.FC<{
   isOpen: boolean;
   availableCollateral?: Wei;
 }> = ({ onClose, isOpen, availableCollateral }) => {
-  const { debtChange } = useContext(ManagePositionContext);
+  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const params = useParams();
 
   const { network } = useNetwork();
@@ -223,6 +224,7 @@ export const RepayModal: React.FC<{
           } else {
             await execRepay();
           }
+          setDebtChange(ZEROWEI);
 
           await Promise.all([
             queryClient.invalidateQueries({

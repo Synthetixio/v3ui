@@ -114,7 +114,7 @@ export function WithdrawModal({
     step: 1,
     status: 'idle',
   });
-  const { withdrawAmount } = useContext(ManagePositionContext);
+  const { withdrawAmount, setWithdrawAmount } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -158,6 +158,8 @@ export function WithdrawModal({
         } else {
           await withdrawAndromeda.mutateAsync();
         }
+
+        setWithdrawAmount(ZEROWEI);
 
         setTxState({
           step: 2,
@@ -207,6 +209,7 @@ export function WithdrawModal({
     network?.preset,
     onClose,
     queryClient,
+    setWithdrawAmount,
     toast,
     txState.step,
     withdrawAndromeda,
