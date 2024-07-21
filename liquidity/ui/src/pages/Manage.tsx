@@ -185,9 +185,10 @@ export const Manage = () => {
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
-  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralTypes, isLoading: isLoadingCollaterals } = useCollateralTypes();
 
   const notSupported =
+    !isLoadingCollaterals &&
     poolData &&
     collateralTypes &&
     collateralDisplayName &&
@@ -227,7 +228,7 @@ export const Manage = () => {
           />
         )}
 
-      {isLoadingPosition && (
+      {isLoadingPosition && !!accountId && (
         <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
       )}
     </ManagePositionProvider>
