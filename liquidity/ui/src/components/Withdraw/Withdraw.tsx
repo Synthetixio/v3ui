@@ -96,7 +96,7 @@ const WithdrawUi: FC<{
         <Alert colorScheme="red" mb="4">
           <AlertIcon />
           <Text>
-            You will be able to withdraw assets in {hours}:{minutes}. Any account activity will
+            You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
             reset this timer to 24H.
           </Text>
         </Alert>
