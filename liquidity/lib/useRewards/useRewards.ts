@@ -65,7 +65,9 @@ export function useRewards(
   const targetNetwork = customNetwork || network;
 
   const { data: Multicall3 } = useMulticall3(customNetwork);
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy({
+    customNetwork,
+  });
 
   return useQuery({
     enabled: Boolean(CoreProxy && Multicall3 && distributors && poolId && accountId),
