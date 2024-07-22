@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
@@ -177,7 +177,15 @@ export const ClaimModal: React.FC<{
 
   const { txnStatus } = txnState;
 
-  if (!params.poolId || !params.accountId || !collateralType) return null;
+  if (!params.poolId || !params.accountId || !collateralType)
+    return (
+      <Flex gap={4} flexDirection="column">
+        <Skeleton maxW="232px" width="100%" height="20px" />
+        <Divider my={4} />
+        <Skeleton width="100%" height="20px" />
+        <Skeleton width="100%" height="20px" />
+      </Flex>
+    );
 
   return (
     <ClaimModalUi

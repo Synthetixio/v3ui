@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { parseUnits } from '@snx-v3/format';
@@ -291,7 +291,15 @@ export const RepayModal: React.FC<{
     send(Events.RUN);
   }, [onClose, send, state]);
 
-  if (!params.poolId || !params.accountId || !collateralType) return null;
+  if (!params.poolId || !params.accountId || !collateralType)
+    return (
+      <Flex gap={4} flexDirection="column">
+        <Skeleton maxW="232px" width="100%" height="20px" />
+        <Divider my={4} />
+        <Skeleton width="100%" height="20px" />
+        <Skeleton width="100%" height="20px" />
+      </Flex>
+    );
 
   return (
     <RepayModalUi

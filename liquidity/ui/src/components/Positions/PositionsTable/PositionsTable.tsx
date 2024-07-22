@@ -1,5 +1,5 @@
 import { Button, Fade, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import {
@@ -29,6 +29,7 @@ export const PositionsTable = ({
   apr,
   systemToken,
 }: PositionsTableInterface) => {
+  const navigate = useNavigate();
   const { activeWallet } = useWallet();
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
@@ -54,7 +55,14 @@ export const PositionsTable = ({
       ) : (
         <>
           <Flex alignItems="center" justifyContent="space-between">
-            <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
+            <Heading
+              _hover={{ cursor: 'pointer', opacity: 0.9 }}
+              onClick={() => navigate(`/pools/${network?.id}/1`)}
+              fontSize="18px"
+              fontWeight={700}
+              lineHeight="28px"
+              color="gray.50"
+            >
               Spartan Council Pool
               {network && (
                 <Flex alignItems="center" fontSize="12px" color="gray.500" gap={1}>

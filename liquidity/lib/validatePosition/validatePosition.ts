@@ -29,6 +29,7 @@ export const validatePosition = ({
     .sub(debt || 0);
 
   const maxDebt = maybeMaxDebt.gte(0) ? maybeMaxDebt : wei(0);
+  const maxDebtWithSlippage = maybeMaxDebt.mul(99).div(100);
 
   const isValid =
     (newCRatio.gte(targetCRatio) || newCRatio.lte(0)) &&
@@ -41,5 +42,6 @@ export const validatePosition = ({
     newDebt,
     newCollateralAmount,
     maxDebt,
+    maxDebtWithSlippage,
   };
 };

@@ -107,16 +107,12 @@ const ClaimUi: FC<{
       </Collapse>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert status="info" mb="6">
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
             Assets will be available to withdraw 24 hours after your last interaction with this
             position.
           </Text>
-        </Alert>
-        <Alert status="warning" mb="6">
-          <AlertIcon />
-          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
 
@@ -142,7 +138,10 @@ const ClaimUi: FC<{
         </Alert>
       </Collapse>
 
-      <Collapse in={debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase} animateOpacity>
+      <Collapse
+        in={!debtChange.gt(max) && debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase}
+        animateOpacity
+      >
         <Alert colorScheme="info" mb="6">
           <AlertIcon />
           <Text>
@@ -182,7 +181,7 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const { maxDebt } = validatePosition({
+  const { maxDebtWithSlippage } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
     collateralPrice: liquidityPosition?.collateralPrice,
@@ -190,12 +189,13 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   return (
     <ClaimUi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       maxClaimble={maxClaimble}
-      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebt}
+      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebtWithSlippage}
     />
   );
 };

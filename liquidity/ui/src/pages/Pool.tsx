@@ -25,7 +25,7 @@ export const Pool = () => {
       <>
         <HomeLink mt={4} />
         <PoolHeader mt={3} name={poolInfo && poolInfo[0].pool.name} network={network || MAINNET} />
-        <Divider my={8} bg="gray.900" />
+        <Divider my={6} bg="gray.900" />
         <Flex gap={4} mb={16}>
           <Box w="100%">
             <CollateralSection />

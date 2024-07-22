@@ -5,6 +5,8 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import { useNetwork } from '@snx-v3/useBlockchain';
 
+import { useToast } from '@chakra-ui/react';
+
 export function useClaimRewards(
   poolId?: string,
   collateralAddress?: string,
@@ -12,6 +14,8 @@ export function useClaimRewards(
   distributorAddress?: string,
   amount?: number
 ) {
+  const toast = useToast({ isClosable: true, duration: 9000 });
+
   const { network } = useNetwork();
   const { data: CoreProxy } = useCoreProxy({
     isWrite: true,
@@ -55,10 +59,28 @@ export function useClaimRewards(
 
         dispatch({ type: 'success' });
         client.invalidateQueries({ queryKey: [`${network?.id}-${network?.preset}`, 'Rewards'] });
+
+        toast.closeAll();
+        toast({
+          title: 'Success',
+          description: 'Your rewards has been claimed.',
+          status: 'success',
+          duration: 5000,
+          variant: 'left-accent',
+        });
+
         return claimedAmount;
       } catch (error) {
         const err = error as Error;
         dispatch({ type: 'error', payload: { error: err } });
+
+        toast.closeAll();
+        toast({
+          title: 'Claiming failed',
+          description: 'Please try again.',
+          status: 'error',
+          variant: 'left-accent',
+        });
 
         return 0;
       }
