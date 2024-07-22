@@ -6,6 +6,7 @@ import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
 import { Amount } from '@snx-v3/Amount';
 import { TimeIcon } from '@chakra-ui/icons';
 import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
+import { useTokenPrice } from '../../../../../lib/useTokenPrice';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -25,6 +26,7 @@ export function PositionRow({
   availableCollateral,
   accountId,
 }: PositionRow) {
+  const collateralPrice = useTokenPrice(collateralType.displaySymbol);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
@@ -67,10 +69,12 @@ export function PositionRow({
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
           <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-            <Amount value={collateralAmount} />
+            {collateralPrice.gt(0) && (
+              <Amount prefix="$" value={collateralAmount.mul(collateralPrice)} />
+            )}
           </Text>
           <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-            {collateralType.symbol.toString()}
+            <Amount value={collateralAmount} suffix={` ${collateralType.symbol.toString()}`} />
           </Text>
         </Flex>
       </Td>
@@ -85,7 +89,9 @@ export function PositionRow({
             fontSize="sm"
             gap={1.5}
           >
-            <Amount value={availableCollateral} />
+            {collateralPrice.gt(0) && (
+              <Amount prefix="$" value={availableCollateral.mul(collateralPrice)} />
+            )}
 
             {availableCollateral.gt(0) &&
               isRunning &&
@@ -96,7 +102,7 @@ export function PositionRow({
               )}
           </Text>
           <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-            {collateralType.symbol.toString()}
+            <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
           </Text>
         </Flex>
       </Td>
