@@ -20,6 +20,7 @@ export function PositionRow({
   isBase,
   apr,
   collateralAmount,
+  availableCollateral,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
@@ -60,16 +61,24 @@ export function PositionRow({
         </Fade>
       </Td>
       <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-              <Amount value={collateralAmount} />
-            </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {collateralType.symbol.toString()}
-            </Text>
-          </Flex>
-        </Fade>
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+            <Amount value={collateralAmount} />
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            {collateralType.symbol.toString()}
+          </Text>
+        </Flex>
+      </Td>
+      <Td border="none">
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+            <Amount value={availableCollateral} />
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            {collateralType.symbol.toString()}
+          </Text>
+        </Flex>
       </Td>
       <Td border="none">
         <Fade in>

@@ -17,12 +17,15 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
         >
           Collateral
         </Th>
-        <Th border="none" textTransform="unset" py={5}>
-          <Flex justifyContent="flex-end" alignItems="center">
-            <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-              Locked
-            </Text>
-          </Flex>
+        <Th textAlign="right" border="none" textTransform="unset" py={5}>
+          <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            Locked
+          </Text>
+        </Th>
+        <Th textAlign="right" border="none" textTransform="unset" py={5}>
+          <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            Unlocked
+          </Text>
         </Th>
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
