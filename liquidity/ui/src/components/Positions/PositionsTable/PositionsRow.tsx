@@ -1,7 +1,6 @@
 import { Button, Collapse, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
 import { Amount } from '@snx-v3/Amount';
@@ -11,10 +10,8 @@ interface PositionRow extends LiquidityPositionType {
   apr?: number;
   systemTokenSymbol?: string;
 }
-[];
 
 export function PositionRow({
-  accountId,
   poolId,
   collateralType,
   debt,
@@ -22,15 +19,10 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
+  collateralAmount,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType.tokenAddress,
-    accountId,
-    poolId,
-  });
 
   const onClick = () => {
     queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
@@ -71,7 +63,7 @@ export function PositionRow({
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-              <Amount value={liquidityPosition?.collateralAmount} />
+              <Amount value={collateralAmount} />
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
               {collateralType.symbol.toString()}

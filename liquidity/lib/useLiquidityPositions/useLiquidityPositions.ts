@@ -21,6 +21,7 @@ export type LiquidityPositionType = {
   collateralPrice: Wei;
   collateralValue: Wei;
   collateralType: CollateralType;
+  availableCollateral: Wei;
   cRatio: Wei;
   debt: Wei;
 };
@@ -89,7 +90,19 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       });
 
       const positionCalls = positionCallsAndData.map((x) => x.calls).flat();
-      const allCalls = priceCalls.concat(positionCalls);
+
+      const availableCollateralCalls = await Promise.all(
+        collateralTypes.map(
+          (collateralType) =>
+            CoreProxy.populateTransaction.getAccountAvailableCollateral(
+              accountId,
+              collateralType.tokenAddress
+            ),
+          []
+        )
+      );
+
+      const allCalls = priceCalls.concat(positionCalls).concat(availableCollateralCalls);
       const singlePositionDecoder = positionCallsAndData.at(0)?.decoder;
 
       if (priceUpdateTx) {
@@ -103,6 +116,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
         (encoded) => {
           if (!Array.isArray(encoded)) throw Error('Expected array');
           if (!singlePositionDecoder) return {};
+
           const prices = priceDecoder(encoded.slice(0, priceCalls.length));
           const pricesByAddress = keyBy(
             'address',
@@ -114,8 +128,31 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               : [{ price: prices, address: collateralTypes[0].tokenAddress }]
           );
 
-          const pairedPositionsEncoded = toPairs(encoded.slice(priceCalls.length));
+          const pairedPositionsEncoded = toPairs(
+            encoded.slice(priceCalls.length, priceCalls.length + positionCalls.length)
+          );
           const positionData = pairedPositionsEncoded.map((x) => singlePositionDecoder(x));
+
+          const availableCollaterals = encoded
+            .slice(priceCalls.length + positionCalls.length)
+            .map((encode) =>
+              CoreProxy.interface.decodeFunctionResult('getAccountAvailableCollateral', encode)
+            );
+          const availableCollateralByAddress = keyBy(
+            'address',
+            Array.isArray(availableCollaterals)
+              ? availableCollaterals.map((availableCollateral, i) => ({
+                  availableCollateral: wei(availableCollateral[0]),
+                  address: collateralTypes[i].tokenAddress,
+                }))
+              : [
+                  {
+                    availableCollateral: wei(availableCollaterals[0]),
+                    address: collateralTypes[0].tokenAddress,
+                  },
+                ]
+          );
+
           const positions = positionData.map(({ debt, collateral }, index) => {
             const { poolName, collateralType, poolId, isPreferred } = positionCallsAndData[index];
             // Value will be removed from the collateral call in next release, so to prepare for that calculate it manually
@@ -124,6 +161,8 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
             const collateralValue = collateralPrice
               ? collateralAmount.mul(collateralPrice)
               : wei(0);
+            const availableCollateral =
+              availableCollateralByAddress?.[collateralType.tokenAddress].availableCollateral;
             const cRatio = calculateCRatio(debt, collateralValue);
 
             return {
@@ -138,6 +177,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
               cRatio,
               debt,
               isPreferred,
+              availableCollateral,
             };
           });
           return keyBy('id', positions);

@@ -104,6 +104,7 @@ export const PositionsTable = ({
                       isBase={isBase}
                       apr={apr}
                       systemTokenSymbol={systemToken?.symbol}
+                      collateralAmount={position.collateralAmount}
                     />
                   ))}
                 </>
