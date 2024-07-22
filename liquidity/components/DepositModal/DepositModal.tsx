@@ -262,24 +262,21 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const { data: SpotProxy } = useSpotMarketProxy();
   const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? usdTokens?.USDC
-    : collateralType?.tokenAddress;
+  const collateralAddress = isBase ? usdTokens?.USDC : collateralType?.tokenAddress;
 
   const collateralNeeded = collateralChange.sub(availableCollateral);
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
     amount: collateralNeeded.gt(0)
-      ? isBaseAndromeda(network?.id, network?.preset)
+      ? isBase
         ? //Base USDC is 6 decimals
           utils.parseUnits(collateralNeeded.toString(), 6)
         : utils.parseUnits(collateralNeeded.toString(), collateralType?.decimals)
       : 0,
-    spender: isBaseAndromeda(network?.id, network?.preset)
-      ? SpotProxy?.address
-      : CoreProxy?.address,
+    spender: isBase ? SpotProxy?.address : CoreProxy?.address,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -392,7 +389,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
             collateralChange,
           });
 
-          if (isBaseAndromeda(network?.id, network?.preset)) {
+          if (isBase) {
             await depositBaseAndromeda();
           } else {
             await execDeposit();
@@ -501,6 +498,50 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
     send(Events.RUN);
   }, [handleClose, send, state]);
 
+  const txSummaryItems = useMemo(() => {
+    const items = [
+      {
+        label: 'Total Collateral',
+        value: (
+          <ChangeStat
+            value={txSummary.currentCollateral}
+            newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
+            formatFn={(val: Wei) => currency(val)}
+            hasChanges={txSummary.collateralChange.abs().gt(0)}
+            size="sm"
+          />
+        ),
+      },
+    ];
+
+    if (isBase) {
+      return items;
+    }
+
+    return [
+      ...items,
+      {
+        label: 'C-ratio',
+        value: (
+          <CRatioChangeStat
+            currentCollateral={txSummary.currentCollateral}
+            currentDebt={txSummary.currentDebt}
+            collateralChange={txSummary.collateralChange}
+            collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
+            debtChange={ZEROWEI}
+            size="sm"
+          />
+        ),
+      },
+    ];
+  }, [
+    isBase,
+    liquidityPosition?.collateralPrice,
+    txSummary.collateralChange,
+    txSummary.currentCollateral,
+    txSummary.currentDebt,
+  ]);
+
   return (
     <DepositModalUi
       collateralChange={collateralChange}
@@ -515,37 +556,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
       poolName={pool?.name || ''}
       availableCollateral={availableCollateral || wei(0)}
       title={title}
-      txSummary={
-        <TransactionSummary
-          items={[
-            {
-              label: 'Total Collateral',
-              value: (
-                <ChangeStat
-                  value={txSummary.currentCollateral}
-                  newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
-                  formatFn={(val: Wei) => currency(val)}
-                  hasChanges={txSummary.collateralChange.abs().gt(0)}
-                  size="sm"
-                />
-              ),
-            },
-            {
-              label: 'C-ratio',
-              value: (
-                <CRatioChangeStat
-                  currentCollateral={txSummary.currentCollateral}
-                  currentDebt={txSummary.currentDebt}
-                  collateralChange={txSummary.collateralChange}
-                  collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
-                  debtChange={ZEROWEI}
-                  size="sm"
-                />
-              ),
-            },
-          ]}
-        />
-      }
+      txSummary={<TransactionSummary items={txSummaryItems} />}
     />
   );
 };
