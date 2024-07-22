@@ -5339,7 +5339,9 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5349,6 +5351,7 @@ __metadata:
     "@snx-v3/useDeposit": "workspace:*"
     "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePools": "workspace:*"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
@@ -5709,6 +5712,7 @@ __metadata:
     react: "npm:^18.2.0"
     react-blockies: "npm:^1.4.1"
     react-dom: "npm:^18.2.0"
+    react-helmet: "npm:^6.1.0"
     react-hook-form: "npm:^7.48.2"
     react-refresh: "npm:^0.14.0"
     react-router-dom: "npm:^6.18.0"
@@ -5825,6 +5829,7 @@ __metadata:
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
+    "@snx-v3/useRewardsDistributors": "workspace:^"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -6663,6 +6668,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useRewardsDistributors@workspace:^, @snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useSpotMarketProxy@workspace:*, @snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
@@ -6723,6 +6738,17 @@ __metadata:
     "@snx-v3/useMulticall3": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice"
+  dependencies:
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft

@@ -24,6 +24,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../TokenIcon';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { useTimer } from 'react-timer-hook';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -49,6 +50,8 @@ export const UndelegateUi: FC<{
   isAnyMarketLocked,
   unlockDate,
 }) => {
+  const price = useTokenPrice(symbol);
+
   const onMaxClick = useCallback(() => {
     if (!max) {
       return;
@@ -113,7 +116,7 @@ export const UndelegateUi: FC<{
             )}
           </Flex>
         </Flex>
-        <Flex flexGrow={1}>
+        <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
               isDisabled: isInputDisabled,
@@ -121,11 +124,15 @@ export const UndelegateUi: FC<{
               'data-testid': 'undelegate amount input',
               'data-max': max?.toString(),
               type: 'number',
+              step: '0.01',
             }}
             value={collateralChange.abs()}
             onChange={(val) => setCollateralChange(val.mul(-1))}
             max={max}
           />
+          <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+            {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
+          </Flex>
         </Flex>
         <Collapse in={isInputDisabled} animateOpacity>
           <Alert mt={2} status="warning">

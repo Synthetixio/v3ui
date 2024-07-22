@@ -10,6 +10,7 @@ import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -54,6 +55,14 @@ export const PoolsList = () => {
     BASE_ANDROMEDA
   );
 
+  // Arb Rewards
+  const { data: ArbitrumRewards, isLoading: isArbitrumRewardsLoading } =
+    useRewardsDistributors(ARBITRUM);
+
+  // Base Rewards
+  const { data: BaseRewards, isLoading: isBaseRewardsLoading } =
+    useRewardsDistributors(BASE_ANDROMEDA);
+
   const { collateral, chain } = state;
 
   const showToros =
@@ -66,7 +75,9 @@ export const PoolsList = () => {
     isBaseCollateralLoading ||
     isArbCollateralLoading ||
     isArbitrumBalancesLoading ||
-    isBaseBalancesLoading;
+    isBaseBalancesLoading ||
+    isArbitrumRewardsLoading ||
+    isBaseRewardsLoading;
 
   const filteredPools = useMemo(() => {
     return (
@@ -88,6 +99,7 @@ export const PoolsList = () => {
           }));
 
           const balances = network.id === ARBITRUM.id ? ArbitrumTokenBalances : BaseTokenBalances;
+          const rewardsDistributors = network.id === ARBITRUM.id ? ArbitrumRewards : BaseRewards;
 
           return {
             network,
@@ -96,6 +108,7 @@ export const PoolsList = () => {
             collateralDeposited,
             collateralTypes,
             balances,
+            rewardsDistributors,
           };
         })
         .filter((pool) => {
@@ -133,6 +146,8 @@ export const PoolsList = () => {
     data?.synthetixPools,
     ArbitrumTokenBalances,
     BaseTokenBalances,
+    ArbitrumRewards,
+    BaseRewards,
   ]);
 
   return (
@@ -150,21 +165,32 @@ export const PoolsList = () => {
           <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} />
         )}
         {!isLoading &&
-          filteredPools.map(({ network, poolInfo, apr, collateralTypes, balances }) => {
-            const { pool } = poolInfo[0];
+          filteredPools.map(
+            ({ network, poolInfo, apr, collateralTypes, balances, rewardsDistributors }) => {
+              const { pool } = poolInfo[0];
 
-            return (
-              <PoolCard
-                key={network.hexId}
-                collateralTypes={collateralTypes}
-                collateralPrices={collateralPrices}
-                apr={apr}
-                network={network}
-                pool={pool}
-                balances={balances}
-              />
-            );
-          })}
+              const rewardsPayoutTokens = [
+                ...new Set(
+                  rewardsDistributors?.map(({ payoutToken }: any) =>
+                    payoutToken.symbol.toUpperCase()
+                  )
+                ),
+              ] as string[];
+
+              return (
+                <PoolCard
+                  key={network.hexId}
+                  collateralTypes={collateralTypes}
+                  collateralPrices={collateralPrices}
+                  apr={apr}
+                  network={network}
+                  pool={pool}
+                  balances={balances}
+                  rewardsPayoutTokens={rewardsPayoutTokens}
+                />
+              );
+            }
+          )}
 
         {!isLoading && !filteredPools.length && (
           <Flex flexDir="column" alignItems="center">
@@ -216,7 +242,8 @@ function poolsReducer(state: PoolsFilterState, action: PoolsFilterAction): Pools
       if (action.payload?.collateral) {
         return {
           ...state,
-          collateral: [...state.collateral, action.payload.collateral],
+          // Only one collateral active at once
+          collateral: [action.payload.collateral],
         };
       }
 

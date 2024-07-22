@@ -7,7 +7,6 @@ import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import Wei, { wei } from '@synthetixio/wei';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -16,45 +15,6 @@ import { PnlStats } from './PnlStats';
 import { DebtStats } from './DebtStats';
 import { CollateralStats } from './CollateralStats';
 import { ZEROWEI } from '../../utils/constants';
-
-export const ChangeStat: FC<{
-  value: Wei;
-  newValue: Wei;
-  hasChanges: boolean;
-  dataTestId?: string;
-  formatFn: (val: Wei) => string;
-  withColor?: boolean;
-}> = ({ formatFn, value, newValue, hasChanges, dataTestId, withColor }) => {
-  return (
-    <Flex
-      gap={1.5}
-      color="white"
-      fontSize="20px"
-      fontWeight="800"
-      alignItems="center"
-      lineHeight="32px"
-    >
-      <Text
-        data-cy={dataTestId}
-        color={withColor && value.gt(0) ? 'green.700' : value.lt(0) ? 'red.700' : 'gray.50'}
-      >
-        {formatFn(value)}
-      </Text>
-      {hasChanges && !value.eq(newValue) ? (
-        <>
-          <ArrowForwardIcon />
-          <Text
-            color={
-              withColor && newValue.gt(0) ? 'green.700' : newValue.lt(0) ? 'red.700' : 'gray.50'
-            }
-          >
-            {formatFn(newValue)}
-          </Text>
-        </>
-      ) : null}
-    </Flex>
-  );
-};
 
 export const ManageStatsUi: FC<{
   liquidityPosition?: LiquidityPosition;

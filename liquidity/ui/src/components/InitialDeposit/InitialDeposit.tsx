@@ -32,6 +32,7 @@ import { formatNumber } from '@snx-v3/formatters';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ZEROWEI } from '../../utils/constants';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 export const InitialDepositUi: FC<{
   collateralChange: Wei;
@@ -62,6 +63,8 @@ export const InitialDepositUi: FC<{
   availableCollateral,
 }) => {
   const [step, setStep] = useState(0);
+
+  const price = useTokenPrice(symbol);
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable || ZEROWEI;
@@ -154,21 +157,23 @@ export const InitialDepositUi: FC<{
                   </Text>
                 </Tooltip>
               </Flex>
-              <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-                <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
-                  <NumberInput
-                    InputProps={{
-                      'data-testid': 'deposit amount input',
-                      'data-max': combinedTokenBalance?.toString(),
-                      type: 'number',
-                    }}
-                    value={collateralChange}
-                    onChange={(value) => {
-                      setCollateralChange(value);
-                    }}
-                    max={combinedTokenBalance}
-                    dataTestId="deposit-number-input"
-                  />
+              <Flex flexDir="column" flexGrow={1}>
+                <NumberInput
+                  InputProps={{
+                    'data-testid': 'deposit amount input',
+                    'data-max': combinedTokenBalance?.toString(),
+                    type: 'number',
+                    step: '0.01',
+                  }}
+                  value={collateralChange}
+                  onChange={(value) => {
+                    setCollateralChange(value);
+                  }}
+                  max={combinedTokenBalance}
+                  dataTestId="deposit-number-input"
+                />
+                <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+                  {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
                 </Flex>
               </Flex>
             </Flex>

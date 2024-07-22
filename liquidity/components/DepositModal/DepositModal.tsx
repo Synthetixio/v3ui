@@ -19,12 +19,19 @@ import { Wei, wei } from '@synthetixio/wei';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
 import { utils } from 'ethers';
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 import type { StateFrom } from 'xstate';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { ChangeStat } from '../../ui/src/components';
+import { CRatioChangeStat } from '../../ui/src/components/CRatioBar/CRatioChangeStat';
+import { TransactionSummary } from '../../ui/src/components/TransactionSummary/TransactionSummary';
+import { currency } from '@snx-v3/format';
 
 export const DepositModalUi: FC<{
   collateralChange: Wei;
@@ -37,6 +44,7 @@ export const DepositModalUi: FC<{
   availableCollateral: Wei;
   poolName: string;
   title?: string;
+  txSummary?: ReactNode;
 }> = ({
   collateralChange,
   isOpen,
@@ -48,6 +56,7 @@ export const DepositModalUi: FC<{
   availableCollateral,
   poolName,
   title = 'Manage Collateral',
+  txSummary,
 }) => {
   const wrapAmount = state.context.wrapAmount;
   const infiniteApproval = state.context.infiniteApproval;
@@ -87,6 +96,7 @@ export const DepositModalUi: FC<{
               <b>Collateral</b> successfully Updated
             </>
           }
+          summary={txSummary}
         />
       );
     }
@@ -228,22 +238,21 @@ export const DepositModalUi: FC<{
 };
 
 export type DepositModalProps = FC<{
-  collateralChange: Wei;
-  currentCollateral: Wei;
-  availableCollateral: Wei;
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  liquidityPosition?: LiquidityPosition;
 }>;
 
-export const DepositModal: DepositModalProps = ({
-  onClose,
-  isOpen,
-  collateralChange,
-  currentCollateral,
-  availableCollateral,
-  title,
-}) => {
+export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquidityPosition }) => {
+  const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
+  const currentCollateral = liquidityPosition?.collateralAmount ?? ZEROWEI;
+  const availableCollateral = liquidityPosition?.accountCollateral.availableCollateral ?? ZEROWEI;
+  const [txSummary, setTxSummary] = useState({
+    currentCollateral: ZEROWEI,
+    collateralChange: ZEROWEI,
+    currentDebt: ZEROWEI,
+  });
   const navigate = useNavigate();
   const { collateralSymbol, poolId, accountId } = useParams();
   const queryClient = useQueryClient();
@@ -371,16 +380,25 @@ export const DepositModal: DepositModalProps = ({
           toast.closeAll();
           toast({
             title: Boolean(accountId)
-              ? 'Delegating your collateral'
-              : 'Creating your account and depositing collateral',
+              ? 'Locking your collateral'
+              : 'Creating your account and locking your collateral',
             description: '',
             variant: 'left-accent',
           });
+
+          setTxSummary({
+            currentCollateral,
+            currentDebt: liquidityPosition?.debt || ZEROWEI,
+            collateralChange,
+          });
+
           if (isBaseAndromeda(network?.id, network?.preset)) {
             await depositBaseAndromeda();
           } else {
             await execDeposit();
           }
+
+          setCollateralChange(ZEROWEI);
 
           await Promise.all([
             queryClient.invalidateQueries({
@@ -421,7 +439,7 @@ export const DepositModal: DepositModalProps = ({
             console.error(new Error(contractError.name), contractError);
           }
           toast({
-            title: 'Could not complete delegating collateral',
+            title: 'Could not complete locking collateral',
             description: contractError ? (
               <ContractError contractError={contractError} />
             ) : (
@@ -497,6 +515,37 @@ export const DepositModal: DepositModalProps = ({
       poolName={pool?.name || ''}
       availableCollateral={availableCollateral || wei(0)}
       title={title}
+      txSummary={
+        <TransactionSummary
+          items={[
+            {
+              label: 'Total Collateral',
+              value: (
+                <ChangeStat
+                  value={txSummary.currentCollateral}
+                  newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
+                  formatFn={(val: Wei) => currency(val)}
+                  hasChanges={txSummary.collateralChange.abs().gt(0)}
+                  size="sm"
+                />
+              ),
+            },
+            {
+              label: 'C-ratio',
+              value: (
+                <CRatioChangeStat
+                  currentCollateral={txSummary.currentCollateral}
+                  currentDebt={txSummary.currentDebt}
+                  collateralChange={txSummary.collateralChange}
+                  collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
+                  debtChange={ZEROWEI}
+                  size="sm"
+                />
+              ),
+            },
+          ]}
+        />
+      }
     />
   );
 };

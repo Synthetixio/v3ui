@@ -49,21 +49,25 @@ export const CRatioBarUi: FC<{
           <InfoIcon w="10px" h="10px" />
         </Tooltip>
       </Text>
-      <Flex alignItems="center" gap={2}>
+      <Flex
+        color="white"
+        fontWeight={800}
+        fontSize="20px"
+        flexDir={['column', 'row']}
+        alignItems="center"
+        gap={2}
+      >
         {!currentCRatio ? (
-          <Text color="white" fontWeight={800} fontSize="20px">
-            N/A
-          </Text>
+          <Text>N/A</Text>
         ) : (
-          <Text color="white" fontWeight={800} fontSize="20px">
-            {ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}
-          </Text>
+          <Text>{ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}</Text>
         )}
 
         {hasChanges && newCratio && (
-          <Text color="white" fontWeight={800} fontSize="20px">
-            &rarr; {ratioIsMaxUInt(newCratio) ? 'Infinite' : `${newCratio.toFixed(2)} %`}
-          </Text>
+          <>
+            <span>&rarr;</span>
+            <Text>{ratioIsMaxUInt(newCratio) ? 'Infinite' : `${newCratio.toFixed(2)} %`}</Text>
+          </>
         )}
 
         {(hasChanges ? newCratio || 0 : currentCRatio) !== 0 && (
@@ -111,7 +115,11 @@ export const CRatioBarUi: FC<{
           isLoaded={!isLoading}
         >
           <Progress
-            variant={currentBarSize < newBarSize ? `update-${variant}` : variant}
+            variant={
+              currentBarSize < newBarSize && !(currentBarSize >= 100 && newBarSize > 100)
+                ? `update-${variant}`
+                : variant
+            }
             top={0}
             bottom={0}
             height="12px"
