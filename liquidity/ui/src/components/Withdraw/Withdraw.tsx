@@ -28,7 +28,7 @@ const WithdrawUi: FC<{
 }> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
   const price = useTokenPrice(symbol);
 
-  const { minutes, hours, seconds, isRunning, restart } = useTimer({
+  const { minutes, hours, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
   });
@@ -91,11 +91,8 @@ const WithdrawUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
-      <Collapse
-        in={isRunning && maWWithdrawable.gt(0) && !![minutes, hours, seconds].find((a) => a > 0)}
-        animateOpacity
-      >
-        <Alert colorScheme="red" mb="6">
+      <Collapse in={maWWithdrawable.gt(0)} animateOpacity>
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will

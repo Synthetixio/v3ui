@@ -17,7 +17,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
-import React, { FC, useCallback, useContext, useEffect } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -26,6 +26,10 @@ import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlo
 import { useTimer } from 'react-timer-hook';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
 import { ZEROWEI } from '../../utils/constants';
+import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
+import { ChangeStat } from '../Manage';
+import { currency } from '@snx-v3/format';
+import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -33,12 +37,14 @@ export const UndelegateUi: FC<{
   minDelegation?: Wei;
   currentDebt?: Wei;
   max?: Wei;
+  collateralPrice?: Wei;
   displaySymbol: string;
   symbol: string;
   setCollateralChange: (val: Wei) => void;
   isAnyMarketLocked?: boolean;
   isLoadingRequiredData: boolean;
   unlockDate?: Date;
+  isBase: boolean;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -50,6 +56,9 @@ export const UndelegateUi: FC<{
   isLoadingRequiredData,
   isAnyMarketLocked,
   unlockDate,
+  isBase,
+  currentDebt,
+  collateralPrice,
 }) => {
   const price = useTokenPrice(symbol);
 
@@ -60,7 +69,7 @@ export const UndelegateUi: FC<{
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
 
-  const { minutes, hours, seconds, isRunning, restart } = useTimer({
+  const { minutes, hours, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
   });
@@ -72,19 +81,63 @@ export const UndelegateUi: FC<{
   }, [restart, unlockDate]);
 
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
-
   const isValidLeftover =
-    leftoverCollateral.gt(minDelegation || wei(0)) || leftoverCollateral.eq(0);
+    leftoverCollateral.gte(minDelegation || wei(0)) || leftoverCollateral.eq(0);
 
   const isInputDisabled = isAnyMarketLocked === true;
   const overAvailableBalance = collateralChange.abs().gt(max);
-
-  const isFormDisabled =
+  const isSubmitDisabled =
     isLoadingRequiredData ||
     isAnyMarketLocked === true ||
     collateralChange.gte(0) ||
     !isValidLeftover ||
     overAvailableBalance;
+
+  const txSummaryItems = useMemo(() => {
+    const items = [
+      {
+        label: 'Total ' + symbol,
+        value: (
+          <ChangeStat
+            value={currentCollateral || ZEROWEI}
+            newValue={leftoverCollateral}
+            formatFn={(val: Wei) => currency(val)}
+            hasChanges={collateralChange.abs().gt(0)}
+            size="sm"
+          />
+        ),
+      },
+    ];
+
+    if (isBase) {
+      return items;
+    }
+
+    return [
+      ...items,
+      {
+        label: 'C-ratio',
+        value: (
+          <CRatioChangeStat
+            currentCollateral={currentCollateral}
+            currentDebt={currentDebt}
+            collateralChange={collateralChange}
+            collateralPrice={collateralPrice}
+            debtChange={ZEROWEI}
+            size="sm"
+          />
+        ),
+      },
+    ];
+  }, [
+    collateralChange,
+    collateralPrice,
+    currentCollateral,
+    currentDebt,
+    isBase,
+    leftoverCollateral,
+    symbol,
+  ]);
 
   return (
     <Flex flexDirection="column">
@@ -163,15 +216,10 @@ export const UndelegateUi: FC<{
         </Alert>
       </Collapse>
       <Collapse
-        in={
-          max?.gt(0) &&
-          !isLoadingRequiredData &&
-          isRunning &&
-          !![minutes, hours, seconds].find((a) => a > 0)
-        }
+        in={max?.gt(0) && !isLoadingRequiredData && collateralChange.abs().gt(0)}
         animateOpacity
       >
-        <Alert variant="warning" mb="6">
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
@@ -179,10 +227,7 @@ export const UndelegateUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-      <Collapse
-        in={isValidLeftover && !collateralChange.eq(0) && !isRunning}
-        animateOpacity
-      ></Collapse>
+
       <Collapse in={overAvailableBalance} animateOpacity>
         <Alert mb={6} status="error">
           <AlertIcon />
@@ -193,7 +238,12 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-      <Button data-testid="undelegate submit" type="submit" isDisabled={isFormDisabled}>
+
+      <Collapse in={collateralChange.abs().gt(0)} animateOpacity>
+        <TransactionSummary mb={6} items={txSummaryItems} />
+      </Collapse>
+
+      <Button data-testid="undelegate submit" type="submit" isDisabled={isSubmitDisabled}>
         {collateralChange.gte(0) ? 'Enter Amount' : 'Unlock Collateral'}
       </Button>
     </Flex>
@@ -225,6 +275,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     debtChange: debtChange,
   });
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
@@ -232,7 +284,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     if (!liquidityPosition || !collateralType) return undefined;
     const { collateralAmount, collateralValue } = liquidityPosition;
 
-    if (isBaseAndromeda(network?.id, network?.preset)) {
+    if (isBase) {
       return collateralAmount;
     }
 
@@ -265,6 +317,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
       unlockDate={accountCollateralUnlockDate}
       isLoadingRequiredData={poolConfiguration.isLoading || isLoadingAccountUnlockDate || !max}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
+      isBase={isBase}
+      collateralPrice={liquidityPosition?.collateralPrice}
     />
   );
 };
