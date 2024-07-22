@@ -103,6 +103,17 @@ const WithdrawUi: FC<{
           </Text>
         </Alert>
       </Collapse>
+
+      <Collapse in={amount.gt(maWWithdrawable)} animateOpacity>
+        <Alert colorScheme="red" mb="6">
+          <AlertIcon />
+          <Text>
+            You cannot Withdraw more {!isDebtWithdrawal ? 'Collateral' : ''} than your Unlocked
+            Balance
+          </Text>
+        </Alert>
+      </Collapse>
+
       <Button
         isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maWWithdrawable)}
         data-testid="claim submit"

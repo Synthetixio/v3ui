@@ -4,6 +4,7 @@
   "main": "index.ts",
   "version": "0.0.2",
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@snx-v3/txnReducer": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",

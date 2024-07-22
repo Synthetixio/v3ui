@@ -6223,6 +6223,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useClaimRewards@workspace:liquidity/lib/useClaimRewards"
   dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
