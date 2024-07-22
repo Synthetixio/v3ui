@@ -9,7 +9,7 @@ import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import {
   calculateAssets,
   calculateTotalAssetsAvailable,
-  calculateTotalAssetsDelegated,
+  calculateTotalAssetsLocked,
 } from '../../utils/assets';
 import { calculateDebt } from '../../utils/positions';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -84,7 +84,7 @@ export const StatsList = () => {
 
   const debt = calculateDebt(positions);
   const totalAssets = calculateTotalAssetsAvailable(assets);
-  const totalDelegated = calculateTotalAssetsDelegated(assets);
+  const totalLocked = calculateTotalAssetsLocked(assets);
 
   const isLoading =
     isAccountCollateralsLoading ||
@@ -96,29 +96,31 @@ export const StatsList = () => {
   return (
     <Flex flexWrap="wrap" w="100%" gap="4" mt={6}>
       <StatBox
-        title="Total Assets"
+        title="Total Unlocked"
         isLoading={isLoading}
         value={<Amount prefix="$" value={wei(totalAssets || '0')} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
-              Total Assets:
+              Total Unlocked:
             </Text>
-            <Text textAlign="left">All assets in your Wallet and in your Synthetix Account.</Text>
+            <Text textAlign="left" mt={1}>
+              All available assets in your Wallet and in your Synthetix Account.
+            </Text>
           </>
         }
       />
       <StatBox
-        title="Total Delegated"
+        title="Total Locked"
         isLoading={isLoading}
-        value={<Amount prefix="$" value={wei(totalDelegated || '0')} />}
+        value={<Amount prefix="$" value={wei(totalLocked || '0')} />}
         label={
           <>
             <Text fontWeight={600} textAlign="left">
-              Total Delegated:
+              Total Locked:
             </Text>
             <Text textAlign="left" mt={1}>
-              All assets in your Account that have been Delegated to a Pool.
+              All assets in your Account that are locked in a Pool.
             </Text>
           </>
         }

@@ -103,9 +103,8 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                       C-ratio:
                     </Text>
                     <Text textAlign="left" fontSize="14px">
-                      Manage your Position by Adding or Removing collateral to this position.
-                      BorrowIs a dynamic number that represents a ratio between the collateral
-                      Delegated for your position and the Borrowed assets for this position - PNL.
+                      Manage your c-ratio by repaying debt or adding more collateral to your
+                      position.
                     </Text>
                   </Flex>
                 }
