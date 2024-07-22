@@ -243,7 +243,7 @@ export const InitialDepositUi: FC<{
             action needed that you won’t have to reproduce for the next positions. Accounts are
             represented as ERC-721 compliant tokens (NFTs). Read more about it in the{' '}
             <Link
-              href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
               target="_blank"
               color="cyan.500"
             >

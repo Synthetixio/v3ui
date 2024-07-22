@@ -83,7 +83,7 @@ export const DepositModalUi: FC<{
             <>
               Your <b>Collateral</b> has been updated, read more about it in the{' '}
               <Link
-                href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
                 target="_blank"
                 color="cyan.500"
               >
