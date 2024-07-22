@@ -30,7 +30,7 @@ const ClosePositionUi: FC<{
 
   return (
     <Flex flexDirection="column">
-      <Text color="gray.50" fontSize="sm" fontWeight="700">
+      <Text color="gray.50" fontSize="xl" fontWeight="700">
         <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
         Close Position
       </Text>

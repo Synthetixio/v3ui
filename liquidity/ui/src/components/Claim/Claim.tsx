@@ -119,6 +119,7 @@ const ClaimUi: FC<{
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
+
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
         <Alert colorScheme="blue" mb="6">
           <AlertIcon />
@@ -129,7 +130,7 @@ const ClaimUi: FC<{
                 if (!maxDebt) {
                   return;
                 }
-                setDebtChange(maxDebt);
+                setDebtChange(maxDebt.add(maxClaimble));
               }}
               cursor="pointer"
               as="span"
@@ -137,6 +138,16 @@ const ClaimUi: FC<{
             >
               <Amount value={maxDebt} prefix="$" />
             </Box>
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse in={debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase} animateOpacity>
+        <Alert colorScheme="info" mb="6">
+          <AlertIcon />
+          <Text>
+            You are about to take a <Amount value={debtChange.sub(maxClaimble)} prefix="$" />{' '}
+            interest-free loan
           </Text>
         </Alert>
       </Collapse>
@@ -160,11 +171,12 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
   const params = useParams();
   const { network } = useNetwork();
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
+
   const maxClaimble = useMemo(() => {
     if (!liquidityPosition || liquidityPosition?.debt.gte(0)) {
       return ZEROWEI;
     } else {
-      return wei(liquidityPosition.debt.mul(-1).toBN().sub(1));
+      return wei(liquidityPosition.debt.abs().toBN().sub(1));
     }
   }, [liquidityPosition]);
 

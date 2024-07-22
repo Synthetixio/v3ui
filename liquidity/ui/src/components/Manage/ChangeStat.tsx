@@ -41,6 +41,7 @@ export const ChangeStat: FC<{
       <Text
         data-cy={dataTestId}
         textAlign="center"
+        opacity={value.eq(0) ? '70%' : undefined}
         color={withColor && value.gt(0) ? 'green.700' : value.lt(0) ? 'red.700' : 'gray.50'}
       >
         {formatFn(value)}
@@ -50,6 +51,7 @@ export const ChangeStat: FC<{
           <ArrowForwardIcon />
           <Text
             textAlign="center"
+            opacity={newValue.eq(0) ? '70%' : undefined}
             color={
               withColor && newValue.gt(0) ? 'green.700' : newValue.lt(0) ? 'red.700' : 'gray.50'
             }
