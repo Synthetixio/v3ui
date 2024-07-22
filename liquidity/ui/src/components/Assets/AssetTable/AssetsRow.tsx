@@ -158,7 +158,7 @@ export const AssetsRow = ({
           <Fade in>
             <Tooltip
               label={
-                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H ${minutes}M`
+                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H${minutes}M`
               }
             >
               <Button

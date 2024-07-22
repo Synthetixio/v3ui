@@ -166,9 +166,9 @@ export const UndelegateUi: FC<{
       </Collapse>
       <Collapse
         in={
-          isRunning &&
           max?.gt(0) &&
           !isLoadingRequiredData &&
+          isRunning &&
           !![minutes, hours, seconds].find((a) => a > 0)
         }
         animateOpacity
