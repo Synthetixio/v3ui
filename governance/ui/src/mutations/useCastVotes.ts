@@ -7,9 +7,9 @@ import {
   getWormwholeChainId,
   SnapshotRecordContractAddress,
 } from '../utils/contracts';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 
-export function useCastVotes(council: CouncilSlugs, votingPower: BigNumber) {
+export function useCastVotes(councils: CouncilSlugs[], votingPowers: BigNumber[]) {
   const { data: multicall } = useMulticall3();
   const signer = useSigner();
   const { network } = useNetwork();
@@ -17,26 +17,35 @@ export function useCastVotes(council: CouncilSlugs, votingPower: BigNumber) {
 
   return useMutation({
     mutationFn: async () => {
-      if (signer && network) {
+      if (signer && network && multicall) {
+        const isMotherchain = network.id !== 421614;
         try {
-          const electionModule = getCouncilContract(council).connect(signer);
-          const prepareBallotData = electionModule.interface.encodeFunctionData(
+          const electionModules = councils.map((council) =>
+            getCouncilContract(council).connect(signer)
+          );
+          const prepareBallotData = electionModules[0].interface.encodeFunctionData(
             'prepareBallotWithSnapshot',
             [SnapshotRecordContractAddress(network.id), activeWallet?.address]
           );
-
-          // TODO @dev get quote from contract
-          const quote = await electionModule.quoteCrossChainDeliveryPrice(
-            getWormwholeChainId(network.id)
+          let quote: BigNumber = BigNumber.from(0);
+          if (isMotherchain) {
+            quote = await electionModules[0].quoteCrossChainDeliveryPrice(
+              getWormwholeChainId(network.id)
+            );
+          }
+          const castData = votingPowers.map((power) =>
+            electionModules[0].interface.encodeFunctionData('cast', [
+              ['0x47872B16557875850a02C94B28d959515F894913'],
+              [power],
+            ])
           );
 
-          const castData = electionModule.interface.encodeFunctionData('cast', [
-            ['0x47872B16557875850a02C94B28d959515F894913'],
-            [votingPower],
-            { value: utils.parseEther('0.001') },
-          ]);
-
-          multicall.aggregateV3([prepareBallotData, castData]);
+          multicall[isMotherchain ? 'aggregate' : 'aggregate3Value'](
+            [prepareBallotData, castData],
+            {
+              value: isMotherchain ? '0' : quote,
+            }
+          );
         } catch (error) {
           console.error(error);
         }

@@ -1,29 +1,22 @@
 import { Alert, Button, Flex, Heading, Text } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../utils/councils';
+import councils from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
-import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
-import { useNetwork, useSigner } from '../queries/useWallet';
+
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import {
-  useGetUserVotingPower,
-  useGetUserBallot,
-  GetUserDetails,
-  useGetUserDetailsQuery,
-} from '../queries/';
+import { useGetUserVotingPower, useGetUserBallot, useGetUserCurrentVotes } from '../queries/';
+import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
-import { utils } from 'ethers';
+import { useGetUserSelectedVotes } from '../hooks/useGetUserSelectedVotes';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
-  const signer = useSigner();
-  const { network } = useNetwork();
 
   const [{ data: spartanBallot }, { data: ambassadorBallot }, { data: treasuryBallot }] = [
     useGetUserBallot('spartan'),
@@ -31,22 +24,11 @@ export default function MyVotes() {
     useGetUserBallot('treasury'),
   ];
   const { data: votingPower } = useGetUserVotingPower('spartan');
-
+  const selectedVotes = useGetUserSelectedVotes();
+  console.log(selectedVotes);
+  const {} = useCastVotes(Object.values(selectedVotes));
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
-  const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
-  const candidates =
-    users &&
-    votingCandidates &&
-    Object.entries(votingCandidates)
-      .map(([council, candidate]) => {
-        const user = users.find((user) => user.address.toLowerCase() === candidate.toLowerCase());
-        return { ...user, council };
-      })
-      .reduce(
-        (a, v) => ({ ...a, [v.council]: v }),
-        {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
-      );
 
   return (
     <>
@@ -161,32 +143,7 @@ export default function MyVotes() {
                 {formatNumber(votingPower)}
               </Text>
             </Flex>
-            <Button
-              size="md"
-              isDisabled={period !== '2'}
-              onClick={async () => {
-                if (signer) {
-                  try {
-                    await getCouncilContract('spartan')
-                      .connect(signer)
-                      .prepareBallotWithSnapshot(
-                        SnapshotRecordContractAddress(network?.id || 1),
-                        await signer.getAddress()
-                      );
-                  } catch (error) {
-                    console.error('already prepared ballot', error);
-                  }
-
-                  await getCouncilContract('spartan')
-                    .connect(signer)
-                    .cast(
-                      ['0x47872B16557875850a02C94B28d959515F894913'],
-                      [spartanBallot!.votingPower],
-                      { value: utils.parseEther('0.001') }
-                    );
-                }
-              }}
-            >
+            <Button size="md" isDisabled={period !== '2'} onClick={() => {}}>
               Cast Vote
             </Button>
           </Flex>
