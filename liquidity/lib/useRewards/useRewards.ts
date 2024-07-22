@@ -65,7 +65,7 @@ export function useRewards(
   const targetNetwork = customNetwork || network;
 
   const { data: Multicall3 } = useMulticall3(customNetwork);
-  const { data: CoreProxy } = useCoreProxy({ customNetwork });
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
 
   return useQuery({
     enabled: Boolean(CoreProxy && Multicall3 && distributors && poolId && accountId),
@@ -216,7 +216,7 @@ export function useRewards(
 
         for (const item of result) {
           try {
-            const response = await CoreProxy.callStatic.claimRewards(
+            const response = await CoreProxy.getAvailableRewards(
               BigNumber.from(accountId),
               BigNumber.from(poolId),
               collateralAddress,
