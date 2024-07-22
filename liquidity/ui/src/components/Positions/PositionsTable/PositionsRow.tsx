@@ -31,8 +31,8 @@ export function PositionRow({
   const navigate = useNavigate();
   const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
 
-  const onClick = () => {
-    queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
+  const handleNavigate = (actions: string) => {
+    queryParams.set('manageAction', actions);
     navigate({
       pathname: `/positions/${collateralType.symbol}/${poolId}`,
       search: queryParams.toString(),
@@ -46,7 +46,7 @@ export function PositionRow({
           <Flex
             alignItems="center"
             _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
-            onClick={onClick}
+            onClick={() => handleNavigate(debt.gt(0) ? 'repay' : 'claim')}
           >
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
@@ -112,6 +112,16 @@ export function PositionRow({
             <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {!!apr ? apr.toFixed(2).concat('%') : '-'}
             </Text>
+            <Text
+              color="cyan.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              cursor="pointer"
+              onClick={() => handleNavigate('deposit')}
+            >
+              Claim Rewards
+            </Text>
           </Flex>
         </Fade>
       </Td>
@@ -128,7 +138,7 @@ export function PositionRow({
               fontSize="0.75rem"
               lineHeight="1rem"
               cursor="pointer"
-              onClick={onClick}
+              onClick={() => handleNavigate(debt.gt(0) ? 'repay' : 'claim')}
             >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
@@ -165,13 +175,7 @@ export function PositionRow({
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
-            onClick={() => {
-              queryParams.set('manageAction', 'deposit');
-              navigate({
-                pathname: `/positions/${collateralType.symbol}/${poolId}`,
-                search: queryParams.toString(),
-              });
-            }}
+            onClick={() => handleNavigate('deposit')}
             data-cy="manage-position-row-button"
           >
             Manage
