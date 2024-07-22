@@ -54,7 +54,7 @@ const ManageActionUi: FC<{
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const [tab, setTab] = useState(getInitialTab(manageAction));
-
+  console.log(manageAction);
   const debtActions = DEBTACTIONS(isBase);
 
   useEffect(() => {

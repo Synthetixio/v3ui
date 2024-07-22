@@ -10,6 +10,7 @@ import {
   Text,
   Tooltip,
   UnorderedList,
+  Link,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -209,7 +210,7 @@ export const InitialDepositUi: FC<{
             <Alert mb={6} status="error">
               <AlertIcon />
               <AlertDescription>
-                You cannot Deposit & Lock more Collateral than your balance amount
+                You cannot Deposit & Lock more Collateral than your Balance amount
               </AlertDescription>
             </Alert>
           </Collapse>
@@ -240,8 +241,14 @@ export const InitialDepositUi: FC<{
           <Text>
             In order to open a position on Synthetix Liquidity, you need an Account. It’s a one time
             action needed that you won’t have to reproduce for the next positions. Accounts are
-            represented as ERC-721 compliant tokens (NFTs). Read more in the Synthetix V3
-            Documentation.
+            represented as ERC-721 compliant tokens (NFTs). Read more about it in the{' '}
+            <Link
+              href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+              target="_blank"
+              color="cyan.500"
+            >
+              Synthetix V3 Documentation
+            </Link>
           </Text>
           <br />
           <UnorderedList>

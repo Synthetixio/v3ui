@@ -137,7 +137,6 @@ export const UndelegateUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
-
       <Collapse in={isInputDisabled} animateOpacity>
         <Alert mb={6} status="warning">
           <AlertIcon />
@@ -150,7 +149,6 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
         <Alert mt={2} mb={4} status="info">
           <AlertIcon />
@@ -173,7 +171,7 @@ export const UndelegateUi: FC<{
         }
         animateOpacity
       >
-        <Alert colorScheme="blue" mb="6">
+        <Alert variant="warning" mb="6">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
@@ -181,12 +179,10 @@ export const UndelegateUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-      <Collapse in={isValidLeftover && !collateralChange.eq(0) && !isRunning} animateOpacity>
-        <Alert status="warning" mb="6">
-          <AlertIcon />
-          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
-        </Alert>
-      </Collapse>
+      <Collapse
+        in={isValidLeftover && !collateralChange.eq(0) && !isRunning}
+        animateOpacity
+      ></Collapse>
       <Collapse in={overAvailableBalance} animateOpacity>
         <Alert mb={6} status="error">
           <AlertIcon />

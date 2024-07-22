@@ -148,10 +148,14 @@ export function PositionRow({
       <Td border="none" pr={0}>
         <Flex justifyContent="flex-end">
           <Button
-            fontSize="0.75rem"
-            lineHeight="1rem"
-            height="1.75rem"
+            fontSize="sm"
+            lineHeight="1.25rem"
+            height="2rem"
             fontWeight={700}
+            pt="5px"
+            pb="5px"
+            pl="12px"
+            pr="12px"
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"

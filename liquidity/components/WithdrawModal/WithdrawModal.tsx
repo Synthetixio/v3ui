@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import React, { FC, useCallback, useContext, useState } from 'react';
 import { Multistep } from '@snx-v3/Multistep';
 import { Wei } from '@synthetixio/wei';
@@ -42,7 +42,14 @@ export const WithdrawModalUi: FC<{
           subline={
             <>
               Your <b>{isDebtWithdrawal ? 'Debt' : 'Collateral'}</b> has been withdrawn, read more
-              about it in the Synthetix V3 Documentation.
+              about it in the{' '}
+              <Link
+                href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={(isDebtWithdrawal ? 'Debt' : 'Collateral') + ' successfully Withdrawn'}

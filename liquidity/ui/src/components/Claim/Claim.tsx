@@ -119,7 +119,6 @@ const ClaimUi: FC<{
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
-
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
         <Alert colorScheme="blue" mb="6">
           <AlertIcon />

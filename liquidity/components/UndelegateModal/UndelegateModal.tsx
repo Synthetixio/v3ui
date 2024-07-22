@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -40,8 +40,14 @@ export const UndelegateModalUi: FC<{
           title="Collateral successfully Updated"
           subline={
             <>
-              Your <b>Collateral</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Collateral</b> has been updated, read more about it in the{' '}
+              <Link
+                href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={
