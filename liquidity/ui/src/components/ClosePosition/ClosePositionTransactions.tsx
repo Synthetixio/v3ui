@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Skeleton, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Flex, Skeleton, Text, useToast, Link } from '@chakra-ui/react';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -281,8 +281,14 @@ export const ClosePositionTransactions: FC<{
         title="Position successfully Closed"
         subline={
           <>
-            Your position has been successfully closed, read more about it in the Synthetix V3
-            Documentation.
+            Your position has been successfully closed, read more about it in the{' '}
+            <Link
+              href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+              target="_blank"
+              color="cyan.500"
+            >
+              Synthetix V3 Documentation
+            </Link>
           </>
         }
         alertText={<>Position successfully Closed</>}

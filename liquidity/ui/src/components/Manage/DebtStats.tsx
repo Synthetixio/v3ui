@@ -29,12 +29,12 @@ export const DebtStats: FC<{
         <Tooltip
           label={
             <Text>
-              Debt in Synthetix V3 consists of:
+              Debt consists of:
               <br />
-              1. Your portion of the pool&apos;s total debt, which fluctuates based on trader
-              performance and market conditions.
-              <br />
-              2. The amount you&apos;ve borrowed against your collateral without incurring interest.
+              - Your portion of the pool&apos;s total debt, which fluctuates based on trader
+              performance and market conditions
+              <br />- The amount you&apos;ve borrowed against your collateral without incurring
+              interest
             </Text>
           }
           textAlign="start"

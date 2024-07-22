@@ -164,7 +164,7 @@ export const PoolCard = ({
                       ?.concat('%')}`
                   : '-'}
               </Text>
-              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+              <Tooltip label="APR is averaged over the trailing 28 days and is comprised of both performance and rewards">
                 <Flex>
                   <Sparkles w="18px" h="18px" mb={0.5} />
                 </Flex>

@@ -177,7 +177,7 @@ export const CollateralSectionUi: FC<{
             height="26px"
           >
             <Fade in>
-              <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+              <Tooltip label="APR is averaged over the trailing 28 days and is comprised of both performance and rewards">
                 <Text fontWeight={700} fontSize="xl" color="white" textAlign="end">
                   {network?.id === ARBITRUM.id ? 'Up to ' : ''}
                   {formatApr(apr?.combinedApr, network?.id)}

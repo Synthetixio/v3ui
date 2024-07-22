@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
@@ -38,8 +38,14 @@ export const BorrowModalUi: React.FC<{
           title="Debt successfully Updated"
           subline={
             <>
-              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Debt</b> has been updated, read more about it in the{' '}
+              <Link
+                href={'https://docs.synthetix.io/v/synthetix-v3-user-documentation'}
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={

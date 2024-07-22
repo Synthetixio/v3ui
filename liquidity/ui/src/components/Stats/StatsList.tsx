@@ -96,15 +96,16 @@ export const StatsList = () => {
   return (
     <Flex flexWrap="wrap" w="100%" gap="4" mt={6}>
       <StatBox
-        title="Total Assets"
+        title="Available to Lock"
         isLoading={isLoading}
         value={<Amount prefix="$" value={wei(totalAssets || '0')} />}
         label={
           <>
-            <Text fontWeight={600} textAlign="left">
-              Total Assets:
+            <Text textAlign="left">
+              Total assets that can be Locked, including:
+              <br /> - Unlocked assets not yet withdrawn
+              <br /> - Available assets in your wallet
             </Text>
-            <Text textAlign="left">All assets in your Wallet and in your Synthetix Account.</Text>
           </>
         }
       />
@@ -114,12 +115,7 @@ export const StatsList = () => {
         value={<Amount prefix="$" value={wei(totalDelegated || '0')} />}
         label={
           <>
-            <Text fontWeight={600} textAlign="left">
-              Total Locked:
-            </Text>
-            <Text textAlign="left" mt={1}>
-              All assets in your Account that have been Delegated to a Pool.
-            </Text>
+            <Text textAlign="left">All assets locked in Positions </Text>
           </>
         }
       />
@@ -129,11 +125,8 @@ export const StatsList = () => {
         value={<Amount prefix="$" value={debt?.abs() || ZEROWEI} />}
         label={
           <>
-            <Text fontWeight={600} textAlign="left">
-              Total {isBase ? 'PNL' : 'Debt'}:
-            </Text>
-            <Text mt={1} textAlign="left">
-              Aggregated {isBase ? 'PNL' : 'Debt'} of all your Open Positions.
+            <Text textAlign="left">
+              Aggregated {isBase ? 'PNL' : 'Debt'} of all your open Positions
             </Text>
           </>
         }

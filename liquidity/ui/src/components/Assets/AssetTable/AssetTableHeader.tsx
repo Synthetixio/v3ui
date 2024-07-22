@@ -54,7 +54,7 @@ export const AssetTableHeader = () => {
                   </Text>
                   <Text textAlign="left" mt={1}>
                     Assets deposited in your Synthetix Account. These assets are available to be
-                    delegated to a pool.
+                    locked in a pool.
                   </Text>
                 </>
               }
@@ -66,13 +66,13 @@ export const AssetTableHeader = () => {
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-              Delegated
+              Locked
             </Text>
             <Tooltip
               label={
                 <>
                   <Text fontWeight={600} textAlign="left">
-                    Account Delegated Assets:
+                    Locked Assets:
                   </Text>
                   <Text textAlign="left" mt={1}>
                     Assets used as collateral in a Position.

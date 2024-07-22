@@ -145,7 +145,7 @@ export const UndelegateUi: FC<{
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>
-              The minimal delegated amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
+              The minimal locked amount is <Amount value={minDelegation} suffix={` ${symbol}`} />
             </AlertTitle>
             <AlertDescription>
               You can close your position by removing all the collateral.
@@ -162,7 +162,7 @@ export const UndelegateUi: FC<{
         }
         animateOpacity
       >
-        <Alert colorScheme="blue" mb="4">
+        <Alert variant="warning" mb="4">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}:{minutes}. Any account activity will
@@ -170,12 +170,10 @@ export const UndelegateUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-      <Collapse in={isValidLeftover && !collateralChange.eq(0) && !isRunning} animateOpacity>
-        <Alert status="warning" mb="4">
-          <AlertIcon />
-          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
-        </Alert>
-      </Collapse>
+      <Collapse
+        in={isValidLeftover && !collateralChange.eq(0) && !isRunning}
+        animateOpacity
+      ></Collapse>
       <Collapse in={overAvailableBalance} animateOpacity>
         <Alert mt={2} mb={4} status="error">
           <AlertIcon />

@@ -85,8 +85,8 @@ const TableHeader = [
             </Text>
             <Text textAlign="left" fontSize="14px">
               Manage your Position by Adding or Removing collateral to this position. BorrowIs a
-              dynamic number that represents a ratio between the collateral Delegated for your
-              position and the Borrowed assets for this position - PNL.
+              dynamic number that represents a ratio between the collateral for your position and
+              the Borrowed assets for this position - PNL.
             </Text>
           </Flex>
         }
