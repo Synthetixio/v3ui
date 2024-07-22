@@ -1,9 +1,11 @@
-import { Button, Collapse, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
 import { Amount } from '@snx-v3/Amount';
+import { TimeIcon } from '@chakra-ui/icons';
+import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -20,9 +22,12 @@ export function PositionRow({
   isBase,
   apr,
   collateralAmount,
+  availableCollateral,
+  accountId,
 }: PositionRow) {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
+  const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
 
   const onClick = () => {
     queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
@@ -60,16 +65,40 @@ export function PositionRow({
         </Fade>
       </Td>
       <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-              <Amount value={collateralAmount} />
-            </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {collateralType.symbol.toString()}
-            </Text>
-          </Flex>
-        </Fade>
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+            <Amount value={collateralAmount} />
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            {collateralType.symbol.toString()}
+          </Text>
+        </Flex>
+      </Td>
+      <Td border="none">
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text
+            display="flex"
+            alignItems="center"
+            color="white"
+            lineHeight="1.25rem"
+            fontFamily="heading"
+            fontSize="sm"
+            gap={1.5}
+          >
+            <Amount value={availableCollateral} />
+
+            {availableCollateral.gt(0) &&
+              isRunning &&
+              !![minutes, hours, seconds].find((a) => a > 0) && (
+                <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
+                  <TimeIcon />
+                </Tooltip>
+              )}
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            {collateralType.symbol.toString()}
+          </Text>
+        </Flex>
       </Td>
       <Td border="none">
         <Fade in>

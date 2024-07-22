@@ -84,7 +84,7 @@ const ClaimUi: FC<{
       </BorderBox>
 
       <Collapse in={debtChange.lte(0) && maxClaimble.gt(0)} animateOpacity>
-        <Alert colorScheme="green" mb="4">
+        <Alert colorScheme="green" mb="6">
           <AlertIcon />
           <Text>
             Positive market performance has credited your position. Claim up to{' '}
@@ -107,21 +107,21 @@ const ClaimUi: FC<{
       </Collapse>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert status="info" mb="4">
+        <Alert status="info" mb="6">
           <AlertIcon />
           <Text>
             Assets will be available to withdraw 24 hours after your last interaction with this
             position.
           </Text>
         </Alert>
-        <Alert status="warning" mb="4">
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
 
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="blue" mb="6">
           <AlertIcon />
           <Text>
             You can take an interest-free loan up to &nbsp;

@@ -24,7 +24,7 @@ export const UnsupportedCollateralAlert = ({ isOpen }: { isOpen: boolean }) => {
           as={Link}
           mt={6}
           to={{
-            pathname: '/',
+            pathname: '/dashboard',
             search: location.search,
           }}
         >
