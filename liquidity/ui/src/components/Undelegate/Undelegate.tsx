@@ -136,19 +136,21 @@ export const UndelegateUi: FC<{
             {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
           </Flex>
         </Flex>
-        <Collapse in={isInputDisabled} animateOpacity>
-          <Alert mt={2} status="warning">
-            <AlertIcon />
-            <Flex direction="column">
-              <AlertTitle>Credit capacity reached</AlertTitle>
-              <AlertDescription>
-                One of the markets has reached its credit capacity and is currently in a locked
-                state. You cannot unlock collateral from the pool at this time.
-              </AlertDescription>
-            </Flex>
-          </Alert>
-        </Collapse>
       </BorderBox>
+
+      <Collapse in={isInputDisabled} animateOpacity>
+        <Alert mb={6} status="warning">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>Credit capacity reached</AlertTitle>
+            <AlertDescription>
+              One of the markets has reached its credit capacity and is currently in a locked state.
+              You cannot unlock collateral from the pool at this time.
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      </Collapse>
+
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
         <Alert mt={2} mb={4} status="info">
           <AlertIcon />
@@ -171,7 +173,7 @@ export const UndelegateUi: FC<{
         }
         animateOpacity
       >
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="blue" mb="6">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
@@ -180,13 +182,13 @@ export const UndelegateUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={isValidLeftover && !collateralChange.eq(0) && !isRunning} animateOpacity>
-        <Alert status="warning" mb="4">
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
         </Alert>
       </Collapse>
       <Collapse in={overAvailableBalance} animateOpacity>
-        <Alert mt={2} mb={4} status="error">
+        <Alert mb={6} status="error">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>

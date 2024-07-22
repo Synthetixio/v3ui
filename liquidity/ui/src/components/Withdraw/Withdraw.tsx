@@ -95,7 +95,7 @@ const WithdrawUi: FC<{
         in={isRunning && maWWithdrawable.gt(0) && !![minutes, hours, seconds].find((a) => a > 0)}
         animateOpacity
       >
-        <Alert colorScheme="red" mb="4">
+        <Alert colorScheme="red" mb="6">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will

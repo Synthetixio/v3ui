@@ -69,7 +69,7 @@ const BorrowUi: FC<{
       </BorderBox>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert colorScheme="orange" mb="4">
+        <Alert colorScheme="orange" mb="6">
           <AlertIcon />
           <Text>
             As a security precaution, borrowed assets can only be withdrawn to your wallet after 24
