@@ -21,8 +21,8 @@ export const useGetUserSelectedVotes = () => {
         parsedLocalstorageState[council] &&
         allNominees?.includes(parsedLocalstorageState[council])
       )
-        return parsedLocalstorageState[council];
-      return state[council];
+        return parsedLocalstorageState[council] as string;
+      return state[council] as string;
     };
 
     return {

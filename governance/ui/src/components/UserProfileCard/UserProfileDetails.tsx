@@ -195,7 +195,7 @@ export const UserProfileDetails = ({
           >
             {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
             {userData?.ens ||
-              userData?.username.slice(0, 20).concat('...') ||
+              userData?.username?.slice(0, 20).concat('...') ||
               prettyString(userData!.address)}
           </Button>
         )}

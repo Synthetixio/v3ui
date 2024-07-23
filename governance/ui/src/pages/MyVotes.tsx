@@ -1,14 +1,13 @@
 import { Alert, Button, Flex, Heading, Text } from '@chakra-ui/react';
-import councils from '../utils/councils';
+import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
-
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetUserVotingPower, useGetUserBallot, useGetUserCurrentVotes } from '../queries/';
+import { useGetUserVotingPower } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -18,15 +17,14 @@ export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
 
-  const [{ data: spartanBallot }, { data: ambassadorBallot }, { data: treasuryBallot }] = [
-    useGetUserBallot('spartan'),
-    useGetUserBallot('ambassador'),
-    useGetUserBallot('treasury'),
-  ];
-  const { data: votingPower } = useGetUserVotingPower('spartan');
+  const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
+  // const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
+  // const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const selectedVotes = useGetUserSelectedVotes();
-  console.log(selectedVotes);
-  const {} = useCastVotes(Object.values(selectedVotes));
+  const councilToCastVote = Object.entries(selectedVotes)
+    .filter(([_, candidate]) => !!candidate)
+    .map(([council]) => council) as CouncilSlugs[];
+  const { mutateAsync } = useCastVotes(councilToCastVote, selectedVotes);
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
 
@@ -140,10 +138,25 @@ export default function MyVotes() {
                 Total Voting Power
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold">
-                {formatNumber(votingPower)}
+                {formatNumber(
+                  votingPowerSpartan?.power
+                    ? // && votingPowerAmbassador
+                      // && votingPowerTreassury
+                      votingPowerSpartan.power
+                        // .add(votingPowerAmbassador)
+                        // .add(votingPowerTreassury)
+                        .toString()
+                    : 0
+                )}
               </Text>
             </Flex>
-            <Button size="md" isDisabled={period !== '2'} onClick={() => {}}>
+            <Button
+              size="md"
+              isDisabled={period !== '2'}
+              onClick={async () => {
+                await mutateAsync();
+              }}
+            >
               Cast Vote
             </Button>
           </Flex>

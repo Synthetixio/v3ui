@@ -1,51 +1,111 @@
 import { useMutation } from '@tanstack/react-query';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
-import { useNetwork, useSigner, useWallet } from '../queries';
+import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import {
   getCouncilContract,
   getWormwholeChainId,
   SnapshotRecordContractAddress,
 } from '../utils/contracts';
-import { BigNumber } from 'ethers';
+import { BigNumber, Contract, utils } from 'ethers';
+import { multicallABI } from '../utils/abi';
 
-export function useCastVotes(councils: CouncilSlugs[], votingPowers: BigNumber[]) {
-  const { data: multicall } = useMulticall3();
+export function useCastVotes(
+  councils: CouncilSlugs[],
+  candidates: { spartan?: string; ambassador?: string; treasury?: string }
+) {
   const signer = useSigner();
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
+  const multicall = new Contract('0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e', multicallABI);
+  const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
+  const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
+  const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');
 
   return useMutation({
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = network.id !== 421614;
+        const getVotingPowerByCouncil = (council: CouncilSlugs) => {
+          switch (council) {
+            case 'spartan':
+              return spartanVotingPower;
+            case 'ambassador':
+              return ambassadorVotingPower;
+            case 'treasury':
+              return treasuryVotingPower;
+            default:
+              return spartanVotingPower;
+          }
+        };
+        const isMotherchain = network.id === 11155420;
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
           );
-          const prepareBallotData = electionModules[0].interface.encodeFunctionData(
-            'prepareBallotWithSnapshot',
-            [SnapshotRecordContractAddress(network.id), activeWallet?.address]
-          );
+
+          const prepareBallotData = councils
+            .map((council) => {
+              if (!getVotingPowerByCouncil(council)?.isDeclared) {
+                return isMotherchain
+                  ? {
+                      target: electionModules[0].address,
+                      callData: electionModules[0].interface.encodeFunctionData(
+                        'prepareBallotWithSnapshot',
+                        [SnapshotRecordContractAddress(network.id), activeWallet?.address]
+                      ),
+                    }
+                  : {
+                      target: electionModules[0].address,
+                      callData: electionModules[0].interface.encodeFunctionData(
+                        'prepareBallotWithSnapshot',
+                        [SnapshotRecordContractAddress(network.id), activeWallet?.address]
+                      ),
+                      value: 0,
+                      requireSuccess: true,
+                    };
+              }
+              return '';
+            })
+            .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
-          if (isMotherchain) {
+          if (!isMotherchain) {
             quote = await electionModules[0].quoteCrossChainDeliveryPrice(
-              getWormwholeChainId(network.id)
+              getWormwholeChainId(network.id),
+
+              0,
+              utils.parseUnits('1000000', 'wei')
             );
           }
-          const castData = votingPowers.map((power) =>
-            electionModules[0].interface.encodeFunctionData('cast', [
-              ['0x47872B16557875850a02C94B28d959515F894913'],
-              [power],
-            ])
+          const castData = councils.map((council) => {
+            return isMotherchain
+              ? {
+                  target: electionModules[0].address,
+                  callData: electionModules[0].interface.encodeFunctionData('cast', [
+                    [candidates[council]],
+                    [getVotingPowerByCouncil(council)?.power],
+                  ]),
+                }
+              : {
+                  target: electionModules[0].address,
+                  callData: electionModules[0].interface.encodeFunctionData('cast', [
+                    [candidates[council]],
+                    [getVotingPowerByCouncil(council)?.power],
+                  ]),
+                  value: quote,
+                  requireSuccess: true,
+                };
+          });
+
+          await electionModules[0].cast(
+            [candidates.spartan],
+            [getVotingPowerByCouncil('spartan')?.power],
+            { gasLimit: 1000000 }
           );
 
-          multicall[isMotherchain ? 'aggregate' : 'aggregate3Value'](
-            [prepareBallotData, castData],
-            {
-              value: isMotherchain ? '0' : quote,
-            }
-          );
+          // await multicall
+          //   .connect(signer)
+          //   [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+          //     gasLimit: 1000000,
+          //   });
         } catch (error) {
           console.error(error);
         }

@@ -874,9 +874,6 @@ export const multicallABI = [
 ];
 
 export const electionModuleABITest = [
-  'function takeVotePowerSnapshot(address snapshotContract) external returns (uint128 snapshotId)',
-  'function prepareBallotWithSnapshot(address snapshotContract, address voter) external returns (uint256 power)',
-  'function getVotePowerSnapshotId(address snapshotContract, uint128 electionId) external view returns (uint128)',
   {
     inputs: [
       {
@@ -1578,6 +1575,37 @@ export const electionModuleABITest = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'nominationPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'votingPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'epochEndDate',
+        type: 'uint64',
+      },
+    ],
+    name: 'EpochScheduleTweaked',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: 'uint64',
         name: 'epochId',
@@ -1603,6 +1631,43 @@ export const electionModuleABITest = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'epochStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'nominationPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'votingPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'epochEndDate',
+        type: 'uint64',
+      },
+    ],
+    name: 'EpochSetup',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: 'uint256',
         name: 'epochId',
@@ -1610,6 +1675,49 @@ export const electionModuleABITest = [
       },
     ],
     name: 'EpochStarted',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'epochIndex',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'epochStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'nominationPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'votingPeriodStartDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'epochEndDate',
+        type: 'uint64',
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'councilMembers',
+        type: 'address[]',
+      },
+    ],
+    name: 'InitializedSatellite',
     type: 'event',
   },
   {
@@ -1655,6 +1763,31 @@ export const electionModuleABITest = [
       },
     ],
     name: 'NominationWithdrawn',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'VoteCastSent',
     type: 'event',
   },
   {
@@ -1723,6 +1856,25 @@ export const electionModuleABITest = [
       },
     ],
     name: 'VoteWithdrawn',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'candidates',
+        type: 'address[]',
+      },
+    ],
+    name: 'VoteWithdrawnSent',
     type: 'event',
   },
   {
@@ -2231,6 +2383,19 @@ export const electionModuleABITest = [
   },
   {
     inputs: [],
+    name: 'getRegisteredEmitters',
+    outputs: [
+      {
+        internalType: 'bytes32[]',
+        name: '',
+        type: 'bytes32[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'getSupportedNetworks',
     outputs: [
       {
@@ -2292,6 +2457,25 @@ export const electionModuleABITest = [
         internalType: 'contract IWormholeRelayer',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'deliveryHash',
+        type: 'bytes32',
+      },
+    ],
+    name: 'hasProcessedMsg',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -2556,6 +2740,19 @@ export const electionModuleABITest = [
     name: 'sendMessage',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'gasLimit',
+        type: 'uint256',
+      },
+    ],
+    name: 'setGasLimit',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

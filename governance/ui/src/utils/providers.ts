@@ -1,6 +1,5 @@
 import { Wallet, providers } from 'ethers';
 
-// Sepolia for testnet
 export const motherShipProvider = new providers.JsonRpcProvider(
   process.env.DEV === 'true'
     ? process.env.DEV_RPC_MOTHERSHIP

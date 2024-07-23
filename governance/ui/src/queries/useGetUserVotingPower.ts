@@ -3,7 +3,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
 import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useProvider, useWallet } from './';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
 
 export function useGetUserVotingPower(council: CouncilSlugs) {
@@ -22,18 +22,20 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         const ballot = await electionModule.getBallot(activeWallet.address, network.id, electionId);
 
         if (ballot && ballot.votingPower.gt(0)) {
-          return ballot.votingPower;
+          return { power: ballot.votingPower as BigNumber, isDeclared: true };
         }
 
-        const votingPower = await electionModule.callStatic.prepareBallotWithSnapshot(
-          SnapshotRecordContractAddress(network.id),
-          activeWallet?.address
-        );
-        return votingPower.toString();
+        const votingPower: BigNumber = await electionModule
+          .connect(provider)
+          .callStatic.prepareBallotWithSnapshot(
+            SnapshotRecordContractAddress(network.id),
+            activeWallet?.address
+          );
+        return { power: votingPower, isDeclared: false };
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('ERROR IS', { error });
-        return ethers.BigNumber.from(0);
+        return { power: ethers.BigNumber.from(0), isDeclared: false };
       }
     },
     enabled: !!provider && !!activeWallet,
