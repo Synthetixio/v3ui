@@ -393,37 +393,40 @@ export const PoolCard = ({
                       </Text>
                     </Td>
                     <Td border="none" textAlign="left" px={4}>
-                      <Tooltip
-                        label={
-                          <Flex direction="column">
-                            <Flex justifyContent="space-between">
-                              <Text fontWeight={700} mr={2}>
-                                Total APR:
-                              </Text>
-                              <Text fontWeight={700}>{formatApr(apr28d * 100, network?.id)}</Text>
-                            </Flex>
-                            <Flex justifyContent="space-between">
-                              <Text mr={2}>Performance:</Text>
-                              <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
-                            </Flex>
-                            <Flex justifyContent="space-between">
-                              <Text mr={2}>Rewards: </Text>
-                              <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
-                            </Flex>
-                          </Flex>
-                        }
+                      <Text
+                        fontFamily="heading"
+                        fontSize="14px"
+                        lineHeight="20px"
+                        fontWeight={500}
+                        color="white"
                       >
-                        <Text
-                          fontFamily="heading"
-                          fontSize="14px"
-                          lineHeight="20px"
-                          fontWeight={500}
-                          color="white"
+                        {formatApr(apr28d * 100, network?.id)}
+
+                        <Tooltip
+                          label={
+                            <Flex direction="column">
+                              <Flex justifyContent="space-between">
+                                <Text fontWeight={700} mr={2}>
+                                  Total APR:
+                                </Text>
+                                <Text fontWeight={700}>{formatApr(apr28d * 100, network?.id)}</Text>
+                              </Flex>
+                              <Flex justifyContent="space-between">
+                                <Text mr={2}>Performance:</Text>
+                                <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
+                              </Flex>
+                              <Flex justifyContent="space-between">
+                                <Text mr={2}>Rewards: </Text>
+                                <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
+                              </Flex>
+                            </Flex>
+                          }
                         >
-                          {formatApr(apr28d * 100, network?.id)}
-                          <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
-                        </Text>
-                      </Tooltip>
+                          <Flex display="inline">
+                            <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
+                          </Flex>
+                        </Tooltip>
+                      </Text>
                     </Td>
                     <Td border="none" textAlign="right" pl={4} pr={0}>
                       <Button
