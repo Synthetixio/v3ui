@@ -32,7 +32,7 @@ export const PositionsList = () => {
       <PositionsTable
         isLoading={isLoading}
         positions={parsedPositions}
-        apr={apr?.combinedApr}
+        apr={apr?.collateralAprs}
         systemToken={systemToken}
       />
     </Flex>

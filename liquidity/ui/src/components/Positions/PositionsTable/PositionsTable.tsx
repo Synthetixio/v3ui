@@ -15,7 +15,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 interface PositionsTableInterface {
   isLoading: boolean;
   positions?: LiquidityPositionType[];
-  apr?: number;
+  apr?: any[];
   systemToken?: {
     symbol?: string;
     name?: string;
@@ -96,16 +96,24 @@ export const PositionsTable = ({
                 <PositionsRowLoading />
               ) : (
                 <>
-                  {positions?.map((position, index) => (
-                    <PositionRow
-                      key={position.poolName.concat(index.toString())}
-                      {...position}
-                      final={index === positions.length - 1}
-                      isBase={isBase}
-                      apr={apr}
-                      systemTokenSymbol={systemToken?.symbol}
-                    />
-                  ))}
+                  {positions?.map((position, index) => {
+                    const positionApr = apr?.find(
+                      (apr) =>
+                        apr.collateralType.toLowerCase() ===
+                        position.collateralType.tokenAddress.toLowerCase()
+                    );
+
+                    return (
+                      <PositionRow
+                        key={position.poolName.concat(index.toString())}
+                        {...position}
+                        final={index === positions.length - 1}
+                        isBase={isBase}
+                        apr={positionApr?.apr28d * 100}
+                        systemTokenSymbol={systemToken?.symbol}
+                      />
+                    );
+                  })}
                 </>
               )}
             </Tbody>
