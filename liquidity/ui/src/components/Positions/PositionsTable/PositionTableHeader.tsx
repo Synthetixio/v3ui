@@ -18,9 +18,14 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
           Collateral
         </Th>
         <Th textAlign="right" border="none" textTransform="unset" py={5}>
-          <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
-            Locked
-          </Text>
+          <Flex justifyContent="flex-end" alignItems="center">
+            <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+              Locked
+            </Text>
+            <Tooltip label="Unlocked assets can be locked into a position at any time or withdrawn after 24h since last activity">
+              <InfoIcon w="10px" h="10px" />
+            </Tooltip>
+          </Flex>
         </Th>
         <Th textAlign="right" border="none" textTransform="unset" py={5}>
           <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>

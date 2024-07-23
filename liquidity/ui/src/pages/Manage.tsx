@@ -63,10 +63,23 @@ export const ManageUi: FC<{
   collateralSymbol?: string;
   poolName?: string;
   poolId?: string;
-}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
+}> = ({
+  collateralType,
+  isLoading,
+  rewards,
+  liquidityPosition,
+  network,
+  collateralSymbol,
+  poolName,
+  poolId,
+}) => {
   const [closePosition, setClosePosition] = useState(false);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
+
+  const positionApr = poolData?.apr.collateralAprs.find(
+    (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
+  );
 
   return (
     <Box mb={12} mt={8}>
@@ -85,7 +98,6 @@ export const ManageUi: FC<{
           isOpen={false}
           poolId={poolId}
         />
-
         {poolData && (
           <Flex alignItems={['center', 'flex-end']} direction="column">
             <Tooltip label="APR is averaged over the trailing 28 days and is comprised of both performance and rewards">
@@ -101,8 +113,8 @@ export const ManageUi: FC<{
               </Text>
             </Tooltip>
             <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-              {poolData.apr.combinedApr > 0
-                ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
+              {poolData && positionApr.apr28d > 0
+                ? `${(positionApr.apr28d * 100).toFixed(2)?.concat('%')}`
                 : '-'}
             </Text>
           </Flex>
@@ -229,6 +241,7 @@ export const Manage = () => {
                 liquidityPosition={liquidityPosition}
                 network={network}
                 collateralSymbol={collateralSymbol}
+                collateralType={collateralType}
               />
             )}
 

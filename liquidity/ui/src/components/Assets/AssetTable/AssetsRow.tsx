@@ -154,7 +154,6 @@ export const AssetsRow = ({
               {activeWallet?.address ? 'Deposit' : 'Connect'}
             </Button>
           </Fade>
-
           <Fade in>
             <Tooltip
               label={
