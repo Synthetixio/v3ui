@@ -1,9 +1,9 @@
 import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
 import { Multistep } from '@snx-v3/Multistep';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -18,6 +18,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { ZEROWEI } from '../../ui/src/utils/constants';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export const ClaimModalUi: React.FC<{
   onClose: () => void;
@@ -117,11 +118,26 @@ export const ClaimModalUi: React.FC<{
 export const ClaimModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
-}> = ({ onClose, isOpen }) => {
+  liquidityPosition?: LiquidityPosition;
+}> = ({ onClose, isOpen, liquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const queryClient = useQueryClient();
   const params = useParams();
+  const { network } = useNetwork();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+
+  const maxClaimble = useMemo(() => {
+    if (!liquidityPosition || liquidityPosition?.debt.gte(0)) {
+      return ZEROWEI;
+    } else {
+      return wei(liquidityPosition.debt.abs().toBN().sub(1));
+    }
+  }, [liquidityPosition]);
+  const isBorrow = useMemo(
+    () => debtChange.gt(maxClaimble) && !isBase,
+    [debtChange, isBase, maxClaimble]
+  );
 
   const {
     exec: execBorrow,
@@ -136,7 +152,6 @@ export const ClaimModal: React.FC<{
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { data: CoreProxy } = useCoreProxy();
-  const { network } = useNetwork();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
@@ -152,9 +167,10 @@ export const ClaimModal: React.FC<{
       if (contractError) {
         console.error(new Error(contractError.name), contractError);
       }
+
       toast.closeAll();
       toast({
-        title: 'Claim failed',
+        title: isBorrow ? 'Borrow' : 'Claim' + ' failed',
         description: contractError ? (
           <ContractError contractError={contractError} />
         ) : (
@@ -163,16 +179,17 @@ export const ClaimModal: React.FC<{
         status: 'error',
         variant: 'left-accent',
       });
-      throw Error('Claim failed', { cause: error });
+      throw Error(isBorrow ? 'Borrow' : 'Claim' + ' failed', { cause: error });
     }
   }, [
     execBorrow,
-    setDebtChange,
     queryClient,
     network?.id,
     network?.preset,
+    setDebtChange,
     errorParserCoreProxy,
     toast,
+    isBorrow,
   ]);
 
   const { txnStatus } = txnState;
