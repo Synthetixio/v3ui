@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { useCollateralDisplayName } from '../../pages';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
@@ -55,16 +55,16 @@ export const PositionTitle: FC<{
           _hover={{ cursor: 'pointer' }}
           onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
         >
-          {poolName}
+          {poolName && <Text mr={2}>{poolName}</Text>}
           <Flex
-            alignItems="normal"
+            mt={0.25}
+            alignItems="center"
             fontSize={['10px', '12px']}
             color="gray.500"
-            gap={1}
             fontWeight="500"
           >
-            <NetworkIcon size="14px" networkId={network?.id} />
-            {network?.label} Network
+            <NetworkIcon size="14px" networkId={network?.id} mr={1} />
+            <Text mt={0.5}>{network?.label} Network</Text>
           </Flex>
         </Heading>
       </Flex>
