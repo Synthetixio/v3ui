@@ -181,7 +181,7 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
-  const { maxDebtWithSlippage } = validatePosition({
+  const { maxDebt } = validatePosition({
     issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
     collateralPrice: liquidityPosition?.collateralPrice,
@@ -195,7 +195,7 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       maxClaimble={maxClaimble}
-      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebtWithSlippage}
+      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebt.mul(99).div(100)}
     />
   );
 };
