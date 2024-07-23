@@ -255,6 +255,7 @@ export const ClosePositionTransactions: FC<{
       toast.closeAll();
       toast({
         title: 'Transaction failed',
+        variant: 'left-accent',
         description: contractError ? (
           <ContractError contractError={contractError} />
         ) : (

@@ -324,7 +324,7 @@ export const PoolCard = ({
                       <Flex
                         minWidth="120px"
                         alignItems="center"
-                        _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+                        _hover={{ cursor: 'pointer' }}
                         onClick={onClick}
                       >
                         <TokenIcon w={26} h={26} symbol={type.symbol} />
