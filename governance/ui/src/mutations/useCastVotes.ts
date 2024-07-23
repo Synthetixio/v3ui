@@ -68,12 +68,7 @@ export function useCastVotes(
             .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
           if (!isMotherchain) {
-            quote = await electionModules[0].quoteCrossChainDeliveryPrice(
-              getWormwholeChainId(network.id),
-
-              0,
-              utils.parseUnits('1000000', 'wei')
-            );
+            quote = await electionModules[0].quoteCrossChainDeliveryPrice(10005, 0, 1_000_000);
           }
           const castData = councils.map((council) => {
             return isMotherchain
@@ -95,17 +90,11 @@ export function useCastVotes(
                 };
           });
 
-          await electionModules[0].cast(
-            [candidates.spartan],
-            [getVotingPowerByCouncil('spartan')?.power],
-            { gasLimit: 1000000 }
-          );
-
-          // await multicall
-          //   .connect(signer)
-          //   [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
-          //     gasLimit: 1000000,
-          //   });
+          await multicall
+            .connect(signer)
+            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+              gasLimit: 1_250_000,
+            });
         } catch (error) {
           console.error(error);
         }
