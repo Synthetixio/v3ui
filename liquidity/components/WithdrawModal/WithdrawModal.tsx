@@ -171,15 +171,18 @@ export function WithdrawModal({
           status: 'success',
         });
 
-        await queryClient.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition', { accountId }],
         });
-        await queryClient.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: [
             `${network?.id}-${network?.preset}`,
             'AccountSpecificCollateral',
             { accountId },
           ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions', { accountId }],
         });
 
         setWithdrawAmount(ZEROWEI);

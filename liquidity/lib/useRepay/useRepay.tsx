@@ -13,13 +13,13 @@ import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const useRepay = ({
   accountId,
   poolId,
   collateralTypeAddress,
   debtChange,
-  balance,
   availableUSDCollateral,
 }: {
   accountId?: string;
@@ -54,11 +54,12 @@ export const useRepay = ({
       ) {
         return;
       }
-      if (!balance) return;
-      if (!availableUSDCollateral) return;
-      if (debtChange.eq(0)) return;
+      if (debtChange.eq(0)) {
+        return;
+      }
+
       const debtChangeAbs = debtChange.abs();
-      const amountToDeposit = debtChangeAbs.sub(availableUSDCollateral);
+      const amountToDeposit = debtChangeAbs.sub(availableUSDCollateral || ZEROWEI);
 
       try {
         dispatch({ type: 'prompting' });
