@@ -16,7 +16,7 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { ClosePosition } from '../components/ClosePosition/ClosePosition';
@@ -88,7 +88,7 @@ export const ManageUi: FC<{
 
         {poolData && (
           <Flex alignItems={['center', 'flex-end']} direction="column">
-            <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+            <Tooltip label="APR is averaged over the trailing 28 days and is comprised of both performance and rewards">
               <Text
                 fontFamily="heading"
                 fontSize="sm"
@@ -163,6 +163,7 @@ export const Manage = () => {
   const collateralSymbol = useNormalisedCollateralSymbol(collateralSymbolRaw);
 
   const { network } = useNetwork();
+  const { activeWallet } = useWallet();
 
   const { isFetching: isCollateralLoading, data: collateralType } =
     useCollateralType(collateralSymbolRaw);
@@ -185,11 +186,12 @@ export const Manage = () => {
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
-  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralTypes, isLoading: isLoadingCollaterals } = useCollateralTypes();
 
   const notSupported =
+    !isLoadingCollaterals &&
     poolData &&
-    collateralTypes &&
+    collateralTypes?.length &&
     collateralDisplayName &&
     !collateralTypes.some(
       (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
@@ -197,38 +199,43 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
-      <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
-
       <WatchAccountBanner />
-      {(!accountId ||
-        (!isLoadingPosition &&
-          liquidityPosition &&
-          liquidityPosition.collateralAmount.eq(0) &&
-          liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
-        <NoPosition
-          collateralSymbol={collateralSymbol}
-          collateralType={collateralType}
-          accountId={accountId}
-          rewards={rewardsData}
-          liquidityPosition={liquidityPosition}
-        />
-      )}
-      {accountId &&
-        ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
-          liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
-          <ManageUi
-            isLoading={isLoading}
-            rewards={rewardsData}
-            poolName={poolData?.name}
-            poolId={poolId}
-            liquidityPosition={liquidityPosition}
-            network={network}
-            collateralSymbol={collateralSymbol}
-          />
-        )}
 
-      {isLoadingPosition && (
-        <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
+      {!!activeWallet && (
+        <>
+          <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
+
+          {(!accountId ||
+            (!isLoadingPosition &&
+              liquidityPosition &&
+              liquidityPosition.collateralAmount.eq(0) &&
+              liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
+            <NoPosition
+              collateralSymbol={collateralSymbol}
+              collateralType={collateralType}
+              accountId={accountId}
+              rewards={rewardsData}
+              liquidityPosition={liquidityPosition}
+            />
+          )}
+          {accountId &&
+            ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
+              liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
+              <ManageUi
+                isLoading={isLoading}
+                rewards={rewardsData}
+                poolName={poolData?.name}
+                poolId={poolId}
+                liquidityPosition={liquidityPosition}
+                network={network}
+                collateralSymbol={collateralSymbol}
+              />
+            )}
+
+          {isLoadingPosition && !!accountId && (
+            <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
+          )}
+        </>
       )}
     </ManagePositionProvider>
   );

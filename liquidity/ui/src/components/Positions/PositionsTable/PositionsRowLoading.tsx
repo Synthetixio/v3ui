@@ -48,6 +48,21 @@ export function PositionsRowLoading() {
                 </Skeleton>
               </Flex>
             </Td>
+
+            <Td border="none">
+              <Flex flexDirection="column" alignItems="flex-end">
+                <Skeleton height="1rem" mb={1}>
+                  <Text color="white" fontWeight={700} lineHeight="1.25rem" fontFamily="heading">
+                    $100,000
+                  </Text>
+                </Skeleton>
+                <Skeleton height="0.75rem">
+                  <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+                    200 SNX
+                  </Text>
+                </Skeleton>
+              </Flex>
+            </Td>
             <Td border="none">
               <Flex flexDirection="column" alignItems="flex-end">
                 <Skeleton height="1rem" mb={1} width="70%">

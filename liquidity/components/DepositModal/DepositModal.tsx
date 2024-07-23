@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -81,8 +81,14 @@ export const DepositModalUi: FC<{
           title="Collateral successfully Updated"
           subline={
             <>
-              Your <b>Collateral</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Collateral</b> has been updated, read more about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={
@@ -149,13 +155,13 @@ export const DepositModalUi: FC<{
 
         <Multistep
           step={stepNumbers.deposit}
-          title={`Lock ${collateralType?.symbol}`}
+          title={`Deposit & Lock ${collateralType?.symbol}`}
           subtitle={
             <>
               {state.matches(State.success) ? (
                 <Text>
-                  <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> locked
-                  to {poolName}.
+                  <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
+                  deposited & locked in {poolName}.
                 </Text>
               ) : (
                 <>
@@ -163,14 +169,14 @@ export const DepositModalUi: FC<{
                     <>
                       {availableCollateral.gte(collateralChange) ? (
                         <Text>
-                          This will lock{' '}
+                          This will deposit & lock{' '}
                           <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} />{' '}
-                          to {poolName}.
+                          in {poolName}.
                         </Text>
                       ) : (
                         <>
                           <Text>
-                            This will lock{' '}
+                            This will deposit & lock{' '}
                             <Amount
                               value={availableCollateral}
                               suffix={` ${collateralType?.symbol}`}
@@ -183,14 +189,14 @@ export const DepositModalUi: FC<{
                               value={collateralChange.sub(availableCollateral)}
                               suffix={` ${collateralType?.symbol}`}
                             />{' '}
-                            will be locked from your wallet.
+                            will be deposited and locked from your wallet.
                           </Text>
                         </>
                       )}
                     </>
                   ) : (
                     <Text>
-                      This will lock{' '}
+                      This will deposit and lock{' '}
                       <Amount value={collateralChange} suffix={` ${collateralType?.symbol}`} /> to{' '}
                       {poolName}.
                     </Text>
@@ -256,24 +262,20 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const { data: SpotProxy } = useSpotMarketProxy();
   const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? usdTokens?.USDC
-    : collateralType?.tokenAddress;
-
+  const collateralAddress = isBase ? usdTokens?.USDC : collateralType?.tokenAddress;
   const collateralNeeded = collateralChange.sub(availableCollateral);
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
     amount: collateralNeeded.gt(0)
-      ? isBaseAndromeda(network?.id, network?.preset)
+      ? isBase
         ? //Base USDC is 6 decimals
           utils.parseUnits(collateralNeeded.toString(), 6)
         : utils.parseUnits(collateralNeeded.toString(), collateralType?.decimals)
       : 0,
-    spender: isBaseAndromeda(network?.id, network?.preset)
-      ? SpotProxy?.address
-      : CoreProxy?.address,
+    spender: isBase ? SpotProxy?.address : CoreProxy?.address,
   });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -284,8 +286,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const { exec: wrapEth, wethBalance } = useWrapEth();
 
   const wrapAmount =
-    collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
-      ? collateralChange.sub(wethBalance || 0)
+    collateralType?.symbol === 'WETH' && collateralNeeded.gt(wethBalance || 0)
+      ? collateralNeeded.sub(wethBalance || 0)
       : wei(0);
 
   const { data: pool } = usePool(poolId);
@@ -386,13 +388,11 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
             collateralChange,
           });
 
-          if (isBaseAndromeda(network?.id, network?.preset)) {
+          if (isBase) {
             await depositBaseAndromeda();
           } else {
             await execDeposit();
           }
-
-          setCollateralChange(ZEROWEI);
 
           await Promise.all([
             queryClient.invalidateQueries({
@@ -419,6 +419,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
               : Promise.resolve(),
           ]);
 
+          setCollateralChange(ZEROWEI);
+
           toast.closeAll();
           toast({
             title: 'Success',
@@ -432,6 +434,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
           if (contractError) {
             console.error(new Error(contractError.name), contractError);
           }
+
+          toast.closeAll();
           toast({
             title: 'Could not complete locking collateral',
             description: contractError ? (
@@ -495,6 +499,50 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
     send(Events.RUN);
   }, [handleClose, send, state]);
 
+  const txSummaryItems = useMemo(() => {
+    const items = [
+      {
+        label: 'Total Collateral',
+        value: (
+          <ChangeStat
+            value={txSummary.currentCollateral}
+            newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
+            formatFn={(val: Wei) => currency(val)}
+            hasChanges={txSummary.collateralChange.abs().gt(0)}
+            size="sm"
+          />
+        ),
+      },
+    ];
+
+    if (isBase) {
+      return items;
+    }
+
+    return [
+      ...items,
+      {
+        label: 'C-ratio',
+        value: (
+          <CRatioChangeStat
+            currentCollateral={txSummary.currentCollateral}
+            currentDebt={txSummary.currentDebt}
+            collateralChange={txSummary.collateralChange}
+            collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
+            debtChange={ZEROWEI}
+            size="sm"
+          />
+        ),
+      },
+    ];
+  }, [
+    isBase,
+    liquidityPosition?.collateralPrice,
+    txSummary.collateralChange,
+    txSummary.currentCollateral,
+    txSummary.currentDebt,
+  ]);
+
   return (
     <DepositModalUi
       collateralChange={collateralChange}
@@ -509,37 +557,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
       poolName={pool?.name || ''}
       availableCollateral={availableCollateral || wei(0)}
       title={title}
-      txSummary={
-        <TransactionSummary
-          items={[
-            {
-              label: 'Total Collateral',
-              value: (
-                <ChangeStat
-                  value={txSummary.currentCollateral}
-                  newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
-                  formatFn={(val: Wei) => currency(val)}
-                  hasChanges={txSummary.collateralChange.abs().gt(0)}
-                  size="sm"
-                />
-              ),
-            },
-            {
-              label: 'C-ratio',
-              value: (
-                <CRatioChangeStat
-                  currentCollateral={txSummary.currentCollateral}
-                  currentDebt={txSummary.currentDebt}
-                  collateralChange={txSummary.collateralChange}
-                  collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
-                  debtChange={ZEROWEI}
-                  size="sm"
-                />
-              ),
-            },
-          ]}
-        />
-      }
+      txSummary={<TransactionSummary items={txSummaryItems} />}
     />
   );
 };

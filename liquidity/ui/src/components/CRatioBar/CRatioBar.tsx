@@ -42,7 +42,8 @@ export const CRatioBarUi: FC<{
       <Text color="gray.500" fontSize="xs">
         C-Ratio{' '}
         <Tooltip
-          label="C-ratio is a dynamic number that represents a ratio between your collateral and your debt."
+          textAlign="left"
+          label="C-ratio is a dynamic number that represents a ratio between your locked collateral and your debt"
           p="3"
         >
           <InfoIcon w="10px" h="10px" />
@@ -62,10 +63,16 @@ export const CRatioBarUi: FC<{
           <Text>{ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}</Text>
         )}
 
-        {hasChanges && newCratio && (
+        {!!hasChanges && (
           <>
             <span>&rarr;</span>
-            <Text>{ratioIsMaxUInt(newCratio) ? 'Infinite' : `${newCratio.toFixed(2)} %`}</Text>
+            <Text>
+              {!newCratio
+                ? 'N/A'
+                : ratioIsMaxUInt(newCratio)
+                  ? 'Infinite'
+                  : `${newCratio.toFixed(2)} %`}
+            </Text>
           </>
         )}
 
@@ -89,7 +96,7 @@ export const CRatioBarUi: FC<{
           <LineWithText
             left="25%"
             text={!isLoading ? `Liquidation < ${liquidationCratio.toFixed(0)}%` : 'Liquidation'}
-            tooltipText="Point at which your Position gets liquidated."
+            tooltipText="Point at which your Position gets liquidated"
           />
           <LineWithText
             left="75%"
@@ -100,7 +107,7 @@ export const CRatioBarUi: FC<{
                   }%`
                 : 'Borrowing Ratio'
             }
-            tooltipText="Minimum point at which you can borrow assets"
+            tooltipText="Min point at which you can borrow assets"
           />
         </>
         <Skeleton

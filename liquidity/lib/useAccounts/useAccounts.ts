@@ -39,7 +39,9 @@ export function useAccounts() {
 }
 
 export function useCreateAccount() {
-  const { data: CoreProxy } = useCoreProxy();
+  const { data: CoreProxy } = useCoreProxy({
+    isWrite: true,
+  });
   const { network } = useNetwork();
   const client = useQueryClient();
   const { data: gasPrices } = useGasPrice();

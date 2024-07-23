@@ -5300,6 +5300,7 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -5516,6 +5517,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -6207,10 +6209,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useBurnMintFee@workspace:liquidity/lib/useBurnMintFee":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useBurnMintFee@workspace:liquidity/lib/useBurnMintFee"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCoreProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useClaimRewards@workspace:*, @snx-v3/useClaimRewards@workspace:liquidity/lib/useClaimRewards":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useClaimRewards@workspace:liquidity/lib/useClaimRewards"
   dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -6446,10 +6461,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
   dependencies:
-    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
-    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -6469,9 +6482,7 @@ __metadata:
   resolution: "@snx-v3/useLiquidityPositions@workspace:liquidity/lib/useLiquidityPositions"
   dependencies:
     "@snx-v3/calculations": "workspace:*"
-    "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
-    "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -6891,6 +6902,16 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useWithdrawTimer@workspace:liquidity/lib/useWithdrawTimer":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useWithdrawTimer@workspace:liquidity/lib/useWithdrawTimer"
+  dependencies:
+    "@snx-v3/useAccountCollateralUnlockDate": "workspace:*"
+    react: "npm:^18.2.0"
+    react-timer-hook: "npm:^3.0.7"
   languageName: unknown
   linkType: soft
 

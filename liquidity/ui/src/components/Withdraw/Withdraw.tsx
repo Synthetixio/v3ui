@@ -28,7 +28,7 @@ const WithdrawUi: FC<{
 }> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
   const price = useTokenPrice(symbol);
 
-  const { minutes, hours, seconds, isRunning, restart } = useTimer({
+  const { minutes, hours, isRunning, restart } = useTimer({
     expiryTimestamp: new Date(0),
     autoStart: false,
   });
@@ -79,28 +79,38 @@ const WithdrawUi: FC<{
               'data-testid': 'withdraw amount input',
               'data-max': maWWithdrawable.toString(),
               type: 'number',
+              min: 0,
             }}
             value={amount}
             onChange={(val) => setAmount(val)}
             max={maWWithdrawable}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={amount.abs().mul(price)} />}
           </Flex>
         </Flex>
       </BorderBox>
-      <Collapse
-        in={isRunning && maWWithdrawable.gt(0) && !![minutes, hours, seconds].find((a) => a > 0)}
-        animateOpacity
-      >
-        <Alert colorScheme="red" mb="4">
+      <Collapse in={maWWithdrawable.gt(0)} animateOpacity>
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
-            You will be able to withdraw assets in {hours}:{minutes}. Any account activity will
+            You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
             reset this timer to 24H.
           </Text>
         </Alert>
       </Collapse>
+
+      <Collapse in={amount.gt(maWWithdrawable)} animateOpacity>
+        <Alert colorScheme="red" mb="6">
+          <AlertIcon />
+          <Text>
+            You cannot Withdraw more {!isDebtWithdrawal ? 'Collateral' : ''} than your Unlocked
+            Balance
+          </Text>
+        </Alert>
+      </Collapse>
+
       <Button
         isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maWWithdrawable)}
         data-testid="claim submit"

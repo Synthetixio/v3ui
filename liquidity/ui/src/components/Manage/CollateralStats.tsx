@@ -15,14 +15,7 @@ export const CollateralStats: FC<{
   collateralValue: Wei;
   hasChanges: boolean;
   isLoading?: boolean;
-}> = ({
-  liquidityPosition,
-  collateralType,
-  newCollateralAmount,
-  collateralValue,
-  hasChanges,
-  isLoading,
-}) => (
+}> = ({ liquidityPosition, collateralType, newCollateralAmount, hasChanges, isLoading }) => (
   <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700">
     <Flex
       opacity={!liquidityPosition && !isLoading && !hasChanges ? '40%' : '100%'}
@@ -39,21 +32,26 @@ export const CollateralStats: FC<{
           <Skeleton width="100%">Lorem ipsum (this wont be displaye debt) </Skeleton>
         ) : liquidityPosition && collateralType ? (
           <Flex direction="column">
-            <Flex justifyContent="space-between" alignItems="center">
-              <ChangeStat
-                value={liquidityPosition.collateralAmount}
-                newValue={newCollateralAmount}
-                formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
-                hasChanges={hasChanges}
-                dataTestId="manage stats collateral"
-              />
-            </Flex>
-            <Text fontWeight="400" color="white" fontSize="16px">
-              {currency(collateralValue, {
-                currency: 'USD',
-                style: 'currency',
-              })}
-            </Text>
+            <ChangeStat
+              value={liquidityPosition.collateralAmount}
+              newValue={newCollateralAmount}
+              formatFn={(val: Wei) => `${currency(val)} ${collateralType.displaySymbol}`}
+              hasChanges={hasChanges}
+              dataTestId="manage stats collateral"
+            />
+            <ChangeStat
+              value={liquidityPosition.collateralAmount.mul(liquidityPosition.collateralPrice)}
+              newValue={newCollateralAmount.mul(liquidityPosition.collateralPrice)}
+              formatFn={(val: Wei) =>
+                currency(val, {
+                  currency: 'USD',
+                  style: 'currency',
+                })
+              }
+              size="md"
+              hasChanges={hasChanges}
+              dataTestId="manage stats collateral"
+            />
           </Flex>
         ) : (
           <Flex direction="column">

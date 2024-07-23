@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -15,11 +15,16 @@ import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
 import { Wei, wei } from '@synthetixio/wei';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
-import { FC, useCallback, useContext, useEffect } from 'react';
+import { FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { StateFrom } from 'xstate';
 import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ChangeStat } from '../../ui/src/components';
+import { currency } from '@snx-v3/format';
+import { CRatioChangeStat } from '../../ui/src/components/CRatioBar/CRatioChangeStat';
+import { TransactionSummary } from '../../ui/src/components/TransactionSummary/TransactionSummary';
 
 export const UndelegateModalUi: FC<{
   amount: Wei;
@@ -29,7 +34,8 @@ export const UndelegateModalUi: FC<{
   state: StateFrom<typeof UndelegateMachine>;
   error: { error: Error; step: string } | null;
   onSubmit: () => void;
-}> = ({ amount, isOpen, onClose, collateralType, onSubmit, state, error }) => {
+  txSummary?: ReactNode;
+}> = ({ txSummary, amount, isOpen, onClose, collateralType, onSubmit, state, error }) => {
   const isProcessing = state.matches(State.undelegate);
   if (isOpen) {
     if (state.matches(State.success)) {
@@ -39,8 +45,14 @@ export const UndelegateModalUi: FC<{
           title="Collateral successfully Updated"
           subline={
             <>
-              Your <b>Collateral</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Collateral</b> has been updated, read more about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={
@@ -48,6 +60,7 @@ export const UndelegateModalUi: FC<{
               <b>Collateral</b> successfully Updated
             </>
           }
+          summary={txSummary}
         />
       );
     }
@@ -64,8 +77,8 @@ export const UndelegateModalUi: FC<{
           title="Unlock collateral"
           subtitle={
             <Text as="div">
-              <Amount value={amount} suffix={` ${collateralType?.symbol}`} /> will be unlocked from
-              the pool.
+              <Amount value={amount} suffix={` ${collateralType?.displaySymbol}`} /> will be
+              unlocked from the pool.
             </Text>
           }
           status={{
@@ -107,7 +120,7 @@ export type UndelegateModalProps = FC<{
 }>;
 export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidityPosition }) => {
   const params = useParams();
-  const { collateralChange } = useContext(ManagePositionContext);
+  const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
 
   const queryClient = useQueryClient();
@@ -115,6 +128,12 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const toast = useToast({ isClosable: true, duration: 9000 });
+
+  const [txSummary, setTxSummary] = useState({
+    currentCollateral: ZEROWEI,
+    collateralChange: ZEROWEI,
+    currentDebt: ZEROWEI,
+  });
 
   const currentCollateral = liquidityPosition?.collateralAmount || wei(0);
 
@@ -137,6 +156,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const [state, send] = useMachine(UndelegateMachine, {
     context: {
       amount: collateralChange.abs(),
@@ -144,15 +164,24 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
     services: {
       [ServiceNames.undelegate]: async () => {
         try {
-          if (isBaseAndromeda(network?.id, network?.preset)) {
+          setTxSummary({
+            currentCollateral,
+            currentDebt: liquidityPosition?.debt || ZEROWEI,
+            collateralChange,
+          });
+
+          if (isBase) {
             await undelegateBaseAndromeda();
           } else {
             await execUndelegate();
           }
+
           await queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,
           });
+
+          setCollateralChange(ZEROWEI);
         } catch (error: any) {
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
@@ -198,6 +227,51 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
     send(Events.RUN);
   }, [onClose, send, state]);
 
+  const txSummaryItems = useMemo(() => {
+    const items = [
+      {
+        label: 'Total ' + collateralType?.displaySymbol,
+        value: (
+          <ChangeStat
+            value={txSummary.currentCollateral}
+            newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
+            formatFn={(val: Wei) => currency(val)}
+            hasChanges={txSummary.collateralChange.abs().gt(0)}
+            size="sm"
+          />
+        ),
+      },
+    ];
+
+    if (isBase) {
+      return items;
+    }
+
+    return [
+      ...items,
+      {
+        label: 'C-ratio',
+        value: (
+          <CRatioChangeStat
+            currentCollateral={txSummary.currentCollateral}
+            currentDebt={txSummary.currentDebt}
+            collateralChange={txSummary.collateralChange}
+            collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
+            debtChange={ZEROWEI}
+            size="sm"
+          />
+        ),
+      },
+    ];
+  }, [
+    collateralType?.displaySymbol,
+    isBase,
+    liquidityPosition?.collateralPrice,
+    txSummary.collateralChange,
+    txSummary.currentCollateral,
+    txSummary.currentDebt,
+  ]);
+
   return (
     <UndelegateModalUi
       amount={state.context.amount}
@@ -207,6 +281,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
       state={state}
       error={state.context.error}
       onSubmit={onSubmit}
+      txSummary={<TransactionSummary items={txSummaryItems} />}
     />
   );
 };

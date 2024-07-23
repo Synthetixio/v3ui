@@ -14,6 +14,8 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { ZEROWEI } from '../../utils/constants';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { ClosePositionTransactions } from './ClosePositionTransactions';
+import { Amount } from '@snx-v3/Amount';
+import { useTokenPrice } from '../../../../lib/useTokenPrice';
 
 const ClosePositionUi: FC<{
   debt: Wei;
@@ -23,9 +25,12 @@ const ClosePositionUi: FC<{
   debtSymbol: string;
   collateralSymbol: string;
 }> = ({ onSubmit, debt, collateralAmount, collateralSymbol, onClose, debtSymbol }) => {
+  const debtPrice = useTokenPrice(debtSymbol);
+  const collateralPrice = useTokenPrice(collateralSymbol);
+
   return (
     <Flex flexDirection="column">
-      <Text color="gray.50" fontSize="sm" fontWeight="700">
+      <Text color="gray.50" fontSize="xl" fontWeight="700">
         <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
         Close Position
       </Text>
@@ -37,13 +42,27 @@ const ClosePositionUi: FC<{
       </Text>
       <BorderBox display="flex" flexDirection="column" p={3} mb="6">
         <Flex alignItems="center">
-          <BorderBox display="flex" justifyContent="center" alignItems="center" py={1.5} px={2.5}>
-            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-              <TokenIcon symbol={debtSymbol} width={16} height={16} />
-              {debtSymbol}
-            </Text>
-          </BorderBox>
-          <NumberInput value={debt.gt(0) ? debt : debt.mul(-1)} disabled />
+          <Flex alignItems="flex-start" flexDir="column" gap={1}>
+            <BorderBox display="flex" justifyContent="center" alignItems="center" py={1.5} px={2.5}>
+              <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+                <TokenIcon symbol={debtSymbol} width={16} height={16} />
+                {debtSymbol}
+              </Text>
+            </BorderBox>
+            <Flex fontSize="12px" gap="1" mr="3">
+              <Text>{debt.gt(0) ? 'Debt:' : 'Max Claim'}</Text>
+              <Amount value={debt.abs()} />
+              <Text ml={0.5} color="gray.600" fontWeight={700}>
+                Max
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex flexGrow={1} flexDir="column">
+            <NumberInput value={debt.abs()} disabled />
+            <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+              {debtPrice.gt(0) && <Amount prefix="$" value={debt.abs().mul(debtPrice)} />}
+            </Flex>
+          </Flex>
         </Flex>
       </BorderBox>
 
@@ -52,13 +71,29 @@ const ClosePositionUi: FC<{
       </Text>
       <BorderBox display="flex" flexDirection="column" p={3} mb="6">
         <Flex alignItems="center">
-          <BorderBox display="flex" justifyContent="center" alignItems="center" py={1.5} px={2.5}>
-            <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-              <TokenIcon symbol={collateralSymbol} width={16} height={16} />
-              {collateralSymbol}
-            </Text>
-          </BorderBox>
-          <NumberInput value={collateralAmount} disabled />
+          <Flex alignItems="flex-start" flexDir="column" gap={1}>
+            <BorderBox display="flex" justifyContent="center" alignItems="center" py={1.5} px={2.5}>
+              <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+                <TokenIcon symbol={collateralSymbol} width={16} height={16} />
+                {collateralSymbol}
+              </Text>
+            </BorderBox>
+            <Flex fontSize="12px" gap="1" mr="3">
+              <Text>Locked:</Text>
+              <Amount value={collateralAmount} />
+              <Text ml={0.5} color="gray.600" fontWeight={700}>
+                Max
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex flexGrow={1} flexDir="column">
+            <NumberInput value={collateralAmount} disabled />
+            <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
+              {collateralPrice.gt(0) && (
+                <Amount prefix="$" value={collateralAmount.abs().mul(collateralPrice)} />
+              )}
+            </Flex>
+          </Flex>
         </Flex>
       </BorderBox>
       <Button onClick={onSubmit} type="submit">
@@ -81,7 +116,6 @@ export const ClosePosition = ({
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-
   const { data: systemToken } = useSystemToken();
 
   useEffect(() => {

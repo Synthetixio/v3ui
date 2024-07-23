@@ -23,8 +23,8 @@ const ClaimUi: FC<{
   setDebtChange: (val: Wei) => void;
 }> = ({ maxDebt, debtChange, setDebtChange, maxClaimble }) => {
   const { network } = useNetwork();
-  const { data: systemToken } = useSystemToken();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: systemToken } = useSystemToken();
   const max = useMemo(() => maxClaimble.add(maxDebt), [maxClaimble, maxDebt]);
   const price = useTokenPrice(isBase ? 'USDC' : systemToken?.symbol);
 
@@ -70,10 +70,12 @@ const ClaimUi: FC<{
               'data-testid': 'claim amount input',
               'data-max': maxClaimble.toString(),
               type: 'number',
+              min: 0,
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}
             max={max}
+            min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={debtChange.abs().mul(price)} />}
@@ -82,7 +84,7 @@ const ClaimUi: FC<{
       </BorderBox>
 
       <Collapse in={debtChange.lte(0) && maxClaimble.gt(0)} animateOpacity>
-        <Alert colorScheme="green" mb="4">
+        <Alert colorScheme="green" mb="6">
           <AlertIcon />
           <Text>
             Positive market performance has credited your position. Claim up to{' '}
@@ -105,21 +107,17 @@ const ClaimUi: FC<{
       </Collapse>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert status="info" mb="4">
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
             Assets will be available to withdraw 24 hours after your last interaction with this
             position.
           </Text>
         </Alert>
-        <Alert status="warning" mb="4">
-          <AlertIcon />
-          <Text>This action will reset the withdrawal waiting period to 24 hours </Text>
-        </Alert>
       </Collapse>
 
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="4">
+        <Alert colorScheme="blue" mb="6">
           <AlertIcon />
           <Text>
             You can take an interest-free loan up to &nbsp;
@@ -128,7 +126,7 @@ const ClaimUi: FC<{
                 if (!maxDebt) {
                   return;
                 }
-                setDebtChange(maxDebt);
+                setDebtChange(maxDebt.add(maxClaimble));
               }}
               cursor="pointer"
               as="span"
@@ -136,6 +134,19 @@ const ClaimUi: FC<{
             >
               <Amount value={maxDebt} prefix="$" />
             </Box>
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse
+        in={!debtChange.gt(max) && debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase}
+        animateOpacity
+      >
+        <Alert colorScheme="info" mb="6">
+          <AlertIcon />
+          <Text>
+            You are about to take a <Amount value={debtChange.sub(maxClaimble)} prefix="$" />{' '}
+            interest-free loan
           </Text>
         </Alert>
       </Collapse>
@@ -159,11 +170,12 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
   const params = useParams();
   const { network } = useNetwork();
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
+
   const maxClaimble = useMemo(() => {
     if (!liquidityPosition || liquidityPosition?.debt.gte(0)) {
       return ZEROWEI;
     } else {
-      return wei(liquidityPosition.debt.mul(-1).toBN().sub(1));
+      return wei(liquidityPosition.debt.abs().toBN().sub(1));
     }
   }, [liquidityPosition]);
 
@@ -177,12 +189,13 @@ export const Claim = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
     collateralChange: collateralChange,
     debtChange: debtChange,
   });
+
   return (
     <ClaimUi
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       maxClaimble={maxClaimble}
-      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebt}
+      maxDebt={isBaseAndromeda(network?.id, network?.preset) ? ZEROWEI : maxDebt.mul(99).div(100)}
     />
   );
 };

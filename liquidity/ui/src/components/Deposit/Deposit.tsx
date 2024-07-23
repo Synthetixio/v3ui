@@ -49,6 +49,7 @@ export const DepositUi: FC<{
   currentCollateral: Wei;
   currentDebt: Wei;
   collateralPrice: Wei;
+  isBase: boolean;
 }> = ({
   accountCollateral,
   collateralChange,
@@ -62,6 +63,7 @@ export const DepositUi: FC<{
   currentCollateral,
   currentDebt,
   collateralPrice,
+  isBase,
 }) => {
   const price = useTokenPrice(symbol);
 
@@ -82,6 +84,44 @@ export const DepositUi: FC<{
     () => combinedTokenBalance?.add(accountCollateral.availableCollateral.toString()),
     [accountCollateral.availableCollateral, combinedTokenBalance]
   );
+
+  const txSummaryItems = useMemo(() => {
+    const items = [
+      {
+        label: 'Total Collateral',
+        value: (
+          <ChangeStat
+            value={currentCollateral}
+            newValue={currentCollateral.add(collateralChange)}
+            formatFn={(val: Wei) => currency(val)}
+            hasChanges={collateralChange.abs().gt(0)}
+            size="sm"
+          />
+        ),
+      },
+    ];
+
+    if (isBase) {
+      return items;
+    }
+
+    return [
+      ...items,
+      {
+        label: 'C-ratio',
+        value: (
+          <CRatioChangeStat
+            currentCollateral={currentCollateral}
+            currentDebt={currentDebt}
+            collateralChange={collateralChange}
+            collateralPrice={collateralPrice}
+            debtChange={ZEROWEI}
+            size="sm"
+          />
+        ),
+      },
+    ];
+  }, [collateralChange, collateralPrice, currentCollateral, currentDebt, isBase]);
 
   const overAvailableBalance = collateralChange.abs().gt(maxAmount);
 
@@ -149,16 +189,15 @@ export const DepositUi: FC<{
             InputProps={{
               'data-testid': 'deposit amount input',
               'data-max': maxAmount?.toString(),
-              type: 'number',
-              step: '0.01',
+              min: 0,
             }}
             value={collateralChange}
             onChange={(value) => {
               setCollateralChange(value);
             }}
             max={maxAmount}
-            dataTestId="deposit-number-input"
             min={ZEROWEI}
+            dataTestId="deposit-number-input"
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
             {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
@@ -187,42 +226,13 @@ export const DepositUi: FC<{
         <Alert mb={6} status="error">
           <AlertIcon />
           <AlertDescription>
-            You cannot Deposit & Lock more Collateral than your balance amount
+            You cannot Deposit & Lock more Collateral than your Balance amount
           </AlertDescription>
         </Alert>
       </Collapse>
 
       <Collapse in={collateralChange.abs().gt(0)} animateOpacity>
-        <TransactionSummary
-          mb={6}
-          items={[
-            {
-              label: 'Total Collateral',
-              value: (
-                <ChangeStat
-                  value={currentCollateral}
-                  newValue={currentCollateral.add(collateralChange)}
-                  formatFn={(val: Wei) => currency(val)}
-                  hasChanges={collateralChange.abs().gt(0)}
-                  size="sm"
-                />
-              ),
-            },
-            {
-              label: 'C-ratio',
-              value: (
-                <CRatioChangeStat
-                  currentCollateral={currentCollateral}
-                  currentDebt={currentDebt}
-                  collateralChange={collateralChange}
-                  collateralPrice={collateralPrice}
-                  debtChange={ZEROWEI}
-                  size="sm"
-                />
-              ),
-            },
-          ]}
-        />
+        <TransactionSummary mb={6} items={txSummaryItems} />
       </Collapse>
       <Button
         data-testid="deposit submit"
@@ -248,9 +258,10 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
   const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset) ? usdTokens?.USDC : collateralType?.tokenAddress
+    isBase ? usdTokens?.USDC : collateralType?.tokenAddress
   );
 
   const { data: ethBalance } = useEthBalance();
@@ -273,6 +284,7 @@ export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPo
       currentCollateral={liquidityPosition?.collateralAmount ?? ZEROWEI}
       currentDebt={liquidityPosition?.debt ?? ZEROWEI}
       collateralPrice={liquidityPosition?.collateralPrice ?? ZEROWEI}
+      isBase={isBase}
     />
   );
 };

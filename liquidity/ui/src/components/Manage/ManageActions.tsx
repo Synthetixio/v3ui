@@ -1,4 +1,15 @@
-import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Flex,
+  Skeleton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from '@chakra-ui/react';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
@@ -54,7 +65,6 @@ const ManageActionUi: FC<{
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const [tab, setTab] = useState(getInitialTab(manageAction));
-
   const debtActions = DEBTACTIONS(isBase);
 
   useEffect(() => {
@@ -270,7 +280,16 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
           manageAction={parsedAction || undefined}
         />
       )}
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <Flex gap={4} flexDirection="column">
+            <Skeleton maxW="232px" width="100%" height="20px" />
+            <Divider my={4} />
+            <Skeleton width="100%" height="20px" />
+            <Skeleton width="100%" height="20px" />
+          </Flex>
+        }
+      >
         {txnModalOpen === 'repay' ? (
           <RepayModal
             availableCollateral={liquidityPosition?.usdCollateral.availableCollateral}
@@ -300,6 +319,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
               setTxnModalOpen(null);
             }}
             isOpen={txnModalOpen === 'claim'}
+            liquidityPosition={liquidityPosition}
           />
         ) : null}
         {txnModalOpen === 'deposit' ? (
