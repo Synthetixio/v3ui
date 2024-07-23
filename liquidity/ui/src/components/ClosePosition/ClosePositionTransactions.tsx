@@ -244,6 +244,25 @@ export const ClosePositionTransactions: FC<{
         status: 'success',
       });
 
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate'],
+      });
+
       setCollateralChange(ZEROWEI);
       setDebtChange(ZEROWEI);
     } catch (error) {
@@ -269,20 +288,22 @@ export const ClosePositionTransactions: FC<{
       });
       throw Error('Transaction failed', { cause: error });
     }
-  }, [txState.step, steps, setCollateralChange, setDebtChange, errorParserCoreProxy, toast]);
+  }, [
+    txState.step,
+    steps,
+    queryClient,
+    network?.id,
+    network?.preset,
+    setCollateralChange,
+    setDebtChange,
+    errorParserCoreProxy,
+    toast,
+  ]);
 
   if (isSuccess) {
     return (
       <LiquidityPositionUpdated
-        onClose={() => {
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
-          });
-          onClose();
-        }}
+        onClose={onClose}
         title="Position successfully Closed"
         subline={
           <>

@@ -265,7 +265,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
   const collateralAddress = isBase ? usdTokens?.USDC : collateralType?.tokenAddress;
-
   const collateralNeeded = collateralChange.sub(availableCollateral);
 
   const { approve, requireApproval } = useApprove({
@@ -287,8 +286,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const { exec: wrapEth, wethBalance } = useWrapEth();
 
   const wrapAmount =
-    collateralType?.symbol === 'WETH' && collateralChange.gt(wethBalance || 0)
-      ? collateralChange.sub(wethBalance || 0)
+    collateralType?.symbol === 'WETH' && collateralNeeded.gt(wethBalance || 0)
+      ? collateralNeeded.sub(wethBalance || 0)
       : wei(0);
 
   const { data: pool } = usePool(poolId);
@@ -435,6 +434,8 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
           if (contractError) {
             console.error(new Error(contractError.name), contractError);
           }
+
+          toast.closeAll();
           toast({
             title: 'Could not complete locking collateral',
             description: contractError ? (

@@ -225,6 +225,7 @@ export const RepayModal: React.FC<{
         try {
           toast.closeAll();
           toast({ title: 'Repaying...', variant: 'left-accent' });
+
           if (isBaseAndromeda(network?.id, network?.preset)) {
             await execRepayBaseAndromeda();
           } else {
