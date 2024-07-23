@@ -22,7 +22,8 @@ export type PoolsType = z.infer<typeof PoolsSchema>;
 export function usePools(customNetwork?: Network) {
   const { network } = useNetwork();
   const targetNetwork = customNetwork || network;
-  const { data: CoreProxy } = useCoreProxy(targetNetwork);
+
+  const { data: CoreProxy } = useCoreProxy({ customNetwork: targetNetwork });
 
   return useQuery({
     enabled: Boolean(targetNetwork),

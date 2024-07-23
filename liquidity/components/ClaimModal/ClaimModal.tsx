@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import Wei from '@synthetixio/wei';
 import { TransactionStatus } from '@snx-v3/txnReducer';
@@ -17,6 +17,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const ClaimModalUi: React.FC<{
   onClose: () => void;
@@ -38,8 +39,14 @@ export const ClaimModalUi: React.FC<{
           title="Debt successfully Updated"
           subline={
             <>
-              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Debt</b> has been updated, read more about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={
@@ -111,7 +118,7 @@ export const ClaimModal: React.FC<{
   onClose: () => void;
   isOpen: boolean;
 }> = ({ onClose, isOpen }) => {
-  const { debtChange } = useContext(ManagePositionContext);
+  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const queryClient = useQueryClient();
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -134,10 +141,12 @@ export const ClaimModal: React.FC<{
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();
+
       await queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
       });
+      setDebtChange(ZEROWEI);
     } catch (error: any) {
       const contractError = errorParserCoreProxy(error);
       if (contractError) {
@@ -156,11 +165,27 @@ export const ClaimModal: React.FC<{
       });
       throw Error('Claim failed', { cause: error });
     }
-  }, [execBorrow, queryClient, network?.id, network?.preset, errorParserCoreProxy, toast]);
+  }, [
+    execBorrow,
+    setDebtChange,
+    queryClient,
+    network?.id,
+    network?.preset,
+    errorParserCoreProxy,
+    toast,
+  ]);
 
   const { txnStatus } = txnState;
 
-  if (!params.poolId || !params.accountId || !collateralType) return null;
+  if (!params.poolId || !params.accountId || !collateralType)
+    return (
+      <Flex gap={4} flexDirection="column">
+        <Skeleton maxW="232px" width="100%" height="20px" />
+        <Divider my={4} />
+        <Skeleton width="100%" height="20px" />
+        <Skeleton width="100%" height="20px" />
+      </Flex>
+    );
 
   return (
     <ClaimModalUi

@@ -1,5 +1,5 @@
-import { Button, Divider, Flex, Skeleton, Text, useToast } from '@chakra-ui/react';
-import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { Button, Divider, Flex, Skeleton, Text, useToast, Link } from '@chakra-ui/react';
+import { FC, ReactNode, useCallback, useEffect, useState, useContext } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
@@ -22,6 +22,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { LiquidityPositionUpdated } from '../Manage/LiquidityPositionUpdated';
 import { useQueryClient } from '@tanstack/react-query';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 
 export const ClosePositionTransactions: FC<{
   onClose: () => void;
@@ -37,6 +38,7 @@ export const ClosePositionTransactions: FC<{
       cb: () => Promise<any>;
     }[]
   >([]);
+  const { setCollateralChange, setDebtChange } = useContext(ManagePositionContext);
   const { data: systemToken } = useSystemToken();
   const { data: balance } = useTokenBalance(systemToken?.address);
   const { data: usdTokens } = useGetUSDTokens();
@@ -241,6 +243,9 @@ export const ClosePositionTransactions: FC<{
         step: steps.length,
         status: 'success',
       });
+
+      setCollateralChange(ZEROWEI);
+      setDebtChange(ZEROWEI);
     } catch (error) {
       setTxState((state) => ({
         step: state.step,
@@ -264,7 +269,7 @@ export const ClosePositionTransactions: FC<{
       });
       throw Error('Transaction failed', { cause: error });
     }
-  }, [txState.step, steps, errorParserCoreProxy, toast]);
+  }, [txState.step, steps, setCollateralChange, setDebtChange, errorParserCoreProxy, toast]);
 
   if (isSuccess) {
     return (
@@ -281,8 +286,14 @@ export const ClosePositionTransactions: FC<{
         title="Position successfully Closed"
         subline={
           <>
-            Your position has been successfully closed, read more about it in the Synthetix V3
-            Documentation.
+            Your position has been successfully closed, read more about it in the{' '}
+            <Link
+              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+              target="_blank"
+              color="cyan.500"
+            >
+              Synthetix V3 Documentation
+            </Link>
           </>
         }
         alertText={<>Position successfully Closed</>}

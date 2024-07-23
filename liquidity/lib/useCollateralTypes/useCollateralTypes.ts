@@ -52,7 +52,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
   const targetNetwork = customNetwork || network;
   const { data: systemToken } = useSystemToken(customNetwork);
 
-  return useQuery({
+  const query = useQuery({
     enabled: Boolean(targetNetwork?.id && targetNetwork?.preset && systemToken),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
@@ -96,6 +96,12 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
     staleTime: Infinity,
     placeholderData: [],
   });
+
+  return {
+    ...query,
+    isLoading:
+      query.isLoading || !Boolean(targetNetwork?.id && targetNetwork?.preset && systemToken),
+  };
 }
 
 export function useCollateralType(collateralSymbol?: string) {

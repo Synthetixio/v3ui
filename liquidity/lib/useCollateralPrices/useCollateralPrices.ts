@@ -55,7 +55,7 @@ export async function loadPrices({
 
 export const useCollateralPrices = (customNetwork?: Network) => {
   const { network } = useNetwork();
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy({ customNetwork });
   const { data: collateralData } = useCollateralTypes(false, customNetwork);
   const { data: usdTokens } = useGetUSDTokens(customNetwork);
 

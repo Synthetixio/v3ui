@@ -21,7 +21,7 @@ export const useVaultsData = (poolId?: number, customNetwork?: Network) => {
   const targetNetwork = customNetwork || network;
 
   const { data: collateralTypes } = useCollateralTypes(false, customNetwork);
-  const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: CoreProxy } = useCoreProxy({ customNetwork });
   const { data: collateralPriceUpdates } = useAllCollateralPriceIds(customNetwork);
 
   const provider = useProviderForChain(targetNetwork);

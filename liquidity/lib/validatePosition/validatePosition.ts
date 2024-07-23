@@ -22,6 +22,7 @@ export const validatePosition = ({
   const newCollateralValue = newCollateralAmount.mul(collateralPrice || 0);
 
   const newCRatio = calculateCRatio(newDebt, newCollateralValue);
+
   const maybeMaxDebt = wei(newCollateralAmount)
     .mul(collateralPrice || 0)
     .div(targetCRatio)

@@ -10,6 +10,7 @@ import {
   Text,
   Tooltip,
   UnorderedList,
+  Link,
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -162,7 +163,7 @@ export const InitialDepositUi: FC<{
                     'data-testid': 'deposit amount input',
                     'data-max': combinedTokenBalance?.toString(),
                     type: 'number',
-                    step: '0.01',
+                    min: 0,
                   }}
                   value={collateralChange}
                   onChange={(value) => {
@@ -170,6 +171,7 @@ export const InitialDepositUi: FC<{
                   }}
                   max={combinedTokenBalance}
                   dataTestId="deposit-number-input"
+                  min={ZEROWEI}
                 />
                 <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
                   {price.gt(0) && <Amount prefix="$" value={collateralChange.abs().mul(price)} />}
@@ -196,7 +198,7 @@ export const InitialDepositUi: FC<{
             }
             animateOpacity
           >
-            <Alert mb={4} status="error">
+            <Alert mb={6} status="error">
               <AlertIcon />
               <AlertDescription>
                 Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
@@ -205,10 +207,10 @@ export const InitialDepositUi: FC<{
           </Collapse>
 
           <Collapse in={overAvailableBalance} animateOpacity>
-            <Alert mb={4} status="error">
+            <Alert mb={6} status="error">
               <AlertIcon />
               <AlertDescription>
-                You cannot Deposit & Lock more Collateral than your balance amount
+                You cannot Deposit & Lock more Collateral than your Balance amount
               </AlertDescription>
             </Alert>
           </Collapse>
@@ -239,8 +241,14 @@ export const InitialDepositUi: FC<{
           <Text>
             In order to open a position on Synthetix Liquidity, you need an Account. It’s a one time
             action needed that you won’t have to reproduce for the next positions. Accounts are
-            represented as ERC-721 compliant tokens (NFTs). Read more in the Synthetix V3
-            Documentation.
+            represented as ERC-721 compliant tokens (NFTs). Read more about it in the{' '}
+            <Link
+              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+              target="_blank"
+              color="cyan.500"
+            >
+              Synthetix V3 Documentation
+            </Link>
           </Text>
           <br />
           <UnorderedList>

@@ -115,7 +115,9 @@ export const useUndelegateBaseAndromeda = ({
           allCalls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useUndelegateBase');
+        const walletAddress = await signer.getAddress();
+
+        const erc7412Tx = await withERC7412(network, allCalls, 'useUndelegateBase', walletAddress);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

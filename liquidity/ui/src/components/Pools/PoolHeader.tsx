@@ -9,22 +9,14 @@ interface PoolHeaderProps extends FlexProps {
 export const PoolHeader = ({ name, network, ...props }: PoolHeaderProps) => {
   return (
     <>
-      <Flex gap={2} alignItems="center" {...props}>
+      <Flex mt={2} flexWrap="wrap" gap={4} alignItems="center" {...props}>
         <Skeleton isLoaded={!!name}>
           <Heading fontWeight={700} fontSize="3xl">
             {name ? name : 'Unknown Pool'}
           </Heading>
         </Skeleton>
         {[MAINNET.id, ARBITRUM.id].includes(network?.id) && (
-          <Tag
-            ml={2}
-            mt="2px"
-            size="sm"
-            bg="purple.500"
-            mr="auto"
-            color="white"
-            height="fit-content"
-          >
+          <Tag size="sm" bg="purple.500" mr="auto" color="white" height="fit-content">
             Borrow Interest-Free
           </Tag>
         )}

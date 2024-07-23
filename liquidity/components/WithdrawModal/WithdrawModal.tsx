@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import React, { FC, useCallback, useContext, useState } from 'react';
 import { Multistep } from '@snx-v3/Multistep';
 import { Wei } from '@synthetixio/wei';
@@ -42,7 +42,14 @@ export const WithdrawModalUi: FC<{
           subline={
             <>
               Your <b>{isDebtWithdrawal ? 'Debt' : 'Collateral'}</b> has been withdrawn, read more
-              about it in the Synthetix V3 Documentation.
+              about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={(isDebtWithdrawal ? 'Debt' : 'Collateral') + ' successfully Withdrawn'}
@@ -114,7 +121,7 @@ export function WithdrawModal({
     step: 1,
     status: 'idle',
   });
-  const { withdrawAmount } = useContext(ManagePositionContext);
+  const { withdrawAmount, setWithdrawAmount } = useContext(ManagePositionContext);
   const params = useParams();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -174,6 +181,8 @@ export function WithdrawModal({
             { accountId },
           ],
         });
+
+        setWithdrawAmount(ZEROWEI);
       } else {
         onClose();
       }
@@ -207,6 +216,7 @@ export function WithdrawModal({
     network?.preset,
     onClose,
     queryClient,
+    setWithdrawAmount,
     toast,
     txState.step,
     withdrawAndromeda,
