@@ -17,19 +17,18 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import Wei, { wei } from '@synthetixio/wei';
-import React, { FC, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useContext, useMemo } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../TokenIcon';
-import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { useTimer } from 'react-timer-hook';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
 import { ZEROWEI } from '../../utils/constants';
 import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
 import { ChangeStat } from '../Manage';
 import { currency } from '@snx-v3/format';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
+import { useWithdrawTimer } from '../../../../lib/useWithdrawTimer';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -43,8 +42,8 @@ export const UndelegateUi: FC<{
   setCollateralChange: (val: Wei) => void;
   isAnyMarketLocked?: boolean;
   isLoadingRequiredData: boolean;
-  unlockDate?: Date;
   isBase: boolean;
+  accountId: string | undefined;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -55,10 +54,10 @@ export const UndelegateUi: FC<{
   minDelegation,
   isLoadingRequiredData,
   isAnyMarketLocked,
-  unlockDate,
   isBase,
   currentDebt,
   collateralPrice,
+  accountId,
 }) => {
   const price = useTokenPrice(symbol);
 
@@ -69,16 +68,7 @@ export const UndelegateUi: FC<{
     setCollateralChange(max.mul(-1));
   }, [max, setCollateralChange]);
 
-  const { minutes, hours, restart } = useTimer({
-    expiryTimestamp: new Date(0),
-    autoStart: false,
-  });
-
-  useEffect(() => {
-    if (unlockDate) {
-      restart(unlockDate, true);
-    }
-  }, [restart, unlockDate]);
+  const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
 
   const leftoverCollateral = currentCollateral?.add(collateralChange) || wei(0);
   const isValidLeftover =
@@ -203,7 +193,7 @@ export const UndelegateUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
-        <Alert mt={2} mb={4} status="info">
+        <Alert mb={6} status="info">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>
@@ -216,26 +206,17 @@ export const UndelegateUi: FC<{
         </Alert>
       </Collapse>
       <Collapse
-        in={max?.gt(0) && !isLoadingRequiredData && collateralChange.abs().gt(0)}
+        in={max?.gt(0) && !isLoadingRequiredData && collateralChange.abs().gt(0) && isValidLeftover}
         animateOpacity
       >
-        <Alert status="warning" mb="6">
+        <Alert status="error" mb="6">
           <AlertIcon />
           <Text>
-            You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
-            reset this timer to 24H.
+            {isRunning
+              ? `You will be able to withdraw assets in ${hours}H${minutes}M. `
+              : 'You are able to withdraw assets. '}
+            Any account activity will reset this timer to 24H.
           </Text>
-        </Alert>
-      </Collapse>
-
-      <Collapse in={overAvailableBalance} animateOpacity>
-        <Alert mb={6} status="error">
-          <AlertIcon />
-          <Flex direction="column">
-            <AlertTitle>
-              The max withdrawable amount is <Amount value={max} suffix={` ${symbol}`} />
-            </AlertTitle>
-          </Flex>
         </Alert>
       </Collapse>
 
@@ -254,10 +235,6 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   const { collateralChange, debtChange, setCollateralChange } = useContext(ManagePositionContext);
   const { poolId, accountId, collateralSymbol } = useParams();
   const { data: collateralType } = useCollateralType(collateralSymbol);
-  const { data: accountCollateralUnlockDate, isLoading: isLoadingAccountUnlockDate } =
-    useAccountCollateralUnlockDate({
-      accountId,
-    });
 
   const poolConfiguration = usePoolConfiguration(poolId);
   const { network } = useNetwork();
@@ -314,11 +291,11 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
       currentCollateral={liquidityPosition?.collateralAmount}
       currentDebt={liquidityPosition?.debt}
       max={max}
-      unlockDate={accountCollateralUnlockDate}
-      isLoadingRequiredData={poolConfiguration.isLoading || isLoadingAccountUnlockDate || !max}
+      isLoadingRequiredData={poolConfiguration.isLoading || !max}
       isAnyMarketLocked={poolConfiguration.data?.isAnyMarketLocked}
       isBase={isBase}
       collateralPrice={liquidityPosition?.collateralPrice}
+      accountId={accountId}
     />
   );
 };

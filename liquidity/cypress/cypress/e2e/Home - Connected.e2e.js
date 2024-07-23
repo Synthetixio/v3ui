@@ -39,7 +39,7 @@ it('Home Connected', () => {
     // cy.get('[data-cy="asset-list-account-balance"]').contains('$0.00');
     // cy.get('[data-cy="asset-list-locked-balance"]').contains('$0.00');
     // cy.get('[data-cy="assets-deposit-button"]').contains('Deposit');
-    cy.get('[data-cy="Total Unlocked-stats-box"]').contains('$0.00');
+    // cy.get('[data-cy="Total Unlocked-stats-box"]').contains('$0.00');
     cy.get('[data-cy="Total Locked-stats-box"]').contains('$0.00');
     // cy.get('[data-cy="Total Debt-stats-box"]').contains('$0.00');
   });

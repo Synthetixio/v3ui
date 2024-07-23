@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { useTimer } from 'react-timer-hook';
 
-export function useWithdrawTimer(accountId: string) {
+export function useWithdrawTimer(accountId: string | undefined) {
   const { data: accountCollateralUnlockDate, isLoading: isLoadingDate } =
     useAccountCollateralUnlockDate({
       accountId,
@@ -22,7 +22,7 @@ export function useWithdrawTimer(accountId: string) {
     minutes,
     hours,
     seconds,
-    isRunning,
+    isRunning: isRunning && !![minutes, hours, seconds].find((a) => a > 0),
     accountCollateralUnlockDate,
   };
 }
