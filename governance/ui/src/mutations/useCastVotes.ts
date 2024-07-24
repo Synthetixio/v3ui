@@ -1,12 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
-import {
-  getCouncilContract,
-  getWormwholeChainId,
-  SnapshotRecordContractAddress,
-} from '../utils/contracts';
-import { BigNumber, Contract, utils } from 'ethers';
+import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
+import { BigNumber, Contract } from 'ethers';
 import { multicallABI } from '../utils/abi';
 
 export function useCastVotes(
@@ -85,15 +81,16 @@ export function useCastVotes(
                     [candidates[council]],
                     [getVotingPowerByCouncil(council)?.power],
                   ]),
-                  value: quote,
+                  value: quote.add(quote.mul(25).div(100)),
                   requireSuccess: true,
                 };
           });
+          console.log(prepareBallotData, castData);
 
           await multicall
             .connect(signer)
             [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
-              gasLimit: 1_250_000,
+              gasLimit: 2_000_000,
             });
         } catch (error) {
           console.error(error);

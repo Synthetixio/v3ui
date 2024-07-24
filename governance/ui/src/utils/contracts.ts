@@ -3,17 +3,17 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -42,22 +42,13 @@ export const SnapshotRecordContractAddress = (chainId: number) => {
       return process.env.DEV === 'true'
         ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
         : process.env.TESTNET === 'true'
-          ? '0x5F0aEC6455ACD77721D243020C447a49De6469d5'
+          ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
           : '';
     case 11155420:
       return process.env.DEV === 'true'
         ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
         : process.env.TESTNET === 'true'
-          ? '0x5F0aEC6455ACD77721D243020C447a49De6469d5'
+          ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
           : '';
-  }
-};
-
-export const getWormwholeChainId = (supportedNetworks: number) => {
-  switch (supportedNetworks) {
-    case 421614:
-      return 10003;
-    case 11155420:
-      return 10005;
   }
 };
