@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
-import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
+import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, Contract } from 'ethers';
 import { multicallABI } from '../utils/abi';
 
@@ -37,7 +37,6 @@ export function useCastVotes(
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
           );
-
           const prepareBallotData = councils
             .map((council) => {
               if (!getVotingPowerByCouncil(council)?.isDeclared) {
@@ -46,14 +45,14 @@ export function useCastVotes(
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContractAddress(network.id), activeWallet?.address]
+                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
                       ),
                     }
                   : {
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContractAddress(network.id), activeWallet?.address]
+                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
                       ),
                       value: 0,
                       requireSuccess: true,
@@ -85,13 +84,21 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
-          console.log(prepareBallotData, castData);
+
+          console.log(
+            [candidates.spartan],
+            [getVotingPowerByCouncil('spartan')?.power],
+            prepareBallotData
+          );
+          // await electionModules[0].cast(
+          //   [candidates.spartan],
+          //   [getVotingPowerByCouncil('spartan')?.power],
+          //   { value: quote.add(quote.mul(25).div(100)) }
+          // );
 
           await multicall
             .connect(signer)
-            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
-              gasLimit: 2_000_000,
-            });
+            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData]);
         } catch (error) {
           console.error(error);
         }

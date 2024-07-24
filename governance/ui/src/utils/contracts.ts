@@ -36,19 +36,25 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
-export const SnapshotRecordContractAddress = (chainId: number) => {
+export const SnapshotRecordContract = (chainId: number) => {
   switch (chainId) {
     case 421614:
-      return process.env.DEV === 'true'
-        ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
-        : process.env.TESTNET === 'true'
-          ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-          : '';
+      return new Contract(
+        process.env.DEV === 'true'
+          ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
+          : process.env.TESTNET === 'true'
+            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
+            : '',
+        ['function balanceOfOnPeriod(address, uint256) view returns (uint256)']
+      );
     case 11155420:
-      return process.env.DEV === 'true'
-        ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-        : process.env.TESTNET === 'true'
-          ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-          : '';
+      return new Contract(
+        process.env.DEV === 'true'
+          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+          : process.env.TESTNET === 'true'
+            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
+            : '',
+        ['function balanceOfOnPeriod(address, uint256) view returns (uint256)']
+      );
   }
 };

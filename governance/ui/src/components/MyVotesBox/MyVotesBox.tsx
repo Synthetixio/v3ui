@@ -2,7 +2,6 @@ import { Button, Fade, Flex, Heading } from '@chakra-ui/react';
 import councils from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import MyVoteRow from '../MyVoteRow/MyVoteRow';
-import { useCastVotes } from '../../queries';
 
 export default function MyVotesBox({
   closeCart,
@@ -16,8 +15,6 @@ export default function MyVotesBox({
   period?: string;
 }) {
   const navigate = useNavigate();
-
-  const {} = useCastVotes();
 
   return (
     <Fade in={true}>

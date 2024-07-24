@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
-import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { SnapshotRecordContract, getCouncilContract } from '../utils/contracts';
 import { useProvider, useWallet } from './';
 import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
@@ -19,21 +19,31 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         const electionModule = getCouncilContract(council).connect(motherShipProvider);
 
         const electionId = await electionModule.getEpochIndex();
-        const ballot = await electionModule.getBallot(activeWallet.address, network.id, electionId);
+        const ballot =
+          network.id === 11155420
+            ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
+            : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
 
-        if (ballot && ballot.votingPower.gt(0)) {
-          return { power: ballot.votingPower as BigNumber, isDeclared: true };
+        if (ballot) {
+          if (ballot?.votingPower?.gt(0)) {
+            return { power: ballot.votingPower as BigNumber, isDeclared: true };
+          } else if (ballot.gt(0)) {
+            return { power: ballot as BigNumber, isDeclared: true };
+          }
         }
-
-        const votingPower: BigNumber = await electionModule
-          .connect(provider)
-          .callStatic.prepareBallotWithSnapshot(
-            SnapshotRecordContractAddress(network.id),
-            activeWallet?.address
-          );
+        const votingPower: BigNumber =
+          network.id === 11155420
+            ? await electionModule
+                .connect(provider)
+                .callStatic.prepareBallotWithSnapshot(
+                  SnapshotRecordContract(network.id),
+                  activeWallet?.address
+                )
+            : await SnapshotRecordContract(network.id)
+                ?.connect(provider)
+                .balanceOfOnPeriod(activeWallet.address, 1);
         return { power: votingPower, isDeclared: false };
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('ERROR IS', { error });
         return { power: ethers.BigNumber.from(0), isDeclared: false };
       }
