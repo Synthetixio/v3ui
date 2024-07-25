@@ -9,11 +9,25 @@ export async function mineBlock({ council, period }) {
     proxy
       .connect(devSigner)
       .Epoch_setEpochDates(
-        0,
-        block.timestamp - 10,
-        block.timestamp,
-        block.timestamp + 10000,
-        block.timestamp + 20000
+        period === 'admin'
+          ? (0,
+            block.timestamp,
+            block.timestamp + 10000,
+            block.timestamp + 20000,
+            block.timestamp + 30000)
+          : period === 'nomination'
+            ? (0,
+              block.timestamp - 10,
+              block.timestamp,
+              block.timestamp + 10000,
+              block.timestamp + 20000)
+            : period === 'voting'
+              ? (0,
+                block.timestamp - 200,
+                block.timestamp - 100,
+                block.timestamp,
+                block.timestamp + 10000)
+              : (0, block.timestamp - 10, block.timestamp - 5, block.timestamp - 1, block.timestamp)
       );
   });
   return null;
