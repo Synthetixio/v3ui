@@ -36,6 +36,7 @@ module.exports = defineConfig({
         ...require('./cypress/tasks/mineBlock'),
         ...require('./cypress/tasks/setToAdminPeriod'),
         ...require('./cypress/tasks/setToNominationPeriod'),
+        ...require('./cypress/tasks/changePeriod'),
       });
 
       return config;

@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "scripts": {
-    "anvil:op-sepolia": "anvil --fork-url https://optimism-sepolia.infura.io/v3/$INFURA_KEY --fork-block-number 14539112",
+    "anvil:op-sepolia": "anvil --fork-url https://optimism-sepolia.infura.io/v3/$INFURA_KEY --fork-block-number 15053625",
     "e2e": "cypress open --e2e --browser chrome"
   },
   "devDependencies": {
