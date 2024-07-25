@@ -36,6 +36,7 @@ export default function MyVoteRow({
           address={currentVotes[councilSlug] || selectedVotes[councilSlug]}
         />
         {!!selectedVotes[councilSlug] &&
+          !!currentVotes[councilSlug] &&
           (selectedVotes[councilSlug] !== currentVotes[councilSlug] ||
             selectedVotes[councilSlug] === 'remove') && (
             <>
