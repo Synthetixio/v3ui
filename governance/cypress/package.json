@@ -19,6 +19,8 @@
     "ts-node": "^10.9.1"
   },
   "depcheck": {
-    "ignoreMatches": ["ts-node"]
+    "ignoreMatches": [
+      "ts-node"
+    ]
   }
 }
