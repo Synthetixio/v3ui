@@ -19,7 +19,6 @@ import {
 } from '@chakra-ui/react';
 import { NetworkIcon } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../../TokenIcon';
-import { Sparkles } from '@snx-v3/icons';
 import { Tooltip } from '@snx-v3/Tooltip';
 
 interface TorosPoolCardProps {
@@ -44,17 +43,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           width="calc(100% - 2px)"
           height="calc(100% - 2px)"
         />
-        <Flex
-          position="relative"
-          onClick={() => {
-            window.open('https://toros.finance/synthetix-usdc-andromeda-yield', '_blank');
-          }}
-          flexDir="column"
-          rounded="base"
-          bg="navy.700"
-          _hover={{ cursor: 'pointer', bg: 'whiteAlpha.50', textDecoration: 'none' }}
-          p={6}
-        >
+        <Flex position="relative" flexDir="column" rounded="base" bg="navy.700" p={6}>
           <Flex
             flexDir={['column', 'row']}
             w="100%"
@@ -195,7 +184,6 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
                       minWidth="100px"
                     >
                       {apy}%
-                      <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
                     </Text>
                   </Td>
                   <Td border="none" textAlign="right" px={0}>

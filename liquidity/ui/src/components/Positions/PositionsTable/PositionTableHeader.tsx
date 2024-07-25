@@ -17,12 +17,20 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
         >
           Collateral
         </Th>
-        <Th border="none" textTransform="unset" py={5}>
+        <Th textAlign="right" border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
               Locked
             </Text>
+            <Tooltip label="Unlocked assets can be locked into a position at any time or withdrawn after 24h since last activity">
+              <InfoIcon w="10px" h="10px" />
+            </Tooltip>
           </Flex>
+        </Th>
+        <Th textAlign="right" border="none" textTransform="unset" py={5}>
+          <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            Unlocked
+          </Text>
         </Th>
         <Th border="none" textTransform="unset" py={5}>
           <Flex justifyContent="flex-end" alignItems="center">
@@ -32,17 +40,10 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             <Tooltip
               label={
                 <Flex flexDirection="column" alignItems="start">
-                  <Text fontWeight="bold" fontSize="14px">
-                    Annual Percentage Yield (APY):
-                  </Text>
                   <Text textAlign="left" fontSize="14px">
-                    Reflects the PNL. It is calculated as an estimate derived from past week
-                    historical PNL, extrapolated as a year average.
+                    APR is averaged over the trailing 28 days and is comprised of both performance
+                    and rewards
                   </Text>
-                  <Text fontWeight="bold" mt={2} fontSize="14px">
-                    Calculation
-                  </Text>
-                  <Text fontSize="14px">Last 7 days PNL * 52</Text>
                 </Flex>
               }
             >
@@ -57,33 +58,14 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Text>
             <Tooltip
               label={
-                <Flex flexDirection="column" alignItems="start">
-                  {!isBase && (
-                    <>
-                      <Text fontWeight="bold" fontSize="14px">
-                        Debt.
-                      </Text>
-                      <Text textAlign="left" fontSize="14px" mb={2}>
-                        Represents PNL - Borrowed.
-                      </Text>
-                    </>
-                  )}
-                  <Text fontWeight="bold" fontSize="14px">
-                    Claim Credit:
-                  </Text>
-                  <Text fontSize="14px" textAlign="left">
-                    When your position is performing well, it pays back the borrowed assets (if any)
-                    and turns into Credit available to Claim.
-                  </Text>
-
-                  <Text fontWeight="bold" mt={2} fontSize="14px">
-                    Repay debt:
-                  </Text>
-                  <Text fontSize="14px" textAlign="left">
-                    You have debt if the PNL has not yet paid back your borrowed assets, or if the
-                    PNL is Negative.
-                  </Text>
-                </Flex>
+                <Text textAlign="left">
+                  Debt consists of:
+                  <br />
+                  - Your portion of the pool&apos;s total debt, which fluctuates based on trader
+                  performance and market conditions
+                  <br />- The amount you&apos;ve borrowed against your collateral without incurring
+                  interest
+                </Text>
               }
             >
               <InfoIcon w="10px" h="10px" />
@@ -99,13 +81,9 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
               <Tooltip
                 label={
                   <Flex flexDirection="column" alignItems="start">
-                    <Text fontWeight="bold" fontSize="14px">
-                      C-ratio:
-                    </Text>
                     <Text textAlign="left" fontSize="14px">
-                      Manage your Position by Adding or Removing collateral to this position.
-                      BorrowIs a dynamic number that represents a ratio between the collateral
-                      Delegated for your position and the Borrowed assets for this position - PNL.
+                      C-ratio is a dynamic number that represents a ratio between your locked
+                      collateral and your debt
                     </Text>
                   </Flex>
                 }

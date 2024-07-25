@@ -21,7 +21,7 @@ describe('RewardsModal', () => {
 
     // Add assertions based on your component's UI.
     // For example, you can check if the modal content is displayed.
-    cy.contains('Transaction Pending').should('exist');
+    cy.contains('Claiming Rewards').should('exist');
     cy.contains('Claiming 100 ETH').should('exist');
     cy.contains('View Transaction').should('exist');
   });

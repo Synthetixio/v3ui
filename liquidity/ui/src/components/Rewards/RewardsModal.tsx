@@ -1,8 +1,7 @@
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { CheckIcon } from '@chakra-ui/icons';
 import {
   ModalContent,
   ModalBody,
-  ModalHeader,
   Modal,
   Text,
   Flex,
@@ -10,10 +9,12 @@ import {
   CircularProgress,
   Link,
   Button,
+  Divider,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 
 interface RewardsModalInterface {
   collateralSymbol?: string;
@@ -56,43 +57,24 @@ export const RewardsModal = ({
         borderColor="gray.900"
         minWidth="384px"
       >
-        <ModalBody p={4}>
-          <Flex
-            onClick={() => setIsOpen(false)}
-            justifyContent="flex-end"
-            border="none"
-            boxShadow="none"
-            _focus={{ outline: 'none' }}
-          >
-            <CloseIcon _hover={{ cursor: 'pointer' }} />
-          </Flex>
-          <ModalHeader
-            pl={0}
-            py={1}
-            color="whiteAlpha.900"
-            fontSize="20px"
-            fontWeight={700}
-            lineHeight="120%"
-            textAlign="left"
-          >
-            Transaction Pending
-          </ModalHeader>
-          <Text
-            p={3}
-            pl={0}
-            color="gray.600"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="150%"
-            mb={2}
-          >
-            Follow the Metamask prompts to execute the following transactions.
+        <ModalBody p={6}>
+          <Text color="gray.50" fontSize="20px" fontWeight={700}>
+            Claiming Rewards
           </Text>
+
+          <Divider my={4} />
+
           <Flex
-            px={3}
-            py={3}
-            borderRadius="5px"
-            border="1px solid"
+            position="relative"
+            alignItems="center"
+            gap={4}
+            mb={6}
+            rounded="lg"
+            mt="6"
+            p="4"
+            border="2px solid"
+            transitionProperty="border-color"
+            transitionDuration="normal"
             borderColor={txnStatus === 'success' ? 'green.500' : 'gray.900'}
           >
             <Flex
@@ -124,6 +106,7 @@ export const RewardsModal = ({
               </Text>
             </Flex>
           </Flex>
+          <WithdrawIncrease />
           {txnStatus === 'success' && (
             <Button
               mt={5}

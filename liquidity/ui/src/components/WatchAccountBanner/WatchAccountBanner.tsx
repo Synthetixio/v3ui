@@ -2,9 +2,10 @@ import { Alert, AlertIcon, Button, Flex, Heading } from '@chakra-ui/react';
 import { useAccounts } from '@snx-v3/useAccounts';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useParams } from '@snx-v3/useParams';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 export const WatchAccountBanner: FC = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const { activeWallet, connect } = useWallet();
   const { accountId } = useParams();
   const {
@@ -13,7 +14,13 @@ export const WatchAccountBanner: FC = () => {
     isFetching: isAccountsFetching,
   } = useAccounts();
 
-  if (!accountId) {
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 200);
+  }, []);
+
+  if (!isLoaded) {
     return null;
   }
 
@@ -23,7 +30,9 @@ export const WatchAccountBanner: FC = () => {
         <AlertIcon />
         <Flex flex={1} gap={4} alignItems="center" justifyContent="space-between">
           <div>
-            <Heading fontSize="16px">You are currently watching Account #{accountId}</Heading>
+            {accountId && (
+              <Heading fontSize="16px">You are currently watching Account #{accountId}</Heading>
+            )}
             <Heading fontSize="14px">
               Please connect your wallet too open, manage or view positions.
             </Heading>
@@ -34,10 +43,14 @@ export const WatchAccountBanner: FC = () => {
     );
   }
 
+  if (!accountId) {
+    return null;
+  }
+
   if (
     !isAccountsFetching &&
     !isAccountsLoading &&
-    accounts &&
+    !!accounts?.length &&
     !accounts.find((a) => a === accountId)
   ) {
     return (

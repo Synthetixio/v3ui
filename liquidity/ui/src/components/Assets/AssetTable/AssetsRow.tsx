@@ -15,8 +15,8 @@ interface AssetsRowProps {
   walletBalance$: number;
   accountBalance: Wei;
   accountBalance$: number;
-  delegatedBalance: number;
-  delegatedBalance$: number;
+  lockedBalance: number;
+  lockedBalance$: number;
   unlockDate?: Date;
   final: boolean; // Used for hiding bottom border
 }
@@ -28,8 +28,8 @@ export const AssetsRow = ({
   walletBalance$,
   accountBalance,
   accountBalance$,
-  delegatedBalance,
-  delegatedBalance$,
+  lockedBalance,
+  lockedBalance$,
   unlockDate,
   final,
 }: AssetsRowProps) => {
@@ -111,12 +111,12 @@ export const AssetsRow = ({
               fontWeight={700}
               lineHeight="1.25rem"
               fontFamily="heading"
-              data-cy="asset-list-delegated-balance"
+              data-cy="asset-list-locked-balance"
             >
-              {formatNumberToUsd(delegatedBalance$)}
+              {formatNumberToUsd(lockedBalance$)}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {formatNumber(delegatedBalance)}
+              {formatNumber(lockedBalance)}
               {` ${token}`}
             </Text>
           </Flex>
@@ -154,11 +154,10 @@ export const AssetsRow = ({
               {activeWallet?.address ? 'Deposit' : 'Connect'}
             </Button>
           </Fade>
-
           <Fade in>
             <Tooltip
               label={
-                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H ${minutes}M`
+                isRunning && accountBalance.gt(0) && `Withdrawal available in ${hours}H${minutes}M`
               }
             >
               <Button

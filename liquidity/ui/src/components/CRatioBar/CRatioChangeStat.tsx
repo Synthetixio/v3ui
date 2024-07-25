@@ -32,25 +32,28 @@ export const CRatioChangeStat: FC<{
     </Text>
 
     {(!collateralChange?.eq(0) || !debtChange.eq(0)) && (
-      <Text
-        color="white"
-        fontSize={size === 'lg' ? '20px' : '12px'}
-        fontWeight={size === 'lg' ? '800' : '700'}
-      >
-        &rarr;
-        {(currentCollateral || ZEROWEI).add(collateralChange).gt(0) &&
-        (currentDebt || ZEROWEI).add(debtChange).eq(0) ? (
-          'Infinite'
-        ) : (
-          <Amount
-            value={calculateCRatio(
-              (currentDebt || ZEROWEI).add(debtChange),
-              (currentCollateral || ZEROWEI).add(collateralChange).mul(collateralPrice)
-            ).mul(100)}
-            suffix="%"
-          />
-        )}
-      </Text>
+      <>
+        <span>&rarr;</span>
+
+        <Text
+          color="white"
+          fontSize={size === 'lg' ? '20px' : '12px'}
+          fontWeight={size === 'lg' ? '800' : '700'}
+        >
+          {(currentCollateral || ZEROWEI).add(collateralChange).gt(0) &&
+          (currentDebt || ZEROWEI).add(debtChange).eq(0) ? (
+            'Infinite'
+          ) : (
+            <Amount
+              value={calculateCRatio(
+                (currentDebt || ZEROWEI).add(debtChange),
+                (currentCollateral || ZEROWEI).add(collateralChange).mul(collateralPrice)
+              ).mul(100)}
+              suffix="%"
+            />
+          )}
+        </Text>
+      </>
     )}
   </Flex>
 );

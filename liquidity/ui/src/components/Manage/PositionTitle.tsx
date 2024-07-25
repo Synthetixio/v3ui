@@ -2,8 +2,8 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { FC } from 'react';
 import { useCollateralDisplayName } from '../../pages';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
-import { CollateralIcon } from '@snx-v3/icons';
 import { useNavigate } from 'react-router-dom';
+import { TokenIcon } from '../TokenIcon';
 
 export const PositionTitle: FC<{
   collateralSymbol?: string;
@@ -19,17 +19,15 @@ export const PositionTitle: FC<{
     <Flex alignItems="center">
       <Flex
         bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
-        height="34px"
-        width="34px"
         justifyContent="center"
         alignItems="center"
         borderRadius="100%"
         display="flex"
       >
-        <CollateralIcon
-          symbol={collateralSymbol}
-          width="42px"
-          height="42px"
+        <TokenIcon
+          symbol={collateralSymbol || ''}
+          height={42}
+          width={42}
           fill="#0B0B22"
           color="#00D1FF"
         />
@@ -59,7 +57,6 @@ export const PositionTitle: FC<{
         >
           {poolName}
           <Flex
-            ml={2}
             alignItems="normal"
             fontSize={['10px', '12px']}
             color="gray.500"

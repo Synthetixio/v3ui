@@ -4,7 +4,7 @@ test('handles undefined values', () => {
   const result = validatePosition({
     issuanceRatioD18: undefined,
     collateralAmount: undefined,
-    collateralValue: undefined,
+    collateralPrice: undefined,
     debt: undefined,
     collateralChange: wei(0),
     debtChange: wei(0),

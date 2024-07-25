@@ -16,7 +16,7 @@ import { usePoolData } from '@snx-v3/usePoolData';
 import { useRewards, RewardsType } from '@snx-v3/useRewards';
 import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
+import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { usePool } from '@snx-v3/usePoolsList';
 import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { ClosePosition } from '../components/ClosePosition/ClosePosition';
@@ -63,10 +63,23 @@ export const ManageUi: FC<{
   collateralSymbol?: string;
   poolName?: string;
   poolId?: string;
-}> = ({ isLoading, rewards, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
+}> = ({
+  collateralType,
+  isLoading,
+  rewards,
+  liquidityPosition,
+  network,
+  collateralSymbol,
+  poolName,
+  poolId,
+}) => {
   const [closePosition, setClosePosition] = useState(false);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
+
+  const positionApr = poolData?.apr.collateralAprs.find(
+    (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
+  );
 
   return (
     <Box mb={12} mt={8}>
@@ -85,10 +98,9 @@ export const ManageUi: FC<{
           isOpen={false}
           poolId={poolId}
         />
-
         {poolData && (
           <Flex alignItems={['center', 'flex-end']} direction="column">
-            <Tooltip label="Apr is averaged over the trailing 28 days and is comprised of both performance and rewards.">
+            <Tooltip label="APR is averaged over the trailing 28 days and is comprised of both performance and rewards">
               <Text
                 fontFamily="heading"
                 fontSize="sm"
@@ -101,8 +113,8 @@ export const ManageUi: FC<{
               </Text>
             </Tooltip>
             <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-              {poolData.apr.combinedApr > 0
-                ? `${poolData.apr.combinedApr.toFixed(2)?.concat('%')}`
+              {poolData && positionApr.apr28d > 0
+                ? `${(positionApr.apr28d * 100).toFixed(2)?.concat('%')}`
                 : '-'}
             </Text>
           </Flex>
@@ -163,6 +175,7 @@ export const Manage = () => {
   const collateralSymbol = useNormalisedCollateralSymbol(collateralSymbolRaw);
 
   const { network } = useNetwork();
+  const { activeWallet } = useWallet();
 
   const { isFetching: isCollateralLoading, data: collateralType } =
     useCollateralType(collateralSymbolRaw);
@@ -185,11 +198,12 @@ export const Manage = () => {
   const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
-  const { data: collateralTypes } = useCollateralTypes();
+  const { data: collateralTypes, isLoading: isLoadingCollaterals } = useCollateralTypes();
 
   const notSupported =
+    !isLoadingCollaterals &&
     poolData &&
-    collateralTypes &&
+    collateralTypes?.length &&
     collateralDisplayName &&
     !collateralTypes.some(
       (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
@@ -197,38 +211,44 @@ export const Manage = () => {
 
   return (
     <ManagePositionProvider>
-      <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
-
       <WatchAccountBanner />
-      {(!accountId ||
-        (!isLoadingPosition &&
-          liquidityPosition &&
-          liquidityPosition.collateralAmount.eq(0) &&
-          liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
-        <NoPosition
-          collateralSymbol={collateralSymbol}
-          collateralType={collateralType}
-          accountId={accountId}
-          rewards={rewardsData}
-          liquidityPosition={liquidityPosition}
-        />
-      )}
-      {accountId &&
-        ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
-          liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
-          <ManageUi
-            isLoading={isLoading}
-            rewards={rewardsData}
-            poolName={poolData?.name}
-            poolId={poolId}
-            liquidityPosition={liquidityPosition}
-            network={network}
-            collateralSymbol={collateralSymbol}
-          />
-        )}
 
-      {isLoadingPosition && (
-        <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
+      {!!activeWallet && (
+        <>
+          <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
+
+          {(!accountId ||
+            (!isLoadingPosition &&
+              liquidityPosition &&
+              liquidityPosition.collateralAmount.eq(0) &&
+              liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
+            <NoPosition
+              collateralSymbol={collateralSymbol}
+              collateralType={collateralType}
+              accountId={accountId}
+              rewards={rewardsData}
+              liquidityPosition={liquidityPosition}
+            />
+          )}
+          {accountId &&
+            ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
+              liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
+              <ManageUi
+                isLoading={isLoading}
+                rewards={rewardsData}
+                poolName={poolData?.name}
+                poolId={poolId}
+                liquidityPosition={liquidityPosition}
+                network={network}
+                collateralSymbol={collateralSymbol}
+                collateralType={collateralType}
+              />
+            )}
+
+          {isLoadingPosition && !!accountId && (
+            <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
+          )}
+        </>
       )}
     </ManagePositionProvider>
   );

@@ -16,7 +16,6 @@ interface RewardsRowInterface {
   frequency: number;
   claimableAmount: number; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
-  hasClaimed: boolean;
   address: string;
   readOnly: boolean;
   total: number;
@@ -27,7 +26,6 @@ export const RewardsRow = ({
   frequency,
   claimableAmount,
   lifetimeClaimed,
-  hasClaimed,
   address,
   readOnly,
   total,
@@ -53,14 +51,6 @@ export const RewardsRow = ({
 
   // We want to pass in the total, as well as the
   const { amount, frequencyString } = convertToReadableInterval(total, frequency);
-
-  const claimButtonLabel = () => {
-    if (claimableAmount > 0 || !hasClaimed) {
-      return 'Claim';
-    }
-
-    return 'Claimed';
-  };
 
   const link = etherscanLink({ chain: network?.name || 'mainnet', address });
 
@@ -138,7 +128,7 @@ export const RewardsRow = ({
                 }}
                 onClick={onClick}
               >
-                {claimButtonLabel()}
+                {claimableAmount > 0 || !lifetimeClaimed ? 'Claim' : 'Claimed'}
               </Button>
             </Fade>
           </Td>

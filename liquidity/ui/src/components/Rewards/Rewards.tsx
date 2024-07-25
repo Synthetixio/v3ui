@@ -107,7 +107,6 @@ export const Rewards = ({
                     claimableAmount={item.claimableAmount.toNumber()}
                     frequency={item.duration}
                     lifetimeClaimed={item.lifetimeClaimed}
-                    hasClaimed={item.lifetimeClaimed > 0}
                     address={item.distributorAddress}
                     readOnly={readOnly}
                     total={item.total}

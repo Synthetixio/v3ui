@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
-import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { stringToHash } from '@snx-v3/tsHelpers';
 import { AccountCollateralType, loadAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
 import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
@@ -79,7 +77,6 @@ export const useLiquidityPosition = ({
   accountId?: string;
   poolId?: string;
 }) => {
-  const { data: collateralPriceUpdates } = useAllCollateralPriceIds();
   const { data: CoreProxy } = useCoreProxy();
   const { data: systemToken } = useSystemToken();
   const { network } = useNetwork();
@@ -99,7 +96,6 @@ export const useLiquidityPosition = ({
       {
         pool: poolId,
         token: tokenAddress,
-        collateralPriceUpdates,
         systemToken: systemToken?.address,
         provider: !!provider,
       },
@@ -109,16 +105,7 @@ export const useLiquidityPosition = ({
     enabled: !!tokenAddress,
     queryFn: async () => {
       if (
-        !(
-          CoreProxy &&
-          accountId &&
-          poolId &&
-          tokenAddress &&
-          collateralPriceUpdates &&
-          systemToken &&
-          network &&
-          provider
-        )
+        !(CoreProxy && accountId && poolId && tokenAddress && systemToken && network && provider)
       ) {
         throw Error('useLiquidityPosition not ready');
       }
@@ -141,15 +128,7 @@ export const useLiquidityPosition = ({
           CoreProxy,
         });
 
-      const collateralPriceCalls = await fetchPriceUpdates(
-        collateralPriceUpdates,
-        network.isTestnet
-      ).then((signedData) => priceUpdatesToPopulatedTx('0x', collateralPriceUpdates, signedData));
-
-      const allCalls = collateralPriceCalls
-        .concat(priceCalls)
-        .concat(positionCalls)
-        .concat(accountCollateralCalls);
+      const allCalls = priceCalls.concat(positionCalls).concat(accountCollateralCalls);
 
       if (priceUpdateTx) {
         allCalls.unshift(priceUpdateTx as any);

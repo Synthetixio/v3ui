@@ -1,20 +1,20 @@
-import { Button, Collapse, Fade, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
-import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
 import { Amount } from '@snx-v3/Amount';
+import { TimeIcon } from '@chakra-ui/icons';
+import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
+import { useTokenPrice } from '../../../../../lib/useTokenPrice';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
   apr?: number;
   systemTokenSymbol?: string;
 }
-[];
 
 export function PositionRow({
-  accountId,
   poolId,
   collateralType,
   debt,
@@ -22,21 +22,32 @@ export function PositionRow({
   cRatio,
   isBase,
   apr,
+  collateralAmount,
+  availableCollateral,
+  accountId,
 }: PositionRow) {
+  const collateralPrice = useTokenPrice(collateralType.displaySymbol);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
+  const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
 
-  const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType.tokenAddress,
-    accountId,
-    poolId,
-  });
+  const handleNavigate = (actions: string) => {
+    queryParams.set('manageAction', actions);
+    navigate({
+      pathname: `/positions/${collateralType.symbol}/${poolId}`,
+      search: queryParams.toString(),
+    });
+  };
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
       <Td border="none">
         <Fade in>
-          <Flex alignItems="center">
+          <Flex
+            alignItems="center"
+            _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={() => handleNavigate(debt.gt(0) ? 'repay' : 'claim')}
+          >
             <TokenIcon symbol={collateralType.symbol} />
             <Flex flexDirection="column" ml={3}>
               <Text
@@ -56,22 +67,60 @@ export function PositionRow({
         </Fade>
       </Td>
       <Td border="none">
-        <Fade in>
-          <Flex flexDirection="column" alignItems="flex-end">
-            <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-              <Amount value={liquidityPosition?.collateralAmount} />
-            </Text>
-            <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-              {collateralType.symbol.toString()}
-            </Text>
-          </Flex>
-        </Fade>
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
+            {collateralPrice.gt(0) && (
+              <Amount prefix="$" value={collateralAmount.mul(collateralPrice)} />
+            )}
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Amount value={collateralAmount} suffix={` ${collateralType.symbol.toString()}`} />
+          </Text>
+        </Flex>
+      </Td>
+      <Td border="none">
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Text
+            display="flex"
+            alignItems="center"
+            color="white"
+            lineHeight="1.25rem"
+            fontFamily="heading"
+            fontSize="sm"
+            gap={1.5}
+          >
+            {collateralPrice.gt(0) && (
+              <Amount prefix="$" value={availableCollateral.mul(collateralPrice)} />
+            )}
+
+            {availableCollateral.gt(0) &&
+              isRunning &&
+              !![minutes, hours, seconds].find((a) => a > 0) && (
+                <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
+                  <TimeIcon />
+                </Tooltip>
+              )}
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+            <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
+          </Text>
+        </Flex>
       </Td>
       <Td border="none">
         <Fade in>
           <Flex flexDirection="column" alignItems="flex-end">
             <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {!!apr ? apr.toFixed(2).concat('%') : '-'}
+            </Text>
+            <Text
+              color="cyan.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              cursor="pointer"
+              onClick={() => handleNavigate('deposit')}
+            >
+              Claim Rewards
             </Text>
           </Flex>
         </Fade>
@@ -89,13 +138,7 @@ export function PositionRow({
               fontSize="0.75rem"
               lineHeight="1rem"
               cursor="pointer"
-              onClick={() => {
-                queryParams.set('manageAction', debt.gt(0) ? 'repay' : 'claim');
-                navigate({
-                  pathname: `/positions/${collateralType.symbol}/${poolId}`,
-                  search: queryParams.toString(),
-                });
-              }}
+              onClick={() => handleNavigate(debt.gt(0) ? 'repay' : 'claim')}
             >
               {debt.gt(0) ? 'Repay Debt' : 'Claim Credit'}
             </Text>
@@ -109,7 +152,6 @@ export function PositionRow({
               <Text color="white" fontSize="sm" lineHeight="1.25rem" fontFamily="heading">
                 {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
               </Text>
-
               <CRatioBadge
                 cRatio={cRatio.toNumber() * 100}
                 liquidationCratio={(collateralType?.liquidationRatioD18?.toNumber() || 0) * 100}
@@ -122,20 +164,18 @@ export function PositionRow({
       <Td border="none" pr={0}>
         <Flex justifyContent="flex-end">
           <Button
-            fontSize="0.75rem"
-            lineHeight="1rem"
-            height="1.75rem"
+            fontSize="sm"
+            lineHeight="1.25rem"
+            height="2rem"
             fontWeight={700}
+            pt="5px"
+            pb="5px"
+            pl="12px"
+            pr="12px"
             borderWidth="1px"
             borderColor="gray.900"
             borderRadius="4px"
-            onClick={() => {
-              queryParams.set('manageAction', 'deposit');
-              navigate({
-                pathname: `/positions/${collateralType.symbol}/${poolId}`,
-                search: queryParams.toString(),
-              });
-            }}
+            onClick={() => handleNavigate('deposit')}
             data-cy="manage-position-row-button"
           >
             Manage

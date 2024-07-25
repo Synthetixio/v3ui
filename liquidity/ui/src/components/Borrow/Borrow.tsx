@@ -9,11 +9,12 @@ import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import Wei from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { SUSDCIcon } from '@snx-v3/icons/SUSDCIcon';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { ZEROWEI } from '../../utils/constants';
 
 const BorrowUi: FC<{
   debtChange: Wei;
@@ -42,10 +43,12 @@ const BorrowUi: FC<{
               'data-testid': 'borrow amount input',
               'data-max': maxDebt.toString(),
               type: 'number',
+              min: 0,
             }}
             value={debtChange}
             onChange={(val) => setDebtChange(val)}
             max={maxDebt}
+            min={ZEROWEI}
           />
           <Flex flexDirection="column" alignItems="flex-end" fontSize="xs" color="whiteAlpha.700">
             <Flex
@@ -66,7 +69,7 @@ const BorrowUi: FC<{
       </BorderBox>
 
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert colorScheme="orange" mb="4">
+        <Alert colorScheme="orange" mb="6">
           <AlertIcon />
           <Text>
             As a security precaution, borrowed assets can only be withdrawn to your wallet after 24
@@ -97,5 +100,11 @@ export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPos
     debtChange: debtChange,
   });
 
-  return <BorrowUi setDebtChange={setDebtChange} debtChange={debtChange} maxDebt={maxDebt} />;
+  return (
+    <BorrowUi
+      setDebtChange={setDebtChange}
+      debtChange={debtChange}
+      maxDebt={wei(maxDebt.toBN().sub(1))}
+    />
+  );
 };

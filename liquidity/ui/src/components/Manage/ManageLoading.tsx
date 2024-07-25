@@ -9,8 +9,9 @@ export const ManageLoading: FC<{
 }> = ({ collateralSymbol, poolName }) => {
   return (
     <Box mb={12} mt={8}>
-      <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
-
+      <Box px={[0, 6]}>
+        <PositionTitle collateralSymbol={collateralSymbol} poolName={poolName} isOpen />
+      </Box>
       <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
         <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <Skeleton maxW="100px" width="100%" height="20px" />

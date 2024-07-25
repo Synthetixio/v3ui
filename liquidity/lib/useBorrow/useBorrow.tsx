@@ -58,7 +58,7 @@ export const useBorrow = ({
           BigNumber.from(accountId),
           BigNumber.from(poolId),
           collateralTypeAddress,
-          debtChange.toBN()
+          debtChange.abs().toBN()
         );
 
         const callsPromise = Promise.all([populatedTxnPromised]);
@@ -68,7 +68,8 @@ export const useBorrow = ({
           calls.unshift(priceUpdateTx as any);
         }
 
-        const erc7412Tx = await withERC7412(network, calls, 'borrow');
+        const walletAddress = await signer.getAddress();
+        const erc7412Tx = await withERC7412(network, calls, 'borrow', walletAddress);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

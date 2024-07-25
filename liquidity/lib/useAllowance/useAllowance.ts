@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useWallet, useNetwork, useProvider } from '@snx-v3/useBlockchain';
+import { useWallet, useNetwork, useDefaultProvider } from '@snx-v3/useBlockchain';
 import { Contract } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { wei } from '@synthetixio/wei';
@@ -15,8 +15,8 @@ export const useAllowance = ({
   spender?: string;
 }) => {
   const { activeWallet } = useWallet();
-  const provider = useProvider();
   const { network } = useNetwork();
+  const provider = useDefaultProvider();
 
   return useQuery({
     queryKey: [

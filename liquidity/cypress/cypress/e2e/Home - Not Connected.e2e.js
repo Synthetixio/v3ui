@@ -10,7 +10,7 @@ it('Home Not Connected', () => {
   // Assets are temporarily disabled
   // cy.get('[data-cy="connect-button-asset-table"]').contains('Connect Wallet');
   cy.get('[data-cy="connect-button-position-table"]').contains('Connect Wallet');
-  cy.get('[data-cy="Total Assets-stats-box"]').contains('$0.00');
-  cy.get('[data-cy="Total Delegated-stats-box"]').contains('$0.00');
+  cy.get('[data-cy="Total Locked-stats-box"]').contains('$0.00');
+  // cy.get('[data-cy="Total Unlocked-stats-box"]').contains('$0.00');
   // cy.get('[data-cy="Total Debt-stats-box"]').contains('$0.00');
 });

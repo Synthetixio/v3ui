@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useToast } from '@chakra-ui/react';
+import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { parseUnits } from '@snx-v3/format';
@@ -25,6 +25,7 @@ import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;
@@ -50,8 +51,14 @@ export const RepayModalUi: React.FC<{
           title="Debt successfully Updated"
           subline={
             <>
-              Your <b>debt</b> has been updated, read more about it in the Synthetix V3
-              Documentation.
+              Your <b>Debt</b> has been updated, read more about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
             </>
           }
           alertText={
@@ -131,7 +138,7 @@ export const RepayModal: React.FC<{
   isOpen: boolean;
   availableCollateral?: Wei;
 }> = ({ onClose, isOpen, availableCollateral }) => {
-  const { debtChange } = useContext(ManagePositionContext);
+  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const params = useParams();
 
   const { network } = useNetwork();
@@ -218,6 +225,7 @@ export const RepayModal: React.FC<{
         try {
           toast.closeAll();
           toast({ title: 'Repaying...', variant: 'left-accent' });
+
           if (isBaseAndromeda(network?.id, network?.preset)) {
             await execRepayBaseAndromeda();
           } else {
@@ -235,6 +243,7 @@ export const RepayModal: React.FC<{
               queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             }),
           ]);
+          setDebtChange(ZEROWEI);
 
           toast.closeAll();
           toast({
@@ -283,7 +292,15 @@ export const RepayModal: React.FC<{
     send(Events.RUN);
   }, [onClose, send, state]);
 
-  if (!params.poolId || !params.accountId || !collateralType) return null;
+  if (!params.poolId || !params.accountId || !collateralType)
+    return (
+      <Flex gap={4} flexDirection="column">
+        <Skeleton maxW="232px" width="100%" height="20px" />
+        <Divider my={4} />
+        <Skeleton width="100%" height="20px" />
+        <Skeleton width="100%" height="20px" />
+      </Flex>
+    );
 
   return (
     <RepayModalUi

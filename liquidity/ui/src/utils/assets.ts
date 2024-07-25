@@ -106,7 +106,7 @@ export function calculateTotalAssets(assets?: Asset[]) {
     .toFixed(2);
 }
 
-export function calculateTotalAssetsDelegated(assets?: Asset[]) {
+export function calculateTotalAssetsLocked(assets?: Asset[]) {
   return assets
     ?.map((asset) => asset.collateral.totalAssigned.mul(asset.price))
     .reduce((prev, cur) => prev.add(cur), ZEROWEI)

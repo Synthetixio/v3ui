@@ -65,7 +65,7 @@ export const useUndelegate = ({
         ]);
         const allCalls = collateralPriceCalls.concat(calls);
 
-        const erc7412Tx = await withERC7412(network, allCalls, 'useUndelegate');
+        const erc7412Tx = await withERC7412(network, allCalls, 'useUndelegate', walletAddress);
 
         const gasOptionsForTransaction = formatGasPriceForTransaction({
           gasLimit: erc7412Tx.gasLimit,

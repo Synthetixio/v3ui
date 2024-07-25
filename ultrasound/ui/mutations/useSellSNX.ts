@@ -79,7 +79,8 @@ export function useSellSNX() {
 
       const allCalls = [sellSNX_Txn, sUSDCApproval_Txn, buy_SUSD_Txn, unwrapTxn].filter(notNil);
 
-      const erc7412Tx = await withERC7412(network, allCalls, 'useSellSNX');
+      const walletAddress = await signer.getAddress();
+      const erc7412Tx = await withERC7412(network, allCalls, 'useSellSNX', walletAddress);
 
       const gasOptionsForTransaction = formatGasPriceForTransaction({
         gasLimit: erc7412Tx.gasLimit,
