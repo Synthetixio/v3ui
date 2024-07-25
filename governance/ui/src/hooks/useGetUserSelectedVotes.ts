@@ -18,7 +18,7 @@ export const useGetUserSelectedVotes = () => {
 
     const whichState = (council: CouncilSlugs) => {
       if (
-        parsedLocalstorageState[council] &&
+        !!parsedLocalstorageState[council] &&
         allNominees?.includes(parsedLocalstorageState[council])
       )
         return parsedLocalstorageState[council] as string;

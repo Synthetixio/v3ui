@@ -1,6 +1,6 @@
 import { Flex, IconButton } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../../utils/councils';
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { CouncilSlugs } from '../../utils/councils';
+import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserCurrentVotes } from '../../queries';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
@@ -16,18 +16,12 @@ export default function MyVoteRow({
 }) {
   const navigate = useNavigate();
   const selectedVotes = useGetUserSelectedVotes();
-
-  const council = councils.find((council) => council.slug === councilSlug);
   const { data: currentVotes } = useGetUserCurrentVotes();
   const { dispatch } = useVoteContext();
 
-  if (!council) {
-    return null;
-  }
-
   return (
     <Flex
-      key={`vote-${council.slug}-cart`}
+      key={`vote-${councilSlug}-cart`}
       w="100%"
       padding="2"
       alignItems="center"
@@ -41,8 +35,16 @@ export default function MyVoteRow({
           councilSlug={councilSlug}
           address={currentVotes[councilSlug] || selectedVotes[councilSlug]}
         />
+        {!!selectedVotes[councilSlug] &&
+          (selectedVotes[councilSlug] !== currentVotes[councilSlug] ||
+            selectedVotes[councilSlug] === 'remove') && (
+            <>
+              <ArrowForwardIcon mx="2" />
+              <CouncilUser councilSlug={councilSlug} address={selectedVotes[councilSlug]} />
+            </>
+          )}
       </Flex>
-      {!selectedVotes[council.slug] ? (
+      {!selectedVotes[councilSlug] && !currentVotes[councilSlug] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
@@ -50,7 +52,7 @@ export default function MyVoteRow({
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/councils/${council.slug}`);
+            navigate(`/councils/${councilSlug}`);
           }}
         />
       ) : (
@@ -64,13 +66,19 @@ export default function MyVoteRow({
 
             dispatch({
               type: councilSlug.toUpperCase(),
-              payload: undefined,
+              payload: selectedVotes[councilSlug] === 'remove' ? undefined : 'remove',
             });
 
             const selection = localStorage.getItem('voteSelection');
             if (!selection) localStorage.setItem('voteSelection', '');
             const parsedSelection = JSON.parse(selection ? selection : '{}');
-            delete parsedSelection[council.slug];
+            if (!selectedVotes[councilSlug] && !currentVotes[councilSlug]) {
+              parsedSelection[councilSlug] = currentVotes[councilSlug];
+            } else if (!selectedVotes[councilSlug]) {
+              parsedSelection[councilSlug] = 'remove';
+            } else {
+              delete parsedSelection[councilSlug];
+            }
             localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
           }}
         />

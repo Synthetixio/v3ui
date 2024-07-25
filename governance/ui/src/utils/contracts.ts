@@ -8,12 +8,12 @@ const SpartanCouncilContract = new Contract(
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
+  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
+  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
