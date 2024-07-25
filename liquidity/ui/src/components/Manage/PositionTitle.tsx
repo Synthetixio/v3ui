@@ -25,7 +25,7 @@ export const PositionTitle: FC<{
         display="flex"
       >
         <TokenIcon
-          symbol={collateralSymbol || ''}
+          symbol={collateralDisplayName || ''}
           height={42}
           width={42}
           fill="#0B0B22"
