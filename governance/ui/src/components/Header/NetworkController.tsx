@@ -171,7 +171,7 @@ export function NetworkController() {
             </Flex>
           ) : (
             <Flex alignItems="center" gap="1">
-              <Blockies seed={activeWallet.address} scale={3} className="blockies-rounded" />
+              <Blockies seed={activeWallet?.address || ''} scale={3} className="blockies-rounded" />
               <Text
                 as="span"
                 ml={1}
@@ -222,7 +222,7 @@ export function NetworkController() {
                   <CopyIcon
                     ml="2"
                     onClick={() => {
-                      navigator.clipboard.writeText(activeWallet.address);
+                      navigator.clipboard.writeText(activeWallet?.address || '');
                       setTooltipLabel('Copied');
                       setTimeout(() => {
                         setTooltipLabel('Copy');
@@ -237,7 +237,11 @@ export function NetworkController() {
               {user?.pfpUrl ? (
                 <>Implement me </>
               ) : (
-                <Blockies seed={activeWallet.address} scale={7} className="blockies-rounded" />
+                <Blockies
+                  seed={activeWallet?.address || ''}
+                  scale={7}
+                  className="blockies-rounded"
+                />
               )}
 
               {user?.username ? (
