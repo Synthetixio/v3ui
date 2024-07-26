@@ -32,10 +32,10 @@ export default function Councils() {
         mb="4"
       >
         <Flex flexDir="column" w="100%">
-          {councilPeriod === '1' || councilPeriod === '2' ? (
-            <CouncilNominees activeCouncil={activeCouncil} />
-          ) : (
+          {councilPeriod === '0' ? (
             <CouncilMembers activeCouncil={activeCouncil} />
+          ) : (
+            <CouncilNominees activeCouncil={activeCouncil} />
           )}
           {/* <PassedElectionAccordion
             activeCouncil={councils.find(

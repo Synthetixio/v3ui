@@ -39,7 +39,16 @@ export default function UserTableView({
       {(councilPeriod === '2' || councilPeriod === '0') && (
         <Th color="white">{place < 10 ? `#${place + 1}` : '-'}</Th>
       )}
-      <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset">
+      <Th
+        color="white"
+        display="flex"
+        alignItems="center"
+        gap="2"
+        textTransform="unset"
+        overflow="scroll"
+        px="0"
+        maxW="200px"
+      >
         <ProfilePicture
           imageSrc={user?.pfpUrl}
           address={user?.address}
@@ -73,7 +82,7 @@ export default function UserTableView({
             }}
             color="white"
             rounded="base"
-            data-cy="user-table-view-button"
+            data-cy={`user-table-view-button-${user.address}`}
           >
             {isNomination && 'View'}
           </Button>

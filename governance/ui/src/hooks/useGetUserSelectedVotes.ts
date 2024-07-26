@@ -10,7 +10,6 @@ export const useGetUserSelectedVotes = () => {
   const { data: treasuryNominees } = useGetCouncilNominees('treasury');
 
   const localstorageState = localStorage.getItem('voteSelection');
-
   return useMemo(() => {
     const parsedLocalstorageState = localstorageState ? JSON.parse(localstorageState) : {};
     const allNominees = spartanNominees
@@ -19,11 +18,11 @@ export const useGetUserSelectedVotes = () => {
 
     const whichState = (council: CouncilSlugs) => {
       if (
-        parsedLocalstorageState[council] &&
+        !!parsedLocalstorageState[council] &&
         allNominees?.includes(parsedLocalstorageState[council])
       )
-        return parsedLocalstorageState[council];
-      return state[council];
+        return parsedLocalstorageState[council] as string;
+      return state[council] as string;
     };
 
     return {
