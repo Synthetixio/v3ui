@@ -343,7 +343,6 @@ workflows:
       - liquidity-cy
       - governance-e2e:
           name: governance-e2e-op-sepolia
-          provider-url: https://optimism-sepolia.infura.io/v3/$INFURA_KEY
       - liquidity-e2e:
           name: liquidity-e2e-base-mainnet
           chainId: 8453
