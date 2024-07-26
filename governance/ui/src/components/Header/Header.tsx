@@ -111,7 +111,7 @@ export function Header() {
         {activeWallet && <NetworkController />}
 
         {!activeWallet && (
-          <Button onClick={() => connect()} ml="2" data-testid="connect-wallet-button">
+          <Button onClick={() => connect()} ml="2" data-cy="connect-wallet-button">
             Connect Wallet
           </Button>
         )}

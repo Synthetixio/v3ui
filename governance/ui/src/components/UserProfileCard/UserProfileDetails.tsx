@@ -189,7 +189,7 @@ export const UserProfileDetails = ({
                 const parsedSelection = JSON.parse(selection ? selection : '{}');
 
                 parsedSelection[activeCouncil] =
-                  parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
+                  parsedSelection[activeCouncil]?.toLowerCase() === userData?.address.toLowerCase()
                     ? 'remove'
                     : userData.address;
 

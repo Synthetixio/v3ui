@@ -10,6 +10,7 @@ export async function changePeriod({ council, period }) {
     provider
   );
   if (period === 'admin') {
+    console.log(period);
     await proxy
       .connect(signer)
       .Epoch_setEpochDates(
@@ -19,8 +20,7 @@ export async function changePeriod({ council, period }) {
         block.timestamp + 20000,
         block.timestamp + 30000
       );
-  }
-  if (period === 'nomination') {
+  } else if (period === 'nomination') {
     await proxy
       .connect(signer)
       .Epoch_setEpochDates(
@@ -30,8 +30,7 @@ export async function changePeriod({ council, period }) {
         block.timestamp + 10000,
         block.timestamp + 20000
       );
-  }
-  if (period === 'voting') {
+  } else if (period === 'voting') {
     await proxy
       .connect(signer)
       .Epoch_setEpochDates(

@@ -82,7 +82,7 @@ export default function UserTableView({
             }}
             color="white"
             rounded="base"
-            data-cy="user-table-view-button"
+            data-cy={`user-table-view-button-${user.address}`}
           >
             {isNomination && 'View'}
           </Button>

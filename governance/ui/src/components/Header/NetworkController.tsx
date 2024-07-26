@@ -140,161 +140,148 @@ export function NetworkController() {
           ))}
         </MenuList>
       </Menu>
-      {activeWallet ? (
-        <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()}>
-          <MenuButton
-            as={Button}
-            variant="outline"
-            colorScheme="gray"
-            ml={2}
-            height={10}
-            py="1"
-            px="2"
-            whiteSpace="nowrap"
-            data-cy="header-wallet-address-button"
-            maxW="200px"
-            overflow="scroll"
+      <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()}>
+        <MenuButton
+          as={Button}
+          variant="outline"
+          colorScheme="gray"
+          ml={2}
+          height={10}
+          py="1"
+          px="2"
+          whiteSpace="nowrap"
+          data-cy="header-wallet-address-button"
+          maxW="200px"
+          overflow="scroll"
+        >
+          {user?.pfpUrl ? (
+            <Flex alignItems="center" gap="1">
+              <Image src={user.pfpUrl} w="24px" h="24px" borderRadius="50%" />
+              <Text
+                as="span"
+                ml={1}
+                color="white"
+                fontWeight={700}
+                fontSize="xs"
+                userSelect="none"
+                data-cy="header-wallet-address-display"
+              >
+                {user?.username || prettyString(activeWallet?.address || '')}
+              </Text>
+            </Flex>
+          ) : (
+            <Flex alignItems="center" gap="1">
+              <Blockies seed={activeWallet.address} scale={3} className="blockies-rounded" />
+              <Text
+                as="span"
+                ml={1}
+                color="white"
+                fontWeight={700}
+                fontSize="xs"
+                userSelect="none"
+                data-cy="header-wallet-address-display"
+              >
+                {user?.username || prettyString(activeWallet?.address || '')}
+              </Text>
+            </Flex>
+          )}
+        </MenuButton>
+        <MenuList zIndex={999} onMouseLeave={() => onClose()}>
+          <Flex
+            border="1px solid"
+            rounded="base"
+            borderColor="gray.900"
+            w="370px"
+            _hover={{ bg: 'navy.700' }}
+            backgroundColor="navy.700"
+            opacity={1}
+            p="4"
+            flexDir="column"
+            gap="4"
           >
-            {user?.pfpUrl ? (
-              <Flex alignItems="center" gap="1">
-                <Image src={user.pfpUrl} w="24px" h="24px" borderRadius="50%" />
-                <Text
-                  as="span"
-                  ml={1}
-                  color="white"
-                  fontWeight={700}
-                  fontSize="xs"
-                  userSelect="none"
-                  data-cy="header-wallet-address-display"
-                >
-                  {user?.username || prettyString(activeWallet?.address || '')}
+            <Flex flexDir="column" w="100%" gap="2">
+              <Flex justifyContent="space-between">
+                <Text fontSize="14px" color="gray.500">
+                  Connected with {walletsInfo?.label}
                 </Text>
-              </Flex>
-            ) : (
-              <Flex alignItems="center" gap="1">
-                <Blockies seed={activeWallet.address} scale={3} className="blockies-rounded" />
-                <Text
-                  as="span"
-                  ml={1}
-                  color="white"
-                  fontWeight={700}
-                  fontSize="xs"
-                  userSelect="none"
-                  data-cy="header-wallet-address-display"
-                >
-                  {user?.username || prettyString(activeWallet?.address || '')}
-                </Text>
-              </Flex>
-            )}
-          </MenuButton>
-          <MenuList zIndex={999} onMouseLeave={() => onClose()}>
-            <Flex
-              border="1px solid"
-              rounded="base"
-              borderColor="gray.900"
-              w="370px"
-              _hover={{ bg: 'navy.700' }}
-              backgroundColor="navy.700"
-              opacity={1}
-              p="4"
-              flexDir="column"
-              gap="4"
-            >
-              <Flex flexDir="column" w="100%" gap="2">
-                <Flex justifyContent="space-between">
-                  <Text fontSize="14px" color="gray.500">
-                    Connected with {walletsInfo?.label}
-                  </Text>
-                  <IconButton
-                    aria-label="disconnect wallet"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDisconnect();
-                    }}
-                    size="sm"
-                    icon={<DisconnectIcon />}
-                    variant="outline"
-                    colorScheme="gray"
-                  ></IconButton>
-                </Flex>
-                <Text fontWeight={700} color="white" fontSize="16px">
-                  {prettyString(activeWallet?.address || '')}{' '}
-                  <Tooltip label={toolTipLabel} closeOnClick={false}>
-                    <CopyIcon
-                      ml="2"
-                      onClick={() => {
-                        navigator.clipboard.writeText(activeWallet.address);
-                        setTooltipLabel('Copied');
-                        setTimeout(() => {
-                          setTooltipLabel('Copy');
-                        }, 10000);
-                      }}
-                    />
-                  </Tooltip>
-                </Text>
-              </Flex>
-              <Divider />
-              <Flex alignItems="center" gap="4">
-                {user?.pfpUrl ? (
-                  <>Implement me </>
-                ) : (
-                  <Blockies seed={activeWallet.address} scale={7} className="blockies-rounded" />
-                )}
-
-                {user?.username ? (
-                  <Flex flexDir="column" maxW="200px" overflow="scroll">
-                    <Text
-                      fontSize="16px"
-                      fontWeight={700}
-                      maxW="300px"
-                      overflow="scroll"
-                      whiteSpace="nowrap"
-                    >
-                      {user.username}
-                    </Text>
-                    <Text
-                      fontWeight={400}
-                      fontSize="12px"
-                      overflow="scroll"
-                      maxW="200px"
-                      whiteSpace="nowrap"
-                    >
-                      {user.about}
-                    </Text>
-                  </Flex>
-                ) : (
-                  <Text fontSize="16px" fontWeight={700} maxW="300px">
-                    {prettyString(user?.address || '')}
-                  </Text>
-                )}
-              </Flex>
-              <Link href="/#/profile" onClick={() => onClose()}>
-                <Button
+                <IconButton
+                  aria-label="disconnect wallet"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDisconnect();
+                  }}
+                  size="sm"
+                  icon={<DisconnectIcon />}
                   variant="outline"
                   colorScheme="gray"
-                  color="white"
-                  w="100%"
-                  size="sm"
-                  data-cy="edit-profile-button-link-header"
-                >
-                  Edit Profile
-                </Button>
-              </Link>
+                ></IconButton>
+              </Flex>
+              <Text fontWeight={700} color="white" fontSize="16px">
+                {prettyString(activeWallet?.address || '')}{' '}
+                <Tooltip label={toolTipLabel} closeOnClick={false}>
+                  <CopyIcon
+                    ml="2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(activeWallet.address);
+                      setTooltipLabel('Copied');
+                      setTimeout(() => {
+                        setTooltipLabel('Copy');
+                      }, 10000);
+                    }}
+                  />
+                </Tooltip>
+              </Text>
             </Flex>
-          </MenuList>
-        </Menu>
-      ) : (
-        <Button
-          data-cy="header-connect-wallet"
-          onClick={() => connect()}
-          type="button"
-          size="sm"
-          ml={2}
-          py={5}
-        >
-          Connect Wallet
-        </Button>
-      )}
+            <Divider />
+            <Flex alignItems="center" gap="4">
+              {user?.pfpUrl ? (
+                <>Implement me </>
+              ) : (
+                <Blockies seed={activeWallet.address} scale={7} className="blockies-rounded" />
+              )}
+
+              {user?.username ? (
+                <Flex flexDir="column" maxW="200px" overflow="scroll">
+                  <Text
+                    fontSize="16px"
+                    fontWeight={700}
+                    maxW="300px"
+                    overflow="scroll"
+                    whiteSpace="nowrap"
+                  >
+                    {user.username}
+                  </Text>
+                  <Text
+                    fontWeight={400}
+                    fontSize="12px"
+                    overflow="scroll"
+                    maxW="200px"
+                    whiteSpace="nowrap"
+                  >
+                    {user.about}
+                  </Text>
+                </Flex>
+              ) : (
+                <Text fontSize="16px" fontWeight={700} maxW="300px">
+                  {prettyString(user?.address || '')}
+                </Text>
+              )}
+            </Flex>
+            <Link href="/#/profile" onClick={() => onClose()}>
+              <Button
+                variant="outline"
+                colorScheme="gray"
+                color="white"
+                w="100%"
+                size="sm"
+                data-cy="edit-profile-button-link-header"
+              >
+                Edit Profile
+              </Button>
+            </Link>
+          </Flex>
+        </MenuList>
+      </Menu>
     </Flex>
   );
 }
