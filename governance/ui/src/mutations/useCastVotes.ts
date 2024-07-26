@@ -3,7 +3,6 @@ import {
   useGetUserBallot,
   useGetUserVotingPower,
   useNetwork,
-  useProvider,
   useSigner,
   useWallet,
 } from '../queries';
