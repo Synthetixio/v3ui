@@ -58,14 +58,18 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             </Text>
             <Tooltip
               label={
-                <Text textAlign="left">
-                  Debt consists of:
-                  <br />
-                  - Your portion of the pool&apos;s total debt, which fluctuates based on trader
-                  performance and market conditions
-                  <br />- The amount you&apos;ve borrowed against your collateral without incurring
-                  interest
-                </Text>
+                isBase ? (
+                  "Your portion of the pool's total debt, which fluctuates based on trader performance and market conditions"
+                ) : (
+                  <Text>
+                    Debt consists of:
+                    <br />
+                    - Your portion of the pool&apos;s total debt, which fluctuates based on trader
+                    performance and market conditions
+                    <br />- The amount you&apos;ve borrowed against your collateral without
+                    incurring interest
+                  </Text>
+                )
               }
             >
               <InfoIcon w="10px" h="10px" />
