@@ -104,7 +104,7 @@ export default function UserTableView({
           borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-          borderRadius="20px"
+          borderRadius={isSelected ? 'base' : ''}
         >
           <Button
             size="xs"
