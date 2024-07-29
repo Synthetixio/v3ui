@@ -30,7 +30,9 @@ export const MigrateModal: FC<{ isOpen: boolean; setIsOpen: (isOpen: boolean) =>
       <ModalContent bg="navy.900" borderColor="yellow" color="white">
         <ModalHeader>Migrate to Synthetix V3</ModalHeader>
         <ModalCloseButton color="gray" />
-        <ModalBody>{StepComponent && StepComponent({ onClose, step, send })}</ModalBody>
+        <ModalBody>
+          {StepComponent && <StepComponent onClose={onClose} step={step} send={send} />}
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

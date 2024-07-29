@@ -3,6 +3,8 @@ export * from './importers/importCoreProxy';
 export * from './importers/importAccountProxy';
 export * from './importers/importUSDProxy';
 export * from './importers/importOracleManagerProxy';
+export * from './importers/importLegacyMarket';
+export * from './importers/importV2x';
 export * from './importers/importMulticall3';
 export * from './importers/importRewardDistributor';
 export * from './importers/importSpotMarketProxy';

@@ -5581,7 +5581,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/contracts@workspace:contracts"
   dependencies:
-    "@synthetixio/v3-contracts": "npm:^5.4.0"
+    "@synthetixio/v3-contracts": "npm:^5.6.0"
     viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
@@ -5796,6 +5796,7 @@ __metadata:
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetBorrow": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useLocalStorage": "workspace:*"
@@ -6410,6 +6411,18 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useSpotMarketProxy": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useLegacyMarket@workspace:*, @snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
   languageName: unknown
@@ -7152,10 +7165,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@synthetixio/v3-contracts@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "@synthetixio/v3-contracts@npm:5.4.0"
-  checksum: f73a74f63e0c769dfbc6fc6583290e77ee7d955c480a75acedcb66957d99fee7a2dbe589de33ed15887012e895e6cc610a51968edac6775e9f9a113b522e3f2b
+"@synthetixio/v3-contracts@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "@synthetixio/v3-contracts@npm:5.6.0"
+  checksum: e3fed3cd82f7bdbdcb995355a47decefe1e65ec16b06e034f9ef3ab6c81ec0d6efbf7332629b6a36354259ed4a9f9cfa91457509bf71bde2d581598598abc073
   languageName: node
   linkType: hard
 

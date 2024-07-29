@@ -1,14 +1,15 @@
-import { Alert, Button, Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
 import { AssetsList, PositionsList, StatsList, AccountBanner } from '../components';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useWallet, useNetwork } from '@snx-v3/useBlockchain';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { MigrateModal } from '../components/MigrateModal';
+import { MigrateModal, MigrateBanner } from '../components/MigrateModal';
 
 export function Dashboard() {
   const { activeWallet } = useWallet();
+  const network = useNetwork();
 
   const [searchParams, setSearchParams] = useSearchParams();
   return (
@@ -18,6 +19,7 @@ export function Dashboard() {
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
       <Flex flexDir="column" mb={16}>
+        {network.network?.id === 11155111 && <MigrateBanner />}
         {activeWallet && <AccountBanner />}
         <Heading
           mt={{
@@ -30,10 +32,6 @@ export function Dashboard() {
         >
           Dashboard
         </Heading>
-        <Alert>
-          Need to migrate from Synthetix V2x?{' '}
-          <Button onClick={() => setSearchParams({ v2xmigrate: 'true' })}>Start Migration</Button>
-        </Alert>
         <StatsList />
         <AssetsList />
         <PositionsList />

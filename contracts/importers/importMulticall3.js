@@ -25,8 +25,11 @@ export async function importMulticall3(chainId, preset) {
       return { address: mainnet.contracts.multicall3.address, abi: abi };
     }
     case '11155111-main': {
-      const { sepolia } = await import('viem/chains');
-      return { address: sepolia.contracts.multicall3.address, abi: abi };
+      const [{ default: meta }, { default: abi }] = await Promise.all([
+        import('@synthetixio/v3-contracts/11155111-main/meta.json'),
+        import('@synthetixio/v3-contracts/11155111-main/TrustedMulticallForwarder.readable.json'),
+      ]);
+      return { address: meta.contracts.TrustedMulticallForwarder, abi };
     }
     case '10-main': {
       const { optimism } = await import('viem/chains');
