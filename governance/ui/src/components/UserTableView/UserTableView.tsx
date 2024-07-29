@@ -101,10 +101,9 @@ export default function UserTableView({
         <Th
           textAlign="end"
           borderTop="1px solid"
-          borderBottom={isSelected ? '1px solid' : ''}
-          borderRight={isSelected ? '1px solid' : ''}
+          borderRight="1px solid"
+          borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-          borderRadius={isSelected ? 'base' : ''}
         >
           <Button
             size="xs"
