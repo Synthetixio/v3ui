@@ -46,7 +46,7 @@ function councilPeriodMetaData(councilPeriod: string | undefined) {
     default:
       return {
         color: 'purple.500',
-        text: 'Evaluation',
+        text: 'Evaluation in Progress',
       };
   }
 }

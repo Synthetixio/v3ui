@@ -11,18 +11,16 @@ import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { activeWallet, walletsInfo, connect } = useWallet();
   const { network } = useNetwork();
-
   const { colorMode, toggleColorMode } = useColorMode();
 
   const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
   const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
 
-  const queryClient = useQueryClient();
-
-  const [{ data: ballots, isFetched }] = [useGetUserBallot(['spartan', 'ambassador', 'treasury'])];
+  const { data: ballots, isFetched } = useGetUserBallot(['spartan', 'ambassador', 'treasury']);
 
   useEffect(() => {
     if (
@@ -45,7 +43,9 @@ export function Header() {
               : index === 2
                 ? 'grants'
                 : 'treasury';
-        parsedSelection[council] = ballot.votedCandidates[0];
+        parsedSelection[council] = ballot.votedCandidates[0]
+          ? ballot.votedCandidates[0]
+          : parsedSelection[council];
       });
       localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
       queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
@@ -104,12 +104,14 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        {process.env.DEV === 'true' && <Link href="/#/admin">Admin</Link>}
+        {(process.env.TESTNET === 'true' || process.env.DEV === 'true') && (
+          <Link href="/#/admin">Admin</Link>
+        )}
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
 
         {!activeWallet && (
-          <Button onClick={() => connect()} ml="2" data-testid="connect-wallet-button">
+          <Button onClick={() => connect()} ml="2" data-cy="connect-wallet-button">
             Connect Wallet
           </Button>
         )}

@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { Wallet } from 'ethers';
 import { useSigner } from '../queries/useWallet';
-import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
+import { SnapshotRecordContract, getCouncilContract } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
 
 export default function Admin() {
@@ -155,7 +155,9 @@ export default function Admin() {
               <Button
                 onClick={() => {
                   if (signer) {
-                    proxy.connect(signer).setSnapshotContract(SnapshotRecordContractAddress, true);
+                    proxy
+                      .connect(signer)
+                      .setSnapshotContract(SnapshotRecordContract(421614)?.address, true);
                   }
                 }}
               >
@@ -170,11 +172,11 @@ export default function Admin() {
                   if (signer) {
                     await proxy
                       .connect(signer)
-                      .takeVotePowerSnapshot(SnapshotRecordContractAddress);
+                      .takeVotePowerSnapshot(SnapshotRecordContract(421614)?.address);
                   }
                 }}
               >
-                LFG (only in Nomination)
+                LFG (only in Nomination & Voting)
               </Button>
             </Flex>
           </Flex>

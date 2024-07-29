@@ -9,6 +9,8 @@ import { MyVotesSummary } from '../MyVotesSummary';
 import { useGetUserDetailsQuery, useGetUserBallot } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { utils } from 'ethers';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -39,7 +41,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
       userInformation: useGetUserDetailsQuery(votedNominees[2]?.votedCandidates[0]),
     },
   ];
-
   const userInformation = userInformationData.map((data) => ({
     ...data,
     userInformation: data.userInformation.data,
@@ -107,10 +108,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' &&
-                  (userInformation[index].userInformation?.pfpUrl ||
-                    !!userInformation[index].userInformation?.address ||
-                    newVoteCast) ? (
+                  {councilPeriod === '2' && utils.isAddress(newVoteCast) ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
@@ -119,16 +117,32 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                     />
                   ) : (
                     councilPeriod === '2' && (
-                      <Box
-                        data-cy="council-tab-vote-circle"
-                        borderRadius="50%"
-                        w="7"
-                        h="7"
-                        borderWidth="1px"
-                        bg="navy.700"
-                        borderStyle="dashed"
-                        borderColor="gray.500"
-                      />
+                      <>
+                        {userInformation[index].userInformation?.address && (
+                          <ProfilePicture
+                            imageSrc={userInformation[index].userInformation?.pfpUrl}
+                            address={userInformation[index].userInformation?.address}
+                            size={7}
+                            newVoteCast={newVoteCast}
+                          />
+                        )}
+
+                        {newVoteCast && (
+                          <>
+                            <ArrowForwardIcon mx="2" />
+                            <Box
+                              data-cy="council-tab-vote-circle"
+                              borderRadius="50%"
+                              w="7"
+                              h="7"
+                              borderWidth="1px"
+                              bg="navy.700"
+                              borderStyle="dashed"
+                              borderColor="gray.500"
+                            />
+                          </>
+                        )}
+                      </>
                     )
                   )}
                 </Flex>

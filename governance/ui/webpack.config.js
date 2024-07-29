@@ -175,6 +175,8 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
         'process.env.DEV': JSON.stringify(process.env.DEV),
+        'process.env.CI': JSON.stringify(process.env.CI),
+        'process.env.CI_RPC_MOTHERSHIP': JSON.stringify(process.env.CI_RPC_MOTHERSHIP),
         'process.env.DEV_RPC_MOTHERSHIP': JSON.stringify(process.env.DEV_RPC_MOTHERSHIP),
         'process.env.TESTNET': JSON.stringify(process.env.TESTNET),
         'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),

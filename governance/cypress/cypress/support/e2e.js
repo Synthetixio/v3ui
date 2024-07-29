@@ -2,31 +2,24 @@ import '@cypress/code-coverage/support';
 import { onLogAdded } from '@snx-cy/onLogAdded';
 import { ethers } from 'ethers';
 import { metamask } from '../lib/metamask';
-import { subgraph } from '../lib/subgraph';
 
 beforeEach(() => {
   cy.on('log:added', onLogAdded);
 
   cy.intercept('https://analytics.synthetix.io/matomo.js', { statusCode: 204 }).as('matomo');
 
-  // Because we are working with local fork, subgraph becomes irrelevant
-  cy.intercept('https://api.thegraph.com/**', (req) => {
-    return subgraph(req);
-  }).as('subgraph');
-
   [
     'mainnet',
-    'optimism-mainnet',
-    'optimism-goerli',
-    'base-mainnet',
     'sepolia',
+    'optimism-mainnet',
+    'optimism-sepolia',
+    'base-mainnet',
     'base-sepolia',
     'arbitrum-mainnet',
     'arbitrum-sepolia',
-    'avalanche-fuji',
   ].forEach((networkName) => {
     cy.intercept(`https://${networkName}.infura.io/v3/*`, (req) => {
-      req.url = 'http://127.0.0.1:19000';
+      req.url = 'http://127.0.0.1:8545';
       req.continue();
     }).as(networkName);
   });

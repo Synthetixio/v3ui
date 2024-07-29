@@ -3,6 +3,7 @@ import { BigNumber, providers } from 'ethers';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
 import { useNetwork, useSigner } from './useWallet';
+import { motherShipProvider } from '../utils/providers';
 
 export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(council: T) {
   const { network } = useNetwork();
@@ -43,15 +44,15 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   if (Array.isArray(council)) {
     ballot = (await Promise.all(
       council.map(async (c) => {
-        const electionModule = getCouncilContract(c).connect(signer!);
+        const electionModule = getCouncilContract(c).connect(motherShipProvider);
         const voter = await signer!.getAddress();
-        const electionId = electionModule.getEpochIndex();
+        const electionId = await electionModule.getEpochIndex();
         const temp = await electionModule.getBallot(voter, chainId, electionId);
         return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
-    const electionModule = getCouncilContract(council).connect(signer!);
+    const electionModule = getCouncilContract(council).connect(motherShipProvider);
     const voter = await signer!.getAddress();
     const electionId = electionModule.getEpochIndex();
     const temp = (await electionModule.getBallot(voter, chainId, electionId)) as {

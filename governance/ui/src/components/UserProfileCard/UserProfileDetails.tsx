@@ -58,11 +58,25 @@ export const UserProfileDetails = ({
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
-            <Text fontSize="16px" fontWeight="700" data-testid="user-wallet-profile-address">
-              {prettyString(userData!.address)}
+            <Text
+              fontSize="16px"
+              fontWeight="700"
+              data-testid="user-wallet-profile-address"
+              maxW="300px"
+              whiteSpace="nowrap"
+              overflow="scroll"
+            >
+              {userData?.username ? userData.username : prettyString(userData!.address)}
             </Text>
           </Flex>
-          <Text fontSize="12px" fontWeight="400" lineHeight="16px">
+          <Text
+            fontSize="12px"
+            fontWeight="400"
+            lineHeight="16px"
+            whiteSpace="nowrap"
+            maxW="300px"
+            overflow="scroll"
+          >
             {userData?.about}
           </Text>
         </Flex>
@@ -148,13 +162,15 @@ export const UserProfileDetails = ({
         )}
         {councilPeriod === '2' && (
           <Button
+            variant="outline"
+            colorScheme="gray"
             w="100%"
             data-cy="select-user-to-vote-button"
             onClick={() => {
               if (isAlreadyVoted) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: '',
+                  payload: 'remove',
                 });
               } else if (isSelected) {
                 dispatch({
@@ -172,20 +188,21 @@ export const UserProfileDetails = ({
                 if (!selection) localStorage.setItem('voteSelection', '');
                 const parsedSelection = JSON.parse(selection ? selection : '{}');
 
-                if (parsedSelection[activeCouncil]) {
-                  parsedSelection[activeCouncil] =
-                    parsedSelection[activeCouncil].toLowerCase() === userData?.address.toLowerCase()
-                      ? ''
-                      : userData.address;
-                } else {
-                  parsedSelection[activeCouncil] = userData.address;
-                }
+                parsedSelection[activeCouncil] =
+                  parsedSelection[activeCouncil]?.toLowerCase() === userData?.address.toLowerCase()
+                    ? 'remove'
+                    : userData.address;
+
                 localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
               }
             }}
+            whiteSpace="nowrap"
+            overflow="scroll"
           >
-            {isAlreadyVoted ? 'Withdraw ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens || userData?.username || prettyString(userData!.address)}
+            {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
+            {userData?.ens ||
+              userData?.username?.slice(0, 20).concat('...') ||
+              prettyString(userData!.address)}
           </Button>
         )}
       </Flex>
