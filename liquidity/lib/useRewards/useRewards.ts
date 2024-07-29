@@ -1,12 +1,12 @@
 import { useMulticall3 } from '@snx-v3/useMulticall3';
 import { useQuery } from '@tanstack/react-query';
-import { utils, BigNumber } from 'ethers';
+import { BigNumber } from 'ethers';
 import { Wei, wei } from '@synthetixio/wei';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
 import { getSubgraphUrl } from '@snx-v3/constants';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
-import { importRewardDistributor } from '@snx-v3/contracts';
+import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 
 const RewardsResponseSchema = z.array(
   z.object({
@@ -36,14 +36,6 @@ export type RewardsInterface = {
   }[];
 }[];
 
-const erc20Abi = [
-  'function name() view returns (string)',
-  'function symbol() view returns (string)',
-  'function balanceOf(address) view returns (uint256)',
-  'function deposit() payable',
-  'function decimals() view returns (uint8)',
-];
-
 const RewardsDataDocument = `
   query RewardsData($accountId: String!, $distributor: String!) {
     rewardsClaimeds(where: { distributor: $distributor, account: $accountId }) {
@@ -53,8 +45,19 @@ const RewardsDataDocument = `
   }
 `;
 
+const RewardsDistributionsDocument = `
+  query RewardsDistributions($distributor: String!) {
+    rewardsDistributions(where: { distributor: $distributor}) {
+      collateral_type
+      amount
+      duration
+      start
+      created_at
+    }
+  }
+`;
+
 export function useRewards(
-  distributors?: RewardsInterface,
   poolId?: string,
   collateralAddress?: string,
   accountId: string = '69',
@@ -65,181 +68,140 @@ export function useRewards(
   const targetNetwork = customNetwork || network;
 
   const { data: Multicall3 } = useMulticall3(customNetwork);
-  const { data: CoreProxy } = useCoreProxy({
-    customNetwork,
-  });
+  const { data: CoreProxy } = useCoreProxy(customNetwork);
+  const { data: RewardsDistributors } = useRewardsDistributors(customNetwork);
 
   return useQuery({
-    enabled: Boolean(CoreProxy && Multicall3 && distributors && poolId && accountId),
+    enabled: Boolean(CoreProxy && Multicall3 && RewardsDistributors && poolId && accountId),
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
-      { distributors: distributors?.map(({ id }) => id).sort() },
     ],
     queryFn: async () => {
-      if (!Multicall3 || !CoreProxy || !poolId || !accountId || !distributors) {
+      if (
+        !Multicall3 ||
+        !CoreProxy ||
+        !poolId ||
+        !accountId ||
+        !RewardsDistributors ||
+        !collateralAddress
+      ) {
         throw 'useRewards is missing required data';
       }
 
-      if (distributors.length === 0) return [];
+      if (RewardsDistributors.length === 0) return [];
+
+      // We need to filter the distributors, so we only query for this particular collateral type
+      const filteredDistributors = RewardsDistributors.filter(
+        (distributor: any) =>
+          distributor.collateralType.address.toLowerCase() === collateralAddress.toLowerCase()
+      );
 
       try {
-        const { abi } = await importRewardDistributor(targetNetwork?.id, targetNetwork?.preset);
-
-        const ifaceRD = new utils.Interface(abi);
-        const ifaceERC20 = new utils.Interface(erc20Abi);
-
-        const [{ returnData: distributorReturnData }, ...historicalData] = await Promise.all([
-          Multicall3.callStatic.aggregate(
-            distributors.flatMap(({ id: address }) => [
-              {
-                target: address,
-                callData: ifaceRD.encodeFunctionData('name', []),
-              },
-              {
-                target: address,
-                callData: ifaceRD.encodeFunctionData('token', []),
-              },
-              {
-                target: address,
-                callData: ifaceRD.encodeFunctionData('collateralType', []),
-              },
-            ])
-          ),
-          ...distributors.map(({ id: address }) =>
-            fetch(getSubgraphUrl(network?.name), {
+        const returnData = await Promise.all([
+          // Historical data for account id / distributor address pair
+          ...filteredDistributors.map(({ address }: { address: string }) =>
+            fetch(getSubgraphUrl(targetNetwork?.name), {
               method: 'POST',
               body: JSON.stringify({
                 query: RewardsDataDocument,
-                variables: { accountId, distributor: address },
+                variables: { accountId, distributor: address.toLowerCase() },
+              }),
+            }).then((res) => res.json())
+          ),
+          // Metadata for each distributor
+          ...filteredDistributors.map(({ address: distributor }: { address: string }) =>
+            fetch(getSubgraphUrl(network?.name), {
+              method: 'POST',
+              body: JSON.stringify({
+                query: RewardsDistributionsDocument,
+                variables: {
+                  distributor: distributor.toLowerCase(),
+                },
               }),
             }).then((res) => res.json())
           ),
         ]);
 
-        const distributorResult = distributors.map(({ id: address, rewards_distributions }, i) => {
-          const [distributorName] = ifaceRD.decodeFunctionResult(
-            'name',
-            distributorReturnData[i * 3]
-          );
-          const [distributorPayoutToken] = ifaceRD.decodeFunctionResult(
-            'payoutToken',
-            distributorReturnData[i * 3 + 1]
-          );
-          const [distributorCollateralType] = ifaceRD.decodeFunctionResult(
-            'collateralType',
-            distributorReturnData[i * 3 + 2]
-          );
+        const historicalData = returnData.slice(0, filteredDistributors.length);
+        const metaData = returnData.slice(filteredDistributors.length);
 
-          if (!rewards_distributions.length) {
+        // Get claimable amount for each distributor
+        const calls = filteredDistributors.map(({ address }: { address: string }) =>
+          CoreProxy.populateTransaction.getAvailableRewards(
+            BigNumber.from(accountId),
+            BigNumber.from(poolId),
+            collateralAddress.toLowerCase(),
+            address.toLowerCase()
+          )
+        );
+
+        const txs = await Promise.all(calls);
+
+        const multicallData = txs.map((tx) => ({
+          target: CoreProxy.address,
+          callData: tx.data,
+        }));
+
+        const data = await Multicall3.callStatic.aggregate(multicallData);
+
+        const amounts = data.returnData.map((data: string) => {
+          const amount = CoreProxy.interface.decodeFunctionResult('getAvailableRewards', data)[0];
+          return wei(amount);
+        });
+
+        const results: RewardsResponseArray = filteredDistributors.map((item: any, i: number) => {
+          // Amount claimable for this distributor
+          const claimableAmount = amounts[i];
+          const historicalClaims = historicalData[i]?.data?.rewardsClaimeds;
+          const distributions = metaData[i]?.data?.rewardsDistributions;
+
+          if (!distributions || !distributions.length) {
             return {
-              address,
-              name: distributorName,
-              token: distributorPayoutToken,
-              distributorCollateralType,
+              address: item.collateralType.address,
+              name: item.name,
+              symbol: item.payoutToken.symbol,
+              claimableAmount: wei(0),
+              distributorAddress: item.address,
               duration: 0,
               total: 0,
-              lifetimeClaimed: 0,
+              lifetimeClaimed: historicalClaims
+                .reduce(
+                  (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),
+                  wei(0)
+                )
+                .toNumber(),
+              decimals: item.payoutToken.decimals,
             };
           }
 
-          const duration = parseInt(rewards_distributions[0].duration);
+          const latestDistribution = distributions[distributions.length - 1];
+          const expiry =
+            parseInt(latestDistribution.duration) + parseInt(latestDistribution.created_at);
 
-          const lifetimeClaimed: number = historicalData[i].data.rewardsClaimeds
-            .reduce((acc: Wei, item: { amount: string; id: string }) => {
-              return acc.add(wei(item.amount, 18, true));
-            }, wei(0))
-            .toNumber();
-
-          // See if it is still active (i.e rewards are still being emitted)
-          const { duration: distribution_duration, created_at } = rewards_distributions[0];
-
-          const expiry = parseInt(distribution_duration) + parseInt(created_at);
-
-          // const total =
           const hasExpired = new Date().getTime() / 1000 > expiry;
 
           return {
-            address,
-            name: distributorName,
-            token: distributorPayoutToken,
-            distributorCollateralType,
-            duration,
-            total: hasExpired ? '0' : rewards_distributions[0].amount, // Take the latest amount
-            lifetimeClaimed,
+            address: item.address,
+            name: item.name,
+            symbol: item.payoutToken.symbol,
+            claimableAmount,
+            distributorAddress: item.address,
+            decimals: item.payoutToken.decimals,
+            duration: parseInt(latestDistribution.duration),
+            total: hasExpired ? 0 : wei(latestDistribution.amount, 18, true).toNumber(),
+            lifetimeClaimed: historicalClaims
+              .reduce(
+                (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),
+                wei(0)
+              )
+              .toNumber(),
           };
         });
 
-        const filteredDistributors = collateralAddress
-          ? distributorResult.filter(
-              ({ distributorCollateralType }) =>
-                `${distributorCollateralType}`.toLowerCase() ===
-                `${collateralAddress}`.toLowerCase()
-            )
-          : distributorResult;
-
-        const { returnData: ercReturnData } = await Multicall3.callStatic.aggregate(
-          filteredDistributors.flatMap(({ token }) => [
-            {
-              target: token,
-              callData: ifaceERC20.encodeFunctionData('name', []),
-            },
-            {
-              target: token,
-              callData: ifaceERC20.encodeFunctionData('symbol', []),
-            },
-            {
-              target: token,
-              callData: ifaceERC20.encodeFunctionData('decimals', []),
-            },
-          ])
-        );
-
-        const result = filteredDistributors.map((item, i) => {
-          const [name] = ifaceERC20.decodeFunctionResult('name', ercReturnData[i * 3]);
-          const [symbol] = ifaceERC20.decodeFunctionResult('symbol', ercReturnData[i * 3 + 1]);
-          const [decimals] = ifaceERC20.decodeFunctionResult('decimals', ercReturnData[i * 3 + 2]);
-
-          const total = wei(item.total, 18, true).toNumber();
-
-          return {
-            ...item,
-            name,
-            symbol,
-            decimals,
-            total,
-          };
-        });
-
-        // TODO: Refactor this to use a view function
-        const balances: RewardsResponseArray = [];
-
-        for (const item of result) {
-          try {
-            const response = await CoreProxy.getAvailableRewards(
-              BigNumber.from(accountId),
-              BigNumber.from(poolId),
-              collateralAddress,
-              item.address
-            );
-
-            balances.push({
-              ...item,
-              claimableAmount: wei(response),
-              distributorAddress: item.address,
-            });
-          } catch (error) {
-            balances.push({
-              ...item,
-              claimableAmount: wei(0),
-              distributorAddress: item.address,
-            });
-          }
-        }
-
-        const sortedBalances = [...balances].sort(
+        const sortedBalances = results.sort(
           (a, b) => b.claimableAmount.toNumber() - a.claimableAmount.toNumber()
         );
 
