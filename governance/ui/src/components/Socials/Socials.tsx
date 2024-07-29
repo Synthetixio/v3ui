@@ -11,6 +11,8 @@ interface Props {
 }
 
 export const Socials: FC<Props> = ({ discord, github, twitter }) => {
+  const nothingIsDefined = !discord && !github! && !twitter;
+  if (nothingIsDefined) return null;
   return (
     <Flex gap={3} alignItems="center">
       {discord && (

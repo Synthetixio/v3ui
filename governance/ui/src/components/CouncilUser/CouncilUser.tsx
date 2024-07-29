@@ -54,7 +54,13 @@ export default function CouncilUser({
         <Text fontSize="x-small" fontWeight="bold">
           {council.title}
         </Text>
-        <Text fontSize="x-small" maxW="50px" whiteSpace="nowrap" overflow="scroll">
+        <Text
+          fontSize="x-small"
+          maxW="50px"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          overflow="hidden"
+        >
           {user ? (user?.username ? user.username : truncateAddress(user?.address)) : 'No Vote'}
         </Text>
       </Flex>

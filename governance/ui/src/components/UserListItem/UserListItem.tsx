@@ -36,11 +36,12 @@ export default function UserListItem({
         e.stopPropagation();
         navigate(`/councils/${activeCouncil}?view=${address}`);
       }}
-      borderY="1px solid"
+      borderY={address === searchParams.get('view') ? '1px solid' : ''}
       borderX={address === searchParams.get('view') ? '1px solid' : ''}
       borderColor={address === searchParams.get('view') ? 'cyan.500' : 'gray.900'}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
       rounded="base"
+      data-cy={`user-list-item-${address}`}
       {...props}
     >
       <Flex alignItems="center">
@@ -55,9 +56,10 @@ export default function UserListItem({
           fontWeight="bold"
           fontSize="14px"
           ml="3"
-          overflow="scroll"
-          maxW="300px"
+          textOverflow="ellipsis"
           whiteSpace="nowrap"
+          overflow="hidden"
+          maxW="300px"
         >
           {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>

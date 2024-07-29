@@ -32,13 +32,23 @@ export default function UserProfileEditPreview({
             fontSize="16px"
             fontWeight="700"
             data-cy="username-preview"
-            overflow="scroll"
-            maxW="250px"
+            textOverflow="ellipsis"
             whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="250px"
           >
             {userData.username ? userData.username : prettyString(activeWallet || '')}
           </Text>
-          <Text fontSize="12px" fontWeight="400" lineHeight="16px" data-cy="about-preview">
+          <Text
+            fontSize="12px"
+            fontWeight="400"
+            lineHeight="16px"
+            data-cy="about-preview"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="250px"
+          >
             {userData?.about}
           </Text>
         </Flex>
@@ -78,9 +88,10 @@ export default function UserProfileEditPreview({
       <Text
         fontSize="14px"
         lineHeight="20px"
-        overflowY="scroll"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+        overflow="hidden"
         maxH="50vh"
-        overflow="scroll"
         mb="4"
         data-cy="governance-pitch-preview"
       >

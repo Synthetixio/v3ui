@@ -20,7 +20,7 @@ export const EditNominationContainer = ({
         </Modal>
       </Show>
       <Hide below="xl">
-        <EditNomination activeCouncil={activeCouncil} />
+        <EditNomination activeCouncil={activeCouncil} position="sticky" top="81px" />
       </Hide>
     </>
   );

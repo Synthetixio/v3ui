@@ -1,4 +1,13 @@
-import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  FlexProps,
+  Heading,
+  IconButton,
+  Image,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
@@ -9,7 +18,11 @@ import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
 
-export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
+interface NominateSelfProps extends FlexProps {
+  activeCouncil: CouncilSlugs;
+}
+
+export default function NominateSelf({ activeCouncil, ...props }: NominateSelfProps) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
   const navigate = useNavigate();
 
@@ -29,8 +42,9 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       borderStyle="solid"
       rounded="base"
       p="6"
-      position="sticky"
-      top="81px"
+      mt="6"
+      h="fit-content"
+      {...props}
     >
       {isSuccess ? (
         <>
@@ -62,9 +76,10 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Text
                 fontWeight={700}
                 fontSize="14px"
-                overflow="scroll"
-                maxW="300px"
+                textOverflow="ellipsis"
                 whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="300px"
               >
                 {data?.username ? data.username : 'No Username'}
               </Text>
@@ -147,9 +162,10 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Text
                 fontWeight={700}
                 fontSize="14px"
-                overflow="scroll"
-                maxW="300px"
+                textOverflow="ellipsis"
                 whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="300px"
               >
                 {data?.username ? data.username : 'No Username'}
               </Text>

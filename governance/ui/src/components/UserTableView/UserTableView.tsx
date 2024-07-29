@@ -1,4 +1,4 @@
-import { Button, Flex, Spinner, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Spinner, Text, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -34,21 +34,11 @@ export default function UserTableView({
       border={searchParams.get('view') === user.address ? '1px solid' : ''}
       borderTop="1px solid"
       borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
-      rounded="base"
     >
       {(councilPeriod === '2' || councilPeriod === '0') && (
         <Th color="white">{place < 10 ? `#${place + 1}` : '-'}</Th>
       )}
-      <Th
-        color="white"
-        display="flex"
-        alignItems="center"
-        gap="2"
-        textTransform="unset"
-        overflow="scroll"
-        px="0"
-        maxW="200px"
-      >
+      <Th color="white" display="flex" alignItems="center" gap="2" textTransform="unset" px="3">
         <ProfilePicture
           imageSrc={user?.pfpUrl}
           address={user?.address}
@@ -56,12 +46,19 @@ export default function UserTableView({
           mr="0"
           ImageProps={{ w: '32px', h: '32px' }}
         />{' '}
-        {user.username ? user.username : prettyString(user.address, 8, 8)}
+        <Text
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          maxW="170px"
+          data-cy={`user-table-view-${user.address}`}
+        >
+          {user.username ? user.username : prettyString(user.address)}
+        </Text>
       </Th>
       {councilPeriod !== '0' && (
         <Th>
           <Flex>
-            <Badge color="green">Nominee</Badge>
             {councilSettings && councilSettings?.epochSeatCount > place && (
               <Badge ml="2">Member</Badge>
             )}

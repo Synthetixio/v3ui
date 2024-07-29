@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,11 @@ import { useWallet } from '../../queries/useWallet';
 import EditNominationConfirmation from './EditNominationConfirmation';
 import EditNominationSelect from './EditNominationSelect';
 
-export default function EditNomination({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
+interface EditNominationProps extends FlexProps {
+  activeCouncil: CouncilSlugs;
+}
+
+export default function EditNomination({ activeCouncil, ...props }: EditNominationProps) {
   const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -32,8 +36,7 @@ export default function EditNomination({ activeCouncil }: { activeCouncil: Counc
       borderStyle="solid"
       rounded="base"
       p="6"
-      position="sticky"
-      top="81px"
+      {...props}
     >
       <IconButton
         onClick={() => navigate(`/councils/${activeCouncil}`)}

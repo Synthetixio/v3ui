@@ -51,7 +51,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       bg="navy.700"
       _hover={{ borderColor: 'cyan.500' }}
     >
-      <Text fontSize="x-small" fontWeight="bold" mr="auto">
+      <Text fontSize="sm" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
         My Votes
       </Text>
       <Show above="md">

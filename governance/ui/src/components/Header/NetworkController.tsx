@@ -95,7 +95,7 @@ export function NetworkController() {
           sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
           mr={1}
           data-cy="account-menu-button"
-          px={3}
+          px={2}
         >
           <NetworkIcon
             filter={activeNetwork?.isTestnet ? 'grayscale(1)' : ''}
@@ -149,10 +149,11 @@ export function NetworkController() {
           height={10}
           py="1"
           px="2"
-          whiteSpace="nowrap"
           data-cy="header-wallet-address-button"
           maxW="200px"
-          overflow="scroll"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          overflow="hidden"
         >
           {user?.pfpUrl ? (
             <Flex alignItems="center" gap="1">
@@ -245,22 +246,24 @@ export function NetworkController() {
               )}
 
               {user?.username ? (
-                <Flex flexDir="column" maxW="200px" overflow="scroll">
+                <Flex flexDir="column" maxW="200px">
                   <Text
                     fontSize="16px"
                     fontWeight={700}
                     maxW="300px"
-                    overflow="scroll"
+                    textOverflow="ellipsis"
                     whiteSpace="nowrap"
+                    overflow="hidden"
                   >
                     {user.username}
                   </Text>
                   <Text
                     fontWeight={400}
                     fontSize="12px"
-                    overflow="scroll"
                     maxW="200px"
+                    textOverflow="ellipsis"
                     whiteSpace="nowrap"
+                    overflow="hidden"
                   >
                     {user.about}
                   </Text>

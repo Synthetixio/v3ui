@@ -23,8 +23,8 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
         {councilPeriod === '0'
           ? 'Next Elections:'
           : councilPeriod === '1'
-            ? 'Voting starts'
-            : 'Voting ends'}
+            ? 'Voting starts:'
+            : 'Voting ends:'}
       </Text>
       {isLoading ? (
         <Spinner colorScheme="cyan" />
