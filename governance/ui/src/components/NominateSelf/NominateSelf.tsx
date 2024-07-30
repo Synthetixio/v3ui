@@ -81,7 +81,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
                 overflow="hidden"
                 maxW="300px"
               >
-                {data?.username ? data.username : 'No Username'}
+                {data?.username ? data.username : prettyString(activeWallet?.address || '')}
               </Text>
               <Text fontSize="12px" color="gray.500">
                 Nomination Wallet: {prettyString(data!.address)}
@@ -166,8 +166,9 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
                 whiteSpace="nowrap"
                 overflow="hidden"
                 maxW="300px"
+                data-cy="nominate-self-username"
               >
-                {data?.username ? data.username : 'No Username'}
+                {data?.username ? data.username : prettyString(activeWallet?.address || '')}
               </Text>
               <Text fontSize="12px" color="gray.500">
                 Nomination Wallet: {prettyString(data?.address || '')}
@@ -206,7 +207,11 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
                 >
                   <Image src={council.image} w="6" h="6" />
                 </Flex>
-                <Text fontSize="x-small" fontWeight="bold">
+                <Text
+                  fontSize="sm"
+                  fontWeight="bold"
+                  data-cy="council-select-button-text-nominate-self"
+                >
                   {council.title}
                 </Text>
               </Flex>

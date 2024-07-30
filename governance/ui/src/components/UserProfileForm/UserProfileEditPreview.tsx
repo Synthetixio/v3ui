@@ -82,21 +82,25 @@ export default function UserProfileEditPreview({
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-      <Text fontSize="14px" fontWeight="700" color="gray.500">
-        Governance Pitch
-      </Text>
-      <Text
-        fontSize="14px"
-        lineHeight="20px"
-        textOverflow="ellipsis"
-        whiteSpace="nowrap"
-        overflow="hidden"
-        maxH="50vh"
-        mb="4"
-        data-cy="governance-pitch-preview"
-      >
-        {userData?.delegationPitch}
-      </Text>
+      {userData.delegationPitch && (
+        <>
+          <Text fontSize="14px" fontWeight="700" color="gray.500">
+            Governance Pitch
+          </Text>
+          <Text
+            fontSize="14px"
+            lineHeight="20px"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxH="50vh"
+            mb="4"
+            data-cy="governance-pitch-preview"
+          >
+            {userData.delegationPitch}
+          </Text>
+        </>
+      )}
       <Button isLoading={isPending} w="100%" onClick={onSave} data-cy="save-profile-changes-button">
         Save Changes
       </Button>

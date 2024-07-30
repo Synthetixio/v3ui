@@ -25,6 +25,12 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="nominate-self-button-user-profile-details"]')
     .should('have.css', 'color', 'rgb(0, 0, 0)')
     .click();
+  cy.get('[data-cy="nominate-self-username"]').should('exist');
+  cy.get('[data-cy="council-select-button-text-nominate-self"]').should(
+    'have.css',
+    'font-size',
+    '14px'
+  );
   cy.get('[data-cy="council-nomination-select-spartan"]').click();
   cy.get('[data-cy="nominate-self-cast-nomination-button"]').click();
   cy.get('[data-cy="nominate-self-done-button"]').click();
