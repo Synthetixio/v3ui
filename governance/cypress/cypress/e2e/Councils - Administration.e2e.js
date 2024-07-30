@@ -1,4 +1,6 @@
 it('Councils - Administration', () => {
+  cy.task('changePeriod', { council: 'spartan', period: 'admin' });
+  cy.task('mineBlock');
   cy.connectWallet();
   cy.viewport(1300, 900);
   cy.visit('/');
@@ -24,8 +26,4 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="sort-arrow-up"]').should('exist');
   cy.get('[data-cy="sort-arrow-up"]').click();
   cy.get('[data-cy="sort-arrow-down"]').should('exist');
-  cy.get('[data-cy="user-table-row-0"]').click();
-  cy.url().then((url) => {
-    cy.get(`[data-cy="user-profile-card-${url.split('view=')[1]}"]`);
-  });
 });

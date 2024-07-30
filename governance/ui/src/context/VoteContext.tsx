@@ -2,7 +2,6 @@ import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 
 interface VoteState {
   spartan: string | undefined;
-  grants: string | undefined;
   ambassador: string | undefined;
   treasury: string | undefined;
 }
@@ -11,7 +10,6 @@ type Action = { type: string; payload: string | undefined };
 
 const initialState: VoteState = {
   spartan: undefined,
-  grants: undefined,
   ambassador: undefined,
   treasury: undefined,
 };

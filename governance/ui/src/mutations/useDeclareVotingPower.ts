@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
-import { getCouncilContract, SnapshotRecordContractAddress } from '../utils/contracts';
+import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 import { useSigner } from '../queries/useWallet';
 
 export default function useDeclareVotingPower(council: CouncilSlugs) {
@@ -12,7 +12,10 @@ export default function useDeclareVotingPower(council: CouncilSlugs) {
         try {
           const electionModule = getCouncilContract(council).connect(signer);
           const voter = await signer.getAddress();
-          await electionModule.prepareBallotWithSnapshot(SnapshotRecordContractAddress, voter);
+          await electionModule.prepareBallotWithSnapshot(
+            SnapshotRecordContract(11155420)?.address,
+            voter
+          );
         } catch (error) {
           console.error(error);
         }

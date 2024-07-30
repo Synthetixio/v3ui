@@ -5683,7 +5683,6 @@ __metadata:
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
-    "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useLocalStorage": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
@@ -5831,7 +5830,7 @@ __metadata:
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
-    "@snx-v3/useRewardsDistributors": "workspace:^"
+    "@snx-v3/useRewardsDistributors": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -6667,10 +6666,10 @@ __metadata:
   resolution: "@snx-v3/useRewards@workspace:liquidity/lib/useRewards"
   dependencies:
     "@snx-v3/constants": "workspace:*"
-    "@snx-v3/contracts": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useMulticall3": "workspace:*"
+    "@snx-v3/useRewardsDistributors": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
@@ -6679,7 +6678,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useRewardsDistributors@workspace:^, @snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
+"@snx-v3/useRewardsDistributors@workspace:*, @snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRewardsDistributors@workspace:liquidity/lib/useRewardsDistributors"
   dependencies:

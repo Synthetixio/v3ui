@@ -34,7 +34,7 @@ export const WatchAccountBanner: FC = () => {
               <Heading fontSize="16px">You are currently watching Account #{accountId}</Heading>
             )}
             <Heading fontSize="14px">
-              Please connect your wallet too open, manage or view positions.
+              Please connect your wallet to open, manage or view positions.
             </Heading>
           </div>
           <Button onClick={() => connect()}>Connect Wallet</Button>

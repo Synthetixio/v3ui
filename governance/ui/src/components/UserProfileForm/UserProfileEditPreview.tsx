@@ -26,13 +26,18 @@ export default function UserProfileEditPreview({
       flexDir="column"
     >
       <Flex>
-        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
+        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address || activeWallet} />
         <Flex flexDir="column" w="100%" justifyContent="center" ml="2">
-          <Flex justifyContent="space-between">
-            <Text fontSize="16px" fontWeight="700" data-cy="username-preview">
-              {userData.username ? userData.username : prettyString(activeWallet || '')}
-            </Text>
-          </Flex>
+          <Text
+            fontSize="16px"
+            fontWeight="700"
+            data-cy="username-preview"
+            overflow="scroll"
+            maxW="250px"
+            whiteSpace="nowrap"
+          >
+            {userData.username ? userData.username : prettyString(activeWallet || '')}
+          </Text>
           <Text fontSize="12px" fontWeight="400" lineHeight="16px" data-cy="about-preview">
             {userData?.about}
           </Text>

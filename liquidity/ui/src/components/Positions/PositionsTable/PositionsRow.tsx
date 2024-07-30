@@ -128,8 +128,13 @@ export function PositionRow({
 
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
-            <Amount prefix="$" value={debt.abs()} />
+          <Text
+            color={debt.lt(0) ? 'green.500' : 'red.500'}
+            lineHeight="1.25rem"
+            fontFamily="heading"
+            fontSize="sm"
+          >
+            <Amount prefix={`${debt.lt(0) ? '' : '-'}$`} value={debt.abs()} />
           </Text>
           <Collapse in={!debt.eq(0)}>
             <Text

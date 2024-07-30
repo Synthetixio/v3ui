@@ -318,6 +318,12 @@ export const PoolCard = ({
                   } catch (error) {}
                 };
 
+                const buttonText = !currentNetwork
+                  ? 'Connect Wallet'
+                  : currentNetwork.id !== network.id
+                    ? 'Switch Network'
+                    : 'Deposit';
+
                 return (
                   <Tr key={type.tokenAddress}>
                     <Td border="none" px={4} w="20%">
@@ -442,7 +448,7 @@ export const PoolCard = ({
                         fontSize="14px"
                         lineHeight="20px"
                       >
-                        {!currentNetwork ? 'Connect Wallet' : 'Deposit'}
+                        {buttonText}
                       </Button>
                     </Td>
                   </Tr>

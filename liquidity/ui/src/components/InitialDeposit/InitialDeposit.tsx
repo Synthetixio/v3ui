@@ -105,6 +105,7 @@ export const InitialDepositUi: FC<{
                   alignItems="center"
                   py={1.5}
                   px={2.5}
+                  width="fit-content"
                 >
                   <Text display="flex" gap={2} alignItems="center" fontWeight="600">
                     <TokenIcon symbol={symbol} width={16} height={16} />

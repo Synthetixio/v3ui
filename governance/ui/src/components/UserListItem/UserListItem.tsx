@@ -51,7 +51,14 @@ export default function UserListItem({
           size={8}
           mr="0"
         />
-        <Text fontWeight="bold" fontSize="14px" ml="3">
+        <Text
+          fontWeight="bold"
+          fontSize="14px"
+          ml="3"
+          overflow="scroll"
+          maxW="300px"
+          whiteSpace="nowrap"
+        >
           {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
       </Flex>

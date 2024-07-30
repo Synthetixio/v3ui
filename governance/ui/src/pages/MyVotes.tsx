@@ -3,54 +3,30 @@ import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
-import { SnapshotRecordContractAddress, getCouncilContract } from '../utils/contracts';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
-import { useSigner } from '../queries/useWallet';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import {
-  useGetUserVotingPower,
-  useGetUserBallot,
-  GetUserDetails,
-  useGetUserDetailsQuery,
-} from '../queries/';
+import { useGetUserVotingPower } from '../queries/';
+import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
+import { useGetUserSelectedVotes } from '../hooks/useGetUserSelectedVotes';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
-  const signer = useSigner();
 
-  const [
-    { data: spartanBallot },
-    // { data: grantsBallot },
-    // { data: ambassadorBallot },
-    // { data: treasuryBallot },
-  ] = [
-    useGetUserBallot('spartan'),
-    // useGetUserBallot('grants'),
-    // useGetUserBallot('ambassador'),
-    // useGetUserBallot('treasury'),
-  ];
-  const { data: votingPower } = useGetUserVotingPower('spartan');
-
+  const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
+  // const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
+  // const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
+  const selectedVotes = useGetUserSelectedVotes();
+  const councilToCastVote = Object.entries(selectedVotes)
+    .filter(([_, candidate]) => !!candidate)
+    .map(([council]) => council) as CouncilSlugs[];
+  const { mutateAsync } = useCastVotes(councilToCastVote, selectedVotes);
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
-  const { data: users } = useGetUserDetailsQuery(Object.values(votingCandidates || {}));
-  const candidates =
-    users &&
-    votingCandidates &&
-    Object.entries(votingCandidates)
-      .map(([council, candidate]) => {
-        const user = users.find((user) => user.address.toLowerCase() === candidate.toLowerCase());
-        return { ...user, council };
-      })
-      .reduce(
-        (a, v) => ({ ...a, [v.council]: v }),
-        {} as Record<CouncilSlugs, GetUserDetails & Record<'council', CouncilSlugs>>
-      );
 
   return (
     <>
@@ -162,28 +138,23 @@ export default function MyVotes() {
                 Total Voting Power
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold">
-                {formatNumber(votingPower)}
+                {formatNumber(
+                  votingPowerSpartan?.power
+                    ? // && votingPowerAmbassador
+                      // && votingPowerTreassury
+                      votingPowerSpartan.power
+                        // .add(votingPowerAmbassador)
+                        // .add(votingPowerTreassury)
+                        .toString()
+                    : 0
+                )}
               </Text>
             </Flex>
             <Button
               size="md"
               isDisabled={period !== '2'}
               onClick={async () => {
-                if (signer) {
-                  try {
-                    await getCouncilContract('spartan')
-                      .connect(signer)
-                      .prepareBallotWithSnapshot(
-                        SnapshotRecordContractAddress,
-                        await signer.getAddress()
-                      );
-                  } catch (error) {
-                    console.error('already prepared ballot');
-                  }
-                  await getCouncilContract('spartan')
-                    .connect(signer)
-                    .cast([candidates?.spartan.address], [spartanBallot?.votingPower]);
-                }
+                await mutateAsync();
               }}
             >
               Cast Vote
