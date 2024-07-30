@@ -1,8 +1,7 @@
 import { Fade, Flex, Spinner, Td, Text, Th, Tr } from '@chakra-ui/react';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { CustomTable } from '../CustomTable';
-import { RewardsInterface, useRewards } from '@snx-v3/useRewards';
-import { usePoolData } from '@snx-v3/usePoolData';
+import { useRewards } from '@snx-v3/useRewards';
 import { TokenIcon } from '../TokenIcon';
 import { prettyString } from '@snx-v3/format';
 import { convertSecondsToDisplayString } from '@snx-v3/formatters';
@@ -51,16 +50,12 @@ function RewardsTableUi({
   isLoading,
   accountId,
   poolId,
-  registered_distributors,
 }: {
   collateralTypes?: CollateralType[];
   isLoading: boolean;
   accountId?: string;
   poolId: string;
-  registered_distributors?: RewardsInterface;
 }) {
-  if (!registered_distributors && !isLoading) return null;
-
   return (
     <CustomTable
       loadingState={{ isLoading: isLoading, headerLength: TableHeader.length, numberOfRows: 1 }}
@@ -75,7 +70,6 @@ function RewardsTableUi({
                 accountId={accountId}
                 poolId={poolId}
                 isLoading={isLoading}
-                registered_distributors={registered_distributors}
               />
             ))
       }
@@ -87,16 +81,13 @@ function RewardsRow({
   collateralType,
   accountId,
   poolId,
-  registered_distributors,
 }: {
   collateralType?: CollateralType;
   isLoading: boolean;
   accountId?: string;
   poolId: string;
-  registered_distributors?: RewardsInterface;
 }) {
   const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
-    registered_distributors,
     poolId,
     collateralType?.tokenAddress,
     accountId
@@ -152,15 +143,13 @@ function RewardsRow({
 
 export function RewardsTable({ accountId, poolId }: { accountId?: string; poolId: string }) {
   const { data: collateralTypes, isLoading: collateralTypesAreLoading } = useCollateralTypes();
-  const { data: poolData, isLoading: poolDataIsLoading } = usePoolData(poolId);
 
   return (
     <RewardsTableUi
       collateralTypes={collateralTypes}
       accountId={accountId}
       poolId={poolId}
-      registered_distributors={poolData?.registered_distributors}
-      isLoading={poolDataIsLoading && collateralTypesAreLoading}
+      isLoading={collateralTypesAreLoading}
     />
   );
 }

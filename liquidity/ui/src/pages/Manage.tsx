@@ -3,7 +3,6 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams } from '@snx-v3/useParams';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-
 import {
   ManageAction,
   NoPosition,
@@ -183,7 +182,6 @@ export const Manage = () => {
   const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
 
   const { isFetching: isRewardsLoading, data: rewardsData } = useRewards(
-    poolData?.registered_distributors,
     poolId,
     collateralType?.tokenAddress,
     accountId
