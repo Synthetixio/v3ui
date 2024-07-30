@@ -166,6 +166,10 @@ export function NetworkController() {
                 fontSize="xs"
                 userSelect="none"
                 data-cy="header-wallet-address-display"
+                maxW="200px"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
               >
                 {user?.username || prettyString(activeWallet?.address || '')}
               </Text>
@@ -181,6 +185,10 @@ export function NetworkController() {
                 fontSize="xs"
                 userSelect="none"
                 data-cy="header-wallet-address-display"
+                maxW="200px"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
               >
                 {user?.username || prettyString(activeWallet?.address || '')}
               </Text>

@@ -36,15 +36,15 @@ it('Councils - Administration', () => {
     'textOverflow',
     'ellipsis'
   );
-  // cy.get('[data-cy="user-table-view-button-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]').click();
-  // cy.get('[data-cy="nominate-self-button-user-profile-details"]').click();
-  // cy.get('[data-cy="withdraw-vote-select"]').click();
-  // cy.get('[data-cy="edit-nomination-button"]').click();
-  // cy.get('[data-cy="confirm-edit-nomination-button"]').click();
-  // cy.get('[data-cy="empty-state-user-action-box"]').contains(
-  //   'Click on nominee to see their profile details'
-  // );
-  // cy.get('[data-cy="user-table-view-button-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]').should(
-  //   'not.exist'
-  // );
+  cy.get('[data-cy="user-table-view-button-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]').click();
+  cy.get('[data-cy="nominate-self-button-user-profile-details"]').click();
+  cy.get('[data-cy="withdraw-vote-select"]').click();
+  cy.get('[data-cy="edit-nomination-button"]').click();
+  cy.get('[data-cy="confirm-edit-nomination-button"]').click();
+  cy.get('[data-cy="empty-state-user-action-box"]').contains(
+    'Click on a nominee to see their profile details'
+  );
+  cy.get('[data-cy="user-table-view-button-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]').should(
+    'not.exist'
+  );
 });

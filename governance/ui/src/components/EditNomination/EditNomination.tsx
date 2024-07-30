@@ -31,6 +31,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
       bg="navy.700"
       w="100%"
       maxW="451px"
+      h="fit-content"
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"

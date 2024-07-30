@@ -20,7 +20,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="nominate-self-cast-nomination-button"]').click();
   cy.get('[data-cy="nominate-self-done-button"]').click();
   cy.get('[data-cy="empty-state-user-action-box"]').contains(
-    'Click on nominee to see their profile details'
+    'Click on a nominee to see their profile details'
   );
   cy.get('[data-cy="own-user-list-item"]').click();
   cy.get('[data-cy="select-user-to-vote-button"]').click();
