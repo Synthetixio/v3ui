@@ -57,7 +57,8 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         my="6"
         boxShadow="lg"
         position="sticky"
-        top="81px"
+        top="105px"
+        data-cy="user-action-box-unselected"
       >
         <Text
           w="225px"
@@ -68,7 +69,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
           textAlign="center"
           data-cy="empty-state-user-action-box"
         >
-          Click on nominee to see <br />
+          Click on a nominee to see <br />
           their profile details
         </Text>
       </Flex>

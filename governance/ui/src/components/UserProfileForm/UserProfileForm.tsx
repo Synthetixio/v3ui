@@ -244,7 +244,7 @@ export function UserProfileForm() {
         </Show>
       </Flex>
       <Show above="xl">
-        <Flex flexDir="column" minW="551px" gap="3">
+        <Flex flexDir="column" minW="551px" maxW="551px" gap="3">
           <Heading fontSize="20px">Preview</Heading>
           <UserProfileEditPreview
             activeWallet={activeWallet?.address}

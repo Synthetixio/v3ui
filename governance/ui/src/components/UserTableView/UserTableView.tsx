@@ -1,4 +1,4 @@
-import { Button, Flex, Spinner, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Spinner, Text, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -23,6 +23,8 @@ export default function UserTableView({
   const [searchParams] = useSearchParams();
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: councilSettings } = useGetElectionSettings(activeCouncil);
+  const isSelected = searchParams.get('view') === user.address;
+  const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
 
   if (!user) return <Spinner colorScheme="cyan" />;
   return (
@@ -31,13 +33,18 @@ export default function UserTableView({
       cursor="pointer"
       onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
-      border={searchParams.get('view') === user.address ? '1px solid' : ''}
-      borderTop="1px solid"
-      borderColor={searchParams.get('view') === user.address ? 'cyan.500' : 'gray.900'}
-      rounded="base"
     >
-      {(councilPeriod === '2' || councilPeriod === '0') && (
-        <Th color="white">{place < 10 ? `#${place + 1}` : '-'}</Th>
+      {councilIsInAdminOrVoting && (
+        <Th
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+          borderTop="1px solid"
+          borderLeft="1px solid"
+          borderBottom="1px solid"
+          borderLeftRadius={isSelected ? 'base' : ''}
+          color="white"
+        >
+          {place < 10 ? `#${place + 1}` : '-'}
+        </Th>
       )}
       <Th
         color="white"
@@ -45,9 +52,12 @@ export default function UserTableView({
         alignItems="center"
         gap="2"
         textTransform="unset"
-        overflow="scroll"
-        px="0"
-        maxW="200px"
+        px="3"
+        borderTop="1px solid"
+        borderLeft="1px solid"
+        borderBottom="1px solid"
+        borderLeftRadius={!councilIsInAdminOrVoting && isSelected ? 'base' : ''}
+        borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
         <ProfilePicture
           imageSrc={user?.pfpUrl}
@@ -56,22 +66,45 @@ export default function UserTableView({
           mr="0"
           ImageProps={{ w: '32px', h: '32px' }}
         />{' '}
-        {user.username ? user.username : prettyString(user.address, 8, 8)}
+        <Text
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          maxW="170px"
+          data-cy={`user-table-view-${user.address}`}
+        >
+          {user.username ? user.username : prettyString(user.address)}
+        </Text>
       </Th>
       {councilPeriod !== '0' && (
-        <Th>
+        <Th
+          borderTop="1px solid"
+          borderBottom={isSelected ? '1px solid' : ''}
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+        >
           <Flex>
-            <Badge color="green">Nominee</Badge>
-            {councilSettings && councilSettings?.epochSeatCount > place && (
-              <Badge ml="2">Member</Badge>
-            )}
+            {councilSettings && councilSettings?.epochSeatCount > place && <Badge>Member</Badge>}
           </Flex>
         </Th>
       )}
-      {(councilPeriod === '2' || councilPeriod === '0') && <Th color="white">TODO</Th>}
-      {(councilPeriod === '2' || councilPeriod === '0') && <Th color="white">TODO</Th>}
+      {councilIsInAdminOrVoting && (
+        <Th borderTop="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
+          TODO
+        </Th>
+      )}
+      {councilIsInAdminOrVoting && (
+        <Th borderTop="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
+          TODO
+        </Th>
+      )}
       {councilPeriod !== '2' && councilPeriod !== '0' && (
-        <Th textAlign="end">
+        <Th
+          textAlign="end"
+          borderTop="1px solid"
+          borderRight="1px solid"
+          borderRightRadius={isSelected ? 'base' : ''}
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+        >
           <Button
             size="xs"
             colorScheme="gray"
@@ -89,7 +122,11 @@ export default function UserTableView({
         </Th>
       )}
       {councilPeriod === '0' && (
-        <Th textAlign="end">
+        <Th
+          textAlign="end"
+          borderTop="1px solid"
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+        >
           <Badge w="fit-content">Your Vote TODO</Badge>
         </Th>
       )}

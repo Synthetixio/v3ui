@@ -1,4 +1,13 @@
-import { Button, Flex, Heading, IconButton, Image, Spinner, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  FlexProps,
+  Heading,
+  IconButton,
+  Image,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
@@ -9,7 +18,11 @@ import { useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
 
-export default function NominateSelf({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
+interface NominateSelfProps extends FlexProps {
+  activeCouncil: CouncilSlugs;
+}
+
+export default function NominateSelf({ activeCouncil, ...props }: NominateSelfProps) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
   const navigate = useNavigate();
 
@@ -29,8 +42,9 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
       borderStyle="solid"
       rounded="base"
       p="6"
-      position="sticky"
-      top="81px"
+      mt="6"
+      h="fit-content"
+      {...props}
     >
       {isSuccess ? (
         <>
@@ -62,11 +76,12 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Text
                 fontWeight={700}
                 fontSize="14px"
-                overflow="scroll"
-                maxW="300px"
+                textOverflow="ellipsis"
                 whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="300px"
               >
-                {data?.username ? data.username : 'No Username'}
+                {data?.username ? data.username : prettyString(activeWallet?.address || '')}
               </Text>
               <Text fontSize="12px" color="gray.500">
                 Nomination Wallet: {prettyString(data!.address)}
@@ -147,11 +162,13 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
               <Text
                 fontWeight={700}
                 fontSize="14px"
-                overflow="scroll"
-                maxW="300px"
+                textOverflow="ellipsis"
                 whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="300px"
+                data-cy="nominate-self-username"
               >
-                {data?.username ? data.username : 'No Username'}
+                {data?.username ? data.username : prettyString(activeWallet?.address || '')}
               </Text>
               <Text fontSize="12px" color="gray.500">
                 Nomination Wallet: {prettyString(data?.address || '')}
@@ -190,7 +207,11 @@ export default function NominateSelf({ activeCouncil }: { activeCouncil: Council
                 >
                   <Image src={council.image} w="6" h="6" />
                 </Flex>
-                <Text fontSize="x-small" fontWeight="bold">
+                <Text
+                  fontSize="sm"
+                  fontWeight="bold"
+                  data-cy="council-select-button-text-nominate-self"
+                >
                   {council.title}
                 </Text>
               </Flex>

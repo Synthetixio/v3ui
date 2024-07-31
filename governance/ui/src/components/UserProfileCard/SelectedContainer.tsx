@@ -32,7 +32,7 @@ export const SelectedContainer = ({
       <Hide below="xl">
         <UserProfileCard
           position="sticky"
-          top="81px"
+          top="105px"
           mt={6}
           walletAddress={selectedUserAddress}
           activeCouncil={activeCouncil}

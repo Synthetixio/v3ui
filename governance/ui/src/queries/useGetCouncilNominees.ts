@@ -10,6 +10,14 @@ const randomAddresses = [
   Wallet.createRandom().address,
   Wallet.createRandom().address,
   Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
+  Wallet.createRandom().address,
 ];
 
 export function useGetCouncilNominees(council: CouncilSlugs) {

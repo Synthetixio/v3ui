@@ -104,7 +104,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   _hover={{ borderColor: 'cyan.500' }}
                   px="2"
                 >
-                  <CouncilImage imageUrl={council.image} />
+                  <CouncilImage
+                    imageUrl={council.image}
+                    w="10"
+                    h="10"
+                    data-cy={`council-image-council-tabs-${council.slug}`}
+                  />
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
