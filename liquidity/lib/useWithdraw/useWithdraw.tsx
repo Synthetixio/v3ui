@@ -35,8 +35,13 @@ export const useWithdraw = ({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
 
-      if (!(CoreProxy && collateralTypeAddress && amount && collateralPriceIds)) return;
-      if (amount?.eq(0)) return;
+      if (!(CoreProxy && collateralTypeAddress && amount && collateralPriceIds)) {
+        throw new Error('Not ready');
+      }
+      if (amount?.eq(0)) {
+        throw new Error('Amount less than 0');
+      }
+
       const walletAddress = await signer.getAddress();
 
       try {

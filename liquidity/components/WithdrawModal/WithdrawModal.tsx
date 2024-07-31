@@ -184,6 +184,16 @@ export function WithdrawModal({
         queryClient.invalidateQueries({
           queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions', { accountId }],
         });
+        queryClient.invalidateQueries({
+          queryKey: [
+            `${network?.id}-${network?.preset}`,
+            'AccountCollateralUnlockDate',
+            { accountId },
+          ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
+        });
 
         setWithdrawAmount(ZEROWEI);
       } else {
