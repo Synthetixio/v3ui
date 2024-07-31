@@ -37,7 +37,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         >
           {council?.description}
         </Text>
-        <Flex w="100%" mt="2" gap={{ md: '6' }}>
+        <Flex w="100%" mt="2" gap="2" data-cy={`council-information-${activeCouncil}`}>
           <Heading
             fontSize="xs"
             lineHeight="1rem"
@@ -58,7 +58,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
             px="2"
             py="1"
           >
-            Stipends P/M: {council?.stipends}
+            Stipends: {council?.stipends}/month
           </Heading>
           <Link to={council!.docLink} target="_blank" rel="noopener noreferrer">
             <Heading

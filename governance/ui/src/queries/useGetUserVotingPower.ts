@@ -27,7 +27,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         if (ballot) {
           if (ballot?.votingPower?.gt(0)) {
             return { power: ballot.votingPower as BigNumber, isDeclared: true };
-          } else if (ballot.gt(0)) {
+          } else if (ballot?.gt(0)) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }

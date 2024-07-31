@@ -32,13 +32,23 @@ export default function UserProfileEditPreview({
             fontSize="16px"
             fontWeight="700"
             data-cy="username-preview"
-            overflow="scroll"
-            maxW="250px"
+            textOverflow="ellipsis"
             whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="250px"
           >
             {userData.username ? userData.username : prettyString(activeWallet || '')}
           </Text>
-          <Text fontSize="12px" fontWeight="400" lineHeight="16px" data-cy="about-preview">
+          <Text
+            fontSize="12px"
+            fontWeight="400"
+            lineHeight="16px"
+            data-cy="about-preview"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="250px"
+          >
             {userData?.about}
           </Text>
         </Flex>
@@ -72,20 +82,25 @@ export default function UserProfileEditPreview({
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-      <Text fontSize="14px" fontWeight="700" color="gray.500">
-        Governance Pitch
-      </Text>
-      <Text
-        fontSize="14px"
-        lineHeight="20px"
-        overflowY="scroll"
-        maxH="50vh"
-        overflow="scroll"
-        mb="4"
-        data-cy="governance-pitch-preview"
-      >
-        {userData?.delegationPitch}
-      </Text>
+      {userData.delegationPitch && (
+        <>
+          <Text fontSize="14px" fontWeight="700" color="gray.500">
+            Governance Pitch
+          </Text>
+          <Text
+            fontSize="14px"
+            lineHeight="20px"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxH="50vh"
+            mb="4"
+            data-cy="governance-pitch-preview"
+          >
+            {userData.delegationPitch}
+          </Text>
+        </>
+      )}
       <Button isLoading={isPending} w="100%" onClick={onSave} data-cy="save-profile-changes-button">
         Save Changes
       </Button>

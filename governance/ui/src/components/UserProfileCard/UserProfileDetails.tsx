@@ -9,6 +9,7 @@ import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { useGetUserCurrentVotes } from '../../queries/useGetUserCurrentVotes';
 import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
+import { EditIcon, ShareIcon } from '../Icons';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -45,7 +46,7 @@ export const UserProfileDetails = ({
       <Flex alignItems="center" mb="4" position="relative">
         <IconButton
           onClick={() => navigate(`/councils/${activeCouncil}`)}
-          size="xs"
+          size="sm"
           aria-label="close button"
           icon={<CloseIcon />}
           variant="ghost"
@@ -55,6 +56,18 @@ export const UserProfileDetails = ({
           top="0px"
           right="0px"
         />
+        <IconButton
+          size="xs"
+          icon={<EditIcon />}
+          variant="ghost"
+          position="absolute"
+          top="4px"
+          right="32px"
+          aria-label="edit-profile"
+          onClick={() => navigate(`/profile`)}
+          data-cy="edit-icon-user-profile-details"
+          color="white"
+        />
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
@@ -62,9 +75,10 @@ export const UserProfileDetails = ({
               fontSize="16px"
               fontWeight="700"
               data-testid="user-wallet-profile-address"
-              maxW="300px"
+              maxW="250px"
+              textOverflow="ellipsis"
               whiteSpace="nowrap"
-              overflow="scroll"
+              overflow="hidden"
             >
               {userData?.username ? userData.username : prettyString(userData!.address)}
             </Text>
@@ -73,23 +87,29 @@ export const UserProfileDetails = ({
             fontSize="12px"
             fontWeight="400"
             lineHeight="16px"
+            maxW="250px"
+            textOverflow="ellipsis"
             whiteSpace="nowrap"
-            maxW="300px"
-            overflow="scroll"
+            overflow="hidden"
           >
             {userData?.about}
           </Text>
         </Flex>
       </Flex>
-      <Flex mb="4">
+      <Flex mb="4" gap="3">
         <Socials
           discord={userData?.discord}
           github={userData?.github}
           twitter={userData?.twitter}
         />
+        <ShareIcon
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+          }}
+        />
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
-        <Text fontSize="14px" fontWeight="700" color="gray.500">
+        <Text fontSize="xs" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
           Wallet Address
         </Text>
         <Button
@@ -110,25 +130,19 @@ export const UserProfileDetails = ({
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-      <Text fontSize="14px" fontWeight="700" color="gray.500">
-        Governance Pitch
-      </Text>
-      <Text fontSize="14px" lineHeight="20px" overflowY="scroll">
-        {userData?.delegationPitch}
-      </Text>
+      {userData?.delegationPitch && (
+        <>
+          <Text fontSize="14px" fontWeight="700" color="gray.500">
+            Governance Pitch
+          </Text>
+          <Text fontSize="14px" lineHeight="20px" overflowY="scroll">
+            {userData?.delegationPitch}
+          </Text>
+        </>
+      )}
       <Flex mt="auto" gap="2" flexDir="column">
         {isOwn && (
           <>
-            <Button
-              variant="outline"
-              colorScheme="gray"
-              mb="1"
-              w="100%"
-              onClick={() => navigate(`/profile`)}
-              color="white"
-            >
-              Edit Profile
-            </Button>
             {councilPeriod === '2' ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button
@@ -142,10 +156,10 @@ export const UserProfileDetails = ({
               </Tooltip>
             ) : councilPeriod === '1' ? (
               <Button
-                variant="outline"
-                colorScheme="gray"
+                variant={!isNominated ? 'solid' : 'outline'}
+                colorScheme={!isNominated ? 'cyan' : 'gray'}
                 w="100%"
-                color="white"
+                color={!isNominated ? 'black' : 'white'}
                 data-cy="nominate-self-button-user-profile-details"
                 onClick={() =>
                   navigate(
@@ -165,6 +179,9 @@ export const UserProfileDetails = ({
             variant="outline"
             colorScheme="gray"
             w="100%"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
             data-cy="select-user-to-vote-button"
             onClick={() => {
               if (isAlreadyVoted) {
@@ -196,8 +213,6 @@ export const UserProfileDetails = ({
                 localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
               }
             }}
-            whiteSpace="nowrap"
-            overflow="scroll"
           >
             {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
             {userData?.ens ||
