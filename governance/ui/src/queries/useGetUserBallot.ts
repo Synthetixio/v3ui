@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { BigNumber, providers } from 'ethers';
+import { BigNumber } from 'ethers';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
 import { useNetwork, useSigner } from './useWallet';
@@ -12,18 +12,19 @@ export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(counci
   return useQuery({
     queryFn: async () => {
       if (signer && network?.id) {
-        return await getBallot(council, signer, network.id);
+        const address = await signer.getAddress();
+        return await getBallot(council, address, network.id);
       }
     },
     enabled: !!signer,
-    queryKey: ['userBallot', council.toString()],
+    queryKey: ['userBallot', council.toString(), network?.id],
     staleTime: 900000,
   });
 }
 
 async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   council: T,
-  signer: providers.JsonRpcSigner,
+  address: string,
   chainId: number
 ): Promise<
   T extends CouncilSlugs
@@ -45,17 +46,15 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
     ballot = (await Promise.all(
       council.map(async (c) => {
         const electionModule = getCouncilContract(c).connect(motherShipProvider);
-        const voter = await signer!.getAddress();
         const electionId = await electionModule.getEpochIndex();
-        const temp = await electionModule.getBallot(voter, chainId, electionId);
+        const temp = await electionModule.getBallot(address, chainId, electionId);
         return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
     const electionModule = getCouncilContract(council).connect(motherShipProvider);
-    const voter = await signer!.getAddress();
     const electionId = electionModule.getEpochIndex();
-    const temp = (await electionModule.getBallot(voter, chainId, electionId)) as {
+    const temp = (await electionModule.getBallot(address, chainId, electionId)) as {
       votingPower: BigNumber;
       votedCandidates: string[];
       amounts: BigNumber[];

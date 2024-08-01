@@ -23,8 +23,13 @@ it('Councils - Administration', () => {
     'Click on a nominee to see their profile details'
   );
   cy.get('[data-cy="own-user-list-item"]').click();
+  cy.get('[data-cy="select-user-to-vote-button"]').contains('Select');
   cy.get('[data-cy="select-user-to-vote-button"]').click();
   cy.get('[data-cy="my-votes-button"]').click();
+  cy.get(
+    '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
+  ).should('exist');
+  cy.reload();
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');

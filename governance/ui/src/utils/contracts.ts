@@ -13,7 +13,7 @@ const AmbassadorCouncilContract = new Contract(
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
