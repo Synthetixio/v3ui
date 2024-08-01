@@ -43,12 +43,14 @@ export const useWithdrawBaseAndromeda = ({
   const mutation = useMutation({
     mutationFn: async () => {
       if (!signer || !network || !provider) throw new Error('No signer or network');
-      if (!(CoreProxy && SpotProxy && accountId && usdTokens?.sUSD && usdTokens.snxUSD)) return;
+      if (!(CoreProxy && SpotProxy && accountId && usdTokens?.sUSD && usdTokens.snxUSD)) {
+        throw new Error('Not ready');
+      }
 
       const total = snxUSDCollateral.add(sUSDCCollateral);
 
       if (total.lt(amountToWithdraw)) {
-        return;
+        throw new Error('Exceeds balance');
       }
 
       const sUSDCAmount = amountToWithdraw.gt(sUSDCCollateral) ? sUSDCCollateral : amountToWithdraw;
