@@ -11,7 +11,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
-import { useOraclePrice } from '../../../../lib/useOraclePrice';
+import { useOraclePrice } from '@snx-v3/useOraclePrice';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
