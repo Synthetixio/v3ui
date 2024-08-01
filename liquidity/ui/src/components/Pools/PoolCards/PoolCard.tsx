@@ -75,10 +75,6 @@ export const PoolCard = ({
   const { connect } = useWallet();
 
   const vaultTVL = collateralTypes?.reduce((acc, type) => {
-    const priceThing = collateralPrices?.find(
-      (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
-    )?.price;
-    console.log('priceThing', priceThing, collateralPrices, type.symbol);
     const price = wei(
       collateralPrices?.find((price) => price.symbol.toUpperCase() === type.symbol.toUpperCase())
         ?.price || 0

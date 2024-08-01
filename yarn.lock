@@ -7246,8 +7246,8 @@ __metadata:
 
 "@synthetixio/v3-contracts@synthetixio/v3-contracts#master":
   version: 6.4.0
-  resolution: "@synthetixio/v3-contracts@https://github.com/synthetixio/v3-contracts.git#commit=7f860c35dda8a36c692675e1731cc0b8701fe8c2"
-  checksum: 2818f3a6b5af1b86244d286a0f3312388fa1923360d3299baf4e60f75827a5dfacb4f3a030504e0c161d34491a9d174f359f8f1b093f5a760a9a86bd51ce3e3d
+  resolution: "@synthetixio/v3-contracts@https://github.com/synthetixio/v3-contracts.git#commit=1c43ed368bdfaeef8bd9649339d7d1f9369a3493"
+  checksum: 7f57c77786572691943a47de8c4585ff128b43fe22a429d21660180385272b771dd8842ee6c9ee4ed2707dbd66c2adc4ecd1ac91b254468f260a3b5ea3b7c2ac
   languageName: node
   linkType: hard
 

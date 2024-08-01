@@ -11,6 +11,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
+import { useOraclePrice } from '../../../../lib/useOraclePrice';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -32,10 +33,12 @@ export const PoolsList = () => {
       return [];
     }
 
-    return BaseCollateralTypes.concat(ArbitrumCollateralTypes);
-  }, [ArbitrumCollateralTypes, BaseCollateralTypes]);
+    // We want to filter out assets that don't have a pyth price feed
 
-  console.log('All collaterals:', allCollaterals);
+    return BaseCollateralTypes.concat(ArbitrumCollateralTypes).filter(
+      (item) => item.displaySymbol !== 'stataUSDC'
+    );
+  }, [ArbitrumCollateralTypes, BaseCollateralTypes]);
 
   const { data: collateralPrices, isLoading: isLoadingCollateralPrices } = useOfflinePrices(
     allCollaterals.map((item) => ({
@@ -45,7 +48,13 @@ export const PoolsList = () => {
     }))
   );
 
-  console.log('Collateral prices:', collateralPrices);
+  // Fetch stata price from oracle manager
+  const stata = BaseCollateralTypes?.find((item) => item.symbol === 'stataUSDC');
+
+  const { data: stataPrice, isLoading: isStataPriceLoading } = useOraclePrice(
+    stata?.oracleNodeId,
+    BASE_ANDROMEDA
+  );
 
   // Arb Balances
   const { data: ArbitrumTokenBalances, isLoading: isArbitrumBalancesLoading } = useTokenBalances(
@@ -54,13 +63,8 @@ export const PoolsList = () => {
   );
 
   // Base Balances
-  const additionalBaseTokens =
-    BaseCollateralTypes?.filter((item) => item.symbol !== 'USDC').map(
-      (item) => item.tokenAddress
-    ) || [];
-
   const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
-    usdTokens?.USDC ? [usdTokens.USDC, ...additionalBaseTokens] : [],
+    usdTokens?.USDC && stata ? [usdTokens.USDC, stata.tokenAddress] : [],
     BASE_ANDROMEDA
   );
 
@@ -86,7 +90,8 @@ export const PoolsList = () => {
     isArbitrumBalancesLoading ||
     isBaseBalancesLoading ||
     isArbitrumRewardsLoading ||
-    isBaseRewardsLoading;
+    isBaseRewardsLoading ||
+    isStataPriceLoading;
 
   const filteredPools = useMemo(() => {
     return (
@@ -159,6 +164,12 @@ export const PoolsList = () => {
     BaseRewards,
   ]);
 
+  const allCollateralPrices = useMemo(() => {
+    if (stata && stataPrice) {
+      return collateralPrices?.concat({ symbol: 'stataUSDC', price: stataPrice?.price.toBN() });
+    }
+  }, [stata, collateralPrices, stataPrice]);
+
   return (
     <Flex mt={6} flexDirection="column">
       <Heading fontWeight={700} fontSize={24}>
@@ -190,7 +201,7 @@ export const PoolsList = () => {
                 <PoolCard
                   key={network.hexId}
                   collateralTypes={collateralTypes}
-                  collateralPrices={collateralPrices}
+                  collateralPrices={allCollateralPrices}
                   apr={apr}
                   network={network}
                   pool={pool}
