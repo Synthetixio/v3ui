@@ -75,7 +75,14 @@ export const PoolCard = ({
   const { connect } = useWallet();
 
   const vaultTVL = collateralTypes?.reduce((acc, type) => {
-    const price = wei(collateralPrices?.find((price) => price.symbol === type.symbol)?.price || 0);
+    const priceThing = collateralPrices?.find(
+      (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
+    )?.price;
+    console.log('priceThing', priceThing, collateralPrices, type.symbol);
+    const price = wei(
+      collateralPrices?.find((price) => price.symbol.toUpperCase() === type.symbol.toUpperCase())
+        ?.price || 0
+    );
     const amount = wei(type.collateralDeposited, Number(type.decimals), true);
     const value = price.mul(amount);
     return acc.add(value);
@@ -293,7 +300,7 @@ export const PoolCard = ({
 
                 const collateralApr = apr.collateralAprs.find(
                   (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
-                );
+                ) || { apr28d: 0, apr28dRewards: 0, apr28dPnl: 0 };
 
                 const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
@@ -407,7 +414,6 @@ export const PoolCard = ({
                         color="white"
                       >
                         {formatApr(apr28d * 100, network?.id)}
-
                         <Tooltip
                           label={
                             <Flex direction="column">

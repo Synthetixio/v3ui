@@ -32,6 +32,7 @@ async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
 
   // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
   const priceIds = extras.map(getAllPriceIdsEntries).flat();
+
   const deduped = Array.from(
     new Set(
       priceIds
@@ -135,6 +136,8 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
       const stables = ['sUSDC', 'USDC'];
       const filteredCollaterals = collaterals.filter((item) => !stables.includes(item.symbol));
 
+      console.log('filteredCollaterals', filteredCollaterals);
+
       const returnData: { symbol: string; price: BigNumberish }[] = [
         {
           symbol: 'sUSDC',
@@ -158,9 +161,13 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         filteredCollaterals.map((collateral) => collateral.symbol)
       );
 
+      console.log('pythIds', pythIds);
+
       const prices = await priceService.getLatestPriceFeeds(
         pythIds.map((x) => x.priceId) as string[]
       );
+
+      console.log('prices', prices);
 
       prices?.forEach((item, index) => {
         const price = item.getPriceUnchecked();

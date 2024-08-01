@@ -35,6 +35,8 @@ export const PoolsList = () => {
     return BaseCollateralTypes.concat(ArbitrumCollateralTypes);
   }, [ArbitrumCollateralTypes, BaseCollateralTypes]);
 
+  console.log('All collaterals:', allCollaterals);
+
   const { data: collateralPrices, isLoading: isLoadingCollateralPrices } = useOfflinePrices(
     allCollaterals.map((item) => ({
       id: item.tokenAddress,
@@ -43,6 +45,8 @@ export const PoolsList = () => {
     }))
   );
 
+  console.log('Collateral prices:', collateralPrices);
+
   // Arb Balances
   const { data: ArbitrumTokenBalances, isLoading: isArbitrumBalancesLoading } = useTokenBalances(
     ArbitrumCollateralTypes?.map((item) => item.tokenAddress) || [],
@@ -50,8 +54,13 @@ export const PoolsList = () => {
   );
 
   // Base Balances
+  const additionalBaseTokens =
+    BaseCollateralTypes?.filter((item) => item.symbol !== 'USDC').map(
+      (item) => item.tokenAddress
+    ) || [];
+
   const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
-    usdTokens?.USDC ? [usdTokens.USDC] : [],
+    usdTokens?.USDC ? [usdTokens.USDC, ...additionalBaseTokens] : [],
     BASE_ANDROMEDA
   );
 
