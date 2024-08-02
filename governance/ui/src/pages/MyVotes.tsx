@@ -137,7 +137,7 @@ export default function MyVotes() {
               <Text fontSize="sm" color="gray.500">
                 Total Voting Power
               </Text>
-              <Text fontSize="sm" color="white" fontWeight="bold">
+              <Text fontSize="sm" color="white" fontWeight="bold" data-cy="my-votes-voting-power">
                 {formatNumber(
                   votingPowerSpartan?.power
                     ? // && votingPowerAmbassador
@@ -151,6 +151,7 @@ export default function MyVotes() {
               </Text>
             </Flex>
             <Button
+              data-cy="cast-my-vote-button"
               size="md"
               isDisabled={period !== '2'}
               onClick={async () => {

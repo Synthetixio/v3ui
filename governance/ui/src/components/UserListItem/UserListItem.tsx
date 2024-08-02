@@ -21,7 +21,7 @@ export default function UserListItem({
   const [searchParams] = useSearchParams();
 
   const { data: user } = useGetUserDetailsQuery(address);
-  const { data: nominationInformation } = useGetIsNominated(address);
+  const { data: nominationInformation, isFetched: isNominatedFetched } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { activeWallet } = useWallet();
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
@@ -91,7 +91,7 @@ export default function UserListItem({
             <Text color="black">Nominate Self</Text>
           )}
         </Button>
-      ) : councilPeriod === '2' ? (
+      ) : councilPeriod === '2' && isNominatedFetched ? (
         <Button
           ml="auto"
           size="xs"
