@@ -243,6 +243,7 @@ export const RepayModal: React.FC<{
               queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             }),
           ]);
+
           setDebtChange(ZEROWEI);
 
           toast.closeAll();

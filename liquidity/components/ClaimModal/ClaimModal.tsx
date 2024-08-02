@@ -157,9 +157,12 @@ export const ClaimModal: React.FC<{
     try {
       await execBorrow();
 
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
       });
       setDebtChange(ZEROWEI);
     } catch (error: any) {

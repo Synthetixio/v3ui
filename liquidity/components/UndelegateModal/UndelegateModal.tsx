@@ -176,9 +176,19 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
             await execUndelegate();
           }
 
-          await queryClient.invalidateQueries({
+          queryClient.invalidateQueries({
             queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
             exact: false,
+          });
+          queryClient.invalidateQueries({
+            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [
+              `${network?.id}-${network?.preset}`,
+              'AccountCollateralUnlockDate',
+              { accountId: params.accountId },
+            ],
           });
 
           setCollateralChange(ZEROWEI);

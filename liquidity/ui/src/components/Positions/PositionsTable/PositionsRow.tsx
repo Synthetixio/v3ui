@@ -29,7 +29,7 @@ export function PositionRow({
   const collateralPrice = useTokenPrice(collateralType.displaySymbol);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
-  const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
+  const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
 
   const handleNavigate = (actions: string) => {
     queryParams.set('manageAction', actions);
@@ -93,16 +93,27 @@ export function PositionRow({
               <Amount prefix="$" value={availableCollateral.mul(collateralPrice)} />
             )}
 
-            {availableCollateral.gt(0) &&
-              isRunning &&
-              !![minutes, hours, seconds].find((a) => a > 0) && (
-                <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
-                  <TimeIcon />
-                </Tooltip>
-              )}
+            {availableCollateral.gt(0) && isRunning && (
+              <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
+                <TimeIcon />
+              </Tooltip>
+            )}
           </Text>
           <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-            <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
+            {availableCollateral.gt(0) && !isRunning ? (
+              <Text
+                color="cyan.500"
+                fontFamily="heading"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                cursor="pointer"
+                onClick={() => handleNavigate('withdraw')}
+              >
+                Withdraw
+              </Text>
+            ) : (
+              <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
+            )}
           </Text>
         </Flex>
       </Td>

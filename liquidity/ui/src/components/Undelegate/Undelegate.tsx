@@ -239,7 +239,9 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   const poolConfiguration = usePoolConfiguration(poolId);
   const { network } = useNetwork();
 
-  if (!collateralType) return null;
+  if (!collateralType) {
+    return null;
+  }
 
   const collateralPrice = liquidityPosition?.collateralPrice;
 
@@ -257,8 +259,10 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
   // To avoid the transaction failing due to small price deviations, we also apply a 2% buffer by multiplying with 0.98
-  function maxUndelegate() {
-    if (!liquidityPosition || !collateralType) return undefined;
+  const max = (() => {
+    if (!liquidityPosition || !collateralType) {
+      return undefined;
+    }
     const { collateralAmount, collateralValue } = liquidityPosition;
 
     if (isBase) {
@@ -277,9 +281,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     const maxWithdrawable = collateralValue.sub(minCollateralRequired).mul(0.98);
 
     return Wei.min(collateralAmount, maxWithdrawable);
-  }
-
-  const max = maxUndelegate();
+  })();
 
   return (
     <UndelegateUi
