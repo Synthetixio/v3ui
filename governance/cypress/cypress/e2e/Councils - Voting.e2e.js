@@ -37,4 +37,8 @@ it('Councils - Administration', () => {
   ).should('exist');
   cy.get('[data-cy="my-votes-voting-power"]').contains('100.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
+  cy.reload({ cache: false });
+  cy.get(
+    '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
+  ).should('exist');
 });

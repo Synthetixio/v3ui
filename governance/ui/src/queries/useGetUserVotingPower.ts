@@ -46,7 +46,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       }
     },
     enabled: !!provider && !!activeWallet,
-    queryKey: ['userBallot', council.toString(), activeWallet?.address],
+    queryKey: ['votingPower', council.toString(), activeWallet?.address],
     staleTime: 60000,
   });
 }

@@ -133,13 +133,17 @@ export function useCastVotes(
     onSuccess: async () => {
       await Promise.all(
         councils.map(
-          async (council) => await query.invalidateQueries({ queryKey: ['userBallot', council] })
+          async (council) =>
+            await query.invalidateQueries({ queryKey: ['userBallot', council, network?.id] })
         )
       );
       await Promise.all(
         councils.map(
           async (council) =>
-            await query.refetchQueries({ queryKey: ['userBallot', council], exact: false })
+            await query.refetchQueries({
+              queryKey: ['userBallot', council, network?.id],
+              exact: false,
+            })
         )
       );
     },
