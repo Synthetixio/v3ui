@@ -7,6 +7,7 @@ import { Amount } from '@snx-v3/Amount';
 import { TimeIcon } from '@chakra-ui/icons';
 import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
 import { useTokenPrice } from '../../../../../lib/useTokenPrice';
+import { DebtAmount } from './DebtAmount';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -29,7 +30,7 @@ export function PositionRow({
   const collateralPrice = useTokenPrice(collateralType.displaySymbol);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
-  const { minutes, seconds, hours, isRunning } = useWithdrawTimer(accountId);
+  const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
 
   const handleNavigate = (actions: string) => {
     queryParams.set('manageAction', actions);
@@ -93,16 +94,27 @@ export function PositionRow({
               <Amount prefix="$" value={availableCollateral.mul(collateralPrice)} />
             )}
 
-            {availableCollateral.gt(0) &&
-              isRunning &&
-              !![minutes, hours, seconds].find((a) => a > 0) && (
-                <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
-                  <TimeIcon />
-                </Tooltip>
-              )}
+            {availableCollateral.gt(0) && isRunning && (
+              <Tooltip label={`Withdrawal available in ${hours}H${minutes}M`}>
+                <TimeIcon />
+              </Tooltip>
+            )}
           </Text>
           <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
-            <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
+            {availableCollateral.gt(0) && !isRunning ? (
+              <Text
+                color="cyan.500"
+                fontFamily="heading"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                cursor="pointer"
+                onClick={() => handleNavigate('withdraw')}
+              >
+                Withdraw
+              </Text>
+            ) : (
+              <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
+            )}
           </Text>
         </Flex>
       </Td>
@@ -128,14 +140,7 @@ export function PositionRow({
 
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Text
-            color={debt.lt(0) ? 'green.500' : 'red.500'}
-            lineHeight="1.25rem"
-            fontFamily="heading"
-            fontSize="sm"
-          >
-            <Amount prefix={`${debt.lt(0) ? '' : '-'}$`} value={debt.abs()} />
-          </Text>
+          <DebtAmount debt={debt} showPNL={isBase} />
           <Collapse in={!debt.eq(0)}>
             <Text
               color="cyan.500"
