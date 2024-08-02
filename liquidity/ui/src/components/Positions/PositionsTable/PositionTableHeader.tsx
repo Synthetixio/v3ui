@@ -22,7 +22,14 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
             <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
               Locked
             </Text>
-            <Tooltip label="Unlocked assets can be locked into a position at any time or withdrawn after 24h since last activity">
+            <Tooltip
+              label={
+                <Text textAlign="left">
+                  Unlocked assets can be locked into a position at any time or withdrawn after 24h
+                  since last activity
+                </Text>
+              }
+            >
               <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
@@ -61,7 +68,7 @@ export function PositionTableHeader({ isBase }: { isBase: boolean }) {
                 isBase ? (
                   "Your portion of the pool's total debt, which fluctuates based on trader performance and market conditions"
                 ) : (
-                  <Text>
+                  <Text textAlign="left">
                     Debt consists of:
                     <br />
                     - Your portion of the pool&apos;s total debt, which fluctuates based on trader

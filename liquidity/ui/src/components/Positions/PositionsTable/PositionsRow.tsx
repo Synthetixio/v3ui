@@ -7,6 +7,7 @@ import { Amount } from '@snx-v3/Amount';
 import { TimeIcon } from '@chakra-ui/icons';
 import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
 import { useTokenPrice } from '../../../../../lib/useTokenPrice';
+import { DebtAmount } from './DebtAmount';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -139,14 +140,7 @@ export function PositionRow({
 
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <Text
-            color={debt.lt(0) ? 'green.500' : 'red.500'}
-            lineHeight="1.25rem"
-            fontFamily="heading"
-            fontSize="sm"
-          >
-            <Amount prefix={`${debt.lt(0) ? '' : '-'}$`} value={debt.abs()} />
-          </Text>
+          <DebtAmount debt={debt} showPNL={isBase} />
           <Collapse in={!debt.eq(0)}>
             <Text
               color="cyan.500"

@@ -29,6 +29,9 @@ import { ChangeStat } from '../Manage';
 import { currency } from '@snx-v3/format';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 import { useWithdrawTimer } from '../../../../lib/useWithdrawTimer';
+import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
+import { useSystemToken } from '@snx-v3/useSystemToken';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export const UndelegateUi: FC<{
   collateralChange: Wei;
@@ -44,6 +47,8 @@ export const UndelegateUi: FC<{
   isLoadingRequiredData: boolean;
   isBase: boolean;
   accountId: string | undefined;
+  maxWithdrawable?: Wei;
+  navigate: (action: string) => void;
 }> = ({
   collateralChange,
   setCollateralChange,
@@ -58,6 +63,8 @@ export const UndelegateUi: FC<{
   currentDebt,
   collateralPrice,
   accountId,
+  maxWithdrawable,
+  navigate,
 }) => {
   const price = useTokenPrice(symbol);
 
@@ -192,6 +199,7 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
+
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
         <Alert mb={6} status="info">
           <AlertIcon />
@@ -205,17 +213,35 @@ export const UndelegateUi: FC<{
           </Flex>
         </Alert>
       </Collapse>
-      <Collapse
-        in={max?.gt(0) && !isLoadingRequiredData && collateralChange.abs().gt(0) && isValidLeftover}
-        animateOpacity
-      >
-        <Alert status="error" mb="6">
+
+      <Collapse in={collateralChange.abs().gt(0) && isValidLeftover && isRunning} animateOpacity>
+        <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
-            {isRunning
-              ? `You will be able to withdraw assets in ${hours}H${minutes}M. `
-              : 'You are able to withdraw assets. '}
-            Any account activity will reset this timer to 24H.
+            You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
+            reset this timer to 24H.
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse
+        in={collateralChange.abs().gt(0) && isValidLeftover && !isRunning && maxWithdrawable?.gt(0)}
+        animateOpacity
+      >
+        <Alert status="info" mb="6">
+          <AlertIcon />
+          <Text>
+            You already have <Amount value={maxWithdrawable} suffix={` ${symbol}`} /> unlocked.
+            &nbsp;
+            <Text
+              onClick={() => navigate('withdraw')}
+              cursor="pointer"
+              as="span"
+              textDecoration="underline"
+            >
+              Withdraw
+            </Text>{' '}
+            before unlocking again as it will restart the 24h withdrawal timeout.
           </Text>
         </Alert>
       </Collapse>
@@ -239,14 +265,10 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   const poolConfiguration = usePoolConfiguration(poolId);
   const { network } = useNetwork();
 
-  if (!collateralType) {
-    return null;
-  }
-
   const collateralPrice = liquidityPosition?.collateralPrice;
 
   const { newDebt } = validatePosition({
-    issuanceRatioD18: collateralType.issuanceRatioD18,
+    issuanceRatioD18: collateralType?.issuanceRatioD18,
     collateralAmount: liquidityPosition?.collateralAmount,
     collateralPrice,
     debt: liquidityPosition?.debt,
@@ -255,6 +277,34 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
   });
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: systemToken } = useSystemToken();
+  const { data: systemTokenBalance } = useAccountSpecificCollateral(
+    accountId,
+    systemToken?.address
+  );
+
+  const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
+  const handleNavigate = (actions: string) => {
+    queryParams.set('manageAction', actions);
+    navigate({
+      pathname: `/positions/${collateralType?.symbol}/${poolId}`,
+      search: queryParams.toString(),
+    });
+  };
+
+  const maxWithdrawable = useMemo(() => {
+    if (isBase) {
+      return (liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI).add(
+        systemTokenBalance?.availableCollateral || ZEROWEI
+      );
+    }
+    return liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI;
+  }, [
+    isBase,
+    liquidityPosition?.accountCollateral.availableCollateral,
+    systemTokenBalance?.availableCollateral,
+  ]);
 
   // To get the max withdrawable collateral we look at the new debt and the issuance ratio.
   // This gives us the amount in dollar. We then divide by the collateral price.
@@ -283,6 +333,10 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     return Wei.min(collateralAmount, maxWithdrawable);
   })();
 
+  if (!collateralType) {
+    return null;
+  }
+
   return (
     <UndelegateUi
       displaySymbol={collateralType.displaySymbol}
@@ -298,6 +352,8 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
       isBase={isBase}
       collateralPrice={liquidityPosition?.collateralPrice}
       accountId={accountId}
+      maxWithdrawable={maxWithdrawable}
+      navigate={handleNavigate}
     />
   );
 };

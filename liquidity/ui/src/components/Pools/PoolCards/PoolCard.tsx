@@ -57,6 +57,7 @@ export interface PoolCardProps {
   };
   balances?: Wei[];
   rewardsPayoutTokens?: string[];
+  collateralFilter: string[];
 }
 
 export const PoolCard = ({
@@ -67,6 +68,7 @@ export const PoolCard = ({
   collateralPrices,
   balances,
   rewardsPayoutTokens,
+  collateralFilter,
 }: PoolCardProps) => {
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
@@ -81,21 +83,22 @@ export const PoolCard = ({
     return acc.add(value);
   }, ZEROWEI);
 
-  const sanitizedCollateralTypes = collateralTypes?.map((collateralType) => {
-    if (
-      isBaseAndromeda(network.id, network.preset) &&
-      collateralType.symbol.toUpperCase() === 'SUSDC'
-    ) {
-      return {
-        ...collateralType,
-        symbol: 'USDC',
-        displaySymbol: 'USDC',
-        name: 'USD Coin',
-      };
-    }
+  const sanitizedCollateralTypes =
+    collateralTypes?.map((collateralType) => {
+      if (
+        isBaseAndromeda(network.id, network.preset) &&
+        collateralType.symbol.toUpperCase() === 'SUSDC'
+      ) {
+        return {
+          ...collateralType,
+          symbol: 'USDC',
+          displaySymbol: 'USDC',
+          name: 'USD Coin',
+        };
+      }
 
-    return collateralType;
-  });
+      return collateralType;
+    }) || [];
 
   return (
     <Fade in>
@@ -284,176 +287,188 @@ export const PoolCard = ({
               </Tr>
             </Thead>
             <Tbody>
-              {sanitizedCollateralTypes?.map((type, index) => {
-                const price = wei(
-                  collateralPrices?.find(
-                    (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
-                  )?.price
-                );
+              {sanitizedCollateralTypes
+                .filter((collateralType) => {
+                  if (!collateralFilter.length) {
+                    return true;
+                  }
 
-                const collateralApr = apr.collateralAprs.find(
-                  (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
-                );
+                  return !!collateralFilter.find(
+                    (c) => c.toLowerCase() === collateralType.symbol.toLowerCase()
+                  );
+                })
+                .map((type, index) => {
+                  const price = wei(
+                    collateralPrices?.find(
+                      (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
+                    )?.price
+                  );
 
-                const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
+                  const collateralApr = apr.collateralAprs.find(
+                    (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
+                  );
 
-                const onClick = async () => {
-                  try {
-                    if (!currentNetwork) {
-                      connect();
-                      return;
-                    }
+                  const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
-                    if (currentNetwork.id !== network.id) {
-                      if (!(await setNetwork(network.id))) {
+                  const onClick = async () => {
+                    try {
+                      if (!currentNetwork) {
+                        connect();
                         return;
                       }
-                    }
 
-                    queryParams.set('manageAction', 'deposit');
-                    navigate({
-                      pathname: `/positions/${type.symbol}/${pool.id}`,
-                      search: queryParams.toString(),
-                    });
-                  } catch (error) {}
-                };
+                      if (currentNetwork.id !== network.id) {
+                        if (!(await setNetwork(network.id))) {
+                          return;
+                        }
+                      }
 
-                const buttonText = !currentNetwork
-                  ? 'Connect Wallet'
-                  : currentNetwork.id !== network.id
-                    ? 'Switch Network'
-                    : 'Deposit';
+                      queryParams.set('manageAction', 'deposit');
+                      navigate({
+                        pathname: `/positions/${type.symbol}/${pool.id}`,
+                        search: queryParams.toString(),
+                      });
+                    } catch (error) {}
+                  };
 
-                return (
-                  <Tr key={type.tokenAddress}>
-                    <Td border="none" px={4} w="20%">
-                      <Flex
-                        minWidth="120px"
-                        alignItems="center"
-                        _hover={{ cursor: 'pointer' }}
-                        onClick={onClick}
-                      >
-                        <TokenIcon w={26} h={26} symbol={type.symbol} />
-                        <Flex flexDirection="column" ml={3} mr="auto">
+                  const buttonText = !currentNetwork
+                    ? 'Connect Wallet'
+                    : currentNetwork.id !== network.id
+                      ? 'Switch Network'
+                      : 'Deposit';
+
+                  return (
+                    <Tr key={type.tokenAddress}>
+                      <Td border="none" px={4} w="20%">
+                        <Flex
+                          minWidth="120px"
+                          alignItems="center"
+                          _hover={{ cursor: 'pointer' }}
+                          onClick={onClick}
+                        >
+                          <TokenIcon w={26} h={26} symbol={type.symbol} />
+                          <Flex flexDirection="column" ml={3} mr="auto">
+                            <Text
+                              fontSize="14px"
+                              color="white"
+                              fontWeight={700}
+                              lineHeight="1.25rem"
+                              fontFamily="heading"
+                            >
+                              {type.symbol}
+                            </Text>
+                            <Text
+                              fontSize="xs"
+                              color="gray.500"
+                              fontFamily="heading"
+                              lineHeight="1rem"
+                            >
+                              {type.name}
+                            </Text>
+                          </Flex>
+                        </Flex>
+                      </Td>
+                      <Td border="none" textAlign="left" px={4}>
+                        <Flex direction="column">
                           <Text
-                            fontSize="14px"
-                            color="white"
-                            fontWeight={700}
-                            lineHeight="1.25rem"
                             fontFamily="heading"
+                            fontSize="14px"
+                            fontWeight={500}
+                            lineHeight="28px"
+                            color="white"
                           >
-                            {type.symbol}
+                            {balances && balances[index]
+                              ? formatNumberToUsd(balances[index].mul(price).toNumber())
+                              : '-'}
                           </Text>
                           <Text
-                            fontSize="xs"
                             color="gray.500"
                             fontFamily="heading"
-                            lineHeight="1rem"
+                            fontSize="12px"
+                            lineHeight="16px"
                           >
-                            {type.name}
+                            {balances && balances[index]
+                              ? formatNumber(balances[index].toNumber())
+                              : ''}{' '}
+                            {type.symbol}
                           </Text>
                         </Flex>
-                      </Flex>
-                    </Td>
-                    <Td border="none" textAlign="left" px={4}>
-                      <Flex direction="column">
+                      </Td>
+                      <Td border="none" textAlign="left" px={4}>
                         <Text
                           fontFamily="heading"
                           fontSize="14px"
+                          lineHeight="20px"
                           fontWeight={500}
-                          lineHeight="28px"
                           color="white"
                         >
-                          {balances && balances[index]
-                            ? formatNumberToUsd(balances[index].mul(price).toNumber())
-                            : '-'}
+                          {price
+                            ? formatNumberToUsd(
+                                wei(type.collateralDeposited, Number(type.decimals), true)
+                                  .mul(price)
+                                  .toNumber()
+                              )
+                            : 0}
                         </Text>
+                      </Td>
+                      <Td border="none" textAlign="left" px={4}>
                         <Text
-                          color="gray.500"
                           fontFamily="heading"
-                          fontSize="12px"
-                          lineHeight="16px"
+                          fontSize="14px"
+                          lineHeight="20px"
+                          fontWeight={500}
+                          color="white"
                         >
-                          {balances && balances[index]
-                            ? formatNumber(balances[index].toNumber())
-                            : ''}{' '}
-                          {type.symbol}
-                        </Text>
-                      </Flex>
-                    </Td>
-                    <Td border="none" textAlign="left" px={4}>
-                      <Text
-                        fontFamily="heading"
-                        fontSize="14px"
-                        lineHeight="20px"
-                        fontWeight={500}
-                        color="white"
-                      >
-                        {price
-                          ? formatNumberToUsd(
-                              wei(type.collateralDeposited, Number(type.decimals), true)
-                                .mul(price)
-                                .toNumber()
-                            )
-                          : 0}
-                      </Text>
-                    </Td>
-                    <Td border="none" textAlign="left" px={4}>
-                      <Text
-                        fontFamily="heading"
-                        fontSize="14px"
-                        lineHeight="20px"
-                        fontWeight={500}
-                        color="white"
-                      >
-                        {formatApr(apr28d * 100, network?.id)}
+                          {formatApr(apr28d * 100, network?.id)}
 
-                        <Tooltip
-                          label={
-                            <Flex direction="column">
-                              <Flex justifyContent="space-between">
-                                <Text fontWeight={700} mr={2}>
-                                  Total APR:
-                                </Text>
-                                <Text fontWeight={700}>{formatApr(apr28d * 100, network?.id)}</Text>
+                          <Tooltip
+                            label={
+                              <Flex direction="column">
+                                <Flex justifyContent="space-between">
+                                  <Text fontWeight={700} mr={2}>
+                                    Total APR:
+                                  </Text>
+                                  <Text fontWeight={700}>
+                                    {formatApr(apr28d * 100, network?.id)}
+                                  </Text>
+                                </Flex>
+                                <Flex justifyContent="space-between">
+                                  <Text mr={2}>Performance:</Text>
+                                  <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
+                                </Flex>
+                                <Flex justifyContent="space-between">
+                                  <Text mr={2}>Rewards: </Text>
+                                  <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
+                                </Flex>
                               </Flex>
-                              <Flex justifyContent="space-between">
-                                <Text mr={2}>Performance:</Text>
-                                <Text>{formatApr(apr28dPnl * 100, network?.id)}</Text>
-                              </Flex>
-                              <Flex justifyContent="space-between">
-                                <Text mr={2}>Rewards: </Text>
-                                <Text>{formatApr(apr28dRewards * 100, network?.id)}</Text>
-                              </Flex>
+                            }
+                          >
+                            <Flex display="inline">
+                              <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
                             </Flex>
-                          }
+                          </Tooltip>
+                        </Text>
+                      </Td>
+                      <Td border="none" textAlign="right" pl={4} pr={0}>
+                        <Button
+                          onClick={onClick}
+                          size="sm"
+                          height="32px"
+                          py="10px"
+                          px={3}
+                          whiteSpace="nowrap"
+                          borderRadius="4px"
+                          fontFamily="heading"
+                          fontWeight={700}
+                          fontSize="14px"
+                          lineHeight="20px"
                         >
-                          <Flex display="inline">
-                            <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
-                          </Flex>
-                        </Tooltip>
-                      </Text>
-                    </Td>
-                    <Td border="none" textAlign="right" pl={4} pr={0}>
-                      <Button
-                        onClick={onClick}
-                        size="sm"
-                        height="32px"
-                        py="10px"
-                        px={3}
-                        whiteSpace="nowrap"
-                        borderRadius="4px"
-                        fontFamily="heading"
-                        fontWeight={700}
-                        fontSize="14px"
-                        lineHeight="20px"
-                      >
-                        {buttonText}
-                      </Button>
-                    </Td>
-                  </Tr>
-                );
-              })}
+                          {buttonText}
+                        </Button>
+                      </Td>
+                    </Tr>
+                  );
+                })}
             </Tbody>
           </Table>
         </TableContainer>
