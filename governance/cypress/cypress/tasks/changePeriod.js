@@ -10,7 +10,6 @@ export async function changePeriod({ council, period }) {
     provider
   );
   if (period === 'admin') {
-    console.log(period);
     await proxy
       .connect(signer)
       .Epoch_setEpochDates(

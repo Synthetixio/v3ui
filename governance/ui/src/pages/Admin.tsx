@@ -13,22 +13,10 @@ export default function Admin() {
 
   return (
     <Flex flexDir="column" gap="5">
-      {[
-        getCouncilContract('spartan'),
-        getCouncilContract('ambassador'),
-        getCouncilContract('treasury'),
-      ].map((proxy, index) => {
+      {[getCouncilContract('spartan')].map((proxy, index) => {
         return (
           <Flex direction="column" key={index} p="3" gap={4}>
-            <Heading>
-              {index === 0
-                ? 'Spartan'
-                : index === 1
-                  ? 'Ambassador'
-                  : index === 2
-                    ? 'Grants'
-                    : 'Treasury'}
-            </Heading>
+            <Heading>Spartan</Heading>
             <Flex alignItems="center" gap={2}>
               <Text>Start Now Admin Period</Text>
               <Button

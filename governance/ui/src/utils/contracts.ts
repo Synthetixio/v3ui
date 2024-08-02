@@ -13,7 +13,7 @@ const AmbassadorCouncilContract = new Contract(
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -44,8 +44,11 @@ export const SnapshotRecordContract = (chainId: number) => {
           ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
           : process.env.TESTNET === 'true'
             ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '',
-        ['function balanceOfOnPeriod(address, uint256) view returns (uint256)']
+            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
+        [
+          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+        ]
       );
     case 11155420:
       return new Contract(
@@ -53,8 +56,11 @@ export const SnapshotRecordContract = (chainId: number) => {
           ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
           : process.env.TESTNET === 'true'
             ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '',
-        ['function balanceOfOnPeriod(address, uint256) view returns (uint256)']
+            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
+        [
+          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+        ]
       );
   }
 };

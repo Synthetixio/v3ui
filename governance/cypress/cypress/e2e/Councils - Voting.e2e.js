@@ -1,5 +1,7 @@
 it('Councils - Administration', () => {
-  cy.task('changePeriod', { council: 'spartan', period: 'voting' });
+  cy.task('changePeriod', { council: 'spartan', period: 'admin' });
+  cy.task('prepareVotingPower', { council: 'spartan' });
+  // cy.task('changePeriod', { council: 'spartan', period: 'voting' });
   cy.task('mineBlock');
   cy.connectWallet();
   cy.viewport(1300, 900);
@@ -23,9 +25,16 @@ it('Councils - Administration', () => {
     'Click on a nominee to see their profile details'
   );
   cy.get('[data-cy="own-user-list-item"]').click();
+  cy.get('[data-cy="select-user-to-vote-button"]').contains('Select');
   cy.get('[data-cy="select-user-to-vote-button"]').click();
   cy.get('[data-cy="my-votes-button"]').click();
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
+  cy.reload();
+  cy.get(
+    '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
+  ).should('exist');
+  cy.get('[data-cy="my-votes-voting-power"]').contains('100.00');
+  cy.get('[data-cy="cast-my-vote-button"]').click();
 });
