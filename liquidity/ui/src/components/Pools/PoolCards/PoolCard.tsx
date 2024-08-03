@@ -301,19 +301,24 @@ export const PoolCard = ({
                   const price = wei(
                     collateralPrices?.find(
                       (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
-                    )?.price
+                    )?.price || '0'
                   );
 
                   const collateralApr = apr.collateralAprs.find(
-                    (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
-                  );
+                    (apr) =>
+                      `${apr.collateralType}`.toLowerCase() === `${type.tokenAddress}`.toLowerCase()
+                  ) || {
+                    apr28d: 0,
+                    apr28dRewards: 0,
+                    apr28dPnl: 0,
+                  };
 
                   const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
                   const onClick = async () => {
                     try {
                       if (!currentNetwork) {
-                        connect();
+                        await connect();
                         return;
                       }
 
