@@ -6,12 +6,14 @@
 
 ```sh
 yarn upgrade-contracts
+yarn dedupe
 ```
 
 ## Upgrade browserlist
 
 ```sh
-yarn upgrade-contracts
+yarn upgrade-browsers
+yarn dedupe
 ```
 
 ## Install
@@ -28,7 +30,7 @@ This will install all dependencies, wire dependencies between packages in this r
 
 If you make a change and want to generate the library JS code, run:
 
-```
+```sh
 yarn build
 ```
 
