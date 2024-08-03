@@ -77,7 +77,8 @@ export const PoolCard = ({
   const { connect } = useWallet();
 
   const vaultTVL = collateralTypes?.reduce((acc, type) => {
-    const price = wei(collateralPrices?.find((price) => price.symbol === type.symbol)?.price || 0);
+    const collateralWithPrice = collateralPrices?.find((price) => price.symbol === type.symbol);
+    const price = collateralWithPrice ? wei(collateralWithPrice.price) : ZEROWEI;
     const amount = wei(type.collateralDeposited, Number(type.decimals), true);
     const value = price.mul(amount);
     return acc.add(value);
@@ -298,22 +299,25 @@ export const PoolCard = ({
                   );
                 })
                 .map((type, index) => {
-                  const price = wei(
-                    collateralPrices?.find(
-                      (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
-                    )?.price
+                  const collateralWithPrice = collateralPrices?.find(
+                    (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
                   );
-
+                  const price = collateralWithPrice ? wei(collateralWithPrice.price) : ZEROWEI;
                   const collateralApr = apr.collateralAprs.find(
-                    (apr) => apr.collateralType === type.tokenAddress.toLowerCase()
-                  );
+                    (apr) =>
+                      `${apr.collateralType}`.toLowerCase() === `${type.tokenAddress}`.toLowerCase()
+                  ) || {
+                    apr28d: 0,
+                    apr28dRewards: 0,
+                    apr28dPnl: 0,
+                  };
 
                   const { apr28d, apr28dRewards, apr28dPnl } = collateralApr;
 
                   const onClick = async () => {
                     try {
                       if (!currentNetwork) {
-                        connect();
+                        await connect();
                         return;
                       }
 
