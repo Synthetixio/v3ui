@@ -2,11 +2,23 @@
 
 [![main](https://github.com/synthetixio/v3ui/actions/workflows/main.yml/badge.svg)](https://github.com/synthetixio/v3ui/actions/workflows/main.yml)
 
+## Upgrade contacts
+
+```sh
+yarn upgrade-contracts
+```
+
+## Upgrade browserlist
+
+```sh
+yarn upgrade-contracts
+```
+
 ## Install
 
 This repo uses Yarn workspaces to manage multiple packages in the same repo. To prepare the repository for use, run:
 
-```
+```sh
 yarn install
 ```
 
