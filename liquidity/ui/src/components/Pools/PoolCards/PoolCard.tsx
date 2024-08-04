@@ -25,7 +25,6 @@ import {
   useWallet,
 } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
 import { TokenIcon } from '../../TokenIcon';
@@ -83,22 +82,6 @@ export const PoolCard = ({
     const value = price.mul(amount);
     return acc.add(value);
   }, ZEROWEI);
-
-  const sanitizedCollateralTypes = collateralTypes?.map((collateralType) => {
-    if (
-      isBaseAndromeda(network.id, network.preset) &&
-      collateralType.symbol.toUpperCase() === 'SUSDC'
-    ) {
-      return {
-        ...collateralType,
-        symbol: 'USDC',
-        displaySymbol: 'USDC',
-        name: 'USD Coin',
-      };
-    }
-
-    return collateralType;
-  });
 
   return (
     <Fade in>
@@ -287,7 +270,7 @@ export const PoolCard = ({
               </Tr>
             </Thead>
             <Tbody>
-              {sanitizedCollateralTypes?.map((type, index) => {
+              {collateralTypes?.map((type, index) => {
                 const price = wei(
                   collateralPrices?.find(
                     (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
