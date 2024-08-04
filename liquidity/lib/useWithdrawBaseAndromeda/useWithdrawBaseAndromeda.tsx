@@ -54,6 +54,7 @@ export const useWithdrawBaseAndromeda = ({
       }
 
       const sUSDCAmount = amountToWithdraw.gt(sUSDCCollateral) ? sUSDCCollateral : amountToWithdraw;
+
       const snxUSDAmount = amountToWithdraw.sub(sUSDCAmount).gt(0)
         ? amountToWithdraw.sub(sUSDCAmount)
         : ZEROWEI;
@@ -95,7 +96,7 @@ export const useWithdrawBaseAndromeda = ({
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
           USDC_BASE_MARKET,
           amountToWithdraw.toBN(),
-          //2% slippage
+          // 2% slippage
           Number(
             utils.formatUnits(amountToWithdraw.toBN().mul(98).div(100).toString(), 12).toString()
           ).toFixed()
@@ -149,6 +150,7 @@ export const useWithdrawBaseAndromeda = ({
       }
     },
   });
+
   return {
     mutation,
     txnState,

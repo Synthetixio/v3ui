@@ -121,12 +121,15 @@ export function WithdrawModal({
     step: 1,
     status: 'idle',
   });
-  const { withdrawAmount, setWithdrawAmount } = useContext(ManagePositionContext);
+
   const params = useParams();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { network } = useNetwork();
   const queryClient = useQueryClient();
+
+  const { withdrawAmount, setWithdrawAmount } = useContext(ManagePositionContext);
+
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: CoreProxy } = useCoreProxy();
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const accountId = liquidityPosition?.accountId;
