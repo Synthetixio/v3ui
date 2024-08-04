@@ -7,11 +7,13 @@ import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { ARBITRUM, BASE_ANDROMEDA } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getStataUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalances } from '@snx-v3/useTokenBalance';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 import { useOraclePrice } from '@snx-v3/useOraclePrice';
+
+const stataAddress = getStataUSDCAddress();
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
@@ -64,7 +66,7 @@ export const PoolsList = () => {
 
   // Base Balances
   const { data: BaseTokenBalances, isLoading: isBaseBalancesLoading } = useTokenBalances(
-    usdTokens?.USDC && stata ? [usdTokens.USDC, stata.tokenAddress] : [],
+    usdTokens?.USDC && stata ? [usdTokens.USDC, stataAddress] : [],
     BASE_ANDROMEDA
   );
 

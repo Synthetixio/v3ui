@@ -12,4 +12,8 @@ export function getRepayerContract(id?: number) {
   }
 }
 
+export function getStataUSDCAddress() {
+  return '0x4EA71A20e655794051D1eE8b6e4A3269B13ccaCc';
+}
+
 export const USDC_BASE_MARKET = '1';
