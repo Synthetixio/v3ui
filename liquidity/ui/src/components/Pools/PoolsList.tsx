@@ -209,6 +209,7 @@ export const PoolsList = () => {
                   pool={pool}
                   balances={balances}
                   rewardsPayoutTokens={rewardsPayoutTokens}
+                  collateralFilter={state.collateral}
                 />
               );
             }

@@ -17,31 +17,28 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider);
-
+        const isMothership = network.id === 11155420;
         const electionId = await electionModule.getEpochIndex();
-        const ballot =
-          network.id === 11155420
-            ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
-            : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
-
+        const ballot = isMothership
+          ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
+          : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
         if (ballot) {
           if (ballot?.votingPower?.gt(0)) {
             return { power: ballot.votingPower as BigNumber, isDeclared: true };
-          } else if (ballot?.gt(0)) {
+          } else if ('gt' in ballot && ballot.gt(0)) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }
-        const votingPower: BigNumber =
-          network.id === 11155420
-            ? await electionModule
-                .connect(provider)
-                .callStatic.prepareBallotWithSnapshot(
-                  SnapshotRecordContract(network.id),
-                  activeWallet?.address
-                )
-            : await SnapshotRecordContract(network.id)
-                ?.connect(provider)
-                .balanceOfOnPeriod(activeWallet.address, 1);
+        const votingPower: BigNumber = isMothership
+          ? await electionModule
+              .connect(provider)
+              .callStatic.prepareBallotWithSnapshot(
+                SnapshotRecordContract(network.id)?.address,
+                activeWallet?.address
+              )
+          : await SnapshotRecordContract(network.id)
+              ?.connect(provider)
+              .balanceOfOnPeriod(activeWallet.address, 1);
         return { power: votingPower, isDeclared: false };
       } catch (error) {
         console.error('ERROR IS', { error });

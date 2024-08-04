@@ -2,11 +2,25 @@
 
 [![main](https://github.com/synthetixio/v3ui/actions/workflows/main.yml/badge.svg)](https://github.com/synthetixio/v3ui/actions/workflows/main.yml)
 
+## Upgrade contacts
+
+```sh
+yarn upgrade-contracts
+yarn dedupe
+```
+
+## Upgrade browserlist
+
+```sh
+yarn upgrade-browsers
+yarn dedupe
+```
+
 ## Install
 
 This repo uses Yarn workspaces to manage multiple packages in the same repo. To prepare the repository for use, run:
 
-```
+```sh
 yarn install
 ```
 
@@ -16,7 +30,7 @@ This will install all dependencies, wire dependencies between packages in this r
 
 If you make a change and want to generate the library JS code, run:
 
-```
+```sh
 yarn build
 ```
 

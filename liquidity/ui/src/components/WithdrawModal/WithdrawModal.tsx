@@ -14,7 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Wei from '@synthetixio/wei';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
@@ -31,9 +31,11 @@ import { TokenIcon } from '../';
 import { ChevronDown, ChevronUp } from '@snx-v3/icons';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 
 export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { accountId } = useParams();
+  const { setWithdrawAmount } = useContext(ManagePositionContext);
   const { data: systemToken } = useSystemToken();
 
   const [amount, setAmount] = useState<Wei>(ZEROWEI);
@@ -91,8 +93,30 @@ export function WithdrawModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     } else {
       await withdrawAndromeda.mutateAsync();
     }
-    queryClient.clear();
-  }, [network?.id, network?.preset, queryClient, withdrawAndromeda, withdrawMain]);
+
+    setWithdrawAmount(ZEROWEI);
+
+    queryClient.invalidateQueries({
+      queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
+      exact: false,
+    });
+    queryClient.invalidateQueries({
+      queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral'],
+    });
+  }, [
+    network?.id,
+    network?.preset,
+    queryClient,
+    setWithdrawAmount,
+    withdrawAndromeda,
+    withdrawMain,
+  ]);
 
   // Replace out sUSDC with USDC for Andromeda
   const collateralTypesHydated = collateralTypes?.map((type) => {

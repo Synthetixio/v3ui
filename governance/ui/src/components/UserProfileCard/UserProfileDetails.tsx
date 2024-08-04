@@ -179,9 +179,6 @@ export const UserProfileDetails = ({
             variant="outline"
             colorScheme="gray"
             w="100%"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
             data-cy="select-user-to-vote-button"
             onClick={() => {
               if (isAlreadyVoted) {
@@ -215,9 +212,9 @@ export const UserProfileDetails = ({
             }}
           >
             {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens ||
-              userData?.username?.slice(0, 20).concat('...') ||
-              prettyString(userData!.address)}
+            {userData?.ens || userData?.username
+              ? userData.username.slice(0, 20).concat('...')
+              : prettyString(userData!.address)}
           </Button>
         )}
       </Flex>
