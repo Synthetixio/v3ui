@@ -45,7 +45,7 @@ it('Councils - Administration', () => {
   cy.window().then((win) => {
     win.localStorage.clear();
   });
-  cy.reload();
+  cy.reload({ cache: false });
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
