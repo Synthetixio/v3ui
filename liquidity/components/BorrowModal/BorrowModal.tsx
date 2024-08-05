@@ -139,7 +139,7 @@ export const BorrowModal: React.FC<{
   const execBorrowWithErrorParser = useCallback(async () => {
     try {
       await execBorrow();
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
         exact: false,
       });

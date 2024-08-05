@@ -2,14 +2,13 @@ import { Alert, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { FC, useContext, useEffect, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ZEROWEI } from '../../utils/constants';
 import { useAccountSpecificCollateral } from '@snx-v3/useAccountCollateral';
-import { useTimer } from 'react-timer-hook';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { TokenIcon } from '../TokenIcon';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -17,27 +16,19 @@ import { useParams } from 'react-router-dom';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useWithdrawTimer } from '../../../../lib/useWithdrawTimer';
 
 const WithdrawUi: FC<{
   setAmount: (val: Wei) => void;
   amount: Wei;
-  maWWithdrawable: Wei;
+  maxWithdrawable: Wei;
   unlockDate?: Date | null;
   symbol: string;
   isDebtWithdrawal?: boolean;
-}> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maWWithdrawable }) => {
+  accountId: string | undefined;
+}> = ({ isDebtWithdrawal, symbol, unlockDate, setAmount, amount, maxWithdrawable, accountId }) => {
   const price = useTokenPrice(symbol);
-
-  const { minutes, hours, isRunning, restart } = useTimer({
-    expiryTimestamp: new Date(0),
-    autoStart: false,
-  });
-
-  useEffect(() => {
-    if (unlockDate) {
-      restart(unlockDate, true);
-    }
-  }, [restart, unlockDate]);
+  const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
 
   return (
     <Flex flexDirection="column">
@@ -54,15 +45,15 @@ const WithdrawUi: FC<{
           </BorderBox>
           <Flex fontSize="12px" gap="1">
             <Text>{isDebtWithdrawal ? 'Max Withdraw:' : 'Unlocked:'}</Text>
-            <Amount value={maWWithdrawable} />
-            {maWWithdrawable.gt(0) && (
+            <Amount value={maxWithdrawable} />
+            {maxWithdrawable.gt(0) && (
               <Text
                 cursor="pointer"
                 onClick={() => {
-                  if (!maWWithdrawable) {
+                  if (!maxWithdrawable) {
                     return;
                   }
-                  setAmount(maWWithdrawable);
+                  setAmount(maxWithdrawable);
                 }}
                 color="cyan.500"
                 fontWeight={700}
@@ -77,13 +68,13 @@ const WithdrawUi: FC<{
             InputProps={{
               isRequired: true,
               'data-testid': 'withdraw amount input',
-              'data-max': maWWithdrawable.toString(),
+              'data-max': maxWithdrawable.toString(),
               type: 'number',
               min: 0,
             }}
             value={amount}
             onChange={(val) => setAmount(val)}
-            max={maWWithdrawable}
+            max={maxWithdrawable}
             min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
@@ -91,7 +82,8 @@ const WithdrawUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
-      <Collapse in={maWWithdrawable.gt(0)} animateOpacity>
+
+      <Collapse in={maxWithdrawable.gt(0) && isRunning} animateOpacity>
         <Alert status="warning" mb="6">
           <AlertIcon />
           <Text>
@@ -101,7 +93,16 @@ const WithdrawUi: FC<{
         </Alert>
       </Collapse>
 
-      <Collapse in={amount.gt(maWWithdrawable)} animateOpacity>
+      <Collapse in={maxWithdrawable.gt(0) && !isRunning} animateOpacity>
+        <Alert status="success" mb="6">
+          <AlertIcon />
+          <Text>
+            You can now withdraw <Amount value={maxWithdrawable} suffix={` ${symbol}`} />
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse in={amount.gt(maxWithdrawable)} animateOpacity>
         <Alert colorScheme="red" mb="6">
           <AlertIcon />
           <Text>
@@ -112,7 +113,7 @@ const WithdrawUi: FC<{
       </Collapse>
 
       <Button
-        isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maWWithdrawable)}
+        isDisabled={amount.lte(0) || isRunning || !unlockDate || amount.gt(maxWithdrawable)}
         data-testid="claim submit"
         type="submit"
       >
@@ -142,7 +143,7 @@ export const Withdraw = ({
     systemToken?.address
   );
 
-  const maWWithdrawable = useMemo(() => {
+  const maxWithdrawable = useMemo(() => {
     if (isBase) {
       return (liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI).add(
         systemTokenBalance?.availableCollateral || ZEROWEI
@@ -173,9 +174,10 @@ export const Withdraw = ({
       symbol={isDebtWithdrawal ? systemToken.symbol : collateralType.symbol}
       setAmount={setWithdrawAmount}
       amount={withdrawAmount}
-      maWWithdrawable={maWWithdrawable}
+      maxWithdrawable={maxWithdrawable}
       unlockDate={!isLoadingDate ? accountCollateralUnlockDate : null}
       isDebtWithdrawal={isDebtWithdrawal}
+      accountId={accountId}
     />
   );
 };

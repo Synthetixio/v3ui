@@ -25,7 +25,11 @@ async function getPythFeedIds(network: Network) {
   return getAllPriceIdsEntries(extras).map(([_key, value]) => value);
 }
 
-async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
+async function getPythFeedIdsFromCollateralList(
+  collateralList: {
+    symbol: string;
+  }[]
+) {
   const extras = await Promise.all(
     networksOffline.map((network) => importExtras(network.id, network.preset))
   );
@@ -56,13 +60,10 @@ async function getPythFeedIdsFromCollateralList(collateralList: string[]) {
 
   // Find the corresponding price feed id for each symbol
   return collateralList.map((collateral) => {
-    let symbol = collateral;
-    if (collateral === 'WETH') {
-      symbol = 'ETH';
-    }
+    const symbol = collateral.symbol === 'WETH' ? 'ETH' : collateral.symbol;
     const id = deduped.find((x) => x.symbol?.toUpperCase() === symbol.toUpperCase());
     return {
-      collateral,
+      ...collateral,
       priceId: id?.priceId,
     };
   });
@@ -154,23 +155,20 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
         return returnData;
       }
 
-      const pythIds = await getPythFeedIdsFromCollateralList(
-        filteredCollaterals.map((collateral) => collateral.symbol)
-      );
-
+      const collateralsWithPriceId = await getPythFeedIdsFromCollateralList(filteredCollaterals);
       const prices = await priceService.getLatestPriceFeeds(
-        pythIds.map((x) => x.priceId) as string[]
+        collateralsWithPriceId.map((x) => x.priceId) as string[]
       );
-
-      prices?.forEach((item, index) => {
+      prices?.forEach((item) => {
+        const col = collateralsWithPriceId.find(({ priceId }) => priceId === `0x${item.id}`);
         const price = item.getPriceUnchecked();
-
-        returnData.push({
-          symbol: filteredCollaterals[index].symbol,
-          price: parseUnits(price.price, 18 + price.expo),
-        });
+        if (col) {
+          returnData.push({
+            symbol: col.symbol,
+            price: parseUnits(price.price, 18 + price.expo),
+          });
+        }
       });
-
       return returnData;
     },
     refetchInterval: 60000,

@@ -16,8 +16,9 @@ export function useAccounts() {
       'Accounts',
       { accountAddress: activeWallet?.address, AccountProxy: AccountProxy?.address },
     ],
+    enabled: Boolean(AccountProxy && activeWallet?.address),
     queryFn: async function () {
-      if (!AccountProxy || !activeWallet?.address) throw new Error('Should be disabled');
+      if (!(AccountProxy && activeWallet?.address)) throw new Error('Should be disabled');
 
       const numberOfAccountTokens = await AccountProxy.balanceOf(activeWallet.address);
 
