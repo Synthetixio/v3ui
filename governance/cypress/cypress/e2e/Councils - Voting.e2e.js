@@ -8,6 +8,9 @@ it('Councils - Administration', () => {
   cy.visit('/');
   cy.get('[data-cy="vote-council-button-spartan"]').should('exist');
   cy.get('[data-cy="council-period-badge"]').contains('Voting Open');
+  cy.get('[data-cy="account-menu-button"]').click();
+  cy.get('[data-cy="network-controller-switch"]').click();
+  cy.get('[data-cy="network-menu-button-11155420"]').click();
   cy.get('[data-cy="council-tab-vote-circle"]').should('not.exist');
   cy.get('[data-cy="vote-council-button-spartan"]').click();
   cy.get('[data-cy="period-countdown"]').should('exist');
@@ -35,9 +38,14 @@ it('Councils - Administration', () => {
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
+  cy.wait(3000);
   cy.get('[data-cy="my-votes-voting-power"]').contains('100.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
-  cy.reload({ cache: false });
+  cy.wait(3000);
+  cy.window().then((win) => {
+    win.localStorage.clear();
+  });
+  cy.reload();
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');

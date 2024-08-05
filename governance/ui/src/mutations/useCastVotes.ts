@@ -56,6 +56,7 @@ export function useCastVotes(
   };
 
   return useMutation({
+    mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
         const isMotherchain = network.id === 11155420;
@@ -133,15 +134,14 @@ export function useCastVotes(
     onSuccess: async () => {
       await Promise.all(
         councils.map(
-          async (council) =>
-            await query.invalidateQueries({ queryKey: ['userBallot', council, network?.id] })
+          async (council) => await query.invalidateQueries({ queryKey: ['userBallot', council] })
         )
       );
       await Promise.all(
         councils.map(
           async (council) =>
             await query.refetchQueries({
-              queryKey: ['userBallot', council, network?.id],
+              queryKey: ['userBallot', council],
               exact: false,
             })
         )
