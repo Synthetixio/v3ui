@@ -60,6 +60,7 @@ export default function MyVoteRow({
         <IconButton
           aria-label="action-button"
           icon={<CloseIcon />}
+          data-cy="remove-vote-button"
           variant="outlined"
           isDisabled={period !== '2'}
           onClick={(e) => {

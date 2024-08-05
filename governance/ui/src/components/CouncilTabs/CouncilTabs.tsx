@@ -134,7 +134,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
 
                         {newVoteCast && (
                           <>
-                            <ArrowForwardIcon mx="2" />
+                            {userInformation[index].userInformation?.address && (
+                              <ArrowForwardIcon mx="2" />
+                            )}
                             <Box
                               data-cy="council-tab-vote-circle"
                               borderRadius="50%"
