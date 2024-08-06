@@ -157,9 +157,11 @@ export const useOfflinePrices = (collaterals?: Collaterals[]) => {
       }
 
       const collateralsWithPriceId = await getPythFeedIdsFromCollateralList(filteredCollaterals);
+
       const prices = await priceService.getLatestPriceFeeds(
         collateralsWithPriceId.map((x) => x.priceId) as string[]
       );
+
       prices?.forEach((item) => {
         const col = collateralsWithPriceId.find(({ priceId }) => priceId === `0x${item.id}`);
         const price = item.getPriceUnchecked();
