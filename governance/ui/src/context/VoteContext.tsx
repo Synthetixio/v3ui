@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { removeCandidate, setCandidate } from '../utils/localstorage';
 
-interface VoteState {
+export interface VoteState {
   spartan: string | undefined;
   ambassador: string | undefined;
   treasury: string | undefined;
@@ -8,10 +9,12 @@ interface VoteState {
 
 type Action = { type: string; payload: string | undefined };
 
+const parsedState = JSON.parse(localStorage.getItem('voteSelection') || '{}');
+
 const initialState: VoteState = {
-  spartan: undefined,
-  ambassador: undefined,
-  treasury: undefined,
+  spartan: parsedState?.spartan || undefined,
+  ambassador: parsedState?.ambassador || undefined,
+  treasury: parsedState?.treasury || undefined,
 };
 
 const VoteContext = createContext<
@@ -24,21 +27,39 @@ const VoteContext = createContext<
 
 const voteReducer = (state: VoteState, action: Action): VoteState => {
   switch (action.type) {
-    case 'SPARTAN':
+    case 'SPARTAN': {
+      if (action.payload) {
+        setCandidate(action.payload, 'spartan');
+      } else {
+        removeCandidate('spartan');
+      }
       return {
         ...state,
         spartan: action.payload,
       };
-    case 'AMBASSADOR':
+    }
+    case 'AMBASSADOR': {
+      if (action.payload) {
+        setCandidate(action.payload, 'ambassador');
+      } else {
+        removeCandidate('ambassador');
+      }
       return {
         ...state,
         ambassador: action.payload,
       };
-    case 'TREASURY':
+    }
+    case 'TREASURY': {
+      if (action.payload) {
+        setCandidate(action.payload, 'treasury');
+      } else {
+        removeCandidate('treasury');
+      }
       return {
         ...state,
         treasury: action.payload,
       };
+    }
     default:
       return state;
   }
@@ -46,7 +67,6 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
-
   return <VoteContext.Provider value={{ state, dispatch }}>{children}</VoteContext.Provider>;
 };
 

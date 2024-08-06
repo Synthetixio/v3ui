@@ -1,6 +1,5 @@
 export * from './useGetCouncilNominees';
 export * from './useGetUserBallot';
-export * from './useGetUserCurrentVotes';
 export * from './useGetCouncilMembers';
 export * from './useGetCurrentPeriod';
 export * from './useGetElectionSettings';
@@ -10,7 +9,6 @@ export * from './useGetIsUUIDValidQuery';
 export * from './useGetNextElectionSettings';
 export * from './useGetNomineesDetails';
 export * from './useGetUserBallot';
-export * from './useGetUserCurrentVotes';
 export * from './useGetUserDetailsQuery';
 export * from './useGetUserVotingPower';
 export * from './useGetVotingCandidates';
