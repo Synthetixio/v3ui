@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { removeCandidate, setCandidate } from '../utils/localstorage';
 
-interface VoteState {
+export interface VoteState {
   spartan: string | undefined;
   ambassador: string | undefined;
   treasury: string | undefined;
