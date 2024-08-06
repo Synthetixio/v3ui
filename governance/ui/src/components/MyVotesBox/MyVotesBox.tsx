@@ -2,6 +2,7 @@ import { Button, Fade, Flex, Heading } from '@chakra-ui/react';
 import councils from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import MyVoteRow from '../MyVoteRow/MyVoteRow';
+import { VoteState } from '../../context/VoteContext';
 
 export default function MyVotesBox({
   closeCart,
@@ -10,7 +11,7 @@ export default function MyVotesBox({
   period,
 }: {
   closeCart: () => void;
-  votes?: Record<string, string | undefined>;
+  votes?: VoteState;
   isMouseOnDropdown: (val: boolean) => void;
   period?: string;
 }) {
