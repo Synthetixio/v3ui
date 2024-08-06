@@ -10,6 +10,7 @@ import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, Contract } from 'ethers';
 import { multicallABI } from '../utils/abi';
+import { useVoteContext } from '../context/VoteContext';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -19,6 +20,7 @@ export function useCastVotes(
   const signer = useSigner();
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
+  const { dispatch } = useVoteContext();
   const multicall = new Contract('0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e', multicallABI);
 
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
@@ -132,16 +134,24 @@ export function useCastVotes(
       }
     },
     onSuccess: async () => {
+      councils.map((council) => {
+        const shouldWithdrawVote = candidates[council] === 'remove';
+        shouldWithdrawVote
+          ? dispatch({ type: council.toUpperCase(), payload: undefined })
+          : dispatch({ type: council.toUpperCase(), payload: candidates[council] });
+      });
       await Promise.all(
         councils.map(
-          async (council) => await query.invalidateQueries({ queryKey: ['userBallot', council] })
+          async (council) =>
+            await query.invalidateQueries({ queryKey: ['userBallot', council, network?.id] })
         )
       );
+
       await Promise.all(
         councils.map(
           async (council) =>
             await query.refetchQueries({
-              queryKey: ['userBallot', council],
+              queryKey: ['userBallot', council, network?.id],
               exact: false,
             })
         )

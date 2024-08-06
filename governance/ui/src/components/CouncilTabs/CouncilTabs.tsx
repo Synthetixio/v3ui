@@ -8,21 +8,19 @@ import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
 import { useGetUserDetailsQuery, useGetUserBallot } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
+import { useVoteContext } from '../../context/VoteContext';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
-
+  const { state } = useVoteContext();
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
     useGetUserBallot('treasury'),
   ];
-
-  const selectedVotes = useGetUserSelectedVotes();
 
   const navigate = useNavigate();
   const votedNominees = votedNomineesData.map(({ data }) => data);
@@ -86,7 +84,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = selectedVotes[council.slug];
+              const newVoteCast = state[council.slug];
 
               return (
                 <Flex
@@ -113,7 +111,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(newVoteCast) ? (
+                  {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
@@ -132,23 +130,19 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                           />
                         )}
 
-                        {newVoteCast && (
-                          <>
-                            {userInformation[index].userInformation?.address && (
-                              <ArrowForwardIcon mx="2" />
-                            )}
-                            <Box
-                              data-cy="council-tab-vote-circle"
-                              borderRadius="50%"
-                              w="7"
-                              h="7"
-                              borderWidth="1px"
-                              bg="navy.700"
-                              borderStyle="dashed"
-                              borderColor="gray.500"
-                            />
-                          </>
+                        {newVoteCast && userInformation[index].userInformation?.address && (
+                          <ArrowForwardIcon mx="2" />
                         )}
+                        <Box
+                          data-cy="council-tab-vote-circle"
+                          borderRadius="50%"
+                          w="7"
+                          h="7"
+                          borderWidth="1px"
+                          bg="navy.700"
+                          borderStyle="dashed"
+                          borderColor="gray.500"
+                        />
                       </>
                     )
                   )}

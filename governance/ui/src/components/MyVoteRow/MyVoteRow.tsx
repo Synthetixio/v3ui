@@ -2,10 +2,9 @@ import { Flex, IconButton } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
 import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserCurrentVotes } from '../../queries';
-import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
+import { useGetUserBallot } from '../../queries';
 
 export default function MyVoteRow({
   councilSlug,
@@ -15,9 +14,8 @@ export default function MyVoteRow({
   period?: string;
 }) {
   const navigate = useNavigate();
-  const selectedVotes = useGetUserSelectedVotes();
-  const { data: currentVotes } = useGetUserCurrentVotes();
-  const { dispatch } = useVoteContext();
+  const { data: ballot } = useGetUserBallot(councilSlug);
+  const { dispatch, state } = useVoteContext();
 
   return (
     <Flex
@@ -33,19 +31,17 @@ export default function MyVoteRow({
       <Flex alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
-          address={currentVotes[councilSlug] || selectedVotes[councilSlug]}
+          address={ballot?.votedCandidates[0] || state[councilSlug]}
         />
-        {!!selectedVotes[councilSlug] &&
-          !!currentVotes[councilSlug] &&
-          (selectedVotes[councilSlug] !== currentVotes[councilSlug] ||
-            selectedVotes[councilSlug] === 'remove') && (
-            <>
-              <ArrowForwardIcon mx="2" />
-              <CouncilUser councilSlug={councilSlug} address={selectedVotes[councilSlug]} />
-            </>
-          )}
+
+        {ballot?.votedCandidates[0] && state[councilSlug] === 'remove' && (
+          <>
+            <ArrowForwardIcon mx="2" />
+            <CouncilUser councilSlug={councilSlug} address={state[councilSlug]} />
+          </>
+        )}
       </Flex>
-      {!selectedVotes[councilSlug] && !currentVotes[councilSlug] ? (
+      {!state[councilSlug] && !ballot?.votedCandidates[0] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
@@ -65,23 +61,10 @@ export default function MyVoteRow({
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
-
             dispatch({
               type: councilSlug.toUpperCase(),
-              payload: selectedVotes[councilSlug] === 'remove' ? undefined : 'remove',
+              payload: state[councilSlug] === 'remove' ? undefined : 'remove',
             });
-
-            const selection = localStorage.getItem('voteSelection');
-            if (!selection) localStorage.setItem('voteSelection', '');
-            const parsedSelection = JSON.parse(selection ? selection : '{}');
-            if (!selectedVotes[councilSlug] && !currentVotes[councilSlug]) {
-              parsedSelection[councilSlug] = currentVotes[councilSlug];
-            } else if (!selectedVotes[councilSlug]) {
-              parsedSelection[councilSlug] = 'remove';
-            } else {
-              delete parsedSelection[councilSlug];
-            }
-            localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
           }}
         />
       )}
