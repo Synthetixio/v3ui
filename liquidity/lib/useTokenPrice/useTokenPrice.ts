@@ -3,17 +3,24 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useMemo } from 'react';
 import { ZEROWEI } from '../../ui/src/utils/constants';
 import { wei } from '@synthetixio/wei';
+import { useOraclePrice } from '@snx-v3/useOraclePrice';
 
+// TODO: Update this hook to use a multicall through the oracle manager proxy
 export const useTokenPrice = (symbol: string) => {
   const { data: collateralTypes } = useCollateralTypes(true);
 
+  const pythCollateralPrices = collateralTypes?.filter((item) => item.symbol !== 'stataUSDC');
+  const omCollateralPrices = collateralTypes?.filter((item) => item.symbol === 'stataUSDC');
+
   const { data: collateralPrices } = useOfflinePrices(
-    (collateralTypes || []).map((item) => ({
+    (pythCollateralPrices || []).map((item) => ({
       id: item.tokenAddress,
       oracleId: item.oracleNodeId,
       symbol: item.symbol,
     }))
   );
+
+  const { data: omPrices } = useOraclePrice(omCollateralPrices?.[0]?.oracleNodeId);
 
   return useMemo(() => {
     if (!collateralTypes || !collateralPrices) {
@@ -21,9 +28,10 @@ export const useTokenPrice = (symbol: string) => {
     }
 
     const price = wei(
-      collateralPrices.find((price) => price.symbol.toUpperCase() === symbol.toUpperCase())
-        ?.price || '0'
+      collateralPrices
+        .concat(omPrices ? [{ symbol: 'stataUSDC', price: omPrices.price.toString() }] : [])
+        .find((price) => price.symbol.toUpperCase() === symbol.toUpperCase())?.price || '0'
     );
     return price;
-  }, [collateralPrices, collateralTypes, symbol]);
+  }, [collateralPrices, collateralTypes, symbol, omPrices]);
 };

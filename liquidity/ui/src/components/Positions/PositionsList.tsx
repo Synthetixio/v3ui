@@ -21,6 +21,7 @@ export const PositionsList = () => {
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const positions = calculatePositions(positionsByKey, isBase);
+
   const parsedPositions = positions.filter(
     (position) => position.collateralAmount?.gt(0) || position.availableCollateral?.gt(0)
   );

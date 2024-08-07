@@ -76,7 +76,7 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  const positionApr = poolData?.apr.collateralAprs.find(
+  const positionApr = poolData?.apr?.collateralAprs?.find(
     (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
   );
 
@@ -112,7 +112,7 @@ export const ManageUi: FC<{
               </Text>
             </Tooltip>
             <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-              {poolData && positionApr.apr28d > 0
+              {poolData && positionApr?.apr28d > 0
                 ? `${(positionApr.apr28d * 100).toFixed(2)?.concat('%')}`
                 : '-'}
             </Text>
@@ -210,11 +210,9 @@ export const Manage = () => {
   return (
     <ManagePositionProvider>
       <WatchAccountBanner />
-
       {!!activeWallet && (
         <>
           <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
-
           {(!accountId ||
             (!isLoadingPosition &&
               liquidityPosition &&
@@ -242,7 +240,6 @@ export const Manage = () => {
                 collateralType={collateralType}
               />
             )}
-
           {isLoadingPosition && !!accountId && (
             <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
           )}

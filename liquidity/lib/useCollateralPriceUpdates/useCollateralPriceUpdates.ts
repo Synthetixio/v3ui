@@ -36,6 +36,7 @@ async function getPythFeedIdsFromCollateralList(
 
   // Go over extras and find everything that starts with pyth and ends with FeedId, store in array
   const priceIds = extras.map(getAllPriceIdsEntries).flat();
+
   const deduped = Array.from(
     new Set(
       priceIds

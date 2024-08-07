@@ -25,7 +25,7 @@ import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { CollateralAlert, TokenIcon } from '..';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getStataUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
@@ -65,6 +65,7 @@ export const InitialDepositUi: FC<{
   const [step, setStep] = useState(0);
 
   const price = useTokenPrice(symbol);
+
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
       return snxBalance?.transferable || ZEROWEI;
@@ -183,7 +184,6 @@ export const InitialDepositUi: FC<{
           {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
             <CollateralAlert tokenBalance={snxBalance.collateral} />
           )}
-
           <Collapse
             in={
               collateralChange.gt(0) && !overAvailableBalance && collateralChange.gte(minDelegation)
@@ -192,7 +192,6 @@ export const InitialDepositUi: FC<{
           >
             <WithdrawIncrease />
           </Collapse>
-
           <Collapse
             in={
               collateralChange.gt(0) && collateralChange.lt(minDelegation) && !overAvailableBalance
@@ -206,7 +205,6 @@ export const InitialDepositUi: FC<{
               </AlertDescription>
             </Alert>
           </Collapse>
-
           <Collapse in={overAvailableBalance} animateOpacity>
             <Alert mb={6} status="error">
               <AlertIcon />
@@ -215,7 +213,6 @@ export const InitialDepositUi: FC<{
               </AlertDescription>
             </Alert>
           </Collapse>
-
           <Button
             data-testid="deposit submit"
             data-cy="deposit-submit-button"
@@ -283,12 +280,19 @@ export const InitialDeposit: FC<{
   const { network } = useNetwork();
   const { collateralSymbol } = useParams();
   const { data: usdTokens } = useGetUSDTokens();
+
   const { data: collateralType } = useCollateralType(collateralSymbol);
+
   const { data: transferrableSnx } = useTransferableSynthetix();
 
-  const { data: tokenBalance } = useTokenBalance(
-    isBaseAndromeda(network?.id, network?.preset) ? usdTokens?.USDC : collateralType?.tokenAddress
-  );
+  // TODO: This will need refactoring
+  const balanceAddress = isBaseAndromeda(network?.id, network?.preset)
+    ? collateralSymbol === 'USDC'
+      ? usdTokens?.USDC
+      : getStataUSDCAddress()
+    : collateralType?.tokenAddress;
+
+  const { data: tokenBalance } = useTokenBalance(balanceAddress);
 
   const { data: ethBalance } = useEthBalance();
 

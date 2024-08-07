@@ -7,6 +7,7 @@
     "@snx-v3/isBaseAndromeda": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/txnReducer": "workspace:*",
+    "@snx-v3/useAccountCollateral": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/useCollateralPriceUpdates": "workspace:*",
     "@snx-v3/useCoreProxy": "workspace:*",
