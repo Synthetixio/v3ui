@@ -413,7 +413,7 @@ export const PoolCard = ({
                             </Flex>
                           }
                         >
-                          <Flex display="inline">
+                          <Flex as="span" display="inline">
                             <Sparkles w="14px" h="14px" mb={1} ml="0.5px" mt="1px" />
                           </Flex>
                         </Tooltip>

@@ -2,7 +2,6 @@ import { Flex, Td, Tr, Text, Button, Fade, useDisclosure } from '@chakra-ui/reac
 import { TokenIcon } from '../../TokenIcon';
 import { formatNumberToUsd, formatNumber } from '@snx-v3/formatters';
 import Wei from '@synthetixio/wei';
-import { WithdrawModal } from '../../';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
@@ -182,7 +181,6 @@ export const AssetsRow = ({
             </Tooltip>
           </Fade>
         </Flex>
-        <WithdrawModal isOpen={isOpen} onClose={onClose} />
       </Td>
     </Tr>
   );

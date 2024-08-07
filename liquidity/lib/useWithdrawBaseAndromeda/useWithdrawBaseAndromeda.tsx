@@ -9,24 +9,29 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { Wei } from '@synthetixio/wei';
 import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { ZEROWEI } from '../../ui/src/utils/constants';
+import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 
 export const useWithdrawBaseAndromeda = ({
   accountId,
-  sUSDCCollateral,
+  availableCollateral,
   snxUSDCollateral,
   amountToWithdraw,
+  accountCollateral,
+  collateralSymbol,
 }: {
-  sUSDCCollateral: Wei;
+  availableCollateral: Wei;
   snxUSDCollateral: Wei;
   amountToWithdraw: Wei;
   accountId?: string;
+  collateralSymbol?: string;
+  accountCollateral: AccountCollateralType | undefined;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -47,28 +52,32 @@ export const useWithdrawBaseAndromeda = ({
         throw new Error('Not ready');
       }
 
-      const total = snxUSDCollateral.add(sUSDCCollateral);
+      const total = snxUSDCollateral.add(availableCollateral);
 
       if (total.lt(amountToWithdraw)) {
         throw new Error('Exceeds balance');
       }
 
-      const sUSDCAmount = amountToWithdraw.gt(sUSDCCollateral) ? sUSDCCollateral : amountToWithdraw;
+      const wrappedCollateralAmount = amountToWithdraw.gt(availableCollateral)
+        ? availableCollateral
+        : amountToWithdraw;
 
-      const snxUSDAmount = amountToWithdraw.sub(sUSDCAmount).gt(0)
-        ? amountToWithdraw.sub(sUSDCAmount)
+      const snxUSDAmount = amountToWithdraw.sub(wrappedCollateralAmount).gt(0)
+        ? amountToWithdraw.sub(wrappedCollateralAmount)
         : ZEROWEI;
 
       try {
+        const spotMarketId = getSpotMarketId(collateralSymbol);
+
         dispatch({ type: 'prompting' });
 
         const gasPricesPromised = getGasPrice({ provider });
 
-        const withdraw_sUSDC = sUSDCAmount.gt(0)
+        const withdraw_collateral = wrappedCollateralAmount.gt(0)
           ? CoreProxy.populateTransaction.withdraw(
               BigNumber.from(accountId),
-              usdTokens?.sUSD,
-              sUSDCAmount.toBN()
+              accountCollateral?.tokenAddress,
+              wrappedCollateralAmount.toBN()
             )
           : undefined;
 
@@ -79,51 +88,55 @@ export const useWithdrawBaseAndromeda = ({
               snxUSDAmount.toBN()
             )
           : undefined;
-
         const snxUSDApproval = snxUSDAmount.gt(0)
           ? UsdProxy?.populateTransaction.approve(SpotProxy.address, snxUSDAmount.toBN())
           : undefined;
-
-        const buy_sUSDC = snxUSDAmount.gt(0)
+        const buy_wrappedCollateral = snxUSDAmount.gt(0)
           ? SpotProxy.populateTransaction.buy(
-              USDC_BASE_MARKET,
+              spotMarketId,
               snxUSDAmount.toBN(),
               0,
               constants.AddressZero
             )
           : undefined;
 
+        const synthAmount = snxUSDAmount.gt(0)
+          ? (await SpotProxy.callStatic.quoteBuyExactIn(spotMarketId, snxUSDAmount.toBN(), 0))
+              .synthAmount
+          : ZEROWEI;
+        const withdrawAmount = availableCollateral.add(synthAmount);
+
         const unwrapTxnPromised = SpotProxy.populateTransaction.unwrap(
-          USDC_BASE_MARKET,
-          amountToWithdraw.toBN(),
+          spotMarketId,
+          withdrawAmount.toBN(),
           // 2% slippage
           Number(
-            utils.formatUnits(amountToWithdraw.toBN().mul(98).div(100).toString(), 12).toString()
+            utils.formatUnits(withdrawAmount.toBN().mul(98).div(100).toString(), 12).toString()
           ).toFixed()
         );
 
         const [
           gasPrices,
-          withdraw_sUSDC_Txn,
-          withdraw_snxUSD_Txn,
-          snxUSDCApproval_Txn,
-          buy_sUSDC_Txn,
-          unwrapTxn,
+          withdraw_collateral_txn,
+          withdraw_snxUSD_txn,
+          snxUSDApproval_txn,
+          buy_wrappedCollateral_txn,
+          unwrapTxnPromised_txn,
         ] = await Promise.all([
           gasPricesPromised,
-          withdraw_sUSDC,
+          withdraw_collateral,
           withdraw_snxUSD,
           snxUSDApproval,
-          buy_sUSDC,
+          buy_wrappedCollateral,
           unwrapTxnPromised,
         ]);
 
         const allCalls = [
-          withdraw_sUSDC_Txn,
-          withdraw_snxUSD_Txn,
-          snxUSDCApproval_Txn,
-          buy_sUSDC_Txn,
-          unwrapTxn,
+          withdraw_collateral_txn,
+          withdraw_snxUSD_txn,
+          snxUSDApproval_txn,
+          buy_wrappedCollateral_txn,
+          unwrapTxnPromised_txn,
         ].filter(notNil);
 
         if (priceUpdateTx) {

@@ -150,9 +150,11 @@ export function WithdrawModal({
 
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
     accountId,
-    sUSDCCollateral: liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI,
+    availableCollateral: liquidityPosition?.accountCollateral.availableCollateral || ZEROWEI,
     snxUSDCollateral: systemTokenBalance?.availableCollateral || ZEROWEI,
     amountToWithdraw: withdrawAmount,
+    accountCollateral: liquidityPosition?.accountCollateral,
+    collateralSymbol: params.collateralSymbol,
   });
 
   const onSubmit = useCallback(async () => {

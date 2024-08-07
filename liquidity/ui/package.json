@@ -75,8 +75,6 @@
     "@snx-v3/useUndelegate": "workspace:*",
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*",
     "@snx-v3/useVaultsData": "workspace:*",
-    "@snx-v3/useWithdraw": "workspace:*",
-    "@snx-v3/useWithdrawBaseAndromeda": "workspace:*",
     "@snx-v3/validatePosition": "workspace:*",
     "@synthetixio/safe-import": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",

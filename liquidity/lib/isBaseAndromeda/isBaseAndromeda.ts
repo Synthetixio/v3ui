@@ -21,11 +21,11 @@ export function getsStataUSDCAddress() {
 }
 
 export function getSpotMarketId(collateralSymbol?: string) {
-  switch (collateralSymbol) {
-    case 'USDC':
+  switch (collateralSymbol?.toLowerCase()) {
+    case 'usdc':
       return USDC_BASE_MARKET;
 
-    case 'stataUSDC':
+    case 'statausdc':
       return STATA_BASE_MARKET;
 
     default:
