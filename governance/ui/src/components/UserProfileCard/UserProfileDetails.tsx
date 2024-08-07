@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
-import { useGetUserBallot } from '../../queries';
+import { useGetUserBallot, useNetwork } from '../../queries';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -27,11 +27,15 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(activeCouncil);
 
-  const isSelected = state[activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase();
+  const isSelected = state[networkForState]
+    ? state[networkForState][activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase()
+    : false;
 
   const isAlreadyVoted =
     !!ballot?.votedCandidates &&
@@ -180,17 +184,20 @@ export const UserProfileDetails = ({
               if (isAlreadyVoted) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: 'remove',
+                  payload: { action: 'remove', network: networkForState },
                 });
               } else if (isSelected) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: undefined,
+                  payload: { action: undefined, network: networkForState },
                 });
               } else {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: userData?.address.toLowerCase(),
+                  payload: {
+                    action: userData?.address.toLowerCase(),
+                    network: networkForState,
+                  },
                 });
               }
             }}

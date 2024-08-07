@@ -137,8 +137,14 @@ export function useCastVotes(
       councils.map((council) => {
         const shouldWithdrawVote = candidates[council] === 'remove';
         shouldWithdrawVote
-          ? dispatch({ type: council.toUpperCase(), payload: undefined })
-          : dispatch({ type: council.toUpperCase(), payload: candidates[council] });
+          ? dispatch({
+              type: council.toUpperCase(),
+              payload: { action: undefined, network: network!.id.toString() },
+            })
+          : dispatch({
+              type: council.toUpperCase(),
+              payload: { action: candidates[council], network: network!.id.toString() },
+            });
       });
       await Promise.all(
         councils.map(

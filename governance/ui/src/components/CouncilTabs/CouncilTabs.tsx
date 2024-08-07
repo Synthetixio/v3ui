@@ -6,7 +6,7 @@ import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
-import { useGetUserDetailsQuery, useGetUserBallot } from '../../queries';
+import { useGetUserDetailsQuery, useGetUserBallot, useNetwork } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
@@ -15,6 +15,8 @@ import { useVoteContext } from '../../context/VoteContext';
 export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
   const { state } = useVoteContext();
   const votedNomineesData = [
     useGetUserBallot('spartan'),
@@ -84,7 +86,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = state[council.slug];
+              const newVoteCast = state[networkForState]
+                ? state[networkForState][council.slug]
+                : '';
 
               return (
                 <Flex
@@ -101,6 +105,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   bg="navy.700"
                   _hover={{ borderColor: 'cyan.500' }}
                   px="2"
+                  data-cy={`council-tab-button-${council.slug}`}
                 >
                   <CouncilImage
                     imageUrl={council.image}

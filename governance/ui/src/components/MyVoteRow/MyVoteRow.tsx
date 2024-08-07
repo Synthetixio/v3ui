@@ -4,7 +4,7 @@ import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetUserBallot } from '../../queries';
+import { useGetUserBallot, useNetwork } from '../../queries';
 
 export default function MyVoteRow({
   councilSlug,
@@ -15,8 +15,10 @@ export default function MyVoteRow({
 }) {
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(councilSlug);
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
-
+  const stateForNetwork = state[networkForState] ? state[networkForState][councilSlug] : '';
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -31,17 +33,17 @@ export default function MyVoteRow({
       <Flex alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
-          address={ballot?.votedCandidates[0] || state[councilSlug]}
+          address={ballot?.votedCandidates[0] || stateForNetwork}
         />
 
-        {ballot?.votedCandidates[0] && state[councilSlug] === 'remove' && (
+        {ballot?.votedCandidates[0] && state[networkForState][councilSlug] === 'remove' && (
           <>
             <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={state[councilSlug]} />
+            <CouncilUser councilSlug={councilSlug} address={stateForNetwork} />
           </>
         )}
       </Flex>
-      {!state[councilSlug] && !ballot?.votedCandidates[0] ? (
+      {!stateForNetwork && !ballot?.votedCandidates[0] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
@@ -63,7 +65,10 @@ export default function MyVoteRow({
             e.stopPropagation();
             dispatch({
               type: councilSlug.toUpperCase(),
-              payload: state[councilSlug] === 'remove' ? undefined : 'remove',
+              payload: {
+                action: stateForNetwork === 'remove' ? undefined : 'remove',
+                network: networkForState,
+              },
             });
           }}
         />
