@@ -126,12 +126,17 @@ export function NetworkController() {
                 colorScheme="gray"
                 isChecked={showTestnets}
                 onChange={() => setShowTestnets(!showTestnets)}
+                data-cy="network-controller-switch"
               />
             </Flex>
           </MenuOptionGroup>
 
           {(showTestnets ? testnets : []).map(({ id, preset, label }) => (
-            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+            <MenuItem
+              key={`${id}-${preset}`}
+              onClick={() => setNetwork(id)}
+              data-cy={`network-menu-button-${id}`}
+            >
               <NetworkIcon filter="grayscale(1)" networkId={id} size="20px" />
               <Text variant="nav" ml={2}>
                 {label}

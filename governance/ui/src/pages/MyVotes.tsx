@@ -11,7 +11,7 @@ import { useGetUserVotingPower } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
-import { useGetUserSelectedVotes } from '../hooks/useGetUserSelectedVotes';
+import { useVoteContext } from '../context/VoteContext';
 
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
@@ -20,11 +20,11 @@ export default function MyVotes() {
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   // const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   // const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
-  const selectedVotes = useGetUserSelectedVotes();
-  const councilToCastVote = Object.entries(selectedVotes)
+  const { state } = useVoteContext();
+  const councilToCastVote = Object.entries(state || {})
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync } = useCastVotes(councilToCastVote, selectedVotes);
+  const { mutateAsync } = useCastVotes(councilToCastVote, state || {});
   const navigate = useNavigate();
   const { data: votingCandidates } = useGetVotingCandidates();
 

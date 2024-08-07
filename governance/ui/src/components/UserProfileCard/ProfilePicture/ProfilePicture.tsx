@@ -58,6 +58,7 @@ export const ProfilePicture = ({
             }}
             zIndex={10}
             position="relative"
+            data-cy={`user-blockies-council-tabs-${address || newVoteCast}`}
           >
             {!!newVoteCast && (
               <Box
@@ -68,7 +69,6 @@ export const ProfilePicture = ({
                 borderRadius="100%"
                 position="absolute"
                 zIndex={11}
-                data-cy={`user-blockies-council-tabs-${address || newVoteCast}`}
               />
             )}
             <Blockies

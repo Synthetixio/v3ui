@@ -7,9 +7,8 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
-import { useGetUserCurrentVotes } from '../../queries/useGetUserCurrentVotes';
-import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import { EditIcon, ShareIcon } from '../Icons';
+import { useGetUserBallot } from '../../queries';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -28,18 +27,15 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
-  const { dispatch } = useVoteContext();
+  const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
+  const { data: ballot } = useGetUserBallot(activeCouncil);
 
-  const { data: currentVotes } = useGetUserCurrentVotes();
-  const selectedVotes = useGetUserSelectedVotes();
-
-  const isSelected =
-    selectedVotes[activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase();
+  const isSelected = state[activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase();
 
   const isAlreadyVoted =
-    currentVotes[activeCouncil] &&
-    currentVotes[activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase();
+    !!ballot?.votedCandidates &&
+    ballot?.votedCandidates[0]?.toLowerCase() === userData?.address?.toLowerCase();
 
   return (
     <>
@@ -180,7 +176,7 @@ export const UserProfileDetails = ({
             colorScheme="gray"
             w="100%"
             data-cy="select-user-to-vote-button"
-            onClick={() => {
+            onClick={async () => {
               if (isAlreadyVoted) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
@@ -196,18 +192,6 @@ export const UserProfileDetails = ({
                   type: activeCouncil.toUpperCase(),
                   payload: userData?.address.toLowerCase(),
                 });
-              }
-              if (userData?.address) {
-                const selection = localStorage.getItem('voteSelection');
-                if (!selection) localStorage.setItem('voteSelection', '');
-                const parsedSelection = JSON.parse(selection ? selection : '{}');
-
-                parsedSelection[activeCouncil] =
-                  parsedSelection[activeCouncil]?.toLowerCase() === userData?.address.toLowerCase()
-                    ? 'remove'
-                    : userData.address;
-
-                localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
               }
             }}
           >
