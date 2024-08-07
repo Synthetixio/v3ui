@@ -2,12 +2,11 @@ import { Alert, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
-import { useGetVotingCandidates } from '../queries/useGetVotingCandidates';
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetUserVotingPower } from '../queries/';
+import { useGetUserVotingPower, useNetwork } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -16,17 +15,18 @@ import { useVoteContext } from '../context/VoteContext';
 export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
 
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   // const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   // const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
-  const councilToCastVote = Object.entries(state || {})
+  const councilToCastVote = Object.entries(state[networkForState] || {})
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync } = useCastVotes(councilToCastVote, state || {});
+  const { mutateAsync } = useCastVotes(councilToCastVote, state[networkForState] || {});
   const navigate = useNavigate();
-  const { data: votingCandidates } = useGetVotingCandidates();
 
   return (
     <>
@@ -85,8 +85,9 @@ export default function MyVotes() {
             )}
             <Flex justifyContent="space-between" mb="4" opacity={period !== '2' ? '0.4' : '1'}>
               <Heading fontSize="2xl">My Votes</Heading>
-              <Heading fontSize="2xl">
-                {Object.values(votingCandidates || {}).length}/{councils.length}
+              <Heading fontSize="2xl" data-cy="my-votes-total-votes">
+                {Object.values(state[networkForState] || {}).filter((council) => !!council).length}/
+                {councils.length}
               </Heading>
             </Flex>
             <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>

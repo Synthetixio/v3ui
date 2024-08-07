@@ -5,6 +5,7 @@ import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext } from '../../context/VoteContext';
+import { useNetwork } from '../../queries';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -21,6 +22,8 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
   const { state } = useVoteContext();
 
   return (
@@ -57,7 +60,12 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
         <Text fontSize="x-small" ml={8} fontWeight="bold">
           {councilPeriod === '2' && (
             <>
-              {Object.values(state).filter((vote) => !!vote).length}/{councils.length}
+              {
+                Object.values(state[networkForState] ? state[networkForState] : {}).filter(
+                  (vote) => !!vote
+                ).length
+              }
+              /{councils.length}
             </>
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
@@ -68,7 +76,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
         {showCart && (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
-            votes={state}
+            votes={state[networkForState]}
             isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
             period={councilPeriod}
           />

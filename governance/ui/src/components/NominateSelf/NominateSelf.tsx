@@ -43,7 +43,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       rounded="base"
       p="6"
       mt="6"
-      h="fit-content"
+      h="612px"
       {...props}
     >
       {isSuccess ? (
@@ -178,7 +178,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
           <Text fontSize="sm" color="gray.500" mb="2" pt="12">
             Chose which governing body you would like to represent if chosen as an elected member:
           </Text>
-          <Flex flexDirection="column">
+          <Flex flexDirection="column" mb="auto">
             {councils.map((council) => (
               <Flex
                 key={`tab-nomination-${council.slug}`}

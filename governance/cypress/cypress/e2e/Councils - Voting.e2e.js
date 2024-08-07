@@ -53,5 +53,15 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="remove-vote-button"]').click();
   cy.get('[data-cy="cast-my-vote-button"]').click();
   cy.wait(3000);
-  cy.get('[data-cy="council-tab-vote-circle"]').should('exist');
+
+  cy.get('[data-cy="account-menu-button"]').click();
+  cy.get('[data-cy="network-controller-switch"]').click();
+  cy.get('[data-cy="network-menu-button-421614"]').click();
+  cy.get('[data-cy="council-tab-button-spartan"]').click();
+  cy.get('[data-cy="own-user-list-item"]').click();
+  cy.get('[data-cy="select-user-to-vote-button"]').contains('Select');
+  cy.get('[data-cy="select-user-to-vote-button"]').click();
+  cy.get('[data-cy="my-votes-button"]').click();
+  cy.get('[data-cy="my-votes-total-votes"]').contains('0/3');
+  cy.get('[data-cy="my-votes-box-total-votes"]').contains('0/3');
 });

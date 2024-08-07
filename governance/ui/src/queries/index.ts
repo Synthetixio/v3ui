@@ -11,5 +11,4 @@ export * from './useGetNomineesDetails';
 export * from './useGetUserBallot';
 export * from './useGetUserDetailsQuery';
 export * from './useGetUserVotingPower';
-export * from './useGetVotingCandidates';
 export * from './useWallet';
