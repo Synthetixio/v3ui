@@ -18,7 +18,9 @@ export default function MyVoteRow({
   const { network } = useNetwork();
   const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
-  const stateForNetwork = state[networkForState] ? state[networkForState][councilSlug] : '';
+  const stateForNetwork =
+    !!state && !!state[networkForState] ? state[networkForState][councilSlug] : undefined;
+
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -36,7 +38,7 @@ export default function MyVoteRow({
           address={ballot?.votedCandidates[0] || stateForNetwork}
         />
 
-        {ballot?.votedCandidates[0] && state[networkForState][councilSlug] === 'remove' && (
+        {ballot?.votedCandidates[0] && stateForNetwork === 'remove' && (
           <>
             <ArrowForwardIcon mx="2" />
             <CouncilUser councilSlug={councilSlug} address={stateForNetwork} />
