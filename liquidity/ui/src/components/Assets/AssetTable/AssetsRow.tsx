@@ -33,7 +33,7 @@ export const AssetsRow = ({
   final,
 }: AssetsRowProps) => {
   const { connect, activeWallet } = useWallet();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen } = useDisclosure();
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
   const { minutes, hours, isRunning } = useTimer({
