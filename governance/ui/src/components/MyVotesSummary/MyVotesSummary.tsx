@@ -1,11 +1,10 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
-
 import { Timer } from '../Timer';
 import { useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserSelectedVotes } from '../../hooks/useGetUserSelectedVotes';
 import councils from '../../utils/councils';
+import { useVoteContext } from '../../context/VoteContext';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -22,8 +21,8 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
+  const { state } = useVoteContext();
 
-  const votes = useGetUserSelectedVotes();
   return (
     <Flex
       position="relative"
@@ -58,8 +57,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
         <Text fontSize="x-small" ml={8} fontWeight="bold">
           {councilPeriod === '2' && (
             <>
-              {Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/
-              {councils.length}
+              {Object.values(state).filter((vote) => !!vote).length}/{councils.length}
             </>
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
@@ -70,7 +68,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
         {showCart && (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
-            votes={votes}
+            votes={state}
             isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
             period={councilPeriod}
           />
