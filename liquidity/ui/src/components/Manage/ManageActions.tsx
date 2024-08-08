@@ -99,7 +99,7 @@ const ManageActionUi: FC<{
               setTab('debt');
             }}
           >
-            Manage Debt
+            {`Manage ${isBase ? 'PnL' : 'Debt'}`}
           </Tab>
         </TabList>
 

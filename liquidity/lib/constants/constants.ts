@@ -42,9 +42,7 @@ export const SESSION_STORAGE_KEYS = {
 };
 
 export const offchainMainnetEndpoint =
-  process.env.PYTH_MAINNET_ENDPOINT ||
-  'https://hermes-mainnet.rpc.extrnode.com/9b85d7db-f562-48e2-ab56-79c01f212582';
+  process.env.PYTH_MAINNET_ENDPOINT || 'https://hermes.pyth.network';
 
 export const offchainTestnetEndpoint =
-  process.env.PYTH_TESTNET_ENDPOINT ||
-  'https://hermes-mainnet.rpc.extrnode.com/9b85d7db-f562-48e2-ab56-79c01f212582';
+  process.env.PYTH_TESTNET_ENDPOINT || 'https://hermes.pyth.network';

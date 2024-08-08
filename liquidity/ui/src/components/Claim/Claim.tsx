@@ -31,7 +31,7 @@ const ClaimUi: FC<{
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Claim{isBase ? '' : '/Borrow'}
+        Claim{isBase ? ' Profit' : '/Borrow'}
       </Text>
 
       <BorderBox display="flex" p={3} mb="6">
@@ -160,7 +160,7 @@ const ClaimUi: FC<{
           ? 'Enter Amount'
           : debtChange.gt(maxClaimble) && !isBase
             ? 'Borrow'
-            : 'Claim'}
+            : 'Claim Profit'}
       </Button>
     </Flex>
   );
