@@ -31,9 +31,8 @@ const ClaimUi: FC<{
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Claim{isBase ? '' : '/Borrow'}
+        Claim{isBase ? ' Profit' : '/Borrow'}
       </Text>
-
       <BorderBox display="flex" p={3} mb="6">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
@@ -42,7 +41,6 @@ const ClaimUi: FC<{
               {isBase ? 'USDC' : systemToken?.symbol}
             </Text>
           </BorderBox>
-
           <Flex fontSize="12px" gap="1">
             <Text>Credit:</Text>
             <Amount value={maxClaimble} />
@@ -82,7 +80,6 @@ const ClaimUi: FC<{
           </Flex>
         </Flex>
       </BorderBox>
-
       <Collapse in={debtChange.lte(0) && maxClaimble.gt(0)} animateOpacity>
         <Alert colorScheme="green" mb="6">
           <AlertIcon />
@@ -105,7 +102,6 @@ const ClaimUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-
       <Collapse in={debtChange.gt(0)} animateOpacity>
         <Alert status="warning" mb="6">
           <AlertIcon />
@@ -115,7 +111,6 @@ const ClaimUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
         <Alert colorScheme="blue" mb="6">
           <AlertIcon />
@@ -137,7 +132,6 @@ const ClaimUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-
       <Collapse
         in={!debtChange.gt(max) && debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase}
         animateOpacity
@@ -150,7 +144,6 @@ const ClaimUi: FC<{
           </Text>
         </Alert>
       </Collapse>
-
       <Button
         isDisabled={debtChange.lte(0) || debtChange.gt(max)}
         data-testid="claim submit"
@@ -160,7 +153,7 @@ const ClaimUi: FC<{
           ? 'Enter Amount'
           : debtChange.gt(maxClaimble) && !isBase
             ? 'Borrow'
-            : 'Claim'}
+            : 'Claim Profit'}
       </Button>
     </Flex>
   );
