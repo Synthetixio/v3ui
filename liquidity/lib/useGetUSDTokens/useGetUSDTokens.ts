@@ -48,8 +48,8 @@ export const useGetWrapperToken = (marketId: string, customNetwork?: Network) =>
   const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
 
   return useQuery({
-    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens', marketId],
-    enabled: Boolean(targetNetwork?.id && isBase && SpotMarket && marketId),
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetWrapperToken', marketId],
+    enabled: Boolean(targetNetwork?.id && SpotMarket),
     queryFn: async () => {
       if (!targetNetwork?.id || !SpotMarket) {
         throw 'useGetWrapperToken queries are not ready';

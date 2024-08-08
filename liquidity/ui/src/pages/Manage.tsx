@@ -47,9 +47,17 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
     if (!network?.id && network?.preset) {
       return undefined;
     }
-    return isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'sUSDC'
-      ? 'USDC'
-      : collateralSymbol;
+
+    if (!isBaseAndromeda(network?.id, network?.preset)) {
+      return collateralSymbol;
+    }
+
+    if (collateralSymbol?.toLowerCase() === 'susdc') {
+      return 'USDC';
+    }
+    if (collateralSymbol?.toLowerCase() === 'sstatausdc') {
+      return 'sStataUSDC';
+    }
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 

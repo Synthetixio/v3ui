@@ -15,9 +15,11 @@ export function getRepayerContract(id?: number) {
 export function getSpotMarketId(collateralSymbol?: string) {
   switch (collateralSymbol?.toLowerCase()) {
     case 'usdc':
+    case 'susdc':
       return USDC_BASE_MARKET;
 
     case 'statausdc':
+    case 'sstatausdc':
       return STATA_BASE_MARKET;
 
     default:
