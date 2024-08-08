@@ -14,6 +14,7 @@ import { useSystemToken } from '@snx-v3/useSystemToken';
 import { TokenIcon } from '../TokenIcon';
 import { ZEROWEI } from '../../utils/constants';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useParams } from 'react-router-dom';
 
 export const RepayUi: FC<{
   debtChange: Wei;
@@ -105,15 +106,16 @@ export const RepayUi: FC<{
 export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
+  const { collateralSymbol } = useParams();
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
   const { data: systemToken } = useSystemToken();
   const { data: balance } = useTokenBalance(systemToken?.address);
 
   const debtExists = liquidityPosition?.debt.gt(0);
   const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
+  const symbol = isBase ? collateralSymbol : systemToken?.symbol;
 
   if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
     return <RepayAllDebt liquidityPosition={liquidityPosition} />;
@@ -121,7 +123,7 @@ export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosi
 
   return (
     <RepayUi
-      symbol={isBase ? 'USDC' : systemToken.symbol}
+      symbol={symbol}
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       snxUSDBalance={flooredBalance}

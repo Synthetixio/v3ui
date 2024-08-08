@@ -203,8 +203,10 @@ export const Manage = () => {
     poolData &&
     collateralTypes?.length &&
     collateralDisplayName &&
-    !collateralTypes.some(
-      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    !collateralTypes.some((item) =>
+      [item.symbol.toUpperCase(), item.displaySymbol.toUpperCase()].includes(
+        collateralDisplayName.toUpperCase()
+      )
     );
 
   return (

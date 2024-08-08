@@ -37,3 +37,27 @@ export function useGetUSDTokens(customNetwork?: Network) {
     },
   });
 }
+
+export const useGetWrapperToken = (marketId: string, customNetwork?: Network) => {
+  const { network } = useNetwork();
+
+  const targetNetwork = customNetwork || network;
+
+  const isBase = isBaseAndromeda(targetNetwork?.id, targetNetwork?.preset);
+
+  const { data: SpotMarket } = useSpotMarketProxy(customNetwork);
+
+  return useQuery({
+    queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetUSDTokens', marketId],
+    enabled: Boolean(targetNetwork?.id && isBase && SpotMarket && marketId),
+    queryFn: async () => {
+      if (!targetNetwork?.id || !SpotMarket) {
+        throw 'useGetWrapperToken queries are not ready';
+      }
+
+      return isBase
+        ? (await (SpotMarket as any)?.getWrapper(marketId))?.wrapCollateralType
+        : undefined;
+    },
+  });
+};

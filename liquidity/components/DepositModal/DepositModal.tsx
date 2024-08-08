@@ -1,7 +1,7 @@
 import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
-import { getStataUSDCAddress, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Multistep } from '@snx-v3/Multistep';
 import { useApprove } from '@snx-v3/useApprove';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -10,7 +10,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { useParams } from '@snx-v3/useParams';
 import { usePool } from '@snx-v3/usePools';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
@@ -262,15 +262,13 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
-  const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: wrapperToken } = useGetWrapperToken(getSpotMarketId(collateralSymbol));
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? collateralSymbol === 'USDC'
-      ? usdTokens?.USDC
-      : getStataUSDCAddress()
+    ? wrapperToken
     : collateralType?.tokenAddress;
 
   const collateralNeeded = collateralChange.sub(availableCollateral);

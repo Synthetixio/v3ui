@@ -8,7 +8,7 @@ export function useBurnMintFee() {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate'],
+    queryKey: [`${network?.id}-${network?.preset}`, 'BurnMintFee'],
     enabled: Boolean(CoreProxy),
     queryFn: async function () {
       if (!CoreProxy) throw new Error('Core Proxy is not defined');

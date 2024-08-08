@@ -12,7 +12,7 @@ import { useSystemToken } from '@snx-v3/useSystemToken';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
-import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
@@ -24,12 +24,14 @@ export const useRepayBaseAndromeda = ({
   collateralTypeAddress,
   debtChange,
   availableUSDCollateral,
+  collateralSymbol,
 }: {
   accountId?: string;
   poolId?: string;
   collateralTypeAddress?: string;
   availableUSDCollateral?: Wei;
   debtChange: Wei;
+  collateralSymbol?: string;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
@@ -65,32 +67,32 @@ export const useRepayBaseAndromeda = ({
       if (debtChange.eq(0)) return;
       const debtChangeAbs = debtChange.abs();
       const amountToDeposit = debtChangeAbs.sub(availableUSDCollateral);
-      const usdcAmount = amountToDeposit.gt(0)
+      const collateralAmount = amountToDeposit.gt(0)
         ? parseUnits(amountToDeposit.toString(), 6)
         : BigNumber.from(0);
 
       try {
         dispatch({ type: 'prompting' });
 
-        // USDC => sUSDC
-        const wrap = amountToDeposit.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, 0)
+        const spotMarketId = getSpotMarketId(collateralSymbol);
+
+        // USDC or stataUSDC to sUSDC or sStataUSDC
+        const wrap = collateralAmount.gt(0)
+          ? SpotMarketProxy.populateTransaction.wrap(spotMarketId, collateralAmount, 0)
           : undefined;
 
-        const sUSDC_ADDRESS = usdTokens?.sUSD;
-        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
-
-        const sUSDC_Approval = amountToDeposit.gt(0)
-          ? sUSDC_Contract.populateTransaction.approve(
+        const Synth_Contract = new ethers.Contract(collateralTypeAddress, approveAbi, signer);
+        const synth_approval = amountToDeposit.gt(0)
+          ? Synth_Contract.populateTransaction.approve(
               SpotMarketProxy.address,
               amountToDeposit.toBN()
             )
           : undefined;
 
-        // sell sUSDC => sUSD
-        const sell = amountToDeposit.gt(0)
+        // sUSDC or sStataUSDC => snxUSD
+        const sell_synth = amountToDeposit.gt(0)
           ? SpotMarketProxy.populateTransaction.sell(
-              USDC_BASE_MARKET,
+              spotMarketId,
               amountToDeposit.toBN(),
               0,
               ethers.constants.AddressZero
@@ -99,7 +101,6 @@ export const useRepayBaseAndromeda = ({
 
         // approve sUSD to Core
         const sUSD_Contract = new ethers.Contract(systemToken.address, approveAbi, signer);
-
         const sUSD_Approval = amountToDeposit.gt(0)
           ? sUSD_Contract.populateTransaction.approve(CoreProxy.address, amountToDeposit.toBN())
           : undefined;
@@ -121,7 +122,7 @@ export const useRepayBaseAndromeda = ({
         );
 
         const callsPromise = Promise.all(
-          [wrap, sUSDC_Approval, sell, sUSD_Approval, deposit, burn].filter(notNil)
+          [wrap, synth_approval, sell_synth, sUSD_Approval, deposit, burn].filter(notNil)
         );
 
         const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
