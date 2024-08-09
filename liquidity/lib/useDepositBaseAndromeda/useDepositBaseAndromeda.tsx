@@ -12,10 +12,11 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { getSpotMarketId, getsStataUSDCAddress } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -41,6 +42,7 @@ export const useDepositBaseAndromeda = ({
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { data: usdTokens } = useGetUSDTokens();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const { gasSpeed } = useGasSpeed();
 
@@ -85,21 +87,23 @@ export const useDepositBaseAndromeda = ({
 
         const amount = collateralChange.sub(availableCollateral);
 
-        const usdcOrStataUSDCAmount = amount.gt(0)
+        const collateralAmount = amount.gt(0)
           ? parseUnits(amount.toString(), 6)
           : BigNumber.from(0);
 
         const spotMarketId = getSpotMarketId(collateralSymbol);
-
         const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
         // Wrap
-        const wrap = usdcOrStataUSDCAmount.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(spotMarketId, usdcOrStataUSDCAmount, amountD18)
+        const wrap = collateralAmount.gt(0)
+          ? SpotMarketProxy.populateTransaction.wrap(spotMarketId, collateralAmount, amountD18)
           : undefined;
 
         // Synth
-        const synthAddress = collateralSymbol === 'USDC' ? usdTokens?.sUSD : getsStataUSDCAddress();
+        const synthAddress = collateralType?.tokenAddress;
+        if (!synthAddress) {
+          throw 'synth not found';
+        }
         const synthContract = new ethers.Contract(synthAddress, approveAbi, signer);
 
         const synthApproval = amountD18.gt(0)

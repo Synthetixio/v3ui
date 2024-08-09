@@ -47,9 +47,17 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
     if (!network?.id && network?.preset) {
       return undefined;
     }
-    return isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'sUSDC'
-      ? 'USDC'
-      : collateralSymbol;
+
+    if (!isBaseAndromeda(network?.id, network?.preset)) {
+      return collateralSymbol;
+    }
+
+    if (collateralSymbol?.toLowerCase() === 'susdc') {
+      return 'USDC';
+    }
+    if (collateralSymbol?.toLowerCase() === 'sstatausdc') {
+      return 'sStataUSDC';
+    }
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 
@@ -203,8 +211,10 @@ export const Manage = () => {
     poolData &&
     collateralTypes?.length &&
     collateralDisplayName &&
-    !collateralTypes.some(
-      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    !collateralTypes.some((item) =>
+      [item.symbol.toUpperCase(), item.displaySymbol.toUpperCase()].includes(
+        collateralDisplayName.toUpperCase()
+      )
     );
 
   return (

@@ -2,7 +2,7 @@ import { Button, Divider, Text, useToast, Link, Flex, Skeleton } from '@chakra-u
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { parseUnits } from '@snx-v3/format';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { Multistep } from '@snx-v3/Multistep';
 import { useApprove } from '@snx-v3/useApprove';
@@ -10,7 +10,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { useParams } from '@snx-v3/useParams';
 import { useRepay } from '@snx-v3/useRepay';
 import { useRepayBaseAndromeda } from '@snx-v3/useRepayBaseAndromeda';
@@ -34,14 +34,10 @@ export const RepayModalUi: React.FC<{
   onSubmit: () => void;
   state: StateFrom<typeof RepayMachine>;
   setInfiniteApproval: (x: boolean) => void;
-}> = ({ onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
+  symbol: string;
+}> = ({ symbol, onClose, isOpen, debtChange, state, onSubmit, setInfiniteApproval }) => {
   const isProcessing = state.matches(State.approve) || state.matches(State.repay);
   const { infiniteApproval, requireApproval, error } = state.context;
-  const { data: systemToken } = useSystemToken();
-
-  const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const symbol = isBase ? ' USDC' : ` ${systemToken?.symbol}`;
 
   if (isOpen) {
     if (state.matches(State.success)) {
@@ -142,7 +138,6 @@ export const RepayModal: React.FC<{
   const params = useParams();
 
   const { network } = useNetwork();
-  const { data: usdTokens } = useGetUSDTokens();
   const queryClient = useQueryClient();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -174,19 +169,18 @@ export const RepayModal: React.FC<{
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
   const amountToDeposit = debtChange.abs().sub(availableCollateral || 0);
 
-  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? usdTokens?.USDC
-    : systemToken?.address;
+  const { data: wrapperToken } = useGetWrapperToken(getSpotMarketId(params.collateralSymbol));
+
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const collateralAddress = isBase ? wrapperToken : systemToken?.address;
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
-    amount: isBaseAndromeda(network?.id, network?.preset)
+    amount: isBase
       ? //Base USDC is 6 decimals
         parseUnits(amountToDeposit.toString(), 6)
       : amountToDeposit.toBN(),
-    spender: isBaseAndromeda(network?.id, network?.preset)
-      ? SpotProxy?.address
-      : CoreProxy?.address,
+    spender: isBase ? SpotProxy?.address : CoreProxy?.address,
   });
 
   const [state, send] = useMachine(RepayMachine, {
@@ -317,6 +311,7 @@ export const RepayModal: React.FC<{
         onClose();
       }}
       isOpen={isOpen}
+      symbol={isBase ? collateralType.symbol : systemToken?.symbol}
     />
   );
 };

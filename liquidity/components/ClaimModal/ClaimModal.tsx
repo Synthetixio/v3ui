@@ -26,11 +26,10 @@ export const ClaimModalUi: React.FC<{
   isOpen: boolean;
   txnStatus: TransactionStatus;
   execBorrow: () => void;
-}> = ({ onClose, isOpen, debtChange, txnStatus, execBorrow }) => {
+  symbol: string;
+}> = ({ symbol, onClose, isOpen, debtChange, txnStatus, execBorrow }) => {
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
-
-  const { data: systemToken } = useSystemToken();
 
   if (isOpen) {
     if (txnStatus === 'success') {
@@ -74,11 +73,7 @@ export const ClaimModalUi: React.FC<{
           subtitle={
             <Text as="div">
               {isBase ? 'Claim' : 'Borrow'}
-              <Amount
-                prefix=" "
-                value={debtChange}
-                suffix={isBase ? ' USDC' : ` ${systemToken?.symbol}`}
-              />
+              <Amount prefix=" " value={debtChange} suffix={` ${symbol}`} />
             </Text>
           }
           status={{
@@ -126,6 +121,7 @@ export const ClaimModal: React.FC<{
   const { network } = useNetwork();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: systemToken } = useSystemToken();
 
   const maxClaimble = useMemo(() => {
     if (!liquidityPosition || liquidityPosition?.debt.gte(0)) {
@@ -164,6 +160,10 @@ export const ClaimModal: React.FC<{
       queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
       });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'AccountCollateralUnlockDate'],
+      });
+
       setDebtChange(ZEROWEI);
     } catch (error: any) {
       const contractError = errorParserCoreProxy(error);
@@ -217,6 +217,7 @@ export const ClaimModal: React.FC<{
         onClose();
       }}
       isOpen={isOpen}
+      symbol={isBase ? collateralType.symbol : systemToken?.symbol}
     />
   );
 };

@@ -20,7 +20,8 @@ const BorrowUi: FC<{
   debtChange: Wei;
   maxDebt: Wei;
   setDebtChange: (val: Wei) => void;
-}> = ({ debtChange, setDebtChange, maxDebt }) => {
+  symbol: string;
+}> = ({ debtChange, setDebtChange, maxDebt, symbol }) => {
   const { network } = useNetwork();
   const { data: systemToken } = useSystemToken();
 
@@ -34,7 +35,7 @@ const BorrowUi: FC<{
       <BorderBox display="flex" p={3} mb="6">
         <Text display="flex" gap={2} alignItems="center" fontWeight="600" mx="2">
           {isBase ? <SUSDCIcon /> : <DollarCircle />}
-          {isBase ? 'USDC' : systemToken?.symbol}
+          {symbol}
         </Text>
         <Flex flexDirection="column" justifyContent="flex-end" flexGrow={1}>
           <NumberInput
@@ -87,6 +88,11 @@ const BorrowUi: FC<{
 
 export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
+  const { network } = useNetwork();
+  const { data: systemToken } = useSystemToken();
+
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
@@ -105,6 +111,7 @@ export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPos
       setDebtChange={setDebtChange}
       debtChange={debtChange}
       maxDebt={wei(maxDebt.toBN().sub(1))}
+      symbol={isBase ? params.collateralSymbol : systemToken?.symbol}
     />
   );
 };

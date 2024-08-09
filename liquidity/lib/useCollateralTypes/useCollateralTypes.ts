@@ -84,8 +84,7 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
           }
           return {
             ...collateralType,
-            symbol: collateralType.symbol,
-            displaySymbol: collateralType.symbol,
+            displaySymbol: collateralType.displaySymbol ?? collateralType.symbol,
           };
         })
         .filter((collateralType) => collateralType.tokenAddress !== systemToken.address);

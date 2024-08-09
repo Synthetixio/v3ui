@@ -12,20 +12,14 @@ export function getRepayerContract(id?: number) {
   }
 }
 
-export function getStataUSDCAddress() {
-  return '0x4EA71A20e655794051D1eE8b6e4A3269B13ccaCc';
-}
-
-export function getsStataUSDCAddress() {
-  return '0x729Ef31D86d31440ecBF49f27F7cD7c16c6616d2';
-}
-
 export function getSpotMarketId(collateralSymbol?: string) {
   switch (collateralSymbol?.toLowerCase()) {
     case 'usdc':
+    case 'susdc':
       return USDC_BASE_MARKET;
 
     case 'statausdc':
+    case 'sstatausdc':
       return STATA_BASE_MARKET;
 
     default:
