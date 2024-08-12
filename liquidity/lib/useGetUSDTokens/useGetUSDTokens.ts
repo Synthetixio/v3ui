@@ -49,7 +49,7 @@ export const useGetWrapperToken = (marketId: string, customNetwork?: Network) =>
 
   return useQuery({
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'GetWrapperToken', marketId],
-    enabled: Boolean(targetNetwork?.id && SpotMarket),
+    enabled: Boolean(targetNetwork?.id && SpotMarket && isBase),
     queryFn: async () => {
       if (!targetNetwork?.id || !SpotMarket) {
         throw 'useGetWrapperToken queries are not ready';
