@@ -23,8 +23,8 @@ import { ChangeStat, CollateralAlert, TokenIcon } from '../';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ZEROWEI } from '../../utils/constants';
@@ -254,15 +254,18 @@ export const DepositUi: FC<{
 export const Deposit = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
+
   const { collateralSymbol } = useParams();
-  const { data: usdTokens } = useGetUSDTokens();
+
   const { data: collateralType } = useCollateralType(collateralSymbol);
   const { data: transferrableSnx } = useTransferableSynthetix();
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: wrapperToken } = useGetWrapperToken(getSpotMarketId(collateralSymbol));
 
-  const { data: tokenBalance } = useTokenBalance(
-    isBase ? usdTokens?.USDC : collateralType?.tokenAddress
-  );
+  // TODO: This will need refactoring
+  const balanceAddress = isBase ? wrapperToken : collateralType?.tokenAddress;
+
+  const { data: tokenBalance } = useTokenBalance(balanceAddress);
 
   const { data: ethBalance } = useEthBalance();
 

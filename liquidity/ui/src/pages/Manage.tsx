@@ -47,9 +47,17 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
     if (!network?.id && network?.preset) {
       return undefined;
     }
-    return isBaseAndromeda(network?.id, network?.preset) && collateralSymbol === 'sUSDC'
-      ? 'USDC'
-      : collateralSymbol;
+
+    if (!isBaseAndromeda(network?.id, network?.preset)) {
+      return collateralSymbol;
+    }
+
+    if (collateralSymbol?.toLowerCase() === 'susdc') {
+      return 'USDC';
+    }
+    if (collateralSymbol?.toLowerCase() === 'sstatausdc') {
+      return 'sStataUSDC';
+    }
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 
@@ -76,7 +84,7 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  const positionApr = poolData?.apr.collateralAprs.find(
+  const positionApr = poolData?.apr?.collateralAprs?.find(
     (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
   );
 
@@ -112,7 +120,7 @@ export const ManageUi: FC<{
               </Text>
             </Tooltip>
             <Text fontWeight="bold" fontSize="20px" color="white" lineHeight="36px">
-              {poolData && positionApr.apr28d > 0
+              {poolData && positionApr?.apr28d > 0
                 ? `${(positionApr.apr28d * 100).toFixed(2)?.concat('%')}`
                 : '-'}
             </Text>
@@ -203,18 +211,18 @@ export const Manage = () => {
     poolData &&
     collateralTypes?.length &&
     collateralDisplayName &&
-    !collateralTypes.some(
-      (item) => item.symbol.toUpperCase() === collateralDisplayName.toUpperCase()
+    !collateralTypes.some((item) =>
+      [item.symbol.toUpperCase(), item.displaySymbol.toUpperCase()].includes(
+        collateralDisplayName.toUpperCase()
+      )
     );
 
   return (
     <ManagePositionProvider>
       <WatchAccountBanner />
-
       {!!activeWallet && (
         <>
           <UnsupportedCollateralAlert isOpen={Boolean(notSupported)} />
-
           {(!accountId ||
             (!isLoadingPosition &&
               liquidityPosition &&
@@ -242,7 +250,6 @@ export const Manage = () => {
                 collateralType={collateralType}
               />
             )}
-
           {isLoadingPosition && !!accountId && (
             <ManageLoading poolName={poolData?.name} collateralSymbol={collateralSymbol} />
           )}

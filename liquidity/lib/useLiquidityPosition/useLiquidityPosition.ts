@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { z } from 'zod';
 import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 
 const PositionCollateralSchema = z.object({
   value: ZodBigNumber.transform((x) => wei(x)).optional(), // This is currently only removed on base-goreli
@@ -82,6 +83,7 @@ export const useLiquidityPosition = ({
   const { network } = useNetwork();
   const { data: priceUpdateTx } = useAllCollateralPriceUpdates();
   const provider = useProviderForChain(network!);
+  const { data: collateralTypes } = useCollateralTypes(true);
 
   const priceUpdateTxHash = useMemo(
     () => (priceUpdateTx?.data ? stringToHash(priceUpdateTx?.data) : null),
@@ -152,6 +154,15 @@ export const useLiquidityPosition = ({
           const [accountCollateral, usdCollateral] = accountCollateralDecoder(
             encoded.slice(startOfAccountCollateral)
           );
+
+          const collateralType = collateralTypes?.find(
+            (x) => x.tokenAddress.toLowerCase() === accountCollateral.tokenAddress.toLowerCase()
+          );
+          if (collateralType) {
+            accountCollateral.symbol = collateralType.symbol;
+            accountCollateral.displaySymbol = collateralType.displaySymbol;
+            accountCollateral.decimals = collateralType.decimals;
+          }
 
           return {
             collateralPrice: Array.isArray(collateralPrice) ? collateralPrice[0] : collateralPrice,

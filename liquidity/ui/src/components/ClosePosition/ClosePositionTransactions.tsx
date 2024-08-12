@@ -8,11 +8,11 @@ import { ZEROWEI } from '../../utils/constants';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { getRepayerContract, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getRepayerContract, getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useBorrow } from '@snx-v3/useBorrow';
 import { Amount } from '@snx-v3/Amount';
 import { useApprove } from '@snx-v3/useApprove';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { parseUnits } from '@snx-v3/format';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useUndelegate } from '@snx-v3/useUndelegate';
@@ -41,7 +41,6 @@ export const ClosePositionTransactions: FC<{
   const { setCollateralChange, setDebtChange } = useContext(ManagePositionContext);
   const { data: systemToken } = useSystemToken();
   const { data: balance } = useTokenBalance(systemToken?.address);
-  const { data: usdTokens } = useGetUSDTokens();
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -52,9 +51,12 @@ export const ClosePositionTransactions: FC<{
   });
 
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: wrapperToken } = useGetWrapperToken(
+    getSpotMarketId(liquidityPosition?.accountCollateral.symbol)
+  );
 
   const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? usdTokens?.USDC
+    ? wrapperToken
     : systemToken?.address;
   const queryClient = useQueryClient();
   const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral || ZEROWEI;
@@ -89,7 +91,7 @@ export const ClosePositionTransactions: FC<{
     requireApproval: requireApprovalUSDC,
     isLoading,
   } = useApprove({
-    contractAddress: usdTokens?.USDC,
+    contractAddress: wrapperToken,
     //slippage for approval
     amount: parseUnits(liquidityPosition?.debt.abs().toString(), 6)
       .mul(110)

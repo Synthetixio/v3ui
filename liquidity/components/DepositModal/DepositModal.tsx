@@ -1,7 +1,7 @@
 import { Button, Divider, Text, useToast, Link } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { Multistep } from '@snx-v3/Multistep';
 import { useApprove } from '@snx-v3/useApprove';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -10,7 +10,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
 import { useDepositBaseAndromeda } from '@snx-v3/useDepositBaseAndromeda';
-import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { useParams } from '@snx-v3/useParams';
 import { usePool } from '@snx-v3/usePools';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
@@ -248,11 +248,13 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const { collateralChange, setCollateralChange } = useContext(ManagePositionContext);
   const currentCollateral = liquidityPosition?.collateralAmount ?? ZEROWEI;
   const availableCollateral = liquidityPosition?.accountCollateral.availableCollateral ?? ZEROWEI;
+
   const [txSummary, setTxSummary] = useState({
     currentCollateral: ZEROWEI,
     collateralChange: ZEROWEI,
     currentDebt: ZEROWEI,
   });
+
   const navigate = useNavigate();
   const { collateralSymbol, poolId, accountId } = useParams();
   const queryClient = useQueryClient();
@@ -260,18 +262,22 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
 
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotProxy } = useSpotMarketProxy();
-  const { data: usdTokens } = useGetUSDTokens();
   const { data: collateralType } = useCollateralType(collateralSymbol);
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const collateralAddress = isBase ? usdTokens?.USDC : collateralType?.tokenAddress;
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: wrapperToken } = useGetWrapperToken(getSpotMarketId(collateralSymbol));
+
+  const collateralAddress = isBaseAndromeda(network?.id, network?.preset)
+    ? wrapperToken
+    : collateralType?.tokenAddress;
+
   const collateralNeeded = collateralChange.sub(availableCollateral);
 
   const { approve, requireApproval } = useApprove({
     contractAddress: collateralAddress,
     amount: collateralNeeded.gt(0)
       ? isBase
-        ? //Base USDC is 6 decimals
+        ? // Base USDC and Base stataUSDC are 6 decimals
           utils.parseUnits(collateralNeeded.toString(), 6)
         : utils.parseUnits(collateralNeeded.toString(), collateralType?.decimals)
       : 0,
@@ -311,6 +317,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
     collateralChange,
     currentCollateral,
     availableCollateral: availableCollateral || wei(0),
+    collateralSymbol,
   });
 
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);

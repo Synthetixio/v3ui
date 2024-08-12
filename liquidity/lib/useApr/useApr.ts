@@ -31,15 +31,14 @@ export async function fetchApr(networkId?: number) {
 
     const data = await response.json();
 
-    // Arbitrum has multiple collateral types
-    const highestAprCollateral = Array.isArray(data)
-      ? data?.sort((a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d)[0]
-      : data;
+    const highestAprCollateral = data?.sort(
+      (a: { apr28d: number }, b: { apr28d: number }) => b.apr28d - a.apr28d
+    )[0];
 
     return {
       combinedApr: highestAprCollateral.apr28d * 100,
       cumulativePnl: isSupported ? highestAprCollateral.cumulativePnl : 0,
-      collateralAprs: networkId === BASE_ANDROMEDA.id ? [data] : data,
+      collateralAprs: data,
     };
   } catch (error) {
     console.error(error);

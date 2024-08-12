@@ -5597,7 +5597,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/contracts@workspace:contracts"
   dependencies:
-    "@synthetixio/v3-contracts": "npm:^6.4.0"
+    "@synthetixio/v3-contracts": "npm:^6.5.0"
     viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
@@ -5824,6 +5824,7 @@ __metadata:
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useLocalStorage": "workspace:*"
     "@snx-v3/useManagePermissions": "workspace:*"
+    "@snx-v3/useOraclePrice": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
@@ -5838,8 +5839,6 @@ __metadata:
     "@snx-v3/useUndelegate": "workspace:*"
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
-    "@snx-v3/useWithdraw": "workspace:*"
-    "@snx-v3/useWithdrawBaseAndromeda": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
@@ -6363,6 +6362,7 @@ __metadata:
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
@@ -6464,6 +6464,7 @@ __metadata:
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
@@ -6545,6 +6546,20 @@ __metadata:
     "@snx-v3/contracts": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useOraclePrice@workspace:*, @snx-v3/useOraclePrice@workspace:liquidity/lib/useOraclePrice":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useOraclePrice@workspace:liquidity/lib/useOraclePrice"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -6758,6 +6773,7 @@ __metadata:
   dependencies:
     "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useOraclePrice": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
@@ -6888,6 +6904,7 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"

@@ -12,10 +12,11 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -25,6 +26,7 @@ export const useDepositBaseAndromeda = ({
   collateralChange,
   currentCollateral,
   availableCollateral,
+  collateralSymbol,
 }: {
   accountId?: string;
   newAccountId: string;
@@ -33,12 +35,14 @@ export const useDepositBaseAndromeda = ({
   currentCollateral: Wei;
   availableCollateral?: Wei;
   collateralChange: Wei;
+  collateralSymbol?: string;
 }) => {
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
   const { data: priceUpdateTx } = useCollateralPriceUpdates();
   const { data: usdTokens } = useGetUSDTokens();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const { gasSpeed } = useGasSpeed();
 
@@ -66,6 +70,13 @@ export const useDepositBaseAndromeda = ({
       if (collateralChange.eq(0)) return;
 
       try {
+        // Steps:
+        // 1. Create an account if not exists
+        // 2. Wrap USDC or stataUSDC to sUSDC or sStataUSDC
+        // 3. Approve sUSDC or sStataUSDC
+        // 4. Deposit sUSDC or sStataUSDC
+        // 5. Delegate collateral
+
         dispatch({ type: 'prompting' });
         const id = accountId ?? newAccountId;
 
@@ -75,25 +86,35 @@ export const useDepositBaseAndromeda = ({
           : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
 
         const amount = collateralChange.sub(availableCollateral);
-        const usdcAmount = amount.gt(0) ? parseUnits(amount.toString(), 6) : BigNumber.from(0);
+
+        const collateralAmount = amount.gt(0)
+          ? parseUnits(amount.toString(), 6)
+          : BigNumber.from(0);
+
+        const spotMarketId = getSpotMarketId(collateralSymbol);
         const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
-        // Wrap USDC to sUSDC
-        const sUSDC_ADDRESS = usdTokens?.sUSD;
-        const wrap = usdcAmount.gt(0)
-          ? SpotMarketProxy.populateTransaction.wrap(USDC_BASE_MARKET, usdcAmount, amountD18)
+        // Wrap
+        const wrap = collateralAmount.gt(0)
+          ? SpotMarketProxy.populateTransaction.wrap(spotMarketId, collateralAmount, amountD18)
           : undefined;
 
-        const sUSDC_Contract = new ethers.Contract(sUSDC_ADDRESS, approveAbi, signer);
-        const sUSDCApproval = amountD18.gt(0)
-          ? sUSDC_Contract.populateTransaction.approve(CoreProxy.address, amountD18)
+        // Synth
+        const synthAddress = collateralType?.tokenAddress;
+        if (!synthAddress) {
+          throw 'synth not found';
+        }
+        const synthContract = new ethers.Contract(synthAddress, approveAbi, signer);
+
+        const synthApproval = amountD18.gt(0)
+          ? synthContract.populateTransaction.approve(CoreProxy.address, amountD18)
           : undefined;
 
         // optionally deposit if available collateral not enough
         const deposit = amountD18.gt(0)
           ? CoreProxy.populateTransaction.deposit(
               BigNumber.from(id),
-              sUSDC_ADDRESS,
+              synthAddress,
               amountD18 // only deposit what's needed
             )
           : undefined;
@@ -101,13 +122,13 @@ export const useDepositBaseAndromeda = ({
         const delegate = CoreProxy.populateTransaction.delegateCollateral(
           BigNumber.from(id),
           BigNumber.from(poolId),
-          sUSDC_ADDRESS,
+          synthAddress,
           currentCollateral.toBN().add(parseUnits(collateralChange.toString(), 18)).toString(),
           wei(1).toBN()
         );
 
         const callsPromise = Promise.all(
-          [wrap, sUSDCApproval, createAccount, deposit, delegate].filter(notNil)
+          [wrap, synthApproval, createAccount, deposit, delegate].filter(notNil)
         );
 
         const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
@@ -117,6 +138,7 @@ export const useDepositBaseAndromeda = ({
         }
 
         const walletAddress = await signer.getAddress();
+
         const erc7412Tx = await withERC7412(
           network,
           calls,

@@ -74,10 +74,17 @@ export function useCollateralTypes(includeDelegationOff = false, customNetwork?:
               name: 'USD Coin',
             };
           }
+          if (isBase && collateralType.symbol === 'sStataUSDC') {
+            return {
+              ...collateralType,
+              symbol: 'stataUSDC',
+              displaySymbol: 'stataUSDC',
+              name: 'Static aUSDC',
+            };
+          }
           return {
             ...collateralType,
-            symbol: collateralType.symbol,
-            displaySymbol: collateralType.symbol,
+            displaySymbol: collateralType.displaySymbol ?? collateralType.symbol,
           };
         })
         .filter((collateralType) => collateralType.tokenAddress !== systemToken.address);
