@@ -5,9 +5,7 @@ export const motherShipProvider = new providers.JsonRpcProvider(
     ? process.env.DEV_RPC_MOTHERSHIP
     : process.env.CI === 'true'
       ? process.env.CI_RPC_MOTHERSHIP
-      : process.env.TESTNET === 'true'
-        ? `https://optimism-sepolia.infura.io/v3/${process.env.INFURA_KEY}`
-        : `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+      : 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD'
 );
 
 export const devSigner = new Wallet(

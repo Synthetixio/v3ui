@@ -5,6 +5,7 @@ import { CouncilSlugs } from '../utils/councils';
 import { CustomToast } from '../components/CustomToast';
 import { useToast } from '@chakra-ui/react';
 import { devSigner } from '../utils/providers';
+import { utils } from 'ethers';
 
 export default function useEditNomination({
   currentNomination,
@@ -23,13 +24,19 @@ export default function useEditNomination({
         if ((nextNomination && currentNomination) || (!nextNomination && currentNomination)) {
           const tx1 = await getCouncilContract(currentNomination)
             .connect(process.env.DEV === 'true' ? devSigner : signer)
-            .withdrawNomination();
+            .withdrawNomination({
+              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+            });
           await tx1.wait();
         }
         if (nextNomination) {
           const tx2 = await getCouncilContract(nextNomination)
             .connect(process.env.DEV === 'true' ? devSigner : signer)
-            .nominate();
+            .nominate({
+              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+            });
           await tx2.wait();
         }
       }

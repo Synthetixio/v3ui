@@ -5,6 +5,7 @@ import { useSigner } from '../queries/useWallet';
 import { useToast } from '@chakra-ui/react';
 import { CustomToast } from '../components/CustomToast';
 import { devSigner } from '../utils/providers';
+import { utils } from 'ethers';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
   const query = useQueryClient();
@@ -16,7 +17,10 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
       if (signer) {
         const tx = await getCouncilContract(council)
           .connect(process.env.DEV === 'true' ? devSigner : signer)
-          .nominate();
+          .nominate({
+            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+            maxFeePerGas: utils.parseUnits('2', 'gwei'),
+          });
         await tx.wait();
       }
     },

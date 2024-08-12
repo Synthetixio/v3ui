@@ -216,6 +216,19 @@ export const ARBTHETIX: Network = {
   isTestnet: false,
 };
 
+export const SNAXTESTNET: Network = {
+  id: 2192,
+  preset: 'test',
+  hexId: `0x${Number(2192).toString(16)}`,
+  token: 'SNX',
+  name: 'SNAX',
+  rpcUrl: () => 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
+  label: 'SNAX CHAIN',
+  isSupported: true,
+  publicRpcUrl: 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
+  isTestnet: true,
+};
+
 export const NETWORKS: Network[] = [
   BASE_ANDROMEDA,
   MAINNET,
@@ -227,6 +240,7 @@ export const NETWORKS: Network[] = [
   ARBITRUM_SEPOLIA,
   ARBITRUM,
   ARBTHETIX,
+  SNAXTESTNET,
 ];
 
 export const deploymentsWithERC7412: string[] = [

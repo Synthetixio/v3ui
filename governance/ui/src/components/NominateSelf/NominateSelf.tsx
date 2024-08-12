@@ -218,7 +218,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             ))}
           </Flex>
           {isPending ? (
-            <Button variant="unstyled" cursor="progress">
+            <Button variant="unstyled" cursor="progress" mt="auto">
               <Flex w="100%" justifyContent="center" gap="2" color="cyan.500">
                 <Spinner colorScheme="cyan" /> Loading
               </Flex>

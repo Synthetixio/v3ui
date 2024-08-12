@@ -1,5 +1,5 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { Wallet } from 'ethers';
+import { utils, Wallet } from 'ethers';
 import { useSigner } from '../queries/useWallet';
 import { SnapshotRecordContract, getCouncilContract } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
@@ -13,10 +13,14 @@ export default function Admin() {
 
   return (
     <Flex flexDir="column" gap="5">
-      {[getCouncilContract('spartan')].map((proxy, index) => {
+      {[
+        getCouncilContract('spartan'),
+        getCouncilContract('ambassador'),
+        getCouncilContract('treasury'),
+      ].map((proxy, index) => {
         return (
           <Flex direction="column" key={index} p="3" gap={4}>
-            <Heading>Spartan</Heading>
+            <Heading>{index === 0 ? 'SC' : index === 1 ? 'AM' : 'TC'}</Heading>
             <Flex alignItems="center" gap={2}>
               <Text>Start Now Admin Period</Text>
               <Button
@@ -30,7 +34,11 @@ export default function Admin() {
                           block.timestamp,
                           block.timestamp + 10000,
                           block.timestamp + 20000,
-                          block.timestamp + 30000
+                          block.timestamp + 30000,
+                          {
+                            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                            maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                          }
                         );
                     });
                   }
@@ -52,7 +60,11 @@ export default function Admin() {
                           block.timestamp - 10,
                           block.timestamp,
                           block.timestamp + 10000,
-                          block.timestamp + 20000
+                          block.timestamp + 20000,
+                          {
+                            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                            maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                          }
                         );
                     });
                   } else {
@@ -65,7 +77,11 @@ export default function Admin() {
                             block.timestamp - 10,
                             block.timestamp,
                             block.timestamp + 10000,
-                            block.timestamp + 20000
+                            block.timestamp + 20000,
+                            {
+                              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                            }
                           );
                       });
                     } catch (error) {
@@ -90,7 +106,11 @@ export default function Admin() {
                           block.timestamp - 200,
                           block.timestamp - 100,
                           block.timestamp,
-                          block.timestamp + 10000
+                          block.timestamp + 10000,
+                          {
+                            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                            maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                          }
                         );
                     });
                   } else {
@@ -103,7 +123,11 @@ export default function Admin() {
                             block.timestamp - 200,
                             block.timestamp - 100,
                             block.timestamp,
-                            block.timestamp + 10000
+                            block.timestamp + 10000,
+                            {
+                              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                            }
                           );
                       });
                     } catch (error) {
@@ -128,7 +152,11 @@ export default function Admin() {
                           block.timestamp - 10,
                           block.timestamp - 5,
                           block.timestamp - 1,
-                          block.timestamp
+                          block.timestamp,
+                          {
+                            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                            maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                          }
                         );
                     });
                   }
@@ -145,7 +173,10 @@ export default function Admin() {
                   if (signer) {
                     proxy
                       .connect(signer)
-                      .setSnapshotContract(SnapshotRecordContract(421614)?.address, true);
+                      .setSnapshotContract(SnapshotRecordContract(421614)?.address, true, {
+                        maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                        maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                      });
                   }
                 }}
               >
@@ -160,7 +191,10 @@ export default function Admin() {
                   if (signer) {
                     await proxy
                       .connect(signer)
-                      .takeVotePowerSnapshot(SnapshotRecordContract(421614)?.address);
+                      .takeVotePowerSnapshot(SnapshotRecordContract(421614)?.address, {
+                        maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                        maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                      });
                   }
                 }}
               >
