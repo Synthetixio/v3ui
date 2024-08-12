@@ -3,17 +3,17 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
+  '0xfD6a975e197d6C4c6a8616E37f7F178eE141a560',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0xd6F3798a695038783EB83227A5770f0DDf2A0605',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
+  '0x8960892BC4B3bdFb2CdC98b0cABc07F15f6c364A',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -36,6 +36,7 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
+// TODO @dev respect also the council, have different contracts?
 export const SnapshotRecordContract = (chainId: number) => {
   switch (chainId) {
     case 421614:
@@ -57,6 +58,16 @@ export const SnapshotRecordContract = (chainId: number) => {
           : process.env.TESTNET === 'true'
             ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
             : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
+        [
+          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+        ]
+      );
+    case 2192:
+      return new Contract(
+        process.env.DEV === 'true'
+          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+          : '0xaC5a365297424E686390f4101B4022be506f2a33',
         [
           'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
           'function setBalanceOfOnPeriod(address, uint256, uint256) external',

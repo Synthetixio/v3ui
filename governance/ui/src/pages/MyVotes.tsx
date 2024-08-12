@@ -1,4 +1,4 @@
-import { Alert, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Alert, Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -41,7 +41,6 @@ export default function MyVotes() {
             borderColor="gray.900"
             w="735px"
             flexDirection="column"
-            p="6"
             position="relative"
           >
             {period !== '2' && (
@@ -83,14 +82,25 @@ export default function MyVotes() {
                 </Button>
               </Flex>
             )}
-            <Flex justifyContent="space-between" mb="4" opacity={period !== '2' ? '0.4' : '1'}>
+            <Flex
+              justifyContent="space-between"
+              opacity={period !== '2' ? '0.4' : '1'}
+              mb="12"
+              p="6"
+            >
               <Heading fontSize="2xl">My Votes</Heading>
               <Heading fontSize="2xl" data-cy="my-votes-total-votes">
                 {Object.values(state[networkForState] || {}).filter((council) => !!council).length}/
                 {councils.length}
               </Heading>
             </Flex>
-            <Text fontSize="xs" color="gray.500" opacity={period !== '2' ? '0.4' : '1'}>
+            <Text
+              fontSize="xs"
+              color="gray.500"
+              opacity={period !== '2' ? '0.4' : '1'}
+              px="6"
+              mb="2"
+            >
               You can cast 3 votes in one transaction. Continue voting if you want to add other
               nominee otherwise cast your vote to complete your voting.
             </Text>
@@ -101,10 +111,17 @@ export default function MyVotes() {
                 period={period}
               />
             ))}
-            <Alert colorScheme="blue" opacity={period !== '2' ? '0.4' : '1'} rounded="base" mt="12">
-              <WarningIcon color="cyan" mr="4" />
-              You can now cast all your votes in one unique transaction
-            </Alert>
+            <Box p="6">
+              <Alert
+                colorScheme="blue"
+                opacity={period !== '2' ? '0.4' : '1'}
+                rounded="base"
+                mt="6"
+              >
+                <WarningIcon color="cyan" mr="4" />
+                You can now cast all your votes in one unique transaction
+              </Alert>
+            </Box>
           </Flex>
           <Flex
             bg="navy.700"
@@ -155,12 +172,12 @@ export default function MyVotes() {
             <Button
               data-cy="cast-my-vote-button"
               size="md"
-              isDisabled={period !== '2'}
+              isDisabled={period !== '2' || !councilToCastVote.length}
               onClick={async () => {
                 await mutateAsync();
               }}
             >
-              Cast Vote
+              Cast Votes
             </Button>
           </Flex>
         </Flex>

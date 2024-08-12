@@ -198,7 +198,7 @@ export const UserProfileDetails = ({
             variant={!isAlreadyVoted && !isSelected ? 'solid' : 'outline'}
             colorScheme={!isAlreadyVoted && !isSelected ? 'cyan' : 'gray'}
             w="100%"
-            mt="4"
+            mt={!isOwn ? 4 : 0}
             data-cy="select-user-to-vote-button"
             onClick={async () => {
               if (isAlreadyVoted) {

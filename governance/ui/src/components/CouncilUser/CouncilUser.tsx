@@ -51,7 +51,7 @@ export default function CouncilUser({
         )}
       </Flex>
       <Flex flexDir="column" mr="auto" ml="1">
-        <Text fontSize="x-small" fontWeight="bold">
+        <Text fontSize="sm" fontWeight="bold">
           {council.title}
         </Text>
         <Text
