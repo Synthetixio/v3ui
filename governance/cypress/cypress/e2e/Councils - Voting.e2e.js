@@ -1,7 +1,10 @@
 it('Councils - Administration', () => {
   cy.task('changePeriod', { council: 'spartan', period: 'admin' });
+  cy.task('changePeriod', { council: 'ambassador', period: 'admin' });
+  cy.task('changePeriod', { council: 'treasury', period: 'admin' });
   cy.task('prepareVotingPower', { council: 'spartan' });
-  // cy.task('changePeriod', { council: 'spartan', period: 'voting' });
+  cy.task('prepareVotingPower', { council: 'ambassador' });
+  cy.task('prepareVotingPower', { council: 'treasury' });
   cy.task('mineBlock');
   cy.connectWallet();
   cy.viewport(1300, 900);

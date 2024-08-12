@@ -74,14 +74,20 @@ export function useCastVotes(
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
+                        [
+                          SnapshotRecordContract(network.id, council)?.address,
+                          activeWallet?.address,
+                        ]
                       ),
                     }
                   : {
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
+                        [
+                          SnapshotRecordContract(network.id, council)?.address,
+                          activeWallet?.address,
+                        ]
                       ),
                       value: 0,
                       requireSuccess: true,

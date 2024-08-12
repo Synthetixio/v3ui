@@ -36,42 +36,41 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
-// TODO @dev respect also the council, have different contracts?
-export const SnapshotRecordContract = (chainId: number) => {
+export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) => {
   switch (chainId) {
-    case 421614:
-      return new Contract(
-        process.env.DEV === 'true'
-          ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
-          : process.env.TESTNET === 'true'
-            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
-        [
-          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-        ]
-      );
-    case 11155420:
-      return new Contract(
-        process.env.DEV === 'true'
-          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-          : process.env.TESTNET === 'true'
-            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
-        [
-          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-        ]
-      );
-    case 2192:
-      return new Contract(
-        process.env.DEV === 'true'
-          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-          : '0xaC5a365297424E686390f4101B4022be506f2a33',
-        [
-          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-        ]
-      );
+    case 2192: {
+      switch (council) {
+        case 'spartan':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0x64dD8f5578C38cbe6066906161f51118f59BB3DD',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+        case 'ambassador':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0x7BaE0d0Bf556B2C8F3BFd250D7c63B1B2711652B',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+        case 'treasury':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0x5A11B387988cCc19f26E7d434dFF6A8c896273C9',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+      }
+    }
   }
 };

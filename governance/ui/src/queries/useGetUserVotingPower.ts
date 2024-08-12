@@ -17,7 +17,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider);
-        const isMothership = network.id === 11155420;
+        const isMothership = network.id === 2192;
         const electionId = await electionModule.getEpochIndex();
         const ballot = isMothership
           ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
@@ -33,10 +33,10 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           ? await electionModule
               .connect(provider)
               .callStatic.prepareBallotWithSnapshot(
-                SnapshotRecordContract(network.id)?.address,
+                SnapshotRecordContract(network.id, council)?.address,
                 activeWallet?.address
               )
-          : await SnapshotRecordContract(network.id)
+          : await SnapshotRecordContract(network.id, council)
               ?.connect(provider)
               .balanceOfOnPeriod(activeWallet.address, 1);
         return { power: votingPower, isDeclared: false };

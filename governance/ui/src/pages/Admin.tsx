@@ -173,10 +173,17 @@ export default function Admin() {
                   if (signer) {
                     proxy
                       .connect(signer)
-                      .setSnapshotContract(SnapshotRecordContract(421614)?.address, true, {
-                        maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
-                        maxFeePerGas: utils.parseUnits('2', 'gwei'),
-                      });
+                      .setSnapshotContract(
+                        SnapshotRecordContract(
+                          2192,
+                          index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
+                        )?.address,
+                        true,
+                        {
+                          maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                          maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                        }
+                      );
                   }
                 }}
               >
@@ -191,10 +198,16 @@ export default function Admin() {
                   if (signer) {
                     await proxy
                       .connect(signer)
-                      .takeVotePowerSnapshot(SnapshotRecordContract(421614)?.address, {
-                        maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
-                        maxFeePerGas: utils.parseUnits('2', 'gwei'),
-                      });
+                      .takeVotePowerSnapshot(
+                        SnapshotRecordContract(
+                          2192,
+                          index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
+                        )?.address,
+                        {
+                          maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+                          maxFeePerGas: utils.parseUnits('2', 'gwei'),
+                        }
+                      );
                   }
                 }}
               >
