@@ -1,4 +1,4 @@
-import { Button, Flex, Spinner, Text, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Text, Th, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -26,7 +26,6 @@ export default function UserTableView({
   const isSelected = searchParams.get('view') === user.address;
   const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
 
-  if (!user) return <Spinner colorScheme="cyan" />;
   return (
     <Tr
       data-cy={`user-table-row-${place}`}
@@ -35,51 +34,42 @@ export default function UserTableView({
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
     >
       {councilIsInAdminOrVoting && (
-        <Th
-          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-          borderTop="1px solid"
-          borderLeft="1px solid"
-          borderBottom="1px solid"
-          borderLeftRadius={isSelected ? 'base' : ''}
-          color="white"
-        >
-          {place < 10 ? `#${place + 1}` : '-'}
+        <Th borderColor={isSelected ? 'cyan.500' : 'gray.900'} borderTop="1px solid">
+          <Text color="white">{place < 10 ? `#${place + 1}` : '-'}</Text>
         </Th>
       )}
       <Th
         color="white"
-        display="flex"
-        alignItems="center"
-        gap="2"
         textTransform="unset"
         px="3"
         borderTop="1px solid"
-        borderLeft="1px solid"
         borderBottom="1px solid"
-        borderLeftRadius={!councilIsInAdminOrVoting && isSelected ? 'base' : ''}
+        borderLeft="1px solid"
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
-        <ProfilePicture
-          imageSrc={user?.pfpUrl}
-          address={user?.address}
-          size={8}
-          mr="0"
-          ImageProps={{ w: '32px', h: '32px' }}
-        />{' '}
-        <Text
-          whiteSpace="nowrap"
-          overflow="hidden"
-          textOverflow="ellipsis"
-          maxW="170px"
-          data-cy={`user-table-view-${user.address}`}
-        >
-          {user.username ? user.username : prettyString(user.address)}
-        </Text>
+        <Flex gap="2" alignItems="center">
+          <ProfilePicture
+            imageSrc={user?.pfpUrl}
+            address={user?.address}
+            size={8}
+            mr="0"
+            ImageProps={{ w: '32px', h: '32px' }}
+          />{' '}
+          <Text
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            maxW="170px"
+            data-cy={`user-table-view-${user.address}`}
+          >
+            {user.username ? user.username : prettyString(user.address)}
+          </Text>
+        </Flex>
       </Th>
       {councilPeriod !== '0' && (
         <Th
           borderTop="1px solid"
-          borderBottom={isSelected ? '1px solid' : ''}
+          borderBottom="1px solid"
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Flex>
@@ -101,8 +91,8 @@ export default function UserTableView({
         <Th
           textAlign="end"
           borderTop="1px solid"
+          borderBottom="1px solid"
           borderRight="1px solid"
-          borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Button
@@ -125,6 +115,8 @@ export default function UserTableView({
         <Th
           textAlign="end"
           borderTop="1px solid"
+          borderBottom="1px solid"
+          borderRight="1px solid"
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Badge w="fit-content">Your Vote TODO</Badge>

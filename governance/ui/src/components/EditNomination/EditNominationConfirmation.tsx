@@ -60,7 +60,7 @@ export default function EditNominationConfirmation({
           <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
         </Flex>
       </Flex>
-      <Text>
+      <Text fontSize="sm" color="gray.500" my="2">
         Chose which governing body you would like to represent if chosen as an elected member:
       </Text>
       <Flex alignItems="center" justifyContent="space-between" mt="2">
@@ -161,10 +161,11 @@ export default function EditNominationConfirmation({
         </Flex>
       </Flex>
       {isPending ? (
-        <Flex w="100%" justifyContent="center">
-          loading
-          <Spinner colorScheme="cyan" />
-        </Flex>
+        <Button variant="unstyled" cursor="progress">
+          <Flex w="100%" justifyContent="center" gap="2" color="cyan.500">
+            <Spinner colorScheme="cyan" /> Loading
+          </Flex>
+        </Button>
       ) : (
         <>
           <Button

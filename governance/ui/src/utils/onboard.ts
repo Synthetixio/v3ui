@@ -7,7 +7,7 @@ import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-export const supportedNetworks = [421614, 11155420, 84532];
+export const supportedNetworks = [421614, 11155420, 84532, 2192];
 
 export const chains = NETWORKS.filter((network) => supportedNetworks.includes(network.id))
   .map((network) => ({
@@ -20,7 +20,7 @@ export const chains = NETWORKS.filter((network) => supportedNetworks.includes(ne
     {
       id: 2192,
       label: 'SNX Chain',
-      rpcUrl: 'http://127.0.0.1:19000',
+      rpcUrl: 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
       token: 'SNX',
     },
   ]);

@@ -42,8 +42,8 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       borderStyle="solid"
       rounded="base"
       p="6"
-      mt="6"
       h="612px"
+      data-cy="nominate-self-modal"
       {...props}
     >
       {isSuccess ? (
@@ -71,7 +71,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             my="2"
             alignItems="center"
           >
-            <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} />
+            <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} size={10} />
             <Flex ml="2" flexDir="column">
               <Text
                 fontWeight={700}
@@ -119,7 +119,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
                 h="6"
               />
             </Flex>
-            <Text fontSize="x-small" fontWeight="bold">
+            <Text fontSize="sm" fontWeight="bold">
               {councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
@@ -175,7 +175,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
               </Text>
             </Flex>
           </Flex>
-          <Text fontSize="sm" color="gray.500" mb="2" pt="12">
+          <Text fontSize="sm" color="gray.500" mb="2">
             Chose which governing body you would like to represent if chosen as an elected member:
           </Text>
           <Flex flexDirection="column" mb="auto">
@@ -218,9 +218,11 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             ))}
           </Flex>
           {isPending ? (
-            <Flex w="100%" justifyContent="center">
-              loading <Spinner colorScheme="cyan" />
-            </Flex>
+            <Button variant="unstyled" cursor="progress">
+              <Flex w="100%" justifyContent="center" gap="2" color="cyan.500">
+                <Spinner colorScheme="cyan" /> Loading
+              </Flex>
+            </Button>
           ) : (
             <Button
               onClick={() => mutate()}

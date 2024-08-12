@@ -20,7 +20,7 @@ export const NominateSelfContainer = ({
         </Modal>
       </Show>
       <Hide below="xl">
-        <NominateSelf activeCouncil={activeCouncil} position="sticky" top="105px" />
+        <NominateSelf activeCouncil={activeCouncil} position="sticky" top="105px" mt="6" />
       </Hide>
     </>
   );

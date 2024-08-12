@@ -58,7 +58,7 @@ export default function EditNominationSelect({
             borderWidth="1px"
             padding="2"
             alignItems="center"
-            mb="12"
+            mb="2"
           >
             <Flex
               borderRadius="50%"
@@ -79,7 +79,7 @@ export default function EditNominationSelect({
           </Flex>
         </>
       )}
-      <Text fontSize="xs" color="gray.500">
+      <Text fontSize="xs" color="gray.500" mb="2">
         Chose which governing body you would like to represent if chosen as an elected member:
       </Text>
       <Flex flexDirection="column">

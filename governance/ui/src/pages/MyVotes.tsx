@@ -114,9 +114,10 @@ export default function MyVotes() {
             borderColor="gray.900"
             w="483px"
             p="6"
+            gap="3"
             flexDir="column"
           >
-            <Heading fontSize="large">Cast Your Vote</Heading>
+            <Heading fontSize="large">Voting Power</Heading>
             <Text fontSize="sm" color="gray.500" display="inline">
               Your total voting powered is aggregated from all chains and used to vote on Optimism.
               It can take{' '}

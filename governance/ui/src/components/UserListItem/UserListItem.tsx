@@ -74,8 +74,8 @@ export default function UserListItem({
           ml="auto"
           rounded="base"
           size="xs"
-          variant={nominationInformation?.isNominated ? 'outline' : 'solid'}
-          colorScheme={nominationInformation?.isNominated ? 'gray' : 'cyan'}
+          variant="outline"
+          colorScheme="gray"
           onClick={(e) => {
             e.stopPropagation();
             if (!nominationInformation?.isNominated) {
@@ -84,11 +84,12 @@ export default function UserListItem({
               navigate(`/councils/${activeCouncil}?editNomination=true`);
             }
           }}
+          data-cy="user-list-item-button-nomination"
         >
           {nominationInformation?.isNominated && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
-            <Text color="black">Nominate Self</Text>
+            <Text color="white">Nominate Self</Text>
           )}
         </Button>
       ) : councilPeriod === '2' && isNominatedFetched ? (

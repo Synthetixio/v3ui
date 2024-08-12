@@ -10,10 +10,12 @@ export default function UserProfileEditPreview({
   activeWallet,
   isPending,
   onSave,
+  isDirty,
 }: {
   onSave: () => void;
   isPending: boolean;
   activeWallet?: string;
+  isDirty: boolean;
   userData: GetUserDetails;
 }) {
   return (
@@ -90,9 +92,7 @@ export default function UserProfileEditPreview({
           <Text
             fontSize="14px"
             lineHeight="20px"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
+            overflow="scroll"
             maxH="50vh"
             mb="4"
             data-cy="governance-pitch-preview"
@@ -101,7 +101,13 @@ export default function UserProfileEditPreview({
           </Text>
         </>
       )}
-      <Button isLoading={isPending} w="100%" onClick={onSave} data-cy="save-profile-changes-button">
+      <Button
+        isLoading={isPending}
+        w="100%"
+        onClick={onSave}
+        data-cy="save-profile-changes-button"
+        isDisabled={!isDirty}
+      >
         Save Changes
       </Button>
     </Flex>

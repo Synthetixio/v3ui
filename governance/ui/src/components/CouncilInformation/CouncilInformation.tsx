@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Flex, Heading, Icon, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { CouncilImage } from '../CouncilImage';
@@ -71,7 +71,20 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
               py="1"
               cursor="pointer"
             >
-              Learn more <ExternalLinkIcon />
+              Learn more{' '}
+              <Icon width="12px" height="12px" viewBox="0 0 12 12" fill="none">
+                <g clipPath="url(#clip0_7624_75578)">
+                  <path
+                    d="M7.78233 3.83246L3.98941 3.83246L3.98941 2.83261L9.48928 2.83262L9.48929 8.33249L8.48944 8.33249L8.48944 4.53957L3.52888 9.70711L2.82178 9L7.78233 3.83246Z"
+                    fill="white"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_7624_75578">
+                    <rect width="12" height="12" fill="white" />
+                  </clipPath>
+                </defs>
+              </Icon>
             </Heading>
           </Link>
         </Flex>

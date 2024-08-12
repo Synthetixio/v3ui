@@ -214,7 +214,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 <SortArrows up={sortConfig[0]} />
               )}
             </Th>
-            <Th textTransform="capitalize">Role</Th>
             {councilPeriod === '2' && (
               <Th
                 cursor="pointer"

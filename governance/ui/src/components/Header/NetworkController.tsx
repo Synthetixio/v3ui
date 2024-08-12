@@ -28,21 +28,21 @@ import '../../pages/index.css';
 import { useGetUserDetailsQuery } from '../../queries';
 
 const SNXChain: Network = {
-  hexId: '999',
-  id: 999,
+  hexId: '2192',
+  id: 2192,
   isSupported: true,
-  isTestnet: false,
+  isTestnet: true,
   label: 'SNX Chain',
   name: 'SNXChain',
-  preset: '999-main',
-  publicRpcUrl: 'http://127.0.0.1:19000',
-  rpcUrl: () => 'http://127.0.0.1:19000',
+  preset: '2912-main',
+  publicRpcUrl: 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
+  rpcUrl: () => 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
   token: 'SNX',
 };
 
-const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet)
-  .filter((network) => supportedNetworks.includes(network.id))
-  .concat(SNXChain);
+const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
+  (network) => supportedNetworks.includes(network.id)
+);
 const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
   .filter((network) => supportedNetworks.includes(network.id))
   .concat(SNXChain);

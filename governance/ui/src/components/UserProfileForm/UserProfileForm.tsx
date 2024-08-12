@@ -29,7 +29,7 @@ export function UserProfileForm() {
   const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
   const mutation = useUpdateUserDetailsMutation();
 
-  const { register, getValues, setValue, watch } = useForm({
+  const { register, getValues, setValue, watch, formState } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -99,10 +99,11 @@ export function UserProfileForm() {
         rounded="base"
         border="1px solid"
         borderColor="gray.900"
+        h="fit-content"
       >
         <Flex w="100%" alignItems="center">
           <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
-          <Flex w="100%" flexDirection="column" ml="2" gap="2">
+          {/*  <Flex w="100%" flexDirection="column" ml="2" gap="2">
             <Text fontSize="12px" color="gray.500">
               Avatar
             </Text>
@@ -115,9 +116,9 @@ export function UserProfileForm() {
               })}
               placeholder="QmSHZw..."
             />
-          </Flex>
+          </Flex> */}
         </Flex>
-        <Flex flexDir="column" w="100%" gap="2">
+        <Flex flexDir="column" w="100%" gap="1">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Username
           </Text>
@@ -132,30 +133,31 @@ export function UserProfileForm() {
           </Text>
           <Input {...register('about')} placeholder="eq: OG DeFi Member" data-cy="about-input" />
         </Flex>
-        <div>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Discord
           </Text>
-          <Input {...register('discord')} placeholder="JohnDoe" data-cy="discord-input" />
-        </div>
-        <div>
+          <Input {...register('discord')} placeholder="username" data-cy="discord-input" />
+        </Flex>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Twitter
           </Text>
-          <Input {...register('twitter')} placeholder="JohnDoe" data-cy="twitter-input" />
-        </div>
-        <div>
+          <Input {...register('twitter')} placeholder="username" data-cy="twitter-input" />
+        </Flex>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Github
           </Text>
-          <Input {...register('github')} placeholder="JohnDoe" data-cy="github-input" />
-        </div>
+          <Input {...register('github')} placeholder="username" data-cy="github-input" />
+        </Flex>
         <Flex flexDirection="column" alignItems="flex-start">
           <Text fontSize="12px" fontWeight="400" color="gray.500">
             Wallet Address
           </Text>
           <Tooltip label="The wallet address cannot be edited, connect with a different wallet to change the address">
             <Button
+              h="40px"
               bg="rgba(255,255,255,0.12)"
               size="xs"
               display="flex"
@@ -234,6 +236,7 @@ export function UserProfileForm() {
                   activeWallet={activeWallet?.address}
                   isPending={mutation.isPending}
                   userData={userData}
+                  isDirty={formState.isDirty}
                   onSave={() => {
                     handleOnFormSave();
                   }}
@@ -250,6 +253,7 @@ export function UserProfileForm() {
             activeWallet={activeWallet?.address}
             isPending={mutation.isPending}
             userData={userData}
+            isDirty={formState.isDirty}
             onSave={() => {
               handleOnFormSave();
             }}

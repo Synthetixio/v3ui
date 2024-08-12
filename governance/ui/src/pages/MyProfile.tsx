@@ -14,7 +14,6 @@ export default function MyProfile() {
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
-
       <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
         <Heading size="lg" mt="6">
           My Profile

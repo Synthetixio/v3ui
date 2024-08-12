@@ -10,6 +10,7 @@ import { useNetwork } from '../../queries';
 interface MyVotesSummary {
   isLoading: boolean;
   councilPeriod?: string;
+  isInMyVotesPage: boolean;
   schedule?: {
     startDate: number;
     nominationPeriodStartDate: number;
@@ -18,7 +19,12 @@ interface MyVotesSummary {
   };
 }
 
-export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSummary) => {
+export const MyVotesSummary = ({
+  isLoading,
+  councilPeriod,
+  schedule,
+  isInMyVotesPage,
+}: MyVotesSummary) => {
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
@@ -29,7 +35,6 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
   return (
     <Flex
       position="relative"
-      key="tab-my-votes"
       cursor="pointer"
       data-cy="my-votes-button"
       onClick={() => navigate('/my-votes')}
@@ -44,7 +49,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       rounded="base"
       w="100%"
       maxW="200px"
-      borderColor="gray.900"
+      borderColor={isInMyVotesPage ? 'cyan.500' : 'gray.900'}
       borderWidth="1px"
       py={2}
       px={4}
@@ -53,7 +58,7 @@ export const MyVotesSummary = ({ isLoading, councilPeriod, schedule }: MyVotesSu
       bg="navy.700"
       _hover={{ borderColor: 'cyan.500' }}
     >
-      <Text fontSize="sm" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
+      <Text fontSize="xs" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
         My Votes
       </Text>
       <Show above="md">

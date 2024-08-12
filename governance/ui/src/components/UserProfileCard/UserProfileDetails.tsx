@@ -9,6 +9,7 @@ import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
 import { useGetUserBallot, useNetwork } from '../../queries';
+import { useState } from 'react';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -27,6 +28,8 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
   const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
@@ -55,19 +58,23 @@ export const UserProfileDetails = ({
           position="absolute"
           top="0px"
           right="0px"
+          _hover={{}}
         />
-        <IconButton
-          size="xs"
-          icon={<EditIcon />}
-          variant="ghost"
-          position="absolute"
-          top="4px"
-          right="32px"
-          aria-label="edit-profile"
-          onClick={() => navigate(`/profile`)}
-          data-cy="edit-icon-user-profile-details"
-          color="white"
-        />
+        {isOwn && (
+          <IconButton
+            size="xs"
+            icon={<EditIcon />}
+            variant="ghost"
+            position="absolute"
+            top="4px"
+            right="32px"
+            aria-label="edit-profile"
+            onClick={() => navigate(`/profile`)}
+            data-cy="edit-icon-user-profile-details"
+            color="white"
+            _hover={{}}
+          />
+        )}
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
@@ -102,11 +109,21 @@ export const UserProfileDetails = ({
           github={userData?.github}
           twitter={userData?.twitter}
         />
-        <ShareIcon
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-          }}
-        />
+        <Tooltip label={tooltipLabel} isOpen={isTooltipOpen}>
+          {/* @dev charka icon tickery */}
+          <div>
+            <ShareIcon
+              cursor="pointer"
+              onMouseEnter={() => setIsTooltipOpen(true)}
+              onMouseLeave={() => setTimeout(() => setIsTooltipOpen(false), 3000)}
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setTooltipLabel('Profile Link Copied');
+                setTimeout(() => setTooltipLabel('Copy Profile Link'), 5000);
+              }}
+            />
+          </div>
+        </Tooltip>
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
         <Text fontSize="xs" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
@@ -146,6 +163,7 @@ export const UserProfileDetails = ({
             {councilPeriod === '2' ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button
+                  mt="4"
                   variant="outline"
                   colorScheme="gray"
                   w="100%"
@@ -159,6 +177,7 @@ export const UserProfileDetails = ({
                 variant={!isNominated ? 'solid' : 'outline'}
                 colorScheme={!isNominated ? 'cyan' : 'gray'}
                 w="100%"
+                mt="4"
                 color={!isNominated ? 'black' : 'white'}
                 data-cy="nominate-self-button-user-profile-details"
                 onClick={() =>
@@ -176,9 +195,10 @@ export const UserProfileDetails = ({
         )}
         {councilPeriod === '2' && (
           <Button
-            variant="outline"
-            colorScheme="gray"
+            variant={!isAlreadyVoted && !isSelected ? 'solid' : 'outline'}
+            colorScheme={!isAlreadyVoted && !isSelected ? 'cyan' : 'gray'}
             w="100%"
+            mt="4"
             data-cy="select-user-to-vote-button"
             onClick={async () => {
               if (isAlreadyVoted) {

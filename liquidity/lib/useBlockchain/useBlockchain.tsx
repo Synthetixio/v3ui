@@ -69,10 +69,11 @@ export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconP
       return <ArbitrumIcon w={size} h={size} {...props} />;
     case 42161:
       return <ArbitrumIcon w={size} h={size} {...props} />;
-    case 999:
+    case 2192:
       return <SNXIcon w={size} h={size} {...props} />;
-    default:
+    default: {
       return <FailedIcon w={size} h={size} {...props} />;
+    }
   }
 };
 
