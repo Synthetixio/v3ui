@@ -19,8 +19,8 @@ export default function MyVotes() {
   const networkForState = network?.id.toString() || '2192';
 
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
-  // const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
-  // const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
+  const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
+  const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
   const councilToCastVote = Object.entries(state[networkForState] || {})
     .filter(([_, candidate]) => !!candidate)
@@ -101,11 +101,12 @@ export default function MyVotes() {
               You can cast 3 votes in one transaction. Continue voting if you want to add other
               nominee otherwise cast your vote to complete your voting.
             </Text>
-            {councils.map((council) => (
+            {councils.map((council, index) => (
               <MyVoteRow
                 key={council.slug.concat('my-votes-page')}
                 councilSlug={council.slug}
                 period={period}
+                isLast={index === councils.length - 1}
               />
             ))}
             <Box p="6">
@@ -158,12 +159,10 @@ export default function MyVotes() {
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold" data-cy="my-votes-voting-power">
                 {formatNumber(
-                  votingPowerSpartan?.power
-                    ? // && votingPowerAmbassador
-                      // && votingPowerTreassury
-                      votingPowerSpartan.power
-                        // .add(votingPowerAmbassador)
-                        // .add(votingPowerTreassury)
+                  votingPowerSpartan?.power && votingPowerAmbassador && votingPowerTreassury
+                    ? votingPowerSpartan.power
+                        .add(votingPowerAmbassador.power)
+                        .add(votingPowerTreassury.power)
                         .toString()
                     : 0
                 )}

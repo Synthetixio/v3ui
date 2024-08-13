@@ -71,7 +71,7 @@ export default function MyVoteRow({
             dispatch({
               type: councilSlug.toUpperCase(),
               payload: {
-                action: stateForNetwork === 'remove' ? undefined : 'remove',
+                action: stateForNetwork === 'remove' ? 'remove' : undefined,
                 network: networkForState,
               },
             });

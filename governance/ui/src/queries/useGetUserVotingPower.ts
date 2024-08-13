@@ -18,6 +18,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider);
         const isMothership = network.id === 2192;
+
         const electionId = await electionModule.getEpochIndex();
         const ballot = isMothership
           ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
@@ -29,6 +30,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }
+
         const votingPower: BigNumber = isMothership
           ? await electionModule
               .connect(provider)

@@ -43,7 +43,7 @@ export function Header() {
       bg="navy.700"
       h="65px"
       alignItems="center"
-      px={{ base: '3', lg: 6 }}
+      px={{ base: '4', md: 6 }}
       py={{ base: '4' }}
       borderBottomWidth="1px"
       borderStyle="solid"

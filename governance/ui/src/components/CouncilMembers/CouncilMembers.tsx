@@ -98,7 +98,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
       flexDirection="column"
       mt={6}
     >
-      <Flex p="6" justifyContent="space-between">
+      <Flex p={{ base: 4, md: 6 }} justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
             Election for {quarter}

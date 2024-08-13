@@ -877,25 +877,6 @@ export const electionModuleABITest = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'user',
-        type: 'address',
-      },
-    ],
-    name: 'getPreparedBallot',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'bytes32',
         name: 'expected',
         type: 'bytes32',
@@ -1442,6 +1423,17 @@ export const electionModuleABITest = [
     type: 'error',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    name: 'UnsupportedNetwork',
+    type: 'error',
+  },
+  {
     inputs: [],
     name: 'ValueAlreadyInSet',
     type: 'error',
@@ -1702,6 +1694,19 @@ export const electionModuleABITest = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: 'gasLimit',
+        type: 'uint256',
+      },
+    ],
+    name: 'GasLimitSet',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: 'epochIndex',
         type: 'uint256',
       },
@@ -1750,19 +1755,6 @@ export const electionModuleABITest = [
       },
     ],
     name: 'MessageReceived',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'string',
-        name: 'message',
-        type: 'string',
-      },
-    ],
-    name: 'MessageSent',
     type: 'event',
   },
   {
@@ -1895,19 +1887,6 @@ export const electionModuleABITest = [
     ],
     name: 'VoteWithdrawnSent',
     type: 'event',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'message',
-        type: 'string',
-      },
-    ],
-    name: '_recMessage',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
   },
   {
     inputs: [
@@ -2344,6 +2323,19 @@ export const electionModuleABITest = [
   },
   {
     inputs: [],
+    name: 'getGasLimit',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'getNextElectionSettings',
     outputs: [
       {
@@ -2742,21 +2734,21 @@ export const electionModuleABITest = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'resolve',
+    inputs: [
+      {
+        internalType: 'uint16[]',
+        name: 'chainIds',
+        type: 'uint16[]',
+      },
+    ],
+    name: 'removeRegisteredEmitters',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'message',
-        type: 'string',
-      },
-    ],
-    name: 'sendMessage',
+    inputs: [],
+    name: 'resolve',
     outputs: [],
     stateMutability: 'payable',
     type: 'function',
@@ -2895,6 +2887,11 @@ export const electionModuleABITest = [
     type: 'error',
   },
   {
+    inputs: [],
+    name: 'InvalidWeightType',
+    type: 'error',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -2943,6 +2940,50 @@ export const electionModuleABITest = [
     type: 'error',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'bool',
+        name: 'enabled',
+        type: 'bool',
+      },
+      {
+        indexed: false,
+        internalType: 'enum SnapshotVotePower.WeightType',
+        name: 'weight',
+        type: 'uint8',
+      },
+    ],
+    name: 'SnapshotContractSet',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+    ],
+    name: 'getPreparedBallot',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'power',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
@@ -2983,7 +3024,7 @@ export const electionModuleABITest = [
     outputs: [
       {
         internalType: 'uint256',
-        name: 'power',
+        name: 'votingPower',
         type: 'uint256',
       },
     ],
@@ -2996,6 +3037,29 @@ export const electionModuleABITest = [
         internalType: 'address',
         name: 'snapshotContract',
         type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'scale',
+        type: 'uint256',
+      },
+    ],
+    name: 'setScale',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'enum SnapshotVotePower.WeightType',
+        name: 'weight',
+        type: 'uint8',
       },
       {
         internalType: 'bool',
@@ -3628,6 +3692,30 @@ export const electionModuleABITest = [
         name: '_load_snapshotContract',
         type: 'address',
       },
+      {
+        internalType: 'uint256',
+        name: 'ballotBalance',
+        type: 'uint256',
+      },
+    ],
+    name: 'SnapshotVotePower_calculateVotingPower',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_load_snapshotContract',
+        type: 'address',
+      },
     ],
     name: 'SnapshotVotePower_get_enabled',
     outputs: [
@@ -3647,6 +3735,25 @@ export const electionModuleABITest = [
         name: '_load_snapshotContract',
         type: 'address',
       },
+    ],
+    name: 'SnapshotVotePower_get_scale',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_load_snapshotContract',
+        type: 'address',
+      },
       {
         internalType: 'bool',
         name: 'val',
@@ -3654,6 +3761,24 @@ export const electionModuleABITest = [
       },
     ],
     name: 'SnapshotVotePower_set_enabled',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_load_snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'val',
+        type: 'uint256',
+      },
+    ],
+    name: 'SnapshotVotePower_set_scale',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

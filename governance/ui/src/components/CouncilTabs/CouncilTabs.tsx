@@ -58,7 +58,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           borderBottomWidth="1px"
           borderStyle="solid"
           borderBottomColor="gray.900"
-          px="6"
+          px={{ base: 4, md: 6 }}
           py={1}
           position="sticky"
           top="0px"
