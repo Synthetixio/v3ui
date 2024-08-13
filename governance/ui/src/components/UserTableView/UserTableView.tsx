@@ -55,7 +55,7 @@ export default function UserTableView({
         color="white"
         textTransform="unset"
         px="3"
-        borderTop={!councilIsInAdminOrVoting ? '' : '1px solid'}
+        borderTop={councilIsInAdminOrVoting ? '' : '1px solid'}
         borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
         borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
@@ -104,7 +104,8 @@ export default function UserTableView({
         <Th
           textAlign="end"
           borderTop="1px solid"
-          borderRight="1px solid"
+          borderBottom="1px solid"
+          borderRight={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Button

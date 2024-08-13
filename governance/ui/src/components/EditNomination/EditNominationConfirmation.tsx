@@ -24,7 +24,7 @@ export default function EditNominationConfirmation({
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
   const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
 
-  const { mutate, isPending, isSuccess } = useEditNomination({
+  const { mutateAsync, isPending, isSuccess } = useEditNomination({
     currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
@@ -63,9 +63,9 @@ export default function EditNominationConfirmation({
             overflow="hidden"
             maxW="300px"
           >
-            {user?.username || prettyString(user!.address)}
+            {user?.username || prettyString(user?.address || '')}
           </Text>
-          <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
+          <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
       </Flex>
       <Text fontSize="sm" color="gray.500" my="2">
@@ -178,8 +178,8 @@ export default function EditNominationConfirmation({
         <>
           <Button
             mt="auto"
-            onClick={() => {
-              mutate();
+            onClick={async () => {
+              await mutateAsync();
             }}
             data-cy="confirm-edit-nomination-button"
           >

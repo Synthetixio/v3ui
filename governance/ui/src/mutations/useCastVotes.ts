@@ -8,7 +8,7 @@ import {
 } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber, Contract, utils } from 'ethers';
 import { multicallABI } from '../utils/abi';
 import { useVoteContext } from '../context/VoteContext';
 
@@ -61,7 +61,7 @@ export function useCastVotes(
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = network.id === 11155420;
+        const isMotherchain = network.id === 2192;
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
@@ -93,7 +93,7 @@ export function useCastVotes(
                       requireSuccess: true,
                     };
               }
-              return '';
+              return null;
             })
             .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
@@ -125,13 +125,16 @@ export function useCastVotes(
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
                   value: quote.add(quote.mul(25).div(100)),
-                  requireSuccess: false,
+                  requireSuccess: true,
                 };
           });
 
           await multicall
             .connect(signer)
-            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData]);
+            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+            });
         } catch (error) {
           console.error(error);
         }
