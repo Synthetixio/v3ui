@@ -17,21 +17,13 @@ export const PositionTitle: FC<{
 
   return (
     <Flex alignItems="center">
-      <Flex
-        bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
-        justifyContent="center"
-        alignItems="center"
-        borderRadius="100%"
-        display="flex"
-      >
-        <TokenIcon
-          symbol={collateralDisplayName || ''}
-          height={42}
-          width={42}
-          fill="#0B0B22"
-          color="#00D1FF"
-        />
-      </Flex>
+      <TokenIcon
+        symbol={collateralDisplayName || ''}
+        height={42}
+        width={42}
+        fill="#0B0B22"
+        color="#00D1FF"
+      />
       <Flex direction="column" gap={0.5}>
         <Heading
           ml={4}

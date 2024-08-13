@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMutation } from '@tanstack/react-query';
-import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
+import { useNetwork, useProvider, useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import Wei, { wei } from '@synthetixio/wei';
 import { BigNumber, ethers } from 'ethers';
@@ -12,11 +12,19 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
+import {
+  STATA_BASE_ADDRESS,
+  USDC_BASE_ADDRESS,
+  getSpotMarketId,
+  stataAbi,
+  usdcAbi,
+} from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useAllowance } from '@snx-v3/useAllowance';
+import { useMulticall3 } from '@snx-v3/useMulticall3';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -163,6 +171,61 @@ export const useDepositBaseAndromeda = ({
       }
     },
   });
+  return {
+    mutation,
+    txnState,
+    settle: () => dispatch({ type: 'settled' }),
+    isLoading: mutation.isPending,
+    exec: mutation.mutateAsync,
+  };
+};
+
+export const useDepositBaseAndromedaStata = () => {
+  const signer = useSigner();
+  const { activeWallet } = useWallet();
+  const { data: Multicall3 } = useMulticall3();
+  const [txnState, dispatch] = useReducer(reducer, initialState);
+
+  const { data: stataAllowance } = useAllowance({
+    contractAddress: STATA_BASE_ADDRESS,
+    spender: activeWallet?.address,
+  });
+
+  const { data: usdcAllowance } = useAllowance({
+    contractAddress: USDC_BASE_ADDRESS,
+    spender: STATA_BASE_ADDRESS,
+  });
+
+  console.log(
+    'stataAllowance',
+    stataAllowance?.toString(),
+    'usdcAllowance',
+    usdcAllowance?.toString()
+  );
+
+  const mutation = useMutation({
+    mutationFn: async ({ amount }) => {
+      try {
+        console.log('Firing useDepositBaseAndromedaStata');
+        const tempAmount = wei(100, 6, true);
+        console.log('tempAmount', tempAmount.toString());
+
+        if (!signer || !activeWallet) throw 'Signer not found useDepositBaseAndromedaStata';
+        const usdcContract = new ethers.Contract(USDC_BASE_ADDRESS, usdcAbi, signer);
+        const stataContract = new ethers.Contract(STATA_BASE_ADDRESS, stataAbi, signer);
+
+        // const calls
+
+        console.log('stata allowance', stataAllowance?.toString());
+
+        // const txn = await usdcContract.(stataContract.address);
+        // return txn;
+      } catch (error: any) {
+        throw error;
+      }
+    },
+  });
+
   return {
     mutation,
     txnState,

@@ -29,3 +29,5 @@ export function getSpotMarketId(collateralSymbol?: string) {
 
 export const USDC_BASE_MARKET = '1';
 export const STATA_BASE_MARKET = '3';
+export const USDC_BASE_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+export const STATA_BASE_ADDRESS = '0x4EA71A20e655794051D1eE8b6e4A3269B13ccaCc';

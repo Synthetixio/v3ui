@@ -58,6 +58,8 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
     if (collateralSymbol?.toLowerCase() === 'sstatausdc') {
       return 'sStataUSDC';
     }
+
+    return collateralSymbol;
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 
