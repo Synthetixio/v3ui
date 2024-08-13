@@ -28,7 +28,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
 
   const { activeWallet } = useWallet();
 
-  const { mutate, isPending, isSuccess } = useNominateSelf(activeCouncil, activeWallet?.address);
+  const { mutate, isPending, isSuccess } = useNominateSelf(selectedCouncil, activeWallet?.address);
   const { data } = useGetUserDetailsQuery(activeWallet?.address);
 
   return (

@@ -58,7 +58,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
           >
             Stipends: {council?.stipends}/month
           </Heading>
-          <Link to={council!.docLink} target="_blank" rel="noopener noreferrer">
+          <Link to={council?.docLink || ''} target="_blank" rel="noopener noreferrer">
             <Heading
               fontSize="xs"
               lineHeight="1rem"
