@@ -39,7 +39,7 @@ export function UserProfileCard({
       borderWidth="1px"
       p="4"
       w="100%"
-      maxW="451px"
+      maxW={{ base: '100%', xl: '451px' }}
       h="612px"
       data-cy={`user-profile-card-${walletAddress}`}
       {...props}

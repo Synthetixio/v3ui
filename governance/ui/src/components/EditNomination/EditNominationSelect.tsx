@@ -12,8 +12,8 @@ export default function EditNominationSelect({
   setSelectedCouncil,
   setShowConfirm,
 }: {
-  selectedCouncil?: CouncilSlugs;
-  setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined>>;
+  selectedCouncil?: CouncilSlugs | null;
+  setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined | null>>;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const { activeWallet } = useWallet();
@@ -132,7 +132,9 @@ export default function EditNominationSelect({
           w="100%"
           height="58px"
           rounded="base"
-          borderColor={!selectedCouncil ? 'cyan.500' : 'gray.900'}
+          borderColor={
+            !selectedCouncil && typeof selectedCouncil === 'undefined' ? 'cyan.500' : 'gray.900'
+          }
           borderWidth="1px"
           padding="2"
           alignItems="center"
@@ -155,9 +157,13 @@ export default function EditNominationSelect({
           </Text>
         </Flex>
       </Flex>
-      {/* TODO @dev if nothing is selected make button disable. So when on tc and you want to edit your nomination
-     nohting is preselected so button is disabled */}
-      <Button mt="auto" onClick={() => setShowConfirm(true)} data-cy="edit-nomination-button">
+
+      <Button
+        mt="auto"
+        onClick={() => setShowConfirm(true)}
+        data-cy="edit-nomination-button"
+        isDisabled={selectedCouncil === null}
+      >
         Edit Nomination
       </Button>
     </>

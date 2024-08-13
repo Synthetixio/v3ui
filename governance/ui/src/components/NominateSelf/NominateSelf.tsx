@@ -36,7 +36,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       flexDirection="column"
       bg="navy.700"
       w="100%"
-      maxW="451px"
+      maxW={{ base: '100%', xl: '451px' }}
       borderColor="gray.900"
       borderWidth="1px"
       borderStyle="solid"

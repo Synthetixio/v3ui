@@ -15,7 +15,7 @@ export default function EditNominationConfirmation({
   activeCouncil,
   setShowConfirm,
 }: {
-  selectedCouncil?: CouncilSlugs;
+  selectedCouncil?: CouncilSlugs | null;
   activeCouncil: CouncilSlugs;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {

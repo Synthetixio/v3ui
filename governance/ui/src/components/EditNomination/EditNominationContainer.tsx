@@ -1,4 +1,4 @@
-import { Box, Hide, Modal, ModalContent, ModalOverlay, Show } from '@chakra-ui/react';
+import { Hide, Modal, ModalContent, ModalOverlay, Show } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
 import EditNomination from './EditNomination';
 
@@ -14,7 +14,7 @@ export const EditNominationContainer = ({
       <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent mx="4">
+          <ModalContent maxW="99vw" width="99vw" margin="2">
             <EditNomination activeCouncil={activeCouncil} />
           </ModalContent>
         </Modal>

@@ -1,7 +1,7 @@
 import { Button, Flex, FlexProps, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useEditNomination from '../../mutations/useEditNomination';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
@@ -14,7 +14,10 @@ interface EditNominationProps extends FlexProps {
 }
 
 export default function EditNomination({ activeCouncil, ...props }: EditNominationProps) {
-  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(activeCouncil);
+  const location = useLocation();
+  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined | null>(
+    location.pathname.includes(activeCouncil) ? null : activeCouncil
+  );
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const { activeWallet } = useWallet();
@@ -30,7 +33,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
       flexDirection="column"
       bg="navy.700"
       w="100%"
-      maxW="451px"
+      maxW={{ base: '100%', xl: '451px' }}
       h="612px"
       borderColor="gray.900"
       borderWidth="1px"
@@ -84,13 +87,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
               alignItems="center"
               mr="3"
             >
-              {!selectedCouncil && (
-                <Image
-                  src={councils.find((council) => council.slug === selectedCouncil)?.image}
-                  w="6"
-                  h="6"
-                />
-              )}
+              {!selectedCouncil && <Image src="" w="6" h="6" />}
             </Flex>
             <Text fontSize="x-small" fontWeight="bold">
               {!selectedCouncil

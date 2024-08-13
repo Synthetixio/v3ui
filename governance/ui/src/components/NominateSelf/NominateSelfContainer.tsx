@@ -14,7 +14,7 @@ export const NominateSelfContainer = ({
       <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent maxW="99vw" width="99vw" margin="2">
             <NominateSelf activeCouncil={activeCouncil} />
           </ModalContent>
         </Modal>

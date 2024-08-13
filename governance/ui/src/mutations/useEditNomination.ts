@@ -12,7 +12,7 @@ export default function useEditNomination({
   nextNomination,
 }: {
   currentNomination?: CouncilSlugs;
-  nextNomination?: CouncilSlugs;
+  nextNomination?: CouncilSlugs | null;
 }) {
   const query = useQueryClient();
   const signer = useSigner();
