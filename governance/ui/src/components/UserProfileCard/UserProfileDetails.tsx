@@ -228,6 +228,16 @@ export const UserProfileDetails = ({
               : prettyString(userData!.address)}
           </Button>
         )}
+
+        {!isOwn && councilPeriod !== '2' && (
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => navigate('/councils/' + activeCouncil)}
+          >
+            Close
+          </Button>
+        )}
       </Flex>
     </>
   );

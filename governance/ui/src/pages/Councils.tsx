@@ -16,15 +16,11 @@ export default function Councils() {
   return (
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={activeCouncil} />
-      <Container
-        maxW={{ base: '100%', md: '768px', lg: '1280px' }}
-        justifyContent="flex-start"
-        w="100%"
-      >
+      <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
         <CouncilInformation activeCouncil={activeCouncil} />
       </Container>
       <Container
-        maxW={{ base: '100%', md: '768px', lg: '1280px' }}
+        maxW={{ base: '100%', lg: '1280px' }}
         gap={4}
         as={Flex}
         flexDirection="row"

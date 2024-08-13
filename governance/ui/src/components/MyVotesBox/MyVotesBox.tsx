@@ -44,11 +44,12 @@ export default function MyVotesBox({
             {Object.values(!!votes ? votes : {}).filter((vote) => !!vote).length}/{councils.length}
           </Heading>
         </Flex>
-        {councils.map((council) => (
+        {councils.map((council, index) => (
           <MyVoteRow
             key={council.slug.concat('my-vote-row')}
             councilSlug={council.slug}
             period={period}
+            isLast={index === councils.length - 1}
           />
         ))}
         <Button

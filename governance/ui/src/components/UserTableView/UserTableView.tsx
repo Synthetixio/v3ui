@@ -34,7 +34,11 @@ export default function UserTableView({
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
     >
       {councilIsInAdminOrVoting && (
-        <Th borderColor={isSelected ? 'cyan.500' : 'gray.900'} borderTop="1px solid">
+        <Th
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+          borderY="1px solid"
+          borderLeft="1px solid"
+        >
           <Text color="white">{place < 10 ? `#${place + 1}` : '-'}</Text>
         </Th>
       )}
@@ -42,9 +46,8 @@ export default function UserTableView({
         color="white"
         textTransform="unset"
         px="3"
-        borderTop="1px solid"
-        borderBottom="1px solid"
-        borderLeft="1px solid"
+        borderY={!councilIsInAdminOrVoting ? '' : '1px solid'}
+        borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
         <Flex gap="2" alignItems="center">
@@ -67,31 +70,26 @@ export default function UserTableView({
         </Flex>
       </Th>
       {councilPeriod !== '0' && (
-        <Th
-          borderTop="1px solid"
-          borderBottom="1px solid"
-          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-        >
+        <Th borderY="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'}>
           <Flex>
             {councilSettings && councilSettings?.epochSeatCount > place && <Badge>Member</Badge>}
           </Flex>
         </Th>
       )}
       {councilIsInAdminOrVoting && (
-        <Th borderTop="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
+        <Th borderY="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
           TODO
         </Th>
       )}
       {councilIsInAdminOrVoting && (
-        <Th borderTop="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
+        <Th borderY="1px solid" borderColor={isSelected ? 'cyan.500' : 'gray.900'} color="white">
           TODO
         </Th>
       )}
       {councilPeriod !== '2' && councilPeriod !== '0' && (
         <Th
           textAlign="end"
-          borderTop="1px solid"
-          borderBottom="1px solid"
+          borderY="1px solid"
           borderRight="1px solid"
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
@@ -114,8 +112,7 @@ export default function UserTableView({
       {councilPeriod === '0' && (
         <Th
           textAlign="end"
-          borderTop="1px solid"
-          borderBottom="1px solid"
+          borderY="1px solid"
           borderRight="1px solid"
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >

@@ -2,7 +2,6 @@ import { Flex, Heading, Icon, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { CouncilImage } from '../CouncilImage';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 
 export default function CouncilInformation({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
@@ -10,7 +9,12 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
-    <Flex py="5" maxW="735px" w="100%" flexDirection={{ base: 'column', md: 'row' }}>
+    <Flex
+      py="5"
+      maxW={{ base: '100%', xl: '735px' }}
+      w="100%"
+      flexDirection={{ base: 'column', md: 'row' }}
+    >
       <Flex>
         <CouncilImage
           imageUrl={council?.image || ''}
@@ -28,13 +32,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
         <Heading fontSize="lg" mb="2">
           {council?.title}
         </Heading>
-        <Text
-          w={{ base: '100%', md: '581px' }}
-          fontSize="14px"
-          lineHeight="20px"
-          fontFamily="heading"
-          color="gray.500"
-        >
+        <Text w="100%" fontSize="14px" lineHeight="20px" fontFamily="heading" color="gray.500">
           {council?.description}
         </Text>
         <Flex w="100%" mt="2" gap="2" data-cy={`council-information-${activeCouncil}`}>

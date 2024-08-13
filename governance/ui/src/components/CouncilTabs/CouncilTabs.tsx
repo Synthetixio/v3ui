@@ -143,6 +143,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                       address={userInformation[index].userInformation?.address}
                       size={7}
                       newVoteCast={newVoteCast}
+                      isCouncilTabs={true}
                     />
                   ) : (
                     councilPeriod === '2' && (

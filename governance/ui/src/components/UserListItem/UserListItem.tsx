@@ -64,11 +64,12 @@ export default function UserListItem({
           {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
       </Flex>
-      {nominationInformation?.isNominated && (
-        <Badge color="green" ml="4" mr="auto">
-          Nominee
-        </Badge>
-      )}
+      {nominationInformation?.isNominated &&
+        nominationInformation.council.slug === activeCouncil && (
+          <Badge color="green" ml="4" mr="auto">
+            Nominee
+          </Badge>
+        )}
       {councilPeriod === '1' ? (
         <Button
           ml="auto"

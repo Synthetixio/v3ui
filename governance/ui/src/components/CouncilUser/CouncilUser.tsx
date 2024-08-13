@@ -2,7 +2,7 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { useGetUserDetailsQuery } from '../../queries';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import { truncateAddress } from '@snx-v3/formatters';
+import { prettyString } from '@snx-v3/format';
 
 export default function CouncilUser({
   address,
@@ -56,12 +56,12 @@ export default function CouncilUser({
         </Text>
         <Text
           fontSize="x-small"
-          maxW="50px"
+          maxW="100px"
           textOverflow="ellipsis"
           whiteSpace="nowrap"
           overflow="hidden"
         >
-          {user ? (user?.username ? user.username : truncateAddress(user?.address)) : 'No Vote'}
+          {user ? (user?.username ? user.username : prettyString(user?.address, 6, 4)) : 'No Vote'}
         </Text>
       </Flex>
     </Flex>

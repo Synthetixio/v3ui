@@ -125,7 +125,7 @@ export function UserProfileForm() {
           <Input
             {...register('username')}
             mb="1"
-            placeholder="eg: DeFiLoard"
+            placeholder="eg: DeFiLord"
             data-cy="username-input"
           />
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
@@ -137,19 +137,19 @@ export function UserProfileForm() {
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Discord
           </Text>
-          <Input {...register('discord')} placeholder="username" data-cy="discord-input" />
+          <Input {...register('discord')} placeholder="eg: username" data-cy="discord-input" />
         </Flex>
         <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Twitter
           </Text>
-          <Input {...register('twitter')} placeholder="username" data-cy="twitter-input" />
+          <Input {...register('twitter')} placeholder="eg: username" data-cy="twitter-input" />
         </Flex>
         <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Github
           </Text>
-          <Input {...register('github')} placeholder="username" data-cy="github-input" />
+          <Input {...register('github')} placeholder="eg: username" data-cy="github-input" />
         </Flex>
         <Flex flexDirection="column" alignItems="flex-start">
           <Text fontSize="12px" fontWeight="400" color="gray.500">
@@ -177,11 +177,13 @@ export function UserProfileForm() {
               <Text mr="1" fontSize="14px" fontWeight="400">
                 {user?.address}
               </Text>
-              <CopyIcon
-                w="12px"
-                h="12px"
-                onClick={() => navigator.clipboard.writeText(user!.address)}
-              />
+              <Tooltip label="Copy Wallet Address">
+                <CopyIcon
+                  w="12px"
+                  h="12px"
+                  onClick={() => navigator.clipboard.writeText(user!.address)}
+                />
+              </Tooltip>
             </Button>
           </Tooltip>
         </Flex>
@@ -200,6 +202,7 @@ export function UserProfileForm() {
             onClick={() => {
               handleOnFormSave();
             }}
+            isDisabled={!formState.isDirty}
           >
             Save Changes
           </Button>

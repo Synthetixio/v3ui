@@ -9,9 +9,11 @@ import { useGetUserBallot, useNetwork } from '../../queries';
 export default function MyVoteRow({
   councilSlug,
   period,
+  isLast,
 }: {
   councilSlug: CouncilSlugs;
   period?: string;
+  isLast: boolean;
 }) {
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(councilSlug);
@@ -28,9 +30,10 @@ export default function MyVoteRow({
       padding="2"
       alignItems="center"
       justifyContent="space-between"
-      border="1px solid"
+      borderTop="1px solid"
+      borderBottom={isLast ? '1px solid' : ''}
       borderColor="gray.900"
-      opacity={period !== '2' ? '0.4' : '1'}
+      opacity={period !== '2' ? '0.2' : '1'}
     >
       <Flex alignItems="center">
         <CouncilUser

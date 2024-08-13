@@ -54,8 +54,16 @@ export default function EditNominationConfirmation({
       >
         <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
-          <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || prettyString(user!.address)}
+          <Text
+            fontSize="xs"
+            color="white"
+            fontWeight="bold"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="300px"
+          >
+            {user?.username || prettyString(user!.address)}
           </Text>
           <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
         </Flex>

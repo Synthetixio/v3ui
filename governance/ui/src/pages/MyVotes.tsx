@@ -31,7 +31,7 @@ export default function MyVotes() {
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
-      <Flex justifyContent="center" gap="2" w="100%">
+      <Flex justifyContent="center" gap="2" w="100%" pt="5">
         <Flex maxW="1440px" w="100%" justifyContent="center" flexWrap="wrap" gap="6">
           <Flex
             bg="navy.700"
@@ -71,21 +71,18 @@ export default function MyVotes() {
                 </Text>
                 <Button
                   onClick={() => navigate('/councils/spartan')}
-                  variant="outline"
-                  colorScheme="gray"
                   size="sm"
-                  color="white"
                   mt="3"
                   w="fit-content"
                 >
-                  See all nominees
+                  {period === '0' || period === '3' ? 'See all Members' : 'See all Nominees'}
                 </Button>
               </Flex>
             )}
             <Flex
               justifyContent="space-between"
-              opacity={period !== '2' ? '0.4' : '1'}
-              mb="12"
+              opacity={period !== '2' ? '0.2' : '1'}
+              mb="3"
               p="6"
             >
               <Heading fontSize="2xl">My Votes</Heading>
@@ -97,7 +94,7 @@ export default function MyVotes() {
             <Text
               fontSize="xs"
               color="gray.500"
-              opacity={period !== '2' ? '0.4' : '1'}
+              opacity={period !== '2' ? '0.2' : '1'}
               px="6"
               mb="2"
             >
@@ -114,7 +111,7 @@ export default function MyVotes() {
             <Box p="6">
               <Alert
                 colorScheme="blue"
-                opacity={period !== '2' ? '0.4' : '1'}
+                opacity={period !== '2' ? '0.2' : '1'}
                 rounded="base"
                 mt="6"
               >
@@ -133,8 +130,11 @@ export default function MyVotes() {
             p="6"
             gap="3"
             flexDir="column"
+            h="fit-content"
           >
-            <Heading fontSize="large">Voting Power</Heading>
+            <Heading fontSize="large">
+              {period === '2' ? 'Cast Your Votes' : 'Voting Power'}
+            </Heading>
             <Text fontSize="sm" color="gray.500" display="inline">
               Your total voting powered is aggregated from all chains and used to vote on Optimism.
               It can take{' '}
@@ -151,7 +151,7 @@ export default function MyVotes() {
               borderWidth="1px"
               borderStyle="solid"
               borderColor="gray.900"
-              mb="auto"
+              mb="12"
             >
               <Text fontSize="sm" color="gray.500">
                 Total Voting Power

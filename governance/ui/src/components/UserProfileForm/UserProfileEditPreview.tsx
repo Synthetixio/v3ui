@@ -23,7 +23,7 @@ export default function UserProfileEditPreview({
       border="1px solid"
       borderColor={{ base: 'navy.700', xl: 'cyan.500' }}
       rounded="base"
-      p="4"
+      p={{ base: 0, xl: '4' }}
       bg="navy.700"
       flexDir="column"
     >

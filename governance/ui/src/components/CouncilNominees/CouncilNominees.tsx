@@ -24,7 +24,6 @@ import { utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
-import { DragControls } from 'framer-motion';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');

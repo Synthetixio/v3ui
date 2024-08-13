@@ -14,7 +14,8 @@ interface EditNominationProps extends FlexProps {
 }
 
 export default function EditNomination({ activeCouncil, ...props }: EditNominationProps) {
-  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(undefined);
+  // todo @dev first time nominating defaults back to preset council and not selcted one?
+  const [selectedCouncil, setSelectedCouncil] = useState<CouncilSlugs | undefined>(activeCouncil);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const { activeWallet } = useWallet();

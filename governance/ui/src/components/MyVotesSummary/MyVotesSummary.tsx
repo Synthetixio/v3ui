@@ -56,7 +56,9 @@ export const MyVotesSummary = ({
       height="48px"
       alignItems="center"
       bg="navy.700"
-      _hover={{ borderColor: 'cyan.500' }}
+      _hover={{
+        bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+      }}
     >
       <Text fontSize="xs" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
         My Votes

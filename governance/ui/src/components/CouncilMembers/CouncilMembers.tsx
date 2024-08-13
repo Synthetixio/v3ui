@@ -87,6 +87,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
     return [];
   }, [sortConfig, councilMemberDetails]);
 
+  // Remove member in the nominees table and show the crown TODO @dev
   return (
     <Flex
       borderWidth="1px"

@@ -19,7 +19,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
   const selectedUserAddress = searchParams.get('view') as string;
 
   const { onClose } = useDisclosure();
-
+  // TODO @dev on mobile all modals should be witdh 100%
   if (nominate && activeWallet?.address) {
     return <NominateSelfContainer activeCouncil={activeCouncil} onClose={onClose} />;
   }
@@ -54,7 +54,6 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         bg="navy.700"
         rounded="base"
         mt={6}
-        my="6"
         boxShadow="lg"
         position="sticky"
         top="105px"
