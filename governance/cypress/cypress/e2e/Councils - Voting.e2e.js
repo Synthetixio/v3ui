@@ -3,7 +3,9 @@ it('Councils - Administration', () => {
   cy.task('changePeriod', { council: 'ambassador', period: 'admin' });
   cy.task('changePeriod', { council: 'treasury', period: 'admin' });
   cy.task('prepareVotingPower', { council: 'spartan' });
+  cy.task('mineBlock');
   cy.task('prepareVotingPower', { council: 'ambassador' });
+  cy.task('mineBlock');
   cy.task('prepareVotingPower', { council: 'treasury' });
   cy.task('mineBlock');
   cy.connectWallet();
@@ -42,7 +44,7 @@ it('Councils - Administration', () => {
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
   cy.wait(3000);
-  cy.get('[data-cy="my-votes-voting-power"]').contains('100.00');
+  cy.get('[data-cy="my-votes-voting-power"]').contains('30.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
   cy.wait(3000);
   cy.window().then((win) => {

@@ -25,7 +25,7 @@ export async function prepareVotingPower({ council }) {
   //   .connect(signer)
   //   .takeVotePowerSnapshot(SnapshotRecordContract(11155420)?.address);
   // console.log('ID', id);
-  SnapshotRecordContract(2492, council)
+  SnapshotRecordContract(2192, council)
     .connect(signer)
     .setBalanceOfOnPeriod(await signer.getAddress(), 100, 1);
   return null;
