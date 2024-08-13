@@ -1,6 +1,8 @@
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
 import { PoolsList } from '../components/Pools';
+import { MigrationBanner } from '../components/Migration/MigrationBanner';
+import { MAINNET } from '@snx-v3/useBlockchain';
 
 export function Home() {
   return (
@@ -24,6 +26,7 @@ export function Home() {
           Provide liquidity for the next generation of permissionless protocols
         </Text>
         <PoolsList />
+        <MigrationBanner network={MAINNET} />
       </Flex>
     </>
   );

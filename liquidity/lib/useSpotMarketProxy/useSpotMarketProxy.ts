@@ -47,7 +47,7 @@ export function useSpotMarketProxy(customNetwork?: Network) {
 
       return new Contract(address, abi, signerOrProvider);
     },
-    enabled: Boolean(signerOrProvider),
+    enabled: Boolean(signerOrProvider && ![1, 10].includes(targetNetwork?.id || 0)),
     staleTime: Infinity,
   });
 }

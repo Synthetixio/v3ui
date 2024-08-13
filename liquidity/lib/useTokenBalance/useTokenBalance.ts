@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { ethers, providers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
+import { ZEROWEI } from '../../ui/src/utils/constants';
 
 export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
 
@@ -66,6 +67,9 @@ async function fetchTokenBalance(
   walletAddress: string,
   provider: providers.JsonRpcProvider
 ) {
+  if (!tokenAddress) {
+    return ZEROWEI;
+  }
   const contract = new ethers.Contract(tokenAddress, abi, provider);
   const balance = wei(await contract.balanceOf(walletAddress), await contract.decimals());
   return balance;

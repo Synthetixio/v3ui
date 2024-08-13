@@ -45,8 +45,9 @@ export const StatsList = () => {
         []
       : accountCollaterals?.map((collateral) => collateral.tokenAddress) || [];
 
-  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } =
-    useTokenBalances(collateralAddresses);
+  const { data: userTokenBalances, isLoading: tokenBalancesIsLoading } = useTokenBalances(
+    collateralAddresses.filter((a) => !!a)
+  );
 
   const associatedUserBalances = userTokenBalances?.map((balance, index) => {
     return {
