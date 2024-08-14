@@ -1,4 +1,4 @@
-import { Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
+import { Box, Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
 import { TokenIcon } from '../../TokenIcon';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -27,7 +27,8 @@ export function PositionRow({
   availableCollateral,
   accountId,
 }: PositionRow) {
-  const collateralPrice = useTokenPrice(collateralType.displaySymbol);
+  const collateralPrice = useTokenPrice(collateralType.symbol);
+
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
@@ -100,7 +101,7 @@ export function PositionRow({
               </Tooltip>
             )}
           </Text>
-          <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+          <Box color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
             {availableCollateral.gt(0) && !isRunning ? (
               <Text
                 color="cyan.500"
@@ -115,7 +116,7 @@ export function PositionRow({
             ) : (
               <Amount value={availableCollateral} suffix={` ${collateralType.symbol.toString()}`} />
             )}
-          </Text>
+          </Box>
         </Flex>
       </Td>
       <Td border="none">
