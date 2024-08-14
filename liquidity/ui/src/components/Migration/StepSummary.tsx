@@ -18,7 +18,6 @@ import { useMigrate } from '../../../../lib/useMigrate';
 
 export const StepSummary = ({
   onClose,
-  onConfirm,
   network,
 }: {
   onClose: () => void;

@@ -72,6 +72,7 @@
     "@snx-v3/useTokenBalance": "workspace:*",
     "@snx-v3/useTransferAccountId": "workspace:*",
     "@snx-v3/useTransferableSynthetix": "workspace:*",
+    "@snx-v3/useUSDProxy": "workspace:*",
     "@snx-v3/useUndelegate": "workspace:*",
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*",
     "@snx-v3/useVaultsData": "workspace:*",
