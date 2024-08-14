@@ -7,7 +7,7 @@ import {
   LogoIcon,
   OptimismIcon,
   ArbitrumIcon,
-  SNXIcon,
+  SNXChainIcon,
 } from '@snx-v3/icons';
 import { INFURA_KEY as DEFAULT_INFURA_KEY } from '@snx-v3/constants';
 import SynthetixIcon from './SynthetixIcon.svg';
@@ -70,9 +70,9 @@ export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconP
     case 42161:
       return <ArbitrumIcon w={size} h={size} {...props} />;
     case 2192:
-      return <SNXIcon w={size} h={size} {...props} />;
+      return <SNXChainIcon w={size} h={size} {...props} />;
     case 13001:
-      return <SNXIcon w={size} h={size} {...props} />;
+      return <SNXChainIcon w={size} h={size} {...props} />;
     default: {
       return <FailedIcon w={size} h={size} {...props} />;
     }
