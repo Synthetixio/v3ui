@@ -71,6 +71,8 @@ export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconP
       return <ArbitrumIcon w={size} h={size} {...props} />;
     case 2192:
       return <SNXIcon w={size} h={size} {...props} />;
+    case 13001:
+      return <SNXIcon w={size} h={size} {...props} />;
     default: {
       return <FailedIcon w={size} h={size} {...props} />;
     }
@@ -216,16 +218,29 @@ export const ARBTHETIX: Network = {
   isTestnet: false,
 };
 
-export const SNAXTESTNET: Network = {
+export const SNAX: Network = {
   id: 2192,
-  preset: 'test',
+  preset: 'main',
   hexId: `0x${Number(2192).toString(16)}`,
-  token: 'SNX',
+  token: 'ETH',
   name: 'SNAX',
-  rpcUrl: () => 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
+  rpcUrl: () => 'https://mainnet.snaxchain.io/',
   label: 'SNAX CHAIN',
   isSupported: true,
-  publicRpcUrl: 'https://testnet.snaxchain.io/BCA1Ao4AhBh5DwLei75wQps21iXy2iMUD',
+  publicRpcUrl: 'https://mainnet.snaxchain.io/',
+  isTestnet: false,
+};
+
+export const SNAXTESTNET: Network = {
+  id: 13001,
+  preset: 'main',
+  hexId: `0x${Number(2192).toString(16)}`,
+  token: 'ETH',
+  name: 'SNAX',
+  rpcUrl: () => 'https://testnet.snaxchain.io/',
+  label: 'SNAX CHAIN',
+  isSupported: true,
+  publicRpcUrl: 'https://testnet.snaxchain.io/',
   isTestnet: true,
 };
 
@@ -240,6 +255,7 @@ export const NETWORKS: Network[] = [
   ARBITRUM_SEPOLIA,
   ARBITRUM,
   ARBTHETIX,
+  SNAX,
   SNAXTESTNET,
 ];
 
