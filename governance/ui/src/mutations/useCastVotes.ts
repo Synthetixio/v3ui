@@ -8,9 +8,9 @@ import {
 } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber, Contract, utils } from 'ethers';
-import { multicallABI } from '../utils/abi';
+import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
+import { useMulticall } from '../hooks/useMulticall';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -21,8 +21,7 @@ export function useCastVotes(
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { dispatch } = useVoteContext();
-  const multicall = new Contract('0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e', multicallABI);
-
+  const multicall = useMulticall();
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
   const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');

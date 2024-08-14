@@ -4,8 +4,8 @@ import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
 import { CustomToast } from '../components/CustomToast';
 import { useToast } from '@chakra-ui/react';
-import { Contract, utils } from 'ethers';
-import { multicallABI } from '../utils/abi';
+import { utils } from 'ethers';
+import { useMulticall } from '../hooks/useMulticall';
 
 export default function useEditNomination({
   currentNomination,
@@ -17,8 +17,7 @@ export default function useEditNomination({
   const query = useQueryClient();
   const signer = useSigner();
   const toast = useToast();
-  const multicall = new Contract('0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e', multicallABI);
-
+  const multicall = useMulticall();
   return useMutation({
     mutationFn: async () => {
       if (signer) {
