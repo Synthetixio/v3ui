@@ -18,7 +18,7 @@ export default function MyProfile() {
         <Heading size="lg" mt="6">
           My Profile
         </Heading>
-        <Text fontSize="12px" color="gray.500" mb="10">
+        <Text fontSize="12px" color="gray.500" mb="4">
           Update your profile information below
         </Text>
         <UserProfileForm />
