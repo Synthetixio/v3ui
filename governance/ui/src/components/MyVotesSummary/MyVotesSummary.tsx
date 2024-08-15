@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext } from '../../context/VoteContext';
 import { useNetwork } from '../../queries';
+import { useTransferAccountId } from '@snx-v3/useTransferAccountId';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -25,7 +26,7 @@ export const MyVotesSummary = ({
   schedule,
   isInMyVotesPage,
 }: MyVotesSummary) => {
-  const [action, setAction] = useState('');
+  const [action, setAction] = useState<'click' | 'longpress' | undefined>(undefined);
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
@@ -33,33 +34,50 @@ export const MyVotesSummary = ({
   const networkForState = network?.id.toString() || '2192';
   const { state } = useVoteContext();
   const [timer, setTimer] = useState<any>();
-  const isLongPress = useRef(false);
+  const [isLongpress, setIsLongpress] = useState(false);
 
   const startPressTimer = () => {
-    isLongPress.current = false;
+    setIsLongpress(false);
     setTimer(
       setTimeout(() => {
         setAction('longpress');
-        isLongPress.current = true;
+        setIsLongpress(true);
       }, 500)
     );
   };
 
   useEffect(() => {
     if (action === 'click') {
+      setAction('click');
       navigate('/my-votes');
     } else if (action === 'longpress') {
+      setAction(undefined);
       setShowCart(true);
     }
   }, [action, navigate]);
 
+  useEffect(() => {
+    const thisComponent = document.querySelector('#my-votes-summary');
+    const listener = (event: any) => {
+      if (event.target && !thisComponent?.contains(event.target)) {
+        setShowCart(false);
+      }
+    };
+    document.addEventListener('mousedown', listener);
+
+    return () => {
+      document.removeEventListener('mousedown', listener);
+    };
+  }, []);
+
   return (
     <Flex
+      id="my-votes-summary"
       position="relative"
       cursor="pointer"
       data-cy="my-votes-button"
       onClick={() => {
-        if (isLongPress.current) {
+        if (isLongpress) {
           return;
         }
         setAction('click');
@@ -67,11 +85,11 @@ export const MyVotesSummary = ({
       onMouseEnter={() => {
         if (councilPeriod === '2') setShowCart(true);
       }}
-      onMouseLeave={() =>
+      onMouseLeave={() => {
         setTimeout(() => {
           if (!mouseOnDropdown) setShowCart(false);
-        }, 1000)
-      }
+        }, 1000);
+      }}
       onMouseDown={() => {
         startPressTimer();
       }}
