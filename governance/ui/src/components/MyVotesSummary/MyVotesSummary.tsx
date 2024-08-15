@@ -1,6 +1,6 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 import { Timer } from '../Timer';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
@@ -25,19 +25,45 @@ export const MyVotesSummary = ({
   schedule,
   isInMyVotesPage,
 }: MyVotesSummary) => {
+  const [action, setAction] = useState('');
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
   const { network } = useNetwork();
   const networkForState = network?.id.toString() || '2192';
   const { state } = useVoteContext();
+  const [timer, setTimer] = useState<any>();
+  const isLongPress = useRef(false);
+
+  const startPressTimer = () => {
+    isLongPress.current = false;
+    setTimer(
+      setTimeout(() => {
+        setAction('longpress');
+        isLongPress.current = true;
+      }, 500)
+    );
+  };
+
+  useEffect(() => {
+    if (action === 'click') {
+      navigate('/my-votes');
+    } else if (action === 'longpress') {
+      setShowCart(true);
+    }
+  }, [action, navigate]);
 
   return (
     <Flex
       position="relative"
       cursor="pointer"
       data-cy="my-votes-button"
-      onClick={() => navigate('/my-votes')}
+      onClick={() => {
+        if (isLongPress.current) {
+          return;
+        }
+        setAction('click');
+      }}
       onMouseEnter={() => {
         if (councilPeriod === '2') setShowCart(true);
       }}
@@ -46,6 +72,18 @@ export const MyVotesSummary = ({
           if (!mouseOnDropdown) setShowCart(false);
         }, 1000)
       }
+      onMouseDown={() => {
+        startPressTimer();
+      }}
+      onMouseUp={() => {
+        clearTimeout(timer);
+      }}
+      onTouchStart={() => {
+        startPressTimer();
+      }}
+      onTouchEnd={() => {
+        clearTimeout(timer);
+      }}
       rounded="base"
       w="100%"
       maxW="200px"
