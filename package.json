@@ -25,10 +25,7 @@
     "upgrade-contracts": "yarn up @synthetixio/v3-contracts --recursive",
     "svg": "svgo --config svgo.config.js --recursive ./",
     "svg:check": "yarn svg && git diff --exit-code **/*.svg",
-    "download-cci-coverage": "download-cci-coverage",
-    "armada:bundle": "armada bundle create",
-    "armada:checksum": "armada bundle checksum",
-    "armada:publish": "armada project publish --network testnet-sepolia"
+    "download-cci-coverage": "download-cci-coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
@@ -40,7 +37,6 @@
     "@types/jest": "^29.5.8",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
-    "armada-cli": "^0.4.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.53.0",
