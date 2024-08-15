@@ -92,7 +92,10 @@ export const useApprove = (
   };
 };
 
-export const useApproveStata = ({ amount }: { amount: BigNumberish }) => {
+export const useApproveStata = () => {
+  console.log('Hello!!');
+  const amount = BigNumber.from(211553395);
+  console.log('Amount', amount.toString());
   const { activeWallet } = useWallet();
   const [txnState, dispatch] = useReducer(reducer, initialState);
 
@@ -112,7 +115,7 @@ export const useApproveStata = ({ amount }: { amount: BigNumberish }) => {
 
   const stataAllowance = wei(allowanceStata || 0).mul(10 ** 12);
   const usdcAllowance = wei(allowanceUSDC || 0).mul(10 ** 12);
-  const amountToApprove = wei(amount, 6, true);
+  const amountToApprove = wei(amount || 1, 6, true);
 
   // TODO: Multiply USDC amount by stata exchange rate
   const stataNeedsApproval = stataAllowance?.lt(amountToApprove);
@@ -144,29 +147,30 @@ export const useApproveStata = ({ amount }: { amount: BigNumberish }) => {
           ? ethers.constants.MaxUint256
           : amountToApprove;
 
-        console.log('Amount to approve', totalApprovalAmount.toString());
+        const usdcTx = usdcContract.populateTransaction.approve(
+          STATA_BASE_ADDRESS,
+          totalApprovalAmount
+        );
+
+        const stataTx = stataContract.populateTransaction.approve(
+          activeWallet?.address,
+          totalApprovalAmount
+        );
 
         const calls: any = [];
 
         // This will me mul by exchange rate
         if (stataNeedsApproval) {
-          calls.concat({
-            to: stataContract.address,
-            data: stataContract.interface.encodeFunctionData('approve', [
-              activeWallet?.address,
-              BigNumber.from(20000),
-            ]),
-          });
+          calls.concat(stataTx);
         }
 
         if (usdcNeedsApproval) {
-          calls.concat({
-            to: usdcContract.address,
-            data: usdcContract.interface.encodeFunctionData('approve', [
-              STATA_BASE_ADDRESS,
-              BigNumber.from(2000),
-            ]),
-          });
+          calls.concat(usdcTx);
+        }
+
+        if (calls.length === 0) {
+          dispatch({ type: 'success' });
+          return;
         }
 
         const txn = await Multicall3?.callStatic.aggregate(calls);
