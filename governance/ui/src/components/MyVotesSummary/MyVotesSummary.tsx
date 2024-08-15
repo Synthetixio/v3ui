@@ -1,12 +1,13 @@
 import { Flex, Show, Spinner, Text } from '@chakra-ui/react';
 import { Timer } from '../Timer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext } from '../../context/VoteContext';
 import { useNetwork } from '../../queries';
-import { useTransferAccountId } from '@snx-v3/useTransferAccountId';
+import { voteCardState } from '../../state/vote-card';
+import { useRecoilState } from 'recoil';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -26,6 +27,7 @@ export const MyVotesSummary = ({
   schedule,
   isInMyVotesPage,
 }: MyVotesSummary) => {
+  const [voteCard, setVoteCard] = useRecoilState(voteCardState);
   const [action, setAction] = useState<'click' | 'longpress' | undefined>(undefined);
   const [showCart, setShowCart] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
@@ -69,6 +71,12 @@ export const MyVotesSummary = ({
       document.removeEventListener('mousedown', listener);
     };
   }, []);
+
+  useEffect(() => {
+    if (voteCard) {
+      setTimeout(() => setVoteCard(false), 3000);
+    }
+  }, [voteCard, setVoteCard]);
 
   return (
     <Flex
@@ -136,14 +144,14 @@ export const MyVotesSummary = ({
             <Timer expiryTimestamp={schedule.votingPeriodStartDate} />
           )}
         </Text>
-        {showCart && (
+        {voteCard || (showCart && councilPeriod === '2') ? (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
             votes={state[networkForState]}
             isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
             period={councilPeriod}
           />
-        )}
+        ) : null}
       </Show>
     </Flex>
   );

@@ -10,6 +10,8 @@ import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
 import { useGetUserBallot, useNetwork } from '../../queries';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { voteCardState } from '../../state/vote-card';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -28,6 +30,7 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const [_, setVoteCard] = useRecoilState(voteCardState);
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
@@ -220,6 +223,7 @@ export const UserProfileDetails = ({
                   },
                 });
               }
+              setVoteCard(true);
             }}
           >
             {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
