@@ -44,7 +44,7 @@ const validActions = [
   'withdraw-debt',
 ] as const;
 const ManageActionSchema = z.enum(validActions);
-type ManageAction = z.infer<typeof ManageActionSchema>;
+export type ManageAction = z.infer<typeof ManageActionSchema>;
 
 const getInitialTab = (manageAction?: ManageAction) => {
   if (!manageAction || COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
@@ -188,14 +188,21 @@ const ManageActionUi: FC<{
   );
 };
 
-export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
+export const ManageAction = ({
+  liquidityPosition,
+  setTxnModalOpen,
+  txnModalOpen,
+}: {
+  liquidityPosition?: LiquidityPosition;
+  setTxnModalOpen: (action: ManageAction | null) => void;
+  txnModalOpen: ManageAction | null;
+}) => {
   const params = useParams();
   const { network } = useNetwork();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const { debtChange, collateralChange, setCollateralChange, setDebtChange, setWithdrawAmount } =
     useContext(ManagePositionContext);
 
@@ -225,7 +232,7 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
       }
       setTxnModalOpen(parsedAction);
     },
-    [isFormValid, parsedAction]
+    [isFormValid, parsedAction, setTxnModalOpen]
   );
 
   useEffect(() => {
