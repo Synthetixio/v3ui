@@ -58,6 +58,8 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
     if (collateralSymbol?.toLowerCase() === 'sstatausdc') {
       return 'sStataUSDC';
     }
+
+    return collateralSymbol;
   }, [network?.id, network?.preset, collateralSymbol]);
 }
 
@@ -84,6 +86,7 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
+  const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
   const positionApr = poolData?.apr?.collateralAprs?.find(
     (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
   );
@@ -140,9 +143,13 @@ export const ManageUi: FC<{
             flexDirection="column"
           >
             <BorderBox flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
-              <ManageAction liquidityPosition={liquidityPosition} />
+              <ManageAction
+                liquidityPosition={liquidityPosition}
+                setTxnModalOpen={setTxnModalOpen}
+                txnModalOpen={txnModalOpen}
+              />
             </BorderBox>
-            {liquidityPosition?.collateralAmount.gt(0) && (
+            {liquidityPosition?.collateralAmount.gt(0) && !txnModalOpen && (
               <Text
                 textAlign="center"
                 cursor="pointer"
