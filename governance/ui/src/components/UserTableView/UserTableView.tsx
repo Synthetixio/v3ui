@@ -38,11 +38,11 @@ export default function UserTableView({
           borderLeft={isSelected ? '1px solid' : ''}
           borderBottom={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-          // borderLeftRadius={isSelected ? 'base' : ''}
+          borderLeftRadius={isSelected ? 'base' : ''}
         >
-          <Text color="white">
+          <Text color="white" fontSize="sm" fontWeight={700}>
             {place < 10 ? (
-              <Flex gap="1">
+              <Flex gap="1" alignItems="center">
                 {place + 1}
                 <CrownIcon />
               </Flex>
@@ -59,7 +59,7 @@ export default function UserTableView({
         borderTop="1px solid"
         borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
         borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
-        // borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
+        borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
         <Flex gap="2" alignItems="center">
@@ -76,6 +76,8 @@ export default function UserTableView({
             textOverflow="ellipsis"
             maxW="170px"
             data-cy={`user-table-view-${user.address}`}
+            fontSize="sm"
+            fontWeight={700}
           >
             {user.username ? user.username : prettyString(user.address)}
           </Text>
@@ -87,6 +89,8 @@ export default function UserTableView({
           borderBottom={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
+          fontSize="sm"
+          fontWeight={700}
         >
           TODO
         </Td>
@@ -96,9 +100,11 @@ export default function UserTableView({
           borderTop="1px solid"
           borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected && councilPeriod === '2' ? '1px solid' : ''}
-          // borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
+          borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
+          fontSize="sm"
+          fontWeight={700}
         >
           TODO
         </Td>
@@ -109,8 +115,10 @@ export default function UserTableView({
           borderTop="1px solid"
           borderBottom="1px solid"
           borderRight={isSelected ? '1px solid' : ''}
-          // borderRightRadius={isSelected ? 'base' : ''}
+          borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+          fontSize="sm"
+          fontWeight={700}
         >
           <Button
             size="xs"
@@ -134,10 +142,10 @@ export default function UserTableView({
           borderTop="1px solid"
           borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected ? '1px solid' : ''}
-          // borderRightRadius={isSelected ? 'base' : ''}
+          borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
-          <Badge w="fit-content" fontFamily="">
+          <Badge w="fit-content" fontSize="xl" fontWeight={700}>
             Your Vote TODO
           </Badge>
         </Td>

@@ -167,7 +167,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
         />
       </Flex>
-      <Table>
+      <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
         <Thead>
           <Tr>
             {councilPeriod === '2' && (

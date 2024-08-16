@@ -6,6 +6,7 @@ import {
   Table,
   Tag,
   Tbody,
+  Td,
   Text,
   Th,
   Thead,
@@ -113,9 +114,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
         </Flex>
       </Flex>
       <Divider />
-      <Table
-      // style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}
-      >
+      <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
         <Thead>
           <Tr>
             <Th
@@ -192,51 +191,47 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
           {userDetailsLoading || !councilMemberDetails ? (
             <>
               <Tr>
-                <Th>
+                <Td>
                   <Skeleton h={6} w={6} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w="180px" />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={10} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={12} />
-                </Th>
+                </Td>
               </Tr>
               <Tr>
-                <Th>
+                <Td>
                   <Skeleton h={6} w={6} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w="180px" />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={10} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={12} />
-                </Th>
+                </Td>
               </Tr>
             </>
           ) : (
-            <>
-              {!!sortedNominees?.length &&
-                sortedNominees.map((councilNominee, index) => {
-                  return (
-                    <UserTableView
-                      place={index}
-                      user={councilNominee!}
-                      isNomination
-                      activeCouncil={activeCouncil}
-                      key={councilNominee?.address
-                        .concat('council-nominees')
-                        .concat(index.toString())}
-                    />
-                  );
-                })}
-            </>
+            !!sortedNominees?.length &&
+            sortedNominees.map((councilNominee, index) => {
+              return (
+                <UserTableView
+                  place={index}
+                  user={councilNominee!}
+                  isNomination
+                  activeCouncil={activeCouncil}
+                  key={councilNominee?.address.concat('council-nominees').concat(index.toString())}
+                />
+              );
+            })
           )}
         </Tbody>
       </Table>
