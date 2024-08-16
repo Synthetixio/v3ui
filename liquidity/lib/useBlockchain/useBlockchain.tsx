@@ -234,7 +234,7 @@ export const SNAX: Network = {
 export const SNAXTESTNET: Network = {
   id: 13001,
   preset: 'main',
-  hexId: `0x${Number(2192).toString(16)}`,
+  hexId: `0x${Number(13001).toString(16)}`,
   token: 'ETH',
   name: 'SNAX',
   rpcUrl: () => 'https://testnet.snaxchain.io/',

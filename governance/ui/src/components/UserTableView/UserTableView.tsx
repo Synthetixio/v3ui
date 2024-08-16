@@ -1,4 +1,4 @@
-import { Button, Flex, Icon, Text, Th, Tr } from '@chakra-ui/react';
+import { Button, Flex, Icon, Text, Td, Tr } from '@chakra-ui/react';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { Badge } from '../Badge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -33,11 +33,12 @@ export default function UserTableView({
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
     >
       {councilIsInAdminOrVoting && (
-        <Th
+        <Td
           borderTop="1px solid"
           borderLeft={isSelected ? '1px solid' : ''}
           borderBottom={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+          // borderLeftRadius={isSelected ? 'base' : ''}
         >
           <Text color="white">
             {place < 10 ? (
@@ -49,15 +50,16 @@ export default function UserTableView({
               '-'
             )}
           </Text>
-        </Th>
+        </Td>
       )}
-      <Th
+      <Td
         color="white"
         textTransform="unset"
         px="3"
         borderTop="1px solid"
         borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
         borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
+        // borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
         <Flex gap="2" alignItems="center">
@@ -78,34 +80,36 @@ export default function UserTableView({
             {user.username ? user.username : prettyString(user.address)}
           </Text>
         </Flex>
-      </Th>
+      </Td>
       {councilIsInAdminOrVoting && (
-        <Th
+        <Td
           borderTop="1px solid"
           borderBottom={isSelected ? '1px solid' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
         >
           TODO
-        </Th>
+        </Td>
       )}
       {councilIsInAdminOrVoting && (
-        <Th
+        <Td
           borderTop="1px solid"
           borderBottom={isSelected ? '1px solid' : ''}
-          borderRight={isSelected ? '1px solid' : ''}
+          borderRight={isSelected && councilPeriod === '2' ? '1px solid' : ''}
+          // borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
         >
           TODO
-        </Th>
+        </Td>
       )}
       {councilPeriod !== '2' && councilPeriod !== '0' && (
-        <Th
+        <Td
           textAlign="end"
           borderTop="1px solid"
           borderBottom="1px solid"
           borderRight={isSelected ? '1px solid' : ''}
+          // borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Button
@@ -122,18 +126,21 @@ export default function UserTableView({
           >
             {isNomination && 'View'}
           </Button>
-        </Th>
+        </Td>
       )}
       {councilPeriod === '0' && (
-        <Th
+        <Td
           textAlign="end"
           borderTop="1px solid"
           borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected ? '1px solid' : ''}
+          // borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
-          <Badge w="fit-content">Your Vote TODO</Badge>
-        </Th>
+          <Badge w="fit-content" fontFamily="">
+            Your Vote TODO
+          </Badge>
+        </Td>
       )}
     </Tr>
   );

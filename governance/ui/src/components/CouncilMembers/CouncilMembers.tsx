@@ -113,7 +113,9 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
         </Flex>
       </Flex>
       <Divider />
-      <Table>
+      <Table
+      // style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}
+      >
         <Thead>
           <Tr>
             <Th
