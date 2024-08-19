@@ -8,6 +8,8 @@ import { TimeIcon } from '@chakra-ui/icons';
 import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
 import { useTokenPrice } from '../../../../../lib/useTokenPrice';
 import { DebtAmount } from './DebtAmount';
+import { useRewards } from '@snx-v3/useRewards';
+import { useMemo } from 'react';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -27,8 +29,8 @@ export function PositionRow({
   availableCollateral,
   accountId,
 }: PositionRow) {
+  const { data: rewardsData } = useRewards(poolId, collateralType?.tokenAddress, accountId);
   const collateralPrice = useTokenPrice(collateralType.symbol);
-
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const { minutes, hours, isRunning } = useWithdrawTimer(accountId);
@@ -40,6 +42,11 @@ export function PositionRow({
       search: queryParams.toString(),
     });
   };
+
+  const hasRewards = useMemo(
+    () => (rewardsData || []).reduce((curr, acc) => curr + acc.claimableAmount.toNumber(), 0) > 0,
+    [rewardsData]
+  );
 
   return (
     <Tr borderBottomWidth={final ? 'none' : '1px'}>
@@ -125,16 +132,18 @@ export function PositionRow({
             <Text color="white" lineHeight="1.25rem" fontFamily="heading" fontSize="sm">
               {!!apr ? apr.toFixed(2).concat('%') : '-'}
             </Text>
-            <Text
-              color="cyan.500"
-              fontFamily="heading"
-              fontSize="0.75rem"
-              lineHeight="1rem"
-              cursor="pointer"
-              onClick={() => handleNavigate('deposit')}
-            >
-              Claim Rewards
-            </Text>
+            {hasRewards && (
+              <Text
+                color="cyan.500"
+                fontFamily="heading"
+                fontSize="0.75rem"
+                lineHeight="1rem"
+                cursor="pointer"
+                onClick={() => handleNavigate('deposit')}
+              >
+                Claim Rewards
+              </Text>
+            )}
           </Flex>
         </Fade>
       </Td>

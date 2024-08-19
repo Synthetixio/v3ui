@@ -11,6 +11,7 @@ import {
   TableDivider,
 } from './';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useRewards } from '@snx-v3/useRewards';
 
 interface PositionsTableInterface {
   isLoading: boolean;
