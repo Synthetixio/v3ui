@@ -8,14 +8,23 @@ export default function Admin() {
 
   const allProxies = [
     getCouncilContract('spartan'),
-    getCouncilContract('ambassador'),
-    getCouncilContract('treasury'),
+    // getCouncilContract('ambassador'),
+    // getCouncilContract('treasury'),
   ];
 
   return (
     <Flex direction="column" p="3" gap={4}>
       <Heading>All Councils</Heading>
-      <Heading>One Button Click will trigger always 3 Transactions</Heading>
+      <Heading>One Button Click will trigger always {allProxies.length} Transactions</Heading>
+      <Text>
+        Currently{' '}
+        {allProxies.length === 1
+          ? 'only spartan council'
+          : allProxies.length === 2
+            ? 'spartan and ambassador councils'
+            : 'all councils'}{' '}
+        is/are active
+      </Text>
       <Flex alignItems="center" gap={2}>
         <Text>Start Now Admin Period</Text>
         <Button

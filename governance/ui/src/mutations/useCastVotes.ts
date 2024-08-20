@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  useGetUserBallot,
+  // useGetUserBallot,
   useGetUserVotingPower,
   useNetwork,
   useSigner,
@@ -26,9 +26,9 @@ export function useCastVotes(
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
   const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');
 
-  const { data: spartanBallot } = useGetUserBallot('spartan');
-  const { data: ambassadorBallot } = useGetUserBallot('ambassador');
-  const { data: treasuryBallot } = useGetUserBallot('treasury');
+  // const { data: spartanBallot } = useGetUserBallot('spartan');
+  // const { data: ambassadorBallot } = useGetUserBallot('ambassador');
+  // const { data: treasuryBallot } = useGetUserBallot('treasury');
 
   const getVotingPowerByCouncil = (council: CouncilSlugs) => {
     switch (council) {
@@ -43,18 +43,18 @@ export function useCastVotes(
     }
   };
 
-  const getBallotByCouncil = (council: CouncilSlugs) => {
-    switch (council) {
-      case 'spartan':
-        return spartanBallot;
-      case 'ambassador':
-        return ambassadorBallot;
-      case 'treasury':
-        return treasuryBallot;
-      default:
-        return spartanBallot;
-    }
-  };
+  // const getBallotByCouncil = (council: CouncilSlugs) => {
+  //   switch (council) {
+  //     case 'spartan':
+  //       return spartanBallot;
+  //     case 'ambassador':
+  //       return ambassadorBallot;
+  //     case 'treasury':
+  //       return treasuryBallot;
+  //     default:
+  //       return spartanBallot;
+  //   }
+  // };
 
   return useMutation({
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
@@ -105,9 +105,7 @@ export function useCastVotes(
               ? {
                   target: electionModules[0].address,
                   callData: shouldWithdrawVote
-                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [
-                        [getBallotByCouncil(council)?.votedCandidates[0]],
-                      ])
+                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],
@@ -116,9 +114,7 @@ export function useCastVotes(
               : {
                   target: electionModules[0].address,
                   callData: shouldWithdrawVote
-                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [
-                        [getBallotByCouncil(council)?.votedCandidates[0]],
-                      ])
+                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],

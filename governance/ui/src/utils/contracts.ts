@@ -3,7 +3,7 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0xEdC8BCE858f3b504dd9DFdD2017339638A3FEC6c',
+  '0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 

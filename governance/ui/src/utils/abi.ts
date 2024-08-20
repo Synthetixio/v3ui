@@ -1859,12 +1859,6 @@ export const electionModuleABITest = [
         name: 'epochId',
         type: 'uint256',
       },
-      {
-        indexed: false,
-        internalType: 'address[]',
-        name: 'candidates',
-        type: 'address[]',
-      },
     ],
     name: 'VoteWithdrawn',
     type: 'event',
@@ -1877,12 +1871,6 @@ export const electionModuleABITest = [
         internalType: 'address',
         name: 'sender',
         type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'address[]',
-        name: 'candidates',
-        type: 'address[]',
       },
     ],
     name: 'VoteWithdrawnSent',
@@ -2026,11 +2014,6 @@ export const electionModuleABITest = [
         internalType: 'uint256',
         name: 'chainId',
         type: 'uint256',
-      },
-      {
-        internalType: 'address[]',
-        name: 'candidates',
-        type: 'address[]',
       },
     ],
     name: '_recvWithdrawVote',
@@ -2853,13 +2836,7 @@ export const electionModuleABITest = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address[]',
-        name: 'candidates',
-        type: 'address[]',
-      },
-    ],
+    inputs: [],
     name: 'withdrawVote',
     outputs: [],
     stateMutability: 'payable',
@@ -2938,6 +2915,25 @@ export const electionModuleABITest = [
     ],
     name: 'SnapshotNotTaken',
     type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'scale',
+        type: 'uint256',
+      },
+    ],
+    name: 'ScaleSet',
+    type: 'event',
   },
   {
     anonymous: false,
