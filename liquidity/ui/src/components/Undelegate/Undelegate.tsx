@@ -93,7 +93,7 @@ export const UndelegateUi: FC<{
   const txSummaryItems = useMemo(() => {
     const items = [
       {
-        label: 'Total ' + symbol,
+        label: 'Locked ' + symbol,
         value: (
           <ChangeStat
             value={currentCollateral || ZEROWEI}

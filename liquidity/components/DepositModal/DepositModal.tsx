@@ -509,7 +509,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
   const txSummaryItems = useMemo(() => {
     const items = [
       {
-        label: 'Total Collateral',
+        label: 'Locked ' + collateralType?.symbol,
         value: (
           <ChangeStat
             value={txSummary.currentCollateral}
@@ -543,6 +543,7 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
       },
     ];
   }, [
+    collateralType?.symbol,
     isBase,
     liquidityPosition?.collateralPrice,
     txSummary.collateralChange,

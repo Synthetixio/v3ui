@@ -44,13 +44,16 @@ export const ClosePositionTransactions: FC<{
   const { data: CoreProxy } = useCoreProxy();
   const { network } = useNetwork();
   const toast = useToast({ isClosable: true, duration: 9000 });
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+
+  const debtSymbol = isBase ? collateralType.symbol : systemToken.symbol;
+  const collateralSymbol = collateralType.displaySymbol;
 
   const [txState, setTxState] = useState({
     step: 0,
     status: 'idle',
   });
 
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
   const { data: wrapperToken } = useGetWrapperToken(
     getSpotMarketId(liquidityPosition?.accountCollateral.symbol)
   );
@@ -158,7 +161,7 @@ export const ClosePositionTransactions: FC<{
           <Text as="div">
             <Amount
               value={liquidityPosition?.collateralAmount || ZEROWEI}
-              suffix={` ${collateralType?.displaySymbol}`}
+              suffix={` ${collateralSymbol}`}
             />{' '}
             will be unlocked from the pool.
           </Text>
@@ -169,7 +172,7 @@ export const ClosePositionTransactions: FC<{
       if (liquidityPosition?.debt.gt(-0.00001)) {
         if (requireApprovalUSDC) {
           transactions.push({
-            title: 'Approve USDC transfer',
+            title: `Approve ${debtSymbol} transfer`,
             cb: () => approveUSDC(false),
           });
         }
@@ -179,8 +182,11 @@ export const ClosePositionTransactions: FC<{
         title: 'Unlock collateral',
         subtitle: (
           <Text as="div">
-            <Amount value={liquidityPosition?.collateralAmount || ZEROWEI} suffix={` USDC`} /> will
-            be unlocked from the pool.
+            <Amount
+              value={liquidityPosition?.collateralAmount || ZEROWEI}
+              suffix={` ${collateralSymbol}`}
+            />{' '}
+            will be unlocked from the pool.
           </Text>
         ),
         cb: () => undelegateBaseAndromeda(),
@@ -191,7 +197,7 @@ export const ClosePositionTransactions: FC<{
           title: 'Claim',
           subtitle: (
             <Text>
-              Claim <Amount value={liquidityPosition?.debt.abs()} suffix={` USDC`} />
+              Claim <Amount value={liquidityPosition?.debt.abs()} suffix={` ${debtSymbol}`} />
             </Text>
           ),
           cb: () => execBorrow(),
@@ -203,7 +209,8 @@ export const ClosePositionTransactions: FC<{
   }, [
     approve,
     approveUSDC,
-    collateralType?.displaySymbol,
+    collateralSymbol,
+    debtSymbol,
     execBorrow,
     execRepay,
     isBase,

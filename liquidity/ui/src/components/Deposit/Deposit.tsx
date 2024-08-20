@@ -88,7 +88,7 @@ export const DepositUi: FC<{
   const txSummaryItems = useMemo(() => {
     const items = [
       {
-        label: 'Total Collateral',
+        label: 'Locked ' + symbol,
         value: (
           <ChangeStat
             value={currentCollateral}
@@ -121,7 +121,7 @@ export const DepositUi: FC<{
         ),
       },
     ];
-  }, [collateralChange, collateralPrice, currentCollateral, currentDebt, isBase]);
+  }, [collateralChange, collateralPrice, currentCollateral, currentDebt, isBase, symbol]);
 
   const overAvailableBalance = collateralChange.abs().gt(maxAmount);
 
@@ -231,7 +231,14 @@ export const DepositUi: FC<{
         </Alert>
       </Collapse>
 
-      <Collapse in={collateralChange.abs().gt(0)} animateOpacity>
+      <Collapse
+        in={
+          collateralChange.abs().gt(0) &&
+          !overAvailableBalance &&
+          collateralChange.add(currentCollateral).gte(minDelegation)
+        }
+        animateOpacity
+      >
         <TransactionSummary mb={6} items={txSummaryItems} />
       </Collapse>
       <Button
