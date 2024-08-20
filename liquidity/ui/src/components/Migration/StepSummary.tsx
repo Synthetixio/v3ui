@@ -17,6 +17,7 @@ import { useV2Position } from '../../../../lib/useV2Position';
 import { Network } from '@snx-v3/useBlockchain';
 import { InfoIcon } from '@chakra-ui/icons';
 import { useMigrate } from '../../../../lib/useMigrate';
+import { useSNXPrice } from '../../../../lib/useSNXPrice';
 
 export const StepSummary = ({
   onClose,
@@ -29,6 +30,8 @@ export const StepSummary = ({
   const [isUnderstanding, setIsUnderstanding] = useState(false);
   const { data } = useV2Position(network);
   const { migrate, transaction, isLoading } = useMigrate();
+
+  const { data: snxPrice } = useSNXPrice(network);
 
   return (
     <VStack spacing={2.5} align="start" fontSize="12px">
@@ -73,13 +76,15 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.collateral?.toString(2)} SNX (${0})
+              {data?.collateral?.toString(2)} SNX &nbsp;
+              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.collateral).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">
             <Text>Balance</Text>
             <Text>
-              {data?.balance?.toString(2)} SNX (${0})
+              {data?.balance?.toString(2)} SNX &nbsp;
+              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.balance).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">
@@ -94,7 +99,10 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.collateral?.sub(data?.balance)?.toString(2)} SNX (${0})
+              {data?.collateral?.sub(data?.balance)?.toString(2)} SNX &nbsp;
+              {snxPrice?.gt(0) && (
+                <>(${snxPrice.mul(data?.collateral?.sub(data?.balance)).toString(2)})</>
+              )}
             </Text>
           </HStack>
           <HStack fontWeight="700" justifyContent="space-between">

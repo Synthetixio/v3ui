@@ -6496,6 +6496,7 @@ __metadata:
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@synthetixio/contracts": "npm:^1.2.3"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
