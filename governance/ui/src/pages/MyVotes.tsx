@@ -16,7 +16,7 @@ export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const networkForState = network?.id.toString() || process.env.CI === 'true' ? 13001 : 2192;
 
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');

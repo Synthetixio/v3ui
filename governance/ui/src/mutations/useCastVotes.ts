@@ -1,11 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  // useGetUserBallot,
-  useGetUserVotingPower,
-  useNetwork,
-  useSigner,
-  useWallet,
-} from '../queries';
+import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, utils } from 'ethers';
@@ -26,10 +20,6 @@ export function useCastVotes(
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
   const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');
 
-  // const { data: spartanBallot } = useGetUserBallot('spartan');
-  // const { data: ambassadorBallot } = useGetUserBallot('ambassador');
-  // const { data: treasuryBallot } = useGetUserBallot('treasury');
-
   const getVotingPowerByCouncil = (council: CouncilSlugs) => {
     switch (council) {
       case 'spartan':
@@ -43,24 +33,11 @@ export function useCastVotes(
     }
   };
 
-  // const getBallotByCouncil = (council: CouncilSlugs) => {
-  //   switch (council) {
-  //     case 'spartan':
-  //       return spartanBallot;
-  //     case 'ambassador':
-  //       return ambassadorBallot;
-  //     case 'treasury':
-  //       return treasuryBallot;
-  //     default:
-  //       return spartanBallot;
-  //   }
-  // };
-
   return useMutation({
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = network.id === 2192;
+        const isMotherchain = network.id === (process.env.CI === 'true' ? 13001 : 2192);
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)

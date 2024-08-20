@@ -1,7 +1,4 @@
 it('Councils - Administration', () => {
-  cy.task('changePeriod', { council: 'spartan', period: 'admin' });
-  cy.task('changePeriod', { council: 'ambassador', period: 'admin' });
-  cy.task('changePeriod', { council: 'treasury', period: 'admin' });
   cy.task('prepareVotingPower', { council: 'spartan' });
   cy.task('mineBlock');
   cy.task('prepareVotingPower', { council: 'ambassador' });
@@ -15,7 +12,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="council-period-badge"]').contains('Voting Open');
   cy.get('[data-cy="account-menu-button"]').click();
   cy.get('[data-cy="network-controller-switch"]').click();
-  cy.get('[data-cy="network-menu-button-11155420"]').click();
+  cy.get('[data-cy="network-menu-button-13001"]').click();
   cy.get('[data-cy="council-tab-vote-circle"]').should('not.exist');
   cy.get('[data-cy="vote-council-button-spartan"]').click();
   cy.get('[data-cy="period-countdown"]').should('exist');

@@ -8,8 +8,8 @@ export default function Admin() {
 
   const allProxies = [
     getCouncilContract('spartan'),
-    // getCouncilContract('ambassador'),
-    // getCouncilContract('treasury'),
+    getCouncilContract('ambassador'),
+    getCouncilContract('treasury'),
   ];
 
   return (
@@ -167,7 +167,7 @@ export default function Admin() {
                 .connect(signer!)
                 .takeVotePowerSnapshot(
                   SnapshotRecordContract(
-                    2192,
+                    13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   {
@@ -193,13 +193,13 @@ export default function Admin() {
                 .connect(signer!)
                 .getVotePowerSnapshotId(
                   SnapshotRecordContract(
-                    2192,
+                    13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   electionId
                 );
               SnapshotRecordContract(
-                2192,
+                13001,
                 index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
               )
                 ?.connect(signer!)

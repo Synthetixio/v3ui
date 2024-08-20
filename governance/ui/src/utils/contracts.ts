@@ -8,12 +8,12 @@ const SpartanCouncilContract = new Contract(
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xC82e8284F6f3Dc0388C4c25B73A4D0908624ee00',
+  '0xCdbEf5753cE3CEbF361e143117e345ADd7498F80',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0x0A7B42E8b43eA1FaD074E6FB18d2807DEb94375d',
+  '0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -38,13 +38,13 @@ export function getCouncilContract(council: CouncilSlugs) {
 
 export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) => {
   switch (chainId) {
-    case 2192: {
+    case 13001: {
       switch (council) {
         case 'spartan':
           return new Contract(
             process.env.DEV === 'true'
               ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-              : '0x64dD8f5578C38cbe6066906161f51118f59BB3DD',
+              : '0x552E469B7C88cd501C08e7759d35dC58f08C9648',
             [
               'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
               'function setBalanceOfOnPeriod(address, uint256, uint256) external',
@@ -54,7 +54,7 @@ export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) =
           return new Contract(
             process.env.DEV === 'true'
               ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-              : '0x7BaE0d0Bf556B2C8F3BFd250D7c63B1B2711652B',
+              : '0x3a0186E03137B9b971EC911350A0F2D88D24FDF2',
             [
               'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
               'function setBalanceOfOnPeriod(address, uint256, uint256) external',
@@ -64,7 +64,7 @@ export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) =
           return new Contract(
             process.env.DEV === 'true'
               ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-              : '0x5A11B387988cCc19f26E7d434dFF6A8c896273C9',
+              : '0xC0bFA9aC792cF691734F7b2BD252d1c2B9fBa343',
             [
               'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
               'function setBalanceOfOnPeriod(address, uint256, uint256) external',
