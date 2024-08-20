@@ -7,6 +7,7 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { ZEROWEI } from '../../ui/src/utils/constants';
 import { wei } from '@synthetixio/wei';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
+import { parseTxError } from '../parser';
 
 export function useMigrate() {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +36,8 @@ export function useMigrate() {
         console.log('gasLimit:', gasLimit);
         return { ...populateTransaction, gasLimit };
       } catch (error) {
-        console.log('error:', error);
+        const err = parseTxError(error);
+        console.log('error:', err);
       }
     },
     enabled: Boolean(signer && !!legacyMarket),

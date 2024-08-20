@@ -13,7 +13,7 @@ export const MigrationBanner: FC<Props> = ({ network }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { data } = useV2Position(network);
   const { network: currentNetwork, setNetwork } = useNetwork();
-  const { connect } = useWallet();
+  const { connect, activeWallet } = useWallet();
 
   if (!data || data?.collateral.lte(0)) {
     return null;
@@ -64,12 +64,12 @@ export const MigrationBanner: FC<Props> = ({ network }) => {
             alignSelf="flex-end"
             onClick={async () => {
               try {
-                if (!currentNetwork) {
+                if (!activeWallet) {
                   connect();
                   return;
                 }
 
-                if (currentNetwork.id !== network.id) {
+                if (!currentNetwork || currentNetwork.id !== network.id) {
                   if (!(await setNetwork(network.id))) {
                     return;
                   }
@@ -79,7 +79,11 @@ export const MigrationBanner: FC<Props> = ({ network }) => {
               } catch (error) {}
             }}
           >
-            {currentNetwork?.id !== network.id ? 'Switch Network' : 'Migrate to V3'}
+            {!activeWallet
+              ? 'Connect'
+              : currentNetwork?.id !== network.id
+                ? 'Switch Network'
+                : 'Migrate to V3'}
           </Button>
         </Flex>
       </Fade>

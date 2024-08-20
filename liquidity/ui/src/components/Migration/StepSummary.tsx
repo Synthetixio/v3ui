@@ -9,6 +9,8 @@ import {
   Checkbox,
   Button,
   Spinner,
+  Link,
+  Flex,
 } from '@chakra-ui/react';
 import { wei } from '@synthetixio/wei';
 import { useV2Position } from '../../../../lib/useV2Position';
@@ -58,11 +60,15 @@ export const StepSummary = ({
       </Text>
 
       <Box p={3.5} borderRadius="4px" background="#1F1F34" width="100%">
-        <VStack align="stretch" spacing={4} mt={4}>
+        <VStack align="stretch" spacing={3}>
           <HStack fontWeight="700" justifyContent="space-between">
             <Text>
               SNX Collateral{' '}
-              <Tooltip label="Your SNX Collateral will not appear on your wallet anymore as it will be deposited into your V3 Account. You can see the details on the Dashboard after migration.">
+              <Tooltip
+                hasArrow
+                textAlign="left"
+                label="Your SNX Collateral will not appear on your wallet anymore as it will be deposited in your Account. You can see the details on your Dashboard."
+              >
                 <InfoIcon />
               </Tooltip>
             </Text>
@@ -70,16 +76,20 @@ export const StepSummary = ({
               {data?.collateral?.toString(2)} SNX (${0})
             </Text>
           </HStack>
-          <HStack justifyContent="space-between">
+          <HStack color="gray" justifyContent="space-between">
             <Text>Balance</Text>
             <Text>
               {data?.balance?.toString(2)} SNX (${0})
             </Text>
           </HStack>
-          <HStack justifyContent="space-between">
+          <HStack color="gray" justifyContent="space-between">
             <Text>
               Escrowed{' '}
-              <Tooltip label="Escrowed SNX will be locked in the V3 system until the escrowed date. It can still be delegated but not withdrawn.">
+              <Tooltip
+                hasArrow
+                textAlign="left"
+                label="Escrowed SNX will be locked in the V3 system until the escrowed date. It can still be delegated but not withdrawn."
+              >
                 <InfoIcon />
               </Tooltip>
             </Text>
@@ -90,7 +100,22 @@ export const StepSummary = ({
           <HStack fontWeight="700" justifyContent="space-between">
             <Text>
               Debt{' '}
-              <Tooltip label="Your debt will be the same on V3. However, post migration, your debt will fluctuate based on the amount of collateral deposited, instead of debt. Learn more about the V3 system.">
+              <Tooltip
+                hasArrow
+                label={
+                  <Text textAlign="left">
+                    Your debt amount will be the same on V3. Debt is however now determined by the
+                    collateral deposited. Learn more about the{' '}
+                    <Link
+                      target="_blank"
+                      color="cyan.500"
+                      href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                    >
+                      V3 system.
+                    </Link>
+                  </Text>
+                }
+              >
                 <InfoIcon />
               </Tooltip>
             </Text>
@@ -103,7 +128,7 @@ export const StepSummary = ({
         I understand that this action cannot be undone
       </Checkbox>
 
-      <Box p={3.5} borderRadius="4px" background="#1F1F34" width="100%">
+      <Box mb={3.5} p={3.5} borderRadius="4px" background="#1F1F34" width="100%">
         <HStack justifyContent="space-between">
           <Text>Estimated Gas</Text>
           <Text>
@@ -130,10 +155,19 @@ export const StepSummary = ({
           </Button>
         </>
       ) : (
-        <HStack>
+        <Flex
+          fontSize="14px"
+          fontWeight={700}
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          gap={2}
+          p={3}
+          color="cyan.500"
+        >
           <Spinner />
-          Transaction in progress...
-        </HStack>
+          Loading
+        </Flex>
       )}
     </VStack>
   );
