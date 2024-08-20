@@ -198,7 +198,7 @@ const parseError = async (error: any, provider: providers.JsonRpcProvider, netwo
 // simulate w/ wETH contract because it will have eth balance
 // This is useful when we do read/static calls but still need an balance for the price update
 // TODO: this probably need to be network aware, maybe look into a different solution even.
-const getDefaultFromAddress = (chainName: string) => {
+export const getDefaultFromAddress = (chainName: string) => {
   switch (chainName) {
     case 'cannon':
       return '0x4200000000000000000000000000000000000006'; // TODO, unclear what to put here

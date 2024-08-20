@@ -24,20 +24,16 @@ export function useMigrate() {
         return;
       }
       const signerAddress = await signer!.getAddress();
-
-      const populateTransaction = await legacyMarket.populateTransaction.migrate(
-        Math.floor(Math.random() * 1000000000000),
-        {
-          from: signerAddress,
-        }
-      );
+      const accountId = Math.floor(Math.random() * 1000000000000);
+      const populateTransaction = await legacyMarket.populateTransaction.migrate(accountId, {
+        from: signerAddress,
+      });
       try {
         const gasLimit = await provider?.estimateGas(populateTransaction);
-        console.log('gasLimit:', gasLimit);
         return { ...populateTransaction, gasLimit };
       } catch (error) {
         const err = parseTxError(error);
-        console.log('error:', err);
+        console.error('error:', err);
       }
     },
     enabled: Boolean(signer && !!legacyMarket),

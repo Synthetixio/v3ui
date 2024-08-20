@@ -3347,7 +3347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0":
+"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0, @ethersproject/providers@npm:^5.7.2":
   version: 5.7.2
   resolution: "@ethersproject/providers@npm:5.7.2"
   dependencies:
@@ -6490,6 +6490,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useSNXPrice@workspace:liquidity/lib/useSNXPrice":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useSNXPrice@workspace:liquidity/lib/useSNXPrice"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/contracts": "npm:^1.2.3"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useSpotMarketProxy@workspace:*, @snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSpotMarketProxy@workspace:liquidity/lib/useSpotMarketProxy"
@@ -7026,6 +7038,16 @@ __metadata:
     "@stablelib/random": "npm:^1.0.2"
     "@stablelib/wipe": "npm:^1.0.1"
   checksum: fb5469e390ee2515d926633e3e179038894ac4f5e8c8cd2c2fc912022e34a051112eab0fe80c4dbc6e59129679844182562a036abff89444e5c4a05dd42ed329
+  languageName: node
+  linkType: hard
+
+"@synthetixio/contracts@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@synthetixio/contracts@npm:1.2.3"
+  dependencies:
+    "@ethersproject/abi": "npm:^5.7.0"
+    "@ethersproject/providers": "npm:^5.7.2"
+  checksum: db21ac9403c5508aa2760927d7825e95665c2ec1a3cf9dac0fab06835fcb34e9ede61c22d05be57cc34f03213d652ad2c4e0f250d8f879ae272056459a0a45b0
   languageName: node
   linkType: hard
 
