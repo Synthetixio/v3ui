@@ -240,7 +240,7 @@ export const UndelegateModal: UndelegateModalProps = ({ onClose, isOpen, liquidi
   const txSummaryItems = useMemo(() => {
     const items = [
       {
-        label: 'Total ' + collateralType?.displaySymbol,
+        label: 'Locked ' + collateralType?.displaySymbol,
         value: (
           <ChangeStat
             value={txSummary.currentCollateral}
