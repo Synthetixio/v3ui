@@ -91,12 +91,6 @@ export const useDepositBaseAndromeda = ({
           ? parseUnits(amount.toString(), 6)
           : BigNumber.from(0);
 
-        console.log({
-          collateralChange: collateralChange.toString(),
-          availableCollateral: availableCollateral.toString(),
-          collateralAmount: collateralAmount.toString(),
-        });
-
         const spotMarketId = getSpotMarketId(collateralSymbol);
         const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
 
