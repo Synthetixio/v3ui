@@ -5,11 +5,11 @@ on:
     tags:
       - 'release-governance-*'
     branches:
-      - 'release-governance'
+      - 'governance-synthetix-eth'
       - 'releases'
 
 jobs:
-  release-liquidity:
+  release-governance:
     runs-on: ubuntu-latest
     steps:
       - run: git config --global user.email engineering@snxdao.io
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: governance
-          repository: 'Synthetixio/governance-v3-ui'
+          repository: 'Synthetixio/governance.synthetix.eth'
           ref: 'master'
           ssh-key: '${{ secrets.GOVERNANCE_SSH_KEY }}'
 
