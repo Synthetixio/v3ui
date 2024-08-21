@@ -5412,7 +5412,6 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@cypress/code-coverage": "npm:^3.12.39"
-    "@snx-cy/onLogAdded": "workspace:*"
     "@snx-cy/printBrowserLogs": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     cypress: "npm:13.11.0"
