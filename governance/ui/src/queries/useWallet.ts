@@ -76,9 +76,10 @@ export function useSigner() {
 
 export function useProvider() {
   const [{ wallet }] = useConnectWallet();
+  const { network } = useNetwork();
 
   if (!wallet) {
-    return motherShipProvider;
+    return motherShipProvider(network?.id);
   }
 
   const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');

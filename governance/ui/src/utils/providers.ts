@@ -1,11 +1,11 @@
 import { providers } from 'ethers';
 
-export const motherShipProvider = new providers.JsonRpcProvider(
-  process.env.DEV === 'true'
-    ? process.env.DEV_RPC_MOTHERSHIP
-    : process.env.CI === 'true'
+export const motherShipProvider = (networkId?: number) => {
+  return new providers.JsonRpcProvider(
+    process.env.CI === 'true'
       ? process.env.CI_RPC_MOTHERSHIP
-      : process.env.TESTNET === 'true'
+      : networkId === 13001
         ? 'https://testnet.snaxchain.io/'
         : 'https://mainnet.snaxchain.io/'
-);
+  );
+};
