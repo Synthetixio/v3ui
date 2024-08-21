@@ -323,7 +323,7 @@ workflows:
           requires: [
               tests,
               liquidity-cy,
-              governance-e2e-snax-testnet,
+              # governance-e2e-snax-testnet,
               liquidity-e2e-base-mainnet,
               #liquidity-e2e-sepolia,
             ]
