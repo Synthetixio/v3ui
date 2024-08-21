@@ -11,7 +11,7 @@ function App() {
             Governing Councils
           </Heading>
           <Text fontSize="14px" lineHeight="20px" color="gray.500">
-            The Synthetix Protocol is governed by four councils, each responsible for a core aspect
+            The Synthetix Protocol is governed by three councils, each responsible for a core aspect
             of a DAO.
           </Text>
         </Flex>
