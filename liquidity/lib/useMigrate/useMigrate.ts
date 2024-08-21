@@ -11,6 +11,7 @@ import { parseTxError } from '../parser';
 
 export function useMigrate() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { network } = useNetwork();
   const provider = useDefaultProvider();
   const signer = useSigner();
@@ -32,8 +33,10 @@ export function useMigrate() {
         const gasLimit = await provider?.estimateGas(populateTransaction);
         return { ...populateTransaction, gasLimit };
       } catch (error) {
-        const err = parseTxError(error);
-        console.error('error:', err);
+        const parsedError = parseTxError(error);
+        const errorResult = legacyMarket.interface.parseError(parsedError as string);
+        console.error('error:', errorResult);
+        return null;
       }
     },
     enabled: Boolean(signer && !!legacyMarket),
@@ -43,10 +46,10 @@ export function useMigrate() {
   const migrate = useCallback(async () => {
     try {
       if (!legacyMarket || !transaction) {
-        console.error('legacy market not found');
         return;
       }
       setIsLoading(true);
+      setIsSuccess(false);
       const gasPrices = await getGasPrice({ provider: signer!.provider });
 
       const gasOptionsForTransaction = formatGasPriceForTransaction({
@@ -59,6 +62,7 @@ export function useMigrate() {
       await txn.wait();
 
       setIsLoading(false);
+      setIsSuccess(true);
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -69,5 +73,6 @@ export function useMigrate() {
     migrate,
     transaction,
     isLoading,
+    isSuccess,
   };
 }

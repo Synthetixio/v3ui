@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   VStack,
   Text,
@@ -18,10 +18,12 @@ import { Network } from '@snx-v3/useBlockchain';
 import { InfoIcon } from '@chakra-ui/icons';
 import { useMigrate } from '../../../../lib/useMigrate';
 import { useSNXPrice } from '../../../../lib/useSNXPrice';
+import { StepSuccess } from './StepSuccess';
 
 export const StepSummary = ({
   onClose,
   network,
+  onConfirm,
 }: {
   onClose: () => void;
   onConfirm: () => void;
@@ -29,9 +31,38 @@ export const StepSummary = ({
 }) => {
   const [isUnderstanding, setIsUnderstanding] = useState(false);
   const { data } = useV2Position(network);
-  const { migrate, transaction, isLoading } = useMigrate();
+  const { migrate, transaction, isLoading, isSuccess } = useMigrate();
 
   const { data: snxPrice } = useSNXPrice(network);
+
+  const [txSummary, setTxSummary] = useState({
+    collateral: '0',
+    cRatio: '0',
+  });
+
+  const cRatio = wei(1)
+    .div(data?.cratio || wei(1))
+    .mul(100)
+    .toString(2);
+
+  const handleSubmit = useCallback(() => {
+    setTxSummary({
+      cRatio,
+      collateral: data?.collateral?.toString(2) || '0',
+    });
+
+    migrate();
+  }, [cRatio, data?.collateral, migrate]);
+
+  if (isSuccess) {
+    return (
+      <StepSuccess
+        onConfirm={onConfirm}
+        cRatio={txSummary.cRatio}
+        collateral={txSummary.collateral}
+      />
+    );
+  }
 
   return (
     <VStack spacing={2.5} align="start" fontSize="12px">
@@ -41,13 +72,7 @@ export const StepSummary = ({
         <HStack fontWeight="700" justifyContent="space-between">
           <Text>C-Ratio</Text>
           <HStack>
-            <Text>
-              {wei(1)
-                .div(data?.cratio || wei(1))
-                .mul(100)
-                .toString(0)}
-              %
-            </Text>
+            <Text>{cRatio}%</Text>
             {/* <Tag colorScheme="green">HEALTHY</Tag> */}
           </HStack>
         </HStack>
@@ -139,11 +164,11 @@ export const StepSummary = ({
       <Box mb={3.5} p={3.5} borderRadius="4px" background="#1F1F34" width="100%">
         <HStack justifyContent="space-between">
           <Text>Estimated Gas</Text>
-          <Text>
+          <Text color="red">
             {transaction?.gasLimit && transaction?.gasLimit.gt(0) ? (
               transaction?.gasLimit.toString() + ' ETH (${0})'
             ) : (
-              <Text color="red">Transaction error occured, please seek support</Text>
+              <span>Transaction error occured, please seek support</span>
             )}
           </Text>
         </HStack>
@@ -154,7 +179,7 @@ export const StepSummary = ({
           <Button
             width="100%"
             isDisabled={!(transaction?.gasLimit && transaction?.gasLimit.gt(0) && isUnderstanding)}
-            onClick={() => migrate()}
+            onClick={handleSubmit}
           >
             Migrate
           </Button>

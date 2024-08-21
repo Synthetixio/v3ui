@@ -36,6 +36,7 @@ export function useLegacyMarket(customNetwork?: Network | null) {
         network?.id,
         network?.preset
       );
+
       return new Contract(lmAddress, lmAbi, signerOrProvider);
     },
     enabled: Boolean(signer || provider || providerForChain),

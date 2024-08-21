@@ -43,7 +43,14 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen }) => {
           {step === 0 && <StepIntro onConfirm={() => setStep(1)} onClose={onClose} />}
           {step === 1 && <StepExplain onConfirm={() => setStep(2)} onClose={() => setStep(0)} />}
           {step === 2 && (
-            <StepSummary onConfirm={() => setStep(3)} onClose={onClose} network={network} />
+            <StepSummary
+              onConfirm={() => {
+                //open sUSD migration dialog
+                onClose();
+              }}
+              onClose={onClose}
+              network={network}
+            />
           )}
         </ModalBody>
       </ModalContent>
