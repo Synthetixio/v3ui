@@ -136,7 +136,7 @@ jobs:
       - run:
           name: Run server localhost:3000
           working_directory: /tmp/app/governance/ui
-          command: DEV=false TESTNET=false CI=true yarn start
+          command: DEV=false TESTNET=false CI=true yarn start:e2e
           background: true
 
       - run:

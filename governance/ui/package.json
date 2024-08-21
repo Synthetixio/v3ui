@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "webpack-cli serve",
+    "start:e2e": "CI=true TESTNET=false webpack-cli serve",
     "build": "NODE_ENV=production webpack-cli",
     "focus": "yarn workspaces focus '@snx-v3/governance'"
   },
