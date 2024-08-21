@@ -40,7 +40,6 @@ export default function MyVoteRow({
           councilSlug={councilSlug}
           address={ballot?.votedCandidates[0] || stateForNetwork}
         />
-
         {ballot?.votedCandidates[0] && stateForNetwork === 'remove' && (
           <>
             <ArrowForwardIcon mx="2" />
@@ -63,18 +62,28 @@ export default function MyVoteRow({
         <IconButton
           aria-label="action-button"
           icon={<CloseIcon />}
-          data-cy="remove-vote-button"
+          data-cy={`remove-vote-button-${councilSlug}`}
           variant="outlined"
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
-            dispatch({
-              type: councilSlug.toUpperCase(),
-              payload: {
-                action: stateForNetwork === 'remove' ? 'remove' : undefined,
-                network: networkForState,
-              },
-            });
+            if (!!ballot?.votedCandidates[0]) {
+              dispatch({
+                type: councilSlug.toUpperCase(),
+                payload: {
+                  action: 'remove',
+                  network: networkForState,
+                },
+              });
+            } else {
+              dispatch({
+                type: councilSlug.toUpperCase(),
+                payload: {
+                  action: stateForNetwork === 'remove' ? 'remove' : undefined,
+                  network: networkForState,
+                },
+              });
+            }
           }}
         />
       )}

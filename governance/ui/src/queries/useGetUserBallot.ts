@@ -62,6 +62,6 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
     ballot = { ...temp, council };
   }
   // @ts-ignore
-  // TODO @MF check why TS is acting up
+  // TODO @dev check why TS is acting up
   return ballot;
 }

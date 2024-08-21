@@ -84,7 +84,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
                 {data?.username ? data.username : prettyString(activeWallet?.address || '')}
               </Text>
               <Text fontSize="12px" color="gray.500">
-                Nomination Wallet: {prettyString(data!.address)}
+                Nomination Wallet: {prettyString(data?.address || '')}
               </Text>
             </Flex>
           </Flex>

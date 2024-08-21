@@ -1,11 +1,8 @@
 import '@cypress/code-coverage/support';
-import { onLogAdded } from '@snx-cy/onLogAdded';
 import { ethers } from 'ethers';
 import { metamask } from '../lib/metamask';
 
 beforeEach(() => {
-  cy.on('log:added', onLogAdded);
-
   cy.intercept('https://analytics.synthetix.io/matomo.js', { statusCode: 204 }).as('matomo');
 
   [

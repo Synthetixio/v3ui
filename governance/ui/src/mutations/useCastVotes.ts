@@ -100,7 +100,6 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
-
           await multicall
             .connect(signer)
             [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {

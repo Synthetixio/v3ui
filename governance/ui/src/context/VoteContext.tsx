@@ -41,7 +41,7 @@ const VoteContext = createContext<
 const voteReducer = (state: VoteState, action: Action): VoteState => {
   switch (action.type) {
     case 'SPARTAN': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(action.payload.action, 'spartan', action.payload.network);
       } else {
         removeCandidate('spartan', action.payload.network);
@@ -55,7 +55,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'AMBASSADOR': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(action.payload.action, 'ambassador', action.payload.network);
       } else {
         removeCandidate('ambassador', action.payload.network);
@@ -69,7 +69,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'TREASURY': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(action.payload.action, 'treasury', action.payload.network);
       } else {
         removeCandidate('treasury', action.payload.network);
