@@ -58,7 +58,10 @@ export function useMigrate() {
         gasSpeed,
       });
 
-      const txn = await legacyMarket.connect(signer!).migrate({ ...gasOptionsForTransaction });
+      const accountId = Math.floor(Math.random() * 1000000000000);
+      const txn = await legacyMarket
+        .connect(signer!)
+        .migrate(accountId, { ...gasOptionsForTransaction });
       await txn.wait();
 
       setIsLoading(false);

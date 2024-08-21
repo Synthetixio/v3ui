@@ -14,7 +14,7 @@ export function useV2sUSD(customNetwork?: Network | null) {
       if (!v2xSynthetix) {
         return;
       }
-      return await v2xSynthetix.synths(utils.formatBytes32String('sUSD'));
+      return (await v2xSynthetix.synths(utils.formatBytes32String('sUSD'))) as string;
     },
     enabled: Boolean(v2xSynthetix),
     staleTime: Infinity,

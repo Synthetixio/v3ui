@@ -6313,6 +6313,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useMulticall3@workspace:*, @snx-v3/useMulticall3@workspace:liquidity/lib/useMulticall3":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMulticall3@workspace:liquidity/lib/useMulticall3"

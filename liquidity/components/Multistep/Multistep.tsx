@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode } from 'react';
-import { Box, Checkbox, CheckboxProps, Flex, Text } from '@chakra-ui/react';
+import { Box, Checkbox, CheckboxProps, Flex, FlexProps, Text } from '@chakra-ui/react';
 import { Step } from './Step';
 import { statusColor } from './statusColor';
 import { MultistepStatus } from './MultistepStatus';
@@ -15,6 +15,15 @@ function StepCheckbox({ children, ...props }: PropsWithChildren<CheckboxProps>) 
     </Flex>
   );
 }
+interface Props extends Omit<FlexProps, 'title'> {
+  step: number;
+  title: string | ReactNode;
+  subtitle?: string | ReactNode;
+  checkboxLabel?: string;
+  checkboxProps?: CheckboxProps;
+  status: MultistepStatus;
+  children?: ReactNode | undefined;
+}
 
 export function Multistep({
   step,
@@ -24,14 +33,8 @@ export function Multistep({
   checkboxProps,
   status,
   children,
-}: PropsWithChildren<{
-  step: number;
-  title: string | ReactNode;
-  subtitle?: string | ReactNode;
-  checkboxLabel?: string;
-  checkboxProps?: CheckboxProps;
-  status: MultistepStatus;
-}>) {
+  ...props
+}: Props) {
   return (
     <Flex
       position="relative"
@@ -44,6 +47,7 @@ export function Multistep({
       transitionProperty="border-color"
       transitionDuration="normal"
       borderColor={statusColor(status)}
+      {...props}
     >
       <Step status={status}>{step}</Step>
       <Flex direction="column">
