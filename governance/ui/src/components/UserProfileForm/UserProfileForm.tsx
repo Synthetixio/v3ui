@@ -19,8 +19,8 @@ import { useForm } from 'react-hook-form';
 import useUpdateUserDetailsMutation from '../../mutations/useUpdateUserDetailsMutation';
 import { GetUserDetails, useGetUserDetailsQuery } from '../../queries/';
 import { useEffect } from 'react';
+import { unstable_useBlocker as useBlocker } from 'react-router-dom';
 import { useWallet } from '../../queries/useWallet';
-import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import UserProfileEditPreview from './UserProfileEditPreview';
 
 export function UserProfileForm() {
@@ -28,8 +28,22 @@ export function UserProfileForm() {
   const { activeWallet } = useWallet();
   const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
   const mutation = useUpdateUserDetailsMutation();
+  const {
+    isOpen: blockerIsOpen,
+    onClose: onBlockerClose,
+    onOpen: onBlockerOpen,
+  } = useDisclosure({ id: 'blocker' });
 
-  const { register, getValues, setValue, watch } = useForm({
+  const blocker = useBlocker(() => {
+    if (formState.isDirty) {
+      onBlockerOpen();
+      return true;
+    }
+    onBlockerClose();
+    return false;
+  });
+
+  const { register, getValues, setValue, watch, formState } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -99,9 +113,12 @@ export function UserProfileForm() {
         rounded="base"
         border="1px solid"
         borderColor="gray.900"
+        mt="9"
       >
-        <Flex w="100%" alignItems="center">
-          <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
+        {/*
+          <Flex w="100%" alignItems="center">
+            <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
+
           <Flex w="100%" flexDirection="column" ml="2" gap="2">
             <Text fontSize="12px" color="gray.500">
               Avatar
@@ -115,16 +132,16 @@ export function UserProfileForm() {
               })}
               placeholder="QmSHZw..."
             />
-          </Flex>
-        </Flex>
-        <Flex flexDir="column" w="100%" gap="2">
+          </Flex></Flex> */}
+
+        <Flex flexDir="column" w="100%" gap="1">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Username
           </Text>
           <Input
             {...register('username')}
             mb="1"
-            placeholder="eg: DeFiLoard"
+            placeholder="eg: DeFiLord"
             data-cy="username-input"
           />
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
@@ -132,30 +149,31 @@ export function UserProfileForm() {
           </Text>
           <Input {...register('about')} placeholder="eq: OG DeFi Member" data-cy="about-input" />
         </Flex>
-        <div>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Discord
           </Text>
-          <Input {...register('discord')} placeholder="JohnDoe" data-cy="discord-input" />
-        </div>
-        <div>
+          <Input {...register('discord')} placeholder="eg: username" data-cy="discord-input" />
+        </Flex>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Twitter
           </Text>
-          <Input {...register('twitter')} placeholder="JohnDoe" data-cy="twitter-input" />
-        </div>
-        <div>
+          <Input {...register('twitter')} placeholder="eg: username" data-cy="twitter-input" />
+        </Flex>
+        <Flex gap="1" flexDirection="column">
           <Text color="gray.500" fontSize="12px" lineHeight="16px">
             Github
           </Text>
-          <Input {...register('github')} placeholder="JohnDoe" data-cy="github-input" />
-        </div>
+          <Input {...register('github')} placeholder="eg: username" data-cy="github-input" />
+        </Flex>
         <Flex flexDirection="column" alignItems="flex-start">
           <Text fontSize="12px" fontWeight="400" color="gray.500">
             Wallet Address
           </Text>
           <Tooltip label="The wallet address cannot be edited, connect with a different wallet to change the address">
             <Button
+              h="40px"
               bg="rgba(255,255,255,0.12)"
               size="xs"
               display="flex"
@@ -175,11 +193,13 @@ export function UserProfileForm() {
               <Text mr="1" fontSize="14px" fontWeight="400">
                 {user?.address}
               </Text>
-              <CopyIcon
-                w="12px"
-                h="12px"
-                onClick={() => navigator.clipboard.writeText(user!.address)}
-              />
+              <Tooltip label="Copy Wallet Address">
+                <CopyIcon
+                  w="12px"
+                  h="12px"
+                  onClick={() => navigator.clipboard.writeText(user!.address)}
+                />
+              </Tooltip>
             </Button>
           </Tooltip>
         </Flex>
@@ -190,6 +210,7 @@ export function UserProfileForm() {
           {...register('delegationPitch')}
           placeholder="eg: How am I going to make a difference at Synthetix"
           data-cy="governance-pitch-input"
+          h="253px"
         />
         <Show below="xl">
           <Button
@@ -198,6 +219,7 @@ export function UserProfileForm() {
             onClick={() => {
               handleOnFormSave();
             }}
+            isDisabled={!formState.isDirty}
           >
             Save Changes
           </Button>
@@ -234,6 +256,7 @@ export function UserProfileForm() {
                   activeWallet={activeWallet?.address}
                   isPending={mutation.isPending}
                   userData={userData}
+                  isDirty={formState.isDirty}
                   onSave={() => {
                     handleOnFormSave();
                   }}
@@ -250,12 +273,54 @@ export function UserProfileForm() {
             activeWallet={activeWallet?.address}
             isPending={mutation.isPending}
             userData={userData}
+            isDirty={formState.isDirty}
             onSave={() => {
               handleOnFormSave();
             }}
           />
         </Flex>
       </Show>
+      {blocker.state === 'blocked' && (
+        <Modal isOpen={blockerIsOpen} onClose={onBlockerClose}>
+          <ModalOverlay />
+          <ModalContent maxW="500px" w="100%">
+            <Flex
+              flexDirection="column"
+              bg="navy.700"
+              minW="100%"
+              borderColor="cyan.500"
+              borderWidth="1px"
+              borderStyle="solid"
+              rounded="base"
+              p="6"
+              position="relative"
+              h="256px"
+              gap="2"
+            >
+              <IconButton
+                onClick={() => onBlockerClose()}
+                size="xs"
+                aria-label="close button"
+                icon={<CloseIcon />}
+                variant="ghost"
+                colorScheme="whiteAlpha"
+                color="white"
+                position="absolute"
+                top="10px"
+                right="10px"
+              />
+              <Heading fontSize="md">You have unsaved changes</Heading>
+              <Text fontSize="sm" color="gray.500" mb="auto">
+                You have unsaved changes. Do you want to leave without saving?
+              </Text>
+              <Button onClick={() => blocker.proceed()}>Leave without Saving</Button>
+              <Button variant="outline" colorScheme="gray" onClick={() => blocker.reset()}>
+                Keep Editing
+              </Button>
+            </Flex>
+          </ModalContent>
+        </Modal>
+      )}
     </Flex>
   );
 }

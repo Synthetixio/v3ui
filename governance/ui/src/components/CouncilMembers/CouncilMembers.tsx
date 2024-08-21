@@ -6,6 +6,7 @@ import {
   Table,
   Tag,
   Tbody,
+  Td,
   Text,
   Th,
   Thead,
@@ -97,7 +98,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
       flexDirection="column"
       mt={6}
     >
-      <Flex p="6" justifyContent="space-between">
+      <Flex p={{ base: 4, md: 6 }} justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
             Election for {quarter}
@@ -113,7 +114,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
         </Flex>
       </Flex>
       <Divider />
-      <Table>
+      <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
         <Thead>
           <Tr>
             <Th
@@ -190,51 +191,47 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
           {userDetailsLoading || !councilMemberDetails ? (
             <>
               <Tr>
-                <Th>
+                <Td>
                   <Skeleton h={6} w={6} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w="180px" />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={10} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={12} />
-                </Th>
+                </Td>
               </Tr>
               <Tr>
-                <Th>
+                <Td>
                   <Skeleton h={6} w={6} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w="180px" />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={10} />
-                </Th>
-                <Th>
+                </Td>
+                <Td>
                   <Skeleton h={6} w={12} />
-                </Th>
+                </Td>
               </Tr>
             </>
           ) : (
-            <>
-              {!!sortedNominees?.length &&
-                sortedNominees.map((councilNominee, index) => {
-                  return (
-                    <UserTableView
-                      place={index}
-                      user={councilNominee!}
-                      isNomination
-                      activeCouncil={activeCouncil}
-                      key={councilNominee?.address
-                        .concat('council-nominees')
-                        .concat(index.toString())}
-                    />
-                  );
-                })}
-            </>
+            !!sortedNominees?.length &&
+            sortedNominees.map((councilNominee, index) => {
+              return (
+                <UserTableView
+                  place={index}
+                  user={councilNominee!}
+                  isNomination
+                  activeCouncil={activeCouncil}
+                  key={councilNominee?.address.concat('council-nominees').concat(index.toString())}
+                />
+              );
+            })
           )}
         </Tbody>
       </Table>

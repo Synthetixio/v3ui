@@ -64,18 +64,19 @@ export default function UserListItem({
           {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
       </Flex>
-      {nominationInformation?.isNominated && (
-        <Badge color="green" ml="4" mr="auto">
-          Nominee
-        </Badge>
-      )}
+      {nominationInformation?.isNominated &&
+        nominationInformation.council.slug === activeCouncil && (
+          <Badge color="green" ml="4" mr="auto">
+            Nominee
+          </Badge>
+        )}
       {councilPeriod === '1' ? (
         <Button
           ml="auto"
           rounded="base"
           size="xs"
-          variant={nominationInformation?.isNominated ? 'outline' : 'solid'}
-          colorScheme={nominationInformation?.isNominated ? 'gray' : 'cyan'}
+          variant="outline"
+          colorScheme="gray"
           onClick={(e) => {
             e.stopPropagation();
             if (!nominationInformation?.isNominated) {
@@ -84,11 +85,12 @@ export default function UserListItem({
               navigate(`/councils/${activeCouncil}?editNomination=true`);
             }
           }}
+          data-cy="user-list-item-button-nomination"
         >
           {nominationInformation?.isNominated && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
-            <Text color="black">Nominate Self</Text>
+            <Text color="white">Nominate Self</Text>
           )}
         </Button>
       ) : councilPeriod === '2' && isNominatedFetched ? (

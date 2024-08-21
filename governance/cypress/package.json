@@ -4,13 +4,12 @@
   "main": "index.ts",
   "version": "0.0.1",
   "scripts": {
-    "anvil:op-sepolia": "anvil --fork-url https://optimism-sepolia.infura.io/v3/$INFURA_KEY --fork-block-number 15053625",
+    "anvil:snax": "anvil --fork-url https://testnet.snaxchain.io --fork-block-number 296528",
     "e2e": "cypress open --e2e --browser chrome"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",
     "@cypress/code-coverage": "^3.12.39",
-    "@snx-cy/onLogAdded": "workspace:*",
     "@snx-cy/printBrowserLogs": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "cypress": "13.11.0",

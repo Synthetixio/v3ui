@@ -1,64 +1,17 @@
 import { Button, Flex, useColorMode, Show, Link } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
-import { useGetUserBallot } from '../../queries';
-import { useQueryClient } from '@tanstack/react-query';
 import councils from '../../utils/councils';
-import { useWallet, useNetwork } from '../../queries/useWallet';
+import { useWallet } from '../../queries/useWallet';
 import { NetworkController } from './NetworkController';
 import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { activeWallet, walletsInfo, connect } = useWallet();
-  const { network } = useNetwork();
   const { colorMode, toggleColorMode } = useColorMode();
-
-  const [localStorageUpdated, setLocalStorageUpdated] = useState(false);
-  const [fetchedNetwork, setFetchedNetwork] = useState<number[]>([]);
-
-  const { data: ballots, isFetched } = useGetUserBallot(['spartan', 'ambassador', 'treasury']);
-
-  useEffect(() => {
-    if (
-      activeWallet?.address &&
-      network?.id &&
-      isFetched &&
-      (!localStorageUpdated || !fetchedNetwork.includes(network?.id))
-    ) {
-      setLocalStorageUpdated(true);
-      setFetchedNetwork([...fetchedNetwork, network?.id]);
-      const selection = localStorage.getItem('voteSelection');
-      if (!selection) localStorage.setItem('voteSelection', '');
-      const parsedSelection = JSON.parse(selection ? selection : '{}');
-      ballots?.forEach((ballot, index) => {
-        const council =
-          index === 0
-            ? 'spartan'
-            : index === 1
-              ? 'ambassador'
-              : index === 2
-                ? 'grants'
-                : 'treasury';
-        parsedSelection[council] = ballot.votedCandidates[0]
-          ? ballot.votedCandidates[0]
-          : parsedSelection[council];
-      });
-      localStorage.setItem('voteSelection', JSON.stringify(parsedSelection));
-      queryClient.refetchQueries({ queryKey: ['voting-candidates'] });
-    }
-  }, [
-    activeWallet?.address,
-    network?.id,
-    localStorageUpdated,
-    isFetched,
-    ballots,
-    queryClient,
-    fetchedNetwork,
-  ]);
 
   useEffect(() => {
     if (colorMode === 'light') {
@@ -90,7 +43,7 @@ export function Header() {
       bg="navy.700"
       h="65px"
       alignItems="center"
-      px={{ base: '3', lg: 6 }}
+      px={{ base: '4', md: 6 }}
       py={{ base: '4' }}
       borderBottomWidth="1px"
       borderStyle="solid"

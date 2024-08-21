@@ -41,18 +41,19 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
         council: CouncilSlugs;
       }[]
 > {
+  const provider = motherShipProvider(chainId);
   let ballot;
   if (Array.isArray(council)) {
     ballot = (await Promise.all(
       council.map(async (c) => {
-        const electionModule = getCouncilContract(c).connect(motherShipProvider);
+        const electionModule = getCouncilContract(c).connect(provider);
         const electionId = await electionModule.getEpochIndex();
         const temp = await electionModule.getBallot(address, chainId, electionId);
         return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
-    const electionModule = getCouncilContract(council).connect(motherShipProvider);
+    const electionModule = getCouncilContract(council).connect(provider);
     const electionId = electionModule.getEpochIndex();
     const temp = (await electionModule.getBallot(address, chainId, electionId)) as {
       votingPower: BigNumber;
@@ -62,6 +63,6 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
     ballot = { ...temp, council };
   }
   // @ts-ignore
-  // TODO @MF check why TS is acting up
+  // TODO @dev check why TS is acting up
   return ballot;
 }

@@ -2,32 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
 import { motherShipProvider } from '../utils/providers';
-import { Wallet } from 'ethers';
-
-// TODO @dev remove
-const randomAddresses = [
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-  Wallet.createRandom().address,
-];
+import { useNetwork } from './useWallet';
 
 export function useGetCouncilMembers(council: CouncilSlugs) {
+  const { network } = useNetwork();
   return useQuery({
-    queryKey: ['members', council],
+    queryKey: ['members', council, network?.id],
     queryFn: async () => {
       const members = (await getCouncilContract(council)
-        .connect(motherShipProvider)
+        .connect(motherShipProvider(network?.id))
         .getCouncilMembers()) as string[];
-      return members.concat(randomAddresses);
+      return members;
     },
     enabled: !!council,
     staleTime: 900000,

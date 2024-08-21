@@ -5,7 +5,6 @@ import {
   clearStore,
   beforeAll,
   afterAll,
-  logStore,
 } from 'matchstick-as/assembly/index';
 import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import {

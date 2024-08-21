@@ -15,7 +15,7 @@ export default function EditNominationConfirmation({
   activeCouncil,
   setShowConfirm,
 }: {
-  selectedCouncil?: CouncilSlugs;
+  selectedCouncil?: CouncilSlugs | null;
   activeCouncil: CouncilSlugs;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -24,7 +24,7 @@ export default function EditNominationConfirmation({
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
   const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
 
-  const { mutate, isPending, isSuccess } = useEditNomination({
+  const { mutateAsync, isPending, isSuccess } = useEditNomination({
     currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
@@ -32,9 +32,9 @@ export default function EditNominationConfirmation({
   useEffect(() => {
     if (isSuccess) {
       setShowConfirm(false);
-      navigate(`/councils/${activeCouncil}?nominate=false`);
+      navigate(`/councils/${selectedCouncil}?nominate=false`);
     }
-  }, [isSuccess, setShowConfirm, navigate, activeCouncil]);
+  }, [isSuccess, setShowConfirm, navigate, selectedCouncil]);
 
   return (
     <>
@@ -54,13 +54,21 @@ export default function EditNominationConfirmation({
       >
         <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
         <Flex flexDirection="column" ml="2">
-          <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || prettyString(user!.address)}
+          <Text
+            fontSize="xs"
+            color="white"
+            fontWeight="bold"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="300px"
+          >
+            {user?.username || prettyString(user?.address || '')}
           </Text>
-          <Text fontSize="xs">Nomination Wallet: {prettyString(user!.address)}</Text>
+          <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
       </Flex>
-      <Text>
+      <Text fontSize="sm" color="gray.500" my="2">
         Chose which governing body you would like to represent if chosen as an elected member:
       </Text>
       <Flex alignItems="center" justifyContent="space-between" mt="2">
@@ -161,16 +169,17 @@ export default function EditNominationConfirmation({
         </Flex>
       </Flex>
       {isPending ? (
-        <Flex w="100%" justifyContent="center">
-          loading
-          <Spinner colorScheme="cyan" />
-        </Flex>
+        <Button variant="unstyled" cursor="progress" mt="auto">
+          <Flex w="100%" justifyContent="center" gap="2" color="cyan.500">
+            <Spinner colorScheme="cyan" /> Loading
+          </Flex>
+        </Button>
       ) : (
         <>
           <Button
             mt="auto"
-            onClick={() => {
-              mutate();
+            onClick={async () => {
+              await mutateAsync();
             }}
             data-cy="confirm-edit-nomination-button"
           >

@@ -1,16 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  useGetUserBallot,
-  useGetUserVotingPower,
-  useNetwork,
-  useSigner,
-  useWallet,
-} from '../queries';
+import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber, Contract } from 'ethers';
-import { multicallABI } from '../utils/abi';
+import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
+import { useMulticall } from '../hooks/useMulticall';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -21,15 +15,10 @@ export function useCastVotes(
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { dispatch } = useVoteContext();
-  const multicall = new Contract('0xE2C5658cC5C448B48141168f3e475dF8f65A1e3e', multicallABI);
-
+  const multicall = useMulticall();
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
   const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');
-
-  const { data: spartanBallot } = useGetUserBallot('spartan');
-  const { data: ambassadorBallot } = useGetUserBallot('ambassador');
-  const { data: treasuryBallot } = useGetUserBallot('treasury');
 
   const getVotingPowerByCouncil = (council: CouncilSlugs) => {
     switch (council) {
@@ -44,24 +33,11 @@ export function useCastVotes(
     }
   };
 
-  const getBallotByCouncil = (council: CouncilSlugs) => {
-    switch (council) {
-      case 'spartan':
-        return spartanBallot;
-      case 'ambassador':
-        return ambassadorBallot;
-      case 'treasury':
-        return treasuryBallot;
-      default:
-        return spartanBallot;
-    }
-  };
-
   return useMutation({
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = network.id === 11155420;
+        const isMotherchain = network.id === (process.env.CI === 'true' ? 13001 : 2192);
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
@@ -74,20 +50,26 @@ export function useCastVotes(
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
+                        [
+                          SnapshotRecordContract(network.id, council)?.address,
+                          activeWallet?.address,
+                        ]
                       ),
                     }
                   : {
                       target: electionModules[0].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
-                        [SnapshotRecordContract(network.id)?.address, activeWallet?.address]
+                        [
+                          SnapshotRecordContract(network.id, council)?.address,
+                          activeWallet?.address,
+                        ]
                       ),
                       value: 0,
                       requireSuccess: true,
                     };
               }
-              return '';
+              return null;
             })
             .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
@@ -100,9 +82,7 @@ export function useCastVotes(
               ? {
                   target: electionModules[0].address,
                   callData: shouldWithdrawVote
-                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [
-                        [getBallotByCouncil(council)?.votedCandidates[0]],
-                      ])
+                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],
@@ -111,21 +91,21 @@ export function useCastVotes(
               : {
                   target: electionModules[0].address,
                   callData: shouldWithdrawVote
-                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [
-                        [getBallotByCouncil(council)?.votedCandidates[0]],
-                      ])
+                    ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
                   value: quote.add(quote.mul(25).div(100)),
-                  requireSuccess: false,
+                  requireSuccess: true,
                 };
           });
-
           await multicall
             .connect(signer)
-            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData]);
+            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+            });
         } catch (error) {
           console.error(error);
         }
@@ -137,8 +117,14 @@ export function useCastVotes(
       councils.map((council) => {
         const shouldWithdrawVote = candidates[council] === 'remove';
         shouldWithdrawVote
-          ? dispatch({ type: council.toUpperCase(), payload: undefined })
-          : dispatch({ type: council.toUpperCase(), payload: candidates[council] });
+          ? dispatch({
+              type: council.toUpperCase(),
+              payload: { action: undefined, network: network!.id.toString() },
+            })
+          : dispatch({
+              type: council.toUpperCase(),
+              payload: { action: candidates[council], network: network!.id.toString() },
+            });
       });
       await Promise.all(
         councils.map(

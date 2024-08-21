@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
-import { useSigner } from '@snx-v3/useBlockchain';
 import { motherShipProvider } from '../utils/providers';
+import { useNetwork } from './useWallet';
 
 export function useGetElectionSettings(council: CouncilSlugs) {
-  const signer = useSigner();
+  const { network } = useNetwork();
   return useQuery({
     queryKey: ['useGetElectionSettings', council],
     queryFn: async () => {
       return (await getCouncilContract(council)
-        .connect(signer ? signer : motherShipProvider)
+        .connect(motherShipProvider(network?.id))
         .getElectionSettings()) as Promise<{
         epochSeatCount: number;
         minimumActiveMembers: number;

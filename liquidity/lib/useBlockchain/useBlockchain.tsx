@@ -7,7 +7,7 @@ import {
   LogoIcon,
   OptimismIcon,
   ArbitrumIcon,
-  SNXIcon,
+  SNXChainIcon,
 } from '@snx-v3/icons';
 import { INFURA_KEY as DEFAULT_INFURA_KEY } from '@snx-v3/constants';
 import SynthetixIcon from './SynthetixIcon.svg';
@@ -69,10 +69,13 @@ export const NetworkIcon = ({ networkId, size = '24px', ...props }: NetworkIconP
       return <ArbitrumIcon w={size} h={size} {...props} />;
     case 42161:
       return <ArbitrumIcon w={size} h={size} {...props} />;
-    case 999:
-      return <SNXIcon w={size} h={size} {...props} />;
-    default:
+    case 2192:
+      return <SNXChainIcon w={size} h={size} {...props} />;
+    case 13001:
+      return <SNXChainIcon w={size} h={size} {...props} />;
+    default: {
       return <FailedIcon w={size} h={size} {...props} />;
+    }
   }
 };
 
@@ -215,6 +218,32 @@ export const ARBTHETIX: Network = {
   isTestnet: false,
 };
 
+export const SNAX: Network = {
+  id: 2192,
+  preset: 'main',
+  hexId: `0x${Number(2192).toString(16)}`,
+  token: 'ETH',
+  name: 'SNAX',
+  rpcUrl: () => 'https://mainnet.snaxchain.io/',
+  label: 'SNAX CHAIN',
+  isSupported: true,
+  publicRpcUrl: 'https://mainnet.snaxchain.io/',
+  isTestnet: false,
+};
+
+export const SNAXTESTNET: Network = {
+  id: 13001,
+  preset: 'main',
+  hexId: `0x${Number(13001).toString(16)}`,
+  token: 'ETH',
+  name: 'SNAX',
+  rpcUrl: () => 'https://testnet.snaxchain.io/',
+  label: 'SNAX CHAIN',
+  isSupported: true,
+  publicRpcUrl: 'https://testnet.snaxchain.io/',
+  isTestnet: true,
+};
+
 export const NETWORKS: Network[] = [
   BASE_ANDROMEDA,
   MAINNET,
@@ -226,6 +255,8 @@ export const NETWORKS: Network[] = [
   ARBITRUM_SEPOLIA,
   ARBITRUM,
   ARBTHETIX,
+  SNAX,
+  SNAXTESTNET,
 ];
 
 export const deploymentsWithERC7412: string[] = [
