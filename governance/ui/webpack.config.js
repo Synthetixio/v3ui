@@ -179,7 +179,6 @@ module.exports = {
           JSON.stringify(process.env.CI_RPC_MOTHERSHIP) || 'http://127.0.0.1:8545',
         'process.env.DEV_RPC_MOTHERSHIP':
           JSON.stringify(process.env.DEV_RPC_MOTHERSHIP) || 'http://127.0.0.1:19000',
-        'process.env.TESTNET': JSON.stringify(process.env.TESTNET) || 'true',
         'process.env.WC_PROJECT_ID':
           JSON.stringify(process.env.WC_PROJECT_ID) || '5075a2da602e17eec34aa77b40b321be',
         'process.env.BOARDROOM_KEY':

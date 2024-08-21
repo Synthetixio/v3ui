@@ -2,16 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { motherShipProvider } from '../utils/providers';
 import { getCouncilContract } from '../utils/contracts';
-import { useProvider } from './useWallet';
+import { useNetwork } from './useWallet';
 
 export function useGetEpochSchedule(council?: CouncilSlugs) {
-  const provider = useProvider();
+  const { network } = useNetwork();
 
   return useQuery({
-    queryKey: ['epoch-schedule', council],
+    queryKey: ['epoch-schedule', council, network?.id],
     queryFn: async () => {
       const schedule = await getCouncilContract(council!)
-        .connect(provider ? provider : motherShipProvider)
+        .connect(motherShipProvider(network?.id))
         .getEpochSchedule();
       return {
         startDate: Number(schedule.startDate.toString()),

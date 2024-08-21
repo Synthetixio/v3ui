@@ -2,13 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { motherShipProvider } from '../utils/providers';
 import { getCouncilContract } from '../utils/contracts';
+import { useNetwork } from './useWallet';
 
 export function useGetNextElectionSettings(council: CouncilSlugs) {
+  const { network } = useNetwork();
   return useQuery({
     queryKey: ['next-epoch-settings', council],
     queryFn: async () => {
       const schedule = await getCouncilContract(council)
-        .connect(motherShipProvider)
+        .connect(motherShipProvider(network?.id))
         .getNextElectionSettings();
       return Number(schedule.epochDuration.toString()) as number | undefined;
     },
