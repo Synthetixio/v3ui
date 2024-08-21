@@ -4,6 +4,7 @@ import { useV2Position } from '../../../../lib/useV2Position';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { Amount } from '@snx-v3/Amount';
 import { MigrationDialog } from './MigrationDialog';
+import { MigrateUSDModal } from '../MigrateUSD/MigrateUSDModal';
 
 interface Props {
   network: Network;
@@ -11,17 +12,35 @@ interface Props {
 
 export const MigrationBanner: FC<Props> = ({ network }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUSDModalOpen, setIsUSDModalOpen] = useState(false);
   const { data } = useV2Position(network);
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { connect, activeWallet } = useWallet();
 
   if (!data || data?.collateral.lte(0)) {
-    return null;
+    return (
+      <MigrationDialog
+        onSuccess={() => setIsUSDModalOpen(true)}
+        network={network}
+        onClose={() => setIsOpen(false)}
+        isOpen={isOpen}
+      />
+    );
   }
 
   return (
     <>
-      <MigrationDialog network={network} onClose={() => setIsOpen(false)} isOpen={isOpen} />
+      <MigrationDialog
+        onSuccess={() => setIsUSDModalOpen(true)}
+        network={network}
+        onClose={() => setIsOpen(false)}
+        isOpen={isOpen}
+      />
+      <MigrateUSDModal
+        network={network}
+        onClose={() => setIsUSDModalOpen(false)}
+        isOpen={isUSDModalOpen}
+      />
       <Fade in>
         <Flex
           alignItems="center"

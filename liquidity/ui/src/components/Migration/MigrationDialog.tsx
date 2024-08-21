@@ -13,14 +13,16 @@ import { Network } from '@snx-v3/useBlockchain';
 import { StepIntro } from './StepIntro';
 import { StepExplain } from './StepExplain';
 import { StepSummary } from './StepSummary';
-
+import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   network: Network;
   onClose: () => void;
+  onSuccess: () => void;
   isOpen: boolean;
 }
 
-export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen }) => {
+export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen, onSuccess }) => {
+  const queryClient = useQueryClient();
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen }) => {
       setStep(0);
     }
   }, [isOpen]);
+
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -45,7 +48,11 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen }) => {
           {step === 2 && (
             <StepSummary
               onConfirm={() => {
-                //open sUSD migration dialog
+                queryClient.invalidateQueries({
+                  queryKey: [`${network?.id}-${network?.preset}`, 'V2Position'],
+                });
+
+                onSuccess();
                 onClose();
               }}
               onClose={onClose}

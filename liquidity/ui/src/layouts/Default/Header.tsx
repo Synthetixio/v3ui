@@ -3,6 +3,8 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkController } from './NetworkController';
 import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
+import { MigrateUSDButton } from '../../components/MigrateUSD/MigrateUSDButton';
+import { MAINNET } from '@snx-v3/useBlockchain';
 
 export default function Header() {
   const { onClose } = useDisclosure();
@@ -85,6 +87,7 @@ export default function Header() {
           <Flex gap={3} flexWrap="wrap-reverse" justifyContent="center" alignItems="center">
             {/* Hide balance */}
             {/* <Balance isBase={isBase} balance={balance} /> */}
+            <MigrateUSDButton network={MAINNET} />
             <NetworkController />
           </Flex>
         </Container>

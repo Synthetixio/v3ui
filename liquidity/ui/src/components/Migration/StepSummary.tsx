@@ -19,6 +19,8 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { useMigrate } from '../../../../lib/useMigrate';
 import { useSNXPrice } from '../../../../lib/useSNXPrice';
 import { StepSuccess } from './StepSuccess';
+import { formatEther } from 'ethers/lib/utils';
+import { Amount } from '@snx-v3/Amount';
 
 export const StepSummary = ({
   onClose,
@@ -164,13 +166,25 @@ export const StepSummary = ({
       <Box mb={3.5} p={3.5} borderRadius="4px" background="#1F1F34" width="100%">
         <HStack justifyContent="space-between">
           <Text>Estimated Gas</Text>
-          <Text color="red">
-            {transaction?.gasLimit && transaction?.gasLimit.gt(0) ? (
-              transaction?.gasLimit.toString() + ' ETH (${0})'
-            ) : (
-              <span>Transaction error occured, please seek support</span>
-            )}
-          </Text>
+
+          {transaction !== undefined && (
+            <>
+              {transaction?.gasLimit && transaction?.gasLimit.gt(0) ? (
+                <Text>
+                  <Amount
+                    value={wei(
+                      formatEther(
+                        transaction?.gasLimit.mul(transaction.gasPrice || 1).toString() || 0
+                      )
+                    )}
+                    suffix=" ETH"
+                  />
+                </Text>
+              ) : (
+                <Text color="red">Transaction error occured, please seek support</Text>
+              )}
+            </>
+          )}
         </HStack>
       </Box>
 

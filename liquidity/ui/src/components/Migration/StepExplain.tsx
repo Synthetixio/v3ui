@@ -36,7 +36,11 @@ export const StepExplain = ({
         <AlertIcon />
         <Text>
           Migration to V3 is currently only available on Ethereum Mainnet. Learn more about &nbsp;
-          <Link color="cyan.500" href="#" isExternal>
+          <Link
+            color="cyan.500"
+            href="https://blog.synthetix.io/synthetix-v3-migration-treasury-council-initiates-transition/"
+            isExternal
+          >
             migrating to V3.
           </Link>
         </Text>

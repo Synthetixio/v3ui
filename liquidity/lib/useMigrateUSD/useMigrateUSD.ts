@@ -1,4 +1,4 @@
-import { useDefaultProvider, useSigner } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain';
 import { useLegacyMarket } from '../useLegacyMarket';
 import { useCallback, useState } from 'react';
 import { getGasPrice } from '@snx-v3/useGasPrice';
@@ -7,6 +7,7 @@ import { ZEROWEI } from '../../ui/src/utils/constants';
 import Wei, { wei } from '@synthetixio/wei';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { parseTxError } from '../parser';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function useMigrateUSD({ amount }: { amount: Wei }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +16,8 @@ export function useMigrateUSD({ amount }: { amount: Wei }) {
   const { data: legacyMarket } = useLegacyMarket();
   const { gasSpeed } = useGasSpeed();
   const provider = useDefaultProvider();
+  const queryClient = useQueryClient();
+  const { network } = useNetwork();
 
   const migrate = useCallback(async () => {
     try {
@@ -40,15 +43,18 @@ export function useMigrateUSD({ amount }: { amount: Wei }) {
 
       setIsLoading(false);
       setIsSuccess(true);
+
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
+      });
     } catch (error) {
       const parsedError = parseTxError(error);
       const errorResult = legacyMarket?.interface.parseError(parsedError as string);
       console.error('error:', errorResult);
-
       setIsLoading(false);
       throw error;
     }
-  }, [amount, gasSpeed, legacyMarket, provider, signer]);
+  }, [amount, gasSpeed, legacyMarket, network?.id, network?.preset, provider, queryClient, signer]);
 
   return {
     migrate,

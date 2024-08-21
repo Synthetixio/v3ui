@@ -1,7 +1,13 @@
 import { assertAddressType } from '@snx-v3/assertAddressType';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
-import { Network, useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import {
+  Network,
+  useDefaultProvider,
+  useNetwork,
+  useProviderForChain,
+  useWallet,
+} from '@snx-v3/useBlockchain';
 import { ethers, providers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { ZEROWEI } from '../../ui/src/utils/constants';
@@ -15,10 +21,10 @@ export const abi = [
 
 export const useTokenBalance = (address?: string, customNetwork?: Network) => {
   const { activeWallet } = useWallet();
-  const provider = useDefaultProvider();
   const { network } = useNetwork();
 
   const targetNetwork = customNetwork || network;
+  const provider = useProviderForChain(targetNetwork);
 
   const tokenAddress = assertAddressType(address) ? address : undefined;
   return useQuery({
