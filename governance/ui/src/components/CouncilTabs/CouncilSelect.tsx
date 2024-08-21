@@ -10,26 +10,27 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
     <Menu>
       {({ isOpen }) => (
         <>
-          <MenuButton as={Flex} py={2} px={3}>
+          <MenuButton>
             <Flex
               flexDirection="row"
               justifyContent="space-between"
-              height="40px"
-              minW="300px"
+              height="48px"
               bg="navy.700"
               borderWidth="1px"
               px="12px"
               borderRadius="3px"
               borderColor="gray.900"
               alignItems="center"
+              data-cy="menu-button-flex-council-select"
             >
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
                 fontFamily="heading"
-                fontSize="18px"
+                fontSize="md"
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
+                data-cy="council-select-mobile"
               >
                 {slugToName(activeCouncil)}
               </Text>
@@ -51,20 +52,12 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
             >
               {councils.map((council) => (
                 <MenuItem
-                  key={council.address}
+                  key={council.address.concat('council-select')}
                   value={council.slug}
                   onClick={() => navigate(`/councils/${council.slug}`)}
-                  bg="navy.700"
                 >
-                  <Flex
-                    py="10px"
-                    px="12px"
-                    bg="navy.700"
-                    alignItems="space-between"
-                    w="100%"
-                    h="100%"
-                  >
-                    <CouncilImage imageUrl={council.image} />
+                  <Flex py="10px" px="12px" alignItems="space-between" w="100%" h="100%">
+                    <CouncilImage imageUrl={council.image} bg="none" />
                     <Text
                       fontFamily="heading"
                       fontSize="18px"

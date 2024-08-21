@@ -15,7 +15,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { NetworkIcon, useNetwork, useWallet, NETWORKS, Network } from '@snx-v3/useBlockchain';
+import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { CopyIcon } from '@chakra-ui/icons';
@@ -27,25 +27,12 @@ import Blockies from 'react-blockies';
 import '../../pages/index.css';
 import { useGetUserDetailsQuery } from '../../queries';
 
-const SNXChain: Network = {
-  hexId: '999',
-  id: 999,
-  isSupported: true,
-  isTestnet: false,
-  label: 'SNX Chain',
-  name: 'SNXChain',
-  preset: '999-main',
-  publicRpcUrl: 'http://127.0.0.1:19000',
-  rpcUrl: () => 'http://127.0.0.1:19000',
-  token: 'SNX',
-};
-
-const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet)
-  .filter((network) => supportedNetworks.includes(network.id))
-  .concat(SNXChain);
-const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet)
-  .filter((network) => supportedNetworks.includes(network.id))
-  .concat(SNXChain);
+const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
+  (network) => supportedNetworks.includes(network.id)
+);
+const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet).filter((network) =>
+  supportedNetworks.includes(network.id)
+);
 
 export function NetworkController() {
   const { isOpen, onOpen, onClose } = useDisclosure();

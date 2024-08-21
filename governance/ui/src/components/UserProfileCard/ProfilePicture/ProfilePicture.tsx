@@ -9,6 +9,7 @@ interface ProfilePictureInterface {
   mr?: string;
   ml?: string;
   newVoteCast?: string;
+  isCouncilTabs?: boolean;
 }
 
 export const ProfilePicture = ({
@@ -19,6 +20,7 @@ export const ProfilePicture = ({
   mr,
   ml,
   newVoteCast,
+  isCouncilTabs,
 }: ProfilePictureInterface) => {
   return (
     <>
@@ -56,20 +58,13 @@ export const ProfilePicture = ({
                 borderRadius: '99999px',
               },
             }}
+            filter={isCouncilTabs ? 'grayscale(1)' : ''}
             zIndex={10}
             position="relative"
             data-cy={`user-blockies-council-tabs-${address || newVoteCast}`}
           >
             {!!newVoteCast && (
-              <Box
-                bg="lightgray"
-                opacity={0.5}
-                h={size}
-                w={size}
-                borderRadius="100%"
-                position="absolute"
-                zIndex={11}
-              />
+              <Box h={size} w={size} borderRadius="100%" position="absolute" zIndex={11} />
             )}
             <Blockies
               size={size}

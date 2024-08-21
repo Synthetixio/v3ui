@@ -1,20 +1,33 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { removeCandidate, setCandidate } from '../utils/localstorage';
+import { useNetwork } from '../queries';
 
-export interface VoteState {
+export interface VoteStateForNetwork {
   spartan: string | undefined;
   ambassador: string | undefined;
   treasury: string | undefined;
 }
 
-type Action = { type: string; payload: string | undefined };
+export interface VoteState {
+  [key: string]: VoteStateForNetwork;
+}
+
+type Action = {
+  type: string;
+  payload: { action: string | undefined; network: string | undefined };
+};
 
 const parsedState = JSON.parse(localStorage.getItem('voteSelection') || '{}');
 
-const initialState: VoteState = {
-  spartan: parsedState?.spartan || undefined,
-  ambassador: parsedState?.ambassador || undefined,
-  treasury: parsedState?.treasury || undefined,
+const initialState = (chainId?: string) => {
+  const customChainId = chainId || Object.keys(parsedState)[0] || '2492';
+  return {
+    [customChainId]: {
+      spartan: parsedState[customChainId]?.spartan || undefined,
+      ambassador: parsedState[customChainId]?.ambassador || undefined,
+      treasury: parsedState[customChainId]?.treasury || undefined,
+    },
+  } as VoteState;
 };
 
 const VoteContext = createContext<
@@ -28,36 +41,45 @@ const VoteContext = createContext<
 const voteReducer = (state: VoteState, action: Action): VoteState => {
   switch (action.type) {
     case 'SPARTAN': {
-      if (action.payload) {
-        setCandidate(action.payload, 'spartan');
+      if (action.payload.action && action.payload.action !== 'remove') {
+        setCandidate(action.payload.action, 'spartan', action.payload.network);
       } else {
-        removeCandidate('spartan');
+        removeCandidate('spartan', action.payload.network);
       }
       return {
         ...state,
-        spartan: action.payload,
+        [action.payload.network!]: {
+          ...state[action.payload.network!],
+          spartan: action.payload.action,
+        },
       };
     }
     case 'AMBASSADOR': {
-      if (action.payload) {
-        setCandidate(action.payload, 'ambassador');
+      if (action.payload.action && action.payload.action !== 'remove') {
+        setCandidate(action.payload.action, 'ambassador', action.payload.network);
       } else {
-        removeCandidate('ambassador');
+        removeCandidate('ambassador', action.payload.network);
       }
       return {
         ...state,
-        ambassador: action.payload,
+        [action.payload.network!]: {
+          ...state[action.payload.network!],
+          ambassador: action.payload.action,
+        },
       };
     }
     case 'TREASURY': {
-      if (action.payload) {
-        setCandidate(action.payload, 'treasury');
+      if (action.payload.action && action.payload.action !== 'remove') {
+        setCandidate(action.payload.action, 'treasury', action.payload.network);
       } else {
-        removeCandidate('treasury');
+        removeCandidate('treasury', action.payload.network);
       }
       return {
         ...state,
-        treasury: action.payload,
+        [action.payload.network!]: {
+          ...state[action.payload.network!],
+          treasury: action.payload.action,
+        },
       };
     }
     default:
@@ -66,7 +88,8 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 };
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(voteReducer, initialState);
+  const { network } = useNetwork();
+  const [state, dispatch] = useReducer(voteReducer, initialState(network?.id.toString()));
   return <VoteContext.Provider value={{ state, dispatch }}>{children}</VoteContext.Provider>;
 };
 

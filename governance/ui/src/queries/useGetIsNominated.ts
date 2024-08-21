@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motherShipProvider } from '../utils/providers';
 import councils from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
+import { utils } from 'ethers';
 
 export function useGetIsNominated(address?: string) {
   return useQuery({
@@ -28,7 +29,7 @@ export function useGetIsNominated(address?: string) {
             : councils[2],
       };
     },
-    enabled: !!address,
+    enabled: utils.isAddress(address || ''),
     staleTime: 900000,
   });
 }

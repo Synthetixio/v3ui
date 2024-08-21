@@ -1,20 +1,25 @@
 import { Box, Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
-import { useGetUserDetailsQuery, useGetUserBallot } from '../../queries';
+import { useGetUserDetailsQuery, useGetUserBallot, useNetwork } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
 import { useVoteContext } from '../../context/VoteContext';
 
-export default function CouncilTabs({ activeCouncil }: { activeCouncil?: CouncilSlugs }) {
+export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
+  const location = useLocation();
+  const isInMyVotesPage = location.pathname.includes('my-votes');
+  const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
+  const { network } = useNetwork();
+  const networkForState = network?.id.toString() || '2192';
   const { state } = useVoteContext();
   const votedNomineesData = [
     useGetUserBallot('spartan'),
@@ -53,7 +58,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           borderBottomWidth="1px"
           borderStyle="solid"
           borderBottomColor="gray.900"
-          px={4}
+          px={{ base: 4, md: 6 }}
           py={1}
           position="sticky"
           top="0px"
@@ -63,7 +68,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
         >
           {/* If on my votes page, spartan council is active by default for navigation */}
           <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
-          <MyVotesSummary isLoading={isLoading} councilPeriod={councilPeriod} schedule={schedule} />
+          <MyVotesSummary
+            isLoading={isLoading}
+            councilPeriod={councilPeriod}
+            schedule={schedule}
+            isInMyVotesPage={false}
+          />
         </Flex>
       </Hide>
       <Show above="xl">
@@ -77,14 +87,16 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
           py="4"
           px="6"
           justifyContent="center"
-          mb="4"
+          mb="5"
           position="sticky"
           top="0px"
           zIndex={99}
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = state[council.slug];
+              const newVoteCast = state[networkForState]
+                ? state[networkForState][council.slug]
+                : '';
 
               return (
                 <Flex
@@ -94,19 +106,33 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                   w="100%"
                   height="48px"
                   rounded="base"
-                  borderColor={activeCouncil === council.slug ? 'cyan.500' : 'gray.900'}
+                  borderColor={
+                    isInMyProfilePage
+                      ? 'gray.900'
+                      : activeCouncil === council.slug && !isInMyVotesPage
+                        ? 'cyan.500'
+                        : 'gray.900'
+                  }
                   borderWidth="1px"
                   py="1"
                   alignItems="center"
                   bg="navy.700"
-                  _hover={{ borderColor: 'cyan.500' }}
+                  _hover={{
+                    bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+                  }}
                   px="2"
+                  data-cy={`council-tab-button-${council.slug}`}
                 >
                   <CouncilImage
                     imageUrl={council.image}
+                    imageProps={{
+                      w: '7',
+                      h: '7',
+                    }}
                     w="10"
                     h="10"
-                    data-cy={`council-image-council-tabs-${council.slug}`}
+                    bg="none"
+                    dataCy={`council-image-council-tabs-${council.slug}`}
                   />
                   <Text fontSize="12px" fontWeight="bold" mr="auto">
                     {council.title}
@@ -117,6 +143,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
                       address={userInformation[index].userInformation?.address}
                       size={7}
                       newVoteCast={newVoteCast}
+                      isCouncilTabs={true}
                     />
                   ) : (
                     councilPeriod === '2' && (
@@ -153,6 +180,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil?: Council
               isLoading={isLoading}
               councilPeriod={councilPeriod}
               schedule={schedule}
+              isInMyVotesPage={isInMyVotesPage}
             />
           </Flex>
         </Flex>

@@ -12,8 +12,8 @@ export default function EditNominationSelect({
   setSelectedCouncil,
   setShowConfirm,
 }: {
-  selectedCouncil?: CouncilSlugs;
-  setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined>>;
+  selectedCouncil?: CouncilSlugs | null;
+  setSelectedCouncil: Dispatch<SetStateAction<CouncilSlugs | undefined | null>>;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const { activeWallet } = useWallet();
@@ -36,10 +36,18 @@ export default function EditNominationSelect({
         p="2"
         mt="3"
       >
-        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} size={10} />
         <Flex flexDirection="column" ml="2">
-          <Text fontSize="xs" color="white" fontWeight="bold">
-            {user?.ens || prettyString(user?.address || '')}
+          <Text
+            fontSize="xs"
+            color="white"
+            fontWeight="bold"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            maxW="300px"
+          >
+            {user?.username || prettyString(user?.address || '')}
           </Text>
           <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
@@ -54,11 +62,11 @@ export default function EditNominationSelect({
             w="100%"
             height="58px"
             rounded="base"
-            borderColor="cyan.500"
+            borderColor="gray.900"
             borderWidth="1px"
             padding="2"
             alignItems="center"
-            mb="12"
+            mb="2"
           >
             <Flex
               borderRadius="50%"
@@ -79,7 +87,7 @@ export default function EditNominationSelect({
           </Flex>
         </>
       )}
-      <Text fontSize="xs" color="gray.500">
+      <Text fontSize="xs" color="gray.500" mb="2">
         Chose which governing body you would like to represent if chosen as an elected member:
       </Text>
       <Flex flexDirection="column">
@@ -124,7 +132,9 @@ export default function EditNominationSelect({
           w="100%"
           height="58px"
           rounded="base"
-          borderColor={!selectedCouncil ? 'cyan.500' : 'gray.900'}
+          borderColor={
+            !selectedCouncil && typeof selectedCouncil === 'undefined' ? 'cyan.500' : 'gray.900'
+          }
           borderWidth="1px"
           padding="2"
           alignItems="center"
@@ -147,7 +157,13 @@ export default function EditNominationSelect({
           </Text>
         </Flex>
       </Flex>
-      <Button mt="auto" onClick={() => setShowConfirm(true)} data-cy="edit-nomination-button">
+
+      <Button
+        mt="auto"
+        onClick={() => setShowConfirm(true)}
+        data-cy="edit-nomination-button"
+        isDisabled={selectedCouncil === null}
+      >
         Edit Nomination
       </Button>
     </>

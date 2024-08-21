@@ -1,7 +1,9 @@
 it('Councils - Administration', () => {
-  cy.task('changePeriod', { council: 'spartan', period: 'admin' });
   cy.task('prepareVotingPower', { council: 'spartan' });
-  // cy.task('changePeriod', { council: 'spartan', period: 'voting' });
+  cy.task('mineBlock');
+  cy.task('prepareVotingPower', { council: 'ambassador' });
+  cy.task('mineBlock');
+  cy.task('prepareVotingPower', { council: 'treasury' });
   cy.task('mineBlock');
   cy.connectWallet();
   cy.viewport(1300, 900);
@@ -10,7 +12,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="council-period-badge"]').contains('Voting Open');
   cy.get('[data-cy="account-menu-button"]').click();
   cy.get('[data-cy="network-controller-switch"]').click();
-  cy.get('[data-cy="network-menu-button-11155420"]').click();
+  cy.get('[data-cy="network-menu-button-13001"]').click();
   cy.get('[data-cy="council-tab-vote-circle"]').should('not.exist');
   cy.get('[data-cy="vote-council-button-spartan"]').click();
   cy.get('[data-cy="period-countdown"]').should('exist');
@@ -39,7 +41,7 @@ it('Councils - Administration', () => {
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
   cy.wait(3000);
-  cy.get('[data-cy="my-votes-voting-power"]').contains('100.00');
+  cy.get('[data-cy="my-votes-voting-power"]').contains('30.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
   cy.wait(3000);
   cy.window().then((win) => {
@@ -50,8 +52,8 @@ it('Councils - Administration', () => {
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
   cy.wait(3000);
-  cy.get('[data-cy="remove-vote-button"]').click();
+  cy.get('[data-cy="remove-vote-button-spartan"]').click();
   cy.get('[data-cy="cast-my-vote-button"]').click();
   cy.wait(3000);
-  cy.get('[data-cy="council-tab-vote-circle"]').should('exist');
+  cy.get('[data-cy="my-votes-total-votes"]').contains('0/3');
 });

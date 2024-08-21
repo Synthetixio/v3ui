@@ -17,11 +17,13 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider);
-        const isMothership = network.id === 11155420;
+        const isMotherchain = network.id === (process.env.CI === 'true' ? 13001 : 2192);
+
         const electionId = await electionModule.getEpochIndex();
-        const ballot = isMothership
+        const ballot = isMotherchain
           ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
           : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
+
         if (ballot) {
           if (ballot?.votingPower?.gt(0)) {
             return { power: ballot.votingPower as BigNumber, isDeclared: true };
@@ -29,14 +31,14 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }
-        const votingPower: BigNumber = isMothership
+        const votingPower: BigNumber = isMotherchain
           ? await electionModule
               .connect(provider)
               .callStatic.prepareBallotWithSnapshot(
-                SnapshotRecordContract(network.id)?.address,
+                SnapshotRecordContract(network.id, council)?.address,
                 activeWallet?.address
               )
-          : await SnapshotRecordContract(network.id)
+          : await SnapshotRecordContract(network.id, council)
               ?.connect(provider)
               .balanceOfOnPeriod(activeWallet.address, 1);
         return { power: votingPower, isDeclared: false };

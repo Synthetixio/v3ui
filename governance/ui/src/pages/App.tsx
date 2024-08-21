@@ -17,7 +17,7 @@ function App() {
         </Flex>
         <Flex wrap={{ base: 'wrap', lg: 'nowrap' }} w="100%" gap={{ base: 4, lg: 6 }} mt="8">
           {councils.map((council) => (
-            <CouncilCard council={council} key={council.address} />
+            <CouncilCard council={council} key={council.address.concat('council-card')} />
           ))}
         </Flex>
       </Container>

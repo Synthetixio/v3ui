@@ -90,7 +90,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           })
           .filter((nominee) => {
             if (utils.isAddress(search)) {
-              return nominee.address.toLowerCase() === search;
+              return nominee.address.toLowerCase().includes(search);
             }
             if (search) {
               return nominee.username.toLowerCase().includes(search);
@@ -167,7 +167,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
         />
       </Flex>
-      <Table>
+      <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
         <Thead>
           <Tr>
             {councilPeriod === '2' && (
@@ -214,7 +214,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 <SortArrows up={sortConfig[0]} />
               )}
             </Th>
-            <Th textTransform="capitalize">Role</Th>
             {councilPeriod === '2' && (
               <Th
                 cursor="pointer"

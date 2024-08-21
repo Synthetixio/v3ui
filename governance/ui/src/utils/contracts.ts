@@ -3,17 +3,17 @@ import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
 const SpartanCouncilContract = new Contract(
-  '0x0AFb5ef6DBe62702142Fa018BE0D21196E666796',
+  '0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xB5BBEa9D6c0d57cc0061ee5A005F0863c0a43aad',
+  '0xCdbEf5753cE3CEbF361e143117e345ADd7498F80',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0x43028D9Cc7e3BD425b15Ba335059F64595c3E000',
+  '0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161',
   process.env.DEV ? electionModuleABITest : electionModuleABITest
 );
 
@@ -36,31 +36,41 @@ export function getCouncilContract(council: CouncilSlugs) {
   }
 }
 
-export const SnapshotRecordContract = (chainId: number) => {
+export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) => {
   switch (chainId) {
-    case 421614:
-      return new Contract(
-        process.env.DEV === 'true'
-          ? '0x854AeE030eFEB8f9C4c778999174A33921613A4F'
-          : process.env.TESTNET === 'true'
-            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
-        [
-          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-        ]
-      );
-    case 11155420:
-      return new Contract(
-        process.env.DEV === 'true'
-          ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
-          : process.env.TESTNET === 'true'
-            ? '0x652e3a72945eDC8d2784c320771ffE0d090fa949'
-            : '0x652e3a72945eDC8d2784c320771ffE0d090fa949',
-        [
-          'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-          'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-        ]
-      );
+    case 13001: {
+      switch (council) {
+        case 'spartan':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0x552E469B7C88cd501C08e7759d35dC58f08C9648',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+        case 'ambassador':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0x3a0186E03137B9b971EC911350A0F2D88D24FDF2',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+        case 'treasury':
+          return new Contract(
+            process.env.DEV === 'true'
+              ? '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+              : '0xC0bFA9aC792cF691734F7b2BD252d1c2B9fBa343',
+            [
+              'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+              'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+            ]
+          );
+      }
+    }
   }
 };

@@ -14,13 +14,13 @@ export const EditNominationContainer = ({
       <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent mx="4">
+          <ModalContent maxW="99vw" width="99vw" margin="2">
             <EditNomination activeCouncil={activeCouncil} />
           </ModalContent>
         </Modal>
       </Show>
       <Hide below="xl">
-        <EditNomination activeCouncil={activeCouncil} position="sticky" top="81px" />
+        <EditNomination activeCouncil={activeCouncil} position="sticky" top="105px" mt="6" />
       </Hide>
     </>
   );
