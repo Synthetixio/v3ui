@@ -173,14 +173,17 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY),
-        'process.env.DEV': JSON.stringify(process.env.DEV),
-        'process.env.CI': JSON.stringify(process.env.CI),
-        'process.env.CI_RPC_MOTHERSHIP': JSON.stringify(process.env.CI_RPC_MOTHERSHIP),
-        'process.env.DEV_RPC_MOTHERSHIP': JSON.stringify(process.env.DEV_RPC_MOTHERSHIP),
-        'process.env.TESTNET': JSON.stringify(process.env.TESTNET),
-        'process.env.WC_PROJECT_ID': JSON.stringify(process.env.WC_PROJECT_ID),
-        'process.env.BOARDROOM_KEY': JSON.stringify(process.env.BOARDROOM_KEY),
+        'process.env.DEV': JSON.stringify(process.env.DEV) || 'false',
+        'process.env.CI': JSON.stringify(process.env.CI) || 'false',
+        'process.env.CI_RPC_MOTHERSHIP':
+          JSON.stringify(process.env.CI_RPC_MOTHERSHIP) || 'http://127.0.0.1:8545',
+        'process.env.DEV_RPC_MOTHERSHIP':
+          JSON.stringify(process.env.DEV_RPC_MOTHERSHIP) || 'http://127.0.0.1:19000',
+        'process.env.TESTNET': JSON.stringify(process.env.TESTNET) || 'true',
+        'process.env.WC_PROJECT_ID':
+          JSON.stringify(process.env.WC_PROJECT_ID) || '5075a2da602e17eec34aa77b40b321be',
+        'process.env.BOARDROOM_KEY':
+          JSON.stringify(process.env.BOARDROOM_KEY) || 'd9abe7a1ab45ace58e6bd91bb9771586',
       })
     ),
   resolve: {
