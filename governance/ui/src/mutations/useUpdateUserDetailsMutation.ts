@@ -57,7 +57,7 @@ function useUpdateUserDetailsMutation() {
 
   const boardroomSignIn = async () => {
     const domain = 'governance.synthetix.io';
-    const chainId = 10;
+    const chainId = 2192;
 
     if (signer && activeWallet?.address) {
       try {

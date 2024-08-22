@@ -9,10 +9,8 @@ export default function UserProfileEditPreview({
   userData,
   activeWallet,
   isPending,
-  onSave,
   isDirty,
 }: {
-  onSave: () => void;
   isPending: boolean;
   activeWallet?: string;
   isDirty: boolean;
@@ -104,7 +102,7 @@ export default function UserProfileEditPreview({
       <Button
         isLoading={isPending}
         w="100%"
-        onClick={onSave}
+        type="submit"
         data-cy="save-profile-changes-button"
         isDisabled={!isDirty}
       >

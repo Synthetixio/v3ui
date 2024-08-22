@@ -6,6 +6,6 @@ export const motherShipProvider = (networkId?: number) => {
       ? process.env.CI_RPC_MOTHERSHIP
       : networkId === 13001
         ? 'https://testnet.snaxchain.io/'
-        : 'https://testnet.snaxchain.io/'
+        : 'https://mainnet.snaxchain.io/'
   );
 };

@@ -127,7 +127,7 @@ export default function UserListItem({
           }}
           color="white"
         >
-          {nominationInformation?.isNominated ? 'View' : 'NominateSelf'}
+          {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
         </Button>
       )}
     </Flex>

@@ -25,7 +25,7 @@ const councils: {
     image: '/councils/ac.svg',
     address: getCouncilContract('ambassador').address,
     description:
-      "The Ambassador Council, established via SIP 157 is responsible for promoting Synthetix's interest in the DeFi ecosystem. This advocation comes through two primary means: governance and partnerships. Governance includes seeking governance power in protocols that may be beneficial for Synthetix, and voting for proposals in the interest of the community. Partnerships include working with Synthetix integrators to help them integrate within the Synthetix Ecosystem.",
+      "The Ambassador Council, established via SIP 157, is responsible for promoting Synthetix's interest in the DeFi ecosystem. This advocation comes through two primary means: governance and partnerships. Governance includes seeking governance power in protocols that may be beneficial for Synthetix, and voting for proposals in the interest of the community. Partnerships include working with Synthetix integrators to help them integrate within the Synthetix Ecosystem.",
     stipends: '2,000 SNX',
     docLink: 'https://docs.synthetix.io/dao/governance-framework/ambassador-council',
   },
