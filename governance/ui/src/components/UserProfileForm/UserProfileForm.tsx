@@ -33,8 +33,7 @@ export function UserProfileForm() {
     onClose: onBlockerClose,
     onOpen: onBlockerOpen,
   } = useDisclosure({ id: 'blocker' });
-
-  const { register, getValues, setValue, watch, formState, handleSubmit } = useForm({
+  const { register, getValues, setValue, watch, formState, reset, handleSubmit } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -61,8 +60,18 @@ export function UserProfileForm() {
     }
   }, [user, setValue]);
 
-  const handleOnFormSave = () => {
-    mutation.mutateAsync({
+  const handleOnFormSave = async () => {
+    reset({
+      about: getValues('about')!,
+      address: user!.address,
+      delegationPitch: getValues('delegationPitch')!,
+      discord: getValues('discord')!,
+      github: getValues('github')!,
+      pfpUrl: getValues('pfpUrl')!,
+      twitter: getValues('twitter')!,
+      username: getValues('username')!,
+    });
+    await mutation.mutateAsync({
       about: getValues('about')!,
       address: user!.address,
       email: '',
@@ -86,7 +95,7 @@ export function UserProfileForm() {
   };
 
   const blocker = useBlocker(() => {
-    if (formState.isDirty && !formState.isSubmitted) {
+    if (formState.isDirty) {
       onBlockerOpen();
       return true;
     }
