@@ -22,9 +22,9 @@ import Wei from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert, TokenIcon } from '..';
+import { TokenIcon } from '..';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { MAINNET, useNetwork } from '@snx-v3/useBlockchain';
 import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
@@ -33,6 +33,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ZEROWEI } from '../../utils/constants';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { MigrationBanner } from '../Migration/MigrationBanner';
 
 export const InitialDepositUi: FC<{
   collateralChange: Wei;
@@ -181,9 +182,7 @@ export const InitialDepositUi: FC<{
               </Flex>
             </Flex>
           </BorderBox>
-          {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
-            <CollateralAlert tokenBalance={snxBalance.collateral} />
-          )}
+          {symbol === 'SNX' && <MigrationBanner network={MAINNET} type="alert" />}
           <Collapse
             in={
               collateralChange.gt(0) && !overAvailableBalance && collateralChange.gte(minDelegation)

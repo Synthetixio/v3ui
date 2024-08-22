@@ -235,7 +235,7 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
           </Flex>
         </Flex>
 
-        {network.id === 1 && <MigrationBanner network={network} />}
+        {network.id === 1 && <MigrationBanner network={network} type="banner" />}
       </Flex>
     </Fade>
   );

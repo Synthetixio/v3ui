@@ -48,7 +48,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
               lineHeight="1.25rem"
               fontFamily="heading"
             >
-              USDC Andromeda Yield
+              USDC
             </Text>
             <Text
               textTransform="capitalize"

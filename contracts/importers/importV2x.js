@@ -26,7 +26,7 @@ export async function importV2x(chainId, preset) {
       return { address: meta.contracts.V2x, abi };
 		}*/
     default: {
-      throw new Error(`Unsupported deployment ${deployment} for Extras`);
+      throw new Error(`Unsupported deployment ${deployment} for V2x`);
     }
   }
 }
