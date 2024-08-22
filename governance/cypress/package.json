@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "scripts": {
     "anvil:snax": "anvil --fork-url https://testnet.snaxchain.io --fork-block-number 296528",
-    "e2e": "cypress open --e2e --browser chrome"
+    "e2e": "cypress open --e2e --browser firefox"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.8.2",
