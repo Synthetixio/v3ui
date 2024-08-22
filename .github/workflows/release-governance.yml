@@ -31,7 +31,7 @@ jobs:
       - run: yarn workspaces focus @snx-v3/governance
         working-directory: v3ui
 
-      - run: yarn workspace @snx-v3/governance build
+      - run: yarn workspace @snx-v3/governance build TESTNET=true
         working-directory: v3ui
 
       - run: rm -rf ./governance/*
