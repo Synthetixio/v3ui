@@ -1,4 +1,4 @@
-import { Button, Fade, Flex, Heading, Image, Text } from '@chakra-ui/react';
+import { Button, Divider, Fade, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import { useV2Position } from '../../../../lib/useV2Position';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
@@ -41,17 +41,13 @@ export const MigrationBanner: FC<Props> = ({ network }) => {
         onClose={() => setIsUSDModalOpen(false)}
         isOpen={isUSDModalOpen}
       />
+      <Divider my={4} />
+
       <Fade in>
         <Flex
           alignItems="center"
           justifyContent={['center', 'space-between']}
           w="100%"
-          border="1px solid"
-          borderColor="gray.900"
-          rounded="base"
-          bg="navy.700"
-          p="6"
-          mt="4"
           flexWrap="wrap"
           gap={4}
         >

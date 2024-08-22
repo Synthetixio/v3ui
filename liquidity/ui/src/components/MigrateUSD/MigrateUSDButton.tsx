@@ -27,7 +27,6 @@ export const MigrateUSDButton: FC<Props> = ({ network }) => {
       <Button
         variant="outline"
         colorScheme="gray"
-        mr={1}
         data-cy="account-menu-button"
         px={3}
         gap={2}

@@ -68,7 +68,7 @@ export const useTokenBalances = (addresses: string[], customNetwork?: Network) =
   });
 };
 
-async function fetchTokenBalance(
+export async function fetchTokenBalance(
   tokenAddress: string,
   walletAddress: string,
   provider: providers.JsonRpcProvider

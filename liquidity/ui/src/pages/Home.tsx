@@ -1,8 +1,6 @@
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet';
 import { PoolsList } from '../components/Pools';
-import { MigrationBanner } from '../components/Migration/MigrationBanner';
-import { MAINNET } from '@snx-v3/useBlockchain';
 
 export function Home() {
   return (
@@ -11,7 +9,7 @@ export function Home() {
         <title>Synthetix Liquidity V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
-      <Flex flexDir="column" mb={16}>
+      <Flex overflow="auto" flexDir="column" mb={16}>
         <Heading
           mt={[6, 10]}
           color="gray.50"
@@ -26,7 +24,6 @@ export function Home() {
           Provide liquidity for the next generation of permissionless protocols
         </Text>
         <PoolsList />
-        <MigrationBanner network={MAINNET} />
       </Flex>
     </>
   );
