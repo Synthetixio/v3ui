@@ -124,15 +124,18 @@ const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           type: ballot.council.toUpperCase(),
         });
       });
+
       const initState = initialState(network.id.toString());
       Object.keys(initState[network.id]).forEach((key) => {
-        dispatch({
-          payload: {
-            action: initState[network.id][key as keyof VoteStateForNetwork],
-            network: network.id.toString(),
-          },
-          type: key.toUpperCase(),
-        });
+        if (initState[network.id][key as keyof VoteStateForNetwork]) {
+          dispatch({
+            payload: {
+              action: initState[network.id][key as keyof VoteStateForNetwork],
+              network: network.id.toString(),
+            },
+            type: key.toUpperCase(),
+          });
+        }
       });
       setInit(true);
     }
