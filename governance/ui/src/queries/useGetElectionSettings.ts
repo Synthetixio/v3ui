@@ -10,7 +10,7 @@ export function useGetElectionSettings(council: CouncilSlugs) {
     queryKey: ['useGetElectionSettings', council],
     queryFn: async () => {
       return (await getCouncilContract(council)
-        .connect(motherShipProvider(network?.id))
+        .connect(motherShipProvider(network?.id || 13001))
         .getElectionSettings()) as Promise<{
         epochSeatCount: number;
         minimumActiveMembers: number;

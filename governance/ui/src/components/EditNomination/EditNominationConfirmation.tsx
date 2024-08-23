@@ -32,7 +32,7 @@ export default function EditNominationConfirmation({
   useEffect(() => {
     if (isSuccess) {
       setShowConfirm(false);
-      navigate(`/councils/${selectedCouncil}?nominate=false`);
+      navigate(`/councils/${selectedCouncil ? selectedCouncil : 'spartan'}?nominate=false`);
     }
   }, [isSuccess, setShowConfirm, navigate, selectedCouncil]);
 

@@ -137,13 +137,10 @@ export function CouncilCard({ council }: CouncilCardProps) {
               mb="1"
               onClick={(e) => {
                 e.stopPropagation();
-                if (
-                  nominationInformation?.isNominated &&
-                  nominationInformation.council.slug === council.slug
-                ) {
-                  navigate(`/councils/${council.slug}?editNomination=true`);
+                if (!activeWallet?.address) {
+                  navigate(`/councils/${council.slug}`);
                 } else {
-                  navigate(`/councils/${council.slug}?nominate=true`);
+                  navigate(`/councils/${council.slug}?view=${activeWallet?.address}`);
                 }
               }}
             >

@@ -6,7 +6,7 @@ import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetUserVotingPower, useNetwork } from '../queries/';
+import { useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -16,6 +16,7 @@ export default function MyVotes() {
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const { network } = useNetwork();
+  const { connect } = useWallet();
   const networkForState = network?.id.toString() || process.env.CI === 'true' ? 13001 : 2192;
 
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
@@ -173,10 +174,14 @@ export default function MyVotes() {
               size="md"
               isDisabled={period !== '2' || !councilToCastVote.length}
               onClick={async () => {
-                await mutateAsync();
+                if (!network?.id) {
+                  connect();
+                } else {
+                  await mutateAsync();
+                }
               }}
             >
-              Cast Votes
+              {!network?.id ? 'Connect Wallet' : 'Cast Votes'}
             </Button>
           </Flex>
         </Flex>

@@ -5,11 +5,14 @@ import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
+import { useToast } from '@chakra-ui/react';
+import { CustomToast } from '../components/CustomToast';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
   candidates: { spartan?: string; ambassador?: string; treasury?: string }
 ) {
+  const toast = useToast();
   const query = useQueryClient();
   const signer = useSigner();
   const { network } = useNetwork();
@@ -112,6 +115,13 @@ export function useCastVotes(
       } else {
         console.error('signer not connected');
       }
+    },
+    onError: () => {
+      toast({
+        description: 'Could not cast votes.',
+        status: 'error',
+        render: CustomToast,
+      });
     },
     onSuccess: async () => {
       councils.map((council) => {

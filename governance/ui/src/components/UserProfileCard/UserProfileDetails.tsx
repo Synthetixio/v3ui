@@ -1,5 +1,5 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, Button, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, IconButton, Button, Text, Tooltip, Box } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
 import { Socials } from '../Socials';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
@@ -9,7 +9,7 @@ import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
 import { useGetUserBallot, useNetwork } from '../../queries';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
 
@@ -38,6 +38,8 @@ export const UserProfileDetails = ({
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(activeCouncil);
+  const elementRef = useRef<HTMLParagraphElement | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   const isSelected = state[networkForState]
     ? state[networkForState][activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase()
@@ -46,6 +48,45 @@ export const UserProfileDetails = ({
   const isAlreadyVoted =
     !!ballot?.votedCandidates &&
     ballot?.votedCandidates[0]?.toLowerCase() === userData?.address?.toLowerCase();
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = elementRef.current;
+      if (el) {
+        const isOverflowing = el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
+        setIsOverflowing(isOverflowing);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (elementRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+          setIsOverflowing(false);
+        } else {
+          setIsOverflowing(true);
+        }
+      }
+    };
+
+    const refCurrent = elementRef.current;
+    if (refCurrent) {
+      refCurrent.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (refCurrent) {
+        refCurrent.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -90,7 +131,7 @@ export const UserProfileDetails = ({
               whiteSpace="nowrap"
               overflow="hidden"
             >
-              {userData?.username ? userData.username : prettyString(userData!.address)}
+              {userData?.username ? userData.username : prettyString(userData?.address || '')}
             </Text>
           </Flex>
           <Text
@@ -122,7 +163,7 @@ export const UserProfileDetails = ({
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setTooltipLabel('Profile Link Copied');
-                setTimeout(() => setTooltipLabel('Copy Profile Link'), 5000);
+                setTimeout(() => setTooltipLabel('Copy Profile Link'), 3000);
               }}
             />
           </div>
@@ -155,8 +196,24 @@ export const UserProfileDetails = ({
           <Text fontSize="14px" fontWeight="700" color="gray.500">
             Governance Pitch
           </Text>
-          <Text fontSize="14px" lineHeight="20px" overflowY="scroll">
+          <Text
+            position="relative"
+            fontSize="14px"
+            lineHeight="20px"
+            overflowY="scroll"
+            ref={elementRef}
+          >
             {userData?.delegationPitch}
+            {isOverflowing && (
+              <Box
+                position="sticky"
+                bottom="-1px"
+                left="0"
+                right="0"
+                height="50px"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%)"
+              />
+            )}
           </Text>
         </>
       )}
@@ -226,10 +283,12 @@ export const UserProfileDetails = ({
               setVoteCard(true);
             }}
           >
-            {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens || userData?.username
-              ? userData.username.slice(0, 20).concat('...')
-              : prettyString(userData!.address)}
+            <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
+              {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
+              {userData?.ens || userData?.username
+                ? userData.username
+                : prettyString(userData!.address)}
+            </Text>
           </Button>
         )}
 

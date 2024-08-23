@@ -7,10 +7,43 @@ import { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
 
+function renderCorrectBorder(
+  column: 'place' | 'name' | 'votes' | 'power',
+  position: 'left' | 'right' | 'bottom',
+  period: string | undefined,
+  isSelected: boolean
+) {
+  if (column === 'place') {
+    if (position === 'left') {
+      return isSelected ? '1px solid' : '';
+    } else if (position === 'bottom') {
+      return isSelected ? '1px solid' : '';
+    }
+  } else if (column === 'name') {
+    if (position === 'left') {
+      if (period === '2') {
+        return '';
+      }
+      if (period === '0') {
+        return '';
+      }
+      return isSelected ? '1px solid' : '';
+    } else if (position === 'bottom') {
+      return isSelected ? '1px solid' : '';
+    }
+  } else if (column === 'votes') {
+    if (position === 'bottom') return isSelected ? '1px solid' : '';
+  } else if (column === 'power') {
+    if (position === 'bottom') return isSelected ? '1px solid' : '';
+    if (position === 'right') {
+      if (period === '2') return isSelected ? '1px solid' : '';
+    }
+  }
+}
+
 export default function UserTableView({
   user,
   activeCouncil,
-  isNomination,
   place,
 }: {
   place: number;
@@ -35,8 +68,8 @@ export default function UserTableView({
       {councilIsInAdminOrVoting && (
         <Td
           borderTop="1px solid"
-          borderLeft={isSelected ? '1px solid' : ''}
-          borderBottom={isSelected ? '1px solid' : ''}
+          borderLeft={renderCorrectBorder('place', 'left', councilPeriod, isSelected)}
+          borderBottom={renderCorrectBorder('place', 'bottom', councilPeriod, isSelected)}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           borderLeftRadius={isSelected ? 'base' : ''}
         >
@@ -57,8 +90,8 @@ export default function UserTableView({
         textTransform="unset"
         px="3"
         borderTop="1px solid"
-        borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
-        borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
+        borderBottom={renderCorrectBorder('name', 'bottom', councilPeriod, isSelected)}
+        borderLeft={renderCorrectBorder('name', 'left', councilPeriod, isSelected)}
         borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
@@ -86,7 +119,7 @@ export default function UserTableView({
       {councilIsInAdminOrVoting && (
         <Td
           borderTop="1px solid"
-          borderBottom={isSelected ? '1px solid' : ''}
+          borderBottom={renderCorrectBorder('votes', 'bottom', councilPeriod, isSelected)}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
           fontSize="sm"
@@ -98,8 +131,8 @@ export default function UserTableView({
       {councilIsInAdminOrVoting && (
         <Td
           borderTop="1px solid"
-          borderBottom={isSelected ? '1px solid' : ''}
-          borderRight={isSelected && councilPeriod === '2' ? '1px solid' : ''}
+          borderBottom={renderCorrectBorder('power', 'bottom', councilPeriod, isSelected)}
+          borderRight={renderCorrectBorder('power', 'right', councilPeriod, isSelected)}
           borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
@@ -113,7 +146,7 @@ export default function UserTableView({
         <Td
           textAlign="end"
           borderTop="1px solid"
-          borderBottom="1px solid"
+          borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected ? '1px solid' : ''}
           borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
@@ -132,7 +165,7 @@ export default function UserTableView({
             rounded="base"
             data-cy={`user-table-view-button-${user.address}`}
           >
-            {isNomination && 'View'}
+            View
           </Button>
         </Td>
       )}
