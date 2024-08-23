@@ -1,4 +1,4 @@
-import { Box, Flex, Hide, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { useGetUserDetailsQuery } from '../../queries';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
