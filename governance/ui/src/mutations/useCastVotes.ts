@@ -40,7 +40,8 @@ export function useCastVotes(
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMotherchain = true;
+        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
