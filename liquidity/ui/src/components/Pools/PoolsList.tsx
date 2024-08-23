@@ -6,15 +6,17 @@ import { usePoolsList } from '@snx-v3/usePoolsList';
 import { PoolCardsLoading } from './PoolCards/PoolCardsLoading';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
-import { ARBITRUM, BASE_ANDROMEDA, MAINNET } from '@snx-v3/useBlockchain';
+import { ARBITRUM, BASE_ANDROMEDA, MAINNET, SEPOLIA, useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 import { useOraclePrice } from '@snx-v3/useOraclePrice';
 import { Balloon } from './Balloon';
+import { MigrationBanner } from '../Migration/MigrationBanner';
 
 export const PoolsList = () => {
   const [state, dispatch] = useReducer(poolsReducer, { collateral: [], chain: [] });
   const { data, isLoading: isPoolsListLoading } = usePoolsList();
+  const { network } = useNetwork();
 
   const { data: BaseCollateralTypes, isLoading: isBaseCollateralLoading } = useCollateralTypes(
     false,
@@ -308,6 +310,8 @@ export const PoolsList = () => {
             </Text>
           </Flex>
         )}
+
+        {network?.isTestnet && <MigrationBanner network={SEPOLIA} type="banner" />}
       </Flex>
     </Flex>
   );

@@ -4,9 +4,10 @@ import { NetworkController } from './NetworkController';
 import { useEffect } from 'react';
 import { Logo, LogoIcon } from '@snx-v3/icons';
 import { MigrateUSDButton } from '../../components/MigrateUSD/MigrateUSDButton';
-import { MAINNET } from '@snx-v3/useBlockchain';
+import { MAINNET, SEPOLIA, useNetwork } from '@snx-v3/useBlockchain';
 
 export default function Header() {
+  const { network } = useNetwork();
   const { onClose } = useDisclosure();
   const location = useLocation();
 
@@ -87,7 +88,8 @@ export default function Header() {
           <Flex gap={3} flexWrap="wrap-reverse" justifyContent="center" alignItems="center">
             {/* Hide balance */}
             {/* <Balance isBase={isBase} balance={balance} /> */}
-            <MigrateUSDButton network={MAINNET} />
+            {!network?.isTestnet && <MigrateUSDButton network={MAINNET} />}
+            {network?.isTestnet && <MigrateUSDButton network={SEPOLIA} />}
             <NetworkController />
           </Flex>
         </Container>
