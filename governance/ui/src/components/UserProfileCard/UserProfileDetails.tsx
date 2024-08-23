@@ -283,10 +283,12 @@ export const UserProfileDetails = ({
               setVoteCard(true);
             }}
           >
-            {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-            {userData?.ens || userData?.username
-              ? userData.username.slice(0, 20).concat('...')
-              : prettyString(userData!.address)}
+            <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
+              {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
+              {userData?.ens || userData?.username
+                ? userData.username
+                : prettyString(userData!.address)}
+            </Text>
           </Button>
         )}
 

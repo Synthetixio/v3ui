@@ -203,16 +203,13 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                       : a.username.localeCompare(b.username) * -1;
                   }
                   return sortConfig[0]
-                    ? a?.address.localeCompare(b.address)
-                    : a?.address.localeCompare(b.address) * -1;
+                    ? a?.address.localeCompare(b.address) * -1
+                    : a?.address.localeCompare(b.address);
                 });
               }}
             >
               Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
-              {/* @ts-ignore */}
-              {sortConfig[1] === 'start' && sortConfig[1] !== 'name' && (
-                <SortArrows up={sortConfig[0]} />
-              )}
+              {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
             </Th>
             {councilPeriod === '2' && (
               <Th

@@ -56,9 +56,8 @@ export default function UserTableView({
         textTransform="unset"
         px="3"
         borderTop="1px solid"
-        borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
-        // TODO @dev heads up, could be borked
-        borderLeft={!isSelected && !councilIsInAdminOrVoting ? '' : '1px solid'}
+        borderBottom={councilPeriod !== '2' ? '' : '1px solid'}
+        borderLeft={councilPeriod === '2' ? '' : '1px solid'}
         borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >

@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { removeCandidate, setCandidate } from '../utils/localstorage';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 import { useNetwork } from '../queries';
+import { removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
   spartan: string | undefined;
@@ -20,7 +27,7 @@ type Action = {
 const parsedState = JSON.parse(localStorage.getItem('voteSelection') || '{}');
 
 const initialState = (chainId?: string) => {
-  const customChainId = chainId || Object.keys(parsedState)[0] || '2492';
+  const customChainId = chainId || Object.keys(parsedState)[0] || '2192';
   return {
     [customChainId]: {
       spartan: parsedState[customChainId]?.spartan || undefined,
@@ -89,7 +96,23 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { network } = useNetwork();
+  const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(voteReducer, initialState(network?.id.toString()));
+  useEffect(() => {
+    if (network && !init) {
+      const initState = initialState(network.id.toString());
+      Object.keys(initState[network.id]).forEach((key) => {
+        dispatch({
+          payload: {
+            action: initState[network.id][key as keyof VoteStateForNetwork],
+            network: network.id.toString(),
+          },
+          type: key.toUpperCase(),
+        });
+      });
+      setInit(true);
+    }
+  }, [network, init]);
   return <VoteContext.Provider value={{ state, dispatch }}>{children}</VoteContext.Provider>;
 };
 
@@ -101,4 +124,4 @@ const useVoteContext = () => {
   return context;
 };
 
-export { VoteProvider, useVoteContext };
+export { useVoteContext, VoteProvider };
