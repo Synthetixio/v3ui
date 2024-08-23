@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSigner } from '../queries/useWallet';
 import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
-import { CustomToast } from '../components/CustomToast';
 import { useToast } from '@chakra-ui/react';
 import { utils } from 'ethers';
 import { useMulticall } from '../hooks/useMulticall';
@@ -69,7 +68,6 @@ export default function useEditNomination({
       toast({
         description: 'Nomination successfully edited.',
         status: 'success',
-        render: CustomToast,
       });
     },
   });

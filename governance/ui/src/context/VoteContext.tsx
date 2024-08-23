@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { useNetwork } from '../queries';
+import { useGetUserBallot, useNetwork } from '../queries';
 import { removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
@@ -48,7 +48,7 @@ const VoteContext = createContext<
 const voteReducer = (state: VoteState, action: Action): VoteState => {
   switch (action.type) {
     case 'SPARTAN': {
-      if (action.payload.action && action.payload.action !== 'remove') {
+      if (action.payload.action) {
         setCandidate(action.payload.action, 'spartan', action.payload.network);
       } else {
         removeCandidate('spartan', action.payload.network);
@@ -62,7 +62,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'AMBASSADOR': {
-      if (action.payload.action && action.payload.action !== 'remove') {
+      if (action.payload.action) {
         setCandidate(action.payload.action, 'ambassador', action.payload.network);
       } else {
         removeCandidate('ambassador', action.payload.network);
@@ -76,7 +76,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'TREASURY': {
-      if (action.payload.action && action.payload.action !== 'remove') {
+      if (action.payload.action) {
         setCandidate(action.payload.action, 'treasury', action.payload.network);
       } else {
         removeCandidate('treasury', action.payload.network);
@@ -98,21 +98,57 @@ const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { network } = useNetwork();
   const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(voteReducer, initialState(network?.id.toString()));
+
+  const { data: spartanBallot, isFetched: isSpartanBallotFetched } = useGetUserBallot('spartan');
+  const { data: ambassadorBallot, isFetched: isAmbassadorBallotFetched } =
+    useGetUserBallot('ambassador');
+  const { data: treasuryBallot, isFetched: isTreasuryBallotFetched } = useGetUserBallot('treasury');
+
   useEffect(() => {
-    if (network && !init) {
-      const initState = initialState(network.id.toString());
-      Object.keys(initState[network.id]).forEach((key) => {
+    if (
+      network &&
+      !init &&
+      isSpartanBallotFetched &&
+      isAmbassadorBallotFetched &&
+      isTreasuryBallotFetched &&
+      spartanBallot &&
+      ambassadorBallot &&
+      treasuryBallot
+    ) {
+      [spartanBallot, ambassadorBallot, treasuryBallot].forEach((ballot) => {
         dispatch({
           payload: {
-            action: initState[network.id][key as keyof VoteStateForNetwork],
+            action: ballot?.votedCandidates[0],
             network: network.id.toString(),
           },
-          type: key.toUpperCase(),
+          type: ballot.council.toUpperCase(),
         });
+      });
+
+      const initState = initialState(network.id.toString());
+      Object.keys(initState[network.id]).forEach((key) => {
+        if (initState[network.id][key as keyof VoteStateForNetwork]) {
+          dispatch({
+            payload: {
+              action: initState[network.id][key as keyof VoteStateForNetwork],
+              network: network.id.toString(),
+            },
+            type: key.toUpperCase(),
+          });
+        }
       });
       setInit(true);
     }
-  }, [network, init]);
+  }, [
+    network,
+    init,
+    isSpartanBallotFetched,
+    isAmbassadorBallotFetched,
+    isTreasuryBallotFetched,
+    spartanBallot,
+    ambassadorBallot,
+    treasuryBallot,
+  ]);
   return <VoteContext.Provider value={{ state, dispatch }}>{children}</VoteContext.Provider>;
 };
 
