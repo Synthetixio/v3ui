@@ -17,7 +17,8 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
-        const isMotherchain = network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMotherchain = true;
+        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
 
         const electionId = await electionModule.getEpochIndex();
         const ballot = isMotherchain
@@ -47,8 +48,8 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         return { power: ethers.BigNumber.from(0), isDeclared: false };
       }
     },
-    enabled: !!provider && !!activeWallet,
-    queryKey: ['votingPower', council.toString(), activeWallet?.address],
+    enabled: !!provider && !!activeWallet && !!network?.id,
+    queryKey: ['votingPower', council.toString(), activeWallet?.address, network?.id],
     staleTime: 60000,
   });
 }

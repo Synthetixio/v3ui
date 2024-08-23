@@ -12,7 +12,6 @@ import { useGetIsUUIDValidQuery } from '../queries/';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
 import { useWallet, useSigner } from '../queries/useWallet';
-import { CustomToast } from '../components/CustomToast';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -158,7 +157,6 @@ function useUpdateUserDetailsMutation() {
       toast({
         description: 'Your profile has been updated.',
         status: 'success',
-        render: CustomToast,
       });
     },
   });

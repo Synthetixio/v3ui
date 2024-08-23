@@ -6,7 +6,6 @@ import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
-import { CustomToast } from '../components/CustomToast';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -22,7 +21,6 @@ export function useCastVotes(
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
   const { data: treasuryVotingPower } = useGetUserVotingPower('treasury');
-
   const getVotingPowerByCouncil = (council: CouncilSlugs) => {
     switch (council) {
       case 'spartan':
@@ -47,11 +45,11 @@ export function useCastVotes(
             getCouncilContract(council).connect(signer)
           );
           const prepareBallotData = councils
-            .map((council) => {
+            .map((council, index) => {
               if (!getVotingPowerByCouncil(council)?.isDeclared) {
                 return isMotherchain
                   ? {
-                      target: electionModules[0].address,
+                      target: electionModules[index].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
                         [
@@ -61,7 +59,7 @@ export function useCastVotes(
                       ),
                     }
                   : {
-                      target: electionModules[0].address,
+                      target: electionModules[index].address,
                       callData: electionModules[0].interface.encodeFunctionData(
                         'prepareBallotWithSnapshot',
                         [
@@ -80,11 +78,11 @@ export function useCastVotes(
           if (!isMotherchain) {
             quote = await electionModules[0].quoteCrossChainDeliveryPrice(10005, 0, 1_000_000);
           }
-          const castData = councils.map((council) => {
+          const castData = councils.map((council, index) => {
             const shouldWithdrawVote = candidates[council] === 'remove';
             return isMotherchain
               ? {
-                  target: electionModules[0].address,
+                  target: electionModules[index].address,
                   callData: shouldWithdrawVote
                     ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
@@ -93,7 +91,7 @@ export function useCastVotes(
                       ]),
                 }
               : {
-                  target: electionModules[0].address,
+                  target: electionModules[index].address,
                   callData: shouldWithdrawVote
                     ? electionModules[0].interface.encodeFunctionData('withdrawVote', [])
                     : electionModules[0].interface.encodeFunctionData('cast', [
@@ -104,6 +102,7 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
+
           await multicall
             .connect(signer)
             [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
@@ -112,6 +111,10 @@ export function useCastVotes(
             });
         } catch (error) {
           console.error(error);
+          toast({
+            description: 'Could not cast votes.',
+            status: 'error',
+          });
         }
       } else {
         console.error('signer not connected');
@@ -121,7 +124,6 @@ export function useCastVotes(
       toast({
         description: 'Could not cast votes.',
         status: 'error',
-        render: CustomToast,
       });
     },
     onSuccess: async () => {
