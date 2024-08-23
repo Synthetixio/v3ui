@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Hide, Image, Text } from '@chakra-ui/react';
 import { useGetUserDetailsQuery } from '../../queries';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
@@ -7,6 +7,7 @@ import { prettyString } from '@snx-v3/format';
 export default function CouncilUser({
   address,
   councilSlug,
+  hideName,
 }: {
   address?: string;
   councilSlug: CouncilSlugs;
@@ -18,6 +19,7 @@ export default function CouncilUser({
   if (!council) {
     return null;
   }
+
   return (
     <Flex alignItems="center">
       <Flex alignItems="center">
@@ -51,18 +53,26 @@ export default function CouncilUser({
         )}
       </Flex>
       <Flex flexDir="column" mr="auto" ml="1">
-        <Text fontSize="sm" fontWeight="bold">
-          {council.title}
-        </Text>
-        <Text
-          fontSize="x-small"
-          maxW="100px"
-          textOverflow="ellipsis"
-          whiteSpace="nowrap"
-          overflow="hidden"
-        >
-          {user ? (user?.username ? user.username : prettyString(user?.address, 6, 4)) : 'No Vote'}
-        </Text>
+        {!hideName && (
+          <>
+            <Text fontSize="sm" fontWeight="bold">
+              {council.title}
+            </Text>
+            <Text
+              fontSize="x-small"
+              maxW="100px"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              overflow="hidden"
+            >
+              {user
+                ? user?.username
+                  ? user.username
+                  : prettyString(user?.address, 6, 4)
+                : 'No Vote'}
+            </Text>
+          </>
+        )}
       </Flex>
     </Flex>
   );

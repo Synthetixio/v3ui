@@ -39,6 +39,7 @@ export default function MyVoteRow({
         <CouncilUser
           councilSlug={councilSlug}
           address={ballot?.votedCandidates[0] || stateForNetwork}
+          hideName={!!(ballot?.votedCandidates[0] && stateForNetwork === 'remove')}
         />
         {ballot?.votedCandidates[0] && stateForNetwork === 'remove' && (
           <>
