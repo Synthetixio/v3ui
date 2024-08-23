@@ -12,17 +12,19 @@ export default function MyProfile() {
       </Heading>
     );
   return (
-    <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
+    <>
       <CouncilTabs activeCouncil="spartan" />
-      <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
-        <Heading size="lg" mt="6">
-          My Profile
-        </Heading>
-        <Text fontSize="12px" color="gray.500" mb="4">
-          Update your profile information below
-        </Text>
-        <UserProfileForm />
-      </Flex>
-    </Container>
+      <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
+        <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
+          <Heading size="lg" mt="6">
+            My Profile
+          </Heading>
+          <Text fontSize="12px" color="gray.500" mb="4">
+            Update your profile information below
+          </Text>
+          <UserProfileForm />
+        </Flex>
+      </Container>
+    </>
   );
 }
