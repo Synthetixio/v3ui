@@ -10,7 +10,6 @@ import { prettyString } from '@snx-v3/format';
 export default function UserTableView({
   user,
   activeCouncil,
-  isNomination,
   place,
 }: {
   place: number;
@@ -58,7 +57,8 @@ export default function UserTableView({
         px="3"
         borderTop="1px solid"
         borderBottom={!councilIsInAdminOrVoting && !isSelected ? '' : '1px solid'}
-        borderLeft={councilIsInAdminOrVoting ? '' : '1px solid'}
+        // TODO @dev heads up, could be borked
+        borderLeft={!isSelected && !councilIsInAdminOrVoting ? '' : '1px solid'}
         borderLeftRadius={isSelected && councilPeriod === '1' ? 'base' : ''}
         borderColor={isSelected ? 'cyan.500' : 'gray.900'}
       >
@@ -113,7 +113,7 @@ export default function UserTableView({
         <Td
           textAlign="end"
           borderTop="1px solid"
-          borderBottom="1px solid"
+          borderBottom={isSelected ? '1px solid' : ''}
           borderRight={isSelected ? '1px solid' : ''}
           borderRightRadius={isSelected ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
@@ -132,7 +132,7 @@ export default function UserTableView({
             rounded="base"
             data-cy={`user-table-view-button-${user.address}`}
           >
-            {isNomination && 'View'}
+            View
           </Button>
         </Td>
       )}

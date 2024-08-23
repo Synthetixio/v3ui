@@ -10,7 +10,7 @@ export function useGetIsNominated(address?: string) {
   return useQuery({
     queryKey: ['isNominated', address, network?.id],
     queryFn: async () => {
-      const provider = motherShipProvider(network?.id);
+      const provider = motherShipProvider(network?.id || 13001);
       const isNominatedForSpartanCouncil = (await getCouncilContract('spartan')
         .connect(provider)
         .isNominated(address)) as boolean | undefined;

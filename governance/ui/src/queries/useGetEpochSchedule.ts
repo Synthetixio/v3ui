@@ -11,7 +11,7 @@ export function useGetEpochSchedule(council?: CouncilSlugs) {
     queryKey: ['epoch-schedule', council, network?.id],
     queryFn: async () => {
       const schedule = await getCouncilContract(council!)
-        .connect(motherShipProvider(network?.id))
+        .connect(motherShipProvider(network?.id || 13001))
         .getEpochSchedule();
       return {
         startDate: Number(schedule.startDate.toString()),

@@ -256,7 +256,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               <UserTableView
                 place={index}
                 user={councilNominee!}
-                isNomination
                 activeCouncil={activeCouncil}
                 key={councilNominee.address.concat('council-nominees')}
               />
