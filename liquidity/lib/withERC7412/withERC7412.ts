@@ -4,7 +4,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { z } from 'zod';
 import { ZodBigNumber } from '@snx-v3/zod';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
-import { deploymentsWithERC7412, Network } from '@snx-v3/useBlockchain';
+import { Network } from '@snx-v3/useBlockchain';
 import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3, importAllErrors } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
@@ -129,7 +129,7 @@ function makeMulticall(
 
 // This should be used for networks that doesn't have a multicall setup as a trusted forwarder
 // TODO remove when all networks have a trusted forwarder
-const makeCoreProxyMulticall = (
+export const makeCoreProxyMulticall = (
   calls: TransactionRequest[],
   senderAddr: string,
   coreProxyAddress: string,
@@ -247,12 +247,12 @@ export const withERC7412 = async (
 
   // If from is set to the default address (wETH) we can assume it's a read rather than a write
   const isRead = from === getDefaultFromAddress(network.name);
-  const networkHaveERC7412 = deploymentsWithERC7412.includes(`${network.id}-${network.preset}`);
-  const useCoreProxy = !networkHaveERC7412 && !isRead;
+  // const networkHaveERC7412 = deploymentsWithERC7412.includes(`${network.id}-${network.preset}`);
 
-  const { address: multicallAddress, abi: multiCallAbi } = useCoreProxy
-    ? await importCoreProxy(network.id, network.preset)
-    : await importMulticall3(network.id, network.preset);
+  const { address: multicallAddress, abi: multiCallAbi } = await importMulticall3(
+    network.id,
+    network.preset
+  );
 
   while (true) {
     try {
@@ -292,10 +292,7 @@ export const withERC7412 = async (
       }
       // If we're here it means we now added a tx to do .
       // Some networks doesn't have ERC7412 and a trusted forwarder setup, on write calls we still need to use the coreproxy for those
-      const multicallTxn = useCoreProxy
-        ? makeCoreProxyMulticall(multicallCalls, from, multicallAddress, multiCallAbi)
-        : makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
-
+      const multicallTxn = makeMulticall(multicallCalls, from, multicallAddress, multiCallAbi);
       const gasLimit = await jsonRpcProvider.estimateGas(multicallTxn);
 
       console.log(
