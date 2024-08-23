@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Container, Flex, Heading, Text } from '@chakra-ui/react';
 import { UserProfileForm } from '../components/UserProfileForm';
 import { useWallet } from '../queries';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
@@ -12,7 +12,7 @@ export default function MyProfile() {
       </Heading>
     );
   return (
-    <>
+    <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
       <CouncilTabs activeCouncil="spartan" />
       <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
         <Heading size="lg" mt="6">
@@ -23,6 +23,6 @@ export default function MyProfile() {
         </Text>
         <UserProfileForm />
       </Flex>
-    </>
+    </Container>
   );
 }

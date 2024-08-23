@@ -163,7 +163,7 @@ export const UserProfileDetails = ({
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setTooltipLabel('Profile Link Copied');
-                setTimeout(() => setTooltipLabel('Copy Profile Link'), 5000);
+                setTimeout(() => setTooltipLabel('Copy Profile Link'), 3000);
               }}
             />
           </div>

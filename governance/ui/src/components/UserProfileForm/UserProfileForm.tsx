@@ -205,7 +205,15 @@ export function UserProfileForm() {
                     }
                   }}
                 >
-                  <Text mr="1" fontSize="14px" fontWeight="400">
+                  <Text
+                    mr="1"
+                    fontSize="14px"
+                    fontWeight="400"
+                    maxW="300px"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                  >
                     {user?.address}
                   </Text>
                   <Tooltip label="Copy Wallet Address">

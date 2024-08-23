@@ -139,11 +139,6 @@ export function CouncilCard({ council }: CouncilCardProps) {
                 e.stopPropagation();
                 if (!activeWallet?.address) {
                   navigate(`/councils/${council.slug}`);
-                } else if (
-                  nominationInformation?.isNominated &&
-                  nominationInformation.council.slug === council.slug
-                ) {
-                  navigate(`/councils/${council.slug}?editNomination=true`);
                 } else {
                   navigate(`/councils/${council.slug}?view=${activeWallet?.address}`);
                 }

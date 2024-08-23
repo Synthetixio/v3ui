@@ -59,7 +59,7 @@ export default function UserListItem({
           textOverflow="ellipsis"
           whiteSpace="nowrap"
           overflow="hidden"
-          maxW="300px"
+          maxW="150px"
         >
           {user?.username ? user.username : prettyString(user?.address || '')}
         </Text>
@@ -70,7 +70,7 @@ export default function UserListItem({
             Nominee
           </Badge>
         )}
-      {councilPeriod === '1' ? (
+      {councilPeriod === '1' && isNominatedFetched && !!nominationInformation ? (
         <Button
           ml="auto"
           rounded="base"
@@ -87,7 +87,7 @@ export default function UserListItem({
           }}
           data-cy="user-list-item-button-nomination"
         >
-          {nominationInformation?.isNominated && isNominatedFetched && isOwn ? (
+          {nominationInformation?.isNominated && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="white">Nominate Self</Text>
@@ -116,19 +116,21 @@ export default function UserListItem({
           {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
         </Button>
       ) : (
-        <Button
-          ml="auto"
-          size="xs"
-          variant="outline"
-          colorScheme="gray"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/councils/${activeCouncil}?view=${address}`);
-          }}
-          color="white"
-        >
-          {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
-        </Button>
+        isNominatedFetched && (
+          <Button
+            ml="auto"
+            size="xs"
+            variant="outline"
+            colorScheme="gray"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/councils/${activeCouncil}?view=${address}`);
+            }}
+            color="white"
+          >
+            {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
+          </Button>
+        )
       )}
     </Flex>
   );
