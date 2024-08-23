@@ -87,7 +87,7 @@ export default function UserListItem({
           }}
           data-cy="user-list-item-button-nomination"
         >
-          {nominationInformation?.isNominated && isOwn ? (
+          {nominationInformation?.isNominated && isNominatedFetched && isOwn ? (
             <Text color="white">Edit Nomination</Text>
           ) : (
             <Text color="white">Nominate Self</Text>
