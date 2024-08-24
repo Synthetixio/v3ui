@@ -44,7 +44,13 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
       {...props}
     >
       <IconButton
-        onClick={() => navigate(`/councils/${activeCouncil}`)}
+        onClick={() => {
+          if (showConfirm) {
+            setShowConfirm(false);
+          } else {
+            navigate(`/councils/${activeCouncil}`);
+          }
+        }}
         size="xs"
         aria-label="close button"
         icon={<CloseIcon />}

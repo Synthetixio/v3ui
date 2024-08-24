@@ -57,9 +57,7 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        {(process.env.TESTNET === 'true' || process.env.DEV === 'true') && (
-          <Link href="/#/admin">Admin</Link>
-        )}
+        <Link href="/#/admin">Admin</Link>
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
 

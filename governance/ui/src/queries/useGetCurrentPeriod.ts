@@ -11,7 +11,7 @@ export function useGetCurrentPeriod(council?: CouncilSlugs) {
     queryFn: async () => {
       return (
         await getCouncilContract(council!)
-          .connect(motherShipProvider(network?.id))
+          .connect(motherShipProvider(network?.id || 13001))
           .getCurrentPeriod()
       ).toString() as string | undefined;
     },

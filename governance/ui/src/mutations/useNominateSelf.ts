@@ -3,7 +3,6 @@ import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
 import { useSigner } from '../queries/useWallet';
 import { useToast } from '@chakra-ui/react';
-import { CustomToast } from '../components/CustomToast';
 import { utils } from 'ethers';
 
 export default function useNominateSelf(council: CouncilSlugs, address?: string) {
@@ -38,7 +37,6 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
       toast({
         description: 'Successfully nominated yourself.',
         status: 'success',
-        render: CustomToast,
       });
     },
   });

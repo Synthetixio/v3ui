@@ -9,10 +9,8 @@ export default function UserProfileEditPreview({
   userData,
   activeWallet,
   isPending,
-  onSave,
   isDirty,
 }: {
-  onSave: () => void;
   isPending: boolean;
   activeWallet?: string;
   isDirty: boolean;
@@ -26,6 +24,10 @@ export default function UserProfileEditPreview({
       p={{ base: 0, xl: '4' }}
       bg="navy.700"
       flexDir="column"
+      w="451px"
+      h="612px"
+      position={{ base: 'unset', xl: 'sticky' }}
+      top="105px"
     >
       <Flex>
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address || activeWallet} />
@@ -95,6 +97,8 @@ export default function UserProfileEditPreview({
             overflow="scroll"
             maxH="50vh"
             mb="4"
+            h="350px"
+            whiteSpace="pre-wrap"
             data-cy="governance-pitch-preview"
           >
             {userData.delegationPitch}
@@ -104,7 +108,7 @@ export default function UserProfileEditPreview({
       <Button
         isLoading={isPending}
         w="100%"
-        onClick={onSave}
+        type="submit"
         data-cy="save-profile-changes-button"
         isDisabled={!isDirty}
       >

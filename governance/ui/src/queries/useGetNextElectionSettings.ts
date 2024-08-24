@@ -10,7 +10,7 @@ export function useGetNextElectionSettings(council: CouncilSlugs) {
     queryKey: ['next-epoch-settings', council],
     queryFn: async () => {
       const schedule = await getCouncilContract(council)
-        .connect(motherShipProvider(network?.id))
+        .connect(motherShipProvider(network?.id || 13001))
         .getNextElectionSettings();
       return Number(schedule.epochDuration.toString()) as number | undefined;
     },

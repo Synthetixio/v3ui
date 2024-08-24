@@ -177,7 +177,7 @@ export function NetworkController() {
                 fontSize="xs"
                 userSelect="none"
                 data-cy="header-wallet-address-display"
-                maxW="200px"
+                maxW="80px"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 overflow="hidden"

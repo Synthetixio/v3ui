@@ -106,6 +106,9 @@ export default function EditNominationSelect({
               padding="2"
               alignItems="center"
               mb="2"
+              _hover={{
+                bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+              }}
             >
               <Flex
                 borderRadius="50%"
@@ -140,6 +143,9 @@ export default function EditNominationSelect({
           alignItems="center"
           mb="2"
           data-cy="withdraw-vote-select"
+          _hover={{
+            bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
+          }}
         >
           <Flex
             borderRadius="50%"
