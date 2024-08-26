@@ -170,7 +170,7 @@ export const UserProfileDetails = ({
         </Tooltip>
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
-        <Text fontSize="xs" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
+        <Text fontSize="sm" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
           Wallet Address
         </Text>
         <Button
@@ -185,7 +185,7 @@ export const UserProfileDetails = ({
             }
           }}
         >
-          <Text mr="1" fontSize="12px" fontWeight="700">
+          <Text mr="1" fontSize="14px" fontWeight="400">
             {prettyString(walletAddress)}
           </Text>
           <CopyIcon w="12px" h="12px" />

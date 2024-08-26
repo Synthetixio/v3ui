@@ -15,7 +15,7 @@ export default function MyProfile() {
     <>
       <CouncilTabs activeCouncil="spartan" />
       <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
-        <Flex flexDir="column" p="4" maxW="1440px" mx="auto" w="100%">
+        <Flex flexDir="column" maxW="1440px" mx="auto" w="100%">
           <Heading size="lg" mt="6">
             My Profile
           </Heading>

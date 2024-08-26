@@ -33,6 +33,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
 
   return (
     <Flex
+      mb="24"
       flexDirection="column"
       bg="navy.700"
       w="100%"
@@ -68,8 +69,9 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             borderColor="gray.900"
             p="2"
             rounded="base"
-            my="2"
+            mt="2"
             alignItems="center"
+            mb="12"
           >
             <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} size={10} />
             <Flex ml="2" flexDir="column">
@@ -88,7 +90,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
               </Text>
             </Flex>
           </Flex>
-          <Text fontSize="sm" color="gray.500" mt="2">
+          <Text fontSize="sm" color="gray.500" my="2">
             Nominated for:
           </Text>
           <Flex
@@ -154,10 +156,11 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             borderColor="gray.900"
             p="2"
             rounded="base"
-            my="2"
+            mt="3"
+            mb="12"
             alignItems="center"
           >
-            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
+            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} size={10} />
             <Flex ml="2" flexDir="column">
               <Text
                 fontWeight={700}

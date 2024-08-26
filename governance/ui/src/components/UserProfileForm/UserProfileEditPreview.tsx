@@ -24,8 +24,10 @@ export default function UserProfileEditPreview({
       p={{ base: 0, xl: '4' }}
       bg="navy.700"
       flexDir="column"
-      w="451px"
-      h="612px"
+      // w="451px"
+      // h="612px"
+      w={{ base: '100%', xl: '451px' }}
+      h={{ base: '100%', xl: '612px' }} //@mrx idk how to put this height 100% or vh 97 like the UserProfileCard
       position={{ base: 'unset', xl: 'sticky' }}
       top="105px"
     >
@@ -80,7 +82,7 @@ export default function UserProfileEditPreview({
             }
           }}
         >
-          <Text mr="1" fontSize="12px">
+          <Text mr="1" fontSize="14px" fontWeight="400">
             {prettyString(activeWallet || '')}
           </Text>
           <CopyIcon w="12px" h="12px" />
@@ -106,6 +108,7 @@ export default function UserProfileEditPreview({
         </>
       )}
       <Button
+        mt="auto"
         isLoading={isPending}
         w="100%"
         type="submit"
