@@ -50,17 +50,22 @@ export default function useEditNomination({
         exact: false,
       });
       await Promise.all([
-        await query.invalidateQueries({ queryKey: ['nominees', currentNomination] }),
-        await query.invalidateQueries({ queryKey: ['nominees', nextNomination] }),
-        await query.invalidateQueries({ queryKey: ['nomineesDetails', currentNomination] }),
-        await query.invalidateQueries({ queryKey: ['nomineesDetails', nextNomination] }),
-        await query.refetchQueries({ queryKey: ['nominees', currentNomination], exact: false }),
-        await query.refetchQueries({ queryKey: ['nominees', nextNomination], exact: false }),
-        await query.refetchQueries({
+        query.invalidateQueries({
+          queryKey: ['isNominated', address],
+        }),
+        query.invalidateQueries({ queryKey: ['nominees', currentNomination] }),
+        query.invalidateQueries({ queryKey: ['isNominated', currentNomination] }),
+        query.invalidateQueries({ queryKey: ['nominees', nextNomination] }),
+        query.invalidateQueries({ queryKey: ['nomineesDetails', currentNomination] }),
+        query.invalidateQueries({ queryKey: ['nomineesDetails', nextNomination] }),
+        query.refetchQueries({ queryKey: ['nominees', currentNomination], exact: false }),
+        query.refetchQueries({ queryKey: ['nominees', nextNomination], exact: false }),
+        query.refetchQueries({ queryKey: ['isNominated', address], exact: false }),
+        query.refetchQueries({
           queryKey: ['nomineesDetails', currentNomination, address],
           exact: false,
         }),
-        await query.refetchQueries({
+        query.refetchQueries({
           queryKey: ['nomineesDetails', nextNomination, address],
           exact: false,
         }),
