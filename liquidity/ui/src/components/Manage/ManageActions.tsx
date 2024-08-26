@@ -102,7 +102,6 @@ const ManageActionUi: FC<{
             {`Manage ${isBase ? 'PnL' : 'Debt'}`}
           </Tab>
         </TabList>
-
         <TabPanels>
           <TabPanel px="0">
             <Flex flexDir={['column', 'row']} gap={4}>
@@ -210,6 +209,8 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
     collateralChange,
     debtChange,
   });
+
+  console.log('Manage Actions');
 
   const parsedActionParam = ManageActionSchema.safeParse(params.manageAction);
   const parsedAction = parsedActionParam.success ? parsedActionParam.data : null;
@@ -357,7 +358,6 @@ export const ManageAction = ({ liquidityPosition }: { liquidityPosition?: Liquid
             account
           />
         ) : null}
-
         {txnModalOpen === 'withdraw-debt' ? (
           <WithdrawModal
             liquidityPosition={liquidityPosition}

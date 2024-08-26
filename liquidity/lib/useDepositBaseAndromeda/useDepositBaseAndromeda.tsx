@@ -12,19 +12,12 @@ import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useSpotMarketProxy } from '../useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
-import {
-  STATA_BASE_ADDRESS,
-  USDC_BASE_ADDRESS,
-  getSpotMarketId,
-  stataAbi,
-  usdcAbi,
-} from '@snx-v3/isBaseAndromeda';
+import { STATA_BASE_ADDRESS, getSpotMarketId, stataAbi } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
 import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useAllowance } from '@snx-v3/useAllowance';
-import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { hexlify } from 'ethers/lib/utils';
 
 export const useDepositBaseAndromeda = ({
   accountId,
@@ -80,11 +73,10 @@ export const useDepositBaseAndromeda = ({
       try {
         // Steps:
         // 1. Create an account if not exists
-        // 2. Wrap USDC or stataUSDC to sUSDC or sStataUSDC
-        // 3. Approve sUSDC or sStataUSDC
-        // 4. Deposit sUSDC or sStataUSDC
+        // 2. Wrap USDC to sUSD
+        // 3. Approve sUSDC
+        // 4. Deposit sUSDC
         // 5. Delegate collateral
-
         dispatch({ type: 'prompting' });
         const id = accountId ?? newAccountId;
 
@@ -180,47 +172,159 @@ export const useDepositBaseAndromeda = ({
   };
 };
 
-export const useDepositBaseAndromedaStata = () => {
+export const useDepositBaseAndromedaStata = ({
+  accountId,
+  newAccountId,
+  poolId,
+  collateralTypeAddress,
+  currentCollateral,
+  availableCollateral,
+  collateralChange,
+  collateralSymbol,
+}: {
+  accountId?: string;
+  newAccountId: string;
+  poolId?: string;
+  collateralTypeAddress?: string;
+  currentCollateral: Wei;
+  availableCollateral?: Wei;
+  collateralChange: Wei;
+  collateralSymbol?: string;
+}) => {
   const signer = useSigner();
   const { activeWallet } = useWallet();
-  const { data: Multicall3 } = useMulticall3();
+  const { network } = useNetwork();
   const [txnState, dispatch] = useReducer(reducer, initialState);
-
-  const { data: stataAllowance } = useAllowance({
-    contractAddress: STATA_BASE_ADDRESS,
-    spender: activeWallet?.address,
-  });
-
-  const { data: usdcAllowance } = useAllowance({
-    contractAddress: USDC_BASE_ADDRESS,
-    spender: STATA_BASE_ADDRESS,
-  });
-
-  console.log(
-    'stataAllowance',
-    stataAllowance?.toString(),
-    'usdcAllowance',
-    usdcAllowance?.toString()
-  );
+  const { data: CoreProxy } = useCoreProxy();
+  const { data: SpotMarketProxy } = useSpotMarketProxy();
+  const { data: priceUpdateTx } = useCollateralPriceUpdates();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
 
   const mutation = useMutation({
-    mutationFn: async ({ amount }) => {
+    mutationFn: async () => {
       try {
-        console.log('Firing useDepositBaseAndromedaStata');
-        const tempAmount = wei(100, 6, true);
-        console.log('tempAmount', tempAmount.toString());
+        dispatch({ type: 'prompting' });
 
-        if (!signer || !activeWallet) throw 'Signer not found useDepositBaseAndromedaStata';
-        const usdcContract = new ethers.Contract(USDC_BASE_ADDRESS, usdcAbi, signer);
+        if (
+          !signer ||
+          !activeWallet ||
+          !availableCollateral ||
+          !collateralChange ||
+          !CoreProxy ||
+          !SpotMarketProxy ||
+          !collateralTypeAddress
+        )
+          throw 'useDepositBaseAndromedaStata: Signer, activeWallet or amount is not defined';
+
+        // Steps:
+        // 1. Wrap USDC to stataUSDC (via Aave)
+        // 2. Create an account if not exists
+        // 3. Approve stataUSDC
+        // 4. Deposit stataUSDC
+        // 5. Delegate collateral
+
         const stataContract = new ethers.Contract(STATA_BASE_ADDRESS, stataAbi, signer);
 
-        // const calls
+        const call = await stataContract.populateTransaction[
+          'deposit(uint256,address,uint16,bool)'
+        ](parseUnits(collateralChange.toString(), 6), activeWallet?.address, 0, true);
 
-        console.log('stata allowance', stataAllowance?.toString());
+        const tx = await signer.sendTransaction({
+          ...call,
+          gasLimit: hexlify(500_000),
+        });
 
-        // const txn = await usdcContract.(stataContract.address);
-        // return txn;
+        dispatch({ type: 'pending', payload: { txnHash: tx.hash } });
+        await tx.wait();
+        console.log('tx', tx);
+
+        // Get the logs from the tx
+        dispatch({ type: 'success' });
+
+        dispatch({ type: 'prompting' });
+        const id = accountId ?? newAccountId;
+
+        // create account only when no account exists
+        const createAccount = accountId
+          ? undefined
+          : CoreProxy.populateTransaction['createAccount(uint128)'](BigNumber.from(id));
+
+        // Amount is the amount of stata that we get from the above transaction
+
+        const amount = collateralChange.sub(availableCollateral);
+
+        const collateralAmount = amount.gt(0)
+          ? parseUnits(amount.toString(), 6)
+          : BigNumber.from(0);
+
+        const spotMarketId = getSpotMarketId(collateralSymbol);
+        const amountD18 = amount.gt(0) ? parseUnits(amount.toString(), 18) : BigNumber.from(0);
+
+        // Wrap
+        const wrap = collateralAmount.gt(0)
+          ? SpotMarketProxy.populateTransaction.wrap(spotMarketId, collateralAmount, amountD18)
+          : undefined;
+
+        // Synth
+        const synthAddress = collateralType?.tokenAddress;
+        if (!synthAddress) {
+          throw 'synth not found';
+        }
+        const synthContract = new ethers.Contract(synthAddress, approveAbi, signer);
+
+        const synthApproval = amountD18.gt(0)
+          ? synthContract.populateTransaction.approve(CoreProxy.address, amountD18)
+          : undefined;
+
+        // optionally deposit if available collateral not enough
+        const deposit = amountD18.gt(0)
+          ? CoreProxy.populateTransaction.deposit(
+              BigNumber.from(id),
+              synthAddress,
+              amountD18 // only deposit what's needed
+            )
+          : undefined;
+
+        const delegate = CoreProxy.populateTransaction.delegateCollateral(
+          BigNumber.from(id),
+          BigNumber.from(poolId),
+          synthAddress,
+          currentCollateral.toBN().add(parseUnits(collateralChange.toString(), 18)).toString(),
+          wei(1).toBN()
+        );
+
+        const callsPromise = Promise.all(
+          [wrap, synthApproval, createAccount, deposit, delegate].filter(notNil)
+        );
+
+        const [calls, gasPrices] = await Promise.all([callsPromise, getGasPrice({ provider })]);
+
+        if (priceUpdateTx) {
+          calls.unshift(priceUpdateTx as any);
+        }
+
+        const walletAddress = await signer.getAddress();
+
+        const erc7412Tx = await withERC7412(
+          network,
+          calls,
+          'useDepositBaseAndromeda',
+          walletAddress
+        );
+
+        const gasOptionsForTransaction = formatGasPriceForTransaction({
+          gasLimit: erc7412Tx.gasLimit,
+          gasPrices,
+          gasSpeed,
+        });
+
+        const txn = await signer.sendTransaction({ ...erc7412Tx, ...gasOptionsForTransaction });
+        dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
+
+        await txn.wait();
+        dispatch({ type: 'success' });
       } catch (error: any) {
+        dispatch({ type: 'error', payload: { error } });
         throw error;
       }
     },

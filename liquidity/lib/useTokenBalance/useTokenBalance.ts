@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { assertAddressType } from '@snx-v3/assertAddressType';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
@@ -19,7 +20,8 @@ export const useTokenBalance = (address?: string, customNetwork?: Network) => {
 
   const targetNetwork = customNetwork || network;
 
-  const tokenAddress = assertAddressType(address) ? address : undefined;
+  const tokenAddress = useMemo(() => (assertAddressType(address) ? address : undefined), [address]);
+
   return useQuery({
     queryKey: [
       `${targetNetwork?.id}-${targetNetwork?.preset}`,

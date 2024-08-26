@@ -97,7 +97,6 @@ export const NoPosition: FC<{
               liquidityPosition={liquidityPosition}
             />
           )}
-
           {txnModalOpen === 'deposit' ? (
             <DepositModal
               liquidityPosition={liquidityPosition}

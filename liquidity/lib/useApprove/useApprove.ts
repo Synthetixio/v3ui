@@ -9,6 +9,8 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { STATA_BASE_ADDRESS, USDC_BASE_ADDRESS, stataAbi, usdcAbi } from '@snx-v3/isBaseAndromeda';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { utils } from 'ethers';
+import { useTokenPrice } from '../useTokenPrice';
 import { wei } from '@synthetixio/wei';
 
 export const approveAbi = ['function approve(address spender, uint256 amount) returns (bool)'];
@@ -92,11 +94,10 @@ export const useApprove = (
   };
 };
 
-export const useApproveStata = () => {
-  console.log('Hello!!');
-  const amount = BigNumber.from(211553395);
-  console.log('Amount', amount.toString());
+export const useApproveStata = ({ amount }: { amount: BigNumberish }) => {
   const { activeWallet } = useWallet();
+  const price = useTokenPrice('stataUSDC');
+
   const [txnState, dispatch] = useReducer(reducer, initialState);
 
   const signer = useSigner();
@@ -113,16 +114,21 @@ export const useApproveStata = () => {
     spender: STATA_BASE_ADDRESS,
   });
 
-  const stataAllowance = wei(allowanceStata || 0).mul(10 ** 12);
-  const usdcAllowance = wei(allowanceUSDC || 0).mul(10 ** 12);
-  const amountToApprove = wei(amount || 1, 6, true);
+  // useApproval returns decimals 18
+  const stataAllowance = allowanceStata && utils.parseUnits(allowanceStata?.toString(), 18);
+  const usdcAllowance = allowanceUSDC && utils.parseUnits(allowanceUSDC?.toString(), 18);
+
+  const amountToApproveUSDC = wei(amount, 6, true).mul(price).toBN();
+  const amountToApproveStata = BigNumber.from(amount);
 
   // TODO: Multiply USDC amount by stata exchange rate
-  const stataNeedsApproval = stataAllowance?.lt(amountToApprove);
-  const usdcNeedsApproval = usdcAllowance?.lt(amountToApprove);
+  const stataNeedsApproval = stataAllowance?.lt(amountToApproveStata);
+  const usdcNeedsApproval = usdcAllowance?.lt(1);
 
   const requireApproval = stataNeedsApproval || usdcNeedsApproval;
-  console.log('Requires approval', requireApproval);
+
+  console.log('Stata needs approval:', stataNeedsApproval);
+  console.log('USDC needs approval:', usdcNeedsApproval);
 
   const mutation = useMutation({
     mutationFn: async (infiniteApproval: boolean) => {
@@ -137,48 +143,31 @@ export const useApproveStata = () => {
         throw new Error('Insufficient data to approve');
 
       try {
-        console.log('Made it here');
         dispatch({ type: 'prompting' });
 
         const usdcContract = new ethers.Contract(USDC_BASE_ADDRESS, usdcAbi, signer);
         const stataContract = new ethers.Contract(STATA_BASE_ADDRESS, stataAbi, signer);
 
-        const totalApprovalAmount = infiniteApproval
-          ? ethers.constants.MaxUint256
-          : amountToApprove;
+        let txn: ethers.ContractTransaction;
 
-        const usdcTx = usdcContract.populateTransaction.approve(
-          STATA_BASE_ADDRESS,
-          totalApprovalAmount
-        );
-
-        const stataTx = stataContract.populateTransaction.approve(
-          activeWallet?.address,
-          totalApprovalAmount
-        );
-
-        const calls: any = [];
-
-        // This will me mul by exchange rate
         if (stataNeedsApproval) {
-          calls.concat(stataTx);
+          txn = await stataContract.approve(
+            activeWallet?.address,
+            infiniteApproval ? ethers.constants.MaxUint256 : amountToApproveStata
+          );
+          dispatch({ type: 'pending', payload: { txnHash: txn?.hash } });
+          await txn?.wait();
         }
 
         if (usdcNeedsApproval) {
-          calls.concat(usdcTx);
+          txn = await usdcContract.approve(
+            STATA_BASE_ADDRESS,
+            infiniteApproval ? ethers.constants.MaxUint256 : amountToApproveUSDC
+          );
+          dispatch({ type: 'pending', payload: { txnHash: txn?.hash } });
+          await txn?.wait();
         }
 
-        if (calls.length === 0) {
-          dispatch({ type: 'success' });
-          return;
-        }
-
-        const txn = await Multicall3?.callStatic.aggregate(calls);
-        console.log('Txn', txn);
-
-        dispatch({ type: 'pending', payload: { txnHash: '123' } });
-
-        // await txn.wait();
         dispatch({ type: 'success' });
       } catch (error: any) {
         dispatch({ type: 'error', payload: { error } });

@@ -289,11 +289,9 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
     spender: isBase ? SpotProxy?.address : CoreProxy?.address,
   });
 
-  // {
-  //   amount: collateralNeeded?.gt(0) ? utils.parseUnits(collateralNeeded.toString(), 6) : 0,
-  // }
-
-  const { approve: approveStata } = useApproveStata();
+  const { approve: approveStata } = useApproveStata({
+    amount: utils.parseUnits(collateralNeeded.toString(), 6),
+  });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
 
@@ -331,7 +329,16 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
     collateralSymbol,
   });
 
-  const { exec: depositBaseAndromedaStata } = useDepositBaseAndromedaStata();
+  const { exec: depositBaseAndromedaStata } = useDepositBaseAndromedaStata({
+    accountId,
+    newAccountId,
+    poolId,
+    collateralTypeAddress: collateralAddress,
+    collateralChange,
+    currentCollateral,
+    availableCollateral: availableCollateral || wei(0),
+    collateralSymbol,
+  });
 
   const errorParserCoreProxy = useContractErrorParser(CoreProxy);
 
@@ -377,7 +384,6 @@ export const DepositModal: DepositModalProps = ({ onClose, isOpen, title, liquid
             await approve(Boolean(state.context.infiniteApproval));
           }
         } catch (error: any) {
-          console.log('Error', error);
           const contractError = errorParserCoreProxy(error);
           if (contractError) {
             console.error(new Error(contractError.name), contractError);

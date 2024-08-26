@@ -11,7 +11,7 @@ export function useOraclePrice(nodeId?: string, customNetwork?: Network) {
   const provider = useProviderForChain(targetNetwork);
 
   return useQuery({
-    refetchInterval: 15000,
+    refetchInterval: 1000 * 120,
     retry: false,
     staleTime: 99999,
     enabled: !!targetNetwork && !!provider && !!nodeId,
