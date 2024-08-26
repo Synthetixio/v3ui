@@ -28,9 +28,13 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
 
   const { activeWallet } = useWallet();
 
-  const { mutate, isPending, isSuccess } = useNominateSelf(selectedCouncil, activeWallet?.address);
+  const {
+    mutateAsync,
+    isPending,
+    isSuccess,
+    data: resultNomination,
+  } = useNominateSelf(selectedCouncil, activeWallet?.address);
   const { data } = useGetUserDetailsQuery(activeWallet?.address);
-
   return (
     <Flex
       mb="24"
@@ -47,7 +51,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       data-cy="nominate-self-modal"
       {...props}
     >
-      {isSuccess ? (
+      {isSuccess && resultNomination ? (
         <>
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -231,7 +235,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             </Button>
           ) : (
             <Button
-              onClick={() => mutate()}
+              onClick={async () => await mutateAsync()}
               mt="auto"
               data-cy="nominate-self-cast-nomination-button"
             >

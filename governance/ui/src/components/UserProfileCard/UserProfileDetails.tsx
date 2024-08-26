@@ -32,7 +32,9 @@ export const UserProfileDetails = ({
 }: UserProfileDetailsProps) => {
   const [_, setVoteCard] = useRecoilState(voteCardState);
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
+  const [walletToolTipLabel, setWalletTooltipLabel] = useState('Copy');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
   const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
@@ -159,11 +161,16 @@ export const UserProfileDetails = ({
             <ShareIcon
               cursor="pointer"
               onMouseEnter={() => setIsTooltipOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsTooltipOpen(false), 3000)}
+              onMouseLeave={() => {
+                if (tooltipLabel.includes('Copy')) setIsTooltipOpen(false);
+              }}
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setTooltipLabel('Profile Link Copied');
-                setTimeout(() => setTooltipLabel('Copy Profile Link'), 3000);
+                setTimeout(() => {
+                  setTooltipLabel('Copy Profile Link');
+                  setIsTooltipOpen(false);
+                }, 2000);
               }}
             />
           </div>
@@ -188,7 +195,24 @@ export const UserProfileDetails = ({
           <Text mr="1" fontSize="14px" fontWeight="400">
             {prettyString(walletAddress)}
           </Text>
-          <CopyIcon w="12px" h="12px" />
+          <Tooltip label={walletToolTipLabel} isOpen={isWalletTooltipOpen}>
+            <CopyIcon
+              w="12px"
+              h="12px"
+              onMouseEnter={() => setWalletIsTooltipOpen(true)}
+              onMouseLeave={() => {
+                if (walletToolTipLabel.includes('Copy')) setWalletIsTooltipOpen(false);
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(userData?.address || '');
+                setWalletTooltipLabel('Copied');
+                setTimeout(() => {
+                  setWalletTooltipLabel('Copy');
+                  setWalletIsTooltipOpen(false);
+                }, 2000);
+              }}
+            />
+          </Tooltip>
         </Button>
       </Flex>
       {userData?.delegationPitch && (

@@ -164,6 +164,7 @@ export function UserProfileForm() {
                 {...register('about')}
                 placeholder="eq: OG DeFi Member"
                 data-cy="about-input"
+                maxLength={40}
               />
             </Flex>
             <Flex gap="1" flexDirection="column">

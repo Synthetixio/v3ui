@@ -1,9 +1,10 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
 import { GetUserDetails } from '../../queries';
 import { Socials } from '../Socials';
 import { CopyIcon } from '@chakra-ui/icons';
+import { useEffect, useRef, useState } from 'react';
 
 export default function UserProfileEditPreview({
   userData,
@@ -16,6 +17,47 @@ export default function UserProfileEditPreview({
   isDirty: boolean;
   userData: GetUserDetails;
 }) {
+  const elementRef = useRef<HTMLParagraphElement | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = elementRef.current;
+      if (el) {
+        const isOverflowing = el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
+        setIsOverflowing(isOverflowing);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (elementRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+          setIsOverflowing(false);
+        } else {
+          setIsOverflowing(true);
+        }
+      }
+    };
+
+    const refCurrent = elementRef.current;
+    if (refCurrent) {
+      refCurrent.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (refCurrent) {
+        refCurrent.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   return (
     <Flex
       border="1px solid"
@@ -88,22 +130,31 @@ export default function UserProfileEditPreview({
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-      {userData.delegationPitch && (
+      {userData?.delegationPitch && (
         <>
           <Text fontSize="14px" fontWeight="700" color="gray.500">
             Governance Pitch
           </Text>
           <Text
+            position="relative"
             fontSize="14px"
             lineHeight="20px"
-            overflow="scroll"
-            maxH="50vh"
-            mb="4"
-            h="350px"
-            whiteSpace="pre-wrap"
-            data-cy="governance-pitch-preview"
+            overflowY="scroll"
+            h="330px"
+            mb="auto"
+            ref={elementRef}
           >
-            {userData.delegationPitch}
+            {userData?.delegationPitch}
+            {isOverflowing && (
+              <Box
+                position="sticky"
+                bottom="-1px"
+                left="0"
+                right="0"
+                height="50px"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%)"
+              />
+            )}
           </Text>
         </>
       )}
