@@ -28,6 +28,8 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
 
 export const getAprUrl = (networkId = 8453) => {
   switch (networkId) {
+    case 1:
+      return 'https://api.synthetix.io/v3/mainnet/sc-pool-apy-all';
     case 8453:
       return 'https://api.synthetix.io/v3/base/sc-pool-apy-all';
     case 42161:
