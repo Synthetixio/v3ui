@@ -25,14 +25,21 @@ const TreasuryCouncilContract = new Contract(
   electionModuleABITest
 );
 
-export function getCouncilContract(council: CouncilSlugs) {
+export function getCouncilContract(council: CouncilSlugs, chainId?: string | number) {
+  const parsedChainId = chainId ? Number(chainId) : 2192;
   switch (council) {
     case 'spartan':
-      return SpartanCouncilContract;
+      return parsedChainId === 2192
+        ? SpartanCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
+        : SpartanCouncilContract;
     case 'ambassador':
-      return AmbassadorCouncilContract;
+      return parsedChainId === 2192
+        ? AmbassadorCouncilContract.attach('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80')
+        : AmbassadorCouncilContract;
     case 'treasury':
-      return TreasuryCouncilContract;
+      return parsedChainId === 2192
+        ? TreasuryCouncilContract.attach('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161')
+        : TreasuryCouncilContract;
     default:
       throw new Error('could not find contract');
   }

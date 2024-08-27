@@ -1,16 +1,20 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { utils } from 'ethers';
-import { useSigner } from '../queries/useWallet';
+import { useNetwork, useSigner } from '../queries/useWallet';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 
 export default function Admin() {
   const signer = useSigner();
+  const { network } = useNetwork();
 
-  const allProxies = [
-    getCouncilContract('spartan'),
-    getCouncilContract('ambassador'),
-    getCouncilContract('treasury'),
-  ];
+  const allProxies =
+    network?.id === 2192
+      ? [getCouncilContract('spartan')]
+      : [
+          getCouncilContract('spartan'),
+          getCouncilContract('ambassador'),
+          getCouncilContract('treasury'),
+        ];
 
   return (
     <Flex direction="column" p="3" gap={4}>
