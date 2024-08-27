@@ -152,8 +152,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             />
           </Flex>
           <Text fontSize="sm" color="gray.500" mt="2">
-            Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
-            nominating the wallet below:
+            Nominate yourself to represent a Synthetix Governing Council with the wallet below:
           </Text>
           <Flex
             border="1px solid"

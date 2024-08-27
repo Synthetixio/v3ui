@@ -59,7 +59,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           borderStyle="solid"
           borderBottomColor="gray.900"
           px={{ base: 4, md: 6 }}
-          py={1}
+          py={3}
           position="sticky"
           top="0px"
           justifyContent="space-between"
@@ -126,22 +126,22 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <CouncilImage
                     imageUrl={council.image}
                     imageProps={{
-                      w: '7',
-                      h: '7',
+                      w: '8',
+                      h: '8',
                     }}
                     w="10"
                     h="10"
                     bg="none"
                     dataCy={`council-image-council-tabs-${council.slug}`}
                   />
-                  <Text fontSize="12px" fontWeight="bold" mr="auto">
+                  <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
                   {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
-                      size={7}
+                      size={9}
                       newVoteCast={newVoteCast}
                       isCouncilTabs={true}
                     />
@@ -152,7 +152,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                           <ProfilePicture
                             imageSrc={userInformation[index].userInformation?.pfpUrl}
                             address={userInformation[index].userInformation?.address}
-                            size={7}
+                            size={9}
                             newVoteCast={newVoteCast}
                           />
                         )}
@@ -163,8 +163,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                         <Box
                           data-cy="council-tab-vote-circle"
                           borderRadius="50%"
-                          w="7"
-                          h="7"
+                          w="9"
+                          h="9"
                           borderWidth="1px"
                           bg="navy.700"
                           borderStyle="dashed"

@@ -125,6 +125,7 @@ export function UserProfileForm() {
             border="1px solid"
             borderColor="gray.900"
             mt="9"
+            mb="24"
           >
             {/*
           <Flex w="100%" alignItems="center">

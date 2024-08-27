@@ -30,6 +30,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
 
   return (
     <Flex
+      mb="24"
       flexDirection="column"
       bg="navy.700"
       w="100%"

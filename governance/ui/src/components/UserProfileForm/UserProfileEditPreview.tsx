@@ -72,6 +72,7 @@ export default function UserProfileEditPreview({
       h={{ base: '100%', xl: '612px' }} //@mrx idk how to put this height 100% or vh 97 like the UserProfileCard
       position={{ base: 'unset', xl: 'sticky' }}
       top="105px"
+      mb="24"
     >
       <Flex>
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address || activeWallet} />
@@ -152,7 +153,7 @@ export default function UserProfileEditPreview({
                 left="0"
                 right="0"
                 height="50px"
-                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%)"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #0b0b22 100%)"
               />
             )}
           </Text>

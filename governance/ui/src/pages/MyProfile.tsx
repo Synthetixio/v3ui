@@ -16,10 +16,10 @@ export default function MyProfile() {
       <CouncilTabs activeCouncil="spartan" />
       <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
         <Flex flexDir="column" maxW="1440px" mx="auto" w="100%">
-          <Heading size="lg" mt="6">
+          <Heading size="lg" mt="6" mb="2">
             My Profile
           </Heading>
-          <Text fontSize="12px" color="gray.500" mb="4">
+          <Text fontSize="sm" color="gray.500" mb="4">
             Update your profile information below
           </Text>
           <UserProfileForm />

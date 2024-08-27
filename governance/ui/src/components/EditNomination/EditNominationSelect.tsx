@@ -24,8 +24,7 @@ export default function EditNominationSelect({
     <>
       <Heading fontSize="medium">Edit Nomination</Heading>
       <Text fontSize="sm" color="gray.500" mt="2">
-        Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
-        nominating the wallet below:
+        Nominate yourself to represent a Synthetix Governing Council with the wallet below:
       </Text>
       <Flex
         rounded="base"
@@ -80,7 +79,7 @@ export default function EditNominationSelect({
               alignItems="center"
               mr="3"
             >
-              <Image src={nominationInformation.council.image} w="6" h="6" />
+              <Image src={nominationInformation.council.image} w="8" h="8" />
             </Flex>
             <Text fontSize="small" fontWeight="bold">
               {nominationInformation.council.title}
@@ -122,7 +121,7 @@ export default function EditNominationSelect({
                 alignItems="center"
                 mr="3"
               >
-                <Image src={council.image} w="6" h="6" />
+                <Image src={council.image} w="8" h="8" />
               </Flex>
               <Text fontSize="small" fontWeight="bold">
                 {council.title}

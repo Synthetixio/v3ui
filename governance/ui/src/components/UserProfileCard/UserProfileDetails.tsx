@@ -110,6 +110,7 @@ export const UserProfileDetails = ({
           <IconButton
             size="xs"
             icon={<EditIcon />}
+            mr="1"
             variant="ghost"
             position="absolute"
             top="4px"
@@ -235,7 +236,7 @@ export const UserProfileDetails = ({
                 left="0"
                 right="0"
                 height="50px"
-                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%)"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #0b0b22 100%)"
               />
             )}
           </Text>
