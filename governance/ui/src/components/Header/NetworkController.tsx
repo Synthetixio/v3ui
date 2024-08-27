@@ -77,7 +77,7 @@ export function NetworkController() {
   };
 
   const notConnected = !activeWallet;
-  const notSupported = activeWallet && !activeNetwork;
+  const notSupported = !chains.find((chain) => chain.id === activeNetwork?.id);
 
   return (
     <Flex ml="2">
@@ -93,7 +93,7 @@ export function NetworkController() {
         >
           <NetworkIcon
             filter={activeNetwork?.isTestnet ? 'grayscale(1)' : ''}
-            networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
+            networkId={notConnected ? 2192 : notSupported ? 0 : activeNetwork?.id}
           />
         </MenuButton>
         <MenuList border="1px" borderColor="gray.900" zIndex={999}>
