@@ -11,9 +11,9 @@ export default function Admin() {
     network?.id === 2192 || network?.id === 10
       ? [getCouncilContract('spartan', network?.id)]
       : [
-          getCouncilContract('spartan', network?.id),
-          getCouncilContract('ambassador', network?.id),
-          getCouncilContract('treasury', network?.id),
+          getCouncilContract('spartan'),
+          getCouncilContract('ambassador'),
+          getCouncilContract('treasury'),
         ];
 
   return (
