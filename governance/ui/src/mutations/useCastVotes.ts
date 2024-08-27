@@ -77,7 +77,6 @@ export function useCastVotes(
           if (!isMC) {
             quote = await electionModules[0].quoteCrossChainDeliveryPrice(43, 0, 2_000_000);
           }
-          console.log(quote);
           const castData = councils.map((council, index) => {
             const shouldWithdrawVote = candidates[council] === 'remove';
             return isMC
