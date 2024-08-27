@@ -29,7 +29,7 @@ export function getCouncilContract(council: CouncilSlugs, chainId?: string | num
   const parsedChainId = chainId ? Number(chainId) : 2192;
   switch (council) {
     case 'spartan':
-      return parsedChainId === 2192
+      return parsedChainId === 2192 || parsedChainId === 10
         ? SpartanCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
         : SpartanCouncilContract;
     case 'ambassador':
@@ -50,21 +50,27 @@ export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) =
     case 13001: {
       switch (council) {
         case 'spartan':
-          return new Contract('0x552E469B7C88cd501C08e7759d35dC58f08C9648', [
-            'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-            'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-          ]);
+          return new Contract('0x552E469B7C88cd501C08e7759d35dC58f08C9648', abiForSnapshotMock);
         case 'ambassador':
-          return new Contract('0x3a0186E03137B9b971EC911350A0F2D88D24FDF2', [
-            'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-            'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-          ]);
+          return new Contract('0x3a0186E03137B9b971EC911350A0F2D88D24FDF2', abiForSnapshotMock);
         case 'treasury':
-          return new Contract('0xC0bFA9aC792cF691734F7b2BD252d1c2B9fBa343', [
-            'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
-            'function setBalanceOfOnPeriod(address, uint256, uint256) external',
-          ]);
+          return new Contract('0xC0bFA9aC792cF691734F7b2BD252d1c2B9fBa343', abiForSnapshotMock);
+      }
+    }
+    case 10: {
+      switch (council) {
+        case 'spartan':
+          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
+        case 'ambassador':
+          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
+        case 'treasury':
+          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
       }
     }
   }
 };
+
+const abiForSnapshotMock = [
+  'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
+  'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+];
