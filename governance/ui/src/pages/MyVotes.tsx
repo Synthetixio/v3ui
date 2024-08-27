@@ -44,6 +44,7 @@ export default function MyVotes() {
     .map(([council]) => council) as CouncilSlugs[];
   const { mutateAsync, isPending } = useCastVotes(councilToCastVote, state[networkForState] || {});
   const navigate = useNavigate();
+
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
@@ -81,7 +82,7 @@ export default function MyVotes() {
                   Voting starts in:{' '}
                   <Text display="inline-block">
                     {schedule?.votingPeriodStartDate && (
-                      <Timer expiryTimestamp={schedule.votingPeriodStartDate} />
+                      <Timer expiryTimestamp={schedule.votingPeriodStartDate} id="my-votes" />
                     )}
                   </Text>
                 </Text>

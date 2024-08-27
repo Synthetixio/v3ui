@@ -26,7 +26,7 @@ const TreasuryCouncilContract = new Contract(
 );
 
 export function getCouncilContract(council: CouncilSlugs, chainId?: string | number) {
-  const parsedChainId = chainId ? Number(chainId) : 2192;
+  const parsedChainId = chainId ? Number(chainId) : 13001;
   switch (council) {
     case 'spartan':
       return parsedChainId === 2192 || parsedChainId === 10

@@ -67,7 +67,6 @@ export function Header() {
         )}
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
-
         {!activeWallet && (
           <Button onClick={() => connect()} ml="2" data-cy="connect-wallet-button">
             Connect Wallet
