@@ -46,14 +46,14 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   if (Array.isArray(council)) {
     ballot = (await Promise.all(
       council.map(async (c) => {
-        const electionModule = getCouncilContract(c).connect(provider);
+        const electionModule = getCouncilContract(c, chainId).connect(provider);
         const electionId = await electionModule.getEpochIndex();
         const temp = await electionModule.getBallot(address, chainId, electionId);
         return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
-    const electionModule = getCouncilContract(council).connect(provider);
+    const electionModule = getCouncilContract(council, chainId).connect(provider);
     const electionId = electionModule.getEpochIndex();
     const temp = (await electionModule.getBallot(address, chainId, electionId)) as {
       votingPower: BigNumber;

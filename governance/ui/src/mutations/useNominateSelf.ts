@@ -15,7 +15,7 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
     mutationFn: async () => {
       if (signer) {
         try {
-          const tx = await getCouncilContract(council)
+          const tx = await getCouncilContract(council, network?.id)
             .connect(signer)
             .nominate({
               maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),

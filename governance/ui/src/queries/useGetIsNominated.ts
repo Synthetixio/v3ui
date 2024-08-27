@@ -11,13 +11,13 @@ export function useGetIsNominated(address?: string) {
     queryKey: ['isNominated', address, network?.id],
     queryFn: async () => {
       const provider = motherShipProvider(network?.id || 13001);
-      const isNominatedForSpartanCouncil = (await getCouncilContract('spartan')
+      const isNominatedForSpartanCouncil = (await getCouncilContract('spartan', network?.id)
         .connect(provider)
         .isNominated(address)) as boolean | undefined;
-      const isNominatedForAmbassadorCouncil = (await getCouncilContract('ambassador')
+      const isNominatedForAmbassadorCouncil = (await getCouncilContract('ambassador', network?.id)
         .connect(provider)
         .isNominated(address)) as boolean | undefined;
-      const isNominatedForTreasuryCouncil = (await getCouncilContract('treasury')
+      const isNominatedForTreasuryCouncil = (await getCouncilContract('treasury', network?.id)
         .connect(provider)
         .isNominated(address)) as boolean | undefined;
       return {

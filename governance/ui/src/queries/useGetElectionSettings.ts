@@ -9,7 +9,7 @@ export function useGetElectionSettings(council: CouncilSlugs) {
   return useQuery({
     queryKey: ['useGetElectionSettings', council],
     queryFn: async () => {
-      return (await getCouncilContract(council)
+      return (await getCouncilContract(council, network?.id)
         .connect(motherShipProvider(network?.id || 13001))
         .getElectionSettings()) as Promise<{
         epochSeatCount: number;

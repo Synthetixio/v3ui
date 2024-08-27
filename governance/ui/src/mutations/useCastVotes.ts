@@ -41,7 +41,7 @@ export function useCastVotes(
         const isMotherchain = process.env.CI === 'true' ? true : isMothercain(network.id);
         try {
           const electionModules = councils.map((council) =>
-            getCouncilContract(council).connect(signer)
+            getCouncilContract(council, network.id).connect(signer)
           );
           const prepareBallotData = councils
             .map((council, index) => {

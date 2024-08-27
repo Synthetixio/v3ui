@@ -16,7 +16,9 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       if (!activeWallet || !provider || !network?.id) return;
 
       try {
-        const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
+        const electionModule = getCouncilContract(council, network.id).connect(
+          motherShipProvider(network.id)
+        );
         const isMotherchain = process.env.CI === 'true' ? true : isMothercain(network.id);
 
         const electionId = await electionModule.getEpochIndex();

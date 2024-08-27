@@ -9,7 +9,7 @@ export function useGetCouncilMembers(council: CouncilSlugs) {
   return useQuery({
     queryKey: ['members', council, network?.id],
     queryFn: async () => {
-      const members = (await getCouncilContract(council)
+      const members = (await getCouncilContract(council, network?.id)
         .connect(motherShipProvider(network?.id || 13001))
         .getCouncilMembers()) as string[];
       return members;
