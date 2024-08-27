@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
-import { SnapshotRecordContract, getCouncilContract, isMothercain } from '../utils/contracts';
+import { SnapshotRecordContract, getCouncilContract, isMotherchain } from '../utils/contracts';
 import { useProvider, useWallet } from './';
 import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
@@ -16,13 +16,11 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       if (!activeWallet || !provider || !network?.id) return;
 
       try {
-        const electionModule = getCouncilContract(council, network.id).connect(
-          motherShipProvider(network.id)
-        );
-        const isMotherchain = process.env.CI === 'true' ? true : isMothercain(network.id);
+        const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
+        const isMC = process.env.CI === 'true' ? true : isMotherchain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
-        const ballot = isMotherchain
+        const ballot = isMC
           ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
           : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
 
@@ -33,7 +31,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }
-        const votingPower: BigNumber = isMotherchain
+        const votingPower: BigNumber = isMC
           ? await electionModule
               .connect(provider)
               .callStatic.prepareBallotWithSnapshot(

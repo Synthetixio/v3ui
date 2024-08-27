@@ -9,14 +9,15 @@ import {
   Text,
 } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
-import { useGetUserDetailsQuery } from '../../queries';
-import { useWallet } from '../../queries/useWallet';
+import { useGetIsNominated, useGetUserDetailsQuery } from '../../queries';
+import { useNetwork, useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
+import { isMotherchain } from '../../utils/contracts';
 
 interface NominateSelfProps extends FlexProps {
   activeCouncil: CouncilSlugs;
@@ -26,7 +27,15 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
   const navigate = useNavigate();
 
+  const { network } = useNetwork();
   const { activeWallet } = useWallet();
+  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
+
+  useEffect(() => {
+    if (nominationInformation?.isNominated) {
+      navigate('/councils/' + activeCouncil);
+    }
+  }, [nominationInformation?.isNominated, navigate, activeCouncil]);
 
   const {
     mutateAsync,
@@ -237,8 +246,9 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
               onClick={async () => await mutateAsync()}
               mt="auto"
               data-cy="nominate-self-cast-nomination-button"
+              isDisabled={isMotherchain(network?.id)}
             >
-              Nominate Self
+              {isMotherchain(network?.id) ? 'Nominate Self' : 'Wrong Network'}
             </Button>
           )}
         </>

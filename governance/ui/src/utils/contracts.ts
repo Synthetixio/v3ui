@@ -2,7 +2,7 @@ import { Contract } from 'ethers';
 import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
-export const isMothercain = (chainId?: string | number) => {
+export const isMotherchain = (chainId?: string | number) => {
   if (!chainId) return false;
   const parsedChainId = chainId.toString();
   if (parsedChainId === '13001') return true;

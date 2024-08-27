@@ -36,18 +36,18 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
     onSuccess: async () => {
       await Promise.all([
         query.invalidateQueries({
-          queryKey: ['isNominated', address, network?.id],
+          queryKey: ['isNominated'],
         }),
-        query.invalidateQueries({ queryKey: ['nominees', council], exact: false }),
+        query.invalidateQueries({ queryKey: ['nominees'], exact: false }),
         query.invalidateQueries({
-          queryKey: ['nomineesDetails', council, address],
+          queryKey: ['nomineesDetails'],
           exact: false,
         }),
       ]);
       await Promise.all([
-        query.refetchQueries({ queryKey: ['isNominated', address, network?.id], exact: false }),
-        query.refetchQueries({ queryKey: ['nominees', council], exact: false }),
-        query.refetchQueries({ queryKey: ['nomineesDetails', council, address], exact: false }),
+        query.refetchQueries({ queryKey: ['isNominated'], exact: false }),
+        query.refetchQueries({ queryKey: ['nominees'], exact: false }),
+        query.refetchQueries({ queryKey: ['nomineesDetails'], exact: false }),
       ]);
       toast({
         description: 'Successfully nominated yourself.',
