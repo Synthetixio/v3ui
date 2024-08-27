@@ -112,7 +112,7 @@ export const MyVotesSummary = ({
       }}
       rounded="base"
       w="100%"
-      maxW="300px"
+      maxW={{ base: '100px', xl: '300px' }}
       borderColor={isInMyVotesPage ? 'cyan.500' : 'gray.900'}
       borderWidth="1px"
       py={2}

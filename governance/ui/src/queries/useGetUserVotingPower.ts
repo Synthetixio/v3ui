@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
-import { SnapshotRecordContract, getCouncilContract } from '../utils/contracts';
+import { SnapshotRecordContract, getCouncilContract, isMothercain } from '../utils/contracts';
 import { useProvider, useWallet } from './';
 import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
@@ -17,9 +17,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
-        const isMotherchain = true;
-        // TODO @dev keep an eye on tha
-        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMotherchain = process.env.CI === 'true' ? true : isMothercain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
         const ballot = isMotherchain

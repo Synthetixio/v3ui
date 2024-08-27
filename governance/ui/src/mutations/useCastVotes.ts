@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
-import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
+import { getCouncilContract, isMothercain, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
@@ -38,8 +38,7 @@ export function useCastVotes(
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = true;
-        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMotherchain = process.env.CI === 'true' ? true : isMothercain(network.id);
         try {
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)

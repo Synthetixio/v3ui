@@ -1,4 +1,15 @@
-import { Alert, Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -11,15 +22,18 @@ import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
 import { useVoteContext } from '../context/VoteContext';
+import { useState } from 'react';
+import { CouncilImage } from '../components/CouncilImage';
+import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
 
 export default function MyVotes() {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const { onClose } = useDisclosure();
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
   const { network } = useNetwork();
   const { connect } = useWallet();
-  const networkForState = 13001;
-  // TODO @dev keep an eye on that
-  // network?.id.toString() || process.env.CI === 'true' ? 13001 : 2192;
+  const networkForState = network?.id || 2192;
 
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
@@ -28,7 +42,7 @@ export default function MyVotes() {
   const councilToCastVote = Object.entries(state[networkForState] || {})
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync } = useCastVotes(councilToCastVote, state[networkForState] || {});
+  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, state[networkForState] || {});
   const navigate = useNavigate();
 
   return (
@@ -176,12 +190,17 @@ export default function MyVotes() {
             <Button
               data-cy="cast-my-vote-button"
               size="md"
+              isLoading={isPending}
               isDisabled={period !== '2' || !councilToCastVote.length}
               onClick={async () => {
                 if (!network?.id) {
                   connect();
                 } else {
-                  await mutateAsync();
+                  if (councilToCastVote.length !== 3) {
+                    setShowConfirmation(true);
+                  } else {
+                    await mutateAsync();
+                  }
                 }
               }}
             >
@@ -190,6 +209,71 @@ export default function MyVotes() {
           </Flex>
         </Flex>
       </Flex>
+      <Modal
+        isOpen={showConfirmation}
+        onClose={() => {
+          setShowConfirmation(false);
+          onClose();
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent maxW="483px" w="100%">
+          <Flex
+            flexDirection="column"
+            bg="navy.700"
+            minW="100%"
+            borderColor="cyan.500"
+            borderWidth="1px"
+            borderStyle="solid"
+            rounded="base"
+            p="6"
+            position="relative"
+            h="500px"
+            gap="2"
+          >
+            <Heading fontSize="md">Your haven&apos;t complete your selection</Heading>
+            <Text color="gray.500" fontSize="sm">
+              You can now vote for multiple councils and cast all your votes in one unique
+              transaction:
+            </Text>
+            {councils.map((council, index) => {
+              return (
+                <Flex
+                  key={`vote-confirmation-${council.slug}`}
+                  border="1px solid"
+                  borderColor="gray.900"
+                  rounded="base"
+                  p="2"
+                  alignItems="center"
+                  mb={index === 2 ? 'auto' : ''}
+                >
+                  <CouncilImage imageUrl={council?.image} />
+                  <Text fontWeight={700} fontSize="sm" mr="auto">
+                    {council.title}
+                  </Text>
+
+                  {state[networkForState][council.slug] ? (
+                    <ProfilePicture address={state[networkForState][council.slug]} size={9} />
+                  ) : (
+                    <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
+                  )}
+                </Flex>
+              );
+            })}
+            <Button onClick={() => setShowConfirmation(false)}>Continue Selection</Button>
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              onClick={() => {
+                mutateAsync();
+                setShowConfirmation(false);
+              }}
+            >
+              Cast Vote Anyway
+            </Button>
+          </Flex>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

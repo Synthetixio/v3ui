@@ -2,6 +2,14 @@ import { Contract } from 'ethers';
 import { electionModuleABITest } from './abi';
 import { CouncilSlugs } from './councils';
 
+export const isMothercain = (chainId?: string | number) => {
+  if (!chainId) return false;
+  const parsedChainId = chainId.toString();
+  if (parsedChainId === '13001') return true;
+  if (parsedChainId === '2192') return true;
+  return false;
+};
+
 const SpartanCouncilContract = new Contract(
   '0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD',
   electionModuleABITest
