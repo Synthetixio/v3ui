@@ -117,14 +117,15 @@ export function UserProfileForm() {
           <Flex
             flexDir="column"
             gap="4"
-            px="6"
-            py="4"
+            px="4"
+            py="6"
             w="100%"
             bg="navy.700"
             rounded="base"
             border="1px solid"
             borderColor="gray.900"
             mt="9"
+            mb="24"
           >
             {/*
           <Flex w="100%" alignItems="center">
@@ -155,6 +156,8 @@ export function UserProfileForm() {
                 placeholder="eg: DeFiLord"
                 data-cy="username-input"
               />
+            </Flex>
+            <Flex flexDir="column" w="100%" gap="1">
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 About
               </Text>
@@ -162,6 +165,7 @@ export function UserProfileForm() {
                 {...register('about')}
                 placeholder="eq: OG DeFi Member"
                 data-cy="about-input"
+                maxLength={40}
               />
             </Flex>
             <Flex gap="1" flexDirection="column">
@@ -226,15 +230,17 @@ export function UserProfileForm() {
                 </Button>
               </Tooltip>
             </Flex>
-            <Text color="gray.500" fontSize="12px">
-              Governance Pitch
-            </Text>
-            <Textarea
-              {...register('delegationPitch')}
-              placeholder="eg: How am I going to make a difference at Synthetix"
-              data-cy="governance-pitch-input"
-              h="253px"
-            />
+            <Flex gap="1" flexDirection="column">
+              <Text color="gray.500" fontSize="12px">
+                Governance Pitch
+              </Text>
+              <Textarea
+                {...register('delegationPitch')}
+                placeholder="eg: How am I going to make a difference at Synthetix"
+                data-cy="governance-pitch-input"
+                h="253px"
+              />
+            </Flex>
             <Show below="xl">
               <Button
                 isLoading={mutation.isPending}
@@ -251,7 +257,7 @@ export function UserProfileForm() {
               </Button>
               <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent mx="4" minW="95%">
+                <ModalContent maxW="97vw" width="97vw" margin="4">
                   <Flex
                     flexDirection="column"
                     bg="navy.700"
@@ -287,7 +293,7 @@ export function UserProfileForm() {
             </Show>
           </Flex>
           <Show above="xl">
-            <Flex flexDir="column" minW="551px" maxW="551px" gap="3">
+            <Flex flexDir="column" maxW="451px" gap="3">
               <Heading fontSize="20px">Preview</Heading>
               <UserProfileEditPreview
                 activeWallet={activeWallet?.address}

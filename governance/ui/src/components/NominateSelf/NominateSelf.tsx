@@ -28,11 +28,16 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
 
   const { activeWallet } = useWallet();
 
-  const { mutate, isPending, isSuccess } = useNominateSelf(selectedCouncil, activeWallet?.address);
+  const {
+    mutateAsync,
+    isPending,
+    isSuccess,
+    data: resultNomination,
+  } = useNominateSelf(selectedCouncil, activeWallet?.address);
   const { data } = useGetUserDetailsQuery(activeWallet?.address);
-
   return (
     <Flex
+      mb="24"
       flexDirection="column"
       bg="navy.700"
       w="100%"
@@ -46,7 +51,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       data-cy="nominate-self-modal"
       {...props}
     >
-      {isSuccess ? (
+      {isSuccess && resultNomination ? (
         <>
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -68,8 +73,9 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             borderColor="gray.900"
             p="2"
             rounded="base"
-            my="2"
+            mt="2"
             alignItems="center"
+            mb="12"
           >
             <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} size={10} />
             <Flex ml="2" flexDir="column">
@@ -88,7 +94,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
               </Text>
             </Flex>
           </Flex>
-          <Text fontSize="sm" color="gray.500" mt="2">
+          <Text fontSize="sm" color="gray.500" my="2">
             Nominated for:
           </Text>
           <Flex
@@ -146,18 +152,18 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             />
           </Flex>
           <Text fontSize="sm" color="gray.500" mt="2">
-            Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
-            nominating the wallet below:
+            Nominate yourself to represent a Synthetix Governing Council with the wallet below:
           </Text>
           <Flex
             border="1px solid"
             borderColor="gray.900"
             p="2"
             rounded="base"
-            my="2"
+            mt="3"
+            mb="12"
             alignItems="center"
           >
-            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} />
+            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} size={10} />
             <Flex ml="2" flexDir="column">
               <Text
                 fontWeight={700}
@@ -228,7 +234,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             </Button>
           ) : (
             <Button
-              onClick={() => mutate()}
+              onClick={async () => await mutateAsync()}
               mt="auto"
               data-cy="nominate-self-cast-nomination-button"
             >

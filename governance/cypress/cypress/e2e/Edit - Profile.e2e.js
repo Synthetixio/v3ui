@@ -30,6 +30,5 @@ it('should let user edit their profile', () => {
 
   cy.get("[data-cy='governance-pitch-input']").type('sup its me kaiynne');
   cy.get("[data-cy='governance-pitch-preview']").contains('sup its me kaiynne');
-
   cy.get("[data-cy='save-profile-changes-button']").should('exist');
 });

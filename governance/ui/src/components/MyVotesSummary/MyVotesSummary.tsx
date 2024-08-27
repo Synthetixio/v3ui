@@ -112,7 +112,7 @@ export const MyVotesSummary = ({
       }}
       rounded="base"
       w="100%"
-      maxW="200px"
+      maxW="300px"
       borderColor={isInMyVotesPage ? 'cyan.500' : 'gray.900'}
       borderWidth="1px"
       py={2}
@@ -124,11 +124,11 @@ export const MyVotesSummary = ({
         bg: 'linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 100%), #0B0B22;',
       }}
     >
-      <Text fontSize="xs" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
+      <Text fontSize="sm" fontWeight="bold" mr="auto" data-cy="my-votes-summary-text">
         My Votes
       </Text>
       <Show above="md">
-        <Text fontSize="x-small" ml={8} fontWeight="bold">
+        <Text fontSize="small" ml={8} fontWeight="bold">
           {councilPeriod === '2' && (
             <>
               {

@@ -32,7 +32,9 @@ export const UserProfileDetails = ({
 }: UserProfileDetailsProps) => {
   const [_, setVoteCard] = useRecoilState(voteCardState);
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
+  const [walletToolTipLabel, setWalletTooltipLabel] = useState('Copy');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
   const networkForState = network?.id.toString() || '2192';
   const { dispatch, state } = useVoteContext();
@@ -108,6 +110,7 @@ export const UserProfileDetails = ({
           <IconButton
             size="xs"
             icon={<EditIcon />}
+            mr="1"
             variant="ghost"
             position="absolute"
             top="4px"
@@ -159,18 +162,23 @@ export const UserProfileDetails = ({
             <ShareIcon
               cursor="pointer"
               onMouseEnter={() => setIsTooltipOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsTooltipOpen(false), 3000)}
+              onMouseLeave={() => {
+                if (tooltipLabel.includes('Copy')) setIsTooltipOpen(false);
+              }}
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setTooltipLabel('Profile Link Copied');
-                setTimeout(() => setTooltipLabel('Copy Profile Link'), 3000);
+                setTimeout(() => {
+                  setTooltipLabel('Copy Profile Link');
+                  setIsTooltipOpen(false);
+                }, 2000);
               }}
             />
           </div>
         </Tooltip>
       </Flex>
       <Flex flexDirection="column" alignItems="flex-start" mb="6">
-        <Text fontSize="xs" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
+        <Text fontSize="sm" fontWeight="700" color="gray.500" data-cy="user-profile-wallet-address">
           Wallet Address
         </Text>
         <Button
@@ -185,10 +193,27 @@ export const UserProfileDetails = ({
             }
           }}
         >
-          <Text mr="1" fontSize="12px" fontWeight="700">
+          <Text mr="1" fontSize="14px" fontWeight="400">
             {prettyString(walletAddress)}
           </Text>
-          <CopyIcon w="12px" h="12px" />
+          <Tooltip label={walletToolTipLabel} isOpen={isWalletTooltipOpen}>
+            <CopyIcon
+              w="12px"
+              h="12px"
+              onMouseEnter={() => setWalletIsTooltipOpen(true)}
+              onMouseLeave={() => {
+                if (walletToolTipLabel.includes('Copy')) setWalletIsTooltipOpen(false);
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(userData?.address || '');
+                setWalletTooltipLabel('Copied');
+                setTimeout(() => {
+                  setWalletTooltipLabel('Copy');
+                  setWalletIsTooltipOpen(false);
+                }, 2000);
+              }}
+            />
+          </Tooltip>
         </Button>
       </Flex>
       {userData?.delegationPitch && (
@@ -211,7 +236,7 @@ export const UserProfileDetails = ({
                 left="0"
                 right="0"
                 height="50px"
-                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%)"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #0b0b22 100%)"
               />
             )}
           </Text>

@@ -93,7 +93,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               return nominee.address.toLowerCase().includes(search);
             }
             if (search) {
-              return nominee.username.toLowerCase().includes(search);
+              if (nominee.username) {
+                return nominee.username.toLowerCase().includes(search);
+              } else {
+                return nominee.address.toLowerCase().includes(search);
+              }
             }
             return true;
           })
@@ -131,7 +135,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           data-cy="own-user-list-item"
         />
       ) : (
-        <Flex justifyContent="space-between" px="6" py="4">
+        <Flex justifyContent="space-between" alignItems="center" px="6" py="4">
           <Text
             fontSize="14px"
             fontWeight={700}
@@ -143,9 +147,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           >
             <CouncilImage
               imageUrl={council?.image || ''}
-              width="30px"
-              height="30px"
-              imageProps={{ w: '108px', h: '108px' }}
+              width="40px"
+              height="40px"
+              imageProps={{ w: '32px', h: '32px' }}
             />
             Nominate Yourself for the {activeCouncil} Council
           </Text>
