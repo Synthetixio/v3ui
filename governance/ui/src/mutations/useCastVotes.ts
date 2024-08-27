@@ -101,7 +101,7 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
-
+          console.log(prepareBallotData, castData);
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
