@@ -74,12 +74,12 @@ export function useCastVotes(
             })
             .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
-          if (!isMotherchain) {
+          if (!isMC) {
             quote = await electionModules[0].quoteCrossChainDeliveryPrice(10005, 0, 1_000_000);
           }
           const castData = councils.map((council, index) => {
             const shouldWithdrawVote = candidates[council] === 'remove';
-            return isMotherchain
+            return isMC
               ? {
                   target: electionModules[index].address,
                   callData: shouldWithdrawVote
