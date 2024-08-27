@@ -8,7 +8,7 @@ export default function Admin() {
   const { network } = useNetwork();
 
   const allProxies =
-    network?.id === 2192
+    network?.id === 2192 || network?.id === 10
       ? [getCouncilContract('spartan')]
       : [
           getCouncilContract('spartan'),
