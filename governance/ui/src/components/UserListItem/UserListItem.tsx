@@ -19,7 +19,6 @@ export default function UserListItem({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: nominationInformation, isFetched: isNominatedFetched } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -49,7 +48,7 @@ export default function UserListItem({
           imageSrc={user?.pfpUrl}
           address={address}
           ImageProps={{ w: '8', h: '8' }}
-          size={8}
+          size={9}
           mr="0"
         />
         <Text
@@ -66,7 +65,7 @@ export default function UserListItem({
       </Flex>
       {nominationInformation?.isNominated &&
         nominationInformation.council.slug === activeCouncil && (
-          <Badge color="green" ml="4" mr="auto">
+          <Badge variant="outline" color="green" ml="4" mr="auto">
             Nominee
           </Badge>
         )}

@@ -35,7 +35,7 @@ export default function MyVoteRow({
       borderColor="gray.900"
       opacity={period !== '2' ? '0.2' : '1'}
     >
-      <Flex alignItems="center">
+      <Flex ml="4" alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
           address={ballot?.votedCandidates[0] || stateForNetwork}
@@ -53,6 +53,7 @@ export default function MyVoteRow({
           aria-label="action-button"
           icon={<AddIcon />}
           variant="outlined"
+          mr="4"
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
@@ -63,8 +64,10 @@ export default function MyVoteRow({
         <IconButton
           aria-label="action-button"
           icon={<CloseIcon />}
+          colorScheme="gray"
           data-cy={`remove-vote-button-${councilSlug}`}
-          variant="outlined"
+          variant="outline"
+          mr="4"
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();

@@ -1,9 +1,10 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
 import { GetUserDetails } from '../../queries';
 import { Socials } from '../Socials';
 import { CopyIcon } from '@chakra-ui/icons';
+import { useEffect, useRef, useState } from 'react';
 
 export default function UserProfileEditPreview({
   userData,
@@ -16,6 +17,47 @@ export default function UserProfileEditPreview({
   isDirty: boolean;
   userData: GetUserDetails;
 }) {
+  const elementRef = useRef<HTMLParagraphElement | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = elementRef.current;
+      if (el) {
+        const isOverflowing = el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
+        setIsOverflowing(isOverflowing);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (elementRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+          setIsOverflowing(false);
+        } else {
+          setIsOverflowing(true);
+        }
+      }
+    };
+
+    const refCurrent = elementRef.current;
+    if (refCurrent) {
+      refCurrent.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (refCurrent) {
+        refCurrent.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   return (
     <Flex
       border="1px solid"
@@ -24,10 +66,13 @@ export default function UserProfileEditPreview({
       p={{ base: 0, xl: '4' }}
       bg="navy.700"
       flexDir="column"
-      w="451px"
-      h="612px"
+      // w="451px"
+      // h="612px"
+      w={{ base: '100%', xl: '451px' }}
+      h={{ base: '100%', xl: '612px' }} //@mrx idk how to put this height 100% or vh 97 like the UserProfileCard
       position={{ base: 'unset', xl: 'sticky' }}
       top="105px"
+      mb="24"
     >
       <Flex>
         <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address || activeWallet} />
@@ -80,32 +125,43 @@ export default function UserProfileEditPreview({
             }
           }}
         >
-          <Text mr="1" fontSize="12px">
+          <Text mr="1" fontSize="14px" fontWeight="400">
             {prettyString(activeWallet || '')}
           </Text>
           <CopyIcon w="12px" h="12px" />
         </Button>
       </Flex>
-      {userData.delegationPitch && (
+      {userData?.delegationPitch && (
         <>
           <Text fontSize="14px" fontWeight="700" color="gray.500">
             Governance Pitch
           </Text>
           <Text
+            position="relative"
             fontSize="14px"
-            lineHeight="20px"
-            overflow="scroll"
-            maxH="50vh"
-            mb="4"
-            h="350px"
-            whiteSpace="pre-wrap"
             data-cy="governance-pitch-preview"
+            lineHeight="20px"
+            overflowY="scroll"
+            h="330px"
+            mb="auto"
+            ref={elementRef}
           >
-            {userData.delegationPitch}
+            {userData?.delegationPitch}
+            {isOverflowing && (
+              <Box
+                position="sticky"
+                bottom="-1px"
+                left="0"
+                right="0"
+                height="50px"
+                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #0b0b22 100%)"
+              />
+            )}
           </Text>
         </>
       )}
       <Button
+        mt="auto"
         isLoading={isPending}
         w="100%"
         type="submit"

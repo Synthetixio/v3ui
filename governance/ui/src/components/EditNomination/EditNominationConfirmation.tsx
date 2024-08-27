@@ -40,8 +40,7 @@ export default function EditNominationConfirmation({
     <>
       <Heading fontSize="medium">Confirm changes</Heading>
       <Text fontSize="sm" color="gray.500" mt="2">
-        Nominate yourself to represent one of the Synthetix Governing Councils. Your will be
-        nominating the wallet below:
+        Nominate yourself to represent a Synthetix Governing Council with the wallet below:
       </Text>
       <Flex
         rounded="base"
@@ -51,11 +50,12 @@ export default function EditNominationConfirmation({
         alignItems="center"
         p="2"
         mt="3"
+        mb="3"
       >
-        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
+        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} size={10} />
         <Flex flexDirection="column" ml="2">
           <Text
-            fontSize="xs"
+            fontSize="sm"
             color="white"
             fontWeight="bold"
             textOverflow="ellipsis"
@@ -68,10 +68,10 @@ export default function EditNominationConfirmation({
           <Text fontSize="xs">Nomination Wallet: {prettyString(user?.address || '')}</Text>
         </Flex>
       </Flex>
-      <Text fontSize="sm" color="gray.500" my="2">
+      <Text fontSize="sm" color="gray.500" mb="2">
         Chose which governing body you would like to represent if chosen as an elected member:
       </Text>
-      <Flex alignItems="center" justifyContent="space-between" mt="2">
+      <Flex alignItems="center" justifyContent="space-between">
         {nominationInformation?.isNominated ? (
           <Flex
             key={`tab-nomination-${nominationInformation.council.docLink}`}
@@ -96,9 +96,9 @@ export default function EditNominationConfirmation({
               alignItems="center"
               mr="3"
             >
-              <Image src={nominationInformation.council.image} w="6" h="6" />
+              <Image src={nominationInformation.council.image} w="8" h="8" />
             </Flex>
-            <Text fontSize="x-small" fontWeight="bold">
+            <Text fontSize="small" fontWeight="bold">
               {nominationInformation.council.title}
             </Text>
           </Flex>
@@ -163,7 +163,7 @@ export default function EditNominationConfirmation({
               />
             )}
           </Flex>
-          <Text fontSize="x-small" fontWeight="bold">
+          <Text fontSize="small" fontWeight="bold">
             {councils.find((c) => c.slug === selectedCouncil)?.title || 'None'}
           </Text>
         </Flex>

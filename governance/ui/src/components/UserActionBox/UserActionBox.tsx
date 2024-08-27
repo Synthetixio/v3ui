@@ -42,6 +42,7 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
   return (
     <Show above="xl">
       <Flex
+        mb="24"
         w="100%"
         maxW="451px"
         h="612px"

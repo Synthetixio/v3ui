@@ -5,7 +5,7 @@ export function Timer({ expiryTimestamp }: { expiryTimestamp: number }) {
   const { days, hours, minutes } = useCountdown(expiryTimestamp);
   return (
     <Text
-      fontSize="12px"
+      // fontSize="12px"
       fontWeight="bold"
       textAlign="center"
       lineHeight="short"

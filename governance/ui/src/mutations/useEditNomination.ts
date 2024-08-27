@@ -44,29 +44,23 @@ export default function useEditNomination({
     },
     mutationKey: ['editNomination', currentNomination, nextNomination],
     onSuccess: async () => {
-      const address = await signer?.getAddress();
-      await query.invalidateQueries({
-        queryKey: ['isNominated', address?.toLowerCase()],
-        exact: false,
-      });
       await Promise.all([
-        query.invalidateQueries({
-          queryKey: ['isNominated', address],
-        }),
-        query.invalidateQueries({ queryKey: ['nominees', currentNomination] }),
-        query.invalidateQueries({ queryKey: ['isNominated', currentNomination] }),
-        query.invalidateQueries({ queryKey: ['nominees', nextNomination] }),
-        query.invalidateQueries({ queryKey: ['nomineesDetails', currentNomination] }),
-        query.invalidateQueries({ queryKey: ['nomineesDetails', nextNomination] }),
-        query.refetchQueries({ queryKey: ['nominees', currentNomination], exact: false }),
-        query.refetchQueries({ queryKey: ['nominees', nextNomination], exact: false }),
-        query.refetchQueries({ queryKey: ['isNominated', address], exact: false }),
+        query.invalidateQueries({ queryKey: ['isNominated'] }),
+        query.invalidateQueries({ queryKey: ['nominees'] }),
+        query.invalidateQueries({ queryKey: ['nominees'] }),
+        query.invalidateQueries({ queryKey: ['nomineesDetails'] }),
+        query.invalidateQueries({ queryKey: ['nomineesDetails'] }),
+      ]);
+      await Promise.all([
+        query.refetchQueries({ queryKey: ['nominees'], exact: false }),
+        query.refetchQueries({ queryKey: ['nominees'], exact: false }),
+        query.refetchQueries({ queryKey: ['isNominated'], exact: false }),
         query.refetchQueries({
-          queryKey: ['nomineesDetails', currentNomination, address],
+          queryKey: ['nomineesDetails'],
           exact: false,
         }),
         query.refetchQueries({
-          queryKey: ['nomineesDetails', nextNomination, address],
+          queryKey: ['nomineesDetails'],
           exact: false,
         }),
       ]);

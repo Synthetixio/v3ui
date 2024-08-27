@@ -15,7 +15,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="council-tab-vote-circle"]').should('not.exist');
   cy.get('[data-cy="view-council-button-spartan"]').click();
   cy.get('[data-cy="election-closed-tag"]').should('exist');
-  cy.get('[data-cy="council-image-council-tabs-spartan"]').should('have.css', 'width', '28px');
+  cy.get('[data-cy="council-image-council-tabs-spartan"]').should('have.css', 'width', '32px');
   cy.get('[data-cy="user-action-box-unselected"]')
     .should('have.css', 'top', '105px')
     .and('have.css', 'position', 'sticky');
@@ -41,7 +41,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="sort-arrow-down"]').should('exist');
   cy.viewport(600, 500);
   cy.visit('#/councils');
-  cy.get('[data-cy="my-votes-summary-text"]').should('have.css', 'font-size', '12px');
+  cy.get('[data-cy="my-votes-summary-text"]').should('have.css', 'font-size', '14px');
   cy.get('[data-cy="council-select-mobile"]').should('have.css', 'font-size', '16px');
   cy.get('[data-cy="menu-button-flex-council-select"]').should('have.css', 'height', '48px');
   cy.get('[data-cy="my-votes-button"]').should('have.css', 'height', '48px');
