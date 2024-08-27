@@ -139,6 +139,7 @@ export default function UserProfileEditPreview({
           <Text
             position="relative"
             fontSize="14px"
+            data-cy="governance-pitch-preview"
             lineHeight="20px"
             overflowY="scroll"
             h="330px"
