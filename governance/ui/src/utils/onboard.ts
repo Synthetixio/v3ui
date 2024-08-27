@@ -7,7 +7,7 @@ import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-export const supportedNetworks = [2192, 13001];
+export const supportedNetworks = [2192, 13001, 10];
 
 export const chains = NETWORKS.filter((network) => supportedNetworks.includes(network.id)).map(
   (network) => ({
