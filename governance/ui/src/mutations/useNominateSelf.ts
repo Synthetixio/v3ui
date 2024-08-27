@@ -43,6 +43,8 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
           queryKey: ['nomineesDetails', council, address],
           exact: false,
         }),
+      ]);
+      await Promise.all([
         query.refetchQueries({ queryKey: ['isNominated', address, network?.id], exact: false }),
         query.refetchQueries({ queryKey: ['nominees', council], exact: false }),
         query.refetchQueries({ queryKey: ['nomineesDetails', council, address], exact: false }),

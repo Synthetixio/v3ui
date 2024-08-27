@@ -19,7 +19,6 @@ export default function UserListItem({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const { data: user } = useGetUserDetailsQuery(address);
   const { data: nominationInformation, isFetched: isNominatedFetched } = useGetIsNominated(address);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);

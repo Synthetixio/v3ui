@@ -49,6 +49,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
           if (showConfirm) {
             setShowConfirm(false);
           } else {
+            setSelectedCouncil(null);
             navigate(`/councils/${activeCouncil}`);
           }
         }}
@@ -102,7 +103,13 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
                 : councils.find((council) => council.slug === selectedCouncil)?.title}
             </Text>
           </Flex>
-          <Button onClick={() => navigate(`/councils/${activeCouncil}`)} mt="auto">
+          <Button
+            onClick={() => {
+              setSelectedCouncil(null);
+              navigate(`/councils/${activeCouncil}`);
+            }}
+            mt="auto"
+          >
             Done
           </Button>
         </>

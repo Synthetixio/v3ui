@@ -1,6 +1,5 @@
 import {
   Button,
-  Center,
   Divider,
   Flex,
   Heading,
@@ -94,7 +93,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               return nominee.address.toLowerCase().includes(search);
             }
             if (search) {
-              return nominee.username.toLowerCase().includes(search);
+              if (nominee.username) {
+                return nominee.username.toLowerCase().includes(search);
+              } else {
+                return nominee.address.toLowerCase().includes(search);
+              }
             }
             return true;
           })
