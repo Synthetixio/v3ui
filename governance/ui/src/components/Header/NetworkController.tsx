@@ -91,7 +91,16 @@ export function NetworkController() {
         </MenuButton>
         <MenuList border="1px" borderColor="gray.900" zIndex={999}>
           {mainnets.map(({ id, preset, label }) => (
-            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+            <MenuItem
+              key={`${id}-${preset}`}
+              onClick={() => {
+                try {
+                  setNetwork(id);
+                } catch (error) {
+                  // TODO @dev add chain to wallet
+                }
+              }}
+            >
               <NetworkIcon networkId={id} size="20px" />
               <Text variant="nav" ml={2}>
                 {label}

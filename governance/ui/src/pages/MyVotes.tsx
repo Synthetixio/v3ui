@@ -44,7 +44,7 @@ export default function MyVotes() {
     .map(([council]) => council) as CouncilSlugs[];
   const { mutateAsync, isPending } = useCastVotes(councilToCastVote, state[networkForState] || {});
   const navigate = useNavigate();
-
+  console.log(state);
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
@@ -252,7 +252,7 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {state[networkForState][council.slug] ? (
+                  {state[networkForState] ? (
                     <ProfilePicture address={state[networkForState][council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
