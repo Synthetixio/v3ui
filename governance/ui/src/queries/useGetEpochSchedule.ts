@@ -10,7 +10,7 @@ export function useGetEpochSchedule(council?: CouncilSlugs) {
   return useQuery({
     queryKey: ['epoch-schedule', council, network?.id],
     queryFn: async () => {
-      const schedule = await getCouncilContract(council!, network?.id)
+      const schedule = await getCouncilContract(council!)
         .connect(motherShipProvider(network?.id || 13001))
         .getEpochSchedule();
       return {
