@@ -77,6 +77,7 @@ export function useCastVotes(
           if (!isMC) {
             quote = await electionModules[0].quoteCrossChainDeliveryPrice(43, 0, 2_000_000);
           }
+          console.log(quote);
           const castData = councils.map((council, index) => {
             const shouldWithdrawVote = candidates[council] === 'remove';
             return isMC
@@ -102,6 +103,7 @@ export function useCastVotes(
                 };
           });
           console.log(prepareBallotData, castData);
+
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
