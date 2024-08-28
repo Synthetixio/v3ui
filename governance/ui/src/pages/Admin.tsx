@@ -171,7 +171,7 @@ export default function Admin() {
                 .connect(signer!)
                 .takeVotePowerSnapshot(
                   SnapshotRecordContract(
-                    13001,
+                    network?.id || 13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   {
@@ -197,13 +197,13 @@ export default function Admin() {
                 .connect(signer!)
                 .getVotePowerSnapshotId(
                   SnapshotRecordContract(
-                    13001,
+                    network?.id || 13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   electionId
                 );
               SnapshotRecordContract(
-                13001,
+                network?.id || 13011,
                 index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
               )
                 ?.connect(signer!)

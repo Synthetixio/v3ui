@@ -101,7 +101,6 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
-          console.log(prepareBallotData, castData);
 
           await multicall
             .connect(signer)

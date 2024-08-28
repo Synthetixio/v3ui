@@ -1,6 +1,6 @@
 import { Button, Flex, FlexProps, Heading, IconButton, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useEditNomination from '../../mutations/useEditNomination';
 import { CloseIcon } from '@chakra-ui/icons';
@@ -27,6 +27,12 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
     currentNomination: nominationInformation?.council.slug,
     nextNomination: selectedCouncil,
   });
+
+  useEffect(() => {
+    if (!nominationInformation?.isNominated) {
+      navigate('/councils/' + activeCouncil);
+    }
+  }, [nominationInformation?.isNominated, navigate, activeCouncil]);
 
   return (
     <Flex
