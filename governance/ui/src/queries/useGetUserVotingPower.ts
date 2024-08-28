@@ -44,8 +44,8 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           : await SnapshotRecordContract(network.id, council)
               ?.connect(provider)
               .balanceOfOnPeriod(activeWallet.address, 1);
-        //  TODO @dev check when prod is live
-        return { power: sqrt(votingPower), isDeclared: false };
+        //  TODO @dev check when prod is live maybe we wanna add sqrt?
+        return { power: votingPower, isDeclared: false };
       } catch (error) {
         console.error('ERROR IS', { error });
         return { power: ethers.BigNumber.from(0), isDeclared: false };

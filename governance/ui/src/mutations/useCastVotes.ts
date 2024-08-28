@@ -105,7 +105,7 @@ export function useCastVotes(
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
-              value: quote.add(quote.mul(25).div(100)),
+              value: isMC ? 0 : quote.add(quote.mul(25).div(100)),
             });
         } catch (error) {
           console.error(error);
