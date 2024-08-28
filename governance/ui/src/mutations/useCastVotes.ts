@@ -66,7 +66,6 @@ export function useCastVotes(
                           activeWallet?.address,
                         ]
                       ),
-                      value: 0,
                       requireSuccess: true,
                     };
               }
@@ -97,16 +96,16 @@ export function useCastVotes(
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
-                  value: quote.add(quote.mul(25).div(100)),
                   requireSuccess: true,
                 };
           });
 
           await multicall
             .connect(signer)
-            [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+            [isMC ? 'aggregate' : 'aggregate3']([...prepareBallotData, ...castData], {
               maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
               maxFeePerGas: utils.parseUnits('2', 'gwei'),
+              value: quote.add(quote.mul(25).div(100)),
             });
         } catch (error) {
           console.error(error);

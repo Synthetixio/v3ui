@@ -43,6 +43,7 @@ it('Councils - Administration', () => {
   cy.wait(3000);
   cy.get('[data-cy="my-votes-voting-power"]').contains('30.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
+  cy.get('[data-cy="cast-vote-anyway-button"]').click();
   cy.wait(3000);
   cy.window().then((win) => {
     win.localStorage.clear();
@@ -54,6 +55,7 @@ it('Councils - Administration', () => {
   cy.wait(3000);
   cy.get('[data-cy="remove-vote-button-spartan"]').click();
   cy.get('[data-cy="cast-my-vote-button"]').click();
+  cy.get('[data-cy="cast-vote-anyway-button"]').click();
   cy.wait(3000);
   cy.get('[data-cy="my-votes-total-votes"]').contains('0/3');
 });

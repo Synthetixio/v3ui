@@ -266,6 +266,7 @@ export default function MyVotes() {
             <Button
               variant="outline"
               colorScheme="gray"
+              data-cy="cast-vote-anyway-button"
               onClick={() => {
                 mutateAsync();
                 setShowConfirmation(false);

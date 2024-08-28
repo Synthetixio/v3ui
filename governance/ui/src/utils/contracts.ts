@@ -26,20 +26,20 @@ const TreasuryCouncilContract = new Contract(
 );
 
 export function getCouncilContract(council: CouncilSlugs, chainId?: string | number) {
-  const parsedChainId = chainId ? Number(chainId) : 2192;
+  const parsedChainId = process.env.CI === 'true' ? 13001 : chainId ? Number(chainId) : 2192;
   switch (council) {
     case 'spartan':
       return parsedChainId === 2192 || parsedChainId === 10
         ? SpartanCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : SpartanCouncilContract;
+        : SpartanCouncilContract.attach('0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD');
     case 'ambassador':
       return parsedChainId === 2192
         ? AmbassadorCouncilContract.attach('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80')
-        : AmbassadorCouncilContract;
+        : AmbassadorCouncilContract.attach('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80');
     case 'treasury':
       return parsedChainId === 2192
         ? TreasuryCouncilContract.attach('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161')
-        : TreasuryCouncilContract;
+        : TreasuryCouncilContract.attach('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161');
     default:
       throw new Error('could not find contract');
   }

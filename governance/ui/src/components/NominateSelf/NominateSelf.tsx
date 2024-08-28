@@ -25,25 +25,27 @@ interface NominateSelfProps extends FlexProps {
 
 export default function NominateSelf({ activeCouncil, ...props }: NominateSelfProps) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
+  const [sentTx, setSentTx] = useState(false);
   const navigate = useNavigate();
 
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
 
-  useEffect(() => {
-    if (nominationInformation?.isNominated) {
-      navigate('/councils/' + activeCouncil);
-    }
-  }, [nominationInformation?.isNominated, navigate, activeCouncil]);
-
   const {
     mutateAsync,
     isPending,
     isSuccess,
+
     data: resultNomination,
   } = useNominateSelf(selectedCouncil, activeWallet?.address);
   const { data } = useGetUserDetailsQuery(activeWallet?.address);
+
+  useEffect(() => {
+    if (nominationInformation?.isNominated && !sentTx) {
+      navigate('/councils/' + activeCouncil);
+    }
+  }, [nominationInformation?.isNominated, navigate, activeCouncil, sentTx]);
   return (
     <Flex
       mb="24"
@@ -243,10 +245,13 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             </Button>
           ) : (
             <Button
-              onClick={async () => await mutateAsync()}
+              onClick={async () => {
+                setSentTx(true);
+                await mutateAsync();
+              }}
               mt="auto"
               data-cy="nominate-self-cast-nomination-button"
-              isDisabled={isMotherchain(network?.id)}
+              isDisabled={!isMotherchain(network?.id)}
             >
               {isMotherchain(network?.id) ? 'Nominate Self' : 'Wrong Network'}
             </Button>
