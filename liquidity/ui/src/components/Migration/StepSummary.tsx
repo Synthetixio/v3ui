@@ -13,11 +13,11 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { wei } from '@synthetixio/wei';
-import { useV2Position } from '../../../../lib/useV2Position';
+import { useV2Position } from '@snx-v3/useV2Position';
 import { Network } from '@snx-v3/useBlockchain';
 import { InfoIcon } from '@chakra-ui/icons';
-import { useMigrate } from '../../../../lib/useMigrate';
-import { useSNXPrice } from '../../../../lib/useSNXPrice';
+import { useMigrate } from '@snx-v3/useMigrate';
+import { useSNXPrice } from '@snx-v3/useSNXPrice';
 import { StepSuccess } from './StepSuccess';
 import { formatEther } from 'ethers/lib/utils';
 import { Amount } from '@snx-v3/Amount';

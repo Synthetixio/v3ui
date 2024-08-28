@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { useV2xSynthetix } from '../useV2xSynthetix';
+import { useV2xSynthetix } from '@snx-v3/useV2xSynthetix';
 import { wei } from '@synthetixio/wei';
 import { utils } from 'ethers';
 

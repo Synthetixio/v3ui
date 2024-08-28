@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
-import { useV2xSynthetix } from '../useV2xSynthetix';
+import { useV2xSynthetix } from '@snx-v3/useV2xSynthetix';
 import { utils } from 'ethers';
 
 export function useV2sUSD(customNetwork?: Network | null) {

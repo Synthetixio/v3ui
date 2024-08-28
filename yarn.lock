@@ -5581,10 +5581,13 @@ __metadata:
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useLocalStorage": "workspace:*"
     "@snx-v3/useManagePermissions": "workspace:*"
+    "@snx-v3/useMigrate": "workspace:*"
+    "@snx-v3/useMigrateUSD": "workspace:*"
     "@snx-v3/useOraclePrice": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
@@ -5593,6 +5596,7 @@ __metadata:
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useRewardsDistributors": "workspace:*"
+    "@snx-v3/useSNXPrice": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
@@ -5600,6 +5604,8 @@ __metadata:
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useUndelegate": "workspace:*"
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
+    "@snx-v3/useV2Position": "workspace:*"
+    "@snx-v3/useV2sUSD": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -6218,7 +6224,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket":
+"@snx-v3/useLegacyMarket@workspace:*, @snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket"
   dependencies:
@@ -6300,7 +6306,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useMigrate@workspace:liquidity/lib/useMigrate":
+"@snx-v3/useMigrate@workspace:*, @snx-v3/useMigrate@workspace:liquidity/lib/useMigrate":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMigrate@workspace:liquidity/lib/useMigrate"
   dependencies:
@@ -6308,13 +6314,14 @@ __metadata:
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD":
+"@snx-v3/useMigrateUSD@workspace:*, @snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD"
   dependencies:
@@ -6322,6 +6329,7 @@ __metadata:
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
@@ -6505,7 +6513,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useSNXPrice@workspace:liquidity/lib/useSNXPrice":
+"@snx-v3/useSNXPrice@workspace:*, @snx-v3/useSNXPrice@workspace:liquidity/lib/useSNXPrice":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSNXPrice@workspace:liquidity/lib/useSNXPrice"
   dependencies:
@@ -6672,11 +6680,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2Position@workspace:liquidity/lib/useV2Position":
+"@snx-v3/useV2Position@workspace:*, @snx-v3/useV2Position@workspace:liquidity/lib/useV2Position":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useV2Position@workspace:liquidity/lib/useV2Position"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useV2xSynthetix": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
@@ -6684,18 +6693,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2sUSD@workspace:liquidity/lib/useV2sUSD":
+"@snx-v3/useV2sUSD@workspace:*, @snx-v3/useV2sUSD@workspace:liquidity/lib/useV2sUSD":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useV2sUSD@workspace:liquidity/lib/useV2sUSD"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useV2xSynthetix": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2xSynthetix@workspace:liquidity/lib/useV2xSynthetix":
+"@snx-v3/useV2xSynthetix@workspace:*, @snx-v3/useV2xSynthetix@workspace:liquidity/lib/useV2xSynthetix":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useV2xSynthetix@workspace:liquidity/lib/useV2xSynthetix"
   dependencies:

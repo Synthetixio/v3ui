@@ -10,11 +10,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FC, useCallback, useState } from 'react';
-import { useV2Position } from '../../../../lib/useV2Position';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { Amount } from '@snx-v3/Amount';
 import { MigrationDialog } from './MigrationDialog';
 import { MigrateUSDModal } from '../MigrateUSD/MigrateUSDModal';
+import { useV2Position } from '@snx-v3/useV2Position';
 
 interface Props {
   network: Network;

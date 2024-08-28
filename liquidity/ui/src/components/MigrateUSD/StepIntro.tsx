@@ -1,7 +1,6 @@
 import React from 'react';
 import { VStack, Text, Button, Flex } from '@chakra-ui/react';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { useV2sUSD } from '../../../../lib/useV2sUSD';
 import { Network } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei from '@synthetixio/wei';
@@ -10,6 +9,7 @@ import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { TokenIcon } from '../TokenIcon';
 import { useUSDProxyForChain } from '@snx-v3/useUSDProxy';
+import { useV2sUSD } from '@snx-v3/useV2sUSD';
 
 export const StepIntro = ({
   onClose,

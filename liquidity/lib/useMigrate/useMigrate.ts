@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { useLegacyMarket } from '../useLegacyMarket';
 import { useCallback, useState } from 'react';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
@@ -8,6 +7,7 @@ import { ZEROWEI } from '../../ui/src/utils/constants';
 import { wei } from '@synthetixio/wei';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { parseTxError } from '../parser';
+import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
 
 export function useMigrate() {
   const [isLoading, setIsLoading] = useState(false);

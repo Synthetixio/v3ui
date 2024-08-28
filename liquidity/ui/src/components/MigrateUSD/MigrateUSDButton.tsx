@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import { Network, useWallet } from '@snx-v3/useBlockchain';
 import { MigrateUSDModal } from './MigrateUSDModal';
-import { useV2sUSD } from '../../../../lib/useV2sUSD';
+import { useV2sUSD } from '@snx-v3/useV2sUSD';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { TokenIcon } from '../TokenIcon';
 

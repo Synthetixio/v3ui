@@ -5,9 +5,9 @@ import { useApprove } from '@snx-v3/useApprove';
 import { Wei } from '@synthetixio/wei';
 import { FC, useCallback, useState } from 'react';
 import { Network } from '@snx-v3/useBlockchain';
-import { useV2sUSD } from '../../../../lib/useV2sUSD';
-import { useLegacyMarket } from '../../../../lib/useLegacyMarket';
-import { useMigrateUSD } from '../../../../lib/useMigrateUSD';
+import { useV2sUSD } from '@snx-v3/useV2sUSD';
+import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
+import { useMigrateUSD } from '@snx-v3/useMigrateUSD';
 import { StepSuccess } from './StepSuccess';
 
 type Props = FC<{

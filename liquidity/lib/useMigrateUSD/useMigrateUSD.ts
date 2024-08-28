@@ -1,5 +1,5 @@
 import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { useLegacyMarket } from '../useLegacyMarket';
+import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
 import { useCallback, useState } from 'react';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';

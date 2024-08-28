@@ -25,7 +25,9 @@ const supportedAprNetworks = [BASE_ANDROMEDA.id, ARBITRUM.id, MAINNET.id];
 export async function fetchApr(networkId?: number) {
   try {
     const isSupported = networkId && supportedAprNetworks.includes(networkId);
-    if (!isSupported) throw new Error('Apr endpoint not supported for this network');
+    if (!isSupported) {
+      throw new Error('Apr endpoint not supported for this network');
+    }
 
     const response = await fetch(getAprUrl(networkId));
 
