@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
@@ -67,6 +67,7 @@ export function useCastVotes(
                         ]
                       ),
                       requireSuccess: true,
+                      value: 0,
                     };
               }
               return null;
@@ -97,15 +98,14 @@ export function useCastVotes(
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
                   requireSuccess: true,
+                  value: quote.add(quote.mul(25).div(100)),
                 };
           });
 
           await multicall
             .connect(signer)
-            [isMC ? 'aggregate' : 'aggregate3']([...prepareBallotData, ...castData], {
-              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
-              maxFeePerGas: utils.parseUnits('2', 'gwei'),
-              value: quote.add(quote.mul(25).div(100)),
+            [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+              value: isMC ? 0 : quote.add(quote.mul(25).div(100)),
             });
         } catch (error) {
           console.error(error);
