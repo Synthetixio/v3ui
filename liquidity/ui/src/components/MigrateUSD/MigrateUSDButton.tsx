@@ -33,7 +33,12 @@ export const MigrateUSDButton: FC<Props> = ({ network }) => {
 
   return (
     <>
-      <MigrateUSDModal network={network} onClose={() => setIsOpen(false)} isOpen={isOpen} />
+      <MigrateUSDModal
+        type="convert"
+        network={network}
+        onClose={() => setIsOpen(false)}
+        isOpen={isOpen}
+      />
       <Button
         variant="outline"
         colorScheme="gray"

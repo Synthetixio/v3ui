@@ -28,18 +28,19 @@ export const StepSummary = ({
   onConfirm,
 }: {
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (accountId: string) => void;
   network: Network;
 }) => {
   const [isUnderstanding, setIsUnderstanding] = useState(false);
   const { data } = useV2Position(network);
-  const { migrate, transaction, isLoading, isSuccess } = useMigrate();
+  const { migrate, transaction, isLoading, isSuccess, accountId } = useMigrate();
 
   const { data: snxPrice } = useSNXPrice(network);
 
   const [txSummary, setTxSummary] = useState({
     collateral: '0',
     cRatio: '0',
+    accountId: '',
   });
 
   const cRatio = data?.cratio.eq(0)
@@ -52,18 +53,20 @@ export const StepSummary = ({
   const handleSubmit = useCallback(() => {
     setTxSummary({
       cRatio,
-      collateral: data?.stakedBalance?.toString(2) || '0',
+      collateral: data?.collateral?.toString(2) || '0',
+      accountId,
     });
 
     migrate();
-  }, [cRatio, data?.stakedBalance, migrate]);
+  }, [accountId, cRatio, data?.collateral, migrate]);
 
   if (isSuccess) {
     return (
       <StepSuccess
-        onConfirm={onConfirm}
+        onConfirm={() => onConfirm(txSummary.accountId)}
         cRatio={txSummary.cRatio}
         collateral={txSummary.collateral}
+        accountId={txSummary.accountId}
       />
     );
   }
@@ -105,8 +108,8 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.stakedBalance?.toString(2)} SNX &nbsp;
-              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.stakedBalance).toString(2)})</>}
+              {data?.collateral?.toString(2)} SNX &nbsp;
+              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.collateral).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">
@@ -130,7 +133,7 @@ export const StepSummary = ({
             <Text>
               {data?.collateral?.sub(data?.balance)?.toString(2)} SNX &nbsp;
               {snxPrice?.gt(0) && (
-                <>(${snxPrice.mul(data?.stakedBalance?.sub(data?.balance)).toString(2)})</>
+                <>(${snxPrice.mul(data?.collateral?.sub(data?.balance)).toString(2)})</>
               )}
             </Text>
           </HStack>

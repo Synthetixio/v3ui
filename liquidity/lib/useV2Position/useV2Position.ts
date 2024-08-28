@@ -34,7 +34,6 @@ export function useV2Position(customNetwork?: Network | null) {
 
       return {
         collateral,
-        stakedBalance: balance.sub(transferableSynthetix),
         balance,
         debt,
         cratio,

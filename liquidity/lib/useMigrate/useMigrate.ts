@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDefaultProvider, useNetwork, useSigner } from '@snx-v3/useBlockchain';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { ZEROWEI } from '../../ui/src/utils/constants';
@@ -19,6 +19,8 @@ export function useMigrate() {
   const { gasSpeed } = useGasSpeed();
   const queryClient = useQueryClient();
 
+  const accountId = useMemo(() => Math.floor(Math.random() * 1000000000000).toString(), []);
+
   const { data: transaction } = useQuery({
     queryKey: [`${network?.id}-${network?.preset}`, 'MigrateTxn'],
     queryFn: async function () {
@@ -26,7 +28,6 @@ export function useMigrate() {
         return;
       }
       const signerAddress = await signer!.getAddress();
-      const accountId = Math.floor(Math.random() * 1000000000000);
       const populateTransaction = await legacyMarket.populateTransaction.migrate(accountId, {
         from: signerAddress,
       });
@@ -56,7 +57,7 @@ export function useMigrate() {
       setIsSuccess(false);
       const gasPrices = await getGasPrice({ provider: signer!.provider });
       const signerAddress = await signer!.getAddress();
-      const accountId = Math.floor(Math.random() * 1000000000000);
+
       const populateTransaction = await legacyMarket.populateTransaction.migrate(accountId, {
         from: signerAddress,
       });
@@ -84,6 +85,7 @@ export function useMigrate() {
       throw error;
     }
   }, [
+    accountId,
     gasSpeed,
     legacyMarket,
     network?.id,
@@ -99,5 +101,6 @@ export function useMigrate() {
     transaction,
     isLoading,
     isSuccess,
+    accountId,
   };
 }

@@ -9,24 +9,35 @@ import { useV2sUSD } from '@snx-v3/useV2sUSD';
 import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
 import { useMigrateUSD } from '@snx-v3/useMigrateUSD';
 import { StepSuccess } from './StepSuccess';
+import { ZEROWEI } from '../../utils/constants';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { useUSDProxyForChain } from '@snx-v3/useUSDProxy';
 
 type Props = FC<{
   amount: Wei;
   network: Network;
-  onClose: () => void;
+  onSuccess: () => void;
   onBack: () => void;
 }>;
 
-export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack }) => {
+export const MigrateUSDTransaction: Props = ({ onSuccess, amount, network, onBack }) => {
   const { data: legacyMarket } = useLegacyMarket();
+
+  const { data: v2_sUSD } = useV2sUSD(network);
+  const { data: v2_balance } = useTokenBalance(v2_sUSD, network);
+  const { data: v3_sUSD } = useUSDProxyForChain(network);
+  const { data: v3_balance } = useTokenBalance(v3_sUSD?.address, network);
 
   const [infiniteApproval, setInfiniteApproval] = useState(false);
   const [txState, setTxState] = useState({
     step: 1,
     status: 'idle',
   });
-
-  const { data: v2_sUSD } = useV2sUSD(network);
+  const [txSummary, setTxSummary] = useState({
+    amount: ZEROWEI,
+    v2Balance: ZEROWEI,
+    v3Balance: ZEROWEI,
+  });
 
   const { approve, refetchAllowance, requireApproval } = useApprove({
     contractAddress: v2_sUSD,
@@ -43,7 +54,7 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
   const onSubmit = useCallback(async () => {
     try {
       if (txState.step > 2) {
-        onClose();
+        onSuccess();
         return;
       }
 
@@ -62,6 +73,11 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
         status: 'pending',
       });
 
+      setTxSummary({
+        amount,
+        v2Balance: v2_balance || ZEROWEI,
+        v3Balance: v3_balance || ZEROWEI,
+      });
       await migrate();
 
       setTxState({
@@ -88,18 +104,21 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
       });
     }
   }, [
+    amount,
     approve,
     infiniteApproval,
     migrate,
-    onClose,
+    onSuccess,
     refetchAllowance,
     requireApproval,
     toast,
     txState.step,
+    v2_balance,
+    v3_balance,
   ]);
 
   if (isSuccess) {
-    return <StepSuccess network={network} onConfirm={onClose} />;
+    return <StepSuccess {...txSummary} onConfirm={onSuccess} />;
   }
 
   return (

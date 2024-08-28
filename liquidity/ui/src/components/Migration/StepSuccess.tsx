@@ -7,10 +7,12 @@ export const StepSuccess = ({
   onConfirm,
   collateral,
   cRatio,
+  accountId,
 }: {
   onConfirm: () => void;
   cRatio: string;
   collateral: string;
+  accountId: string;
 }) => {
   return (
     <VStack spacing={6}>
@@ -37,6 +39,10 @@ export const StepSuccess = ({
           {
             label: 'C-ratio',
             value: cRatio,
+          },
+          {
+            label: 'Account Id',
+            value: `#${accountId}`,
           },
         ]}
       />

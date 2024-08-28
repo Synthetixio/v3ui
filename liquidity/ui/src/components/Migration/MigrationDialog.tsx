@@ -17,7 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   network: Network;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (accountId: string) => void;
   isOpen: boolean;
 }
 
@@ -47,12 +47,12 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen, onSuccess
           {step === 1 && <StepExplain onConfirm={() => setStep(2)} onClose={() => setStep(0)} />}
           {step === 2 && (
             <StepSummary
-              onConfirm={() => {
+              onConfirm={(accountId) => {
                 queryClient.invalidateQueries({
                   queryKey: [`${network?.id}-${network?.preset}`, 'V2Position'],
                 });
 
-                onSuccess();
+                onSuccess(accountId);
                 onClose();
               }}
               onClose={onClose}
