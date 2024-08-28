@@ -5350,6 +5350,8 @@ __metadata:
 "@snx-v3/constants@workspace:*, @snx-v3/constants@workspace:liquidity/lib/constants":
   version: 0.0.0-use.local
   resolution: "@snx-v3/constants@workspace:liquidity/lib/constants"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
   languageName: unknown
   linkType: soft
 

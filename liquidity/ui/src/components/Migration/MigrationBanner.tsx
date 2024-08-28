@@ -45,7 +45,7 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
     } catch (error) {}
   }, [activeWallet, connect, currentNetwork, network.id, setNetwork]);
 
-  if (!data || data?.collateral.lte(0)) {
+  if (!data || data?.stakedBalance.lte(0)) {
     return (
       <MigrationDialog
         onSuccess={() => setIsUSDModalOpen(true)}
@@ -85,7 +85,7 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
               <Image src="/Rocket.png" />
               <Flex flexDir="column" gap={6}>
                 <Heading fontSize="lg" fontWeight={700} color="white">
-                  You have a <Amount value={data?.collateral} /> SNX position on Synthetix V2
+                  You have a <Amount value={data?.stakedBalance} /> SNX position on Synthetix V2
                 </Heading>
                 <Text fontSize="14px" color="gray.500">
                   Migrate your SNX to Synthetix V3 to earn fees from both V2 and V3 markets and much
@@ -124,7 +124,7 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
           <Alert mb={6} borderLeftColor="cyan.500" borderRadius="6px">
             <AlertIcon color="cyan.500" />
             <Text color="white" fontFamily="heading" fontSize="16px" lineHeight="24px">
-              You have a <Amount value={data?.collateral} /> SNX active staking position on V2.
+              You have a <Amount value={data?.stakedBalance} /> SNX active staking position on V2.
               <Text onClick={onClick} as="span" color="cyan.500" cursor="pointer">
                 &nbsp; Migrate to V3
               </Text>

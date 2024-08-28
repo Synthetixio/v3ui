@@ -79,7 +79,6 @@ export function useMigrate() {
       queryClient.invalidateQueries({
         queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
       });
-  
     } catch (error) {
       setIsLoading(false);
       throw error;

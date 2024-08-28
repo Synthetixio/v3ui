@@ -50,11 +50,11 @@ export const StepSummary = ({
   const handleSubmit = useCallback(() => {
     setTxSummary({
       cRatio,
-      collateral: data?.collateral?.toString(2) || '0',
+      collateral: data?.stakedBalance?.toString(2) || '0',
     });
 
     migrate();
-  }, [cRatio, data?.collateral, migrate]);
+  }, [cRatio, data?.stakedBalance, migrate]);
 
   if (isSuccess) {
     return (
@@ -103,8 +103,8 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.collateral?.toString(2)} SNX &nbsp;
-              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.collateral).toString(2)})</>}
+              {data?.stakedBalance?.toString(2)} SNX &nbsp;
+              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.stakedBalance).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">
@@ -128,7 +128,7 @@ export const StepSummary = ({
             <Text>
               {data?.collateral?.sub(data?.balance)?.toString(2)} SNX &nbsp;
               {snxPrice?.gt(0) && (
-                <>(${snxPrice.mul(data?.collateral?.sub(data?.balance)).toString(2)})</>
+                <>(${snxPrice.mul(data?.stakedBalance?.sub(data?.balance)).toString(2)})</>
               )}
             </Text>
           </HStack>

@@ -1,3 +1,5 @@
+import { ARBITRUM, BASE_ANDROMEDA, MAINNET } from '@snx-v3/useBlockchain';
+
 export const GWEI_DECIMALS = 9;
 export const GAS_LIMIT_MULTIPLIER = 1.5;
 
@@ -28,11 +30,11 @@ export const getSubgraphUrl = (networkName = 'optimism-mainnet') => {
 
 export const getAprUrl = (networkId = 8453) => {
   switch (networkId) {
-    case 1:
+    case MAINNET.id:
       return 'https://api.synthetix.io/v3/mainnet/sc-pool-apy-all';
-    case 8453:
+    case BASE_ANDROMEDA.id:
       return 'https://api.synthetix.io/v3/base/sc-pool-apy-all';
-    case 42161:
+    case ARBITRUM.id:
       return 'https://api.synthetix.io/v3/arbitrum/sc-pool-apy-all';
     default:
       return `https://api.synthetix.io/v3/base/sc-pool-apy-all`;
