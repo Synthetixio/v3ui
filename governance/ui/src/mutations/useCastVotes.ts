@@ -67,6 +67,7 @@ export function useCastVotes(
                         ]
                       ),
                       requireSuccess: true,
+                      value: 0,
                     };
               }
               return null;
@@ -97,33 +98,15 @@ export function useCastVotes(
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
                   requireSuccess: true,
+                  value: quote.add(quote.mul(25).div(100)),
                 };
           });
 
-          // await electionModules[0].prepareBallotWithSnapshot(
-          //   SnapshotRecordContract(network.id, 'spartan')?.address,
-          //   activeWallet?.address
-          // );
-
-          // await electionModules[0].cast(
-          //   [candidates['spartan']],
-          //   [getVotingPowerByCouncil('spartan')?.power]
-          // );
-          //
-          // console.log(
-          //   [...prepareBallotData, ...castData],
-
-          //   !isMC && {
-          //     value: quote.add(quote.mul(25).div(100)),
-          //   }
-          // );
-
-          await multicall.connect(signer)[isMC ? 'aggregate' : 'aggregate3'](
-            [...prepareBallotData, ...castData],
-            !isMC && {
+          await multicall
+            .connect(signer)
+            [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
               value: quote.add(quote.mul(25).div(100)),
-            }
-          );
+            });
         } catch (error) {
           console.error(error);
           toast({
