@@ -15,13 +15,20 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { NetworkIcon, useNetwork, useWallet, NETWORKS } from '@snx-v3/useBlockchain';
+import {
+  NetworkIcon,
+  useNetwork,
+  useWallet,
+  NETWORKS,
+  SNAX,
+  SNAXTESTNET,
+} from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
 import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { supportedNetworks } from '../../utils/onboard';
+import { chains, supportedNetworks } from '../../utils/onboard';
 import { DisconnectIcon } from '../Icons';
 import Blockies from 'react-blockies';
 import '../../pages/index.css';
@@ -70,7 +77,7 @@ export function NetworkController() {
   };
 
   const notConnected = !activeWallet;
-  const notSupported = activeWallet && !activeNetwork;
+  const notSupported = !chains.find((chain) => chain.id === activeNetwork?.id);
 
   return (
     <Flex ml="2">
@@ -86,12 +93,40 @@ export function NetworkController() {
         >
           <NetworkIcon
             filter={activeNetwork?.isTestnet ? 'grayscale(1)' : ''}
-            networkId={notConnected ? 8453 : notSupported ? 0 : activeNetwork?.id}
+            networkId={notConnected ? 2192 : notSupported ? 0 : activeNetwork?.id}
           />
         </MenuButton>
         <MenuList border="1px" borderColor="gray.900" zIndex={999}>
           {mainnets.map(({ id, preset, label }) => (
-            <MenuItem key={`${id}-${preset}`} onClick={() => setNetwork(id)}>
+            <MenuItem
+              key={`${id}-${preset}`}
+              onClick={async () => {
+                try {
+                  setNetwork(id);
+                } catch (error) {
+                  await (window as any).ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                      {
+                        chainId: id === 2192 ? SNAX.hexId : SNAXTESTNET.hexId,
+                        chainName: id === 2192 ? SNAX.label : SNAXTESTNET.label,
+                        nativeCurrency: {
+                          name: 'ETH',
+                          symbol: 'ETH',
+                          decimals: 18,
+                        },
+                        rpcUrls: [id === 2192 ? SNAX.rpcUrl() : SNAXTESTNET.rpcUrl()],
+                        blockExplorerUrls: [
+                          id === 2192
+                            ? 'https://explorer.snaxchain.io/'
+                            : 'https://testnet-explorer.snaxchain.io/',
+                        ],
+                      },
+                    ],
+                  });
+                }
+              }}
+            >
               <NetworkIcon networkId={id} size="20px" />
               <Text variant="nav" ml={2}>
                 {label}

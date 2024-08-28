@@ -11,7 +11,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../../utils/councils';
+import councils, { calculateNextEpoch, CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
@@ -38,46 +38,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
 
   const council = councils.find((council) => council.slug === activeCouncil);
 
-  const startDay =
-    councilSchedule?.endDate && new Date(councilSchedule?.endDate * 1000).getUTCDate();
-  const startMonth =
-    councilSchedule?.endDate &&
-    new Date(councilSchedule.endDate * 1000).toLocaleString('default', { month: 'short' });
-  const startYear =
-    councilSchedule?.endDate && new Date(councilSchedule.endDate * 1000).getUTCFullYear();
-
-  const endDay =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getUTCDate();
-  const endMonth =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).toLocaleString('default', {
-      month: 'short',
-    });
-  const endYear =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getUTCFullYear();
-
-  const startQuarter =
-    councilSchedule?.endDate &&
-    Math.floor(new Date(councilSchedule.endDate * 1000).getMonth() / 3 + 1);
-
-  const endQuarter =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    Math.floor(
-      new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getMonth() / 3 + 1
-    );
-
-  const quarter =
-    startYear === endYear && startQuarter === endQuarter
-      ? `Q${startQuarter} ${startYear}`
-      : startYear === endYear
-        ? `Q${startQuarter} - ${endYear}`
-        : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
+  const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
 
   let sortedNominees = useMemo(() => {
     return !!councilNomineesDetails?.length
@@ -117,10 +78,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       <Flex p="6" justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
-            Nominees for {quarter}
+            Nominees for {epoch.quarter}
           </Heading>
           <Text fontSize="xs" w="100%">
-            {startDay} {startMonth} {startYear} - {endDay} {endMonth} {endYear}
+            {epoch.startDay} {epoch.startMonth} {epoch.startYear} - {epoch.endDay} {epoch.endMonth}{' '}
+            {epoch.endYear}
           </Text>
         </Flex>
         <Flex justifyContent="flex-end">

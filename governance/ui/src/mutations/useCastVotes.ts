@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
-import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
+import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
@@ -38,16 +38,15 @@ export function useCastVotes(
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
       if (signer && network && multicall) {
-        const isMotherchain = true;
-        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMC = process.env.CI === 'true' ? true : isMotherchain(network.id);
         try {
           const electionModules = councils.map((council) =>
-            getCouncilContract(council).connect(signer)
+            getCouncilContract(council, network.id).connect(signer)
           );
           const prepareBallotData = councils
             .map((council, index) => {
               if (!getVotingPowerByCouncil(council)?.isDeclared) {
-                return isMotherchain
+                return isMC
                   ? {
                       target: electionModules[index].address,
                       callData: electionModules[0].interface.encodeFunctionData(
@@ -67,7 +66,6 @@ export function useCastVotes(
                           activeWallet?.address,
                         ]
                       ),
-                      value: 0,
                       requireSuccess: true,
                     };
               }
@@ -75,12 +73,12 @@ export function useCastVotes(
             })
             .filter((call) => !!call);
           let quote: BigNumber = BigNumber.from(0);
-          if (!isMotherchain) {
-            quote = await electionModules[0].quoteCrossChainDeliveryPrice(10005, 0, 1_000_000);
+          if (!isMC) {
+            quote = await electionModules[0].quoteCrossChainDeliveryPrice(43, 0, 2_000_000);
           }
           const castData = councils.map((council, index) => {
             const shouldWithdrawVote = candidates[council] === 'remove';
-            return isMotherchain
+            return isMC
               ? {
                   target: electionModules[index].address,
                   callData: shouldWithdrawVote
@@ -98,16 +96,16 @@ export function useCastVotes(
                         [candidates[council]],
                         [getVotingPowerByCouncil(council)?.power],
                       ]),
-                  value: quote.add(quote.mul(25).div(100)),
                   requireSuccess: true,
                 };
           });
 
           await multicall
             .connect(signer)
-            [isMotherchain ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
+            [isMC ? 'aggregate' : 'aggregate3']([...prepareBallotData, ...castData], {
               maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
               maxFeePerGas: utils.parseUnits('2', 'gwei'),
+              value: quote.add(quote.mul(25).div(100)),
             });
         } catch (error) {
           console.error(error);

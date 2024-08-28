@@ -29,10 +29,11 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
         {isLoading ? (
           <Spinner colorScheme="cyan" />
         ) : councilPeriod === '0' && schedule ? (
-          <Timer expiryTimestamp={schedule.nominationPeriodStartDate} />
+          <Timer expiryTimestamp={schedule.nominationPeriodStartDate} id="admin" />
         ) : (
           schedule?.votingPeriodStartDate && (
             <Timer
+              id="voting"
               expiryTimestamp={
                 councilPeriod === '1' ? schedule.votingPeriodStartDate : schedule.endDate
               }

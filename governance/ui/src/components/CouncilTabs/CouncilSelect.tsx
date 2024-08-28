@@ -10,7 +10,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
     <Menu>
       {({ isOpen }) => (
         <>
-          <MenuButton>
+          <MenuButton minW="300px">
             <Flex
               flexDirection="row"
               justifyContent="space-between"

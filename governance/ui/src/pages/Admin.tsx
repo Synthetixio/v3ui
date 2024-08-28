@@ -1,16 +1,20 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { utils } from 'ethers';
-import { useSigner } from '../queries/useWallet';
+import { useNetwork, useSigner } from '../queries/useWallet';
 import { getCouncilContract, SnapshotRecordContract } from '../utils/contracts';
 
 export default function Admin() {
   const signer = useSigner();
+  const { network } = useNetwork();
 
-  const allProxies = [
-    getCouncilContract('spartan'),
-    getCouncilContract('ambassador'),
-    getCouncilContract('treasury'),
-  ];
+  const allProxies =
+    network?.id === 2192 || network?.id === 10
+      ? [getCouncilContract('spartan', network?.id)]
+      : [
+          getCouncilContract('spartan'),
+          getCouncilContract('ambassador'),
+          getCouncilContract('treasury'),
+        ];
 
   return (
     <Flex direction="column" p="3" gap={4}>
@@ -167,7 +171,7 @@ export default function Admin() {
                 .connect(signer!)
                 .takeVotePowerSnapshot(
                   SnapshotRecordContract(
-                    13001,
+                    network?.id || 13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   {
@@ -193,13 +197,13 @@ export default function Admin() {
                 .connect(signer!)
                 .getVotePowerSnapshotId(
                   SnapshotRecordContract(
-                    13001,
+                    network?.id || 13001,
                     index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
                   )?.address,
                   electionId
                 );
               SnapshotRecordContract(
-                13001,
+                network?.id || 13011,
                 index === 0 ? 'spartan' : index === 1 ? 'ambassador' : 'treasury'
               )
                 ?.connect(signer!)

@@ -112,7 +112,7 @@ export const MyVotesSummary = ({
       }}
       rounded="base"
       w="100%"
-      maxW="300px"
+      maxW={{ base: '100px', xl: '300px' }}
       borderColor={isInMyVotesPage ? 'cyan.500' : 'gray.900'}
       borderWidth="1px"
       py={2}
@@ -141,7 +141,7 @@ export const MyVotesSummary = ({
           )}
           {isLoading && <Spinner colorScheme="cyan" />}
           {schedule && (councilPeriod === '1' || councilPeriod === '0') && (
-            <Timer expiryTimestamp={schedule.votingPeriodStartDate} />
+            <Timer expiryTimestamp={schedule.votingPeriodStartDate} id="summary" />
           )}
         </Text>
         {voteCard || (showCart && councilPeriod === '2') ? (

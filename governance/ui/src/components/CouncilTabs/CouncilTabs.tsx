@@ -1,4 +1,4 @@
-import { Box, Flex, Hide, Show, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -8,7 +8,7 @@ import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
 import { useGetUserDetailsQuery, useGetUserBallot, useNetwork } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
 import { useVoteContext } from '../../context/VoteContext';
 
@@ -54,6 +54,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
       <Hide above="xl">
         <Flex
           w="100%"
+          h="73px"
           bg="navy.700"
           borderBottomWidth="1px"
           borderStyle="solid"
@@ -66,14 +67,29 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           alignItems="center"
           zIndex={99}
         >
-          {/* If on my votes page, spartan council is active by default for navigation */}
-          <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
-          <MyVotesSummary
-            isLoading={isLoading}
-            councilPeriod={councilPeriod}
-            schedule={schedule}
-            isInMyVotesPage={false}
-          />
+          {isInMyVotesPage ? (
+            <Button
+              colorScheme="gray"
+              variant="outline"
+              leftIcon={<ArrowBackIcon />}
+              onClick={() => {
+                navigate('/councils/spartan');
+              }}
+            >
+              Back to Councils
+            </Button>
+          ) : (
+            // If on my votes page, spartan council is active by default for navigation
+            <>
+              <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
+              <MyVotesSummary
+                isLoading={isLoading}
+                councilPeriod={councilPeriod}
+                schedule={schedule}
+                isInMyVotesPage={false}
+              />
+            </>
+          )}
         </Flex>
       </Hide>
       <Show above="xl">

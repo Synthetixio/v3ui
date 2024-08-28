@@ -21,11 +21,8 @@ export function useGetEpochSchedule(council?: CouncilSlugs) {
       } as
         | {
             startDate: number;
-
             nominationPeriodStartDate: number;
-
             votingPeriodStartDate: number;
-
             endDate: number;
           }
         | undefined;

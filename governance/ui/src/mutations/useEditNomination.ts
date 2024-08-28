@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSigner } from '../queries/useWallet';
+import { useNetwork, useSigner } from '../queries/useWallet';
 import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
 import { useToast } from '@chakra-ui/react';
@@ -17,13 +17,14 @@ export default function useEditNomination({
   const signer = useSigner();
   const toast = useToast();
   const multicall = useMulticall();
+  const { network } = useNetwork();
   return useMutation({
     mutationFn: async () => {
       if (signer) {
         const txs = [];
         if ((nextNomination && currentNomination) || (!nextNomination && currentNomination)) {
           txs.push({
-            target: getCouncilContract(currentNomination).address,
+            target: getCouncilContract(currentNomination, network?.id).address,
             callData:
               getCouncilContract(currentNomination).interface.encodeFunctionData(
                 'withdrawNomination'
@@ -32,7 +33,7 @@ export default function useEditNomination({
         }
         if (nextNomination) {
           txs.push({
-            target: getCouncilContract(nextNomination).address,
+            target: getCouncilContract(nextNomination, network?.id).address,
             callData: getCouncilContract(nextNomination).interface.encodeFunctionData('nominate'),
           });
         }

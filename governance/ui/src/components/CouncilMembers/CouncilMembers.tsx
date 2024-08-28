@@ -12,7 +12,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { CouncilSlugs } from '../../utils/councils';
+import { calculateNextEpoch, CouncilSlugs } from '../../utils/councils';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import UserTableView from '../UserTableView/UserTableView';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -31,37 +31,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
 
-  const startDay =
-    councilSchedule?.startDate && new Date(councilSchedule?.startDate * 1000).getUTCDate();
-  const startMonth =
-    councilSchedule?.startDate &&
-    new Date(councilSchedule.startDate * 1000).toLocaleString('default', { month: 'short' });
-  const startYear =
-    councilSchedule?.startDate && new Date(councilSchedule.startDate * 1000).getUTCFullYear();
-
-  const endDay = councilSchedule?.endDate && new Date(councilSchedule.endDate * 1000).getUTCDate();
-  const endMonth =
-    councilSchedule?.endDate &&
-    new Date(councilSchedule.endDate * 1000).toLocaleString('default', {
-      month: 'short',
-    });
-  const endYear =
-    councilSchedule?.endDate && new Date(councilSchedule.endDate * 1000).getUTCFullYear();
-
-  const startQuarter =
-    councilSchedule?.endDate &&
-    Math.floor(new Date(councilSchedule.endDate * 1000).getMonth() / 3 + 1);
-
-  const endQuarter =
-    councilSchedule?.endDate &&
-    Math.floor(new Date(councilSchedule.endDate * 1000).getMonth() / 3 + 1);
-
-  const quarter =
-    startYear === endYear && startQuarter === endQuarter
-      ? `Q${startQuarter} ${startYear}`
-      : startYear === endYear
-        ? `Q${startQuarter} - ${endYear}`
-        : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
+  const nextEpoch = calculateNextEpoch(councilSchedule);
 
   const sortedNominees = useMemo(() => {
     // TODO @dev
@@ -101,10 +71,11 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
       <Flex p={{ base: 4, md: 6 }} justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
-            Election for {quarter}
+            Election for {nextEpoch.quarter}
           </Heading>
           <Text fontSize="xs" w="100%">
-            {startDay} {startMonth} {startYear} - {endDay} {endMonth} {endYear}
+            {nextEpoch.startDay} {nextEpoch.startMonth} {nextEpoch.startYear} - {nextEpoch.endDay}{' '}
+            {nextEpoch.endMonth} {nextEpoch.endYear}
           </Text>
         </Flex>
         <Flex justifyContent="flex-end">

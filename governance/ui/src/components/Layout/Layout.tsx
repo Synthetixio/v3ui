@@ -23,7 +23,6 @@ export function Layout() {
         <meta name="twitter:image" content="https://governance.synthetix.io/governance.png" />
         <meta name="twitter:url" content="https://governance.synthetix.io/governance.png" />
       </Head>
-
       <Flex minH="100vh" flexDir="column">
         <Header />
         <Outlet />
