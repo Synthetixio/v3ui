@@ -24,7 +24,7 @@ import { useParams } from '@snx-v3/useParams';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
 import { TokenIcon } from '..';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { MAINNET, useNetwork } from '@snx-v3/useBlockchain';
+import { MAINNET, SEPOLIA, useNetwork } from '@snx-v3/useBlockchain';
 import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
@@ -66,6 +66,7 @@ export const InitialDepositUi: FC<{
   const [step, setStep] = useState(0);
 
   const price = useTokenPrice(symbol);
+  const { network } = useNetwork();
 
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
@@ -182,7 +183,9 @@ export const InitialDepositUi: FC<{
               </Flex>
             </Flex>
           </BorderBox>
-          {symbol === 'SNX' && <MigrationBanner network={MAINNET} type="alert" />}
+          {symbol === 'SNX' && network && [MAINNET.id, SEPOLIA.id].includes(network.id) && (
+            <MigrationBanner network={network} type="alert" />
+          )}
           <Collapse
             in={
               collateralChange.gt(0) && !overAvailableBalance && collateralChange.gte(minDelegation)

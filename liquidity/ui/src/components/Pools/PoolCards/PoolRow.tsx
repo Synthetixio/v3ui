@@ -1,6 +1,13 @@
 import { Flex, Button, Text, Fade } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import {
+  MAINNET,
+  Network,
+  NetworkIcon,
+  SEPOLIA,
+  useNetwork,
+  useWallet,
+} from '@snx-v3/useBlockchain';
 import { wei } from '@synthetixio/wei';
 import { BigNumberish } from 'ethers';
 import { TokenIcon } from '../../TokenIcon';
@@ -235,7 +242,9 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
           </Flex>
         </Flex>
 
-        {network.id === 1 && <MigrationBanner network={network} type="banner" />}
+        {[MAINNET.id, SEPOLIA.id].includes(network.id) && (
+          <MigrationBanner network={network} type="banner" />
+        )}
       </Flex>
     </Fade>
   );
