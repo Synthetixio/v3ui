@@ -20,7 +20,7 @@ export const StepSuccess = ({
         <Image maxWidth="455px" width="100%" src="/Migrate Launch.png" alt="Synthetix V3 Launch" />
       </Flex>
 
-      <Alert rounded="base" colorScheme="green">
+      <Alert borderRadius="6px" colorScheme="green">
         <Flex bg="green.500" p="1" rounded="full" mr="3.5">
           <CheckIcon w="12px" h="12px" color="green.900" />
         </Flex>

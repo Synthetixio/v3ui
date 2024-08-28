@@ -64,7 +64,7 @@ export const RepayUi: FC<{
                     color="cyan.500"
                     fontWeight={700}
                   >
-                    &nbsp; Max
+                    &nbsp;Max
                   </Text>
                 )}
               </Text>

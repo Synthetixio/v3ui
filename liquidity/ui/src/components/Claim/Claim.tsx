@@ -58,7 +58,7 @@ const ClaimUi: FC<{
                 color="cyan.500"
                 fontWeight={700}
               >
-                &nbsp; Max
+                &nbsp;Max
               </Text>
             )}
           </Flex>
@@ -83,7 +83,7 @@ const ClaimUi: FC<{
         </Flex>
       </BorderBox>
       <Collapse in={debtChange.lte(0) && maxClaimble.gt(0)} animateOpacity>
-        <Alert colorScheme="green" mb="6">
+        <Alert colorScheme="green" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             Positive market performance has credited your position. Claim up to{' '}
@@ -105,7 +105,7 @@ const ClaimUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={debtChange.gt(0)} animateOpacity>
-        <Alert status="warning" mb="6">
+        <Alert status="warning" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             Assets will be available to withdraw 24 hours after your last interaction with this
@@ -114,7 +114,7 @@ const ClaimUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={debtChange.lte(0) && !isBase && maxDebt.gt(0)} animateOpacity>
-        <Alert colorScheme="blue" mb="6">
+        <Alert colorScheme="blue" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You can take an interest-free loan up to &nbsp;
@@ -138,7 +138,7 @@ const ClaimUi: FC<{
         in={!debtChange.gt(max) && debtChange.gt(0) && debtChange.gt(maxClaimble) && !isBase}
         animateOpacity
       >
-        <Alert colorScheme="info" mb="6">
+        <Alert colorScheme="info" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You are about to take a <Amount value={debtChange.sub(maxClaimble)} prefix="$" />{' '}

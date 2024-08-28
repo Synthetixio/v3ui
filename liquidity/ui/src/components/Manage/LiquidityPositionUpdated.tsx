@@ -30,7 +30,7 @@ export function LiquidityPositionUpdated({
           {subline}
         </Text>
       )}
-      <Alert colorScheme="green" rounded="base">
+      <Alert colorScheme="green" rounded="base" borderRadius="6px">
         <Flex bg="green.500" p="1" rounded="full" mr="2">
           <CheckIcon w="12px" h="12px" color="green.900" />
         </Flex>

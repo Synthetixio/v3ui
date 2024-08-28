@@ -39,7 +39,7 @@ export const StepExplain = ({
         </ListItem>
       </UnorderedList>
 
-      <Alert my={6} status="info">
+      <Alert my={6} status="info" borderRadius="6px">
         <AlertIcon />
         <Text fontSize="14px">
           Migration to V3 is currently only available on Ethereum Mainnet. Learn more about

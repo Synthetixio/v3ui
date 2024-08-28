@@ -26,7 +26,7 @@ export const WatchAccountBanner: FC = () => {
 
   if (!activeWallet) {
     return (
-      <Alert colorScheme="blue" my="4">
+      <Alert colorScheme="blue" my="4" borderRadius="6px">
         <AlertIcon />
         <Flex flex={1} gap={4} alignItems="center" justifyContent="space-between">
           <div>
@@ -54,7 +54,7 @@ export const WatchAccountBanner: FC = () => {
     !accounts.find((a) => a === accountId)
   ) {
     return (
-      <Alert colorScheme="blue" my="4">
+      <Alert colorScheme="blue" my="4" borderRadius="6px">
         <AlertIcon />
         <Flex>
           <Heading fontSize="16px">You are currently watching Account #{accountId}</Heading>

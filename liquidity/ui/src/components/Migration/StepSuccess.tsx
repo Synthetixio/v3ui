@@ -18,7 +18,7 @@ export const StepSuccess = ({
         Your <b>Collateral</b> has been migrated to Synthetix V3 System
       </Text>
 
-      <Alert rounded="base" colorScheme="green">
+      <Alert rounded="base" colorScheme="green" borderRadius="6px">
         <Flex bg="green.500" p="1" rounded="full" mr="3.5">
           <CheckIcon w="12px" h="12px" color="green.900" />
         </Flex>

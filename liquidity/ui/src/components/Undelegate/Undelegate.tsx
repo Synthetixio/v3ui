@@ -188,7 +188,7 @@ export const UndelegateUi: FC<{
         </Flex>
       </BorderBox>
       <Collapse in={isInputDisabled} animateOpacity>
-        <Alert mb={6} status="warning">
+        <Alert mb={6} status="warning" borderRadius="6px">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>Credit capacity reached</AlertTitle>
@@ -201,7 +201,7 @@ export const UndelegateUi: FC<{
       </Collapse>
 
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
-        <Alert mb={6} status="info">
+        <Alert mb={6} status="info" borderRadius="6px">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>
@@ -228,7 +228,7 @@ export const UndelegateUi: FC<{
         in={collateralChange.abs().gt(0) && isValidLeftover && !isRunning && maxWithdrawable?.gt(0)}
         animateOpacity
       >
-        <Alert status="info" mb="6">
+        <Alert status="info" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You already have <Amount value={maxWithdrawable} suffix={` ${symbol}`} /> unlocked.

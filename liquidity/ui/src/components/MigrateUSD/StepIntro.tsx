@@ -1,5 +1,14 @@
-import React from 'react';
-import { VStack, Text, Button, Flex } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import {
+  VStack,
+  Text,
+  Button,
+  Flex,
+  Collapse,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+} from '@chakra-ui/react';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Network } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
@@ -29,6 +38,12 @@ export const StepIntro = ({
   const { data: v3_sUSD } = useUSDProxyForChain(network);
   const { data: v3_balance } = useTokenBalance(v3_sUSD?.address, network);
 
+  useEffect(() => {
+    if (v2_balance && amount.eq(0)) {
+      setAmount(v2_balance);
+    }
+  }, [amount, setAmount, v2_balance]);
+
   return (
     <VStack gap={2.5}>
       <Text width="100%" textAlign="left" fontSize="14px">
@@ -39,21 +54,37 @@ export const StepIntro = ({
       <BorderBox width="100%" display="flex" flexDirection="column" p={3}>
         <Flex alignItems="center">
           <Flex flexDir="column" gap="1">
-            <BorderBox
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              py={1.5}
-              px={2.5}
-              width="fit-content"
-            >
-              <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-                <TokenIcon symbol="susd" width={16} height={16} />
-                V2 sUSD
-              </Text>
-            </BorderBox>
-            <Flex fontSize="xs" color="whiteAlpha.700" gap="1">
-              Balance: <Amount value={v2_balance} />
+            <Flex flexDir="column" gap="1">
+              <BorderBox
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                py={1.5}
+                px={2.5}
+                width="fit-content"
+              >
+                <Text display="flex" gap={2} alignItems="center" fontWeight="600">
+                  <TokenIcon symbol="susd" width={16} height={16} />
+                  V2 sUSD
+                </Text>
+              </BorderBox>
+              <Flex fontSize="xs" color="whiteAlpha.700" gap="1">
+                Balance: <Amount value={v2_balance} />
+                <Text
+                  as="span"
+                  cursor="pointer"
+                  onClick={() => {
+                    if (!v2_balance) {
+                      return;
+                    }
+                    setAmount(v2_balance);
+                  }}
+                  color={v2_balance?.eq(amount) ? 'gray.600' : 'cyan.500'}
+                  fontWeight={700}
+                >
+                  &nbsp;Max
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
           <Flex flexDir="column" flexGrow={1}>
@@ -98,6 +129,13 @@ export const StepIntro = ({
           </Flex>
         </Flex>
       </BorderBox>
+
+      <Collapse in={v2_balance?.lt(amount)} animateOpacity>
+        <Alert borderRadius="6px" status="error">
+          <AlertIcon />
+          <AlertDescription>You cannot convert more than your v2 sUSD balance</AlertDescription>
+        </Alert>
+      </Collapse>
 
       <Button
         isDisabled={v2_balance?.lt(amount) || amount.lte(0)}
