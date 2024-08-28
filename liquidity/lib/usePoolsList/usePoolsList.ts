@@ -41,7 +41,6 @@ export function usePool(networkId: number, poolId: string) {
   };
 }
 
-// TODO: Add 1 and 10 to support Mainnet and Optimism
 const supportedNetworks = [MAINNET.id, BASE_ANDROMEDA.id, ARBITRUM.id];
 
 async function fetchTorosPool() {
