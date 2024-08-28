@@ -99,7 +99,6 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
-          console.log(prepareBallotData, castData, getVotingPowerByCouncil('spartan')?.power);
 
           // await electionModules[0].prepareBallotWithSnapshot(
           //   SnapshotRecordContract(network.id, 'spartan')?.address,
