@@ -193,16 +193,16 @@ export default function MyVotes() {
               data-cy="cast-my-vote-button"
               size="md"
               isLoading={isPending}
-              isDisabled={period !== '2' || !councilToCastVote.length}
+              // isDisabled={period !== '2' || !councilToCastVote.length}
               onClick={async () => {
                 if (!network?.id) {
                   connect();
                 } else {
-                  if (councilToCastVote.length !== 3) {
-                    setShowConfirmation(true);
-                  } else {
-                    await mutateAsync();
-                  }
+                  // if (councilToCastVote.length !== 3) {
+                  setShowConfirmation(true);
+                  // } else {
+                  await mutateAsync();
+                  // }
                 }
               }}
             >

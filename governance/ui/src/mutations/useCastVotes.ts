@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
@@ -99,14 +99,32 @@ export function useCastVotes(
                   requireSuccess: true,
                 };
           });
+          console.log(prepareBallotData, castData, getVotingPowerByCouncil('spartan')?.power);
 
-          await multicall
-            .connect(signer)
-            [isMC ? 'aggregate' : 'aggregate3']([...prepareBallotData, ...castData], {
-              maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
-              maxFeePerGas: utils.parseUnits('2', 'gwei'),
+          // await electionModules[0].prepareBallotWithSnapshot(
+          //   SnapshotRecordContract(network.id, 'spartan')?.address,
+          //   activeWallet?.address
+          // );
+
+          // await electionModules[0].cast(
+          //   [candidates['spartan']],
+          //   [getVotingPowerByCouncil('spartan')?.power]
+          // );
+          //
+          // console.log(
+          //   [...prepareBallotData, ...castData],
+
+          //   !isMC && {
+          //     value: quote.add(quote.mul(25).div(100)),
+          //   }
+          // );
+
+          await multicall.connect(signer)[isMC ? 'aggregate' : 'aggregate3'](
+            [...prepareBallotData, ...castData],
+            !isMC && {
               value: quote.add(quote.mul(25).div(100)),
-            });
+            }
+          );
         } catch (error) {
           console.error(error);
           toast({

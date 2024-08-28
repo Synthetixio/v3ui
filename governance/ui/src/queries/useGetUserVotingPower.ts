@@ -5,6 +5,7 @@ import { SnapshotRecordContract, getCouncilContract, isMotherchain } from '../ut
 import { useProvider, useWallet } from './';
 import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
+import { sqrt } from '../utils/math';
 
 export function useGetUserVotingPower(council: CouncilSlugs) {
   const { network } = useNetwork();
@@ -16,7 +17,9 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
       if (!activeWallet || !provider || !network?.id) return;
 
       try {
-        const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
+        const electionModule = getCouncilContract(council, network.id).connect(
+          motherShipProvider(network.id)
+        );
         const isMC = process.env.CI === 'true' ? true : isMotherchain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
@@ -41,7 +44,8 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           : await SnapshotRecordContract(network.id, council)
               ?.connect(provider)
               .balanceOfOnPeriod(activeWallet.address, 1);
-        return { power: votingPower, isDeclared: false };
+        //  TODO @dev check when prod is live
+        return { power: sqrt(votingPower), isDeclared: false };
       } catch (error) {
         console.error('ERROR IS', { error });
         return { power: ethers.BigNumber.from(0), isDeclared: false };
@@ -49,6 +53,6 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
     },
     enabled: !!provider && !!activeWallet && !!network?.id,
     queryKey: ['votingPower', council.toString(), activeWallet?.address, network?.id],
-    staleTime: 60000,
+    staleTime: 900000,
   });
 }
