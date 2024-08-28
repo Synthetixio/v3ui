@@ -42,7 +42,8 @@ export default function MyVotes() {
             borderWidth="1px"
             borderStyle="solid"
             borderColor="gray.900"
-            w="735px"
+            mx={{ base: '6', xl: '0' }}
+            w={{ base: '100%', xl: '735px' }}
             flexDirection="column"
             position="relative"
           >
@@ -85,8 +86,8 @@ export default function MyVotes() {
             <Flex
               justifyContent="space-between"
               opacity={period !== '2' ? '0.2' : '1'}
-              mb="3"
               p="6"
+              pb="4"
             >
               <Heading fontSize="2xl">My Votes</Heading>
               <Heading fontSize="2xl" data-cy="my-votes-total-votes">
@@ -95,11 +96,11 @@ export default function MyVotes() {
               </Heading>
             </Flex>
             <Text
-              fontSize="xs"
+              fontSize="sm"
               color="gray.500"
               opacity={period !== '2' ? '0.2' : '1'}
               px="6"
-              mb="2"
+              mb="12"
             >
               You can cast 3 votes in one transaction. Continue voting if you want to add other
               nominee otherwise cast your vote to complete your voting.
@@ -130,7 +131,8 @@ export default function MyVotes() {
             borderWidth="1px"
             borderStyle="solid"
             borderColor="gray.900"
-            w="483px"
+            mx={{ base: '6', xl: '0' }}
+            w={{ base: '100%', xl: '483px' }}
             p="6"
             gap="3"
             flexDir="column"

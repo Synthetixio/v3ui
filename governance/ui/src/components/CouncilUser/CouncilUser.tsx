@@ -28,21 +28,21 @@ export default function CouncilUser({
           borderWidth="1px"
           borderStyle="solid"
           borderColor="gray.900"
-          w="8"
-          h="8"
+          w="10"
+          h="10"
           justifyContent="center"
           alignItems="center"
           position="relative"
         >
-          <Image src={council.image} w="6" h="6" />
+          <Image src={council.image} w="8" h="8" />
         </Flex>
         {user ? (
-          <ProfilePicture size={7} imageSrc={user?.pfpUrl} address={user?.address} ml="-3" />
+          <ProfilePicture size={9} imageSrc={user?.pfpUrl} address={user?.address} ml="-3" />
         ) : (
           <Box
             borderRadius="50%"
-            w="7"
-            h="7"
+            w="9"
+            h="9"
             borderWidth="1px"
             bg="navy.700"
             borderStyle="dashed"
@@ -52,14 +52,14 @@ export default function CouncilUser({
           />
         )}
       </Flex>
-      <Flex flexDir="column" mr="auto" ml="1">
+      <Flex flexDir="column" mr="auto" ml="3">
         {!hideName && (
           <>
             <Text fontSize="sm" fontWeight="bold">
               {council.title}
             </Text>
             <Text
-              fontSize="x-small"
+              fontSize="small"
               maxW="100px"
               textOverflow="ellipsis"
               whiteSpace="nowrap"

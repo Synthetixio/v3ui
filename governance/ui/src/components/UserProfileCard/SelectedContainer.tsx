@@ -20,7 +20,7 @@ export const SelectedContainer = ({
       <Show below="xl">
         <Modal isOpen={true} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent maxW="99vw" width="99vw" margin="2">
+          <ModalContent maxW="99vw" width="99vw" margin="4">
             <UserProfileCard
               walletAddress={selectedUserAddress}
               activeCouncil={activeCouncil}
@@ -34,6 +34,7 @@ export const SelectedContainer = ({
           position="sticky"
           top="105px"
           mt={6}
+          mb={24}
           walletAddress={selectedUserAddress}
           activeCouncil={activeCouncil}
           isOwn={isOwn}

@@ -23,7 +23,7 @@ it('Councils - Administration', () => {
   );
   cy.get('[data-cy="own-user-list-item"]').click();
   cy.get('[data-cy="edit-icon-user-profile-details"]').should('exist');
-  cy.get('[data-cy="user-profile-wallet-address"]').should('have.css', 'font-size', '12px');
+  cy.get('[data-cy="user-profile-wallet-address"]').should('have.css', 'font-size', '14px');
   cy.get('[data-cy="nominate-self-button-user-profile-details"]')
     .should('have.css', 'color', 'rgb(0, 0, 0)')
     .click();
@@ -59,5 +59,5 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="user-table-view-button-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]').should(
     'not.exist'
   );
-  cy.get('[data-cy="user-list-item-button-nomination"]').should('not.exist');
+  cy.get('[data-cy="user-list-item-button-nomination"]').contains('Nominate Self');
 });

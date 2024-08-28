@@ -32,7 +32,7 @@ export function useGetIsNominated(address?: string) {
             : councils[2],
       };
     },
-    enabled: utils.isAddress(address || ''),
+    enabled: utils.isAddress(address || '') && !!network?.id,
     staleTime: 900000,
   });
 }

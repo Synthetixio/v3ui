@@ -177,7 +177,7 @@ export function NetworkController() {
                 fontSize="xs"
                 userSelect="none"
                 data-cy="header-wallet-address-display"
-                maxW="80px"
+                maxW="120px"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 overflow="hidden"
@@ -192,46 +192,46 @@ export function NetworkController() {
             border="1px solid"
             rounded="base"
             borderColor="gray.900"
-            w="370px"
+            w="300px"
             _hover={{ bg: 'navy.700' }}
             backgroundColor="navy.700"
             opacity={1}
             p="4"
             flexDir="column"
-            gap="4"
+            gap="3"
           >
-            <Flex flexDir="column" w="100%" gap="2">
-              <Flex justifyContent="space-between">
+            <Flex w="100%" justifyContent="space-between">
+              <Flex flexDir="column">
                 <Text fontSize="14px" color="gray.500">
                   Connected with {walletsInfo?.label}
                 </Text>
-                <IconButton
-                  aria-label="disconnect wallet"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDisconnect();
-                  }}
-                  size="sm"
-                  icon={<DisconnectIcon />}
-                  variant="outline"
-                  colorScheme="gray"
-                ></IconButton>
+                <Text fontWeight={700} color="white" fontSize="16px">
+                  {prettyString(activeWallet?.address || '')}{' '}
+                  <Tooltip label={toolTipLabel} closeOnClick={false}>
+                    <CopyIcon
+                      ml="2"
+                      onClick={() => {
+                        navigator.clipboard.writeText(activeWallet?.address || '');
+                        setTooltipLabel('Copied');
+                        setTimeout(() => {
+                          setTooltipLabel('Copy');
+                        }, 10000);
+                      }}
+                    />
+                  </Tooltip>
+                </Text>
               </Flex>
-              <Text fontWeight={700} color="white" fontSize="16px">
-                {prettyString(activeWallet?.address || '')}{' '}
-                <Tooltip label={toolTipLabel} closeOnClick={false}>
-                  <CopyIcon
-                    ml="2"
-                    onClick={() => {
-                      navigator.clipboard.writeText(activeWallet?.address || '');
-                      setTooltipLabel('Copied');
-                      setTimeout(() => {
-                        setTooltipLabel('Copy');
-                      }, 10000);
-                    }}
-                  />
-                </Tooltip>
-              </Text>
+              <IconButton
+                aria-label="disconnect wallet"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDisconnect();
+                }}
+                icon={<DisconnectIcon />}
+                variant="outline"
+                colorScheme="gray"
+              ></IconButton>
+              {/* </Flex> */}
             </Flex>
             <Divider />
             <Flex alignItems="center" gap="4">
@@ -261,8 +261,8 @@ export function NetworkController() {
                     fontWeight={400}
                     fontSize="12px"
                     maxW="200px"
-                    textOverflow="ellipsis"
-                    whiteSpace="nowrap"
+                    textOverflow="wrap"
+                    // whiteSpace="nowrap"
                     overflow="hidden"
                   >
                     {user.about}
@@ -280,7 +280,7 @@ export function NetworkController() {
                 colorScheme="gray"
                 color="white"
                 w="100%"
-                size="sm"
+                size="md"
                 data-cy="edit-profile-button-link-header"
               >
                 Edit Profile

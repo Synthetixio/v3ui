@@ -12,7 +12,7 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
     <Box
       bg={councilPeriod === '1' ? 'orange.700' : councilPeriod === '2' ? 'teal.700' : 'gray.700'}
       rounded="base"
-      px={{ base: 1, lg: 2 }}
+      px={{ base: 1, lg: 3 }}
       py="1"
       w={{ base: '121px', md: '230px' }}
       alignItems="center"
@@ -25,20 +25,21 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
           : councilPeriod === '1'
             ? 'Voting starts:'
             : 'Voting ends:'}
+
+        {isLoading ? (
+          <Spinner colorScheme="cyan" />
+        ) : councilPeriod === '0' && schedule ? (
+          <Timer expiryTimestamp={schedule.nominationPeriodStartDate} />
+        ) : (
+          schedule?.votingPeriodStartDate && (
+            <Timer
+              expiryTimestamp={
+                councilPeriod === '1' ? schedule.votingPeriodStartDate : schedule.endDate
+              }
+            />
+          )
+        )}
       </Text>
-      {isLoading ? (
-        <Spinner colorScheme="cyan" />
-      ) : councilPeriod === '0' && schedule ? (
-        <Timer expiryTimestamp={schedule.nominationPeriodStartDate} />
-      ) : (
-        schedule?.votingPeriodStartDate && (
-          <Timer
-            expiryTimestamp={
-              councilPeriod === '1' ? schedule.votingPeriodStartDate : schedule.endDate
-            }
-          />
-        )
-      )}
     </Box>
   ) : null;
 }

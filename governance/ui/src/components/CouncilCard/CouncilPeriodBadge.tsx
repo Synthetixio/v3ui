@@ -35,12 +35,12 @@ function councilPeriodMetaData(councilPeriod: string | undefined) {
       };
     case '1':
       return {
-        color: 'orange.600',
+        color: 'orange.700',
         text: 'Nomination Open',
       };
     case '2':
       return {
-        color: 'teal.500',
+        color: 'teal.700',
         text: 'Voting Open',
       };
     default:
