@@ -5,3 +5,7 @@
 .blockies-rounded {
   border-radius: 50%;
 }
+
+.wcm-container {
+  z-index: 999999;
+}
