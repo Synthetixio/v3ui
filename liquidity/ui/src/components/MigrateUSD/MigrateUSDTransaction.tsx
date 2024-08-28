@@ -107,13 +107,13 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
       <Multistep
         width="100%"
         step={1}
-        title="Approve sUSD"
+        title="Approve sUSD transfer"
         status={{
           failed: txState.step === 1 && txState.status === 'error',
           success: txState.step > 1,
           loading: txState.step === 1 && txState.status === 'pending',
         }}
-        checkboxLabel="Approve unlimited"
+        checkboxLabel="Approve unlimited sUSD transfers to Synthetix"
         checkboxProps={{
           isChecked: infiniteApproval,
           onChange: (e) => setInfiniteApproval(e.target.checked),
@@ -124,12 +124,12 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
       <Multistep
         width="100%"
         step={2}
-        title="Migrate sUSD"
+        title="Convert sUSD"
         mb={4}
         mt={4}
         subtitle={
           <Text>
-            This will migrate <Amount value={amount} suffix={` v2 sUSD`} /> to v3 sUSD
+            This will convert <Amount value={amount} suffix={` v2 sUSD`} /> to v3 sUSD
           </Text>
         }
         status={{
@@ -154,9 +154,11 @@ export const MigrateUSDTransaction: Props = ({ onClose, amount, network, onBack 
         })()}
       </Button>
 
-      <Button variant="outline" colorScheme="gray" width="100%" onClick={onBack}>
-        Back
-      </Button>
+      {txState.status !== 'pending' && (
+        <Button variant="outline" colorScheme="gray" width="100%" onClick={onBack}>
+          Back
+        </Button>
+      )}
     </VStack>
   );
 };

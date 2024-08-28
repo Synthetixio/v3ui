@@ -27,21 +27,28 @@ export const StepExplain = ({
           Position on the Liquidity App
         </ListItem>
         <ListItem>
-          (optional) Conversion of your sUSD into V3 compatible sUSD. You can convert your sUSD at
-          anytime
+          (optional) Conversion of your sUSD into V3 compatible sUSD. You can
+          <Link
+            color="cyan.500"
+            target="_blank"
+            href={`${window.location.origin}/#/?convert=snxusd`}
+          >
+            &nbsp;convert your sUSD&nbsp;
+          </Link>
+          at anytime
         </ListItem>
       </UnorderedList>
 
       <Alert my={6} status="info">
         <AlertIcon />
-        <Text>
-          Migration to V3 is currently only available on Ethereum Mainnet. Learn more about &nbsp;
+        <Text fontSize="14px">
+          Migration to V3 is currently only available on Ethereum Mainnet. Learn more about
           <Link
             color="cyan.500"
             href="https://blog.synthetix.io/synthetix-v3-migration-treasury-council-initiates-transition/"
             isExternal
           >
-            migrating to V3.
+            &nbsp;migrating to V3.
           </Link>
         </Text>
       </Alert>

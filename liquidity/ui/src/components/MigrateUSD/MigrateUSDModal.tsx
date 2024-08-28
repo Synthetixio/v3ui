@@ -33,7 +33,7 @@ export const MigrateUSDModal: FC<Props> = ({ onClose, isOpen, network }) => {
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="navy.900" color="white">
+      <ModalContent mt="100px" borderWidth="1px" borderColor="gray.900" bg="navy.900" color="white">
         <Flex justifyContent="space-between" p={6} alignItems="center">
           <Heading fontSize="20px">Convert your sUSD to V3</Heading>
           <CloseButton onClick={onClose} color="gray" />

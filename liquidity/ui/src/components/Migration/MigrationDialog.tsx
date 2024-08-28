@@ -34,15 +34,15 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen, onSuccess
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay />
-      <ModalContent bg="navy.900" color="white">
+      <ModalContent mt="100px" borderWidth="1px" borderColor="gray.900" bg="navy.900" color="white">
         <Flex justifyContent="space-between" p={6} alignItems="center">
           <Heading fontSize="20px">Migrate to Synthetix V3</Heading>
           <CloseButton onClick={onClose} color="gray" />
         </Flex>
         <Flex width="100%" px={6}>
-          <Divider mb={4} colorScheme="gray" />
+          <Divider borderColor="gray.900" mb={6} colorScheme="gray" />
         </Flex>
-        <ModalBody>
+        <ModalBody pt={0} pb={6}>
           {step === 0 && <StepIntro onConfirm={() => setStep(1)} onClose={onClose} />}
           {step === 1 && <StepExplain onConfirm={() => setStep(2)} onClose={() => setStep(0)} />}
           {step === 2 && (

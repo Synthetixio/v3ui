@@ -7,6 +7,7 @@ import {
   Flex,
   Heading,
   Image,
+  Link,
   Text,
 } from '@chakra-ui/react';
 import { FC, useCallback, useState } from 'react';
@@ -75,47 +76,43 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
           <>
             <Divider my={4} />
 
-            <Flex
-              alignItems="center"
-              justifyContent={['center', 'space-between']}
-              w="100%"
-              flexWrap="wrap"
-              gap={4}
-            >
+            <Flex justifyContent={['center', 'space-between']} w="100%" flexWrap="wrap" gap={4}>
               <Image src="/Rocket.png" />
-              <Flex flexDir="column" gap={6}>
-                <Heading fontSize="lg" fontWeight={700} color="white">
+
+              <Flex mt={1} flex={1} alignItems="flex-start" flexDir="column" gap={6}>
+                <Heading fontSize="20px" fontWeight={700} color="white">
                   You have a <Amount value={data?.stakedBalance} /> SNX position on Synthetix V2
                 </Heading>
-                <Text fontSize="14px" color="gray.500">
+                <Text maxW="484px" fontSize="14px" color="gray.500">
                   Migrate your SNX to Synthetix V3 to earn fees from both V2 and V3 markets and much
                   more.
                 </Text>
               </Flex>
 
-              <Button
-                px={3}
-                py={2}
-                fontSize="sm"
-                fontWeight={700}
-                lineHeight="20px"
-                variant="outline"
-                alignContent="center"
-                borderWidth="1px"
-                borderColor="gray.900"
-                _hover={{ textTransform: 'none', opacity: 0.9 }}
-                borderRadius="4px"
-                color="white"
-                textAlign="center"
-                alignSelf="flex-end"
-                onClick={onClick}
-              >
-                {!activeWallet
-                  ? 'Connect'
-                  : currentNetwork?.id !== network.id
-                    ? 'Switch Network'
-                    : 'Migrate to V3'}
-              </Button>
+              <Flex mt="auto" alignItems="flex-center" gap={2}>
+                <Button
+                  fontSize="sm"
+                  fontWeight={700}
+                  colorScheme="gray"
+                  variant="outline"
+                  onClick={onClick}
+                >
+                  {!activeWallet
+                    ? 'Connect'
+                    : currentNetwork?.id !== network.id
+                      ? 'Switch Network'
+                      : 'Migrate to V3'}
+                </Button>
+                <Link
+                  href="https://blog.synthetix.io/synthetix-v3-migration-treasury-council-initiates-transition/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <Button fontSize="sm" fontWeight={700} variant="outline" colorScheme="gray">
+                    Learn More
+                  </Button>
+                </Link>
+              </Flex>
             </Flex>
           </>
         )}
@@ -126,7 +123,7 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
             <Text color="white" fontFamily="heading" fontSize="16px" lineHeight="24px">
               You have a <Amount value={data?.stakedBalance} /> SNX active staking position on V2.
               <Text onClick={onClick} as="span" color="cyan.500" cursor="pointer">
-                &nbsp; Migrate to V3
+                &nbsp;Migrate to V3
               </Text>
             </Text>
           </Alert>

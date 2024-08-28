@@ -55,7 +55,7 @@ function ColorMode() {
 
 export const App = () => {
   const TERMS_CONDITIONS_ACCEPTED =
-    sessionStorage.getItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED) === 'true';
+    localStorage.getItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED) === 'true';
 
   return (
     <>
