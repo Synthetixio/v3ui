@@ -27,13 +27,12 @@ export const onboard = init({
       email: 'info@synthetix.io',
     }),
     ledgerModule({
-      projectId: process.env.WC_PROJECT_ID ?? '',
+      projectId: process.env.WC_PROJECT_ID ?? '824270fbfdf10d95099e9702d3cb3741',
       walletConnectVersion: 2,
     }),
     walletConnectModule({
       version: 2,
-      projectId: process.env.WC_PROJECT_ID ?? '',
-      dappUrl: 'https://governance.synthetix.io',
+      projectId: process.env.WC_PROJECT_ID ?? '824270fbfdf10d95099e9702d3cb3741',
     }),
     gnosisModule(),
   ],
