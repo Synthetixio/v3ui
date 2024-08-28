@@ -42,10 +42,12 @@ export const StepSummary = ({
     cRatio: '0',
   });
 
-  const cRatio = wei(1)
-    .div(data?.cratio || wei(1))
-    .mul(100)
-    .toString(2);
+  const cRatio = data?.cratio.eq(0)
+    ? '0'
+    : wei(1)
+        .div(data?.cratio || wei(1))
+        .mul(100)
+        .toString(2);
 
   const handleSubmit = useCallback(() => {
     setTxSummary({
