@@ -57,12 +57,6 @@ export function Header() {
           </Show>
         </Flex>
 
-        <Link href="https://superbridge.app/snaxchain-mainnet" target="_blank">
-          <Button variant="outline" colorScheme="gray" mx="2" size={{ base: 'xs', md: 'md' }}>
-            Bridge ETH
-          </Button>
-        </Link>
-
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
         {!activeWallet && (

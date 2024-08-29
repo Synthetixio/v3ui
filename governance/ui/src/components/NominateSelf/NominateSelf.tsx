@@ -5,6 +5,7 @@ import {
   Heading,
   IconButton,
   Image,
+  Link,
   Spinner,
   Text,
 } from '@chakra-ui/react';
@@ -25,10 +26,11 @@ interface NominateSelfProps extends FlexProps {
 
 export default function NominateSelf({ activeCouncil, ...props }: NominateSelfProps) {
   const [selectedCouncil, setSelectedCouncil] = useState(activeCouncil);
+  const [showSnaxChainBanner, setShowSnaxChainBanner] = useState(false);
   const [sentTx, setSentTx] = useState(false);
   const navigate = useNavigate();
 
-  const { network } = useNetwork();
+  const { network, setNetwork } = useNetwork();
   const { activeWallet } = useWallet();
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
 
@@ -46,6 +48,13 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       navigate('/councils/' + activeCouncil);
     }
   }, [nominationInformation?.isNominated, navigate, activeCouncil, sentTx]);
+
+  useEffect(() => {
+    if (network?.id && !isMotherchain(network.id)) {
+      setShowSnaxChainBanner(true);
+    }
+  }, [network?.id]);
+
   return (
     <Flex
       mb="24"
@@ -62,7 +71,33 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
       data-cy="nominate-self-modal"
       {...props}
     >
-      {isSuccess && resultNomination ? (
+      {showSnaxChainBanner ? (
+        <>
+          <Flex justifyContent="space-between" w="100%">
+            <Heading fontSize="medium">Nomination only available on Snaxchain</Heading>
+            <IconButton
+              onClick={() => navigate(`/councils/${activeCouncil}?nominate=false`)}
+              size="xs"
+              aria-label="close button"
+              icon={<CloseIcon />}
+              variant="ghost"
+              colorScheme="whiteAlpha"
+              color="white"
+            />
+          </Flex>
+          <Text fontSize="sm" color="gray.500" mt="3">
+            Nomination is only available on Snaxchain. Please bridge ETH to Snaxchain and switch
+            your network to proceed.
+          </Text>
+          <Image src="/snaxchain-banner.png" mb="auto" mt="12" />
+          <Link href="https://superbridge.app/snaxchain-mainnet" target="_blank" w="100%">
+            <Button w="100%">Bridge Eth to Snaxchain</Button>
+          </Link>
+          <Button variant="outline" mt="2" colorScheme="gray" onClick={() => setNetwork(2192)}>
+            Switch Network
+          </Button>
+        </>
+      ) : isSuccess && resultNomination ? (
         <>
           <Flex justifyContent="space-between" w="100%">
             <Heading fontSize="medium">Nomination Successful</Heading>
@@ -251,9 +286,8 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
               }}
               mt="auto"
               data-cy="nominate-self-cast-nomination-button"
-              isDisabled={!isMotherchain(network?.id)}
             >
-              {isMotherchain(network?.id) ? 'Nominate Self' : 'Wrong Network'}
+              Nominate Self
             </Button>
           )}
         </>
