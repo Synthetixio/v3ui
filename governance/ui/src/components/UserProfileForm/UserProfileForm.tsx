@@ -72,7 +72,7 @@ export function UserProfileForm() {
       twitter: getValues('twitter')!,
       username: getValues('username')!,
     });
-    await mutation.mutateAsync({
+    await mutateAsync({
       about: getValues('about')!,
       address: user!.address,
       email: '',
