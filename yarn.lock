@@ -5443,7 +5443,6 @@ __metadata:
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useLocalStorage": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     "@tanstack/react-query-devtools": "npm:^5.8.3"
