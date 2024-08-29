@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import councils from '../../utils/councils';
-import { useNetwork, useWallet } from '../../queries/useWallet';
+import { useWallet } from '../../queries/useWallet';
 import { NetworkController } from './NetworkController';
 import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
-  const { network } = useNetwork();
   const { activeWallet, walletsInfo, connect } = useWallet();
   const { colorMode, toggleColorMode } = useColorMode();
 

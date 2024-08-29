@@ -178,7 +178,7 @@ export function NetworkController() {
           py="1"
           px="2"
           data-cy="header-wallet-address-button"
-          maxW="120px"
+          maxW={{ base: '42px', md: '200px' }}
           textOverflow="ellipsis"
           whiteSpace="nowrap"
           overflow="hidden"
@@ -193,7 +193,7 @@ export function NetworkController() {
               fontSize="xs"
               userSelect="none"
               data-cy="header-wallet-address-display"
-              maxW="120px"
+              maxW={{ base: '42px', md: '200px' }}
               textOverflow="ellipsis"
               whiteSpace="nowrap"
               overflow="hidden"

@@ -6,6 +6,7 @@ import {
   IconButton,
   Input,
   Modal,
+  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Show,
@@ -27,7 +28,7 @@ export function UserProfileForm() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { activeWallet } = useWallet();
   const { data: user, isLoading } = useGetUserDetailsQuery(activeWallet?.address);
-  const mutation = useUpdateUserDetailsMutation();
+  const { mutateAsync, isPending } = useUpdateUserDetailsMutation();
   const {
     isOpen: blockerIsOpen,
     onClose: onBlockerClose,
@@ -243,7 +244,7 @@ export function UserProfileForm() {
             </Flex>
             <Show below="xl">
               <Button
-                isLoading={mutation.isPending}
+                isLoading={isPending}
                 w="100%"
                 onClick={() => {
                   handleOnFormSave();
@@ -283,7 +284,7 @@ export function UserProfileForm() {
                     />
                     <UserProfileEditPreview
                       activeWallet={activeWallet?.address}
-                      isPending={mutation.isPending}
+                      isPending={isPending}
                       userData={userData}
                       isDirty={formState.isDirty}
                     />
@@ -297,7 +298,7 @@ export function UserProfileForm() {
               <Heading fontSize="20px">Preview</Heading>
               <UserProfileEditPreview
                 activeWallet={activeWallet?.address}
-                isPending={mutation.isPending}
+                isPending={isPending}
                 userData={userData}
                 isDirty={formState.isDirty}
               />
@@ -307,7 +308,14 @@ export function UserProfileForm() {
         {blocker.state === 'blocked' && (
           <Modal isOpen={blockerIsOpen} onClose={onBlockerClose}>
             <ModalOverlay />
+
             <ModalContent maxW="500px" w="100%">
+              <ModalCloseButton
+                onClick={() => {
+                  blocker.reset();
+                  onBlockerClose();
+                }}
+              />
               <Flex
                 flexDirection="column"
                 bg="navy.700"
@@ -337,9 +345,37 @@ export function UserProfileForm() {
                 <Text fontSize="sm" color="gray.500" mb="auto">
                   You have unsaved changes. Do you want to leave without saving?
                 </Text>
-                <Button onClick={() => blocker.proceed()}>Leave without Saving</Button>
-                <Button variant="outline" colorScheme="gray" onClick={() => blocker.reset()}>
-                  Keep Editing
+                <Button
+                  isLoading={isPending}
+                  onClick={async () => {
+                    await mutateAsync({
+                      about: getValues('about')!,
+                      address: user!.address,
+                      email: '',
+                      associatedAddresses: '',
+                      bannerImageId: '',
+                      bannerUrl: '',
+                      delegationPitch: getValues('delegationPitch')!,
+                      discord: getValues('discord')!,
+                      ens: '',
+                      github: getValues('github')!,
+                      bannerThumbnailUrl: '',
+                      pfpUrl: getValues('pfpUrl')!,
+                      website: '',
+                      pfpImageId: '',
+                      twitter: getValues('twitter')!,
+                      pfpThumbnailUrl: '',
+                      notificationPreferences: '',
+                      type: '',
+                      username: getValues('username')!,
+                    });
+                    blocker.proceed();
+                  }}
+                >
+                  Save Changes and Leave
+                </Button>
+                <Button variant="outline" colorScheme="gray" onClick={() => blocker.proceed()}>
+                  Leave without Saving
                 </Button>
               </Flex>
             </ModalContent>
