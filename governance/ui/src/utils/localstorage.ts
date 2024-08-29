@@ -1,7 +1,7 @@
 import { VoteState } from '../context/VoteContext';
 import { CouncilSlugs } from './councils';
 
-const key = 'voteSelection';
+export const localStorageKey = 'voteSelection';
 
 export const setCandidate = (
   candidate?: string,
@@ -12,7 +12,7 @@ export const setCandidate = (
   try {
     if (!candidate || !council || !network || !epochId) return;
 
-    const parsedSelection = JSON.parse(localStorage.getItem(key) || '{}');
+    const parsedSelection = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
     if (!parsedSelection[epochId]) {
       parsedSelection[epochId] = {};
@@ -23,7 +23,7 @@ export const setCandidate = (
 
     parsedSelection[epochId][network][council] = candidate;
 
-    localStorage.setItem(key, JSON.stringify(parsedSelection));
+    localStorage.setItem(localStorageKey, JSON.stringify(parsedSelection));
   } catch (error) {
     console.error('Tried to add address but wasn’t possible', candidate, error);
   }

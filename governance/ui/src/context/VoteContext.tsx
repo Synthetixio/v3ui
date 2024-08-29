@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../queries';
-import { removeCandidate, setCandidate } from '../utils/localstorage';
+import { localStorageKey, removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
   spartan: string | undefined;
@@ -29,7 +29,7 @@ type Action = {
 const initialState = (chainId?: string, epochId?: string) => {
   if (!epochId || !chainId) return {};
 
-  const parsedState = JSON.parse(localStorage.getItem('voteSelection') || '{}');
+  const parsedState = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
   return {
     [epochId]: {
