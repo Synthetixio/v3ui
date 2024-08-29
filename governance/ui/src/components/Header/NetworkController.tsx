@@ -21,7 +21,6 @@ import {
   SNAXTESTNET,
 } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
