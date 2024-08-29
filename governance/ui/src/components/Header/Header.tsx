@@ -57,14 +57,13 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        <Link href="/#/admin">Admin</Link>
-        {network?.id === 2192 && (
-          <Link href="https://superbridge.app/snaxchain-mainnet" target="_blank">
-            <Button variant="outline" colorScheme="gray" mx="2">
-              Bridge ETH
-            </Button>
-          </Link>
-        )}
+
+        <Link href="https://superbridge.app/snaxchain-mainnet" target="_blank">
+          <Button variant="outline" colorScheme="gray" mx="2" size={{ base: 'xs', md: 'md' }}>
+            Bridge ETH
+          </Button>
+        </Link>
+
         <PeriodCountdown council={councils[0].slug} />
         {activeWallet && <NetworkController />}
         {!activeWallet && (

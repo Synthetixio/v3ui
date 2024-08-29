@@ -10,7 +10,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
     <Menu>
       {({ isOpen }) => (
         <>
-          <MenuButton minW="300px">
+          <MenuButton maxWidth="278px" w="100%">
             <Flex
               flexDirection="row"
               justifyContent="space-between"
@@ -22,6 +22,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               borderColor="gray.900"
               alignItems="center"
               data-cy="menu-button-flex-council-select"
+              w="100%"
             >
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
