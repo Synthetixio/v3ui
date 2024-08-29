@@ -214,7 +214,7 @@ export function UserProfileForm() {
                     mr="1"
                     fontSize="14px"
                     fontWeight="400"
-                    maxW="300px"
+                    maxW="350px"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
                     overflow="hidden"
