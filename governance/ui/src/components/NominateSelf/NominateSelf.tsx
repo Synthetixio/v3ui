@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import useNominateSelf from '../../mutations/useNominateSelf';
 import { useNavigate } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
-import { useGetIsNominated, useGetUserDetailsQuery } from '../../queries';
+import { useGetCurrentPeriod, useGetIsNominated, useGetUserDetailsQuery } from '../../queries';
 import { useNetwork, useWallet } from '../../queries/useWallet';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
@@ -33,21 +33,24 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
   const { network, setNetwork } = useNetwork();
   const { activeWallet } = useWallet();
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
+  const { data: currentPeriod } = useGetCurrentPeriod(activeCouncil);
 
   const {
     mutateAsync,
     isPending,
     isSuccess,
-
     data: resultNomination,
   } = useNominateSelf(selectedCouncil, activeWallet?.address);
   const { data } = useGetUserDetailsQuery(activeWallet?.address);
 
+  const isInNominationOrVoting =
+    currentPeriod === '1' ? true : currentPeriod === '2' ? true : false;
+
   useEffect(() => {
-    if (nominationInformation?.isNominated && !sentTx) {
+    if ((nominationInformation?.isNominated && !sentTx) || !isInNominationOrVoting) {
       navigate('/councils/' + activeCouncil);
     }
-  }, [nominationInformation?.isNominated, navigate, activeCouncil, sentTx]);
+  }, [nominationInformation?.isNominated, navigate, activeCouncil, sentTx, isInNominationOrVoting]);
 
   useEffect(() => {
     if (network?.id && !isMotherchain(network.id)) {

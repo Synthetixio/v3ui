@@ -27,7 +27,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
                 fontFamily="heading"
-                fontSize={{ base: 'xs', md: 'md' }}
+                fontSize={{ base: 'sm', md: 'md' }}
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
@@ -47,7 +47,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               borderRadius="3px"
               borderColor="gray.900"
               flexDir="column"
-              mt="12px"
+              mt="3"
               w="100%"
               h="100%"
             >
@@ -61,10 +61,10 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
                     <CouncilImage imageUrl={council.image} bg="none" />
                     <Text
                       fontFamily="heading"
-                      fontSize={{ base: 'xs', md: 'medium' }}
+                      fontSize={{ base: 'sm', md: 'medium' }}
                       lineHeight="28px"
                       fontWeight={700}
-                      mr="12px"
+                      mr="14px"
                       mt="2px"
                     >
                       {council.title}

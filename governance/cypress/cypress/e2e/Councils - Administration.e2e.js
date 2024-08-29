@@ -42,7 +42,7 @@ it('Councils - Administration', () => {
   cy.viewport(600, 500);
   cy.visit('#/councils');
   cy.get('[data-cy="my-votes-summary-text"]').should('have.css', 'font-size', '14px');
-  cy.get('[data-cy="council-select-mobile"]').should('have.css', 'font-size', '16px');
+  cy.get('[data-cy="council-select-mobile"]').should('have.css', 'font-size', '14px');
   cy.get('[data-cy="menu-button-flex-council-select"]').should('have.css', 'height', '48px');
   cy.get('[data-cy="my-votes-button"]').should('have.css', 'height', '48px');
 });

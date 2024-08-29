@@ -178,7 +178,7 @@ export function NetworkController() {
           py="1"
           px="2"
           data-cy="header-wallet-address-button"
-          maxW={{ base: '42px', md: '200px' }}
+          maxW={{ base: '130px', md: '200px' }}
           textOverflow="ellipsis"
           whiteSpace="nowrap"
           overflow="hidden"
@@ -193,7 +193,7 @@ export function NetworkController() {
               fontSize="xs"
               userSelect="none"
               data-cy="header-wallet-address-display"
-              maxW={{ base: '42px', md: '200px' }}
+              maxW={{ base: '200px', md: '200px' }}
               textOverflow="ellipsis"
               whiteSpace="nowrap"
               overflow="hidden"
@@ -249,15 +249,15 @@ export function NetworkController() {
               {/* </Flex> */}
             </Flex>
             <Divider />
-            <Flex alignItems="center" gap="4" maxW="150px">
+            <Flex alignItems="center" gap="4" maxW="200px">
               <Blockies seed={activeWallet?.address || ''} scale={7} className="blockies-rounded" />
 
               {user?.username ? (
-                <Flex flexDir="column" maxW="150px">
+                <Flex flexDir="column" maxW="200px">
                   <Text
                     fontSize="16px"
                     fontWeight={700}
-                    maxW="150px"
+                    maxW="200px"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
                     overflow="hidden"
@@ -267,8 +267,8 @@ export function NetworkController() {
                   <Text
                     fontWeight={400}
                     fontSize="12px"
-                    maxW="150px"
-                    textOverflow="wrap"
+                    maxW="200px"
+                    textOverflow="ellipsis"
                     whiteSpace="nowrap"
                     overflow="hidden"
                   >
