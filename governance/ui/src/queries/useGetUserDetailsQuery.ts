@@ -110,9 +110,6 @@ export async function getUserDetails<T extends string | string[]>(
         return {
           ...data,
           delegationPitch: foundPitch,
-          // foundPitch.find(
-          // (pitch) => pitch[0]?.address.toLowerCase() === data.address.toLowerCase()
-          // )[0]?.delegationPitch || '',
         };
       } catch (error) {
         console.error(error);
