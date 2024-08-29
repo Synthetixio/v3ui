@@ -77,24 +77,26 @@ export default function MyVoteRow({
           onClick={(e) => {
             e.stopPropagation();
 
-            if (!!ballot?.votedCandidates[0]) {
-              dispatch({
-                type: councilSlug.toUpperCase(),
-                payload: {
-                  action: 'remove',
-                  network: voteAddressState,
-                  epochId,
-                },
-              });
-            } else {
-              dispatch({
-                type: councilSlug.toUpperCase(),
-                payload: {
-                  action: networkForState === 'remove' ? 'remove' : undefined,
-                  network: voteAddressState,
-                  epochId,
-                },
-              });
+            if (network?.id) {
+              if (!!ballot?.votedCandidates[0]) {
+                dispatch({
+                  type: councilSlug.toUpperCase(),
+                  payload: {
+                    action: 'remove',
+                    network: network.id.toString(),
+                    epochId,
+                  },
+                });
+              } else {
+                dispatch({
+                  type: councilSlug.toUpperCase(),
+                  payload: {
+                    action: networkForState === 'remove' ? 'remove' : undefined,
+                    network: network.id.toString(),
+                    epochId,
+                  },
+                });
+              }
             }
           }}
         />
