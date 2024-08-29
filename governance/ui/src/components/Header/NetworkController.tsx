@@ -9,8 +9,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  MenuOptionGroup,
-  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -35,9 +33,6 @@ import { useGetUserDetailsQuery } from '../../queries';
 
 const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
   (network) => supportedNetworks.includes(network.id)
-);
-const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet).filter((network) =>
-  supportedNetworks.includes(network.id)
 );
 
 export function NetworkController() {
@@ -128,38 +123,6 @@ export function NetworkController() {
               }}
             >
               <NetworkIcon networkId={id} size="20px" />
-              <Text variant="nav" ml={2}>
-                {label}
-              </Text>
-            </MenuItem>
-          ))}
-
-          {showTestnets && <Divider color="gray.900" />}
-
-          <MenuOptionGroup>
-            <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
-              <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
-                Show Testnets
-              </Text>
-              <Switch
-                mr={2}
-                size="sm"
-                color="gray.900"
-                colorScheme="gray"
-                isChecked={showTestnets}
-                onChange={() => setShowTestnets(!showTestnets)}
-                data-cy="network-controller-switch"
-              />
-            </Flex>
-          </MenuOptionGroup>
-
-          {(showTestnets ? testnets : []).map(({ id, preset, label }) => (
-            <MenuItem
-              key={`${id}-${preset}`}
-              onClick={() => setNetwork(id)}
-              data-cy={`network-menu-button-${id}`}
-            >
-              <NetworkIcon filter="grayscale(1)" networkId={id} size="20px" />
               <Text variant="nav" ml={2}>
                 {label}
               </Text>
