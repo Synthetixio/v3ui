@@ -5,9 +5,10 @@ import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext } from '../../context/VoteContext';
-import { useNetwork } from '../../queries';
+import { useGetCurrentPeriod, useNetwork } from '../../queries';
 import { voteCardState } from '../../state/vote-card';
 import { useRecoilState } from 'recoil';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 interface MyVotesSummary {
   isLoading: boolean;
@@ -33,8 +34,9 @@ export const MyVotesSummary = ({
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
   const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const { data: epochId } = useGetCurrentPeriod('spartan');
   const { state } = useVoteContext();
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString(), 'spartan');
   const [timer, setTimer] = useState<any>();
   const [isLongpress, setIsLongpress] = useState(false);
 
@@ -132,7 +134,7 @@ export const MyVotesSummary = ({
           {councilPeriod === '2' && (
             <>
               {
-                Object.values(state[networkForState] ? state[networkForState] : {}).filter(
+                Object.values(typeof networkForState !== 'string' ? networkForState : {}).filter(
                   (vote) => !!vote
                 ).length
               }
@@ -147,7 +149,7 @@ export const MyVotesSummary = ({
         {voteCard || (showCart && councilPeriod === '2') ? (
           <MyVotesBox
             closeCart={() => setShowCart(false)}
-            votes={state[networkForState]}
+            votes={typeof networkForState !== 'string' ? networkForState : undefined}
             isMouseOnDropdown={(val: boolean) => setMouseOnDropdown(val)}
             period={councilPeriod}
           />

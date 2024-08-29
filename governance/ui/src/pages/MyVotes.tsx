@@ -25,24 +25,27 @@ import { useVoteContext } from '../context/VoteContext';
 import { useState } from 'react';
 import { CouncilImage } from '../components/CouncilImage';
 import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
+import { getVoteSelectionState } from '../utils/localstorage';
 
 export default function MyVotes() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { onClose } = useDisclosure();
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
+  const { data: epochId } = useGetCurrentPeriod('spartan');
   const { network } = useNetwork();
   const { connect } = useWallet();
-  const networkForState = network?.id || 2192;
-
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
-  const councilToCastVote = Object.entries(state[networkForState] || {})
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+  const stateFromCouncil = typeof networkForState !== 'string' ? networkForState : {};
+  const councilToCastVote = Object.entries(stateFromCouncil)
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, state[networkForState] || {});
+  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncil);
   const navigate = useNavigate();
 
   return (
@@ -107,8 +110,12 @@ export default function MyVotes() {
             >
               <Heading fontSize="2xl">My Votes</Heading>
               <Heading fontSize="2xl" data-cy="my-votes-total-votes">
-                {Object.values(state[networkForState] || {}).filter((council) => !!council).length}/
-                {councils.length}
+                {
+                  Object.values(typeof networkForState !== 'string' ? networkForState : {}).filter(
+                    (council) => !!council
+                  ).length
+                }
+                /{councils.length}
               </Heading>
             </Flex>
             <Text
@@ -254,8 +261,8 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {state[networkForState] ? (
-                    <ProfilePicture address={state[networkForState][council.slug]} size={9} />
+                  {voteAddressState ? (
+                    <ProfilePicture address={voteAddressState} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
                   )}

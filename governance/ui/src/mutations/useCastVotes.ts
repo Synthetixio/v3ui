@@ -1,5 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useGetUserVotingPower, useNetwork, useSigner, useWallet } from '../queries';
+import {
+  useGetCurrentPeriod,
+  useGetUserVotingPower,
+  useNetwork,
+  useSigner,
+  useWallet,
+} from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
 import { BigNumber } from 'ethers';
@@ -17,6 +23,7 @@ export function useCastVotes(
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { dispatch } = useVoteContext();
+  const { data: epochId } = useGetCurrentPeriod('spartan');
   const multicall = useMulticall();
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
@@ -130,11 +137,11 @@ export function useCastVotes(
         shouldWithdrawVote
           ? dispatch({
               type: council.toUpperCase(),
-              payload: { action: undefined, network: network!.id.toString() },
+              payload: { action: undefined, network: network!.id.toString(), epochId },
             })
           : dispatch({
               type: council.toUpperCase(),
-              payload: { action: candidates[council], network: network!.id.toString() },
+              payload: { action: candidates[council], network: network!.id.toString(), epochId },
             });
       });
       await Promise.all(
