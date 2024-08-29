@@ -86,10 +86,14 @@ export const StepSummary = ({
       </Box>
 
       <Text fontSize="12px" fontWeight="400" color="gray" as="i">
-        Warning: if your c-ratio is below V3 liquidation ratio (300%), your account will be{' '}
-        <Text as="span" color="cyan.500">
+        Warning: if your c-ratio is below V3 liquidation ratio (105%), your account will be{' '}
+        <Link
+          target="_blank"
+          color="cyan.500"
+          href="https://docs.synthetix.io/v/v3/for-liquidity-integrators/liquidity-positions/position-liquidations"
+        >
           liquidated
-        </Text>{' '}
+        </Link>{' '}
         during the migration. We recommend to commence this migration only if you have a healthy
         c-ratio.
       </Text>
@@ -131,9 +135,9 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.collateral?.sub(data?.balance)?.toString(2)} SNX &nbsp;
+              {data?.collateral?.sub(data?.balance)?.toString(2)} SNX
               {snxPrice?.gt(0) && (
-                <>(${snxPrice.mul(data?.collateral?.sub(data?.balance)).toString(2)})</>
+                <>&nbsp;(${snxPrice.mul(data?.collateral?.sub(data?.balance)).toString(2)})</>
               )}
             </Text>
           </HStack>
@@ -145,14 +149,7 @@ export const StepSummary = ({
                 label={
                   <Text textAlign="left">
                     Your debt amount will be the same on V3. Debt is however now determined by the
-                    collateral deposited. Learn more about the{' '}
-                    <Link
-                      target="_blank"
-                      color="cyan.500"
-                      href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
-                    >
-                      V3 system.
-                    </Link>
+                    collateral deposited.
                   </Text>
                 }
               >

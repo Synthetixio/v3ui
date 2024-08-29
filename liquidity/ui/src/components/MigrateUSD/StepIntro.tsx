@@ -97,7 +97,6 @@ export const StepIntro = ({
               }}
               value={amount}
               onChange={(val) => setAmount(val)}
-              max={v2_balance}
               min={ZEROWEI}
             />
           </Flex>

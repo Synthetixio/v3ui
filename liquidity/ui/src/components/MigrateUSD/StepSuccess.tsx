@@ -20,7 +20,7 @@ export const StepSuccess = ({
   return (
     <VStack spacing={6}>
       <Text width="100%" textAlign="left" fontSize="14px">
-        Your <b>V2 sUSD</b> has been converted to V3 sUSD
+        Your <b>V2 sUSD</b> has been converted to <b>V3 sUSD</b>
       </Text>
 
       <Alert rounded="base" colorScheme="green" borderRadius="6px">

@@ -43,7 +43,7 @@ export function Multistep({
       rounded="lg"
       mt="6"
       p="4"
-      border="2px solid"
+      border="1px solid"
       transitionProperty="border-color"
       transitionDuration="normal"
       borderColor={statusColor(status)}

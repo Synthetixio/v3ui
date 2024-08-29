@@ -38,7 +38,7 @@ export const StepSuccess = ({
           },
           {
             label: 'C-ratio',
-            value: cRatio,
+            value: `${cRatio}%`,
           },
           {
             label: 'Account Id',
