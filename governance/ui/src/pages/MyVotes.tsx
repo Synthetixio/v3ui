@@ -21,7 +21,7 @@ import { useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
-import { useVoteContext } from '../context/VoteContext';
+import { useVoteContext, VoteStateForNetwork } from '../context/VoteContext';
 import { useState } from 'react';
 import { CouncilImage } from '../components/CouncilImage';
 import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
@@ -41,11 +41,13 @@ export default function MyVotes() {
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-  const stateFromCouncil = typeof networkForState !== 'string' ? networkForState : {};
-  const councilToCastVote = Object.entries(stateFromCouncil)
+  const stateFromCouncils = (
+    typeof networkForState !== 'string' ? networkForState : {}
+  ) as VoteStateForNetwork;
+  const councilToCastVote = Object.entries(stateFromCouncils)
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncil);
+  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
   const navigate = useNavigate();
 
   return (
@@ -110,12 +112,8 @@ export default function MyVotes() {
             >
               <Heading fontSize="2xl">My Votes</Heading>
               <Heading fontSize="2xl" data-cy="my-votes-total-votes">
-                {
-                  Object.values(typeof networkForState !== 'string' ? networkForState : {}).filter(
-                    (council) => !!council
-                  ).length
-                }
-                /{councils.length}
+                {Object.values(stateFromCouncils).filter((council) => !!council).length}/
+                {councils.length}
               </Heading>
             </Flex>
             <Text

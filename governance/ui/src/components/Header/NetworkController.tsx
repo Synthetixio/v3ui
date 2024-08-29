@@ -40,7 +40,6 @@ export function NetworkController() {
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-  const [showTestnets, setShowTestnets] = useLocalStorage('governance-show-testnets', false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
