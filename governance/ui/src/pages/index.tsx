@@ -8,7 +8,6 @@ import { RouterProvider, Navigate, createHashRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Councils from './Councils';
-import Admin from './Admin';
 import MyVotes from './MyVotes';
 import { Layout } from '../components/Layout';
 import { Web3OnboardProvider } from '@web3-onboard/react';
@@ -24,7 +23,6 @@ const router = createHashRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <App /> },
-      { path: '/admin', element: <Admin /> },
       { path: '/councils/:council', element: <Councils /> },
       { path: '/councils', element: <Navigate to="/councils/spartan" /> },
       { path: '/my-votes', element: <MyVotes /> },

@@ -10,7 +10,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
     <Menu>
       {({ isOpen }) => (
         <>
-          <MenuButton minW="300px">
+          <MenuButton w="100%" minW="240px" maxW={{ base: '278px', lg: '350px' }}>
             <Flex
               flexDirection="row"
               justifyContent="space-between"
@@ -22,11 +22,12 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               borderColor="gray.900"
               alignItems="center"
               data-cy="menu-button-flex-council-select"
+              w="100%"
             >
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
                 fontFamily="heading"
-                fontSize="md"
+                fontSize={{ base: 'sm', md: 'md' }}
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
@@ -46,7 +47,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               borderRadius="3px"
               borderColor="gray.900"
               flexDir="column"
-              mt="12px"
+              mt="3"
               w="100%"
               h="100%"
             >
@@ -60,10 +61,10 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
                     <CouncilImage imageUrl={council.image} bg="none" />
                     <Text
                       fontFamily="heading"
-                      fontSize="18px"
+                      fontSize={{ base: 'sm', md: 'medium' }}
                       lineHeight="28px"
                       fontWeight={700}
-                      mr="12px"
+                      mr="14px"
                       mt="2px"
                     >
                       {council.title}

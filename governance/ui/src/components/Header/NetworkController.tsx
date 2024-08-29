@@ -4,14 +4,11 @@ import {
   Divider,
   Flex,
   IconButton,
-  Image,
   Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  MenuOptionGroup,
-  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -24,7 +21,6 @@ import {
   SNAXTESTNET,
 } from '@snx-v3/useBlockchain';
 import { prettyString } from '@snx-v3/format';
-import { useLocalStorage } from '@snx-v3/useLocalStorage';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip } from '@snx-v3/Tooltip';
@@ -37,16 +33,12 @@ import { useGetUserDetailsQuery } from '../../queries';
 const mainnets = NETWORKS.filter(({ isSupported, isTestnet }) => isSupported && !isTestnet).filter(
   (network) => supportedNetworks.includes(network.id)
 );
-const testnets = NETWORKS.filter(({ isTestnet }) => isTestnet).filter((network) =>
-  supportedNetworks.includes(network.id)
-);
 
 export function NetworkController() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [toolTipLabel, setTooltipLabel] = useState('Copy');
   const { activeWallet, walletsInfo, connect, disconnect } = useWallet();
   const { network: activeNetwork, setNetwork } = useNetwork();
-  const [showTestnets, setShowTestnets] = useLocalStorage('governance-show-testnets', false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
@@ -104,18 +96,19 @@ export function NetworkController() {
                 try {
                   setNetwork(id);
                 } catch (error) {
+                  const snaxChain = id === 2192 ? SNAX : SNAXTESTNET;
                   await (window as any).ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                       {
-                        chainId: id === 2192 ? SNAX.hexId : SNAXTESTNET.hexId,
-                        chainName: id === 2192 ? SNAX.label : SNAXTESTNET.label,
+                        chainId: snaxChain.hexId,
+                        chainName: snaxChain.label,
                         nativeCurrency: {
                           name: 'ETH',
                           symbol: 'ETH',
                           decimals: 18,
                         },
-                        rpcUrls: [id === 2192 ? SNAX.rpcUrl() : SNAXTESTNET.rpcUrl()],
+                        rpcUrls: [snaxChain.rpcUrl()],
                         blockExplorerUrls: [
                           id === 2192
                             ? 'https://explorer.snaxchain.io/'
@@ -133,41 +126,9 @@ export function NetworkController() {
               </Text>
             </MenuItem>
           ))}
-
-          {showTestnets && <Divider color="gray.900" />}
-
-          <MenuOptionGroup>
-            <Flex py={4} px={3} alignItems="center" justifyContent="space-between">
-              <Text fontSize="14px" fontFamily="heading" lineHeight="20px">
-                Show Testnets
-              </Text>
-              <Switch
-                mr={2}
-                size="sm"
-                color="gray.900"
-                colorScheme="gray"
-                isChecked={showTestnets}
-                onChange={() => setShowTestnets(!showTestnets)}
-                data-cy="network-controller-switch"
-              />
-            </Flex>
-          </MenuOptionGroup>
-
-          {(showTestnets ? testnets : []).map(({ id, preset, label }) => (
-            <MenuItem
-              key={`${id}-${preset}`}
-              onClick={() => setNetwork(id)}
-              data-cy={`network-menu-button-${id}`}
-            >
-              <NetworkIcon filter="grayscale(1)" networkId={id} size="20px" />
-              <Text variant="nav" ml={2}>
-                {label}
-              </Text>
-            </MenuItem>
-          ))}
         </MenuList>
       </Menu>
-      <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()}>
+      <Menu placement="bottom-end" isOpen={isOpen} onOpen={() => onOpen()} closeOnBlur>
         <MenuButton
           as={Button}
           variant="outline"
@@ -177,50 +138,29 @@ export function NetworkController() {
           py="1"
           px="2"
           data-cy="header-wallet-address-button"
-          maxW="200px"
+          maxW={{ base: '130px', md: '200px' }}
           textOverflow="ellipsis"
           whiteSpace="nowrap"
           overflow="hidden"
         >
-          {user?.pfpUrl ? (
-            <Flex alignItems="center" gap="1">
-              <Image src={user.pfpUrl} w="24px" h="24px" borderRadius="50%" />
-              <Text
-                as="span"
-                ml={1}
-                color="white"
-                fontWeight={700}
-                fontSize="xs"
-                userSelect="none"
-                data-cy="header-wallet-address-display"
-                maxW="200px"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                overflow="hidden"
-              >
-                {user?.username || prettyString(activeWallet?.address || '')}
-              </Text>
-            </Flex>
-          ) : (
-            <Flex alignItems="center" gap="1">
-              <Blockies seed={activeWallet?.address || ''} scale={3} className="blockies-rounded" />
-              <Text
-                as="span"
-                ml={1}
-                color="white"
-                fontWeight={700}
-                fontSize="xs"
-                userSelect="none"
-                data-cy="header-wallet-address-display"
-                maxW="120px"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                overflow="hidden"
-              >
-                {user?.username || prettyString(activeWallet?.address || '')}
-              </Text>
-            </Flex>
-          )}
+          <Flex alignItems="center" gap="1">
+            <Blockies seed={activeWallet?.address || ''} scale={3} className="blockies-rounded" />
+            <Text
+              as="span"
+              ml={1}
+              color="white"
+              fontWeight={700}
+              fontSize="xs"
+              userSelect="none"
+              data-cy="header-wallet-address-display"
+              maxW={{ base: '200px', md: '200px' }}
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              overflow="hidden"
+            >
+              {user?.username || prettyString(activeWallet?.address || '')}
+            </Text>
+          </Flex>
         </MenuButton>
         <MenuList zIndex={999} onMouseLeave={() => onClose()}>
           <Flex
@@ -269,23 +209,15 @@ export function NetworkController() {
               {/* </Flex> */}
             </Flex>
             <Divider />
-            <Flex alignItems="center" gap="4">
-              {user?.pfpUrl ? (
-                <>Implement me </>
-              ) : (
-                <Blockies
-                  seed={activeWallet?.address || ''}
-                  scale={7}
-                  className="blockies-rounded"
-                />
-              )}
+            <Flex alignItems="center" gap="4" maxW="200px">
+              <Blockies seed={activeWallet?.address || ''} scale={7} className="blockies-rounded" />
 
               {user?.username ? (
                 <Flex flexDir="column" maxW="200px">
                   <Text
                     fontSize="16px"
                     fontWeight={700}
-                    maxW="300px"
+                    maxW="200px"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
                     overflow="hidden"
@@ -296,15 +228,15 @@ export function NetworkController() {
                     fontWeight={400}
                     fontSize="12px"
                     maxW="200px"
-                    textOverflow="wrap"
-                    // whiteSpace="nowrap"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
                     overflow="hidden"
                   >
                     {user.about}
                   </Text>
                 </Flex>
               ) : (
-                <Text fontSize="16px" fontWeight={700} maxW="300px">
+                <Text fontSize="16px" fontWeight={700} maxW="150px">
                   {prettyString(user?.address || '')}
                 </Text>
               )}

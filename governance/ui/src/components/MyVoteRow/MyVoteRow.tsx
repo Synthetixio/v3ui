@@ -4,7 +4,8 @@ import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetUserBallot, useNetwork } from '../../queries';
+import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../../queries';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function MyVoteRow({
   councilSlug,
@@ -17,12 +18,16 @@ export default function MyVoteRow({
 }) {
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(councilSlug);
-  const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const { data: epochId } = useGetCurrentPeriod(councilSlug);
   const { dispatch, state } = useVoteContext();
-  const stateForNetwork =
-    !!state && !!state[networkForState] ? state[networkForState][councilSlug] : undefined;
-
+  const { network } = useNetwork();
+  const networkForState = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    councilSlug
+  );
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -38,17 +43,17 @@ export default function MyVoteRow({
       <Flex ml="4" alignItems="center">
         <CouncilUser
           councilSlug={councilSlug}
-          address={ballot?.votedCandidates[0] || stateForNetwork}
-          hideName={!!(ballot?.votedCandidates[0] && stateForNetwork === 'remove')}
+          address={ballot?.votedCandidates[0] || voteAddressState}
+          hideName={!!(ballot?.votedCandidates[0] && networkForState === 'remove')}
         />
-        {ballot?.votedCandidates[0] && stateForNetwork === 'remove' && (
+        {ballot?.votedCandidates[0] && networkForState === 'remove' && (
           <>
             <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={stateForNetwork} />
+            <CouncilUser councilSlug={councilSlug} address={networkForState} />
           </>
         )}
       </Flex>
-      {!stateForNetwork && !ballot?.votedCandidates[0] ? (
+      {!networkForState && !ballot?.votedCandidates[0] ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
@@ -71,22 +76,27 @@ export default function MyVoteRow({
           isDisabled={period !== '2'}
           onClick={(e) => {
             e.stopPropagation();
-            if (!!ballot?.votedCandidates[0]) {
-              dispatch({
-                type: councilSlug.toUpperCase(),
-                payload: {
-                  action: 'remove',
-                  network: networkForState,
-                },
-              });
-            } else {
-              dispatch({
-                type: councilSlug.toUpperCase(),
-                payload: {
-                  action: stateForNetwork === 'remove' ? 'remove' : undefined,
-                  network: networkForState,
-                },
-              });
+
+            if (network?.id) {
+              if (!!ballot?.votedCandidates[0]) {
+                dispatch({
+                  type: councilSlug.toUpperCase(),
+                  payload: {
+                    action: 'remove',
+                    network: network.id.toString(),
+                    epochId,
+                  },
+                });
+              } else {
+                dispatch({
+                  type: councilSlug.toUpperCase(),
+                  payload: {
+                    action: networkForState === 'remove' ? 'remove' : undefined,
+                    network: network.id.toString(),
+                    epochId,
+                  },
+                });
+              }
             }
           }}
         />

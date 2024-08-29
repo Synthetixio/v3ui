@@ -2,8 +2,8 @@ import { Icon } from '@chakra-ui/react';
 
 export const SNXHeaderIconSmall = () => (
   <Icon
-    width="29"
-    height="22"
+    width="29px"
+    height="22px"
     fill="none"
     viewBox="0 0 29 22"
     xmlns="http://www.w3.org/2000/svg"

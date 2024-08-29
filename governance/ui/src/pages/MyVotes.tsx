@@ -21,28 +21,33 @@ import { useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
-import { useVoteContext } from '../context/VoteContext';
+import { useVoteContext, VoteStateForNetwork } from '../context/VoteContext';
 import { useState } from 'react';
 import { CouncilImage } from '../components/CouncilImage';
 import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
+import { getVoteSelectionState } from '../utils/localstorage';
 
 export default function MyVotes() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { onClose } = useDisclosure();
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
+  const { data: epochId } = useGetCurrentPeriod('spartan');
   const { network } = useNetwork();
   const { connect } = useWallet();
-  const networkForState = network?.id || 2192;
-
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
-  const councilToCastVote = Object.entries(state[networkForState] || {})
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+  const stateFromCouncils = (
+    typeof networkForState !== 'string' ? networkForState : {}
+  ) as VoteStateForNetwork;
+  const councilToCastVote = Object.entries(stateFromCouncils)
     .filter(([_, candidate]) => !!candidate)
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, state[networkForState] || {});
+  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
   const navigate = useNavigate();
 
   return (
@@ -107,7 +112,7 @@ export default function MyVotes() {
             >
               <Heading fontSize="2xl">My Votes</Heading>
               <Heading fontSize="2xl" data-cy="my-votes-total-votes">
-                {Object.values(state[networkForState] || {}).filter((council) => !!council).length}/
+                {Object.values(stateFromCouncils).filter((council) => !!council).length}/
                 {councils.length}
               </Heading>
             </Flex>
@@ -254,8 +259,8 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {state[networkForState] ? (
-                    <ProfilePicture address={state[networkForState][council.slug]} size={9} />
+                  {voteAddressState ? (
+                    <ProfilePicture address={voteAddressState} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
                   )}

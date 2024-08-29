@@ -1,15 +1,14 @@
-import { Button, Flex, useColorMode, Show, Link } from '@chakra-ui/react';
+import { Button, Flex, useColorMode, Show } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import councils from '../../utils/councils';
-import { useNetwork, useWallet } from '../../queries/useWallet';
+import { useWallet } from '../../queries/useWallet';
 import { NetworkController } from './NetworkController';
 import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
-  const { network } = useNetwork();
   const { activeWallet, walletsInfo, connect } = useWallet();
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -20,7 +19,6 @@ export function Header() {
   }, [colorMode, toggleColorMode]);
 
   useEffect(() => {
-    // Check if wallet preference is stored in local storage
     if (!walletsInfo) {
       const defaultWallet = localStorage.getItem('connectedWallets');
 
@@ -32,7 +30,6 @@ export function Header() {
     }
 
     if (walletsInfo) {
-      // store in local storage
       localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
     }
   }, [walletsInfo, connect]);
@@ -57,17 +54,11 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-        <Link href="/#/admin">Admin</Link>
-        {network?.id === 2192 && (
-          <Link href="https://superbridge.app/snaxchain-mainnet" target="_blank">
-            <Button variant="outline" colorScheme="gray" mx="2">
-              Bridge ETH
-            </Button>
-          </Link>
-        )}
+
         <PeriodCountdown council={councils[0].slug} />
-        {activeWallet && <NetworkController />}
-        {!activeWallet && (
+        {activeWallet ? (
+          <NetworkController />
+        ) : (
           <Button onClick={() => connect()} ml="2" data-cy="connect-wallet-button">
             Connect Wallet
           </Button>

@@ -11,6 +11,7 @@ import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
 import { useVoteContext } from '../../context/VoteContext';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -19,8 +20,16 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
   const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const { data: epochId } = useGetCurrentPeriod(activeCouncil);
   const { state } = useVoteContext();
+  const networkForState = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
@@ -110,9 +119,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = state[networkForState]
-                ? state[networkForState][council.slug]
-                : '';
+              const newVoteCast = typeof networkForState !== 'string' ? networkForState : '';
 
               return (
                 <Flex
@@ -153,12 +160,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
+                  {councilPeriod === '2' && utils.isAddress(voteAddressState) ? (
                     <ProfilePicture
                       imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
                       size={9}
-                      newVoteCast={newVoteCast}
+                      newVoteCast={voteAddressState}
                       isCouncilTabs={true}
                     />
                   ) : (
@@ -169,7 +176,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                             imageSrc={userInformation[index].userInformation?.pfpUrl}
                             address={userInformation[index].userInformation?.address}
                             size={9}
-                            newVoteCast={newVoteCast}
+                            newVoteCast={voteAddressState}
                           />
                         )}
 
