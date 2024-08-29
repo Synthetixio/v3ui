@@ -1,7 +1,13 @@
 import { Icon } from '@chakra-ui/react';
 
 export const DisconnectIcon = () => (
-  <Icon width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <Icon
+    width="17px"
+    height="16px"
+    viewBox="0 0 17 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M2.12484 1.75C2.00978 1.75 1.9165 1.84327 1.9165 1.95833V14.0417C1.9165 14.1567 2.00978 14.25 2.12484 14.25H6.9165V15.5H2.12484C1.31942 15.5 0.666504 14.8471 0.666504 14.0417V1.95833C0.666504 1.15292 1.31942 0.5 2.12484 0.5H6.9165V1.75H6.29151H2.12484Z"
       fill="white"
