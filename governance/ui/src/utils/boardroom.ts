@@ -1,6 +1,6 @@
 import { getAddress } from 'ethers/lib/utils';
-
-const MAIN_NET_URL = 'https://api.boardroom.info';
+// 'https://api.boardroom.info';
+const MAIN_NET_URL = 'https://staging-api.boardroom.info/';
 const STAGING_URL = 'https://staging-api.boardroom.info/';
 
 const BASE_URL = window.location.hostname === 'localhost' ? STAGING_URL : MAIN_NET_URL;
