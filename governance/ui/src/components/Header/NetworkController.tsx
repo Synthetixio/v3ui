@@ -4,7 +4,6 @@ import {
   Divider,
   Flex,
   IconButton,
-  Image,
   Link,
   Menu,
   MenuButton,
