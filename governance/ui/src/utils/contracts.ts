@@ -11,35 +11,28 @@ export const isMotherchain = (chainId?: string | number) => {
 };
 
 const SpartanCouncilContract = new Contract(
-  '0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD',
+  '0xd2866fbEFfD8AE158B29690D5425674DfF6D0E95',
   electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xCdbEf5753cE3CEbF361e143117e345ADd7498F80',
+  '0x9984A9a5699A66BCB25cbCBa9b09007DB6C969F9',
   electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161',
+  '0x689d5De527Bc35e604006cc42a34678e5b79e9D8',
   electionModuleABITest
 );
 
-export function getCouncilContract(council: CouncilSlugs, chainId?: string | number) {
-  const parsedChainId = process.env.CI === 'true' ? 13001 : chainId ? Number(chainId) : 2192;
+export function getCouncilContract(council: CouncilSlugs) {
   switch (council) {
     case 'spartan':
-      return parsedChainId === 2192 || parsedChainId === 10
-        ? SpartanCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : SpartanCouncilContract.attach('0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD');
+      return SpartanCouncilContract;
     case 'ambassador':
-      return parsedChainId === 2192
-        ? AmbassadorCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : AmbassadorCouncilContract.attach('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80');
+      return AmbassadorCouncilContract;
     case 'treasury':
-      return parsedChainId === 2192
-        ? TreasuryCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : TreasuryCouncilContract.attach('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161');
+      return TreasuryCouncilContract;
     default:
       throw new Error('could not find contract');
   }
