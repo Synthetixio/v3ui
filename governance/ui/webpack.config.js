@@ -173,10 +173,6 @@ module.exports = {
     )
     .concat(
       new webpack.DefinePlugin({
-        'process.env.CI': JSON.stringify(process.env.CI || false),
-        'process.env.CI_RPC_MOTHERSHIP': JSON.stringify(
-          process.env.CI_RPC_MOTHERSHIP || 'http://127.0.0.1:8545'
-        ),
         'process.env.WC_PROJECT_ID': JSON.stringify(
           process.env.WC_PROJECT_ID || '824270fbfdf10d95099e9702d3cb3741'
         ),
