@@ -1,6 +1,6 @@
-import React from 'react';
-import { VStack, Text, Button, Alert, Flex } from '@chakra-ui/react';
-import { CheckIcon } from '@chakra-ui/icons';
+import React, { useState } from 'react';
+import { VStack, Text, Button, Alert, Flex, Tooltip } from '@chakra-ui/react';
+import { CheckIcon, CopyIcon } from '@chakra-ui/icons';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 
 export const StepSuccess = ({
@@ -14,6 +14,7 @@ export const StepSuccess = ({
   collateral: string;
   accountId: string;
 }) => {
+  const [toolTipLabel, setTooltipLabel] = useState('Copy');
   return (
     <VStack spacing={6}>
       <Text width="100%" textAlign="left" fontSize="14px">
@@ -42,7 +43,24 @@ export const StepSuccess = ({
           },
           {
             label: 'Account Id',
-            value: `#${accountId}`,
+            value: (
+              <>
+                {`#${accountId}`}
+                <Tooltip label={toolTipLabel} closeOnClick={false}>
+                  <CopyIcon
+                    ml="2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(accountId);
+                      setTooltipLabel('Copied');
+                      setTimeout(() => {
+                        setTooltipLabel('Copy');
+                      }, 10000);
+                    }}
+                    cursor="pointer"
+                  />
+                </Tooltip>
+              </>
+            ),
           },
         ]}
       />

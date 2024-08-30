@@ -91,6 +91,7 @@ export const MigrateUSDTransaction: Props = ({ onSuccess, amount, network, onBac
         description: 'Migration executed.',
         status: 'success',
         duration: 5000,
+        variant: 'left-accent',
       });
     } catch (error) {
       setTxState((state) => ({
@@ -101,6 +102,7 @@ export const MigrateUSDTransaction: Props = ({ onSuccess, amount, network, onBac
         title: 'Migration failed',
         description: 'Please try again.',
         status: 'error',
+        variant: 'left-accent',
       });
     }
   }, [

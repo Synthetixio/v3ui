@@ -21,6 +21,7 @@ import { useSNXPrice } from '@snx-v3/useSNXPrice';
 import { StepSuccess } from './StepSuccess';
 import { formatEther } from 'ethers/lib/utils';
 import { Amount } from '@snx-v3/Amount';
+import { CRatioBadge } from '../CRatioBar/CRatioBadge';
 
 export const StepSummary = ({
   onClose,
@@ -80,6 +81,7 @@ export const StepSummary = ({
           <Text>C-Ratio</Text>
           <HStack>
             <Text>{cRatio}%</Text>
+            <CRatioBadge cRatio={Number(cRatio)} liquidationCratio={105} targetCratio={500} />
             {/* <Tag colorScheme="green">HEALTHY</Tag> */}
           </HStack>
         </HStack>
