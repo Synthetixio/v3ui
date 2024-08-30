@@ -11,7 +11,7 @@ export default function useDeclareVotingPower(council: CouncilSlugs) {
     mutationFn: async () => {
       if (signer && network) {
         try {
-          const electionModule = getCouncilContract(council, network.id).connect(signer);
+          const electionModule = getCouncilContract(council).connect(signer);
           const voter = await signer.getAddress();
           await electionModule.prepareBallotWithSnapshot(
             SnapshotRecordContract(network.id, council)?.address,

@@ -11,35 +11,34 @@ export const isMotherchain = (chainId?: string | number) => {
 };
 
 const SpartanCouncilContract = new Contract(
-  '0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD',
+  '0x2082d5A6f6F17F5e421FD6508b867D794472A42a',
   electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0xCdbEf5753cE3CEbF361e143117e345ADd7498F80',
+  '0x93D3A11B8403C2140D0d1f1c0460601e4FBB52DE',
   electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161',
+  '0xECfA1d4B17AaCD691173b6194C3ade361ef38367',
   electionModuleABITest
 );
 
-export function getCouncilContract(council: CouncilSlugs, chainId?: string | number) {
-  const parsedChainId = process.env.CI === 'true' ? 13001 : chainId ? Number(chainId) : 2192;
+export function getCouncilContract(council: CouncilSlugs) {
   switch (council) {
     case 'spartan':
-      return parsedChainId === 2192 || parsedChainId === 10
-        ? SpartanCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : SpartanCouncilContract.attach('0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD');
+      if (process.env.CI === 'true')
+        return SpartanCouncilContract.connect('0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD');
+      return SpartanCouncilContract;
     case 'ambassador':
-      return parsedChainId === 2192
-        ? AmbassadorCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : AmbassadorCouncilContract.attach('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80');
+      if (process.env.CI === 'true')
+        return AmbassadorCouncilContract.connect('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80');
+      return AmbassadorCouncilContract;
     case 'treasury':
-      return parsedChainId === 2192
-        ? TreasuryCouncilContract.attach('0xB3026a683AAC2499e70Bbd988a9411A99b00EBD2')
-        : TreasuryCouncilContract.attach('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161');
+      if (process.env.CI === 'true')
+        return TreasuryCouncilContract.connect('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161');
+      return TreasuryCouncilContract;
     default:
       throw new Error('could not find contract');
   }

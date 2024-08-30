@@ -12,3 +12,4 @@ export * from './useGetUserBallot';
 export * from './useGetUserDetailsQuery';
 export * from './useGetUserVotingPower';
 export * from './useWallet';
+export * from './useGetHistoricalVotes';

@@ -4,7 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "scripts": {
-    "anvil:snax": "anvil --fork-url https://testnet.snaxchain.io --fork-block-number 296528",
+    "anvil:snax": "anvil --fork-url https://testnet.snaxchain.io --fork-block-number 296428",
     "e2e": "cypress open --e2e --browser electron"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@ import { init } from '@web3-onboard/react';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
-export const supportedNetworks = [2192, 13001, 10, 1];
+export const supportedNetworks = [2192, 10, 1];
 
 export const chains = NETWORKS.filter((network) => supportedNetworks.includes(network.id)).map(
   (network) => ({
@@ -27,12 +27,17 @@ export const onboard = init({
       email: 'info@synthetix.io',
     }),
     ledgerModule({
-      projectId: process.env.WC_PROJECT_ID ?? '824270fbfdf10d95099e9702d3cb3741',
+      projectId: process.env.WC_PROJECT_ID
+        ? process.env.WC_PROJECT_ID
+        : '824270fbfdf10d95099e9702d3cb3741',
       walletConnectVersion: 2,
     }),
     walletConnectModule({
       version: 2,
-      projectId: process.env.WC_PROJECT_ID ?? '824270fbfdf10d95099e9702d3cb3741',
+      projectId: process.env.WC_PROJECT_ID
+        ? process.env.WC_PROJECT_ID
+        : '824270fbfdf10d95099e9702d3cb3741',
+      dappUrl: 'https://governance.synthetix.eth',
     }),
     gnosisModule(),
   ],
