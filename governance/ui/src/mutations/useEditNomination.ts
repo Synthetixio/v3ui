@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNetwork, useSigner } from '../queries/useWallet';
+import { useSigner } from '../queries/useWallet';
 import { getCouncilContract } from '../utils/contracts';
 import { CouncilSlugs } from '../utils/councils';
 import { useToast } from '@chakra-ui/react';
@@ -17,7 +17,6 @@ export default function useEditNomination({
   const signer = useSigner();
   const toast = useToast();
   const multicall = useMulticall();
-  const { network } = useNetwork();
   return useMutation({
     mutationFn: async () => {
       if (signer) {

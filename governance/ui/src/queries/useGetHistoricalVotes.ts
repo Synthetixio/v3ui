@@ -11,7 +11,6 @@ export function useGetHistoricalVotes(council: CouncilSlugs) {
     queryFn: async () => {
       const res = await fetch(network?.id === 2192 ? testnetURL : testnetURL);
       const votes = await res.json();
-      console.log(votes);
       return votes;
     },
     staleTime: 900000,

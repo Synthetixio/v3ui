@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract } from '../utils/contracts';
-import { useNetwork, useSigner } from '../queries/useWallet';
+import { useSigner } from '../queries/useWallet';
 import { useToast } from '@chakra-ui/react';
 import { utils } from 'ethers';
 
@@ -9,7 +9,6 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
   const query = useQueryClient();
   const signer = useSigner();
   const toast = useToast();
-  const { network } = useNetwork();
 
   return useMutation({
     mutationFn: async () => {
