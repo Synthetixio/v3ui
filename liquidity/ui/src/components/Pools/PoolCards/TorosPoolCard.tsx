@@ -6,6 +6,7 @@ import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { useTokenBalanceForChain } from '@snx-v3/useTokenBalance';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 import { formatNumber } from 'humanize-plus';
+import { Specifics } from './Specifics';
 
 interface TorosPoolCardProps {
   tvl: string;
@@ -112,7 +113,9 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
             {apy}%
           </Text>
         </Flex>
-        <Flex width="121px" textAlign="right"></Flex>
+        <Flex alignItems="center" justifyContent="flex-end" width="121px" textAlign="right">
+          <Specifics type="toros" />
+        </Flex>
         <Flex flex={1} minWidth="159px" alignItems="center" justifyContent="flex-end">
           <Link
             href="https://toros.finance/synthetix-usdc-andromeda-yield"

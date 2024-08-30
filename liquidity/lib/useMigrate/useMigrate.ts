@@ -36,7 +36,19 @@ export function useMigrate() {
           await provider?.estimateGas(populateTransaction),
           await provider?.getFeeData(),
         ]);
-        return { ...populateTransaction, gasLimit, gasPrice: feeData?.gasPrice };
+
+        const gasPrices = await getGasPrice({ provider: signer!.provider });
+        const gasOptionsForTransaction = formatGasPriceForTransaction({
+          gasLimit: wei(gasLimit || ZEROWEI).toBN(),
+          gasPrices,
+          gasSpeed,
+        });
+
+        return {
+          ...populateTransaction,
+          gasLimit: gasOptionsForTransaction.gasLimit,
+          gasPrice: feeData?.gasPrice,
+        };
       } catch (error) {
         const parsedError = parseTxError(error);
         const errorResult = legacyMarket.interface.parseError(parsedError as string);

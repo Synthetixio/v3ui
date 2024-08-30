@@ -68,30 +68,34 @@ export const MigrateUSDModal: FC<Props> = ({ onClose, isOpen, network, type, acc
           <Divider colorScheme="gray" />
         </Flex>
         <ModalBody p={6} pt={2}>
-          {step === 0 && (
-            <StepIntro
-              amount={amount}
-              setAmount={setAmount}
-              onClose={onClose}
-              onConfirm={() => setStep(1)}
-              network={network}
-            />
+          {isOpen && (
+            <>
+              {step === 0 && (
+                <StepIntro
+                  amount={amount}
+                  setAmount={setAmount}
+                  onClose={onClose}
+                  onConfirm={() => setStep(1)}
+                  network={network}
+                />
+              )}
+              {step === 1 && (
+                <MigrateUSDTransaction
+                  network={network}
+                  onSuccess={() => {
+                    if (type === 'migration') {
+                      setStep(2);
+                    } else {
+                      onClose();
+                    }
+                  }}
+                  onBack={() => setStep(0)}
+                  amount={amount}
+                />
+              )}
+              {step === 2 && <StepSuccessFinal network={network} onConfirm={handleConfirm} />}
+            </>
           )}
-          {step === 1 && (
-            <MigrateUSDTransaction
-              network={network}
-              onSuccess={() => {
-                if (type === 'migration') {
-                  setStep(2);
-                } else {
-                  onClose();
-                }
-              }}
-              onBack={() => setStep(0)}
-              amount={amount}
-            />
-          )}
-          {step === 2 && <StepSuccessFinal network={network} onConfirm={handleConfirm} />}
         </ModalBody>
       </ModalContent>
     </Modal>

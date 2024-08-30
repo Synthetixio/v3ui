@@ -21,6 +21,7 @@ import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { ZEROWEI } from '../../../utils/constants';
 import { MigrationBanner } from '../../Migration/MigrationBanner';
+import { Specifics } from './Specifics';
 
 interface CollateralTypeWithDeposited extends CollateralType {
   collateralDeposited: string;
@@ -49,10 +50,9 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
     getSpotMarketId(collateralType.symbol),
     network
   );
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
   // TODO: This will need refactoring
-  const balanceAddress = isBaseAndromeda(network?.id, network?.preset)
-    ? wrapperToken
-    : collateralType?.tokenAddress;
+  const balanceAddress = isBase ? wrapperToken : collateralType?.tokenAddress;
 
   const { data: balance } = useTokenBalanceForChain(balanceAddress, network);
   const navigate = useNavigate();
@@ -222,7 +222,9 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
               </Tooltip>
             </Text>
           </Flex>
-          <Flex width="121px" textAlign="right"></Flex>
+          <Flex alignItems="center" justifyContent="flex-end" width="121px" textAlign="right">
+            <Specifics type={isBase ? 'mint' : 'borrow'} />
+          </Flex>
           <Flex minW="159px" flex="1" justifyContent="flex-end">
             <Button
               onClick={onClick}

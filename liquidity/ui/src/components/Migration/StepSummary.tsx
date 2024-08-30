@@ -114,15 +114,15 @@ export const StepSummary = ({
               </Tooltip>
             </Text>
             <Text>
-              {data?.collateral?.toString(2)} SNX &nbsp;
-              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.collateral).toString(2)})</>}
+              {data?.collateral?.toString(2)} SNX
+              {snxPrice?.gt(0) && <>&nbsp;(${snxPrice.mul(data?.collateral).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">
             <Text>Balance</Text>
             <Text>
-              {data?.balance?.toString(2)} SNX &nbsp;
-              {snxPrice?.gt(0) && <>(${snxPrice.mul(data?.balance).toString(2)})</>}
+              {data?.balance?.toString(2)} SNX
+              {snxPrice?.gt(0) && <>&nbsp;(${snxPrice.mul(data?.balance).toString(2)})</>}
             </Text>
           </HStack>
           <HStack color="gray" justifyContent="space-between">

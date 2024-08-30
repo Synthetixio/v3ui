@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   VStack,
   Text,
@@ -33,16 +33,18 @@ export const StepIntro = ({
   amount: Wei;
   network: Network;
 }) => {
+  const [loaded, setLoaded] = useState(false);
   const { data: v2_sUSD } = useV2sUSD(network);
   const { data: v2_balance } = useTokenBalance(v2_sUSD, network);
   const { data: v3_sUSD } = useUSDProxyForChain(network);
   const { data: v3_balance } = useTokenBalance(v3_sUSD?.address, network);
 
   useEffect(() => {
-    if (v2_balance && amount.eq(0)) {
+    if (v2_balance && amount.eq(0) && !loaded) {
       setAmount(v2_balance);
+      setLoaded(true);
     }
-  }, [amount, setAmount, v2_balance]);
+  }, [amount, loaded, setAmount, v2_balance]);
 
   return (
     <VStack gap={2.5}>
