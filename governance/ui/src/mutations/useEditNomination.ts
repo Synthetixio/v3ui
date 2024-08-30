@@ -24,7 +24,7 @@ export default function useEditNomination({
         const txs = [];
         if ((nextNomination && currentNomination) || (!nextNomination && currentNomination)) {
           txs.push({
-            target: getCouncilContract(currentNomination, network?.id).address,
+            target: getCouncilContract(currentNomination).address,
             callData:
               getCouncilContract(currentNomination).interface.encodeFunctionData(
                 'withdrawNomination'
@@ -33,7 +33,7 @@ export default function useEditNomination({
         }
         if (nextNomination) {
           txs.push({
-            target: getCouncilContract(nextNomination, network?.id).address,
+            target: getCouncilContract(nextNomination).address,
             callData: getCouncilContract(nextNomination).interface.encodeFunctionData('nominate'),
           });
         }
