@@ -76,7 +76,7 @@ export const PoolCard = ({
   const vaultTVL = collateralTypes?.reduce((acc, type) => {
     const price = wei(
       collateralPrices?.find((price) => price.symbol.toUpperCase() === type.symbol.toUpperCase())
-        ?.price || 0
+        ?.price ?? 0
     );
     const amount = wei(type.collateralDeposited, Number(type.decimals), true);
     const value = price.mul(amount);
@@ -274,7 +274,7 @@ export const PoolCard = ({
                 const price = wei(
                   collateralPrices?.find(
                     (price) => price.symbol.toUpperCase() === type.symbol.toUpperCase()
-                  )?.price
+                  )?.price ?? 0
                 );
 
                 const collateralApr = apr.collateralAprs.find(
