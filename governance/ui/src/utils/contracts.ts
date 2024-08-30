@@ -11,17 +11,17 @@ export const isMotherchain = (chainId?: string | number) => {
 };
 
 const SpartanCouncilContract = new Contract(
-  '0xd2866fbEFfD8AE158B29690D5425674DfF6D0E95',
+  '0x2082d5A6f6F17F5e421FD6508b867D794472A42a',
   electionModuleABITest
 );
 
 const AmbassadorCouncilContract = new Contract(
-  '0x9984A9a5699A66BCB25cbCBa9b09007DB6C969F9',
+  '0x93D3A11B8403C2140D0d1f1c0460601e4FBB52DE',
   electionModuleABITest
 );
 
 const TreasuryCouncilContract = new Contract(
-  '0x689d5De527Bc35e604006cc42a34678e5b79e9D8',
+  '0xECfA1d4B17AaCD691173b6194C3ade361ef38367',
   electionModuleABITest
 );
 
