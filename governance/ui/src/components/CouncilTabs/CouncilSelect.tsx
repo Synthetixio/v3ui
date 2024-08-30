@@ -27,7 +27,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
                 fontFamily="heading"
-                fontSize={{ base: 'sm', md: 'md' }}
+                fontSize={{ base: 'xs', md: 'md' }}
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
