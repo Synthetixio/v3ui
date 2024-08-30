@@ -18,7 +18,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
-        const isMC = process.env.CI === 'true' ? true : isMotherchain(network.id);
+        const isMC = isMotherchain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
         const ballot = isMC
