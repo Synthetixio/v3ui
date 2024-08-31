@@ -19,9 +19,8 @@ export const ProfilePicture = ({
   newVoteCast,
   isCouncilTabs,
 }: ProfilePictureInterface) => {
-  return (
-    <>
-      (address || !!newVoteCast) && (
+  if (address || newVoteCast) {
+    return (
       <Box
         mr={mr}
         ml={ml}
@@ -45,7 +44,7 @@ export const ProfilePicture = ({
           className="fully-rounded"
         />
       </Box>
-      )
-    </>
-  );
+    );
+  }
+  return null;
 };
