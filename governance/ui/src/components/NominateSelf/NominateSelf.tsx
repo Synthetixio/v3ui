@@ -126,7 +126,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             alignItems="center"
             mb="12"
           >
-            <ProfilePicture imageSrc={data?.pfpUrl} address={activeWallet?.address} size={10} />
+            <ProfilePicture address={activeWallet?.address} size={10} />
             <Flex ml="2" flexDir="column">
               <Text
                 fontWeight={700}
@@ -212,7 +212,7 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
             mb="12"
             alignItems="center"
           >
-            <ProfilePicture imageSrc={data?.pfpUrl} address={data?.address} size={10} />
+            <ProfilePicture address={data?.address} size={10} />
             <Flex ml="2" flexDir="column">
               <Text
                 fontWeight={700}

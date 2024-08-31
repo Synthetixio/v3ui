@@ -52,7 +52,7 @@ export default function EditNominationConfirmation({
         mt="3"
         mb="3"
       >
-        <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} size={10} />
+        <ProfilePicture address={user?.address} size={10} />
         <Flex flexDirection="column" ml="2">
           <Text
             fontSize="sm"

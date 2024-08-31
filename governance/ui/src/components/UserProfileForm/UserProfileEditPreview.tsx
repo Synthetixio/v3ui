@@ -75,7 +75,7 @@ export default function UserProfileEditPreview({
       mb="24"
     >
       <Flex>
-        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address || activeWallet} />
+        <ProfilePicture address={userData?.address || activeWallet} />
         <Flex flexDir="column" w="100%" justifyContent="center" ml="2">
           <Text
             fontSize="16px"

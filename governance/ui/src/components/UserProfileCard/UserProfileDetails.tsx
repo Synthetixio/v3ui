@@ -125,7 +125,7 @@ export const UserProfileDetails = ({
             _hover={{}}
           />
         )}
-        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
+        <ProfilePicture address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
             <Text

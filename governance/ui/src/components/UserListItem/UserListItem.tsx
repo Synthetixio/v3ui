@@ -44,13 +44,7 @@ export default function UserListItem({
       {...props}
     >
       <Flex alignItems="center">
-        <ProfilePicture
-          imageSrc={user?.pfpUrl}
-          address={address}
-          ImageProps={{ w: '8', h: '8' }}
-          size={9}
-          mr="0"
-        />
+        <ProfilePicture address={address} ImageProps={{ w: '8', h: '8' }} size={9} mr="0" />
         <Text
           fontWeight="bold"
           fontSize="14px"
