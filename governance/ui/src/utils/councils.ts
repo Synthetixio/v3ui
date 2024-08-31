@@ -3,6 +3,7 @@ import { getCouncilContract } from './contracts';
 const councils: {
   title: string;
   slug: CouncilSlugs;
+  seats: number;
   image: string;
   address: string;
   description: string;
@@ -12,6 +13,7 @@ const councils: {
   {
     title: 'Spartan Council',
     slug: 'spartan',
+    seats: 8,
     image: '/councils/sc.svg',
     address: getCouncilContract('spartan').address,
     description:
@@ -22,6 +24,7 @@ const councils: {
   {
     title: 'Ambassador Council',
     slug: 'ambassador',
+    seats: 5,
     image: '/councils/ac.svg',
     address: getCouncilContract('ambassador').address,
     description:
@@ -32,6 +35,7 @@ const councils: {
   {
     title: 'Treasury Council',
     slug: 'treasury',
+    seats: 4,
     image: '/councils/tc.svg',
     address: getCouncilContract('treasury').address,
     description:

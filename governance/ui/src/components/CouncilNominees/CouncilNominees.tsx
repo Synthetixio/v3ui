@@ -116,7 +116,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             />
             Nominate Yourself for the {activeCouncil} Council
           </Text>
-          <Button size="xs" onClick={() => connect()}>
+          <Button size="xs" onClick={() => connect()} minW="100px">
             Connect Wallet
           </Button>
         </Flex>
