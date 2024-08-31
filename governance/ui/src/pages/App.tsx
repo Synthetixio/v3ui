@@ -1,7 +1,7 @@
 import { Container, Flex, Heading, Text } from '@chakra-ui/react';
 import councils from '../utils/councils';
 import { CouncilCard } from '../components/CouncilCard';
-import { Head } from 'react-helmet';
+import Head from 'react-helmet';
 
 function App() {
   return (
