@@ -48,9 +48,17 @@ export async function getUserDetails<T extends string | string[]>(
 ): Promise<(T extends string ? GetUserDetails : GetUserDetails[]) | undefined> {
   if (typeof walletAddress === 'string') {
     const randomNumber = Math.random();
+    const isMultiSig = await motherShipProvider(2192).getCode(walletAddress);
+    if (isMultiSig !== '0x') {
+      const profile = await profileContract
+        .connect(motherShipProvider(2192))
+        .getProfile(walletAddress);
+      return profile as T extends string ? GetUserDetails : GetUserDetails[];
+    }
     const userDetailsResponse = await fetch(GET_USER_DETAILS_API_URL(walletAddress), {
       method: 'POST',
     });
+
     const userProfile = await userDetailsResponse.json();
     const userPitchesResponse = await fetch(
       GET_PITCHES_FOR_USER_API_URL(walletAddress, randomNumber),
