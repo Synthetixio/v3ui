@@ -11,8 +11,8 @@ import { SiweMessage } from 'siwe';
 import { useGetIsUUIDValidQuery } from '../queries/';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
-import { useWallet, useSigner } from '../queries/useWallet';
-import { profileContract } from '../utils/contracts';
+import { useWallet, useSigner, useNetwork } from '../queries/useWallet';
+import { isMotherchain, profileContract } from '../utils/contracts';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -52,6 +52,7 @@ function useUpdateUserDetailsMutation() {
   const { activeWallet } = useWallet();
   const signer = useSigner();
   const toast = useToast();
+  const { network } = useNetwork();
 
   const [uuid, setUuid] = useState<null | string>(null);
 
@@ -110,7 +111,7 @@ function useUpdateUserDetailsMutation() {
     mutationFn: async (userProfile: GetUserDetails) => {
       const address = await signer?.getAddress();
       const isContract = await signer?.provider.getCode(address || '');
-      if (isContract !== '0x' && signer) {
+      if (isContract !== '0x' && signer && isMotherchain(network?.id)) {
         await profileContract.connect(signer).updateProfile(
           {
             username: userProfile.username,
