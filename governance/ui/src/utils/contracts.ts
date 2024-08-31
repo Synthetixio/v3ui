@@ -1,5 +1,5 @@
 import { Contract } from 'ethers';
-import { electionModuleABITest } from './abi';
+import { electionModuleABITest, profileAbi } from './abi';
 import { CouncilSlugs } from './councils';
 
 export const isMotherchain = (chainId?: string | number) => {
@@ -57,3 +57,8 @@ const abiForSnapshotMock = [
   'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
   'function setBalanceOfOnPeriod(address, uint256, uint256) external',
 ];
+
+export const profileContract = new Contract(
+  '0x4F94C98825517688C088d565D3364B01748149a0',
+  profileAbi
+);

@@ -1,5 +1,7 @@
 import { GET_PITCHES_FOR_USER_API_URL, GET_USER_DETAILS_API_URL } from '../utils/boardroom';
 import { useQuery } from '@tanstack/react-query';
+import { motherShipProvider } from '../utils/providers';
+import { profileContract } from '../utils/contracts';
 
 export type GetUserDetails = {
   address: string;
@@ -46,9 +48,20 @@ export async function getUserDetails<T extends string | string[]>(
 ): Promise<(T extends string ? GetUserDetails : GetUserDetails[]) | undefined> {
   if (typeof walletAddress === 'string') {
     const randomNumber = Math.random();
+    const isMultiSig = await motherShipProvider(2192).getCode(walletAddress);
+    if (isMultiSig !== '0x') {
+      const profile = await profileContract
+        .connect(motherShipProvider(2192))
+        .getProfile(walletAddress);
+
+      return { ...profile, address: walletAddress } as T extends string
+        ? GetUserDetails
+        : GetUserDetails[];
+    }
     const userDetailsResponse = await fetch(GET_USER_DETAILS_API_URL(walletAddress), {
       method: 'POST',
     });
+
     const userProfile = await userDetailsResponse.json();
     const userPitchesResponse = await fetch(
       GET_PITCHES_FOR_USER_API_URL(walletAddress, randomNumber),
@@ -83,6 +96,18 @@ export async function getUserDetails<T extends string | string[]>(
           })
       )
     );
+
+    const multiSigQueries = await Promise.all(
+      walletAddress.map(async (address) => await motherShipProvider(2192).getCode(address))
+    );
+
+    const multiSigs = multiSigQueries.filter((sig) => sig !== '0x');
+    const multiSigsProfiles = await Promise.all(
+      multiSigs.map(async (address) => ({
+        ...(await profileContract.connect(motherShipProvider(2192)).getProfile(address)),
+        address,
+      }))
+    );
     const userProfile = await Promise.all(
       userDetailsResponse.map(async (responses) => await responses.json())
     );
@@ -103,18 +128,19 @@ export async function getUserDetails<T extends string | string[]>(
         return data.delegationPitches?.filter((e: UserPitch) => e.protocol === 'synthetix');
       });
     }
-
-    return userProfile.map(({ data }) => {
-      try {
-        delete data.delegationPitches;
-        return {
-          ...data,
-          delegationPitch: foundPitch,
-        };
-      } catch (error) {
-        console.error(error);
-        return userProfile;
-      }
-    }) as T extends string ? GetUserDetails : GetUserDetails[];
+    return userProfile
+      .map(({ data }) => {
+        try {
+          delete data.delegationPitches;
+          return {
+            ...data,
+            delegationPitch: foundPitch,
+          };
+        } catch (error) {
+          console.error(error);
+          return userProfile;
+        }
+      })
+      .concat(multiSigsProfiles) as T extends string ? GetUserDetails : GetUserDetails[];
   }
 }
