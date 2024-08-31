@@ -1,3 +1,41 @@
+export const profileAbi = [
+  {
+    inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
+    name: 'getProfile',
+    outputs: [
+      { internalType: 'string', name: 'username', type: 'string' },
+      { internalType: 'string', name: 'about', type: 'string' },
+      { internalType: 'string', name: 'twitter', type: 'string' },
+      { internalType: 'string', name: 'github', type: 'string' },
+      { internalType: 'string', name: 'discord', type: 'string' },
+      { internalType: 'string', name: 'delegationPitch', type: 'string' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: 'string', name: 'username', type: 'string' },
+          { internalType: 'string', name: 'about', type: 'string' },
+          { internalType: 'string', name: 'twitter', type: 'string' },
+          { internalType: 'string', name: 'github', type: 'string' },
+          { internalType: 'string', name: 'discord', type: 'string' },
+          { internalType: 'string', name: 'delegationPitch', type: 'string' },
+        ],
+        internalType: 'struct UserProfile.ProfileUpdate',
+        name: 'update',
+        type: 'tuple',
+      },
+    ],
+    name: 'updateProfile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
+
 export const multicallABI = [
   {
     inputs: [],

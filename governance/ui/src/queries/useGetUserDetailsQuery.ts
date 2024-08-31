@@ -1,5 +1,7 @@
 import { GET_PITCHES_FOR_USER_API_URL, GET_USER_DETAILS_API_URL } from '../utils/boardroom';
 import { useQuery } from '@tanstack/react-query';
+import { motherShipProvider } from '../utils/providers';
+import { profileContract } from '../utils/contracts';
 
 export type GetUserDetails = {
   address: string;
@@ -83,6 +85,19 @@ export async function getUserDetails<T extends string | string[]>(
           })
       )
     );
+
+    const multiSigQueries = await Promise.all(
+      walletAddress.map(async (address) => await motherShipProvider(2192).getCode(address))
+    );
+
+    const multiSigs = multiSigQueries.filter((sig) => sig !== '0x');
+    const multiSigsProfiles = await Promise.all(
+      multiSigs.map(
+        async (address) =>
+          await profileContract.connect(motherShipProvider(2192)).getProfile(address)
+      )
+    );
+
     const userProfile = await Promise.all(
       userDetailsResponse.map(async (responses) => await responses.json())
     );
@@ -104,17 +119,19 @@ export async function getUserDetails<T extends string | string[]>(
       });
     }
 
-    return userProfile.map(({ data }) => {
-      try {
-        delete data.delegationPitches;
-        return {
-          ...data,
-          delegationPitch: foundPitch,
-        };
-      } catch (error) {
-        console.error(error);
-        return userProfile;
-      }
-    }) as T extends string ? GetUserDetails : GetUserDetails[];
+    return userProfile
+      .map(({ data }) => {
+        try {
+          delete data.delegationPitches;
+          return {
+            ...data,
+            delegationPitch: foundPitch,
+          };
+        } catch (error) {
+          console.error(error);
+          return userProfile;
+        }
+      })
+      .concat(multiSigsProfiles) as T extends string ? GetUserDetails : GetUserDetails[];
   }
 }
