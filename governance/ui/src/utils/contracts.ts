@@ -59,6 +59,6 @@ const abiForSnapshotMock = [
 ];
 
 export const profileContract = new Contract(
-  '0x76f46F9f24ED58B14854Ae6Cd2141dd1FE03fCC2',
+  '0x4F94C98825517688C088d565D3364B01748149a0',
   profileAbi
 );
