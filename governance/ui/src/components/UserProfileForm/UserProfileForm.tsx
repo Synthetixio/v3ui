@@ -79,7 +79,7 @@ export function UserProfileForm() {
       associatedAddresses: '',
       bannerImageId: '',
       bannerUrl: '',
-      delegationPitch: getValues('delegationPitch')!,
+      delegationPitch: getValues('delegationPitch')! ?? ' ',
       discord: getValues('discord')!,
       ens: '',
       github: getValues('github')!,

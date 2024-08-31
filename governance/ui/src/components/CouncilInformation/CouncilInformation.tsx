@@ -1,11 +1,9 @@
 import { Flex, Heading, Icon, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
-import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
 import { CouncilImage } from '../CouncilImage';
 import { Link } from 'react-router-dom';
 
 export default function CouncilInformation({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const { data: getCouncilMembers } = useGetCouncilMembers(activeCouncil);
   const council = councils.find((council) => council.slug === activeCouncil);
 
   return (
@@ -45,7 +43,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
             px="2"
             py="1"
           >
-            Council Seats: {getCouncilMembers?.length}
+            Council Seats: {council?.seats}
           </Heading>
           <Heading
             fontSize="xs"
