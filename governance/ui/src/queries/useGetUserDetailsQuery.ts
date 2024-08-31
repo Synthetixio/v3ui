@@ -53,7 +53,10 @@ export async function getUserDetails<T extends string | string[]>(
       const profile = await profileContract
         .connect(motherShipProvider(2192))
         .getProfile(walletAddress);
-      return profile as T extends string ? GetUserDetails : GetUserDetails[];
+
+      return { ...profile, address: walletAddress } as T extends string
+        ? GetUserDetails
+        : GetUserDetails[];
     }
     const userDetailsResponse = await fetch(GET_USER_DETAILS_API_URL(walletAddress), {
       method: 'POST',
@@ -100,12 +103,11 @@ export async function getUserDetails<T extends string | string[]>(
 
     const multiSigs = multiSigQueries.filter((sig) => sig !== '0x');
     const multiSigsProfiles = await Promise.all(
-      multiSigs.map(
-        async (address) =>
-          await profileContract.connect(motherShipProvider(2192)).getProfile(address)
-      )
+      multiSigs.map(async (address) => ({
+        ...(await profileContract.connect(motherShipProvider(2192)).getProfile(address)),
+        address,
+      }))
     );
-
     const userProfile = await Promise.all(
       userDetailsResponse.map(async (responses) => await responses.json())
     );
@@ -126,7 +128,6 @@ export async function getUserDetails<T extends string | string[]>(
         return data.delegationPitches?.filter((e: UserPitch) => e.protocol === 'synthetix');
       });
     }
-
     return userProfile
       .map(({ data }) => {
         try {
