@@ -162,7 +162,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   </Text>
                   {councilPeriod === '2' && utils.isAddress(voteAddressState) ? (
                     <ProfilePicture
-                      imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
                       size={9}
                       newVoteCast={voteAddressState}
@@ -173,7 +172,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                       <>
                         {userInformation[index].userInformation?.address && (
                           <ProfilePicture
-                            imageSrc={userInformation[index].userInformation?.pfpUrl}
                             address={userInformation[index].userInformation?.address}
                             size={9}
                             newVoteCast={voteAddressState}

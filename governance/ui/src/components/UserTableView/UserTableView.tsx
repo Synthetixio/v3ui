@@ -97,7 +97,6 @@ export default function UserTableView({
       >
         <Flex gap="2" alignItems="center">
           <ProfilePicture
-            imageSrc={user?.pfpUrl}
             address={user?.address}
             size={9}
             mr="0"
