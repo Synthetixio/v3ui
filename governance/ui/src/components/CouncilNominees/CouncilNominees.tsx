@@ -32,7 +32,7 @@ import { CloseIcon } from '@chakra-ui/icons';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'name']);
 
   const { activeWallet, connect } = useWallet();
 
@@ -45,15 +45,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
 
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
 
-  let sortedNominees = useMemo(() => {
+  const sortedNominees = useMemo(() => {
     return !!councilNomineesDetails?.length
       ? councilNomineesDetails
-          .filter((nominee) => {
-            if (councilPeriod !== '2') {
-              nominee?.address.toLowerCase() !== activeWallet?.address.toLowerCase();
-            }
-            return true;
-          })
           .filter((nominee) => {
             if (utils.isAddress(search)) {
               return nominee.address.toLowerCase().includes(search);
@@ -67,8 +61,26 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             }
             return true;
           })
+          .sort((a, b) => {
+            if (sortConfig[1] === 'name') {
+              if (a.username && b.username) {
+                return sortConfig[0]
+                  ? a.username.localeCompare(b.username)
+                  : a.username.localeCompare(b.username) * -1;
+              }
+              if (a.username && !b.username) {
+                return -1;
+              } else if (b.username && !a.username) {
+                return 1;
+              }
+              return sortConfig[0]
+                ? a.address.localeCompare(b.address)
+                : a.address.localeCompare(b.address) * -1;
+            }
+            return 0;
+          })
       : [];
-  }, [search, councilNomineesDetails, activeWallet?.address, councilPeriod]);
+  }, [search, councilNomineesDetails, sortConfig]);
 
   return (
     <Flex
@@ -182,19 +194,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 cursor="pointer"
                 userSelect="none"
                 data-cy="name-table-header"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'name']);
-                  sortedNominees = sortedNominees.sort((a, b) => {
-                    if (a.username && b.username) {
-                      return sortConfig[0]
-                        ? a.username.localeCompare(b.username)
-                        : a.username.localeCompare(b.username) * -1;
-                    }
-                    return sortConfig[0]
-                      ? a?.address.localeCompare(b.address) * -1
-                      : a?.address.localeCompare(b.address);
-                  });
-                }}
+                onClick={() => setSortConfig([!sortConfig[0], 'name'])}
               >
                 Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
                 {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
