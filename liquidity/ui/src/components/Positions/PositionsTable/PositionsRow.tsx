@@ -150,7 +150,13 @@ export function PositionRow({
 
       <Td border="none">
         <Flex flexDirection="column" alignItems="flex-end">
-          <DebtAmount debt={debt} showPNL={isBase} />
+          <DebtAmount
+            debt={debt}
+            showPNL={isBase}
+            lineHeight="1.25rem"
+            fontFamily="heading"
+            fontSize="sm"
+          />
           <Collapse in={!debt.eq(0)}>
             <Text
               color="cyan.500"

@@ -10,7 +10,7 @@ export const getHealthVariant = ({
   if (!liquidationCratio || !targetCratio || !cRatio) {
     return 'success';
   }
-  if (cRatio === 0) {
+  if (cRatio <= 0) {
     return 'success';
   }
   if (cRatio < liquidationCratio) {
@@ -22,7 +22,7 @@ export const getHealthVariant = ({
   return 'success';
 };
 
-export const ratioIsMaxUInt = (ratio: number) => ratio >= Number.MAX_SAFE_INTEGER;
+export const ratioIsMaxUInt = (ratio: number) => ratio >= Number.MAX_SAFE_INTEGER || ratio < 0;
 
 export const getProgressSize = ({
   targetCratio,
