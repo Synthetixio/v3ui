@@ -146,16 +146,18 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           Current {councilPeriod === '1' ? 'Nominees' : 'Results'}
         </Heading>
         <InputGroup maxW="320px">
-          <InputRightElement cursor="pointer">
-            <CloseIcon
-              w={3}
-              h={3}
-              zIndex={10}
-              onClick={() => {
-                setSearch('');
-              }}
-            />
-          </InputRightElement>
+          {search && (
+            <InputRightElement cursor="pointer">
+              <CloseIcon
+                w={3}
+                h={3}
+                zIndex={10}
+                onClick={() => {
+                  setSearch('');
+                }}
+              />
+            </InputRightElement>
+          )}
           <Input
             bg="navy.900"
             placeholder="Search"

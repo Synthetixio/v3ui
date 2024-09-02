@@ -12,6 +12,7 @@ import { BigNumber } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
+import { motherShipProvider } from '../utils/providers';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -50,6 +51,16 @@ export function useCastVotes(
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
           );
+          const nomineesCheck = await Promise.all(
+            electionModules.map(async (council, index) =>
+              council.connect(motherShipProvider()).isNominated(candidates[councils[index]])
+            )
+          );
+
+          // TODO @dev check if its the wanted behaviour
+          if (nomineesCheck.some((val) => val === false)) {
+            throw new Error('Some of the candidates were not nominees');
+          }
           const prepareBallotData = councils
             .map((council, index) => {
               if (!getVotingPowerByCouncil(council)?.isDeclared) {
@@ -114,10 +125,11 @@ export function useCastVotes(
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
               value: isMC ? 0 : quote.add(quote.mul(25).div(100)),
             });
-        } catch (error) {
+        } catch (error: any) {
           console.error(error);
           toast({
-            description: 'Could not cast votes.',
+            title: 'Could not cast votes.',
+            description: error && 'message' in error ? error.message : '',
             status: 'error',
             isClosable: true,
           });
@@ -126,9 +138,10 @@ export function useCastVotes(
         console.error('signer not connected');
       }
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        description: 'Could not cast votes.',
+        title: 'Could not cast votes.',
+        description: error.message,
         status: 'error',
         isClosable: true,
       });
