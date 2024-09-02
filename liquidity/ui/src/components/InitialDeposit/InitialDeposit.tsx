@@ -99,7 +99,7 @@ export const InitialDepositUi: FC<{
           </Text>
           <BorderBox display="flex" flexDirection="column" p={3} mb="6">
             <Flex alignItems="center">
-              <Flex flexDir="column">
+              <Flex flexDir="column" gap={1}>
                 <BorderBox
                   display="flex"
                   justifyContent="center"
