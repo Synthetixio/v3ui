@@ -322,7 +322,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     // if debt is negative it's actually credit, which means we can undelegate all collateral
     if (newDebt.lte(0)) return collateralAmount;
 
-    const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
+    const minCollateralRequired = newDebt.mul(collateralType.liquidationRatioD18);
 
     if (collateralValue.lt(minCollateralRequired))
       // If you're below issuance ratio, you can't withdraw anything

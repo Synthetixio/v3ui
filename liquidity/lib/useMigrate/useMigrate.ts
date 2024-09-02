@@ -53,6 +53,11 @@ export function useMigrate() {
         const parsedError = parseTxError(error);
         const errorResult = legacyMarket.interface.parseError(parsedError as string);
         console.error('error:', errorResult);
+
+        return {
+          gasLimit: wei(1),
+          gasPrice: '2',
+        };
         return null;
       }
     },

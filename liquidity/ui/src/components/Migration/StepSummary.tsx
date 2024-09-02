@@ -17,11 +17,11 @@ import { useV2Position } from '@snx-v3/useV2Position';
 import { Network } from '@snx-v3/useBlockchain';
 import { InfoIcon } from '@chakra-ui/icons';
 import { useMigrate } from '@snx-v3/useMigrate';
-import { useSNXPrice } from '@snx-v3/useSNXPrice';
 import { StepSuccess } from './StepSuccess';
 import { formatEther } from 'ethers/lib/utils';
 import { Amount } from '@snx-v3/Amount';
 import { CRatioBadge } from '../CRatioBar/CRatioBadge';
+import { useRates } from '@snx-v3/useRates';
 
 export const StepSummary = ({
   onClose,
@@ -36,7 +36,9 @@ export const StepSummary = ({
   const { data } = useV2Position(network);
   const { migrate, transaction, isLoading, isSuccess, accountId } = useMigrate();
 
-  const { data: snxPrice } = useSNXPrice(network);
+  const { data: rates } = useRates();
+  const snxPrice = rates?.snx;
+  const ethPrice = rates?.eth;
 
   const [txSummary, setTxSummary] = useState({
     collateral: '0',
@@ -183,6 +185,20 @@ export const StepSummary = ({
                     )}
                     suffix=" ETH"
                   />
+
+                  {ethPrice?.gt(0) && (
+                    <>
+                      &nbsp;($
+                      {ethPrice
+                        .mul(
+                          formatEther(
+                            transaction?.gasLimit.mul(transaction.gasPrice || 1).toString() || 0
+                          )
+                        )
+                        .toString(2)}
+                      )
+                    </>
+                  )}
                 </Text>
               ) : (
                 <Text color="red">Transaction error occured, please seek support</Text>
