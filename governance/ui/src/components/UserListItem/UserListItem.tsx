@@ -70,12 +70,13 @@ export default function UserListItem({
           size="xs"
           variant="outline"
           colorScheme="gray"
+          _hover={{}}
           onClick={(e) => {
             e.stopPropagation();
             if (!nominationInformation?.isNominated) {
-              navigate(`/councils/${activeCouncil}?nominate=true`);
+              navigate(`/councils/${activeCouncil}?view=${address}&nominate=true`);
             } else {
-              navigate(`/councils/${activeCouncil}?editNomination=true`);
+              navigate(`/councils/${activeCouncil}?view=${address}`);
             }
           }}
           data-cy="user-list-item-button-nomination"
@@ -93,14 +94,14 @@ export default function UserListItem({
           variant="outline"
           colorScheme="gray"
           data-cy="nominate-self-button-user-profile-details-voting-period"
+          _hover={{}}
           onClick={(e) => {
             e.stopPropagation();
             if (nominationInformation?.isNominated) {
               navigate(`/councils/${activeCouncil}?view=${address}`);
             } else {
               navigate({
-                pathname: `/councils/${activeCouncil}`,
-                search: 'nominate=true',
+                pathname: `/councils/${activeCouncil}?view=${address}&nominate=true`,
               });
             }
           }}
@@ -115,9 +116,17 @@ export default function UserListItem({
             size="xs"
             variant="outline"
             colorScheme="gray"
+            _hover={{}}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/councils/${activeCouncil}?view=${address}`);
+              if (nominationInformation?.isNominated && isNominatedFetched) {
+                navigate(`/councils/${activeCouncil}?view=${address}`);
+              } else {
+                navigate({
+                  pathname: `/councils/${activeCouncil}`,
+                  search: 'nominate=true',
+                });
+              }
             }}
             color="white"
           >

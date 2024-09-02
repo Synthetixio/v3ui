@@ -26,6 +26,7 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
           toast({
             description: err?.message ? err.message : 'Something went wrong.',
             status: 'error',
+            isClosable: true,
           });
           throw new Error(err);
         }
@@ -51,6 +52,7 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
       toast({
         description: 'Successfully nominated yourself.',
         status: 'success',
+        isClosable: true,
       });
     },
   });

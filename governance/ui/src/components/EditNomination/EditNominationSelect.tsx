@@ -1,11 +1,12 @@
 import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useGetUserDetailsQuery } from '../../queries';
-import { useWallet } from '../../queries/useWallet';
+import { useNetwork, useWallet } from '../../queries/useWallet';
 import { useGetIsNominated } from '../../queries/useGetIsNominated';
 import { Dispatch, SetStateAction } from 'react';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
+import { isMotherchain } from '../../utils/contracts';
 
 export default function EditNominationSelect({
   selectedCouncil,
@@ -17,8 +18,11 @@ export default function EditNominationSelect({
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const { activeWallet } = useWallet();
+  const { network } = useNetwork();
   const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
   const { data: user } = useGetUserDetailsQuery(activeWallet?.address);
+
+  const isNotMotherchain = !isMotherchain(network?.id);
 
   return (
     <>
@@ -166,11 +170,16 @@ export default function EditNominationSelect({
 
       <Button
         mt="auto"
-        onClick={() => setShowConfirm(true)}
+        onClick={() => {
+          if (isNotMotherchain) {
+          } else {
+            setShowConfirm(true);
+          }
+        }}
         data-cy="edit-nomination-button"
-        isDisabled={selectedCouncil === null}
+        isDisabled={selectedCouncil === null || isNotMotherchain}
       >
-        Edit Nomination
+        {isNotMotherchain ? 'Wrong Chain' : 'Edit Nomination'}
       </Button>
     </>
   );

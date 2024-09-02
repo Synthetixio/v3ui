@@ -56,7 +56,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
             setShowConfirm(false);
           } else {
             setSelectedCouncil(null);
-            navigate(`/councils/${activeCouncil}`);
+            navigate(`/councils/${activeCouncil}?view=${activeWallet?.address}`);
           }
         }}
         size="xs"

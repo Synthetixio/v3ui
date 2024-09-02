@@ -1,4 +1,4 @@
-import { Flex, Heading, Icon, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Icon, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { CouncilImage } from '../CouncilImage';
 import { Link } from 'react-router-dom';
@@ -57,16 +57,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
             Stipends: {council?.stipends}/month
           </Heading>
           <Link to={council?.docLink || ''} target="_blank" rel="noopener noreferrer">
-            <Heading
-              fontSize="xs"
-              lineHeight="1rem"
-              border="1px solid"
-              borderColor="gray.900"
-              rounded="base"
-              px="2"
-              py="1"
-              cursor="pointer"
-            >
+            <Button variant="outline" colorScheme="gray" size="xs">
               Learn more{' '}
               <Icon width="12px" height="12px" viewBox="0 0 12 12" fill="none">
                 <g clipPath="url(#clip0_7624_75578)">
@@ -81,7 +72,7 @@ export default function CouncilInformation({ activeCouncil }: { activeCouncil: C
                   </clipPath>
                 </defs>
               </Icon>
-            </Heading>
+            </Button>
           </Link>
         </Flex>
       </Flex>

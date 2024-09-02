@@ -4,6 +4,8 @@ import {
   Flex,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Table,
   TableContainer,
   Tbody,
@@ -26,6 +28,7 @@ import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
 import TableLoading from '../TableLoading/TableLoading';
+import { CloseIcon } from '@chakra-ui/icons';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
@@ -130,13 +133,24 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         <Heading fontSize="medium">
           Current {councilPeriod === '1' ? 'Nominees' : 'Results'}
         </Heading>
-        <Input
-          zIndex="1"
-          maxW="320px"
-          bg="navy.900"
-          placeholder="Search"
-          onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
-        />
+        <InputGroup maxW="320px">
+          <InputRightElement cursor="pointer">
+            <CloseIcon
+              w={3}
+              h={3}
+              zIndex={10}
+              onClick={() => {
+                setSearch('');
+              }}
+            />
+          </InputRightElement>
+          <Input
+            bg="navy.900"
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
+          />
+        </InputGroup>
       </Flex>
       <TableContainer>
         <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
@@ -234,9 +248,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               ))
             ) : isLoading ? (
               <TableLoading />
-            ) : (
-              <></>
-            )}
+            ) : !!search ? (
+              <Text color="gray.500" fontSize="sm" p="4">
+                No results found, try another search
+              </Text>
+            ) : null}
           </Tbody>
         </Table>
       </TableContainer>

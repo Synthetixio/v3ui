@@ -119,6 +119,7 @@ export function useCastVotes(
           toast({
             description: 'Could not cast votes.',
             status: 'error',
+            isClosable: true,
           });
         }
       } else {
@@ -129,6 +130,7 @@ export function useCastVotes(
       toast({
         description: 'Could not cast votes.',
         status: 'error',
+        isClosable: true,
       });
     },
     onSuccess: async () => {
