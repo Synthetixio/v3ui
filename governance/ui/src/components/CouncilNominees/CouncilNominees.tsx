@@ -25,6 +25,7 @@ import { utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
 import { useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
+import TableLoading from '../TableLoading/TableLoading';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
@@ -32,7 +33,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
 
   const { activeWallet, connect } = useWallet();
 
-  const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
+  const { data: councilNomineesDetails, isLoading } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -98,22 +99,25 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           data-cy="own-user-list-item"
         />
       ) : (
-        <Flex justifyContent="space-between" alignItems="center" px="6" py="4">
+        <Flex alignItems="center" px={{ base: 2, sm: '6' }} py="4">
+          <CouncilImage
+            imageUrl={council?.image || ''}
+            width="40px"
+            height="40px"
+            minW="40px"
+            minH="40px"
+            imageProps={{ w: '32px', h: '32px' }}
+          />
           <Text
             fontSize="14px"
             fontWeight={700}
             color="white"
-            as={Flex}
             alignItems="center"
             gap="2"
             textTransform="capitalize"
+            maxW="300px"
+            mr="auto"
           >
-            <CouncilImage
-              imageUrl={council?.image || ''}
-              width="40px"
-              height="40px"
-              imageProps={{ w: '32px', h: '32px' }}
-            />
             Nominate Yourself for the {activeCouncil} Council
           </Text>
           <Button size="xs" onClick={() => connect()} minW="100px">
@@ -219,7 +223,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             </Tr>
           </Thead>
           <Tbody>
-            {!!sortedNominees?.length &&
+            {!!sortedNominees?.length ? (
               sortedNominees.map((councilNominee, index) => (
                 <UserTableView
                   place={index}
@@ -227,7 +231,12 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}
                 />
-              ))}
+              ))
+            ) : isLoading ? (
+              <TableLoading />
+            ) : (
+              <></>
+            )}
           </Tbody>
         </Table>
       </TableContainer>
