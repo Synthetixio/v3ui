@@ -10,6 +10,7 @@ import { ZEROWEI } from '../../utils/constants';
 import { ChangeStat } from './ChangeStat';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { DebtAmount } from '../Positions/PositionsTable/DebtAmount';
 
 export const DebtStats: FC<{
   liquidityPosition?: LiquidityPosition;
@@ -62,13 +63,7 @@ export const DebtStats: FC<{
             <ChangeStat
               value={liquidityPosition.debt}
               newValue={newDebt}
-              formatFn={(val: Wei) =>
-                currency(val, {
-                  currency: 'USD',
-                  style: 'currency',
-                  maximumFractionDigits: 4,
-                })
-              }
+              formatFn={(val: Wei) => <DebtAmount debt={val} />}
               hasChanges={hasChanges}
               dataTestId="manage-stats-debt-value"
             />

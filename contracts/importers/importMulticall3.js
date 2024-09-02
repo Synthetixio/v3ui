@@ -21,12 +21,18 @@ export async function importMulticall3(chainId, preset) {
   const deployment = `${Number(chainId).toFixed(0)}-${preset}`;
   switch (deployment) {
     case '1-main': {
-      const { mainnet } = await import('viem/chains');
-      return { address: mainnet.contracts.multicall3.address, abi: abi };
+      const [{ default: meta }, { default: abi }] = await Promise.all([
+        import('@synthetixio/v3-contracts/1-main/meta.json'),
+        import('@synthetixio/v3-contracts/1-main/TrustedMulticallForwarder.readable.json'),
+      ]);
+      return { address: meta.contracts.TrustedMulticallForwarder, abi };
     }
     case '11155111-main': {
-      const { sepolia } = await import('viem/chains');
-      return { address: sepolia.contracts.multicall3.address, abi: abi };
+      const [{ default: meta }, { default: abi }] = await Promise.all([
+        import('@synthetixio/v3-contracts/11155111-main/meta.json'),
+        import('@synthetixio/v3-contracts/11155111-main/TrustedMulticallForwarder.readable.json'),
+      ]);
+      return { address: meta.contracts.TrustedMulticallForwarder, abi };
     }
     case '10-main': {
       const { optimism } = await import('viem/chains');
