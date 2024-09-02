@@ -19,7 +19,6 @@
     "@snx-v3/formatters": "workspace:*",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/useLocalStorage": "workspace:*",
     "@synthetixio/v3-theme": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
     "@web3-onboard/coinbase": "^2.4.1",

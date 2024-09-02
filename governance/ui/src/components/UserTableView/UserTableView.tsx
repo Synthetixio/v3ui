@@ -97,7 +97,6 @@ export default function UserTableView({
       >
         <Flex gap="2" alignItems="center">
           <ProfilePicture
-            imageSrc={user?.pfpUrl}
             address={user?.address}
             size={9}
             mr="0"
@@ -125,7 +124,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          TODO
+          0
         </Td>
       )}
       {councilIsInAdminOrVoting && (
@@ -139,7 +138,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          TODO
+          0
         </Td>
       )}
       {councilPeriod !== '2' && councilPeriod !== '0' && (
@@ -179,7 +178,7 @@ export default function UserTableView({
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
         >
           <Badge w="fit-content" fontSize="xl" fontWeight={700}>
-            Your Vote TODO
+            0
           </Badge>
         </Td>
       )}

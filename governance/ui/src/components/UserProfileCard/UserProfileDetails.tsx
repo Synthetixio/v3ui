@@ -8,10 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
-import { useGetUserBallot, useNetwork } from '../../queries';
+import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -36,15 +37,17 @@ export const UserProfileDetails = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const { data: epochId } = useGetCurrentPeriod(activeCouncil);
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(activeCouncil);
   const elementRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
 
-  const isSelected = state[networkForState]
-    ? state[networkForState][activeCouncil]?.toLowerCase() === userData?.address?.toLowerCase()
+  const isSelected = voteAddressState
+    ? voteAddressState?.toLowerCase() === userData?.address?.toLowerCase()
     : false;
 
   const isAlreadyVoted =
@@ -122,7 +125,7 @@ export const UserProfileDetails = ({
             _hover={{}}
           />
         )}
-        <ProfilePicture imageSrc={userData?.pfpUrl} address={userData?.address} />
+        <ProfilePicture address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
             <Text
@@ -286,22 +289,24 @@ export const UserProfileDetails = ({
             mt={!isOwn ? 4 : 0}
             data-cy="select-user-to-vote-button"
             onClick={async () => {
+              const parsedNetwork = network?.id ? network.id.toString() : '2192';
               if (isAlreadyVoted) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: { action: 'remove', network: networkForState },
+                  payload: { action: 'remove', network: parsedNetwork, epochId },
                 });
               } else if (isSelected) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: { action: undefined, network: networkForState },
+                  payload: { action: undefined, network: parsedNetwork, epochId },
                 });
               } else {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
                   payload: {
                     action: userData?.address.toLowerCase(),
-                    network: networkForState,
+                    network: parsedNetwork,
+                    epochId,
                   },
                 });
               }

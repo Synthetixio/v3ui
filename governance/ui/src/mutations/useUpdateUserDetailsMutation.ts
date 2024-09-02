@@ -11,7 +11,8 @@ import { SiweMessage } from 'siwe';
 import { useGetIsUUIDValidQuery } from '../queries/';
 import { utils } from 'ethers';
 import { GetUserDetails } from '../queries/useGetUserDetailsQuery';
-import { useWallet, useSigner } from '../queries/useWallet';
+import { useWallet, useSigner, useNetwork } from '../queries/useWallet';
+import { isMotherchain, profileContract } from '../utils/contracts';
 
 type UpdateUserDetailsResponse = {
   data: GetUserDetails & {
@@ -51,6 +52,7 @@ function useUpdateUserDetailsMutation() {
   const { activeWallet } = useWallet();
   const signer = useSigner();
   const toast = useToast();
+  const { network } = useNetwork();
 
   const [uuid, setUuid] = useState<null | string>(null);
 
@@ -107,47 +109,66 @@ function useUpdateUserDetailsMutation() {
   return useMutation({
     mutationKey: ['updateUserDetails'],
     mutationFn: async (userProfile: GetUserDetails) => {
-      let signedInUuid = '';
-      if (!isUuidValidQuery.data) {
-        signedInUuid = (await boardroomSignIn()) || '';
-      }
-      if (activeWallet?.address) {
-        const body = {
-          ...userProfile,
-          uuid: signedInUuid,
-        };
-        const updateUserDetailsResponse = await fetch(
-          UPDATE_USER_DETAILS_API_URL(activeWallet.address),
+      const address = await signer?.getAddress();
+      const isContract = await signer?.provider.getCode(address || '');
+      if (isContract !== '0x' && signer && isMotherchain(network?.id)) {
+        await profileContract.connect(signer).updateProfile(
           {
-            method: 'POST',
-            body: JSON.stringify(body),
+            username: userProfile.username,
+            about: userProfile.about,
+            github: userProfile.github,
+            twitter: userProfile.twitter,
+            discord: userProfile.discord,
+            delegationPitch: userProfile.delegationPitch,
+          },
+          {
+            maxPriorityFeePerGas: utils.parseUnits('1', 'gwei'),
+            maxFeePerGas: utils.parseUnits('2', 'gwei'),
           }
         );
-
-        const updateUserDetailsResult =
-          (await updateUserDetailsResponse.json()) as UpdateUserDetailsResponse;
-
-        let updateDelegationPitchResult = {
-          data: {},
-        };
-
-        if (userProfile.delegationPitch) {
-          const delegationPitchesBody = {
-            protocol: 'synthetix',
-            address: activeWallet.address,
-            delegationPitch: userProfile.delegationPitch,
+      } else {
+        let signedInUuid = '';
+        if (!isUuidValidQuery.data) {
+          signedInUuid = (await boardroomSignIn()) || '';
+        }
+        if (activeWallet?.address) {
+          const body = {
+            ...userProfile,
             uuid: signedInUuid,
           };
-          const delegationUpdateReponse = await fetch(UPDATE_USER_PITCH_FOR_PROTOCOL, {
-            method: 'POST',
-            body: JSON.stringify(delegationPitchesBody),
-          });
-          updateDelegationPitchResult = await delegationUpdateReponse.json();
-        }
+          const updateUserDetailsResponse = await fetch(
+            UPDATE_USER_DETAILS_API_URL(activeWallet.address),
+            {
+              method: 'POST',
+              body: JSON.stringify(body),
+            }
+          );
 
-        return { ...updateUserDetailsResult.data, ...updateDelegationPitchResult.data };
-      } else {
-        return new Error();
+          const updateUserDetailsResult =
+            (await updateUserDetailsResponse.json()) as UpdateUserDetailsResponse;
+
+          let updateDelegationPitchResult = {
+            data: {},
+          };
+
+          if (userProfile.delegationPitch) {
+            const delegationPitchesBody = {
+              protocol: 'synthetix',
+              address: activeWallet.address,
+              delegationPitch: userProfile.delegationPitch,
+              uuid: signedInUuid,
+            };
+            const delegationUpdateReponse = await fetch(UPDATE_USER_PITCH_FOR_PROTOCOL, {
+              method: 'POST',
+              body: JSON.stringify(delegationPitchesBody),
+            });
+            updateDelegationPitchResult = await delegationUpdateReponse.json();
+          }
+
+          return { ...updateUserDetailsResult.data, ...updateDelegationPitchResult.data };
+        } else {
+          return new Error();
+        }
       }
     },
 

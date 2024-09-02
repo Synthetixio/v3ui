@@ -5357,7 +5357,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/contracts@workspace:contracts"
   dependencies:
-    "@synthetixio/v3-contracts": "npm:^6.5.0"
+    "@synthetixio/v3-contracts": "npm:^6.7.0"
     viem: "npm:^2.13.5"
   languageName: unknown
   linkType: soft
@@ -5443,7 +5443,6 @@ __metadata:
     "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useLocalStorage": "workspace:*"
     "@synthetixio/v3-theme": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     "@tanstack/react-query-devtools": "npm:^5.8.3"

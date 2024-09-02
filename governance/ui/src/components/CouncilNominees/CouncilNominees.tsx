@@ -5,13 +5,14 @@ import {
   Heading,
   Input,
   Table,
+  TableContainer,
   Tbody,
   Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../../utils/councils';
+import councils, { calculateNextEpoch, CouncilSlugs } from '../../utils/councils';
 import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { useGetNextElectionSettings } from '../../queries/useGetNextElectionSettings';
@@ -38,46 +39,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
 
   const council = councils.find((council) => council.slug === activeCouncil);
 
-  const startDay =
-    councilSchedule?.endDate && new Date(councilSchedule?.endDate * 1000).getUTCDate();
-  const startMonth =
-    councilSchedule?.endDate &&
-    new Date(councilSchedule.endDate * 1000).toLocaleString('default', { month: 'short' });
-  const startYear =
-    councilSchedule?.endDate && new Date(councilSchedule.endDate * 1000).getUTCFullYear();
-
-  const endDay =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getUTCDate();
-  const endMonth =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).toLocaleString('default', {
-      month: 'short',
-    });
-  const endYear =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getUTCFullYear();
-
-  const startQuarter =
-    councilSchedule?.endDate &&
-    Math.floor(new Date(councilSchedule.endDate * 1000).getMonth() / 3 + 1);
-
-  const endQuarter =
-    councilSchedule?.endDate &&
-    nextEpochDuration &&
-    Math.floor(
-      new Date(councilSchedule.endDate * 1000 + nextEpochDuration * 1000).getMonth() / 3 + 1
-    );
-
-  const quarter =
-    startYear === endYear && startQuarter === endQuarter
-      ? `Q${startQuarter} ${startYear}`
-      : startYear === endYear
-        ? `Q${startQuarter} - ${endYear}`
-        : `Q${startQuarter} ${startYear} - Q${endQuarter} ${endYear}`;
+  const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
 
   let sortedNominees = useMemo(() => {
     return !!councilNomineesDetails?.length
@@ -117,10 +79,11 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       <Flex p="6" justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
-            Nominees for {quarter}
+            Nominees for {epoch.quarter}
           </Heading>
           <Text fontSize="xs" w="100%">
-            {startDay} {startMonth} {startYear} - {endDay} {endMonth} {endYear}
+            {epoch.startDay} {epoch.startMonth} {epoch.startYear} - {epoch.endDay} {epoch.endMonth}{' '}
+            {epoch.endYear}
           </Text>
         </Flex>
         <Flex justifyContent="flex-end">
@@ -153,7 +116,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             />
             Nominate Yourself for the {activeCouncil} Council
           </Text>
-          <Button size="xs" onClick={() => connect()}>
+          <Button size="xs" onClick={() => connect()} minW="100px">
             Connect Wallet
           </Button>
         </Flex>
@@ -171,98 +134,103 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
         />
       </Flex>
-      <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
-        <Thead>
-          <Tr>
-            {councilPeriod === '2' && (
+      <TableContainer>
+        <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
+          <Thead>
+            <Tr>
+              {councilPeriod === '2' && (
+                <Th
+                  cursor="pointer"
+                  w="50px"
+                  userSelect="none"
+                  px="0"
+                  textAlign="center"
+                  onClick={() => {
+                    setSortConfig([!sortConfig[0], 'ranking']);
+                    // sortedNominees = sortedNominees.sort((a, b) => {
+                    // TODO implement sorting for most votes when subgraph is ready
+                    // });
+                  }}
+                >
+                  N°{' '}
+                  {sortConfig[1] === 'ranking' && sortConfig[0] && (
+                    <SortArrows up={sortConfig[0]} />
+                  )}
+                </Th>
+              )}
               <Th
+                textTransform="capitalize"
+                w="200px"
                 cursor="pointer"
-                w="50px"
                 userSelect="none"
-                px="0"
-                textAlign="center"
+                data-cy="name-table-header"
                 onClick={() => {
-                  setSortConfig([!sortConfig[0], 'ranking']);
-                  // sortedNominees = sortedNominees.sort((a, b) => {
-                  // TODO implement sorting for most votes when subgraph is ready
-                  // });
-                }}
-              >
-                N°{' '}
-                {sortConfig[1] === 'ranking' && sortConfig[0] && <SortArrows up={sortConfig[0]} />}
-              </Th>
-            )}
-            <Th
-              textTransform="capitalize"
-              w="200px"
-              cursor="pointer"
-              userSelect="none"
-              data-cy="name-table-header"
-              onClick={() => {
-                setSortConfig([!sortConfig[0], 'name']);
-                sortedNominees = sortedNominees.sort((a, b) => {
-                  if (a.username && b.username) {
+                  setSortConfig([!sortConfig[0], 'name']);
+                  sortedNominees = sortedNominees.sort((a, b) => {
+                    if (a.username && b.username) {
+                      return sortConfig[0]
+                        ? a.username.localeCompare(b.username)
+                        : a.username.localeCompare(b.username) * -1;
+                    }
                     return sortConfig[0]
-                      ? a.username.localeCompare(b.username)
-                      : a.username.localeCompare(b.username) * -1;
-                  }
-                  return sortConfig[0]
-                    ? a?.address.localeCompare(b.address) * -1
-                    : a?.address.localeCompare(b.address);
-                });
-              }}
-            >
-              Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
-              {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
-            </Th>
-            {councilPeriod === '2' && (
-              <Th
-                cursor="pointer"
-                w="150px"
-                px="0"
-                userSelect="none"
-                textTransform="capitalize"
-                pl="6"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'votes']);
-                  // sortedNominees = sortedNominees.sort((a, b) => {
-                  // TODO implement sorting for most votes when subgraph is ready
-                  // });
+                      ? a?.address.localeCompare(b.address) * -1
+                      : a?.address.localeCompare(b.address);
+                  });
                 }}
               >
-                Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
+                Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
+                {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
               </Th>
-            )}
-            {councilPeriod === '2' && (
-              <Th
-                cursor="pointer"
-                userSelect="none"
-                textTransform="capitalize"
-                pl="6"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'votingPower']);
-                  // sortedNominees = sortedNominees.sort((a, b) => {
-                  // TODO implement sorting for most votes when subgraph is ready
-                  // });
-                }}
-              >
-                Voting Power {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
-              </Th>
-            )}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {!!sortedNominees?.length &&
-            sortedNominees.map((councilNominee, index) => (
-              <UserTableView
-                place={index}
-                user={councilNominee!}
-                activeCouncil={activeCouncil}
-                key={councilNominee.address.concat('council-nominees')}
-              />
-            ))}
-        </Tbody>
-      </Table>
+              {councilPeriod === '2' && (
+                <Th
+                  cursor="pointer"
+                  w="150px"
+                  px="0"
+                  userSelect="none"
+                  textTransform="capitalize"
+                  pl="6"
+                  onClick={() => {
+                    setSortConfig([!sortConfig[0], 'votes']);
+                    // sortedNominees = sortedNominees.sort((a, b) => {
+                    // TODO implement sorting for most votes when subgraph is ready
+                    // });
+                  }}
+                >
+                  Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
+                </Th>
+              )}
+              {councilPeriod === '2' && (
+                <Th
+                  cursor="pointer"
+                  userSelect="none"
+                  textTransform="capitalize"
+                  pl="6"
+                  onClick={() => {
+                    setSortConfig([!sortConfig[0], 'votingPower']);
+                    // sortedNominees = sortedNominees.sort((a, b) => {
+                    // TODO implement sorting for most votes when subgraph is ready
+                    // });
+                  }}
+                >
+                  Voting Power{' '}
+                  {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
+                </Th>
+              )}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {!!sortedNominees?.length &&
+              sortedNominees.map((councilNominee, index) => (
+                <UserTableView
+                  place={index}
+                  user={councilNominee!}
+                  activeCouncil={activeCouncil}
+                  key={councilNominee.address.concat('council-nominees')}
+                />
+              ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Flex>
   );
 }

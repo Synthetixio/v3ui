@@ -1,4 +1,4 @@
-import { Box, Flex, Hide, Show, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Hide, Show, Text } from '@chakra-ui/react';
 import councils, { CouncilSlugs } from '../../utils/councils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
@@ -8,9 +8,10 @@ import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
 import { useGetUserDetailsQuery, useGetUserBallot, useNetwork } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
 import { useVoteContext } from '../../context/VoteContext';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -19,8 +20,16 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
   const { network } = useNetwork();
-  const networkForState = network?.id.toString() || '2192';
+  const { data: epochId } = useGetCurrentPeriod(activeCouncil);
   const { state } = useVoteContext();
+  const networkForState = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+
   const votedNomineesData = [
     useGetUserBallot('spartan'),
     useGetUserBallot('ambassador'),
@@ -54,6 +63,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
       <Hide above="xl">
         <Flex
           w="100%"
+          h="73px"
           bg="navy.700"
           borderBottomWidth="1px"
           borderStyle="solid"
@@ -66,14 +76,29 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           alignItems="center"
           zIndex={99}
         >
-          {/* If on my votes page, spartan council is active by default for navigation */}
-          <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
-          <MyVotesSummary
-            isLoading={isLoading}
-            councilPeriod={councilPeriod}
-            schedule={schedule}
-            isInMyVotesPage={false}
-          />
+          {isInMyVotesPage ? (
+            <Button
+              colorScheme="gray"
+              variant="outline"
+              leftIcon={<ArrowBackIcon />}
+              onClick={() => {
+                navigate('/councils/spartan');
+              }}
+            >
+              Back to Councils
+            </Button>
+          ) : (
+            // If on my votes page, spartan council is active by default for navigation
+            <>
+              <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
+              <MyVotesSummary
+                isLoading={isLoading}
+                councilPeriod={councilPeriod}
+                schedule={schedule}
+                isInMyVotesPage={false}
+              />
+            </>
+          )}
         </Flex>
       </Hide>
       <Show above="xl">
@@ -94,9 +119,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = state[networkForState]
-                ? state[networkForState][council.slug]
-                : '';
+              const newVoteCast = typeof networkForState !== 'string' ? networkForState : '';
 
               return (
                 <Flex
@@ -137,12 +160,11 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
+                  {councilPeriod === '2' && utils.isAddress(voteAddressState) ? (
                     <ProfilePicture
-                      imageSrc={userInformation[index].userInformation?.pfpUrl}
                       address={userInformation[index].userInformation?.address}
                       size={9}
-                      newVoteCast={newVoteCast}
+                      newVoteCast={voteAddressState}
                       isCouncilTabs={true}
                     />
                   ) : (
@@ -150,10 +172,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                       <>
                         {userInformation[index].userInformation?.address && (
                           <ProfilePicture
-                            imageSrc={userInformation[index].userInformation?.pfpUrl}
                             address={userInformation[index].userInformation?.address}
                             size={9}
-                            newVoteCast={newVoteCast}
+                            newVoteCast={voteAddressState}
                           />
                         )}
 

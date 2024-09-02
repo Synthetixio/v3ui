@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { CouncilSlugs } from '../utils/councils';
-import { SnapshotRecordContract, getCouncilContract } from '../utils/contracts';
+import { SnapshotRecordContract, getCouncilContract, isMotherchain } from '../utils/contracts';
 import { useProvider, useWallet } from './';
 import { BigNumber, ethers } from 'ethers';
 import { motherShipProvider } from '../utils/providers';
+import { sqrt } from '../utils/math';
 
 export function useGetUserVotingPower(council: CouncilSlugs) {
   const { network } = useNetwork();
@@ -17,12 +18,10 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
 
       try {
         const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
-        const isMotherchain = true;
-        // TODO @dev keep an eye on tha
-        // network.id === (process.env.CI === 'true' ? 13001 : 2192);
+        const isMC = isMotherchain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
-        const ballot = isMotherchain
+        const ballot = isMC
           ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
           : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
 
@@ -33,7 +32,7 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
             return { power: ballot as BigNumber, isDeclared: true };
           }
         }
-        const votingPower: BigNumber = isMotherchain
+        const votingPower: BigNumber = isMC
           ? await electionModule
               .connect(provider)
               .callStatic.prepareBallotWithSnapshot(
@@ -43,7 +42,11 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
           : await SnapshotRecordContract(network.id, council)
               ?.connect(provider)
               .balanceOfOnPeriod(activeWallet.address, 1);
-        return { power: votingPower, isDeclared: false };
+        //  TODO @dev check when prod is live
+        return {
+          power: process.env.CI === 'true' ? votingPower : sqrt(votingPower),
+          isDeclared: false,
+        };
       } catch (error) {
         console.error('ERROR IS', { error });
         return { power: ethers.BigNumber.from(0), isDeclared: false };
@@ -51,6 +54,6 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
     },
     enabled: !!provider && !!activeWallet && !!network?.id,
     queryKey: ['votingPower', council.toString(), activeWallet?.address, network?.id],
-    staleTime: 60000,
+    staleTime: 900000,
   });
 }
