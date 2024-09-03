@@ -40,7 +40,6 @@ export default function MyVotes() {
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
   const stateFromCouncils = (
     typeof networkForState !== 'string' ? networkForState : {}
   ) as VoteStateForNetwork;
@@ -259,8 +258,8 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {voteAddressState ? (
-                    <ProfilePicture address={voteAddressState} size={9} />
+                  {stateFromCouncils[council.slug] ? (
+                    <ProfilePicture address={stateFromCouncils[council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
                   )}
