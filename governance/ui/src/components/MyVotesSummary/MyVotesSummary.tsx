@@ -5,7 +5,7 @@ import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext, VoteStateForNetwork } from '../../context/VoteContext';
-import { useGetCurrentPeriod, useGetEpochIndex, useNetwork } from '../../queries';
+import { useGetEpochIndex, useNetwork } from '../../queries';
 import { voteCardState } from '../../state/vote-card';
 import { useRecoilState } from 'recoil';
 import { getVoteSelectionState } from '../../utils/localstorage';

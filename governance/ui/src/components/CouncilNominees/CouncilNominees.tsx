@@ -259,7 +259,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   user={councilNominee!}
                   isSelectedForVoting={
                     councilNominee.address.toLowerCase() ===
-                    currentSelectedUser.toString().toLowerCase()
+                    currentSelectedUser?.toString().toLowerCase()
                   }
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}

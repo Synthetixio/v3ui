@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
-import { useGetCurrentPeriod, useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';

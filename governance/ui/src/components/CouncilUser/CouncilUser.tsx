@@ -8,12 +8,10 @@ export default function CouncilUser({
   address,
   councilSlug,
   hideName,
-  hideCouncil,
 }: {
   address?: string;
   councilSlug: CouncilSlugs;
   hideName?: boolean;
-  hideCouncil?: boolean;
 }) {
   const council = councils.find((council) => council.slug === councilSlug);
   const { data: user } = useGetUserDetailsQuery(address);
