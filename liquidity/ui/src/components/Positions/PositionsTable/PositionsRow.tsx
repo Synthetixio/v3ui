@@ -10,6 +10,7 @@ import { useTokenPrice } from '../../../../../lib/useTokenPrice';
 import { DebtAmount } from './DebtAmount';
 import { useRewards } from '@snx-v3/useRewards';
 import { useMemo } from 'react';
+import { CRatioAmount } from '../../CRatioBar/CRatioAmount';
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -176,7 +177,7 @@ export function PositionRow({
           <Fade in>
             <Flex flexDirection="column" alignItems="flex-end">
               <Text color="white" fontSize="sm" lineHeight="1.25rem" fontFamily="heading">
-                {debt.gt(0) ? (cRatio.toNumber() * 100).toFixed(2) + '%' : 'Infinite'}
+                <CRatioAmount value={cRatio.toNumber() * 100} />
               </Text>
               <CRatioBadge
                 cRatio={cRatio.toNumber() * 100}

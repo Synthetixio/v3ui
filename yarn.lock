@@ -3347,7 +3347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0":
+"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0, @ethersproject/providers@npm:^5.7.2":
   version: 5.7.2
   resolution: "@ethersproject/providers@npm:5.7.2"
   dependencies:
@@ -5578,15 +5578,19 @@ __metadata:
     "@snx-v3/useEthBalance": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useLocalStorage": "workspace:*"
     "@snx-v3/useManagePermissions": "workspace:*"
+    "@snx-v3/useMigrate": "workspace:*"
+    "@snx-v3/useMigrateUSD": "workspace:*"
     "@snx-v3/useOraclePrice": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolConfiguration": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
+    "@snx-v3/useRates": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:^"
     "@snx-v3/useRewardsDistributors": "workspace:*"
@@ -5594,8 +5598,11 @@ __metadata:
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useTransferAccountId": "workspace:*"
     "@snx-v3/useTransferableSynthetix": "workspace:*"
+    "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/useUndelegate": "workspace:*"
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
+    "@snx-v3/useV2Position": "workspace:*"
+    "@snx-v3/useV2sUSD": "workspace:*"
     "@snx-v3/useVaultsData": "workspace:*"
     "@snx-v3/validatePosition": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -6214,6 +6221,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useLegacyMarket@workspace:*, @snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useLegacyMarket@workspace:liquidity/lib/useLegacyMarket"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
@@ -6281,6 +6300,36 @@ __metadata:
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
     zod: "npm:^3.22.4"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useMigrate@workspace:*, @snx-v3/useMigrate@workspace:liquidity/lib/useMigrate":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useMigrate@workspace:liquidity/lib/useMigrate"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useMigrateUSD@workspace:*, @snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useGasOptions": "workspace:*"
+    "@snx-v3/useGasPrice": "workspace:*"
+    "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useLegacyMarket": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -6385,6 +6434,19 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     humanize-plus: "npm:^1.8.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useRates@workspace:*, @snx-v3/useRates@workspace:liquidity/lib/useRates":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useRates@workspace:liquidity/lib/useRates"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/contracts": "npm:^1.2.3"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -6611,6 +6673,43 @@ __metadata:
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useV2Position@workspace:*, @snx-v3/useV2Position@workspace:liquidity/lib/useV2Position":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useV2Position@workspace:liquidity/lib/useV2Position"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useV2xSynthetix": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useV2sUSD@workspace:*, @snx-v3/useV2sUSD@workspace:liquidity/lib/useV2sUSD":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useV2sUSD@workspace:liquidity/lib/useV2sUSD"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useV2xSynthetix": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useV2xSynthetix@workspace:*, @snx-v3/useV2xSynthetix@workspace:liquidity/lib/useV2xSynthetix":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useV2xSynthetix@workspace:liquidity/lib/useV2xSynthetix"
+  dependencies:
+    "@ethersproject/contracts": "npm:^5.7.0"
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -6962,6 +7061,16 @@ __metadata:
     "@stablelib/random": "npm:^1.0.2"
     "@stablelib/wipe": "npm:^1.0.1"
   checksum: fb5469e390ee2515d926633e3e179038894ac4f5e8c8cd2c2fc912022e34a051112eab0fe80c4dbc6e59129679844182562a036abff89444e5c4a05dd42ed329
+  languageName: node
+  linkType: hard
+
+"@synthetixio/contracts@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@synthetixio/contracts@npm:1.2.3"
+  dependencies:
+    "@ethersproject/abi": "npm:^5.7.0"
+    "@ethersproject/providers": "npm:^5.7.2"
+  checksum: db21ac9403c5508aa2760927d7825e95665c2ec1a3cf9dac0fab06835fcb34e9ede61c22d05be57cc34f03213d652ad2c4e0f250d8f879ae272056459a0a45b0
   languageName: node
   linkType: hard
 

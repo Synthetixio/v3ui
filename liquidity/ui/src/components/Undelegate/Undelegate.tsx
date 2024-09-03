@@ -88,7 +88,8 @@ export const UndelegateUi: FC<{
     isAnyMarketLocked === true ||
     collateralChange.gte(0) ||
     !isValidLeftover ||
-    overAvailableBalance;
+    overAvailableBalance ||
+    (currentDebt?.gt(0) && isBase);
 
   const txSummaryItems = useMemo(() => {
     const items = [
@@ -188,7 +189,7 @@ export const UndelegateUi: FC<{
         </Flex>
       </BorderBox>
       <Collapse in={isInputDisabled} animateOpacity>
-        <Alert mb={6} status="warning">
+        <Alert mb={6} status="warning" borderRadius="6px">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>Credit capacity reached</AlertTitle>
@@ -201,7 +202,7 @@ export const UndelegateUi: FC<{
       </Collapse>
 
       <Collapse in={!isValidLeftover && !collateralChange.eq(0)} animateOpacity>
-        <Alert mb={6} status="info">
+        <Alert mb={6} status="info" borderRadius="6px">
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>
@@ -228,7 +229,7 @@ export const UndelegateUi: FC<{
         in={collateralChange.abs().gt(0) && isValidLeftover && !isRunning && maxWithdrawable?.gt(0)}
         animateOpacity
       >
-        <Alert status="info" mb="6">
+        <Alert status="info" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You already have <Amount value={maxWithdrawable} suffix={` ${symbol}`} /> unlocked.
@@ -242,6 +243,24 @@ export const UndelegateUi: FC<{
               Withdraw
             </Text>{' '}
             before unlocking again as it will restart the 24h withdrawal timeout.
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse in={currentDebt?.gt(0) && isBase} animateOpacity>
+        <Alert status="error" mb="6" borderRadius="6px">
+          <AlertIcon />
+          <Text>
+            To Unlock this amount, you need to &nbsp;
+            <Text
+              onClick={() => navigate('repay')}
+              cursor="pointer"
+              as="span"
+              textDecoration="underline"
+            >
+              repay <Amount value={currentDebt} suffix={` ${symbol}`} />
+            </Text>{' '}
+            to your position
           </Text>
         </Alert>
       </Collapse>
@@ -322,7 +341,7 @@ export const Undelegate = ({ liquidityPosition }: { liquidityPosition?: Liquidit
     // if debt is negative it's actually credit, which means we can undelegate all collateral
     if (newDebt.lte(0)) return collateralAmount;
 
-    const minCollateralRequired = newDebt.mul(collateralType.issuanceRatioD18);
+    const minCollateralRequired = newDebt.mul(collateralType.liquidationRatioD18);
 
     if (collateralValue.lt(minCollateralRequired))
       // If you're below issuance ratio, you can't withdraw anything

@@ -40,7 +40,7 @@ export function NumberInput({
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       // Define max length here
-      if (e.target.value.length > 15) return;
+      if (e.target.value.length > 24) return;
 
       let _value = e.target.value;
 

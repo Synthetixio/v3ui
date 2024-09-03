@@ -84,7 +84,7 @@ const WithdrawUi: FC<{
       </BorderBox>
 
       <Collapse in={maxWithdrawable.gt(0) && isRunning} animateOpacity>
-        <Alert status="warning" mb="6">
+        <Alert status="warning" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You will be able to withdraw assets in {hours}H{minutes}M. Any account activity will
@@ -94,7 +94,7 @@ const WithdrawUi: FC<{
       </Collapse>
 
       <Collapse in={maxWithdrawable.gt(0) && !isRunning} animateOpacity>
-        <Alert status="success" mb="6">
+        <Alert status="success" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You can now withdraw <Amount value={maxWithdrawable} suffix={` ${symbol}`} />
@@ -103,7 +103,7 @@ const WithdrawUi: FC<{
       </Collapse>
 
       <Collapse in={amount.gt(maxWithdrawable)} animateOpacity>
-        <Alert colorScheme="red" mb="6">
+        <Alert colorScheme="red" mb="6" borderRadius="6px">
           <AlertIcon />
           <Text>
             You cannot Withdraw more {!isDebtWithdrawal ? 'Collateral' : ''} than your Unlocked

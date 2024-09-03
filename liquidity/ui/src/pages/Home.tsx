@@ -9,7 +9,7 @@ export function Home() {
         <title>Synthetix Liquidity V3</title>
         <meta name="description" content="Synthetix V3 - Dashboard" />
       </Helmet>
-      <Flex flexDir="column" mb={16}>
+      <Flex overflow="auto" flexDir="column" mb={16}>
         <Heading
           mt={[6, 10]}
           color="gray.50"

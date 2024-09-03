@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Network, useNetwork, useProviderForChain } from '@snx-v3/useBlockchain';
-import { erc7412Call } from '@snx-v3/withERC7412';
+import { erc7412Call, getDefaultFromAddress } from '@snx-v3/withERC7412';
 import { importOracleManagerProxy } from '@snx-v3/contracts';
 import { Contract } from 'ethers';
 import { Wei } from '@synthetixio/wei';
@@ -28,7 +28,7 @@ export function useOraclePrice(nodeId?: string, customNetwork?: Network) {
 
           const price = [await OracleManagerProxy.populateTransaction.process(nodeId)];
 
-          price[0].from = '0x4200000000000000000000000000000000000006';
+          price[0].from = getDefaultFromAddress(targetNetwork?.name || '');
 
           return await erc7412Call(
             targetNetwork,

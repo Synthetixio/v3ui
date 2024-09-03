@@ -22,9 +22,9 @@ import Wei from '@synthetixio/wei';
 import { FC, useContext, useMemo, useState } from 'react';
 import { useParams } from '@snx-v3/useParams';
 import { useTransferableSynthetix } from '@snx-v3/useTransferableSynthetix';
-import { CollateralAlert, TokenIcon } from '..';
+import { TokenIcon } from '..';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { MAINNET, SEPOLIA, useNetwork } from '@snx-v3/useBlockchain';
 import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
@@ -33,6 +33,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ZEROWEI } from '../../utils/constants';
 import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { MigrationBanner } from '../Migration/MigrationBanner';
 
 export const InitialDepositUi: FC<{
   collateralChange: Wei;
@@ -65,6 +66,7 @@ export const InitialDepositUi: FC<{
   const [step, setStep] = useState(0);
 
   const price = useTokenPrice(symbol);
+  const { network } = useNetwork();
 
   const combinedTokenBalance = useMemo(() => {
     if (symbol === 'SNX') {
@@ -99,7 +101,7 @@ export const InitialDepositUi: FC<{
           </Text>
           <BorderBox display="flex" flexDirection="column" p={3} mb="6">
             <Flex alignItems="center">
-              <Flex flexDir="column" gap={1}>
+              <Flex alignItems="flex-start" flexDir="column" gap="1">
                 <BorderBox
                   display="flex"
                   justifyContent="center"
@@ -154,7 +156,7 @@ export const InitialDepositUi: FC<{
                       color="cyan.500"
                       fontWeight={700}
                     >
-                      &nbsp; Max
+                      &nbsp;Max
                     </Text>
                   </Text>
                 </Tooltip>
@@ -181,8 +183,8 @@ export const InitialDepositUi: FC<{
               </Flex>
             </Flex>
           </BorderBox>
-          {snxBalance?.collateral && snxBalance?.collateral.gt(0) && symbol === 'SNX' && (
-            <CollateralAlert tokenBalance={snxBalance.collateral} />
+          {symbol === 'SNX' && network && [MAINNET.id, SEPOLIA.id].includes(network.id) && (
+            <MigrationBanner network={network} type="alert" />
           )}
           <Collapse
             in={
@@ -198,7 +200,7 @@ export const InitialDepositUi: FC<{
             }
             animateOpacity
           >
-            <Alert mb={6} status="error">
+            <Alert mb={6} status="error" borderRadius="6px">
               <AlertIcon />
               <AlertDescription>
                 Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
@@ -206,7 +208,7 @@ export const InitialDepositUi: FC<{
             </Alert>
           </Collapse>
           <Collapse in={overAvailableBalance} animateOpacity>
-            <Alert mb={6} status="error">
+            <Alert mb={6} status="error" borderRadius="6px">
               <AlertIcon />
               <AlertDescription>
                 You cannot Deposit & Lock more Collateral than your Balance amount

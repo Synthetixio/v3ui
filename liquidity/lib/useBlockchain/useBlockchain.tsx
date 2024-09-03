@@ -287,7 +287,10 @@ export const appMetadata = {
 };
 
 export function useProviderForChain(network?: Network | null) {
-  return network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined;
+  return useMemo(
+    () => (network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined),
+    [network]
+  );
 }
 
 export function useDefaultProvider() {
@@ -301,23 +304,25 @@ export function useWallet() {
   const connect = useCallback(conn, [conn]);
   const disconnect = useCallback(disconn, [disconn]);
 
-  if (!wallet) {
+  return useMemo(() => {
+    if (!wallet) {
+      return {
+        activeWallet: null,
+        walletsInfo: null,
+        connect,
+        disconnect,
+      };
+    }
+
+    const activeWallet = wallet?.accounts[0];
+
     return {
-      activeWallet: null,
-      walletsInfo: null,
+      activeWallet: activeWallet,
+      walletsInfo: wallet,
       connect,
       disconnect,
     };
-  }
-
-  const activeWallet = wallet?.accounts[0];
-
-  return {
-    activeWallet: activeWallet,
-    walletsInfo: wallet,
-    connect,
-    disconnect,
-  };
+  }, [connect, disconnect, wallet]);
 }
 
 export function useGetNetwork(chainId: string) {
@@ -362,23 +367,27 @@ export function useIsConnected(): boolean {
 export function useSigner() {
   const [{ wallet }] = useConnectWallet();
 
-  if (!wallet) {
-    return null;
-  }
+  return useMemo(() => {
+    if (!wallet) {
+      return null;
+    }
 
-  const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+    const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
 
-  return provider.getSigner();
+    return provider.getSigner();
+  }, [wallet]);
 }
 
 export function useProvider() {
   const [{ wallet }] = useConnectWallet();
 
-  if (!wallet) {
-    return null;
-  }
+  return useMemo(() => {
+    if (!wallet) {
+      return null;
+    }
 
-  const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+    const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
 
-  return provider;
+    return provider;
+  }, [wallet]);
 }
