@@ -22,13 +22,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const { network } = useNetwork();
   const { data: epochId } = useGetCurrentPeriod(activeCouncil);
   const { state } = useVoteContext();
-  const networkForState = getVoteSelectionState(
-    state,
-    epochId,
-    network?.id.toString(),
-    activeCouncil
-  );
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+  // @dev dont put activeCounil in here cause its always spartan for the timer
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
 
   const votedNomineesData = [
     useGetUserBallot('spartan'),
@@ -119,7 +114,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
-              const newVoteCast = typeof networkForState !== 'string' ? networkForState : '';
+              const newVoteCast =
+                typeof networkForState !== 'string' ? networkForState[council] : '';
 
               return (
                 <Flex
@@ -160,11 +156,11 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(voteAddressState) ? (
+                  {councilPeriod === '2' && utils.isAddress(newVoteCast) ? (
                     <ProfilePicture
                       address={userInformation[index].userInformation?.address}
                       size={9}
-                      newVoteCast={voteAddressState}
+                      newVoteCast={newVoteCast}
                       isCouncilTabs={true}
                     />
                   ) : (
@@ -174,7 +170,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                           <ProfilePicture
                             address={userInformation[index].userInformation?.address}
                             size={9}
-                            newVoteCast={voteAddressState}
+                            newVoteCast={newVoteCast}
                           />
                         )}
 

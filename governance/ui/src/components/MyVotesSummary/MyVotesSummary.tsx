@@ -38,7 +38,7 @@ export const MyVotesSummary = ({
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString(), 'spartan');
   const stateFromCouncils = (
-    typeof networkForState !== 'string' ? networkForState : {}
+    typeof networkForState !== 'string' ? networkForState : { spartan: networkForState }
   ) as VoteStateForNetwork;
   const [timer, setTimer] = useState<any>();
   const [isLongpress, setIsLongpress] = useState(false);

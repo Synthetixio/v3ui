@@ -39,7 +39,7 @@ export function useGetUserDetailsQuery<T extends string | string[]>(walletAddres
     queryFn: async () => {
       return await getUserDetails(walletAddress!);
     },
-    enabled: !!walletAddress,
+    enabled: Array.isArray(walletAddress) ? !!walletAddress.length : !!walletAddress,
     staleTime: 900000,
   });
 }

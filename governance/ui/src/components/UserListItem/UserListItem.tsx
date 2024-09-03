@@ -74,9 +74,14 @@ export default function UserListItem({
           onClick={(e) => {
             e.stopPropagation();
             if (!nominationInformation?.isNominated) {
-              navigate(`/councils/${activeCouncil}?view=${address}&nominate=true`);
+              searchParams.set('view', address);
+              searchParams.set('nominate', 'true');
+              navigate({
+                pathname: `/councils/${activeCouncil}`,
+                search: searchParams.toString(),
+              });
             } else {
-              navigate(`/councils/${activeCouncil}?view=${address}`);
+              navigate({ pathname: `/councils/${activeCouncil}`, search: `view=${address}` });
             }
           }}
           data-cy="user-list-item-button-nomination"
@@ -98,10 +103,14 @@ export default function UserListItem({
           onClick={(e) => {
             e.stopPropagation();
             if (nominationInformation?.isNominated) {
-              navigate(`/councils/${activeCouncil}?view=${address}`);
+              navigate({
+                pathname: `/councils/${activeCouncil}`,
+                search: `view=${address}`,
+              });
             } else {
               navigate({
-                pathname: `/councils/${activeCouncil}?view=${address}&nominate=true`,
+                pathname: `/councils/${activeCouncil}`,
+                search: `view=${address}&nominate=true`,
               });
             }
           }}
@@ -120,7 +129,7 @@ export default function UserListItem({
             onClick={(e) => {
               e.stopPropagation();
               if (nominationInformation?.isNominated && isNominatedFetched) {
-                navigate(`/councils/${activeCouncil}?view=${address}`);
+                navigate({ pathname: `/councils/${activeCouncil}`, search: `view=${address}` });
               } else {
                 navigate({
                   pathname: `/councils/${activeCouncil}`,

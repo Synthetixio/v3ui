@@ -8,7 +8,7 @@ import {
 } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
@@ -52,12 +52,16 @@ export function useCastVotes(
             getCouncilContract(council).connect(signer)
           );
           const nomineesCheck = await Promise.all(
-            electionModules.map(async (council, index) =>
-              council.connect(motherShipProvider()).isNominated(candidates[councils[index]])
-            )
+            electionModules.map(async (council, index) => {
+              if (utils.isAddress(candidates[councils[index]] || '')) {
+                return council
+                  .connect(motherShipProvider(network.id))
+                  .isNominated(candidates[councils[index]]);
+              }
+              return true;
+            })
           );
 
-          // TODO @dev check if its the wanted behaviour
           if (nomineesCheck.some((val) => val === false)) {
             throw new Error('Some of the candidates were not nominees');
           }
