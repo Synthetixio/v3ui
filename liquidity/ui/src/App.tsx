@@ -85,7 +85,9 @@ export const App = () => {
             <Fonts />
             <GasSpeedProvider>
               <HashRouter>
-                <TermsModal defaultOpen={!TERMS_CONDITIONS_ACCEPTED} />
+                <TermsModal
+                  defaultOpen={process.env.NODE_ENV !== 'development' && !TERMS_CONDITIONS_ACCEPTED}
+                />
                 <Router />
               </HashRouter>
             </GasSpeedProvider>

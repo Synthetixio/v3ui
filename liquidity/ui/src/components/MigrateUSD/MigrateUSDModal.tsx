@@ -14,7 +14,7 @@ import { ZEROWEI } from '../../utils/constants';
 import { MigrateUSDTransaction } from './MigrateUSDTransaction';
 import { Network } from '@snx-v3/useBlockchain';
 import { StepSuccessFinal } from '../Migration/StepSuccessFinal';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 
 interface Props {
   onClose: () => void;
@@ -45,14 +45,14 @@ export const MigrateUSDModal: FC<Props> = ({ onClose, isOpen, network, type, acc
 
       navigate(
         {
-          pathname: location.pathname,
+          pathname: generatePath('/dashboard'),
           search: queryParams.toString(),
         },
         { replace: true }
       );
     }
     onClose();
-  }, [accountId, location.pathname, location.search, navigate, onClose]);
+  }, [accountId, location.search, navigate, onClose]);
 
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
