@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
-import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetCurrentPeriod, useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
@@ -37,7 +37,7 @@ export const UserProfileDetails = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
-  const { data: epochId } = useGetCurrentPeriod(activeCouncil);
+  const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(activeCouncil);

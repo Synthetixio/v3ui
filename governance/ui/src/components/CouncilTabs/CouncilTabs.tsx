@@ -6,7 +6,12 @@ import { CouncilsSelect } from './CouncilSelect';
 import { CouncilImage } from '../CouncilImage';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import { MyVotesSummary } from '../MyVotesSummary';
-import { useGetUserDetailsQuery, useGetUserBallot, useNetwork } from '../../queries';
+import {
+  useGetUserDetailsQuery,
+  useGetUserBallot,
+  useNetwork,
+  useGetEpochIndex,
+} from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { utils } from 'ethers';
@@ -20,7 +25,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
   const { network } = useNetwork();
-  const { data: epochId } = useGetCurrentPeriod(activeCouncil);
+  const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { state } = useVoteContext();
   // @dev dont put activeCounil in here cause its always spartan for the timer
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());

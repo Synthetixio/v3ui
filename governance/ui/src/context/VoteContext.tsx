@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../queries';
 import { localStorageKey, removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
@@ -125,7 +125,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { network } = useNetwork();
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(
     voteReducer,

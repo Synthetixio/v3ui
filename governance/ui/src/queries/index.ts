@@ -2,7 +2,7 @@ export * from './useGetCouncilNominees';
 export * from './useGetUserBallot';
 export * from './useGetCouncilMembers';
 export * from './useGetCurrentPeriod';
-export * from './useGetElectionSettings';
+export * from './useGetEpochIndex';
 export * from './useGetEpochSchedule';
 export * from './useGetIsNominated';
 export * from './useGetIsUUIDValidQuery';

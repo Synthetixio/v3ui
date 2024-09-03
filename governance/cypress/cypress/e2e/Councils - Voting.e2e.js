@@ -38,6 +38,7 @@ it('Councils - Administration', () => {
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
+  cy.get('[data-cy="selected-badge-my-row"]').should('exist');
   cy.wait(3000);
   cy.get('[data-cy="my-votes-voting-power"]').contains('30.00');
   cy.get('[data-cy="cast-my-vote-button"]').click();
@@ -50,8 +51,12 @@ it('Councils - Administration', () => {
   cy.get(
     '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
   ).should('exist');
+  cy.visit('#/councils/spartan');
+  cy.get('[data-cy="your-vote-badge-table"]').should('exist');
+  cy.visit('#/my-votes');
   cy.wait(3000);
   cy.get('[data-cy="remove-vote-button-spartan"]').click();
+  cy.get('[data-cy="selected-badge-my-row"]').should('exist');
   cy.get('[data-cy="cast-my-vote-button"]').click();
   cy.get('[data-cy="cast-vote-anyway-button"]').click();
   cy.wait(3000);

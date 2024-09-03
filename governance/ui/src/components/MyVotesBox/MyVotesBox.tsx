@@ -20,7 +20,7 @@ export default function MyVotesBox({
   return (
     <Fade in={true}>
       <Flex
-        w="324px"
+        w="424px"
         h="310px"
         position="absolute"
         bottom="-320px"

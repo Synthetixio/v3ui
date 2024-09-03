@@ -50,14 +50,20 @@ export function getCouncilContract(council: CouncilSlugs) {
 
 export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) => {
   switch (chainId) {
+    case 1: {
+      switch (council) {
+        case 'spartan':
+        case 'ambassador':
+        case 'treasury':
+          return new Contract('0x89FCb32F29e509cc42d0C8b6f058C993013A843F', abiForSnapshotMock);
+      }
+    }
     case 10: {
       switch (council) {
         case 'spartan':
-          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
         case 'ambassador':
-          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
         case 'treasury':
-          return new Contract('0x7EBF54FD78Ced402c200A6C3c1A10506B83Fb419', abiForSnapshotMock);
+          return new Contract('0x45c55BF488D3Cb8640f12F63CbeDC027E8261E79', abiForSnapshotMock);
       }
     }
     case 13001: {

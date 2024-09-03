@@ -17,7 +17,7 @@ import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
+import { useGetEpochIndex, useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -32,7 +32,7 @@ export default function MyVotes() {
   const { onClose } = useDisclosure();
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const { network } = useNetwork();
   const { connect } = useWallet();
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');

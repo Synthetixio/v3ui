@@ -8,10 +8,12 @@ export default function CouncilUser({
   address,
   councilSlug,
   hideName,
+  hideCouncil,
 }: {
   address?: string;
   councilSlug: CouncilSlugs;
   hideName?: boolean;
+  hideCouncil?: boolean;
 }) {
   const council = councils.find((council) => council.slug === councilSlug);
   const { data: user } = useGetUserDetailsQuery(address);
@@ -36,6 +38,7 @@ export default function CouncilUser({
         >
           <Image src={council.image} w="8" h="8" />
         </Flex>
+
         {user ? (
           <ProfilePicture size={9} address={user?.address} ml="-3" />
         ) : (

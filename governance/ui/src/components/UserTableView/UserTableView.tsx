@@ -6,9 +6,12 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
+import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
+import { getVoteSelectionState } from '../../utils/localstorage';
+import { useVoteContext } from '../../context/VoteContext';
 
 function renderCorrectBorder(
-  column: 'place' | 'name' | 'votes' | 'power',
+  column: 'place' | 'name' | 'votes' | 'power' | 'badge',
   position: 'left' | 'right' | 'bottom',
   period: string | undefined,
   isSelected: boolean
@@ -35,9 +38,9 @@ function renderCorrectBorder(
     if (position === 'bottom') return isSelected ? '1px solid' : '';
   } else if (column === 'power') {
     if (position === 'bottom') return isSelected ? '1px solid' : '';
-    if (position === 'right') {
-      if (period === '2') return isSelected ? '1px solid' : '';
-    }
+  } else if (column === 'badge') {
+    if (position === 'bottom') return isSelected ? '1px solid' : '';
+    if (position === 'right') return isSelected ? '1px solid' : '';
   }
 }
 
@@ -45,7 +48,9 @@ export default function UserTableView({
   user,
   activeCouncil,
   place,
+  isSelectedForVoting,
 }: {
+  isSelectedForVoting?: boolean;
   place: number;
   user: GetUserDetails;
   activeCouncil: CouncilSlugs;
@@ -53,10 +58,20 @@ export default function UserTableView({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { data: ballot } = useGetUserBallot(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-
   const isSelected = searchParams.get('view') === user.address;
+  const { network } = useNetwork();
+  const { data: epochId } = useGetEpochIndex(activeCouncil);
+  const { state } = useVoteContext();
   const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
+  const networkForState = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
+  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
 
   return (
     <Tr
@@ -131,7 +146,6 @@ export default function UserTableView({
         <Td
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('power', 'bottom', councilPeriod, isSelected)}
-          borderRight={renderCorrectBorder('power', 'right', councilPeriod, isSelected)}
           borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
@@ -139,6 +153,28 @@ export default function UserTableView({
           fontWeight={700}
         >
           0
+        </Td>
+      )}
+      {councilPeriod === '2' && (
+        <Td
+          borderTop="1px solid"
+          borderBottom={renderCorrectBorder('badge', 'bottom', councilPeriod, isSelected)}
+          borderRight={renderCorrectBorder('badge', 'right', councilPeriod, isSelected)}
+          borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
+          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
+          color="white"
+          fontSize="sm"
+          fontWeight={700}
+        >
+          {ballot?.votedCandidates.includes(voteAddressState) ? (
+            <Badge w="fit-content" data-cy="your-vote-badge-table">
+              Your Vote
+            </Badge>
+          ) : isSelectedForVoting ? (
+            <Badge color="gray" w="fit-content" data-cy="selected-badge-table">
+              Selected
+            </Badge>
+          ) : null}
         </Td>
       )}
       {councilPeriod !== '2' && councilPeriod !== '0' && (

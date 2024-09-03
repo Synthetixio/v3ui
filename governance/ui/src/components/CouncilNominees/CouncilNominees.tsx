@@ -25,24 +25,34 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
-import { useWallet } from '../../queries/useWallet';
+import { useNetwork, useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
 import TableLoading from '../TableLoading/TableLoading';
 import { CloseIcon } from '@chakra-ui/icons';
+import { useVoteContext } from '../../context/VoteContext';
+import { useGetEpochIndex } from '../../queries';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'name']);
 
+  const { network } = useNetwork();
+  const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { activeWallet, connect } = useWallet();
 
   const { data: councilNomineesDetails, isLoading } = useGetNomineesDetails(activeCouncil);
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-
+  const { state } = useVoteContext();
+  const currentSelectedUser = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
   const council = councils.find((council) => council.slug === activeCouncil);
-
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
 
   const sortedNominees = useMemo(() => {
@@ -236,6 +246,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
+              {councilPeriod === '2' && (
+                <Th cursor="pointer" userSelect="none" textTransform="capitalize" pl="6"></Th>
+              )}
             </Tr>
           </Thead>
           <Tbody>
@@ -244,6 +257,10 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 <UserTableView
                   place={index}
                   user={councilNominee!}
+                  isSelectedForVoting={
+                    councilNominee.address.toLowerCase() ===
+                    currentSelectedUser.toString().toLowerCase()
+                  }
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}
                 />

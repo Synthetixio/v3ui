@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  useGetCurrentPeriod,
+  useGetEpochIndex,
   useGetUserVotingPower,
   useNetwork,
   useSigner,
@@ -24,7 +24,7 @@ export function useCastVotes(
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { dispatch } = useVoteContext();
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const multicall = useMulticall();
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');

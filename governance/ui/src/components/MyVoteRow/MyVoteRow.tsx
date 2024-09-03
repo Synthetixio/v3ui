@@ -4,8 +4,9 @@ import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
+import { Badge } from '../Badge';
 
 export default function MyVoteRow({
   councilSlug,
@@ -18,16 +19,19 @@ export default function MyVoteRow({
 }) {
   const navigate = useNavigate();
   const { data: ballot } = useGetUserBallot(councilSlug);
-  const { data: epochId } = useGetCurrentPeriod(councilSlug);
+  const { data: epochId } = useGetEpochIndex(councilSlug);
   const { dispatch, state } = useVoteContext();
   const { network } = useNetwork();
+
   const networkForState = getVoteSelectionState(
     state,
     epochId,
     network?.id.toString(),
     councilSlug
   );
+
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -40,7 +44,7 @@ export default function MyVoteRow({
       borderColor="gray.900"
       opacity={period !== '2' ? '0.2' : '1'}
     >
-      <Flex ml="4" alignItems="center">
+      <Flex ml="4" alignItems="center" mr="auto">
         <CouncilUser
           councilSlug={councilSlug}
           address={ballot?.votedCandidates[0] || voteAddressState}
@@ -49,10 +53,17 @@ export default function MyVoteRow({
         {ballot?.votedCandidates[0] && networkForState === 'remove' && (
           <>
             <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={networkForState} />
+            <CouncilUser councilSlug={councilSlug} address={networkForState} hideName />
           </>
         )}
       </Flex>
+      {ballot?.votedCandidates.includes(voteAddressState) ? (
+        <Badge mr="2">Your Vote</Badge>
+      ) : voteAddressState ? (
+        <Badge color="gray" mr="2" data-cy="selected-badge-my-row">
+          Selected
+        </Badge>
+      ) : null}
       {!networkForState && !ballot?.votedCandidates[0] ? (
         <IconButton
           aria-label="action-button"
