@@ -115,7 +115,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
             {councils.map((council, index) => {
               const newVoteCast =
-                typeof networkForState !== 'string' ? networkForState[council] : '';
+                networkForState && typeof networkForState !== 'string'
+                  ? networkForState[council.slug]
+                  : '';
 
               return (
                 <Flex
@@ -156,7 +158,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(newVoteCast) ? (
+                  {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
                     <ProfilePicture
                       address={userInformation[index].userInformation?.address}
                       size={9}
