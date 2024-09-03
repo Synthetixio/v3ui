@@ -33,10 +33,8 @@ export const removeCandidate = (council?: CouncilSlugs, network?: string, epochI
   if (!council || !network || !epochId) return;
 
   try {
-    const key = 'yourStorageKey'; // Replace with your actual key
-    const parsedSelection = JSON.parse(localStorage.getItem(key) || '{}');
+    const parsedSelection = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
-    // Ensure the nested structure exists before attempting to delete
     if (
       parsedSelection[epochId] &&
       parsedSelection[epochId][network] &&
@@ -44,7 +42,6 @@ export const removeCandidate = (council?: CouncilSlugs, network?: string, epochI
     ) {
       delete parsedSelection[epochId][network][council];
 
-      // If the object becomes empty after deletion, consider removing the empty objects
       if (Object.keys(parsedSelection[epochId][network]).length === 0) {
         delete parsedSelection[epochId][network];
       }
@@ -52,7 +49,7 @@ export const removeCandidate = (council?: CouncilSlugs, network?: string, epochI
         delete parsedSelection[epochId];
       }
 
-      localStorage.setItem(key, JSON.stringify(parsedSelection));
+      localStorage.setItem(localStorageKey, JSON.stringify(parsedSelection));
     }
   } catch (err) {
     console.error(

@@ -48,7 +48,6 @@ export default function MyVotes() {
     .map(([council]) => council) as CouncilSlugs[];
   const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
   const navigate = useNavigate();
-
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />

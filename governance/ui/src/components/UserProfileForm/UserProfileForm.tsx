@@ -128,25 +128,6 @@ export function UserProfileForm() {
             mt="9"
             mb="24"
           >
-            {/*
-          <Flex w="100%" alignItems="center">
-            <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
-
-          <Flex w="100%" flexDirection="column" ml="2" gap="2">
-            <Text fontSize="12px" color="gray.500">
-              Avatar
-            </Text>
-            <Input
-              {...register('pfpUrl', {
-                pattern: {
-                  value: /^Qm/,
-                  message: 'invalid ipfs link',
-                },
-              })}
-              placeholder="QmSHZw..."
-            />
-          </Flex></Flex> */}
-
             <Flex flexDir="column" w="100%" gap="1">
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 Username

@@ -56,4 +56,9 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="cast-vote-anyway-button"]').click();
   cy.wait(3000);
   cy.get('[data-cy="my-votes-total-votes"]').contains('0/3');
+  cy.reload({ cache: false });
+  cy.get(
+    '[data-cy="user-blockies-council-tabs-0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]'
+  ).should('not.exist');
+  cy.get('[data-cy="my-votes-total-votes"]').contains('0/3');
 });
