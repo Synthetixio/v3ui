@@ -63,7 +63,7 @@ export const DebtStats: FC<{
             <ChangeStat
               value={liquidityPosition.debt}
               newValue={newDebt}
-              formatFn={(val: Wei) => <DebtAmount debt={val} />}
+              formatFn={(val: Wei) => <DebtAmount debt={val} as="span" />}
               hasChanges={hasChanges}
               dataTestId="manage-stats-debt-value"
             />

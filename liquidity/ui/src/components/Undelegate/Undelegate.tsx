@@ -88,7 +88,8 @@ export const UndelegateUi: FC<{
     isAnyMarketLocked === true ||
     collateralChange.gte(0) ||
     !isValidLeftover ||
-    overAvailableBalance;
+    overAvailableBalance ||
+    (currentDebt?.gt(0) && isBase);
 
   const txSummaryItems = useMemo(() => {
     const items = [
@@ -242,6 +243,24 @@ export const UndelegateUi: FC<{
               Withdraw
             </Text>{' '}
             before unlocking again as it will restart the 24h withdrawal timeout.
+          </Text>
+        </Alert>
+      </Collapse>
+
+      <Collapse in={currentDebt?.gt(0) && isBase} animateOpacity>
+        <Alert status="error" mb="6" borderRadius="6px">
+          <AlertIcon />
+          <Text>
+            To Unlock this amount, you need to &nbsp;
+            <Text
+              onClick={() => navigate('repay')}
+              cursor="pointer"
+              as="span"
+              textDecoration="underline"
+            >
+              repay <Amount value={currentDebt} suffix={` ${symbol}`} />
+            </Text>{' '}
+            to your position
           </Text>
         </Alert>
       </Collapse>
