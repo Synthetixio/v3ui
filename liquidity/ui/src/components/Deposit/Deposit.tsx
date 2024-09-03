@@ -178,7 +178,7 @@ export const DepositUi: FC<{
                   color="cyan.500"
                   fontWeight={700}
                 >
-                  &nbsp; Max
+                  &nbsp;Max
                 </Text>
               )}
             </Text>
@@ -215,7 +215,7 @@ export const DepositUi: FC<{
         in={collateralChange.gt(0) && collateralChange.add(currentCollateral).lt(minDelegation)}
         animateOpacity
       >
-        <Alert mb={6} status="error">
+        <Alert mb={6} status="error" borderRadius="6px">
           <AlertIcon />
           <AlertDescription>
             Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
@@ -223,7 +223,7 @@ export const DepositUi: FC<{
         </Alert>
       </Collapse>
       <Collapse in={overAvailableBalance} animateOpacity>
-        <Alert mb={6} status="error">
+        <Alert mb={6} status="error" borderRadius="6px">
           <AlertIcon />
           <AlertDescription>
             You cannot Deposit & Lock more Collateral than your Balance amount

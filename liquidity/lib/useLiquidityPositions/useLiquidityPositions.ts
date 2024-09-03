@@ -61,6 +61,7 @@ export const useLiquidityPositions = ({ accountId }: { accountId?: string }) => 
       },
     ],
     staleTime: 60000 * 5,
+    enabled: !!accountId,
     queryFn: async () => {
       if (!pools || !collateralTypes || !CoreProxy || !accountId || !network || !provider) {
         throw Error('Query should not be enabled');

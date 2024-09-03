@@ -42,7 +42,7 @@ export function Settings() {
           mb={6}
           color="gray.50"
           fontSize="1.5rem"
-          data-cy="liquidity-dashboard"
+          data-cy="account-setting"
         >
           Account Settings
         </Heading>

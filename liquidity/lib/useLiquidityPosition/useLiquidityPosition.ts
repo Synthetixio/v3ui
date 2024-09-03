@@ -104,7 +104,7 @@ export const useLiquidityPosition = ({
       { priceUpdateTxHash },
     ],
     staleTime: 60000 * 5,
-    enabled: !!tokenAddress,
+    enabled: !!tokenAddress && !!accountId,
     queryFn: async () => {
       if (
         !(CoreProxy && accountId && poolId && tokenAddress && systemToken && network && provider)

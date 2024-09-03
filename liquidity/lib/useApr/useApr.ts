@@ -1,5 +1,5 @@
 import { getAprUrl } from '@snx-v3/constants';
-import { ARBITRUM, BASE_ANDROMEDA, BASE_SEPOLIA, Network, useNetwork } from '@snx-v3/useBlockchain';
+import { ARBITRUM, BASE_ANDROMEDA, MAINNET, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
 export function useApr(customNetwork?: Network) {
@@ -20,12 +20,14 @@ export function useApr(customNetwork?: Network) {
   });
 }
 
-const supportedAprNetworks = [BASE_ANDROMEDA.id, BASE_SEPOLIA.id, ARBITRUM.id];
+const supportedAprNetworks = [BASE_ANDROMEDA.id, ARBITRUM.id, MAINNET.id];
 
 export async function fetchApr(networkId?: number) {
   try {
     const isSupported = networkId && supportedAprNetworks.includes(networkId);
-    if (!isSupported) throw new Error('Apr endpoint not supported for this network');
+    if (!isSupported) {
+      throw new Error('Apr endpoint not supported for this network');
+    }
 
     const response = await fetch(getAprUrl(networkId));
 

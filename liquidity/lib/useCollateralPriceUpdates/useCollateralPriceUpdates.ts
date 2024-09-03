@@ -75,8 +75,6 @@ const getPriceUpdates = async (
   stalenessTolerance: number,
   network: Network | null
 ) => {
-  // network.id
-
   const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
   const updateType = 1;
   const data = ethers.utils.defaultAbiCoder.encode(
@@ -108,6 +106,9 @@ export const useAllCollateralPriceUpdates = (customNetwork?: Network) => {
       const stalenessTolerance = 1;
 
       const pythFeedIds = (await getPythFeedIds(targetNetwork)) as string[];
+      if (!pythFeedIds.length) {
+        return null;
+      }
       const tx = await getPriceUpdates(pythFeedIds, stalenessTolerance, targetNetwork);
 
       return {

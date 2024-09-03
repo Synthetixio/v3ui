@@ -69,7 +69,7 @@ export function TransferOwnershipModal({
           />
         </ModalBody>
         <ModalFooter display="flex" flexDirection="column" gap={4} justifyContent="center">
-          <Alert status="warning">
+          <Alert status="warning" borderRadius="6px">
             <AlertIcon />
             <Flex direction="column">
               <AlertDescription>This action cannot be undone</AlertDescription>

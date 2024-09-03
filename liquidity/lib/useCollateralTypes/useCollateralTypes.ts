@@ -43,7 +43,7 @@ async function loadCollateralTypes(chainId: number, preset: string): Promise<Col
 
   return tokenConfigs.map((config) => ({
     ...config,
-    displaySymbol: config.symbol === 'WETH' ? 'ETH' : config.symbol,
+    displaySymbol: config.symbol,
   }));
 }
 

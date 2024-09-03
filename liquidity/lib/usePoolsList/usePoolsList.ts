@@ -1,5 +1,5 @@
 import { getSubgraphUrl } from '@snx-v3/constants';
-import { ARBITRUM, BASE_ANDROMEDA, NETWORKS } from '@snx-v3/useBlockchain';
+import { ARBITRUM, BASE_ANDROMEDA, MAINNET, NETWORKS } from '@snx-v3/useBlockchain';
 import { compactInteger } from 'humanize-plus';
 import { fetchApr } from '@snx-v3/useApr';
 import { useQuery } from '@tanstack/react-query';
@@ -41,8 +41,7 @@ export function usePool(networkId: number, poolId: string) {
   };
 }
 
-// TODO: Add 1 and 10 to support Mainnet and Optimism
-const supportedNetworks = [BASE_ANDROMEDA.id, ARBITRUM.id];
+const supportedNetworks = [MAINNET.id, BASE_ANDROMEDA.id, ARBITRUM.id];
 
 async function fetchTorosPool() {
   return fetch('https://api-v2.dhedge.org/graphql', {

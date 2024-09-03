@@ -26,7 +26,7 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
 
   const onSubmit = () => {
     if (enabled) {
-      sessionStorage.setItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED, JSON.stringify(true));
+      localStorage.setItem(SESSION_STORAGE_KEYS.TERMS_CONDITIONS_ACCEPTED, JSON.stringify(true));
       setOpen(false);
     }
   };

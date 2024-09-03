@@ -1,9 +1,7 @@
 import { assertAddressType } from '@snx-v3/assertAddressType';
 import { useQuery } from '@tanstack/react-query';
 import { Network, useProviderForChain, useWallet } from '@snx-v3/useBlockchain';
-import { Contract } from 'ethers';
-
-import { abi, BalanceSchema } from './useTokenBalance';
+import { fetchTokenBalance } from './useTokenBalance';
 
 export const useTokenBalanceForChain = (address?: string, network?: Network) => {
   const { activeWallet } = useWallet();
@@ -19,8 +17,7 @@ export const useTokenBalanceForChain = (address?: string, network?: Network) => 
     ],
     queryFn: async () => {
       if (activeWallet?.address && tokenAddress && provider) {
-        const contract = new Contract(tokenAddress, abi, provider);
-        return BalanceSchema.parse(await contract.balanceOf(activeWallet?.address));
+        return await fetchTokenBalance(tokenAddress, activeWallet?.address, provider);
       }
     },
     enabled: Boolean(activeWallet?.address && tokenAddress && provider),

@@ -68,16 +68,12 @@ const ManageActionUi: FC<{
   const debtActions = DEBTACTIONS(isBase);
 
   useEffect(() => {
-    if (tab === 'collateral' && !COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
-      setActiveAction(COLLATERALACTIONS[0].link);
-    } else if (tab === 'debt' && !debtActions.find((aciton) => aciton.link === manageAction)) {
-      setActiveAction(debtActions[0].link);
-    }
-  }, [debtActions, manageAction, setActiveAction, tab]);
+    setTab(getInitialTab(manageAction));
+  }, [manageAction]);
 
   return (
     <Box as="form" onSubmit={onSubmit}>
-      <Tabs isFitted defaultIndex={tab === 'collateral' ? 0 : 1}>
+      <Tabs isFitted index={tab === 'collateral' ? 0 : 1}>
         <TabList>
           <Tab
             color={tab === 'collateral' ? 'white' : 'gray.500'}
@@ -85,7 +81,9 @@ const ManageActionUi: FC<{
             fontWeight={700}
             fontSize={['12px', '16px']}
             onClick={() => {
-              setTab('collateral');
+              if (tab !== 'collateral') {
+                setActiveAction(COLLATERALACTIONS[0].link);
+              }
             }}
           >
             Manage Collateral
@@ -96,7 +94,9 @@ const ManageActionUi: FC<{
             fontSize={['12px', '16px']}
             data-cy="tab-button-debt"
             onClick={() => {
-              setTab('debt');
+              if (tab !== 'debt') {
+                setActiveAction(debtActions[0].link);
+              }
             }}
           >
             {`Manage ${isBase ? 'PnL' : 'Debt'}`}
