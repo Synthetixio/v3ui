@@ -146,7 +146,6 @@ export default function UserTableView({
         <Td
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('power', 'bottom', councilPeriod, isSelected)}
-          borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
           fontSize="sm"
@@ -160,7 +159,7 @@ export default function UserTableView({
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('badge', 'bottom', councilPeriod, isSelected)}
           borderRight={renderCorrectBorder('badge', 'right', councilPeriod, isSelected)}
-          borderRightRadius={isSelected && councilPeriod === '2' ? 'base' : ''}
+          borderRightRadius="base"
           borderColor={isSelected ? 'cyan.500' : 'gray.900'}
           color="white"
           fontSize="sm"
