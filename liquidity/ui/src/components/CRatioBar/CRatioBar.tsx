@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { LineWithText } from './LineWithText';
 import { getHealthVariant, getProgressSize, ratioIsMaxUInt } from './CRatioBar.utils';
 import { CRatioBadge } from './CRatioBadge';
+import { CRatioAmount } from './CRatioAmount';
 
 export const CRatioBarUi: FC<{
   liquidationCratio: number;
@@ -57,17 +58,13 @@ export const CRatioBarUi: FC<{
         alignItems="center"
         gap={2}
       >
-        {!currentCRatio ? (
-          <Text>N/A</Text>
-        ) : (
-          <Text>{ratioIsMaxUInt(currentCRatio) ? 'Infinite' : `${currentCRatio.toFixed(2)}%`}</Text>
-        )}
+        <CRatioAmount value={currentCRatio} />
 
         {!!hasChanges && (
           <>
             <span>&rarr;</span>
             <Text>
-              {!newCratio
+              {!newCratio || newCratio < 0
                 ? 'N/A'
                 : ratioIsMaxUInt(newCratio)
                   ? 'Infinite'

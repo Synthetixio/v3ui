@@ -22,6 +22,7 @@ import { formatEther } from 'ethers/lib/utils';
 import { Amount } from '@snx-v3/Amount';
 import { CRatioBadge } from '../CRatioBar/CRatioBadge';
 import { useRates } from '@snx-v3/useRates';
+import { ZEROWEI } from '../../utils/constants';
 
 export const StepSummary = ({
   onClose,
@@ -37,8 +38,8 @@ export const StepSummary = ({
   const { migrate, transaction, isLoading, isSuccess, accountId } = useMigrate();
 
   const { data: rates } = useRates();
-  const snxPrice = rates?.snx;
-  const ethPrice = rates?.eth;
+  const snxPrice = rates?.snx || ZEROWEI;
+  const ethPrice = rates?.eth || ZEROWEI;
 
   const [txSummary, setTxSummary] = useState({
     collateral: '0',
@@ -175,7 +176,7 @@ export const StepSummary = ({
 
           {transaction !== undefined && (
             <>
-              {transaction?.gasLimit && transaction?.gasLimit.gt(0) ? (
+              {transaction?.gasLimit.gt(0) ? (
                 <Text>
                   <Amount
                     value={wei(
