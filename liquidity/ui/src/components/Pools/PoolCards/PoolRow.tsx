@@ -223,7 +223,7 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
             </Text>
           </Flex>
           <Flex alignItems="center" justifyContent="flex-end" width="121px" textAlign="right">
-            <Specifics type={isBase ? 'mint' : 'borrow'} />
+            <Specifics network={network} collateralType={collateralType} />
           </Flex>
           <Flex minW="159px" flex="1" justifyContent="flex-end">
             <Button

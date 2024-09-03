@@ -114,7 +114,7 @@ export function TorosPoolCard({ tvl, apy }: TorosPoolCardProps) {
           </Text>
         </Flex>
         <Flex alignItems="center" justifyContent="flex-end" width="121px" textAlign="right">
-          <Specifics type="toros" />
+          <Specifics isToros />
         </Flex>
         <Flex flex={1} minWidth="159px" alignItems="center" justifyContent="flex-end">
           <Link

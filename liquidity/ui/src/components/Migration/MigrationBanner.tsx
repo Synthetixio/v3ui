@@ -10,12 +10,13 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { Amount } from '@snx-v3/Amount';
 import { MigrationDialog } from './MigrationDialog';
 import { MigrateUSDModal } from '../MigrateUSD/MigrateUSDModal';
 import { useV2Position } from '@snx-v3/useV2Position';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Props {
   network: Network;
@@ -29,6 +30,8 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
   const { data } = useV2Position(network);
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { connect, activeWallet } = useWallet();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const onClick = useCallback(async () => {
     try {
@@ -46,6 +49,23 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
       setIsOpen(true);
     } catch (error) {}
   }, [activeWallet, connect, currentNetwork, network.id, setNetwork]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+
+    const convert = queryParams.get('migrate');
+
+    if (convert && convert.toLowerCase() === 'snx') {
+      setIsOpen(true);
+
+      const queryParams = new URLSearchParams(location.search);
+      queryParams.delete('migrate');
+      navigate({
+        pathname: location.pathname,
+        search: queryParams.toString(),
+      });
+    }
+  }, [location.pathname, location.search, navigate]);
 
   return (
     <>
