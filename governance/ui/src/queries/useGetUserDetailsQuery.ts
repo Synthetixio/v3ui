@@ -155,6 +155,8 @@ export async function getUserDetails<T extends string | string[]>(
 }
 
 const profileIsEmpty = (profile: GetUserDetails) => {
-  const values = Object.values(profile).filter((val) => !utils.isAddress(val) && !!val.trim());
+  const values = Object.values(profile).filter((val) =>
+    typeof val === 'string' ? !utils.isAddress(val) && !!val.trim() : !Object.keys(val).length
+  );
   return values.every((val) => !!val);
 };
