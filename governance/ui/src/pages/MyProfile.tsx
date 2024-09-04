@@ -11,6 +11,7 @@ export default function MyProfile() {
         Please connect your wallet
       </Heading>
     );
+
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />

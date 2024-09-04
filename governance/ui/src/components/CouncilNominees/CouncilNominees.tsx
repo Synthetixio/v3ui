@@ -4,6 +4,8 @@ import {
   Flex,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Table,
   TableContainer,
   Tbody,
@@ -23,48 +25,83 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
-import { useWallet } from '../../queries/useWallet';
+import { useNetwork, useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
+import TableLoading from '../TableLoading/TableLoading';
+import { CloseIcon } from '@chakra-ui/icons';
+import { useVoteContext } from '../../context/VoteContext';
+import { useGetEpochIndex, useGetHistoricalVotes } from '../../queries';
+import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'name']);
 
+  const { network } = useNetwork();
+  const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { activeWallet, connect } = useWallet();
 
-  const { data: councilNomineesDetails } = useGetNomineesDetails(activeCouncil);
+  const { data: councilNomineesDetails, isLoading } = useGetNomineesDetails(activeCouncil);
+  const { data: votes } = useGetHistoricalVotes();
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
-
+  const { state } = useVoteContext();
+  const currentSelectedUser = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
   const council = councils.find((council) => council.slug === activeCouncil);
-
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
+  const votesForCouncil = votes && votes[activeCouncil];
 
-  let sortedNominees = useMemo(() => {
-    return !!councilNomineesDetails?.length
-      ? councilNomineesDetails
-          .filter((nominee) => {
-            if (councilPeriod !== '2') {
-              nominee?.address.toLowerCase() !== activeWallet?.address.toLowerCase();
-            }
-            return true;
-          })
-          .filter((nominee) => {
-            if (utils.isAddress(search)) {
+  const sortedNominees = useMemo(() => {
+    if (councilNomineesDetails?.length && votesForCouncil) {
+      return councilNomineesDetails
+        .map((nominee) => {
+          const vote = votesForCouncil.find(
+            (vote) =>
+              epochId === vote.id && vote.voter.toLowerCase() === nominee.address.toLowerCase()
+          );
+          if (vote) return (nominee = { ...nominee, vote });
+          return nominee;
+        })
+        .filter((nominee) => {
+          if (utils.isAddress(search)) {
+            return nominee.address.toLowerCase().includes(search);
+          }
+          if (search) {
+            if (nominee.username) {
+              return nominee.username.toLowerCase().includes(search);
+            } else {
               return nominee.address.toLowerCase().includes(search);
             }
-            if (search) {
-              if (nominee.username) {
-                return nominee.username.toLowerCase().includes(search);
-              } else {
-                return nominee.address.toLowerCase().includes(search);
-              }
+          }
+          return true;
+        })
+        .sort((a, b) => {
+          if (sortConfig[1] === 'name') {
+            if (a.username && b.username) {
+              return sortConfig[0]
+                ? a.username.localeCompare(b.username)
+                : a.username.localeCompare(b.username) * -1;
             }
-            return true;
-          })
-      : [];
-  }, [search, councilNomineesDetails, activeWallet?.address, councilPeriod]);
+            if (a.username && !b.username) {
+              return -1;
+            } else if (b.username && !a.username) {
+              return 1;
+            }
+            return sortConfig[0]
+              ? a.address.localeCompare(b.address)
+              : a.address.localeCompare(b.address) * -1;
+          }
+          return 0;
+        });
+    }
+    return [];
+  }, [search, councilNomineesDetails, sortConfig, votesForCouncil, epochId]);
 
   return (
     <Flex
@@ -98,22 +135,25 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           data-cy="own-user-list-item"
         />
       ) : (
-        <Flex justifyContent="space-between" alignItems="center" px="6" py="4">
+        <Flex alignItems="center" px={{ base: 2, sm: '6' }} py="4">
+          <CouncilImage
+            imageUrl={council?.image || ''}
+            width="40px"
+            height="40px"
+            minW="40px"
+            minH="40px"
+            imageProps={{ w: '32px', h: '32px' }}
+          />
           <Text
             fontSize="14px"
             fontWeight={700}
             color="white"
-            as={Flex}
             alignItems="center"
             gap="2"
             textTransform="capitalize"
+            maxW="300px"
+            mr="auto"
           >
-            <CouncilImage
-              imageUrl={council?.image || ''}
-              width="40px"
-              height="40px"
-              imageProps={{ w: '32px', h: '32px' }}
-            />
             Nominate Yourself for the {activeCouncil} Council
           </Text>
           <Button size="xs" onClick={() => connect()} minW="100px">
@@ -126,13 +166,26 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         <Heading fontSize="medium">
           Current {councilPeriod === '1' ? 'Nominees' : 'Results'}
         </Heading>
-        <Input
-          zIndex="1"
-          maxW="320px"
-          bg="navy.900"
-          placeholder="Search"
-          onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
-        />
+        <InputGroup maxW="320px">
+          {search && (
+            <InputRightElement cursor="pointer">
+              <CloseIcon
+                w={3}
+                h={3}
+                zIndex={10}
+                onClick={() => {
+                  setSearch('');
+                }}
+              />
+            </InputRightElement>
+          )}
+          <Input
+            bg="navy.900"
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
+          />
+        </InputGroup>
       </Flex>
       <TableContainer>
         <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
@@ -164,19 +217,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 cursor="pointer"
                 userSelect="none"
                 data-cy="name-table-header"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'name']);
-                  sortedNominees = sortedNominees.sort((a, b) => {
-                    if (a.username && b.username) {
-                      return sortConfig[0]
-                        ? a.username.localeCompare(b.username)
-                        : a.username.localeCompare(b.username) * -1;
-                    }
-                    return sortConfig[0]
-                      ? a?.address.localeCompare(b.address) * -1
-                      : a?.address.localeCompare(b.address);
-                  });
-                }}
+                onClick={() => setSortConfig([!sortConfig[0], 'name'])}
               >
                 Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
                 {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
@@ -216,18 +257,32 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
+              {councilPeriod === '2' && (
+                <Th cursor="pointer" userSelect="none" textTransform="capitalize" pl="6"></Th>
+              )}
             </Tr>
           </Thead>
           <Tbody>
-            {!!sortedNominees?.length &&
+            {!!sortedNominees?.length ? (
               sortedNominees.map((councilNominee, index) => (
                 <UserTableView
                   place={index}
                   user={councilNominee!}
+                  isSelectedForVoting={
+                    councilNominee.address.toLowerCase() ===
+                    currentSelectedUser?.toString().toLowerCase()
+                  }
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}
                 />
-              ))}
+              ))
+            ) : isLoading ? (
+              <TableLoading />
+            ) : !!search ? (
+              <Text color="gray.500" fontSize="sm" p="4">
+                No results found, try another search
+              </Text>
+            ) : null}
           </Tbody>
         </Table>
       </TableContainer>

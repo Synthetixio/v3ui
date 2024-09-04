@@ -52,12 +52,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
     >
       <IconButton
         onClick={() => {
-          if (showConfirm) {
-            setShowConfirm(false);
-          } else {
-            setSelectedCouncil(null);
-            navigate(`/councils/${activeCouncil}`);
-          }
+          navigate(`/councils/${activeCouncil}`);
         }}
         size="xs"
         aria-label="close button"
@@ -122,7 +117,6 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
       ) : showConfirm ? (
         <EditNominationConfirmation
           selectedCouncil={selectedCouncil}
-          activeCouncil={activeCouncil}
           setShowConfirm={setShowConfirm}
         />
       ) : (

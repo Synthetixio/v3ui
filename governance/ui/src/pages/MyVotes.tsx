@@ -17,7 +17,7 @@ import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
+import { useGetEpochIndex, useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -32,7 +32,7 @@ export default function MyVotes() {
   const { onClose } = useDisclosure();
   const { data: period } = useGetCurrentPeriod('spartan');
   const { data: schedule } = useGetEpochSchedule('spartan');
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const { network } = useNetwork();
   const { connect } = useWallet();
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
@@ -40,7 +40,6 @@ export default function MyVotes() {
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
   const stateFromCouncils = (
     typeof networkForState !== 'string' ? networkForState : {}
   ) as VoteStateForNetwork;
@@ -49,7 +48,6 @@ export default function MyVotes() {
     .map(([council]) => council) as CouncilSlugs[];
   const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
   const navigate = useNavigate();
-
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
@@ -163,12 +161,8 @@ export default function MyVotes() {
               {period === '2' ? 'Cast Your Votes' : 'Voting Power'}
             </Heading>
             <Text fontSize="sm" color="gray.500" display="inline">
-              Your total voting powered is aggregated from all chains and used to vote on Optimism.
-              It can take{' '}
-              <Text color="cyan.500" display="inline">
-                up to 15 mins
-              </Text>{' '}
-              to transfer.
+              Your voting power is determined by your staked SNX on Synthetix V2x and represents the
+              influence you hold in the governance process.
             </Text>
             <Flex
               flexDir="column"
@@ -259,8 +253,8 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {voteAddressState ? (
-                    <ProfilePicture address={voteAddressState} size={9} />
+                  {stateFromCouncils[council.slug] ? (
+                    <ProfilePicture address={stateFromCouncils[council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
                   )}

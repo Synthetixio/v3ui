@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motherShipProvider } from '../utils/providers';
 import { profileContract } from '../utils/contracts';
 import { utils } from 'ethers';
+import { Vote } from './useGetHistoricalVotes';
 
 export type GetUserDetails = {
   address: string;
@@ -25,6 +26,7 @@ export type GetUserDetails = {
   delegationPitch: string;
   github: string;
   council?: string;
+  vote?: Vote;
 };
 
 type UserPitch = {
@@ -37,9 +39,10 @@ export function useGetUserDetailsQuery<T extends string | string[]>(walletAddres
   return useQuery({
     queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
-      return await getUserDetails(walletAddress!);
+      const users = await getUserDetails(walletAddress!);
+      return users;
     },
-    enabled: !!walletAddress,
+    enabled: Array.isArray(walletAddress) ? !!walletAddress.length : !!walletAddress,
     staleTime: 900000,
   });
 }
@@ -152,6 +155,8 @@ export async function getUserDetails<T extends string | string[]>(
 }
 
 const profileIsEmpty = (profile: GetUserDetails) => {
-  const values = Object.values(profile).filter((val) => !utils.isAddress(val) && !!val.trim());
+  const values = Object.values(profile).filter((val) =>
+    typeof val === 'string' ? !utils.isAddress(val) && !!val.trim() : !Object.keys(val).length
+  );
   return values.every((val) => !!val);
 };

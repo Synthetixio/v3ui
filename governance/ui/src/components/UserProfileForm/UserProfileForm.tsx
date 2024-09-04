@@ -24,6 +24,10 @@ import { unstable_useBlocker as useBlocker } from 'react-router-dom';
 import { useWallet } from '../../queries/useWallet';
 import UserProfileEditPreview from './UserProfileEditPreview';
 
+const urlPattern = new RegExp('https?:\\/\\/(?:www\\.)?[^s/$.?#].[^s]*', 'i');
+
+type OnChangeEvent = Record<string, Record<string, string>>;
+
 export function UserProfileForm() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { activeWallet } = useWallet();
@@ -34,7 +38,17 @@ export function UserProfileForm() {
     onClose: onBlockerClose,
     onOpen: onBlockerOpen,
   } = useDisclosure({ id: 'blocker' });
-  const { register, getValues, setValue, watch, formState, reset, handleSubmit } = useForm({
+  const {
+    register,
+    getValues,
+    setValue,
+    watch,
+    formState,
+    reset,
+    handleSubmit,
+    setError,
+    clearErrors,
+  } = useForm({
     defaultValues: {
       address: user?.about,
       username: user?.username,
@@ -60,7 +74,6 @@ export function UserProfileForm() {
       setValue('delegationPitch', user.delegationPitch);
     }
   }, [user, setValue]);
-
   const handleOnFormSave = async () => {
     reset({
       about: getValues('about')!,
@@ -128,25 +141,6 @@ export function UserProfileForm() {
             mt="9"
             mb="24"
           >
-            {/*
-          <Flex w="100%" alignItems="center">
-            <ProfilePicture imageSrc={user?.pfpUrl} address={user?.address} />
-
-          <Flex w="100%" flexDirection="column" ml="2" gap="2">
-            <Text fontSize="12px" color="gray.500">
-              Avatar
-            </Text>
-            <Input
-              {...register('pfpUrl', {
-                pattern: {
-                  value: /^Qm/,
-                  message: 'invalid ipfs link',
-                },
-              })}
-              placeholder="QmSHZw..."
-            />
-          </Flex></Flex> */}
-
             <Flex flexDir="column" w="100%" gap="1">
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 Username
@@ -173,19 +167,64 @@ export function UserProfileForm() {
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 Discord
               </Text>
-              <Input {...register('discord')} placeholder="eg: username" data-cy="discord-input" />
+              <Input
+                {...register('discord', {
+                  onChange: (event: OnChangeEvent) => {
+                    if (urlPattern.test(event.target.value)) {
+                      setError('discord', { message: 'Only usernames. No links' });
+                    } else {
+                      clearErrors('discord');
+                    }
+                  },
+                })}
+                placeholder="eg: username"
+                data-cy="discord-input"
+              />
+              <Text fontSize="x-small" color="red.500">
+                {formState.errors?.discord?.message}
+              </Text>
             </Flex>
             <Flex gap="1" flexDirection="column">
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 Twitter
               </Text>
-              <Input {...register('twitter')} placeholder="eg: username" data-cy="twitter-input" />
+              <Input
+                {...register('twitter', {
+                  onChange: (event: OnChangeEvent) => {
+                    if (urlPattern.test(event.target.value)) {
+                      setError('twitter', { message: 'Only usernames. No links' });
+                    } else {
+                      clearErrors('twitter');
+                    }
+                  },
+                })}
+                placeholder="eg: username"
+                data-cy="twitter-input"
+              />
+              <Text fontSize="x-small" color="red.500">
+                {formState.errors?.twitter?.message}
+              </Text>
             </Flex>
             <Flex gap="1" flexDirection="column">
               <Text color="gray.500" fontSize="12px" lineHeight="16px">
                 Github
               </Text>
-              <Input {...register('github')} placeholder="eg: username" data-cy="github-input" />
+              <Input
+                {...register('github', {
+                  onChange: (event: OnChangeEvent) => {
+                    if (urlPattern.test(event.target.value)) {
+                      setError('github', { message: 'Only usernames. No links' });
+                    } else {
+                      clearErrors('github');
+                    }
+                  },
+                })}
+                placeholder="eg: username"
+                data-cy="github-input"
+              />
+              <Text fontSize="x-small" color="red.500">
+                {formState.errors?.github?.message}
+              </Text>
             </Flex>
             <Flex flexDirection="column" alignItems="flex-start">
               <Text fontSize="12px" fontWeight="400" color="gray.500">
@@ -287,6 +326,7 @@ export function UserProfileForm() {
                       isPending={isPending}
                       userData={userData}
                       isDirty={formState.isDirty}
+                      hasError={!!Object.keys(formState.errors).length}
                     />
                   </Flex>
                 </ModalContent>
@@ -301,6 +341,7 @@ export function UserProfileForm() {
                 isPending={isPending}
                 userData={userData}
                 isDirty={formState.isDirty}
+                hasError={!!Object.keys(formState.errors).length}
               />
             </Flex>
           </Show>

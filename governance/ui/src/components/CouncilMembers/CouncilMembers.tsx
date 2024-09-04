@@ -2,12 +2,10 @@ import {
   Divider,
   Flex,
   Heading,
-  Skeleton,
   Table,
   TableContainer,
   Tag,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
@@ -21,6 +19,7 @@ import { useMemo, useState } from 'react';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
 import { useGetCouncilMembers, useGetUserDetailsQuery } from '../../queries';
+import TableLoading from '../TableLoading/TableLoading';
 
 export default function CouncilMembers({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
@@ -163,36 +162,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
           </Thead>
           <Tbody>
             {userDetailsLoading || !councilMemberDetails ? (
-              <>
-                <Tr>
-                  <Td>
-                    <Skeleton h={6} w={6} />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w="180px" />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w={10} />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w={12} />
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    <Skeleton h={6} w={6} />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w="180px" />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w={10} />
-                  </Td>
-                  <Td>
-                    <Skeleton h={6} w={12} />
-                  </Td>
-                </Tr>
-              </>
+              <TableLoading />
             ) : (
               !!sortedNominees?.length &&
               sortedNominees.map((councilNominee, index) => {

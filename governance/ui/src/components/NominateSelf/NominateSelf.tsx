@@ -55,6 +55,8 @@ export default function NominateSelf({ activeCouncil, ...props }: NominateSelfPr
   useEffect(() => {
     if (network?.id && !isMotherchain(network.id)) {
       setShowSnaxChainBanner(true);
+    } else {
+      setShowSnaxChainBanner(false);
     }
   }, [network?.id]);
 

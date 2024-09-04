@@ -2,6 +2,10 @@
   --onboard-modal-z-index: 1;
 }
 
+body {
+  height: 100%;
+}
+
 .blockies-rounded {
   border-radius: 50%;
 }

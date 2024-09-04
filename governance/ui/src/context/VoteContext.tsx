@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { useGetCurrentPeriod, useGetUserBallot, useNetwork } from '../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../queries';
 import { localStorageKey, removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
@@ -53,7 +53,7 @@ const VoteContext = createContext<
 const voteReducer = (state: VoteState, action: Action): VoteState => {
   switch (action.type) {
     case 'SPARTAN': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
           'spartan',
@@ -75,7 +75,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'AMBASSADOR': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
           'ambassador',
@@ -97,7 +97,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       };
     }
     case 'TREASURY': {
-      if (action.payload.action) {
+      if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
           'treasury',
@@ -125,7 +125,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { network } = useNetwork();
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(
     voteReducer,

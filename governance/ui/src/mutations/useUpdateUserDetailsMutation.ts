@@ -178,6 +178,7 @@ function useUpdateUserDetailsMutation() {
       toast({
         description: 'Your profile has been updated.',
         status: 'success',
+        isClosable: true,
       });
     },
   });

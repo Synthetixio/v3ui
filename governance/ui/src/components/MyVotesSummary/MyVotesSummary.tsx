@@ -5,7 +5,7 @@ import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext, VoteStateForNetwork } from '../../context/VoteContext';
-import { useGetCurrentPeriod, useNetwork } from '../../queries';
+import { useGetEpochIndex, useNetwork } from '../../queries';
 import { voteCardState } from '../../state/vote-card';
 import { useRecoilState } from 'recoil';
 import { getVoteSelectionState } from '../../utils/localstorage';
@@ -34,11 +34,11 @@ export const MyVotesSummary = ({
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
   const navigate = useNavigate();
   const { network } = useNetwork();
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(state, epochId, network?.id.toString(), 'spartan');
   const stateFromCouncils = (
-    typeof networkForState !== 'string' ? networkForState : {}
+    typeof networkForState !== 'string' ? networkForState : { spartan: networkForState }
   ) as VoteStateForNetwork;
   const [timer, setTimer] = useState<any>();
   const [isLongpress, setIsLongpress] = useState(false);

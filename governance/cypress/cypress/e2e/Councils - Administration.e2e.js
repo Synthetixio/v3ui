@@ -39,10 +39,10 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="sort-arrow-up"]').should('exist');
   cy.get('[data-cy="sort-arrow-up"]').click();
   cy.get('[data-cy="sort-arrow-down"]').should('exist');
-  cy.viewport(600, 500);
+  cy.viewport(400, 800);
   cy.visit('#/councils');
   cy.get('[data-cy="my-votes-summary-text"]').should('have.css', 'font-size', '14px');
-  cy.get('[data-cy="council-select-mobile"]').should('have.css', 'font-size', '14px');
+  cy.get('[data-cy="council-select-mobile"]').should('have.css', 'font-size', '12px');
   cy.get('[data-cy="menu-button-flex-council-select"]').should('have.css', 'height', '48px');
   cy.get('[data-cy="my-votes-button"]').should('have.css', 'height', '48px');
 });

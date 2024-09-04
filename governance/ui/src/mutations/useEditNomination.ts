@@ -67,6 +67,7 @@ export default function useEditNomination({
       toast({
         description: 'Nomination successfully edited.',
         status: 'success',
+        isClosable: true,
       });
     },
   });

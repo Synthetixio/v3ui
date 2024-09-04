@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  useGetCurrentPeriod,
+  useGetEpochIndex,
   useGetUserVotingPower,
   useNetwork,
   useSigner,
@@ -8,10 +8,11 @@ import {
 } from '../queries';
 import { CouncilSlugs } from '../utils/councils';
 import { getCouncilContract, isMotherchain, SnapshotRecordContract } from '../utils/contracts';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { useVoteContext } from '../context/VoteContext';
 import { useMulticall } from '../hooks/useMulticall';
 import { useToast } from '@chakra-ui/react';
+import { motherShipProvider } from '../utils/providers';
 
 export function useCastVotes(
   councils: CouncilSlugs[],
@@ -23,7 +24,7 @@ export function useCastVotes(
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
   const { dispatch } = useVoteContext();
-  const { data: epochId } = useGetCurrentPeriod('spartan');
+  const { data: epochId } = useGetEpochIndex('spartan');
   const multicall = useMulticall();
   const { data: spartanVotingPower } = useGetUserVotingPower('spartan');
   const { data: ambassadorVotingPower } = useGetUserVotingPower('ambassador');
@@ -50,6 +51,20 @@ export function useCastVotes(
           const electionModules = councils.map((council) =>
             getCouncilContract(council).connect(signer)
           );
+          const nomineesCheck = await Promise.all(
+            electionModules.map(async (council, index) => {
+              if (utils.isAddress(candidates[councils[index]] || '')) {
+                return council
+                  .connect(motherShipProvider(network.id))
+                  .isNominated(candidates[councils[index]]);
+              }
+              return true;
+            })
+          );
+
+          if (nomineesCheck.some((val) => val === false)) {
+            throw new Error('Some of the candidates were not nominees');
+          }
           const prepareBallotData = councils
             .map((council, index) => {
               if (!getVotingPowerByCouncil(council)?.isDeclared) {
@@ -114,21 +129,25 @@ export function useCastVotes(
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
               value: isMC ? 0 : quote.add(quote.mul(25).div(100)),
             });
-        } catch (error) {
+        } catch (error: any) {
           console.error(error);
           toast({
-            description: 'Could not cast votes.',
+            title: 'Could not cast votes.',
+            description: error && 'message' in error ? error.message : '',
             status: 'error',
+            isClosable: true,
           });
         }
       } else {
         console.error('signer not connected');
       }
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        description: 'Could not cast votes.',
+        title: 'Could not cast votes.',
+        description: error.message,
         status: 'error',
+        isClosable: true,
       });
     },
     onSuccess: async () => {

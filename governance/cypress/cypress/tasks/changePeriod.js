@@ -13,11 +13,13 @@ export async function changePeriod({ council, period }) {
     '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
     provider
   );
+  const electionId = await proxy.spartan.connect(signer).getEpochIndex();
+
   if (period === 'admin') {
     await proxy[council]
       .connect(signer)
       .Epoch_setEpochDates(
-        0,
+        electionId,
         block.timestamp,
         block.timestamp + 10000,
         block.timestamp + 20000,
@@ -27,7 +29,7 @@ export async function changePeriod({ council, period }) {
     await proxy[council]
       .connect(signer)
       .Epoch_setEpochDates(
-        0,
+        electionId,
         block.timestamp - 10,
         block.timestamp,
         block.timestamp + 10000,
@@ -37,7 +39,7 @@ export async function changePeriod({ council, period }) {
     await proxy[council]
       .connect(signer)
       .Epoch_setEpochDates(
-        0,
+        electionId,
         block.timestamp - 200,
         block.timestamp - 100,
         block.timestamp,
@@ -47,7 +49,7 @@ export async function changePeriod({ council, period }) {
     await proxy[council]
       .connect(signer)
       .Epoch_setEpochDates(
-        0,
+        electionId,
         block.timestamp - 10,
         block.timestamp - 5,
         block.timestamp - 1,
