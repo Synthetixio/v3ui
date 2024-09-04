@@ -11,6 +11,10 @@ import {
   Spinner,
   Link,
   Flex,
+  Collapse,
+  AlertIcon,
+  Alert,
+  AlertDescription,
 } from '@chakra-ui/react';
 import { wei } from '@synthetixio/wei';
 import { useV2Position } from '@snx-v3/useV2Position';
@@ -23,6 +27,7 @@ import { Amount } from '@snx-v3/Amount';
 import { CRatioBadge } from '../CRatioBar/CRatioBadge';
 import { useRates } from '@snx-v3/useRates';
 import { ZEROWEI } from '../../utils/constants';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const StepSummary = ({
   onClose,
@@ -33,6 +38,7 @@ export const StepSummary = ({
   onConfirm: (accountId: string) => void;
   network: Network;
 }) => {
+  const { data: snxCollateral } = useCollateralType('SNX');
   const [isUnderstanding, setIsUnderstanding] = useState(false);
   const { data } = useV2Position(network);
   const { migrate, transaction, isLoading, isSuccess, accountId } = useMigrate();
@@ -208,6 +214,23 @@ export const StepSummary = ({
           )}
         </HStack>
       </Box>
+
+      <Collapse in={data?.balance.lt(snxCollateral?.minDelegationD18)} animateOpacity>
+        <Alert mb={3.5} status="error" borderRadius="6px">
+          <AlertIcon />
+          <AlertDescription fontSize="16px">
+            The minimal locked amount on V3 is <Amount value={snxCollateral?.minDelegationD18} />{' '}
+            SNX. You can manually unstaked your V2 SNX on the{' '}
+            <Link
+              textDecoration="underline"
+              href="https://staking.synthetix.io/staking/burn"
+              target="_blank"
+            >
+              Staking App
+            </Link>
+          </AlertDescription>
+        </Alert>
+      </Collapse>
 
       {!isLoading ? (
         <>

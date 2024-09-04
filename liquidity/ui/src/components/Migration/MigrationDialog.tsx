@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import { Network } from '@snx-v3/useBlockchain';
@@ -36,7 +37,12 @@ export const MigrationDialog: FC<Props> = ({ network, onClose, isOpen, onSuccess
       <ModalOverlay />
       <ModalContent mt="100px" borderWidth="1px" borderColor="gray.900" bg="navy.900" color="white">
         <Flex justifyContent="space-between" p={6} alignItems="center">
-          <Heading fontSize="20px">Migrate to Synthetix V3</Heading>
+          <Heading fontSize="20px">
+            Migrate to Synthetix V3 on{' '}
+            <Text as="span" textTransform="capitalize">
+              {network.name}
+            </Text>
+          </Heading>
           <CloseButton onClick={onClose} color="gray" />
         </Flex>
         <Flex width="100%" px={6}>
