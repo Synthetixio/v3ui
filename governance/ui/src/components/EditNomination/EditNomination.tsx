@@ -52,12 +52,7 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
     >
       <IconButton
         onClick={() => {
-          if (showConfirm) {
-            setShowConfirm(false);
-          } else {
-            setSelectedCouncil(null);
-            navigate(`/councils/${activeCouncil}?view=${activeWallet?.address}`);
-          }
+          navigate(`/councils/${activeCouncil}`);
         }}
         size="xs"
         aria-label="close button"

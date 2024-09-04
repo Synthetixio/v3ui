@@ -71,19 +71,7 @@ export default function UserListItem({
           variant="outline"
           colorScheme="gray"
           _hover={{}}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!nominationInformation?.isNominated) {
-              searchParams.set('view', address);
-              searchParams.set('nominate', 'true');
-              navigate({
-                pathname: `/councils/${activeCouncil}`,
-                search: searchParams.toString(),
-              });
-            } else {
-              navigate({ pathname: `/councils/${activeCouncil}`, search: `view=${address}` });
-            }
-          }}
+          _active={{}}
           data-cy="user-list-item-button-nomination"
         >
           {nominationInformation?.isNominated && isOwn ? (

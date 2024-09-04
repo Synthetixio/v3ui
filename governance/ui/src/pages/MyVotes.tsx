@@ -161,12 +161,8 @@ export default function MyVotes() {
               {period === '2' ? 'Cast Your Votes' : 'Voting Power'}
             </Heading>
             <Text fontSize="sm" color="gray.500" display="inline">
-              Your total voting powered is aggregated from all chains and used to vote on Optimism.
-              It can take{' '}
-              <Text color="cyan.500" display="inline">
-                up to 15 mins
-              </Text>{' '}
-              to transfer.
+              Your voting power is determined by your staked SNX on Synthetix V2x and represents the
+              influence you hold in the governance process.
             </Text>
             <Flex
               flexDir="column"

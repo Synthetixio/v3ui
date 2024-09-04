@@ -191,7 +191,6 @@ export default function EditNominationConfirmation({
             mt="2"
             onClick={() => {
               setShowConfirm(false);
-              navigate(`/councils/${activeCouncil}?nominate=false`);
             }}
           >
             Cancel
