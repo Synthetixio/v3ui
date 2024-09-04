@@ -12,11 +12,9 @@ import { prettyString } from '@snx-v3/format';
 
 export default function EditNominationConfirmation({
   selectedCouncil,
-  activeCouncil,
   setShowConfirm,
 }: {
   selectedCouncil?: CouncilSlugs | null;
-  activeCouncil: CouncilSlugs;
   setShowConfirm: Dispatch<SetStateAction<boolean>>;
 }) {
   const navigate = useNavigate();

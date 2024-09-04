@@ -117,7 +117,6 @@ export default function EditNomination({ activeCouncil, ...props }: EditNominati
       ) : showConfirm ? (
         <EditNominationConfirmation
           selectedCouncil={selectedCouncil}
-          activeCouncil={activeCouncil}
           setShowConfirm={setShowConfirm}
         />
       ) : (
