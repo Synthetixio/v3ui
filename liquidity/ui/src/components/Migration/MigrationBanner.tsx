@@ -97,7 +97,10 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
 
                 <Flex mt={1} flex={1} alignItems="flex-start" flexDir="column" gap={6}>
                   <Heading fontSize="20px" fontWeight={700} color="white">
-                    You have a <Amount value={data?.collateral} /> SNX position on Synthetix V2
+                    You have a <Amount value={data?.collateral} /> SNX position on Synthetix V2 on{' '}
+                    <Text as="span" textTransform="capitalize">
+                      {network.name}
+                    </Text>
                   </Heading>
                   <Text maxW="484px" fontSize="14px" color="gray.500">
                     Migrate your SNX to Synthetix V3 to earn fees from both V2 and V3 markets and
@@ -137,7 +140,11 @@ export const MigrationBanner: FC<Props> = ({ network, type = 'banner' }) => {
             <Alert mb={6} borderLeftColor="cyan.500" borderRadius="6px">
               <AlertIcon color="cyan.500" />
               <Text color="white" fontFamily="heading" fontSize="16px" lineHeight="24px">
-                You have a <Amount value={data?.collateral} /> SNX active staking position on V2.
+                You have a <Amount value={data?.collateral} /> SNX active staking position on V2 on{' '}
+                <Text as="span" textTransform="capitalize">
+                  {network.name}
+                </Text>
+                .
                 <Text onClick={onClick} as="span" color="cyan.500" cursor="pointer">
                   &nbsp;Migrate to V3
                 </Text>
