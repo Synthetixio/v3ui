@@ -11,11 +11,13 @@ export default function UserProfileEditPreview({
   activeWallet,
   isPending,
   isDirty,
+  hasError,
 }: {
   isPending: boolean;
   activeWallet?: string;
   isDirty: boolean;
   userData: GetUserDetails;
+  hasError: boolean;
 }) {
   const elementRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -166,7 +168,7 @@ export default function UserProfileEditPreview({
         w="100%"
         type="submit"
         data-cy="save-profile-changes-button"
-        isDisabled={!isDirty}
+        isDisabled={!isDirty || hasError}
       >
         Save Changes
       </Button>
