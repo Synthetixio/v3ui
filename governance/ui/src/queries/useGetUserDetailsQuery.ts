@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motherShipProvider } from '../utils/providers';
 import { profileContract } from '../utils/contracts';
 import { utils } from 'ethers';
-import { useGetHistoricalVotes } from './useGetHistoricalVotes';
+import { Vote } from './useGetHistoricalVotes';
 
 export type GetUserDetails = {
   address: string;
@@ -26,6 +26,7 @@ export type GetUserDetails = {
   delegationPitch: string;
   github: string;
   council?: string;
+  vote?: Vote;
 };
 
 type UserPitch = {
@@ -35,9 +36,8 @@ type UserPitch = {
 };
 
 export function useGetUserDetailsQuery<T extends string | string[]>(walletAddress?: T) {
-  const { data: votes } = useGetHistoricalVotes();
   return useQuery({
-    queryKey: ['userDetails', walletAddress, votes?.length],
+    queryKey: ['userDetails', walletAddress],
     queryFn: async () => {
       const users = await getUserDetails(walletAddress!);
       return users;

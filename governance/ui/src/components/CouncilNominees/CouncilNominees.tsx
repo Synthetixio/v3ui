@@ -30,7 +30,7 @@ import { CouncilImage } from '../CouncilImage';
 import TableLoading from '../TableLoading/TableLoading';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetEpochIndex } from '../../queries';
+import { useGetEpochIndex, useGetHistoricalVotes } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
@@ -42,6 +42,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   const { activeWallet, connect } = useWallet();
 
   const { data: councilNomineesDetails, isLoading } = useGetNomineesDetails(activeCouncil);
+  const { data: votes } = useGetHistoricalVotes();
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
@@ -54,43 +55,53 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   );
   const council = councils.find((council) => council.slug === activeCouncil);
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
+  const votesForCouncil = votes && votes[activeCouncil];
 
   const sortedNominees = useMemo(() => {
-    return !!councilNomineesDetails?.length
-      ? councilNomineesDetails
-          .filter((nominee) => {
-            if (utils.isAddress(search)) {
+    if (councilNomineesDetails?.length && votesForCouncil) {
+      return councilNomineesDetails
+        .map((nominee) => {
+          const vote = votesForCouncil.find(
+            (vote) =>
+              epochId === vote.id && vote.voter.toLowerCase() === nominee.address.toLowerCase()
+          );
+          if (vote) return (nominee = { ...nominee, vote });
+          return nominee;
+        })
+        .filter((nominee) => {
+          if (utils.isAddress(search)) {
+            return nominee.address.toLowerCase().includes(search);
+          }
+          if (search) {
+            if (nominee.username) {
+              return nominee.username.toLowerCase().includes(search);
+            } else {
               return nominee.address.toLowerCase().includes(search);
             }
-            if (search) {
-              if (nominee.username) {
-                return nominee.username.toLowerCase().includes(search);
-              } else {
-                return nominee.address.toLowerCase().includes(search);
-              }
-            }
-            return true;
-          })
-          .sort((a, b) => {
-            if (sortConfig[1] === 'name') {
-              if (a.username && b.username) {
-                return sortConfig[0]
-                  ? a.username.localeCompare(b.username)
-                  : a.username.localeCompare(b.username) * -1;
-              }
-              if (a.username && !b.username) {
-                return -1;
-              } else if (b.username && !a.username) {
-                return 1;
-              }
+          }
+          return true;
+        })
+        .sort((a, b) => {
+          if (sortConfig[1] === 'name') {
+            if (a.username && b.username) {
               return sortConfig[0]
-                ? a.address.localeCompare(b.address)
-                : a.address.localeCompare(b.address) * -1;
+                ? a.username.localeCompare(b.username)
+                : a.username.localeCompare(b.username) * -1;
             }
-            return 0;
-          })
-      : [];
-  }, [search, councilNomineesDetails, sortConfig]);
+            if (a.username && !b.username) {
+              return -1;
+            } else if (b.username && !a.username) {
+              return 1;
+            }
+            return sortConfig[0]
+              ? a.address.localeCompare(b.address)
+              : a.address.localeCompare(b.address) * -1;
+          }
+          return 0;
+        });
+    }
+    return [];
+  }, [search, councilNomineesDetails, sortConfig, votesForCouncil, epochId]);
 
   return (
     <Flex
