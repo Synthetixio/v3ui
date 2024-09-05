@@ -42,7 +42,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   const { activeWallet, connect } = useWallet();
 
   const { data: councilNomineesDetails, isLoading } = useGetNomineesDetails(activeCouncil);
-  const { data: votes } = useGetHistoricalVotes();
+  const { data: votes, isError } = useGetHistoricalVotes();
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: nextEpochDuration } = useGetNextElectionSettings(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
