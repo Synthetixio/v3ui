@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { CouncilImage } from '../components/CouncilImage';
 import { ProfilePicture } from '../components/UserProfileCard/ProfilePicture';
 import { getVoteSelectionState } from '../utils/localstorage';
+import { utils } from 'ethers';
 
 export default function MyVotes() {
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -180,10 +181,11 @@ export default function MyVotes() {
               <Text fontSize="sm" color="white" fontWeight="bold" data-cy="my-votes-voting-power">
                 {formatNumber(
                   votingPowerSpartan?.power && votingPowerAmbassador && votingPowerTreassury
-                    ? votingPowerSpartan.power
-                        .add(votingPowerAmbassador.power)
-                        .add(votingPowerTreassury.power)
-                        .toString()
+                    ? utils.formatEther(
+                        votingPowerSpartan.power
+                          .add(votingPowerAmbassador.power)
+                          .add(votingPowerTreassury.power)
+                      )
                     : 0
                 )}
               </Text>

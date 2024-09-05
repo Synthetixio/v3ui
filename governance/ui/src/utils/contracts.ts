@@ -82,6 +82,7 @@ export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) =
 const abiForSnapshotMock = [
   'function balanceOfOnPeriod(address, uint256) view returns (uint256)',
   'function setBalanceOfOnPeriod(address, uint256, uint256) external',
+  'function currentPeriodId() external view returns (uint128)',
 ];
 
 export const profileContract = new Contract(
