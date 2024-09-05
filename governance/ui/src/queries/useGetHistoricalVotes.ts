@@ -24,23 +24,28 @@ export function useGetHistoricalVotes() {
   return useQuery({
     queryKey: ['historical-votes', network?.id],
     queryFn: async () => {
-      const res = await fetch(network?.id !== 2192 ? mainnetURL : testnetURL);
-      let votesRaw: Record<CouncilSlugs, Vote[]> = await res.json();
-      if (!('spartan' in votesRaw)) {
-        votesRaw = { spartan: votesRaw[0], ambassador: [], treasury: [] };
+      try {
+        const res = await fetch(network?.id !== 2192 ? mainnetURL : testnetURL);
+        let votesRaw: Record<CouncilSlugs, Vote[]> = await res.json();
+        if (!('spartan' in votesRaw)) {
+          votesRaw = { spartan: votesRaw[0], ambassador: [], treasury: [] };
+        }
+        return councils.reduce(
+          (cur, next) => {
+            cur[next.slug] = votesRaw[next.slug].sort((a, b) => {
+              if (a.epochId === b.epochId) {
+                return a.blockTimestamp - b.blockTimestamp;
+              }
+              return a.epochId - b.epochId;
+            });
+            return cur;
+          },
+          {} as Record<CouncilSlugs, Vote[]>
+        );
+      } catch (err) {
+        console.error(err);
+        return { spartan: [], ambassador: [], treasury: [] } as Record<CouncilSlugs, Vote[]>;
       }
-      return councils.reduce(
-        (cur, next) => {
-          cur[next.slug] = votesRaw[next.slug].sort((a, b) => {
-            if (a.epochId === b.epochId) {
-              return a.blockTimestamp - b.blockTimestamp;
-            }
-            return a.epochId - b.epochId;
-          });
-          return cur;
-        },
-        {} as Record<CouncilSlugs, Vote[]>
-      );
     },
     staleTime: 900000,
   });
