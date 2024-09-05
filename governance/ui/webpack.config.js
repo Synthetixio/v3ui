@@ -179,7 +179,7 @@ module.exports = {
         'process.env.BOARDROOM_KEY': JSON.stringify(
           process.env.BOARDROOM_KEY ?? 'd9abe7a1ab45ace58e6bd91bb9771586'
         ),
-        'process.env.CI': JSON.stringify(process.env.CI ?? false),
+        'process.env.CI': JSON.stringify(process.env.CI ?? 'false'),
       })
     ),
   resolve: {

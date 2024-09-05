@@ -30,7 +30,7 @@ import { CouncilImage } from '../CouncilImage';
 import TableLoading from '../TableLoading/TableLoading';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetEpochIndex, useGetHistoricalVotes } from '../../queries';
+import { useGetEpochIndex, useGetHistoricalVotes, Vote } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
@@ -61,11 +61,13 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
     if (councilNomineesDetails?.length && votesForCouncil) {
       return councilNomineesDetails
         .map((nominee) => {
-          const vote = votesForCouncil.find(
+          const votes = votesForCouncil.filter(
             (vote) =>
-              epochId === vote.id && vote.voter.toLowerCase() === nominee.address.toLowerCase()
+              epochId === vote.epochId &&
+              vote.candidates[0].toLowerCase() === nominee.address.toLowerCase()
           );
-          if (vote) return (nominee = { ...nominee, vote });
+          if (votes.length)
+            return (nominee = { ...nominee, vote: votes.reduce((cur, next) => {}, {} as Vote) });
           return nominee;
         })
         .filter((nominee) => {
@@ -96,6 +98,12 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
             return sortConfig[0]
               ? a.address.localeCompare(b.address)
               : a.address.localeCompare(b.address) * -1;
+          }
+          if (sortConfig[1] === 'votePower') {
+          }
+          if (sortConfig[1] === 'vote') {
+          }
+          if (sortConfig[1] === 'ranking') {
           }
           return 0;
         });
@@ -200,9 +208,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   textAlign="center"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'ranking']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   N°{' '}
@@ -232,9 +237,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   pl="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votes']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
@@ -248,9 +250,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   pl="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votingPower']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Voting Power{' '}
