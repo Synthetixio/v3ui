@@ -1,28 +1,27 @@
-import { FC, useMemo, useState } from 'react';
+import { InfoIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { useParams } from '@snx-v3/useParams';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { CollateralType, useCollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
+import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useParams } from '@snx-v3/useParams';
+import { usePoolData } from '@snx-v3/usePoolData';
+import { usePool } from '@snx-v3/usePoolsList';
+import { FC, useMemo, useState } from 'react';
 import {
   ManageAction,
-  NoPosition,
-  UnsupportedCollateralAlert,
-  Rewards,
   ManageStats,
+  NoPosition,
+  Rewards,
+  UnsupportedCollateralAlert,
 } from '../components';
-import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
-import { usePoolData } from '@snx-v3/usePoolData';
-import { useRewards, RewardsType } from '@snx-v3/useRewards';
-import { LiquidityPosition, useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { Network, useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import { usePool } from '@snx-v3/usePoolsList';
-import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 import { ClosePosition } from '../components/ClosePosition/ClosePosition';
 import { ManageLoading } from '../components/Manage/ManageLoading';
 import { PositionTitle } from '../components/Manage/PositionTitle';
-import { Tooltip } from '@snx-v3/Tooltip';
-import { InfoIcon } from '@chakra-ui/icons';
+import { WatchAccountBanner } from '../components/WatchAccountBanner/WatchAccountBanner';
 
 function useNormalisedCollateralSymbol(collateralSymbol?: string) {
   const { network } = useNetwork();
@@ -65,23 +64,12 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
 
 export const ManageUi: FC<{
   collateralType?: CollateralType;
-  isLoading: boolean;
-  rewards?: RewardsType;
   liquidityPosition?: LiquidityPosition;
   network?: Network | null;
   collateralSymbol?: string;
   poolName?: string;
   poolId?: string;
-}> = ({
-  collateralType,
-  isLoading,
-  rewards,
-  liquidityPosition,
-  network,
-  collateralSymbol,
-  poolName,
-  poolId,
-}) => {
+}> = ({ collateralType, liquidityPosition, network, collateralSymbol, poolName, poolId }) => {
   const [closePosition, setClosePosition] = useState(false);
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
@@ -133,7 +121,7 @@ export const ManageUi: FC<{
       <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
         <BorderBox gap={4} flex={1} p={6} flexDirection="column" bg="navy.700" height="fit-content">
           <ManageStats liquidityPosition={liquidityPosition} />
-          <Rewards isLoading={isLoading} rewards={rewards} />
+          <Rewards />
         </BorderBox>
         {!closePosition && (
           <Flex
@@ -191,24 +179,14 @@ export const Manage = () => {
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
 
-  const { isFetching: isCollateralLoading, data: collateralType } =
-    useCollateralType(collateralSymbolRaw);
-
-  const { isLoading: isPoolGraphDataLoading, data: poolData } = usePoolData(poolId);
-
-  const { isFetching: isRewardsLoading, data: rewardsData } = useRewards(
-    poolId,
-    collateralType?.tokenAddress,
-    accountId
-  );
+  const { data: collateralType } = useCollateralType(collateralSymbolRaw);
+  const { data: poolData } = usePoolData(poolId);
 
   const { data: liquidityPosition, isLoading: isLoadingPosition } = useLiquidityPosition({
     tokenAddress: collateralType?.tokenAddress,
     accountId,
     poolId,
   });
-
-  const isLoading = isRewardsLoading || isCollateralLoading || isPoolGraphDataLoading;
 
   const collateralDisplayName = useCollateralDisplayName(collateralSymbol);
   const { data: collateralTypes, isLoading: isLoadingCollaterals } = useCollateralTypes();
@@ -235,20 +213,12 @@ export const Manage = () => {
               liquidityPosition &&
               liquidityPosition.collateralAmount.eq(0) &&
               liquidityPosition.accountCollateral.availableCollateral.eq(0))) && (
-            <NoPosition
-              collateralSymbol={collateralSymbol}
-              collateralType={collateralType}
-              accountId={accountId}
-              rewards={rewardsData}
-              liquidityPosition={liquidityPosition}
-            />
+            <NoPosition liquidityPosition={liquidityPosition} />
           )}
           {accountId &&
             ((!isLoadingPosition && liquidityPosition?.collateralAmount.gt(0)) ||
               liquidityPosition?.accountCollateral?.availableCollateral.gt(0)) && (
               <ManageUi
-                isLoading={isLoading}
-                rewards={rewardsData}
                 poolName={poolData?.name}
                 poolId={poolId}
                 liquidityPosition={liquidityPosition}
