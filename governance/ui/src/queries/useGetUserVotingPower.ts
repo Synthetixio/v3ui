@@ -20,27 +20,21 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         const isMC = isMotherchain(network.id);
 
         const electionId = await electionModule.getEpochIndex();
-        const ballot = isMC
-          ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
-          : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
-        const votingPowerFromMotherchain: BigNumber = isMC
-          ? await electionModule
-              .connect(motherShipProvider(network.id))
-              .getVotePower(activeWallet.address, network.id, electionId)
-          : BigNumber.from(0);
+        const ballot: { votingPower: BigNumber } | undefined = await electionModule.getBallot(
+          activeWallet.address,
+          network.id,
+          electionId
+        );
 
-        if (ballot) {
-          if (ballot?.votingPower?.gt(0)) {
-            return {
-              power: isCI ? (ballot.votingPower as BigNumber) : votingPowerFromMotherchain,
-              isDeclared: true,
-            };
-          } else if ('gt' in ballot && ballot.gt(0)) {
-            return {
-              power: isCI ? (ballot as BigNumber) : votingPowerFromMotherchain,
-              isDeclared: true,
-            };
-          }
+        const votingPowerFromMotherchain: BigNumber = await electionModule
+          .connect(motherShipProvider(network.id))
+          .getVotePower(activeWallet.address, network.id, electionId);
+
+        if (ballot?.votingPower?.gt(0)) {
+          return {
+            power: isCI ? (ballot.votingPower as BigNumber) : votingPowerFromMotherchain,
+            isDeclared: true,
+          };
         }
         const votingPower: BigNumber = isCI
           ? isMC
@@ -50,12 +44,11 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
                   SnapshotRecordContract(network.id, council)?.address,
                   activeWallet?.address
                 )
-            : await SnapshotRecordContract(network.id, council)
-                ?.connect(provider)
-                .balanceOfOnPeriod(activeWallet.address, 1)
-          : BigNumber.from(0);
+            : BigNumber.from(0)
+          : votingPowerFromMotherchain;
+
         return {
-          power: process.env.CI === 'true' ? votingPower : votingPowerFromMotherchain,
+          power: votingPower,
           isDeclared: false,
         };
       } catch (error) {
