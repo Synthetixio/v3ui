@@ -19,43 +19,41 @@ export function useGetUserVotingPower(council: CouncilSlugs) {
         const electionModule = getCouncilContract(council).connect(motherShipProvider(network.id));
         const isMC = isMotherchain(network.id);
 
+        const snapshotContract = SnapshotRecordContract(network.id, council);
         const electionId = await electionModule.getEpochIndex();
-        const ballot = isMC
-          ? await electionModule.getBallot(activeWallet.address, network.id, electionId)
-          : await electionModule.connect(provider).getPreparedBallot(activeWallet.address);
-        const votingPowerFromMotherchain: BigNumber = isMC
-          ? await electionModule
-              .connect(motherShipProvider(network.id))
-              .getVotePower(activeWallet.address, network.id, electionId)
-          : BigNumber.from(0);
+        const ballot: { votingPower: BigNumber } | undefined = await electionModule.getBallot(
+          activeWallet.address,
+          network.id,
+          electionId
+        );
 
-        if (ballot) {
-          if (ballot?.votingPower?.gt(0)) {
-            return {
-              power: isCI ? (ballot.votingPower as BigNumber) : votingPowerFromMotherchain,
-              isDeclared: true,
-            };
-          } else if ('gt' in ballot && ballot.gt(0)) {
-            return {
-              power: isCI ? (ballot as BigNumber) : votingPowerFromMotherchain,
-              isDeclared: true,
-            };
-          }
+        const periodId = await snapshotContract?.connect(provider).currentPeriodId();
+
+        const votingPowerFromMotherchain: BigNumber = isCI
+          ? BigNumber.from(0)
+          : await electionModule
+              .connect(provider)
+              .getVotingPowerForUser(snapshotContract?.address, activeWallet.address, periodId);
+
+        if (ballot?.votingPower?.gt(0)) {
+          return {
+            power: isCI ? (ballot.votingPower as BigNumber) : votingPowerFromMotherchain,
+            isDeclared: true,
+          };
         }
         const votingPower: BigNumber = isCI
           ? isMC
             ? await electionModule
                 .connect(provider)
                 .callStatic.prepareBallotWithSnapshot(
-                  SnapshotRecordContract(network.id, council)?.address,
+                  snapshotContract?.address,
                   activeWallet?.address
                 )
-            : await SnapshotRecordContract(network.id, council)
-                ?.connect(provider)
-                .balanceOfOnPeriod(activeWallet.address, 1)
-          : BigNumber.from(0);
+            : BigNumber.from(0)
+          : votingPowerFromMotherchain;
+
         return {
-          power: process.env.CI === 'true' ? votingPower : votingPowerFromMotherchain,
+          power: votingPower,
           isDeclared: false,
         };
       } catch (error) {

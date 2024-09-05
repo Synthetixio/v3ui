@@ -8,7 +8,7 @@ export function useGetEpochIndex(council: CouncilSlugs) {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: ['epochId', council],
+    queryKey: ['epochId', council, network?.id],
     queryFn: async () => {
       return await getCouncilContract(council)
         .connect(motherShipProvider(network?.id || 13001))

@@ -915,25 +915,6 @@ export const electionModuleABI = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'voter',
-        type: 'address',
-      },
-    ],
-    name: 'getPreparedBallot',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'power',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'bytes32',
         name: 'expected',
         type: 'bytes32',
@@ -1435,7 +1416,13 @@ export const electionModuleABI = [
     type: 'error',
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: 'enum Epoch.ElectionPeriod',
+        name: 'currentPeriod',
+        type: 'uint8',
+      },
+    ],
     name: 'NotCallableInCurrentPeriod',
     type: 'error',
   },
@@ -2434,6 +2421,19 @@ export const electionModuleABI = [
   },
   {
     inputs: [],
+    name: 'getNumOfBallots',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'getRegisteredEmitters',
     outputs: [
       {
@@ -3055,6 +3055,35 @@ export const electionModuleABI = [
         internalType: 'uint128',
         name: '',
         type: 'uint128',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'snapshotContract',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'voter',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'periodId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getVotingPowerForUser',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
