@@ -49,6 +49,14 @@ export default function MyVotes() {
     .map(([council]) => council) as CouncilSlugs[];
   const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
   const navigate = useNavigate();
+  const formattedVotePower = formatNumber(
+    votingPowerSpartan?.power && votingPowerAmbassador?.power && votingPowerTreassury?.power
+      ? utils.formatEther(
+          votingPowerSpartan.power.add(votingPowerAmbassador.power).add(votingPowerTreassury.power)
+        )
+      : 0
+  );
+
   return (
     <>
       <CouncilTabs activeCouncil="spartan" />
@@ -179,15 +187,14 @@ export default function MyVotes() {
                 Total Voting Power
               </Text>
               <Text fontSize="sm" color="white" fontWeight="bold" data-cy="my-votes-voting-power">
-                {formatNumber(
-                  votingPowerSpartan?.power && votingPowerAmbassador && votingPowerTreassury
-                    ? utils.formatEther(
-                        votingPowerSpartan.power
-                          .add(votingPowerAmbassador.power)
-                          .add(votingPowerTreassury.power)
-                      )
-                    : 0
-                )}
+                {formattedVotePower === '0.00'
+                  ? formatNumber(
+                      votingPowerSpartan?.power
+                        .add(votingPowerAmbassador?.power || 0)
+                        .add(votingPowerTreassury?.power || 0)
+                        .toString() || 0
+                    )
+                  : formattedVotePower}
               </Text>
             </Flex>
             <Button
