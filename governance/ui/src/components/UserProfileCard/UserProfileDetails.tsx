@@ -43,11 +43,15 @@ export const UserProfileDetails = ({
   const { data: ballot } = useGetUserBallot(activeCouncil);
   const elementRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const networkForState = getVoteSelectionState(
+    state,
+    epochId,
+    network?.id.toString(),
+    activeCouncil
+  );
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-
   const isSelected = voteAddressState
-    ? voteAddressState?.toLowerCase() === userData?.address?.toLowerCase()
+    ? voteAddressState?.toLowerCase().trim() === userData?.address?.toLowerCase().trim()
     : false;
 
   const isAlreadyVoted =

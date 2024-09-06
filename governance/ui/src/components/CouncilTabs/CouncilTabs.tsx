@@ -123,6 +123,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                 networkForState && typeof networkForState !== 'string'
                   ? networkForState[council.slug]
                   : '';
+              // TODO @fix here
+              // console.log(newVoteCast, userInformation[index].userInformation?.address);
 
               return (
                 <Flex
