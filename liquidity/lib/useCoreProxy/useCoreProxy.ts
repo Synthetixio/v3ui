@@ -14,7 +14,7 @@ export function useCoreProxy({
   customNetwork,
   isWrite = false,
 }: {
-  customNetwork?: Network | null;
+  customNetwork?: Network;
   isWrite?: boolean;
 } = {}) {
   const { network } = useNetwork();

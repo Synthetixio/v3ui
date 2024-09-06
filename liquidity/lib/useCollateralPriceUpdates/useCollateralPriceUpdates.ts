@@ -73,7 +73,7 @@ async function getPythFeedIdsFromCollateralList(
 const getPriceUpdates = async (
   priceIds: string[],
   stalenessTolerance: number,
-  network: Network | null
+  network?: Network
 ) => {
   const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
   const updateType = 1;

@@ -65,7 +65,7 @@ export function useCollateralDisplayName(collateralSymbol?: string) {
 export const ManageUi: FC<{
   collateralType?: CollateralType;
   liquidityPosition?: LiquidityPosition;
-  network?: Network | null;
+  network?: Network;
   collateralSymbol?: string;
   poolName?: string;
   poolId?: string;

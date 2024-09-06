@@ -4,7 +4,7 @@ import { useV2xSynthetix } from '@snx-v3/useV2xSynthetix';
 import { wei } from '@synthetixio/wei';
 import { utils } from 'ethers';
 
-export function useV2Position(customNetwork?: Network | null) {
+export function useV2Position(customNetwork?: Network) {
   const { data: v2xSynthetix } = useV2xSynthetix(customNetwork);
   const { network } = useNetwork();
   const { activeWallet } = useWallet();
