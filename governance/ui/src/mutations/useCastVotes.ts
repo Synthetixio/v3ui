@@ -133,7 +133,7 @@ export function useCastVotes(
           console.error(error);
           toast({
             title: 'Could not cast votes.',
-            description: error && 'message' in error ? error.message : '',
+            description: 'Check the browser console for more information',
             status: 'error',
             isClosable: true,
           });
