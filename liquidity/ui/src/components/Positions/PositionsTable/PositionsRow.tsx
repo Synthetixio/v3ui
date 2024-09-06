@@ -1,16 +1,17 @@
-import { Box, Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
-import { TokenIcon } from '../../TokenIcon';
-import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
-import { Amount } from '@snx-v3/Amount';
 import { TimeIcon } from '@chakra-ui/icons';
-import { useWithdrawTimer } from '../../../../../lib/useWithdrawTimer';
-import { useTokenPrice } from '../../../../../lib/useTokenPrice';
-import { DebtAmount } from './DebtAmount';
+import { Box, Button, Collapse, Fade, Flex, Td, Text, Tooltip, Tr } from '@chakra-ui/react';
+import { Amount } from '@snx-v3/Amount';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPositions';
 import { useRewards } from '@snx-v3/useRewards';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
+import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CRatioAmount } from '../../CRatioBar/CRatioAmount';
+import { CRatioBadge } from '../../CRatioBar/CRatioBadge';
+import { TokenIcon } from '../../TokenIcon';
+import { DebtAmount } from './DebtAmount';
+
 interface PositionRow extends LiquidityPositionType {
   final: boolean;
   isBase: boolean;
@@ -30,7 +31,11 @@ export function PositionRow({
   availableCollateral,
   accountId,
 }: PositionRow) {
-  const { data: rewardsData } = useRewards(poolId, collateralType?.tokenAddress, accountId);
+  const { data: rewardsData } = useRewards({
+    poolId,
+    collateralSymbol: collateralType?.symbol,
+    accountId,
+  });
   const collateralPrice = useTokenPrice(collateralType.symbol);
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();

@@ -1,32 +1,28 @@
-import { Flex, Td, Text, Button, Fade, Tr, Link } from '@chakra-ui/react';
+import { Button, Fade, Flex, Link, Td, Text, Tr } from '@chakra-ui/react';
+import { Amount } from '@snx-v3/Amount';
+import { etherscanLink } from '@snx-v3/etherscanLink';
+import { truncateAddress } from '@snx-v3/formatters';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { useNetwork } from '@snx-v3/useBlockchain';
 import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
-import { RewardsModal } from './RewardsModal';
-import { truncateAddress, convertToReadableInterval } from '@snx-v3/formatters';
-import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
-import { etherscanLink } from '@snx-v3/etherscanLink';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { Tooltip } from '@snx-v3/Tooltip';
 import { TokenIcon } from '../TokenIcon';
+import { RewardsModal } from './RewardsModal';
 
 interface RewardsRowInterface {
   symbol: string;
-  frequency: number;
   claimableAmount: number; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
   address: string;
-  total: number;
 }
 
 export const RewardsRow = ({
   symbol,
-  frequency,
   claimableAmount,
   lifetimeClaimed,
   address,
-  total,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
@@ -47,11 +43,6 @@ export const RewardsRow = ({
 
   const { txnStatus, txnHash } = txnState;
 
-  // We want to pass in the total, as well as the
-  const { amount, frequencyString } = convertToReadableInterval(total, frequency);
-
-  const link = etherscanLink({ chain: network?.name || 'mainnet', address });
-
   return (
     <>
       <RewardsModal
@@ -67,7 +58,10 @@ export const RewardsRow = ({
           </Fade>
           <Fade in>
             <Flex flexDirection="column" ml="12px">
-              <Link href={link} target="_blank">
+              <Link
+                href={etherscanLink({ chain: network?.name || 'mainnet', address })}
+                target="_blank"
+              >
                 <Tooltip label={`Distributed by ${truncateAddress(address)}`}>
                   <Text
                     color="gray.50"
@@ -76,15 +70,10 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    <Amount showTooltip={false} value={wei(amount)} suffix={` ${symbol}`} />
+                    {symbol}
                   </Text>
                 </Tooltip>
               </Link>
-              {frequencyString && total > 0 && (
-                <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
-                  {frequencyString}
-                </Text>
-              )}
             </Flex>
           </Fade>
         </Td>
@@ -98,13 +87,11 @@ export const RewardsRow = ({
               lineHeight="20px"
             >
               <Amount value={wei(claimableAmount)} />
-              {` ${symbol}`}
             </Text>
             {lifetimeClaimed > 0 && (
               <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
                 <Tooltip label="Total claimed over lifetime">Lifetime: &nbsp;</Tooltip>
                 <Amount value={wei(lifetimeClaimed)} />
-                {symbol}
               </Text>
             )}
           </Fade>

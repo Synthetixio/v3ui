@@ -8,7 +8,6 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
-import { useRewards } from '@snx-v3/useRewards';
 import { FC, useContext, useState } from 'react';
 import { ZEROWEI } from '../../utils/constants';
 import { CRatioBar } from '../CRatioBar/CRatioBar';
@@ -23,9 +22,8 @@ export const NoPosition: FC<{
   poolName?: string;
   liquidityPosition?: LiquidityPosition;
 }> = ({ liquidityPosition, poolName }) => {
-  const { accountId, collateralSymbol, poolId } = useParams();
+  const { collateralSymbol, accountId } = useParams();
   const { data: collateralType } = useCollateralType(collateralSymbol);
-  const { data: rewards } = useRewards(poolId, collateralType?.tokenAddress, accountId);
 
   const { refetch } = useAccounts();
   const { collateralChange, setCollateralChange, setDebtChange } =
@@ -79,7 +77,7 @@ export const NoPosition: FC<{
               />
             </BorderBox>
           )}
-          {rewards && <Rewards isLoading={false} rewards={rewards} />}
+          <Rewards />
         </BorderBox>
         <BorderBox
           flex={1}

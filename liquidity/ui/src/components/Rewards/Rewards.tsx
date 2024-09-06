@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
 import { useRewards } from '@snx-v3/useRewards';
 import { RewardsLoading } from './RewardsLoading';
@@ -21,8 +20,7 @@ import { RewardsRow } from './RewardsRow';
 
 export const Rewards = ({ ...props }: FlexProps) => {
   const { accountId, collateralSymbol, poolId } = useParams();
-  const { data: collateralType } = useCollateralType(collateralSymbol);
-  const { isLoading, data: rewards } = useRewards(poolId, collateralType?.tokenAddress, accountId);
+  const { isLoading, data: rewards } = useRewards({ poolId, collateralSymbol, accountId });
 
   const hasRewards = rewards && rewards.length > 0;
 

@@ -87,11 +87,11 @@ function RewardsRow({
   accountId?: string;
   poolId: string;
 }) {
-  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards(
+  const { isLoading: isRewardsLoading, data: rewardsData } = useRewards({
     poolId,
-    collateralType?.tokenAddress,
-    accountId
-  );
+    collateralSymbol: collateralType?.symbol,
+    accountId,
+  });
 
   return isRewardsLoading && !rewardsData ? (
     <Spinner />
