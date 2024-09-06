@@ -21,9 +21,9 @@ export const sortUsers = (
   if (councilNomineesDetails?.length && votes) {
     const candidatesByVotePowerRanking = votes
       ? Object.keys(votes[activeCouncil]).sort((a, b) => {
-          return votes[activeCouncil][b].votePower
-            .sub(votes[activeCouncil][a].votePower)
-            .toNumber();
+          return votes[activeCouncil][b].votePower.sub(votes[activeCouncil][a].votePower).gt(0)
+            ? 1
+            : -1;
         })
       : [];
     return councilNomineesDetails
@@ -72,15 +72,15 @@ export const sortUsers = (
         if (sortConfig[1] === 'votingPower') {
           if (sortConfig[0]) {
             if (!b.voteResult?.votePower) return -1;
-            return b.voteResult?.votePower
-              .sub(a.voteResult?.votePower || BigNumber.from(0))
-              .toNumber();
+            return b.voteResult?.votePower.sub(a.voteResult?.votePower || BigNumber.from(0)).gt(0)
+              ? 1
+              : -1;
           } else {
             if (!b.voteResult?.votePower) return 1;
             return b.voteResult?.votePower
               .sub(a.voteResult?.votePower || BigNumber.from(0))
               .mul(-1)
-              .toNumber();
+              .toString();
           }
         }
         if (sortConfig[1] === 'votes') {
@@ -92,9 +92,9 @@ export const sortUsers = (
         }
         if (sortConfig[1] === 'ranking') {
           if (!b.voteResult?.votePower) return -1;
-          return b.voteResult?.votePower
-            .sub(a.voteResult?.votePower || BigNumber.from(0))
-            .toNumber();
+          return b.voteResult?.votePower.sub(a.voteResult?.votePower || BigNumber.from(0)).gt(0)
+            ? 1
+            : -1;
         }
         return 0;
       });

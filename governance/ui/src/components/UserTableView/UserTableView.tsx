@@ -31,9 +31,10 @@ export default function UserTableView({
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const isSelected = searchParams.get('view') === user.address;
   const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
-  const totalVotingPowerPercentage = totalVotingPower
-    ? user.voteResult?.votePower.mul(100).div(totalVotingPower).toNumber().toFixed(2)
-    : 'N/A';
+  const totalVotingPowerPercentage =
+    totalVotingPower && user.voteResult
+      ? formatNumber(user.voteResult?.votePower.mul(100).div(totalVotingPower).toString())
+      : 'N/A';
 
   return (
     <Tr
@@ -119,7 +120,7 @@ export default function UserTableView({
           {totalVotingPowerPercentage ? totalVotingPowerPercentage + '%' : 'N/A'}
           <Text color="gray.500" fontSize="x-small">
             {totalVotingPowerPercentage && user.voteResult
-              ? formatNumber(utils.formatEther(user.voteResult?.votePower))
+              ? formatNumber(utils.formatEther(user.voteResult.votePower || '0'))
               : '—'}
           </Text>
         </Td>
