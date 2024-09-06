@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
 import { EditIcon, ShareIcon } from '../Icons';
-import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
@@ -32,6 +32,7 @@ export const UserProfileDetails = ({
   councilPeriod,
 }: UserProfileDetailsProps) => {
   const [_, setVoteCard] = useRecoilState(voteCardState);
+  const { activeWallet } = useWallet();
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
   const [walletToolTipLabel, setWalletTooltipLabel] = useState('Copy');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
@@ -43,11 +44,16 @@ export const UserProfileDetails = ({
   const { data: ballot } = useGetUserBallot(activeCouncil);
   const elementRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const networkForState = getVoteSelectionState(
+    state,
+    activeWallet?.address,
+    epochId?.toString(),
+    network?.id.toString(),
+    activeCouncil
+  );
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-
   const isSelected = voteAddressState
-    ? voteAddressState?.toLowerCase() === userData?.address?.toLowerCase()
+    ? voteAddressState?.toLowerCase().trim() === userData?.address?.toLowerCase().trim()
     : false;
 
   const isAlreadyVoted =
@@ -293,12 +299,22 @@ export const UserProfileDetails = ({
               if (isAlreadyVoted) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: { action: 'remove', network: parsedNetwork, epochId },
+                  payload: {
+                    action: 'remove',
+                    network: parsedNetwork,
+                    epochId: epochId?.toString(),
+                    wallet: activeWallet?.address,
+                  },
                 });
               } else if (isSelected) {
                 dispatch({
                   type: activeCouncil.toUpperCase(),
-                  payload: { action: undefined, network: parsedNetwork, epochId },
+                  payload: {
+                    action: undefined,
+                    network: parsedNetwork,
+                    epochId: epochId?.toString(),
+                    wallet: activeWallet?.address,
+                  },
                 });
               } else {
                 dispatch({
@@ -306,7 +322,8 @@ export const UserProfileDetails = ({
                   payload: {
                     action: userData?.address.toLowerCase(),
                     network: parsedNetwork,
-                    epochId,
+                    epochId: epochId?.toString(),
+                    wallet: activeWallet?.address,
                   },
                 });
               }

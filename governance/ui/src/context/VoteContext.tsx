@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../queries';
 import { localStorageKey, removeCandidate, setCandidate } from '../utils/localstorage';
 
 export interface VoteStateForNetwork {
@@ -17,26 +17,35 @@ export interface VoteStateForNetwork {
 
 export interface VoteState {
   [key: string]: {
-    [key: string]: VoteStateForNetwork;
+    [key: string]: {
+      [key: string]: VoteStateForNetwork;
+    };
   };
 }
 
 type Action = {
   type: string;
-  payload: { action: string | undefined; network: string | undefined; epochId: string | undefined };
+  payload: {
+    action: string | undefined;
+    network: string | undefined;
+    epochId: string | undefined;
+    wallet: string | undefined;
+  };
 };
 
-const initialState = (chainId?: string, epochId?: string) => {
-  if (!epochId || !chainId) return {};
+const initialState = (chainId?: string, epochId?: string, wallet?: string) => {
+  if (!epochId || !chainId || !wallet) return {};
 
   const parsedState = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
   return {
-    [epochId]: {
-      [chainId]: {
-        spartan: parsedState[epochId]?.[chainId]?.spartan || undefined,
-        ambassador: parsedState[epochId]?.[chainId]?.ambassador || undefined,
-        treasury: parsedState[epochId]?.[chainId]?.treasury || undefined,
+    [wallet]: {
+      [epochId]: {
+        [chainId]: {
+          spartan: parsedState[epochId]?.[chainId]?.spartan || undefined,
+          ambassador: parsedState[epochId]?.[chainId]?.ambassador || undefined,
+          treasury: parsedState[epochId]?.[chainId]?.treasury || undefined,
+        },
       },
     },
   } as VoteState;
@@ -56,20 +65,31 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
+          action.payload.wallet,
           'spartan',
           action.payload.network,
           action.payload.epochId
         );
       } else {
-        removeCandidate('spartan', action.payload.network, action.payload.epochId);
+        removeCandidate(
+          'spartan',
+          action.payload.wallet,
+          action.payload.network,
+          action.payload.epochId
+        );
       }
       return {
         ...state,
-        [action.payload.epochId!]: {
-          ...(state[action.payload.epochId!] || {}),
-          [action.payload.network!]: {
-            ...(state[action.payload.epochId!]?.[action.payload.network!] || {}),
-            spartan: action.payload.action,
+        [action.payload.wallet!]: {
+          ...(state[action.payload.wallet!] || {}),
+          [action.payload.epochId!]: {
+            ...(state[action.payload.wallet!]?.[action.payload.epochId!] || {}),
+            [action.payload.network!]: {
+              ...(state[action.payload.wallet!]?.[action.payload.epochId!]?.[
+                action.payload.network!
+              ] || {}),
+              spartan: action.payload.action,
+            },
           },
         },
       };
@@ -78,20 +98,31 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
+          action.payload.wallet,
           'ambassador',
           action.payload.network,
           action.payload.epochId
         );
       } else {
-        removeCandidate('ambassador', action.payload.network, action.payload.epochId);
+        removeCandidate(
+          'ambassador',
+          action.payload.wallet,
+          action.payload.network,
+          action.payload.epochId
+        );
       }
       return {
         ...state,
-        [action.payload.epochId!]: {
-          ...(state[action.payload.epochId!] || {}),
-          [action.payload.network!]: {
-            ...(state[action.payload.epochId!]?.[action.payload.network!] || {}),
-            ambassador: action.payload.action,
+        [action.payload.wallet!]: {
+          ...(state[action.payload.wallet!] || {}),
+          [action.payload.epochId!]: {
+            ...(state[action.payload.wallet!]?.[action.payload.epochId!] || {}),
+            [action.payload.network!]: {
+              ...(state[action.payload.wallet!]?.[action.payload.epochId!]?.[
+                action.payload.network!
+              ] || {}),
+              ambassador: action.payload.action,
+            },
           },
         },
       };
@@ -100,20 +131,31 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
       if (action.payload.action && action.payload.action !== 'remove') {
         setCandidate(
           action.payload.action,
+          action.payload.wallet,
           'treasury',
           action.payload.network,
           action.payload.epochId
         );
       } else {
-        removeCandidate('treasury', action.payload.network, action.payload.epochId);
+        removeCandidate(
+          'treasury',
+          action.payload.wallet,
+          action.payload.network,
+          action.payload.epochId
+        );
       }
       return {
         ...state,
-        [action.payload.epochId!]: {
-          ...(state[action.payload.epochId!] || {}),
-          [action.payload.network!]: {
-            ...(state[action.payload.epochId!]?.[action.payload.network!] || {}),
-            treasury: action.payload.action,
+        [action.payload.wallet!]: {
+          ...(state[action.payload.wallet!] || {}),
+          [action.payload.epochId!]: {
+            ...(state[action.payload.wallet!]?.[action.payload.epochId!] || {}),
+            [action.payload.network!]: {
+              ...(state[action.payload.wallet!]?.[action.payload.epochId!]?.[
+                action.payload.network!
+              ] || {}),
+              treasury: action.payload.action,
+            },
           },
         },
       };
@@ -125,6 +167,7 @@ const voteReducer = (state: VoteState, action: Action): VoteState => {
 
 const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { network } = useNetwork();
+  const { activeWallet } = useWallet();
   const { data: epochId } = useGetEpochIndex('spartan');
   const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(
@@ -147,30 +190,40 @@ const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       isTreasuryBallotFetched &&
       spartanBallot &&
       ambassadorBallot &&
-      treasuryBallot
+      treasuryBallot &&
+      activeWallet?.address
     ) {
       [spartanBallot, ambassadorBallot, treasuryBallot].forEach((ballot) => {
         dispatch({
           payload: {
             action: ballot?.votedCandidates[0],
             network: network.id.toString(),
-            epochId,
+            epochId: epochId.toString(),
+            wallet: activeWallet.address,
           },
           type: ballot.council.toUpperCase(),
         });
       });
 
-      const initState = initialState(network.id.toString(), epochId);
-      const voteStateForNetwork = initState[epochId][network.id.toString()];
+      const initState = initialState(
+        network.id.toString(),
+        epochId.toString(),
+        activeWallet.address
+      );
+      const voteStateForNetwork =
+        initState[activeWallet.address][epochId.toString()][network.id.toString()];
 
-      Object.keys(initState[epochId][network.id.toString()]).forEach((key) => {
+      Object.keys(
+        initState[activeWallet.address][epochId.toString()][network.id.toString()]
+      ).forEach((key) => {
         const candidate = voteStateForNetwork[key as keyof VoteStateForNetwork];
         if (candidate) {
           dispatch({
             payload: {
               action: candidate,
               network: network.id.toString(),
-              epochId,
+              epochId: epochId.toString(),
+              wallet: activeWallet.address,
             },
             type: key.toUpperCase(),
           });
@@ -188,6 +241,7 @@ const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     spartanBallot,
     ambassadorBallot,
     treasuryBallot,
+    activeWallet?.address,
   ]);
   return <VoteContext.Provider value={{ state, dispatch }}>{children}</VoteContext.Provider>;
 };

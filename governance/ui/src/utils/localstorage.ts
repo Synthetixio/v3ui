@@ -5,23 +5,28 @@ export const localStorageKey = 'voteSelection';
 
 export const setCandidate = (
   candidate?: string,
+  wallet?: string,
   council?: CouncilSlugs,
   network?: string,
   epochId?: string
 ) => {
   try {
-    if (!candidate || !council || !network || !epochId) return;
+    if (!candidate || !council || !network || !epochId || !wallet) return;
 
     const parsedSelection = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
-    if (!parsedSelection[epochId]) {
-      parsedSelection[epochId] = {};
-    }
-    if (!parsedSelection[epochId][network]) {
-      parsedSelection[epochId][network] = {};
+    if (!parsedSelection[wallet]) {
+      parsedSelection[wallet] = {};
     }
 
-    parsedSelection[epochId][network][council] = candidate;
+    if (!parsedSelection[wallet][epochId]) {
+      parsedSelection[wallet][epochId] = {};
+    }
+    if (!parsedSelection[wallet][epochId][network]) {
+      parsedSelection[wallet][epochId][network] = {};
+    }
+
+    parsedSelection[wallet][epochId][network][council] = candidate;
 
     localStorage.setItem(localStorageKey, JSON.stringify(parsedSelection));
   } catch (error) {
@@ -29,24 +34,33 @@ export const setCandidate = (
   }
 };
 
-export const removeCandidate = (council?: CouncilSlugs, network?: string, epochId?: string) => {
-  if (!council || !network || !epochId) return;
+export const removeCandidate = (
+  council?: CouncilSlugs,
+  wallet?: string,
+  network?: string,
+  epochId?: string
+) => {
+  if (!council || !network || !epochId || !wallet) return;
 
   try {
     const parsedSelection = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
     if (
-      parsedSelection[epochId] &&
-      parsedSelection[epochId][network] &&
-      parsedSelection[epochId][network][council]
+      parsedSelection[wallet] &&
+      parsedSelection[wallet][epochId] &&
+      parsedSelection[wallet][epochId][network] &&
+      parsedSelection[wallet][epochId][network][council]
     ) {
-      delete parsedSelection[epochId][network][council];
+      delete parsedSelection[wallet][epochId][network][council];
 
-      if (Object.keys(parsedSelection[epochId][network]).length === 0) {
-        delete parsedSelection[epochId][network];
+      if (Object.keys(parsedSelection[wallet][epochId][network]).length === 0) {
+        delete parsedSelection[wallet][epochId][network];
       }
-      if (Object.keys(parsedSelection[epochId]).length === 0) {
-        delete parsedSelection[epochId];
+      if (Object.keys(parsedSelection[wallet][epochId]).length === 0) {
+        delete parsedSelection[wallet][epochId];
+      }
+      if (Object.keys(parsedSelection[wallet]).length === 0) {
+        delete parsedSelection[wallet];
       }
 
       localStorage.setItem(localStorageKey, JSON.stringify(parsedSelection));
@@ -55,6 +69,7 @@ export const removeCandidate = (council?: CouncilSlugs, network?: string, epochI
     console.error(
       'Tried to remove address that wasn’t present in local storage: ',
       council,
+      wallet,
       network,
       epochId,
       err
@@ -64,30 +79,38 @@ export const removeCandidate = (council?: CouncilSlugs, network?: string, epochI
 
 export const getVoteSelectionState = (
   state: VoteState,
+  wallet?: string,
   epochId?: string,
   networkId?: string,
   councilSlug?: CouncilSlugs
 ) => {
-  if (!epochId || !networkId) return '';
-
+  if (!epochId || !networkId || !wallet) return '';
   if (councilSlug) {
-    return epochId
-      ? state[epochId]
-        ? networkId
-          ? state[epochId][networkId]
-            ? state[epochId][networkId][councilSlug]
-              ? state[epochId][networkId][councilSlug]
+    return wallet
+      ? state[wallet]
+        ? epochId
+          ? state[wallet][epochId]
+            ? networkId
+              ? state[wallet][epochId][networkId]
+                ? state[wallet][epochId][networkId][councilSlug]
+                  ? state[wallet][epochId][networkId][councilSlug]
+                  : ''
+                : ''
               : ''
             : ''
           : ''
         : ''
       : '';
   }
-  return epochId
-    ? state[epochId]
-      ? networkId
-        ? state[epochId][networkId]
-          ? state[epochId][networkId]
+  return wallet
+    ? state[wallet]
+      ? epochId
+        ? state[wallet][epochId]
+          ? networkId
+            ? state[wallet][epochId][networkId]
+              ? state[wallet][epochId][networkId]
+              : ''
+            : ''
           : ''
         : ''
       : ''

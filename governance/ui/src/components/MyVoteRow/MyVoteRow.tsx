@@ -4,7 +4,7 @@ import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { Badge } from '../Badge';
 
@@ -18,6 +18,7 @@ export default function MyVoteRow({
   isLast: boolean;
 }) {
   const navigate = useNavigate();
+  const { activeWallet } = useWallet();
   const { data: ballot } = useGetUserBallot(councilSlug);
   const { data: epochId } = useGetEpochIndex(councilSlug);
   const { dispatch, state } = useVoteContext();
@@ -25,13 +26,13 @@ export default function MyVoteRow({
 
   const networkForState = getVoteSelectionState(
     state,
-    epochId,
+    activeWallet?.address,
+    epochId?.toString(),
     network?.id.toString(),
     councilSlug
   );
 
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -47,15 +48,17 @@ export default function MyVoteRow({
       <Flex ml="4" alignItems="center" mr="auto">
         <CouncilUser
           councilSlug={councilSlug}
-          address={ballot?.votedCandidates[0] || voteAddressState}
-          hideName={!!(ballot?.votedCandidates[0] && networkForState === 'remove')}
+          address={ballot?.votedCandidates[0] ? ballot?.votedCandidates[0] : voteAddressState}
+          hideName={!!(ballot?.votedCandidates[0] && voteAddressState)}
         />
-        {ballot?.votedCandidates[0] && networkForState === 'remove' && (
-          <>
-            <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={networkForState} hideName />
-          </>
-        )}
+        {ballot?.votedCandidates[0] &&
+          voteAddressState &&
+          ballot.votedCandidates[0].toLowerCase() !== voteAddressState.toLowerCase() && (
+            <>
+              <ArrowForwardIcon mx="2" />
+              <CouncilUser councilSlug={councilSlug} address={voteAddressState} hideName />
+            </>
+          )}
       </Flex>
       {ballot?.votedCandidates.includes(voteAddressState) ? (
         <Badge mr="2">Your Vote</Badge>
@@ -95,7 +98,8 @@ export default function MyVoteRow({
                   payload: {
                     action: 'remove',
                     network: network.id.toString(),
-                    epochId,
+                    epochId: epochId?.toString(),
+                    wallet: activeWallet?.address,
                   },
                 });
               } else {
@@ -104,7 +108,8 @@ export default function MyVoteRow({
                   payload: {
                     action: networkForState === 'remove' ? 'remove' : undefined,
                     network: network.id.toString(),
-                    epochId,
+                    epochId: epochId?.toString(),
+                    wallet: activeWallet?.address,
                   },
                 });
               }

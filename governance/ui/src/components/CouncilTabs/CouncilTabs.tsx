@@ -11,6 +11,7 @@ import {
   useGetUserBallot,
   useNetwork,
   useGetEpochIndex,
+  useWallet,
 } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
@@ -21,6 +22,7 @@ import { getVoteSelectionState } from '../../utils/localstorage';
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const location = useLocation();
+  const { activeWallet } = useWallet();
   const isInMyVotesPage = location.pathname.includes('my-votes');
   const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
@@ -28,7 +30,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { state } = useVoteContext();
   // @dev dont put activeCounil in here cause its always spartan for the timer
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const networkForState = getVoteSelectionState(
+    state,
+    activeWallet?.address,
+    epochId?.toString(),
+    network?.id.toString()
+  );
 
   const votedNomineesData = [
     useGetUserBallot('spartan'),
@@ -88,7 +95,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
               Back to Councils
             </Button>
           ) : (
-            // If on my votes page, spartan council is active by default for navigation
             <>
               <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
               <MyVotesSummary
@@ -164,12 +170,28 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                     {council.title}
                   </Text>
                   {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
-                    <ProfilePicture
-                      address={userInformation[index].userInformation?.address}
-                      size={9}
-                      newVoteCast={newVoteCast}
-                      isCouncilTabs={true}
-                    />
+                    <>
+                      <ProfilePicture
+                        address={userInformation[index].userInformation?.address}
+                        size={9}
+                        newVoteCast={newVoteCast}
+                        isCouncilTabs
+                      />
+                      {userInformation[index]?.userInformation?.address
+                        ? newVoteCast?.toLowerCase() !==
+                            userInformation[index]?.userInformation?.address?.toLowerCase() && (
+                            <>
+                              <ArrowForwardIcon mx="2" />
+                              <ProfilePicture
+                                address={newVoteCast}
+                                size={9}
+                                newVoteCast={newVoteCast}
+                                isCouncilTabs
+                              />
+                            </>
+                          )
+                        : null}
+                    </>
                   ) : (
                     councilPeriod === '2' && (
                       <>
@@ -178,6 +200,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                             address={userInformation[index].userInformation?.address}
                             size={9}
                             newVoteCast={newVoteCast}
+                            isCouncilTabs
                           />
                         )}
 

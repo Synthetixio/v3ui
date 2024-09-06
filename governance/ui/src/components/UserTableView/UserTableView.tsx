@@ -6,10 +6,9 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
-import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
-import { getVoteSelectionState } from '../../utils/localstorage';
-import { useVoteContext } from '../../context/VoteContext';
-import { BigNumber } from 'ethers';
+import { useGetUserBallot } from '../../queries';
+import { BigNumber, utils } from 'ethers';
+import { formatNumber } from '@snx-v3/formatters';
 import { renderCorrectBorder } from '../../utils/table-border';
 
 export default function UserTableView({
@@ -31,20 +30,11 @@ export default function UserTableView({
   const { data: ballot } = useGetUserBallot(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const isSelected = searchParams.get('view') === user.address;
-  const { network } = useNetwork();
-  const { data: epochId } = useGetEpochIndex(activeCouncil);
-  const { state } = useVoteContext();
   const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
-  const networkForState = getVoteSelectionState(
-    state,
-    epochId,
-    network?.id.toString(),
-    activeCouncil
-  );
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-  const totalVotingPowerPercentage = totalVotingPower
-    ? user.voteResult?.votePower.mul(100).div(totalVotingPower).toNumber().toFixed(2)
-    : 'N/A';
+  const totalVotingPowerPercentage =
+    totalVotingPower && user.voteResult
+      ? formatNumber(user.voteResult?.votePower.mul(100).div(totalVotingPower).toString())
+      : 'N/A';
 
   return (
     <Tr
@@ -129,7 +119,9 @@ export default function UserTableView({
         >
           {totalVotingPowerPercentage ? totalVotingPowerPercentage + '%' : 'N/A'}
           <Text color="gray.500" fontSize="x-small">
-            {totalVotingPowerPercentage ? user.voteResult?.votePower.toString() : '—'}
+            {totalVotingPowerPercentage && user.voteResult
+              ? formatNumber(utils.formatEther(user.voteResult.votePower || '0'))
+              : '—'}
           </Text>
         </Td>
       )}
@@ -144,7 +136,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          {ballot?.votedCandidates.includes(voteAddressState) ? (
+          {ballot?.votedCandidates.includes(user.address) ? (
             <Badge w="fit-content" data-cy="your-vote-badge-table">
               Your Vote
             </Badge>

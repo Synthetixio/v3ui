@@ -133,7 +133,7 @@ export function useCastVotes(
           console.error(error);
           toast({
             title: 'Could not cast votes.',
-            description: error && 'message' in error ? error.message : '',
+            description: 'Check the browser console for more information',
             status: 'error',
             isClosable: true,
           });
@@ -157,11 +157,21 @@ export function useCastVotes(
         shouldWithdrawVote
           ? dispatch({
               type: council.toUpperCase(),
-              payload: { action: undefined, network: network!.id.toString(), epochId },
+              payload: {
+                action: undefined,
+                network: network!.id.toString(),
+                epochId: epochId?.toString(),
+                wallet: activeWallet?.address,
+              },
             })
           : dispatch({
               type: council.toUpperCase(),
-              payload: { action: candidates[council], network: network!.id.toString(), epochId },
+              payload: {
+                action: candidates[council],
+                network: network!.id.toString(),
+                epochId: epochId?.toString(),
+                wallet: activeWallet?.address,
+              },
             });
       });
       await Promise.all(
