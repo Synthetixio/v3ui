@@ -64,9 +64,12 @@ export default function MyVotes() {
     typeof networkForState !== 'string' ? networkForState : {}
   ) as VoteStateForNetwork;
   const councilToCastVote = Object.entries(stateFromCouncils)
-    .filter(
-      ([council, candidate]) => !(ballots as any)[council].votedCandidates.includes(candidate)
-    )
+    .filter(([council, candidate]) => {
+      if ((ballots as any)[council].votedCandidates.length) {
+        return !(ballots as any)[council].votedCandidates.includes(candidate);
+      }
+      return !!(stateFromCouncils as any)[council];
+    })
     .map(([council]) => council) as CouncilSlugs[];
 
   const councilsToAddress = councilToCastVote.reduce(

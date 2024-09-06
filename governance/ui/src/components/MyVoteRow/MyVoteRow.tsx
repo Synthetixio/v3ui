@@ -33,7 +33,6 @@ export default function MyVoteRow({
   );
 
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -49,7 +48,7 @@ export default function MyVoteRow({
       <Flex ml="4" alignItems="center" mr="auto">
         <CouncilUser
           councilSlug={councilSlug}
-          address={ballot?.votedCandidates[0] ? ballot?.votedCandidates[0] : ''}
+          address={ballot?.votedCandidates[0] ? ballot?.votedCandidates[0] : voteAddressState}
           hideName={!!(ballot?.votedCandidates[0] && voteAddressState)}
         />
         {ballot?.votedCandidates[0] &&

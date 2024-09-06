@@ -45,6 +45,7 @@ export function useCastVotes(
   return useMutation({
     mutationKey: ['cast', councils.toString(), JSON.stringify(candidates)],
     mutationFn: async () => {
+      console.log(councils, candidates);
       if (signer && network && multicall) {
         const isMC = isMotherchain(network.id);
         try {
