@@ -287,7 +287,7 @@ export const RepayModal: React.FC<{
     send(Events.RUN);
   }, [onClose, send, state]);
 
-  if (!params.poolId || !params.accountId || !collateralType)
+  if (!(params.poolId && params.accountId && collateralType && systemToken))
     return (
       <Flex gap={4} flexDirection="column">
         <Skeleton maxW="232px" width="100%" height="20px" />

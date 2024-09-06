@@ -286,7 +286,7 @@ export const appMetadata = {
   explore: 'https://blog.synthetix.io',
 };
 
-export function useProviderForChain(network?: Network | null) {
+export function useProviderForChain(network?: Network) {
   return useMemo(
     () => (network ? new ethers.providers.JsonRpcProvider(network.rpcUrl()) : undefined),
     [network]
@@ -348,7 +348,7 @@ export function useNetwork() {
 
   if (!network) {
     return {
-      network: null,
+      network: undefined,
       setNetwork,
     };
   }

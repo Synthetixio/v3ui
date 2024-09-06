@@ -1,40 +1,27 @@
+import { getSubgraphUrl } from '@snx-v3/constants';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useMulticall3 } from '@snx-v3/useMulticall3';
+import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
+import { Wei, wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { BigNumber } from 'ethers';
-import { Wei, wei } from '@synthetixio/wei';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { z } from 'zod';
-import { getSubgraphUrl } from '@snx-v3/constants';
-import { Network, useNetwork } from '@snx-v3/useBlockchain';
-import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 
 const RewardsResponseSchema = z.array(
   z.object({
     address: z.string(),
     name: z.string(),
     symbol: z.string(),
-    claimableAmount: z.instanceof(Wei),
     distributorAddress: z.string(),
-    duration: z.number(),
-    lifetimeClaimed: z.number(),
-    total: z.number(),
     decimals: z.number(),
+    claimableAmount: z.instanceof(Wei),
+    lifetimeClaimed: z.number(),
   })
 );
 
-type RewardsResponseArray = typeof RewardsResponseSchema._type;
-
-export type RewardsType = z.infer<typeof RewardsResponseSchema>;
-
-export type RewardsInterface = {
-  id: string;
-  total_distributed: string;
-  rewards_distributions: {
-    amount: string;
-    duration: string;
-    created_at: string;
-  }[];
-}[];
+export type RewardsResponseType = z.infer<typeof RewardsResponseSchema>;
 
 const RewardsDataDocument = `
   query RewardsData($accountId: String!, $distributor: String!) {
@@ -57,69 +44,95 @@ const RewardsDistributionsDocument = `
   }
 `;
 
-export function useRewards(
-  poolId?: string,
-  collateralAddress?: string,
-  accountId: string = '69',
-  customNetwork?: Network
-) {
+export function useRewards({
+  poolId,
+  collateralSymbol,
+  accountId,
+}: {
+  poolId?: string;
+  collateralSymbol?: string;
+  accountId?: string;
+}) {
+  const { data: collateralType } = useCollateralType(collateralSymbol);
+  const collateralAddress = collateralType?.tokenAddress;
   const { network } = useNetwork();
 
-  const targetNetwork = customNetwork || network;
+  const { data: Multicall3 } = useMulticall3(network);
+  const { data: CoreProxy } = useCoreProxy({ customNetwork: network });
+  const { data: rewardsDistributors } = useRewardsDistributors(network);
 
-  const { data: Multicall3 } = useMulticall3(customNetwork);
-  const { data: CoreProxy } = useCoreProxy({ customNetwork });
-  const { data: RewardsDistributors } = useRewardsDistributors(customNetwork);
+  // We need to filter the distributors, so we only query for this particular collateral type
+  // Also include all pool level distributors
+  const filteredDistributors =
+    rewardsDistributors && collateralAddress
+      ? rewardsDistributors
+          .filter((distributor) => distributor.isRegistered)
+          .filter(
+            (distributor) =>
+              !distributor.collateralType ||
+              (distributor.collateralType &&
+                distributor.collateralType.address.toLowerCase() ===
+                  collateralAddress.toLowerCase())
+          )
+      : [];
+
+  const distributorsCacheKey = filteredDistributors.map((distributor) =>
+    distributor.address.slice(2, 6)
+  );
 
   return useQuery({
-    enabled: Boolean(CoreProxy && Multicall3 && RewardsDistributors && poolId && accountId),
+    enabled: Boolean(
+      network &&
+        CoreProxy &&
+        Multicall3 &&
+        rewardsDistributors &&
+        poolId &&
+        collateralAddress &&
+        accountId
+    ),
     queryKey: [
-      `${targetNetwork?.id}-${targetNetwork?.preset}`,
+      `${network?.id}-${network?.preset}`,
       'Rewards',
       { accountId },
       { collateralAddress },
+      { distributors: distributorsCacheKey },
     ],
     queryFn: async () => {
       if (
-        !Multicall3 ||
-        !CoreProxy ||
-        !poolId ||
-        !accountId ||
-        !RewardsDistributors ||
-        !collateralAddress
+        !(
+          network &&
+          CoreProxy &&
+          Multicall3 &&
+          filteredDistributors &&
+          poolId &&
+          collateralAddress &&
+          accountId
+        )
       ) {
-        throw 'useRewards is missing required data';
+        throw new Error('OMG');
       }
 
-      if (RewardsDistributors.length === 0) return [];
-
-      // We need to filter the distributors, so we only query for this particular collateral type
-      const filteredDistributors = RewardsDistributors.filter(
-        (distributor: any) =>
-          distributor.collateralType.address.toLowerCase() === collateralAddress.toLowerCase()
-      );
+      if (filteredDistributors.length === 0) return [];
 
       try {
         const returnData = await Promise.all([
           // Historical data for account id / distributor address pair
-          ...filteredDistributors.map(({ address }: { address: string }) =>
-            fetch(getSubgraphUrl(targetNetwork?.name), {
+          ...filteredDistributors.map((distributor) =>
+            fetch(getSubgraphUrl(network?.name), {
               method: 'POST',
               body: JSON.stringify({
                 query: RewardsDataDocument,
-                variables: { accountId, distributor: address.toLowerCase() },
+                variables: { accountId, distributor: distributor.address.toLowerCase() },
               }),
             }).then((res) => res.json())
           ),
           // Metadata for each distributor
-          ...filteredDistributors.map(({ address: distributor }: { address: string }) =>
+          ...filteredDistributors.map((distributor) =>
             fetch(getSubgraphUrl(network?.name), {
               method: 'POST',
               body: JSON.stringify({
                 query: RewardsDistributionsDocument,
-                variables: {
-                  distributor: distributor.toLowerCase(),
-                },
+                variables: { distributor: distributor.address.toLowerCase() },
               }),
             }).then((res) => res.json())
           ),
@@ -152,7 +165,7 @@ export function useRewards(
           return wei(amount);
         });
 
-        const results: RewardsResponseArray = filteredDistributors.map((item: any, i: number) => {
+        const results: RewardsResponseType = filteredDistributors.map((item: any, i: number) => {
           // Amount claimable for this distributor
           const claimableAmount = amounts[i];
           const historicalClaims = historicalData[i]?.data?.rewardsClaimeds;
@@ -160,38 +173,28 @@ export function useRewards(
 
           if (!distributions || !distributions.length) {
             return {
-              address: item.collateralType.address,
+              address: item.address,
               name: item.name,
               symbol: item.payoutToken.symbol,
-              claimableAmount: wei(0),
               distributorAddress: item.address,
-              duration: 0,
-              total: 0,
+              decimals: item.payoutToken.decimals,
+              claimableAmount: wei(0),
               lifetimeClaimed: historicalClaims
                 .reduce(
                   (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),
                   wei(0)
                 )
                 .toNumber(),
-              decimals: item.payoutToken.decimals,
             };
           }
-
-          const latestDistribution = distributions[distributions.length - 1];
-          const expiry =
-            parseInt(latestDistribution.duration) + parseInt(latestDistribution.created_at);
-
-          const hasExpired = new Date().getTime() / 1000 > expiry;
 
           return {
             address: item.address,
             name: item.name,
             symbol: item.payoutToken.symbol,
-            claimableAmount,
             distributorAddress: item.address,
             decimals: item.payoutToken.decimals,
-            duration: parseInt(latestDistribution.duration),
-            total: hasExpired ? 0 : wei(latestDistribution.amount, 18, true).toNumber(),
+            claimableAmount,
             lifetimeClaimed: historicalClaims
               .reduce(
                 (acc: Wei, item: { amount: string }) => acc.add(wei(item.amount, 18, true)),

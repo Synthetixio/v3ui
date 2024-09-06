@@ -32,7 +32,7 @@ import { formatNumber } from '@snx-v3/formatters';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ZEROWEI } from '../../utils/constants';
-import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { MigrationBanner } from '../Migration/MigrationBanner';
 
 export const InitialDepositUi: FC<{

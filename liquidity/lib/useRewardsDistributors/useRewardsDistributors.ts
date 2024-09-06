@@ -7,13 +7,18 @@ export function useRewardsDistributors(customNetwork?: Network) {
   const targetNetwork = customNetwork || network;
 
   return useQuery({
+    enabled: Boolean(targetNetwork),
     queryKey: [`${targetNetwork?.id}-${targetNetwork?.preset}`, 'RewardsDistributors'],
     queryFn: async function () {
-      if (!targetNetwork) throw new Error('useRewardsDistributors should be disabled');
-
-      return importRewardsDistributors(targetNetwork?.id, targetNetwork?.preset);
+      if (!targetNetwork) {
+        throw new Error('OMG');
+      }
+      const rewardDistributors = await importRewardsDistributors(
+        targetNetwork?.id,
+        targetNetwork?.preset
+      );
+      return rewardDistributors;
     },
-    enabled: Boolean(targetNetwork),
     staleTime: Infinity,
   });
 }

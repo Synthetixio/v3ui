@@ -197,7 +197,7 @@ export const ClaimModal: React.FC<{
 
   const { txnStatus } = txnState;
 
-  if (!params.poolId || !params.accountId || !collateralType)
+  if (!(params.poolId && params.accountId && collateralType && systemToken))
     return (
       <Flex gap={4} flexDirection="column">
         <Skeleton maxW="232px" width="100%" height="20px" />
@@ -217,7 +217,7 @@ export const ClaimModal: React.FC<{
         onClose();
       }}
       isOpen={isOpen}
-      symbol={isBase ? collateralType.symbol : systemToken?.symbol}
+      symbol={isBase ? collateralType.symbol : systemToken.symbol}
     />
   );
 };

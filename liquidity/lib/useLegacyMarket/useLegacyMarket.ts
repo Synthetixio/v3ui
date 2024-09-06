@@ -9,7 +9,7 @@ import {
 } from '@snx-v3/useBlockchain';
 import { importLegacyMarket } from '@snx-v3/contracts';
 
-export function useLegacyMarket(customNetwork?: Network | null) {
+export function useLegacyMarket(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
   const provider = useProvider();

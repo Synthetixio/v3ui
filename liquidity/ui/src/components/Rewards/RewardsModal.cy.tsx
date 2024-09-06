@@ -2,20 +2,21 @@ import { RewardsModal } from './RewardsModal';
 import injectedModule from '@web3-onboard/injected-wallets';
 import { init, Web3OnboardProvider } from '@web3-onboard/react';
 
-const onboard = init({ wallets: [injectedModule()], chains: [{ id: 1 }] });
-
 describe('RewardsModal', () => {
-  it('renders the component with the correct data', () => {
-    const props = {
-      collateralSymbol: 'ETH',
-      amount: 100,
-      txnStatus: 'prompting',
-      txnHash: '0x123456789abcdef',
-    };
+  it('should render RewardsModal', () => {
+    const onboard = init({
+      wallets: [injectedModule()],
+      chains: [{ id: 1 }],
+    });
 
     cy.mount(
       <Web3OnboardProvider web3Onboard={onboard}>
-        <RewardsModal {...props} />
+        <RewardsModal
+          collateralSymbol="ETH"
+          amount={100}
+          txnStatus="prompting"
+          txnHash="0x123456789abcdef"
+        />
       </Web3OnboardProvider>
     );
 
