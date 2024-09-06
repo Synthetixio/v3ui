@@ -50,7 +50,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   const currentSelectedUser = getVoteSelectionState(
     state,
     activeWallet?.address,
-    epochId,
+    epochId?.toString(),
     network?.id.toString(),
     activeCouncil
   );

@@ -33,7 +33,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const networkForState = getVoteSelectionState(
     state,
     activeWallet?.address,
-    epochId,
+    epochId?.toString(),
     network?.id.toString()
   );
 

@@ -28,12 +28,13 @@ export default function MyVoteRow({
   const networkForState = getVoteSelectionState(
     state,
     activeWallet?.address,
-    epochId,
+    epochId?.toString(),
     network?.id.toString(),
     councilSlug
   );
 
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -49,13 +50,7 @@ export default function MyVoteRow({
       <Flex ml="4" alignItems="center" mr="auto">
         <CouncilUser
           councilSlug={councilSlug}
-          address={
-            utils.isAddress(voteAddressState)
-              ? ballot?.votedCandidates.includes(voteAddressState)
-                ? ballot.votedCandidates[0]
-                : voteAddressState
-              : ballot?.votedCandidates[0] || ''
-          }
+          address={ballot?.votedCandidates[0] ? ballot?.votedCandidates[0] : ''}
           hideName={!!(ballot?.votedCandidates[0] && voteAddressState)}
         />
         {ballot?.votedCandidates[0] &&
@@ -105,7 +100,7 @@ export default function MyVoteRow({
                   payload: {
                     action: 'remove',
                     network: network.id.toString(),
-                    epochId,
+                    epochId: epochId?.toString(),
                     wallet: activeWallet?.address,
                   },
                 });
@@ -115,7 +110,7 @@ export default function MyVoteRow({
                   payload: {
                     action: networkForState === 'remove' ? 'remove' : undefined,
                     network: network.id.toString(),
-                    epochId,
+                    epochId: epochId?.toString(),
                     wallet: activeWallet?.address,
                   },
                 });

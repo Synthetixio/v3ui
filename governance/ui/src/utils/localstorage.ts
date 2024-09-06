@@ -85,12 +85,11 @@ export const getVoteSelectionState = (
   councilSlug?: CouncilSlugs
 ) => {
   if (!epochId || !networkId || !wallet) return '';
-
   if (councilSlug) {
     return wallet
       ? state[wallet]
         ? epochId
-          ? state[epochId]
+          ? state[wallet][epochId]
             ? networkId
               ? state[wallet][epochId][networkId]
                 ? state[wallet][epochId][networkId][councilSlug]
@@ -106,7 +105,7 @@ export const getVoteSelectionState = (
   return wallet
     ? state[wallet]
       ? epochId
-        ? state[epochId]
+        ? state[wallet][epochId]
           ? networkId
             ? state[wallet][epochId][networkId]
               ? state[wallet][epochId][networkId]

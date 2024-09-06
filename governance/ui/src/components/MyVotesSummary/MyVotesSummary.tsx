@@ -40,7 +40,7 @@ export const MyVotesSummary = ({
   const networkForState = getVoteSelectionState(
     state,
     activeWallet?.address,
-    epochId,
+    epochId?.toString(),
     network?.id.toString()
   );
   const stateFromCouncils = (
