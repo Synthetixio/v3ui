@@ -55,8 +55,8 @@ export function useGetHistoricalVotes() {
       const res = await fetch(mainnetURL);
       const votesRaw: Record<CouncilSlugs, VoteRaw[]> = await res.json();
       // TODO @dev remove for prod
-      if (window.location.host.includes('localhost'))
-        votesRaw.spartan = votesRaw.spartan.concat(fakeData);
+      // if (window.location.host.includes('localhost'))
+      // votesRaw.spartan = votesRaw.spartan.concat(fakeData);
       const sortedEvents = councils.reduce(
         (cur, next) => {
           cur[next.slug] = votesRaw[next.slug].sort((a, b) => {

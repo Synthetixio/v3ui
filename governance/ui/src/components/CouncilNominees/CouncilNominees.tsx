@@ -111,7 +111,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           if (sortConfig[1] === 'votingPower') {
             if (sortConfig[0]) {
               if (!b.voteResult?.votePower) return -1;
-              return b.voteResult?.votePower.sub(a.voteResult?.votePower || BigNumber.from(0));
+              return b.voteResult?.votePower
+                .sub(a.voteResult?.votePower || BigNumber.from(0))
+                .toNumber();
             } else {
               if (!b.voteResult?.votePower) return 1;
               return b.voteResult?.votePower
