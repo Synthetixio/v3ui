@@ -89,6 +89,18 @@ export function useGetHistoricalVotes() {
           (cur, candidate) => cur.add(treasury[candidate].votePower),
           BigNumber.from(0)
         ),
+        totalVotesSpartan: Object.keys(spartan).reduce(
+          (cur, candidate) => cur.add(spartan[candidate].votesReceived),
+          BigNumber.from(0)
+        ),
+        totalVotesAmbassador: Object.keys(ambassador).reduce(
+          (cur, candidate) => cur.add(ambassador[candidate].votesReceived),
+          BigNumber.from(0)
+        ),
+        totalVotesTreasury: Object.keys(treasury).reduce(
+          (cur, candidate) => cur.add(treasury[candidate].votesReceived),
+          BigNumber.from(0)
+        ),
       };
     },
     staleTime: 900000,

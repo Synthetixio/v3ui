@@ -10,9 +10,10 @@ import { useWallet } from '../../queries/useWallet';
 
 interface CouncilCardProps {
   council: Council;
+  votesReceived?: number;
 }
 
-export function CouncilCard({ council }: CouncilCardProps) {
+export function CouncilCard({ council, votesReceived }: CouncilCardProps) {
   const navigate = useNavigate();
   const { activeWallet } = useWallet();
 
@@ -121,7 +122,7 @@ export function CouncilCard({ council }: CouncilCardProps) {
             <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
                 <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
-                  0000
+                  {votesReceived}
                 </Text>
               </Fade>
             </Skeleton>

@@ -1,9 +1,11 @@
 import { Container, Flex, Heading, Text } from '@chakra-ui/react';
-import councils from '../utils/councils';
+import councils, { CouncilSlugs } from '../utils/councils';
 import { CouncilCard } from '../components/CouncilCard';
 import Head from 'react-helmet';
+import { useGetHistoricalVotes } from '../queries';
 
 function App() {
+  const { data: votes } = useGetHistoricalVotes();
   return (
     <>
       <Head>
@@ -39,7 +41,15 @@ function App() {
           </Flex>
           <Flex wrap={{ base: 'wrap', lg: 'nowrap' }} w="100%" gap={{ base: 4, lg: 6 }} mt="8">
             {councils.map((council) => (
-              <CouncilCard council={council} key={council.address.concat('council-card')} />
+              <CouncilCard
+                council={council}
+                votesReceived={
+                  votes && votes[totalVotesForCouncil(council.slug)]
+                    ? votes[totalVotesForCouncil(council.slug)].toNumber()
+                    : 0
+                }
+                key={council.address.concat('council-card')}
+              />
             ))}
           </Flex>
         </Container>
@@ -49,3 +59,14 @@ function App() {
 }
 
 export default App;
+
+function totalVotesForCouncil(council: CouncilSlugs) {
+  switch (council) {
+    case 'spartan':
+      return 'totalVotesSpartan';
+    case 'ambassador':
+      return 'totalVotesAmbassador';
+    case 'treasury':
+      return 'totalVotesTreasury';
+  }
+}

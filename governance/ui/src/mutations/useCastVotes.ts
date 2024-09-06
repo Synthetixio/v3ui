@@ -127,7 +127,7 @@ export function useCastVotes(
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
-              value: isMC ? 0 : quote.add(quote.mul(25).div(100)),
+              value: isMC ? 0 : quote.add(quote.mul(25).div(100)).mul(councils.length),
             });
         } catch (error: any) {
           console.error(error);
@@ -143,9 +143,10 @@ export function useCastVotes(
       }
     },
     onError: (error) => {
+      console.error(error);
       toast({
         title: 'Could not cast votes.',
-        description: error.message,
+        description: 'Check the browser console for more information',
         status: 'error',
         isClosable: true,
       });
