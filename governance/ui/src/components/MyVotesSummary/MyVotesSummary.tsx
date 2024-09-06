@@ -36,7 +36,7 @@ export const MyVotesSummary = ({
   const { network } = useNetwork();
   const { data: epochId } = useGetEpochIndex('spartan');
   const { state } = useVoteContext();
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString(), 'spartan');
+  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
   const stateFromCouncils = (
     typeof networkForState !== 'string' ? networkForState : { spartan: networkForState }
   ) as VoteStateForNetwork;
