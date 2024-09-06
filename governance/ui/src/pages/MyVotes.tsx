@@ -35,12 +35,17 @@ export default function MyVotes() {
   const { data: schedule } = useGetEpochSchedule('spartan');
   const { data: epochId } = useGetEpochIndex('spartan');
   const { network } = useNetwork();
-  const { connect } = useWallet();
+  const { activeWallet, connect } = useWallet();
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
   const { state } = useVoteContext();
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const networkForState = getVoteSelectionState(
+    state,
+    activeWallet?.address,
+    epochId,
+    network?.id.toString()
+  );
   const stateFromCouncils = (
     typeof networkForState !== 'string' ? networkForState : {}
   ) as VoteStateForNetwork;

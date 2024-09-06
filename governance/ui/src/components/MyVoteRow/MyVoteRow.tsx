@@ -4,7 +4,7 @@ import { AddIcon, ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import CouncilUser from '../CouncilUser/CouncilUser';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { Badge } from '../Badge';
 import { utils } from 'ethers';
@@ -19,6 +19,7 @@ export default function MyVoteRow({
   isLast: boolean;
 }) {
   const navigate = useNavigate();
+  const { activeWallet } = useWallet();
   const { data: ballot } = useGetUserBallot(councilSlug);
   const { data: epochId } = useGetEpochIndex(councilSlug);
   const { dispatch, state } = useVoteContext();
@@ -26,6 +27,7 @@ export default function MyVoteRow({
 
   const networkForState = getVoteSelectionState(
     state,
+    activeWallet?.address,
     epochId,
     network?.id.toString(),
     councilSlug
@@ -104,6 +106,7 @@ export default function MyVoteRow({
                     action: 'remove',
                     network: network.id.toString(),
                     epochId,
+                    wallet: activeWallet?.address,
                   },
                 });
               } else {
@@ -113,6 +116,7 @@ export default function MyVoteRow({
                     action: networkForState === 'remove' ? 'remove' : undefined,
                     network: network.id.toString(),
                     epochId,
+                    wallet: activeWallet?.address,
                   },
                 });
               }

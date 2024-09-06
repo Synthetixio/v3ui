@@ -11,6 +11,7 @@ import {
   useGetUserBallot,
   useNetwork,
   useGetEpochIndex,
+  useWallet,
 } from '../../queries';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
@@ -21,6 +22,7 @@ import { getVoteSelectionState } from '../../utils/localstorage';
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const location = useLocation();
+  const { activeWallet } = useWallet();
   const isInMyVotesPage = location.pathname.includes('my-votes');
   const isInMyProfilePage = location.pathname.includes('profile');
   const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
@@ -28,7 +30,12 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
   const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { state } = useVoteContext();
   // @dev dont put activeCounil in here cause its always spartan for the timer
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const networkForState = getVoteSelectionState(
+    state,
+    activeWallet?.address,
+    epochId,
+    network?.id.toString()
+  );
 
   const votedNomineesData = [
     useGetUserBallot('spartan'),

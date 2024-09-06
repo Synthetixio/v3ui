@@ -5,7 +5,7 @@ import MyVotesBox from '../MyVotesBox/MyVotesBox';
 import { useNavigate } from 'react-router-dom';
 import councils from '../../utils/councils';
 import { useVoteContext, VoteStateForNetwork } from '../../context/VoteContext';
-import { useGetEpochIndex, useNetwork } from '../../queries';
+import { useGetEpochIndex, useNetwork, useWallet } from '../../queries';
 import { voteCardState } from '../../state/vote-card';
 import { useRecoilState } from 'recoil';
 import { getVoteSelectionState } from '../../utils/localstorage';
@@ -36,7 +36,13 @@ export const MyVotesSummary = ({
   const { network } = useNetwork();
   const { data: epochId } = useGetEpochIndex('spartan');
   const { state } = useVoteContext();
-  const networkForState = getVoteSelectionState(state, epochId, network?.id.toString());
+  const { activeWallet } = useWallet();
+  const networkForState = getVoteSelectionState(
+    state,
+    activeWallet?.address,
+    epochId,
+    network?.id.toString()
+  );
   const stateFromCouncils = (
     typeof networkForState !== 'string' ? networkForState : { spartan: networkForState }
   ) as VoteStateForNetwork;

@@ -49,6 +49,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   const { state } = useVoteContext();
   const currentSelectedUser = getVoteSelectionState(
     state,
+    activeWallet?.address,
     epochId,
     network?.id.toString(),
     activeCouncil

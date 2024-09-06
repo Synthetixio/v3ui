@@ -157,11 +157,21 @@ export function useCastVotes(
         shouldWithdrawVote
           ? dispatch({
               type: council.toUpperCase(),
-              payload: { action: undefined, network: network!.id.toString(), epochId },
+              payload: {
+                action: undefined,
+                network: network!.id.toString(),
+                epochId,
+                wallet: activeWallet?.address,
+              },
             })
           : dispatch({
               type: council.toUpperCase(),
-              payload: { action: candidates[council], network: network!.id.toString(), epochId },
+              payload: {
+                action: candidates[council],
+                network: network!.id.toString(),
+                epochId,
+                wallet: activeWallet?.address,
+              },
             });
       });
       await Promise.all(
