@@ -177,19 +177,20 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                         newVoteCast={newVoteCast}
                         isCouncilTabs
                       />
-                      {userInformation[index].userInformation?.address &&
-                        newVoteCast?.toLowerCase() !==
-                          userInformation[index].userInformation.address.toLowerCase() && (
-                          <>
-                            <ArrowForwardIcon mx="2" />
-                            <ProfilePicture
-                              address={newVoteCast}
-                              size={9}
-                              newVoteCast={newVoteCast}
-                              isCouncilTabs
-                            />
-                          </>
-                        )}
+                      {userInformation[index]?.userInformation?.address
+                        ? newVoteCast?.toLowerCase() !==
+                            userInformation[index]?.userInformation?.address?.toLowerCase() && (
+                            <>
+                              <ArrowForwardIcon mx="2" />
+                              <ProfilePicture
+                                address={newVoteCast}
+                                size={9}
+                                newVoteCast={newVoteCast}
+                                isCouncilTabs
+                              />
+                            </>
+                          )
+                        : null}
                     </>
                   ) : (
                     councilPeriod === '2' && (
