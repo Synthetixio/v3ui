@@ -7,6 +7,7 @@ import { useVoteContext } from '../../context/VoteContext';
 import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { Badge } from '../Badge';
+import { utils } from 'ethers';
 
 export default function MyVoteRow({
   councilSlug,
@@ -31,7 +32,6 @@ export default function MyVoteRow({
   );
 
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-  console.log(voteAddressState);
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -48,18 +48,22 @@ export default function MyVoteRow({
         <CouncilUser
           councilSlug={councilSlug}
           address={
-            ballot?.votedCandidates.includes(voteAddressState)
-              ? ballot.votedCandidates[0]
-              : voteAddressState
+            utils.isAddress(voteAddressState)
+              ? ballot?.votedCandidates.includes(voteAddressState)
+                ? ballot.votedCandidates[0]
+                : voteAddressState
+              : ballot?.votedCandidates[0] || ''
           }
-          hideName={!!(ballot?.votedCandidates[0] && networkForState === 'remove')}
+          hideName={!!(ballot?.votedCandidates[0] && voteAddressState)}
         />
-        {ballot?.votedCandidates[0] && networkForState === 'remove' && (
-          <>
-            <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={networkForState} hideName />
-          </>
-        )}
+        {ballot?.votedCandidates[0] &&
+          voteAddressState &&
+          ballot.votedCandidates[0].toLowerCase() !== voteAddressState.toLowerCase() && (
+            <>
+              <ArrowForwardIcon mx="2" />
+              <CouncilUser councilSlug={councilSlug} address={voteAddressState} hideName />
+            </>
+          )}
       </Flex>
       {ballot?.votedCandidates.includes(voteAddressState) ? (
         <Badge mr="2">Your Vote</Badge>

@@ -88,7 +88,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
               Back to Councils
             </Button>
           ) : (
-            // If on my votes page, spartan council is active by default for navigation
             <>
               <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
               <MyVotesSummary
@@ -123,8 +122,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                 networkForState && typeof networkForState !== 'string'
                   ? networkForState[council.slug]
                   : '';
-              // TODO @fix here
-              // console.log(newVoteCast, userInformation[index].userInformation?.address);
 
               return (
                 <Flex
@@ -166,12 +163,26 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                     {council.title}
                   </Text>
                   {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
-                    <ProfilePicture
-                      address={userInformation[index].userInformation?.address}
-                      size={9}
-                      newVoteCast={newVoteCast}
-                      isCouncilTabs={true}
-                    />
+                    <>
+                      <ProfilePicture
+                        address={userInformation[index].userInformation?.address}
+                        size={9}
+                        newVoteCast={newVoteCast}
+                        isCouncilTabs
+                      />
+                      {newVoteCast?.toLowerCase() !==
+                        userInformation[index].userInformation?.address.toLowerCase() && (
+                        <>
+                          <ArrowForwardIcon mx="2" />
+                          <ProfilePicture
+                            address={newVoteCast}
+                            size={9}
+                            newVoteCast={newVoteCast}
+                            isCouncilTabs
+                          />
+                        </>
+                      )}
+                    </>
                   ) : (
                     councilPeriod === '2' && (
                       <>
@@ -180,6 +191,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                             address={userInformation[index].userInformation?.address}
                             size={9}
                             newVoteCast={newVoteCast}
+                            isCouncilTabs
                           />
                         )}
 
