@@ -115,7 +115,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          {user.voteResult?.votesReceived}
+          {user.voteResult?.votesReceived || 0}
         </Td>
       )}
       {councilIsInAdminOrVoting && (

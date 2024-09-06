@@ -16,6 +16,7 @@ export async function changePeriod({ council, period }) {
   const electionId = await proxy.spartan.connect(signer).getEpochIndex();
 
   if (period === 'admin') {
+    console.log(block.timestamp);
     await proxy[council]
       .connect(signer)
       .Epoch_setEpochDates(

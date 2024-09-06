@@ -11,7 +11,7 @@ export function useGetEpochIndex(council: CouncilSlugs) {
     queryKey: ['epochId', council, network?.id],
     queryFn: async () => {
       return await getCouncilContract(council)
-        .connect(motherShipProvider(network?.id || 13001))
+        .connect(motherShipProvider(network?.id || 2192))
         .getEpochIndex();
     },
     staleTime: 900000,

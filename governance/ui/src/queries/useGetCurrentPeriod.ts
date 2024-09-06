@@ -9,10 +9,11 @@ export function useGetCurrentPeriod(council?: CouncilSlugs) {
   return useQuery({
     queryKey: ['period', council, network?.id],
     queryFn: async () => {
-      return (await getCouncilContract(council!)
-        .connect(motherShipProvider(network?.id || 2192))
-        .getCurrentPeriod()
-        .toString()) as string | undefined;
+      return (
+        await getCouncilContract(council!)
+          .connect(motherShipProvider(network?.id || 2192))
+          .getCurrentPeriod()
+      ).toString() as string | undefined;
     },
     enabled: !!council,
     staleTime: 900000,
