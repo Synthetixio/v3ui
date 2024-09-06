@@ -9,52 +9,22 @@ import { prettyString } from '@snx-v3/format';
 import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { useVoteContext } from '../../context/VoteContext';
-
-function renderCorrectBorder(
-  column: 'place' | 'name' | 'votes' | 'power' | 'badge',
-  position: 'left' | 'right' | 'bottom',
-  period: string | undefined,
-  isSelected: boolean
-) {
-  if (column === 'place') {
-    if (position === 'left') {
-      return isSelected ? '1px solid' : '';
-    } else if (position === 'bottom') {
-      return isSelected ? '1px solid' : '';
-    }
-  } else if (column === 'name') {
-    if (position === 'left') {
-      if (period === '2') {
-        return '';
-      }
-      if (period === '0') {
-        return '';
-      }
-      return isSelected ? '1px solid' : '';
-    } else if (position === 'bottom') {
-      return isSelected ? '1px solid' : '';
-    }
-  } else if (column === 'votes') {
-    if (position === 'bottom') return isSelected ? '1px solid' : '';
-  } else if (column === 'power') {
-    if (position === 'bottom') return isSelected ? '1px solid' : '';
-  } else if (column === 'badge') {
-    if (position === 'bottom') return isSelected ? '1px solid' : '';
-    if (position === 'right') return isSelected ? '1px solid' : '';
-  }
-}
+import { BigNumber } from 'ethers';
+import { renderCorrectBorder } from '../../utils/table-border';
 
 export default function UserTableView({
   user,
   activeCouncil,
   place,
   isSelectedForVoting,
+  totalVotingPower,
 }: {
   isSelectedForVoting?: boolean;
-  place: number;
+  place?: number;
   user: GetUserDetails;
   activeCouncil: CouncilSlugs;
   isNomination?: boolean;
+  totalVotingPower?: BigNumber;
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -72,6 +42,9 @@ export default function UserTableView({
     activeCouncil
   );
   const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+  const totalVotingPowerPercentage = totalVotingPower
+    ? user.voteResult?.votePower.mul(100).div(totalVotingPower).toNumber().toFixed(2)
+    : 'N/A';
 
   return (
     <Tr
@@ -89,9 +62,12 @@ export default function UserTableView({
           borderLeftRadius={isSelected ? 'base' : ''}
         >
           <Text color="white" fontSize="sm" fontWeight={700}>
-            {place < 10 ? (
+            {place === undefined ? (
+              '-'
+            ) : place <
+              (activeCouncil === 'spartan' ? 8 : activeCouncil === 'ambassador' ? 5 : 4) ? (
               <Flex gap="1" alignItems="center">
-                {place + 1}
+                {place}
                 <CrownIcon />
               </Flex>
             ) : (
@@ -139,7 +115,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          0
+          {user.voteResult?.votesReceived}
         </Td>
       )}
       {councilIsInAdminOrVoting && (
@@ -151,7 +127,10 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          0
+          {totalVotingPowerPercentage ? totalVotingPowerPercentage + '%' : 'N/A'}
+          <Text color="gray.500" fontSize="x-small">
+            {totalVotingPowerPercentage ? user.voteResult?.votePower.toString() : '—'}
+          </Text>
         </Td>
       )}
       {councilPeriod === '2' && (
@@ -201,20 +180,6 @@ export default function UserTableView({
           >
             View
           </Button>
-        </Td>
-      )}
-      {councilPeriod === '0' && (
-        <Td
-          textAlign="end"
-          borderTop="1px solid"
-          borderBottom={isSelected ? '1px solid' : ''}
-          borderRight={isSelected ? '1px solid' : ''}
-          borderRightRadius={isSelected ? 'base' : ''}
-          borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-        >
-          <Badge w="fit-content" fontSize="xl" fontWeight={700}>
-            0
-          </Badge>
         </Td>
       )}
     </Tr>

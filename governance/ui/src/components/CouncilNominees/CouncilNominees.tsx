@@ -23,14 +23,14 @@ import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
 import { useNetwork, useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
 import TableLoading from '../TableLoading/TableLoading';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useVoteContext } from '../../context/VoteContext';
-import { useGetEpochIndex, useGetHistoricalVotes, Vote } from '../../queries';
+import { useGetEpochIndex, useGetHistoricalVotes } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
@@ -55,19 +55,28 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   );
   const council = councils.find((council) => council.slug === activeCouncil);
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
-  const votesForCouncil = votes && votes[activeCouncil];
 
   const sortedNominees = useMemo(() => {
-    if (councilNomineesDetails?.length && votesForCouncil) {
+    if (councilNomineesDetails?.length && votes) {
+      const candidatesByVotePowerRanking = votes
+        ? Object.keys(votes[activeCouncil]).sort((a, b) => {
+            return votes[activeCouncil][b].votePower
+              .sub(votes[activeCouncil][a].votePower)
+              .toNumber();
+          })
+        : [];
       return councilNomineesDetails
         .map((nominee) => {
-          const votes = votesForCouncil.filter(
-            (vote) =>
-              epochId === vote.epochId &&
-              vote.candidates[0].toLowerCase() === nominee.address.toLowerCase()
-          );
-          if (votes.length)
-            return (nominee = { ...nominee, vote: votes.reduce((cur, next) => {}, {} as Vote) });
+          if (votes[activeCouncil][nominee.address.toLowerCase()]) {
+            return {
+              ...nominee,
+              voteResult: votes[activeCouncil][nominee.address.toLowerCase()],
+              place:
+                candidatesByVotePowerRanking.findIndex(
+                  (candidate) => candidate.toLowerCase() === nominee.address.toLowerCase()
+                ) + 1,
+            };
+          }
           return nominee;
         })
         .filter((nominee) => {
@@ -99,17 +108,36 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               ? a.address.localeCompare(b.address)
               : a.address.localeCompare(b.address) * -1;
           }
-          if (sortConfig[1] === 'votePower') {
+          if (sortConfig[1] === 'votingPower') {
+            if (sortConfig[0]) {
+              if (!b.voteResult?.votePower) return -1;
+              return b.voteResult?.votePower.sub(a.voteResult?.votePower || BigNumber.from(0));
+            } else {
+              if (!b.voteResult?.votePower) return 1;
+              return b.voteResult?.votePower
+                .sub(a.voteResult?.votePower || BigNumber.from(0))
+                .mul(-1)
+                .toNumber();
+            }
           }
-          if (sortConfig[1] === 'vote') {
+          if (sortConfig[1] === 'votes') {
+            if (sortConfig[0]) {
+              return (b.voteResult?.votesReceived || 0) - (a.voteResult?.votesReceived || 0);
+            } else {
+              return ((b.voteResult?.votesReceived || 0) - (a.voteResult?.votesReceived || 0)) * -1;
+            }
           }
           if (sortConfig[1] === 'ranking') {
+            if (!b.voteResult?.votePower) return -1;
+            return b.voteResult?.votePower
+              .sub(a.voteResult?.votePower || BigNumber.from(0))
+              .toNumber();
           }
           return 0;
         });
     }
     return [];
-  }, [search, councilNomineesDetails, sortConfig, votesForCouncil, epochId]);
+  }, [search, councilNomineesDetails, sortConfig, activeCouncil, votes]);
 
   return (
     <Flex
@@ -207,7 +235,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   px="0"
                   textAlign="center"
                   onClick={() => {
-                    setSortConfig([!sortConfig[0], 'ranking']);
+                    setSortConfig([true, 'ranking']);
                   }}
                 >
                   N°{' '}
@@ -263,9 +291,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           </Thead>
           <Tbody>
             {!!sortedNominees?.length ? (
-              sortedNominees.map((councilNominee, index) => (
+              sortedNominees.map((councilNominee) => (
                 <UserTableView
-                  place={index}
+                  place={councilNominee.place}
                   user={councilNominee!}
                   isSelectedForVoting={
                     councilNominee.address.toLowerCase() ===
@@ -273,6 +301,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   }
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}
+                  totalVotingPower={votes && votes[totalVotingPowerForCouncil(activeCouncil)]}
                 />
               ))
             ) : isLoading ? (
@@ -287,4 +316,15 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       </TableContainer>
     </Flex>
   );
+}
+
+function totalVotingPowerForCouncil(council: CouncilSlugs) {
+  switch (council) {
+    case 'spartan':
+      return 'totalVotingPowerSpartan';
+    case 'ambassador':
+      return 'totalVotingPowerAmbassador';
+    case 'treasury':
+      return 'totalVotingPowerTreasury';
+  }
 }
