@@ -23,7 +23,6 @@ import UserTableView from '../UserTableView/UserTableView';
 import { useGetNomineesDetails } from '../../queries/useGetNomineesDetails';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
-import { utils } from 'ethers';
 import SortArrows from '../SortArrows/SortArrows';
 import { useNetwork, useWallet } from '../../queries/useWallet';
 import { CouncilImage } from '../CouncilImage';
@@ -32,6 +31,7 @@ import { CloseIcon } from '@chakra-ui/icons';
 import { useVoteContext } from '../../context/VoteContext';
 import { useGetEpochIndex, useGetHistoricalVotes } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
+import { sortUsers } from '../../utils/sort-users';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
@@ -55,53 +55,10 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
   );
   const council = councils.find((council) => council.slug === activeCouncil);
   const epoch = calculateNextEpoch(councilSchedule, nextEpochDuration);
-  const votesForCouncil = votes && votes[activeCouncil];
 
   const sortedNominees = useMemo(() => {
-    if (councilNomineesDetails?.length && votesForCouncil) {
-      return councilNomineesDetails
-        .map((nominee) => {
-          const vote = votesForCouncil.find(
-            (vote) =>
-              epochId === vote.id && vote.voter.toLowerCase() === nominee.address.toLowerCase()
-          );
-          if (vote) return (nominee = { ...nominee, vote });
-          return nominee;
-        })
-        .filter((nominee) => {
-          if (utils.isAddress(search)) {
-            return nominee.address.toLowerCase().includes(search);
-          }
-          if (search) {
-            if (nominee.username) {
-              return nominee.username.toLowerCase().includes(search);
-            } else {
-              return nominee.address.toLowerCase().includes(search);
-            }
-          }
-          return true;
-        })
-        .sort((a, b) => {
-          if (sortConfig[1] === 'name') {
-            if (a.username && b.username) {
-              return sortConfig[0]
-                ? a.username.localeCompare(b.username)
-                : a.username.localeCompare(b.username) * -1;
-            }
-            if (a.username && !b.username) {
-              return -1;
-            } else if (b.username && !a.username) {
-              return 1;
-            }
-            return sortConfig[0]
-              ? a.address.localeCompare(b.address)
-              : a.address.localeCompare(b.address) * -1;
-          }
-          return 0;
-        });
-    }
-    return [];
-  }, [search, councilNomineesDetails, sortConfig, votesForCouncil, epochId]);
+    return sortUsers(activeCouncil, search, sortConfig, councilNomineesDetails, votes);
+  }, [search, councilNomineesDetails, sortConfig, activeCouncil, votes]);
 
   return (
     <Flex
@@ -199,10 +156,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   px="0"
                   textAlign="center"
                   onClick={() => {
-                    setSortConfig([!sortConfig[0], 'ranking']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
+                    setSortConfig([true, 'ranking']);
                   }}
                 >
                   N°{' '}
@@ -232,9 +186,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   pl="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votes']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
@@ -248,9 +199,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   pl="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votingPower']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Voting Power{' '}
@@ -264,9 +212,9 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
           </Thead>
           <Tbody>
             {!!sortedNominees?.length ? (
-              sortedNominees.map((councilNominee, index) => (
+              sortedNominees.map((councilNominee) => (
                 <UserTableView
-                  place={index}
+                  place={councilNominee.place}
                   user={councilNominee!}
                   isSelectedForVoting={
                     councilNominee.address.toLowerCase() ===
@@ -274,6 +222,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   }
                   activeCouncil={activeCouncil}
                   key={councilNominee.address.concat('council-nominees')}
+                  totalVotingPower={votes && votes[totalVotingPowerForCouncil(activeCouncil)]}
                 />
               ))
             ) : isLoading ? (
@@ -288,4 +237,15 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
       </TableContainer>
     </Flex>
   );
+}
+
+function totalVotingPowerForCouncil(council: CouncilSlugs) {
+  switch (council) {
+    case 'spartan':
+      return 'totalVotingPowerSpartan';
+    case 'ambassador':
+      return 'totalVotingPowerAmbassador';
+    case 'treasury':
+      return 'totalVotingPowerTreasury';
+  }
 }

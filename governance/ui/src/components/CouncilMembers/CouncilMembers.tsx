@@ -20,6 +20,7 @@ import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
 import { useGetCouncilMembers, useGetUserDetailsQuery } from '../../queries';
 import TableLoading from '../TableLoading/TableLoading';
+import { sortUsers } from '../../utils/sort-users';
 
 export default function CouncilMembers({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
@@ -34,29 +35,8 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
   const nextEpoch = calculateNextEpoch(councilSchedule);
 
   const sortedNominees = useMemo(() => {
-    // TODO @dev
-    // Sort user by voting power and add a place key to the object
-    if (!!councilMemberDetails?.length) {
-      if (sortConfig[1] === 'ranking') {
-        return councilMemberDetails.reverse();
-      }
-      if (sortConfig[1] === 'name') {
-        return councilMemberDetails.sort((a, b) => {
-          if (a.username && b.username) {
-            return sortConfig[0]
-              ? a.username.localeCompare(b.username)
-              : a.username.localeCompare(b.username) * -1;
-          } else {
-            return sortConfig[0]
-              ? a?.address.localeCompare(b.address)
-              : a?.address.localeCompare(b.address) * -1;
-          }
-        });
-      }
-      return councilMemberDetails;
-    }
-    return [];
-  }, [sortConfig, councilMemberDetails]);
+    return sortUsers(activeCouncil, '', sortConfig, councilMemberDetails);
+  }, [sortConfig, councilMemberDetails, activeCouncil]);
 
   return (
     <Flex
@@ -128,9 +108,6 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                   px="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votes']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
@@ -146,9 +123,6 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                   px="6"
                   onClick={() => {
                     setSortConfig([!sortConfig[0], 'votingPower']);
-                    // sortedNominees = sortedNominees.sort((a, b) => {
-                    // TODO implement sorting for most votes when subgraph is ready
-                    // });
                   }}
                 >
                   Voting Power{' '}

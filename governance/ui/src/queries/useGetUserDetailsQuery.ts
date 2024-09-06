@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motherShipProvider } from '../utils/providers';
 import { profileContract } from '../utils/contracts';
 import { utils } from 'ethers';
-import { Vote } from './useGetHistoricalVotes';
+import { Candidate } from './useGetHistoricalVotes';
 
 export type GetUserDetails = {
   address: string;
@@ -26,7 +26,8 @@ export type GetUserDetails = {
   delegationPitch: string;
   github: string;
   council?: string;
-  vote?: Vote;
+  voteResult?: Candidate;
+  place?: number;
 };
 
 type UserPitch = {
