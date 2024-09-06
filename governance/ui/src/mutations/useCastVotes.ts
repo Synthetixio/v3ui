@@ -160,7 +160,7 @@ export function useCastVotes(
               payload: {
                 action: undefined,
                 network: network!.id.toString(),
-                epochId,
+                epochId: epochId?.toString(),
                 wallet: activeWallet?.address,
               },
             })
@@ -169,7 +169,7 @@ export function useCastVotes(
               payload: {
                 action: candidates[council],
                 network: network!.id.toString(),
-                epochId,
+                epochId: epochId?.toString(),
                 wallet: activeWallet?.address,
               },
             });

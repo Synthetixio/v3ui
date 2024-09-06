@@ -7,7 +7,6 @@ import { useVoteContext } from '../../context/VoteContext';
 import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { Badge } from '../Badge';
-import { utils } from 'ethers';
 
 export default function MyVoteRow({
   councilSlug,

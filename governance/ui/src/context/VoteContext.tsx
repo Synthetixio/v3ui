@@ -198,32 +198,37 @@ const VoteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           payload: {
             action: ballot?.votedCandidates[0],
             network: network.id.toString(),
-            epochId,
+            epochId: epochId.toString(),
             wallet: activeWallet.address,
           },
           type: ballot.council.toUpperCase(),
         });
       });
 
-      const initState = initialState(network.id.toString(), epochId, activeWallet.address);
-      const voteStateForNetwork = initState[activeWallet.address][epochId][network.id.toString()];
-
-      Object.keys(initState[activeWallet.address][epochId][network.id.toString()]).forEach(
-        (key) => {
-          const candidate = voteStateForNetwork[key as keyof VoteStateForNetwork];
-          if (candidate) {
-            dispatch({
-              payload: {
-                action: candidate,
-                network: network.id.toString(),
-                epochId,
-                wallet: activeWallet.address,
-              },
-              type: key.toUpperCase(),
-            });
-          }
-        }
+      const initState = initialState(
+        network.id.toString(),
+        epochId.toString(),
+        activeWallet.address
       );
+      const voteStateForNetwork =
+        initState[activeWallet.address][epochId.toString()][network.id.toString()];
+
+      Object.keys(
+        initState[activeWallet.address][epochId.toString()][network.id.toString()]
+      ).forEach((key) => {
+        const candidate = voteStateForNetwork[key as keyof VoteStateForNetwork];
+        if (candidate) {
+          dispatch({
+            payload: {
+              action: candidate,
+              network: network.id.toString(),
+              epochId: epochId.toString(),
+              wallet: activeWallet.address,
+            },
+            type: key.toUpperCase(),
+          });
+        }
+      });
       setInit(true);
     }
   }, [

@@ -17,7 +17,13 @@ import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import { useGetEpochSchedule } from '../queries/useGetEpochSchedule';
 import { Timer } from '../components/Timer';
 import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { useGetEpochIndex, useGetUserVotingPower, useNetwork, useWallet } from '../queries/';
+import {
+  useGetEpochIndex,
+  useGetUserBallot,
+  useGetUserVotingPower,
+  useNetwork,
+  useWallet,
+} from '../queries/';
 import { useCastVotes } from '../mutations';
 import { formatNumber } from '@snx-v3/formatters';
 import MyVoteRow from '../components/MyVoteRow/MyVoteRow';
@@ -39,6 +45,14 @@ export default function MyVotes() {
   const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
   const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
   const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
+  const { data: spartanBallot } = useGetUserBallot('spartan');
+  const { data: ambassadorBallot } = useGetUserBallot('ambassador');
+  const { data: treasuryBallot } = useGetUserBallot('treasury');
+  const ballots = {
+    spartan: spartanBallot,
+    ambassador: ambassadorBallot,
+    treasury: treasuryBallot,
+  };
   const { state } = useVoteContext();
   const networkForState = getVoteSelectionState(
     state,
@@ -50,9 +64,19 @@ export default function MyVotes() {
     typeof networkForState !== 'string' ? networkForState : {}
   ) as VoteStateForNetwork;
   const councilToCastVote = Object.entries(stateFromCouncils)
-    .filter(([_, candidate]) => !!candidate)
+    .filter(
+      ([council, candidate]) => !(ballots as any)[council].votedCandidates.includes(candidate)
+    )
     .map(([council]) => council) as CouncilSlugs[];
-  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, stateFromCouncils);
+
+  const councilsToAddress = councilToCastVote.reduce(
+    (cur, prev) => {
+      cur[prev] = stateFromCouncils[prev] ?? '';
+      return cur;
+    },
+    {} as Record<CouncilSlugs, string>
+  );
+  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, councilsToAddress);
   const navigate = useNavigate();
   const formattedVotePower = formatNumber(
     votingPowerSpartan?.power && votingPowerAmbassador?.power && votingPowerTreassury?.power
@@ -267,8 +291,8 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {stateFromCouncils[council.slug] ? (
-                    <ProfilePicture address={stateFromCouncils[council.slug]} size={9} />
+                  {councilsToAddress[council.slug] ? (
+                    <ProfilePicture address={councilsToAddress[council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />
                   )}

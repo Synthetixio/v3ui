@@ -302,7 +302,7 @@ export const UserProfileDetails = ({
                   payload: {
                     action: 'remove',
                     network: parsedNetwork,
-                    epochId,
+                    epochId: epochId?.toString(),
                     wallet: activeWallet?.address,
                   },
                 });
@@ -312,7 +312,7 @@ export const UserProfileDetails = ({
                   payload: {
                     action: undefined,
                     network: parsedNetwork,
-                    epochId,
+                    epochId: epochId?.toString(),
                     wallet: activeWallet?.address,
                   },
                 });
@@ -322,7 +322,7 @@ export const UserProfileDetails = ({
                   payload: {
                     action: userData?.address.toLowerCase(),
                     network: parsedNetwork,
-                    epochId,
+                    epochId: epochId?.toString(),
                     wallet: activeWallet?.address,
                   },
                 });
