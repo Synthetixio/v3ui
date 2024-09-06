@@ -80,7 +80,9 @@ export const sortUsers = (
             return b.voteResult?.votePower
               .sub(a.voteResult?.votePower || BigNumber.from(0))
               .mul(-1)
-              .toString();
+              .gt(0)
+              ? 1
+              : -1;
           }
         }
         if (sortConfig[1] === 'votes') {
