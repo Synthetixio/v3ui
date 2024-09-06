@@ -15,7 +15,7 @@ import { ZEROWEI } from '../../utils/constants';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { ClosePositionTransactions } from './ClosePositionTransactions';
 import { Amount } from '@snx-v3/Amount';
-import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
 
 const ClosePositionUi: FC<{
   debt: Wei;

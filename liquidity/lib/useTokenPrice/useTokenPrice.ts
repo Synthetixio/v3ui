@@ -6,7 +6,7 @@ import { wei } from '@synthetixio/wei';
 import { useOraclePrice } from '@snx-v3/useOraclePrice';
 
 // TODO: Update this hook to use a multicall through the oracle manager proxy
-export const useTokenPrice = (symbol: string) => {
+export const useTokenPrice = (symbol?: string) => {
   const { data: collateralTypes } = useCollateralTypes(true);
 
   const pythCollateralPrices = collateralTypes?.filter((item) => item.symbol !== 'stataUSDC');
@@ -27,11 +27,10 @@ export const useTokenPrice = (symbol: string) => {
       return ZEROWEI;
     }
 
-    const price = wei(
-      collateralPrices
-        .concat(omPrices ? [{ symbol: 'stataUSDC', price: omPrices.price.toString() }] : [])
-        .find((price) => price.symbol.toUpperCase() === symbol.toUpperCase())?.price || '0'
-    );
-    return price;
+    const collateralPrice = collateralPrices
+      .concat(omPrices ? [{ symbol: 'stataUSDC', price: omPrices.price.toString() }] : [])
+      .find((price) => `${price?.symbol}`.toUpperCase() === `${symbol}`.toUpperCase());
+
+    return collateralPrice?.price ? wei(collateralPrice?.price) : ZEROWEI;
   }, [collateralPrices, collateralTypes, symbol, omPrices]);
 };

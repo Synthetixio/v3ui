@@ -13,7 +13,7 @@ import { RepayAllDebt } from './';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { TokenIcon } from '../TokenIcon';
 import { ZEROWEI } from '../../utils/constants';
-import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { useParams } from 'react-router-dom';
 
 export const RepayUi: FC<{

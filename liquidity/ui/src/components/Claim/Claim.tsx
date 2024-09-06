@@ -14,7 +14,7 @@ import { TokenIcon } from '../TokenIcon';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from 'react-router-dom';
-import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
 
 const ClaimUi: FC<{
   maxClaimble: Wei;

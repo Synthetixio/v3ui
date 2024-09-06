@@ -28,7 +28,7 @@ import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ZEROWEI } from '../../utils/constants';
-import { useTokenPrice } from '../../../../lib/useTokenPrice';
+import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 import { currency } from '@snx-v3/format';
 import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
