@@ -124,10 +124,13 @@ export function useCastVotes(
                 };
           });
 
+          const isSafe = (await signer.provider.getCode(activeWallet?.address || '')).length > 3;
+          const gas = await signer.provider.estimateGas(prepareBallotData[0]);
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
               value: isMC ? 0 : quote.add(quote.mul(25).div(100)).mul(councils.length),
+              gasLimit: isSafe ? gas : undefined,
             });
         } catch (error: any) {
           console.error(error);
