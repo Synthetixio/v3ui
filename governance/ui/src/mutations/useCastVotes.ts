@@ -125,7 +125,13 @@ export function useCastVotes(
           });
 
           const isSafe = (await signer.provider.getCode(activeWallet?.address || '')).length > 3;
-          const gas = await signer.provider.estimateGas(prepareBallotData[0]);
+          const gas = (
+            await Promise.all(
+              prepareBallotData
+                .map(async (tx) => await signer.provider.estimateGas(tx))
+                .concat(castData.map(async (tx) => await signer.provider.estimateGas(tx)))
+            )
+          ).reduce((cur, next) => cur.add(next), BigNumber.from(0));
           await multicall
             .connect(signer)
             [isMC ? 'aggregate' : 'aggregate3Value']([...prepareBallotData, ...castData], {
