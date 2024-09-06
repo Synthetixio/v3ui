@@ -74,7 +74,7 @@ export const ManageUi: FC<{
 
   const { data: poolData } = usePool(Number(network?.id), String(poolId));
 
-  const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | null>(null);
+  const [txnModalOpen, setTxnModalOpen] = useState<ManageAction | undefined>(undefined);
   const positionApr = poolData?.apr?.collateralAprs?.find(
     (item: any) => item.collateralType.toLowerCase() === collateralType?.tokenAddress.toLowerCase()
   );

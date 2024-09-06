@@ -63,16 +63,18 @@ export function useRewards({
 
   // We need to filter the distributors, so we only query for this particular collateral type
   // Also include all pool level distributors
-  const filteredDistributors = rewardsDistributors
-    ? rewardsDistributors
-        .filter((distributor) => distributor.isRegistered)
-        .filter(
-          (distributor) =>
-            !distributor.collateralType ||
-            (distributor.collateralType &&
-              distributor.collateralType.address.toLowerCase() === collateralAddress.toLowerCase())
-        )
-    : [];
+  const filteredDistributors =
+    rewardsDistributors && collateralAddress
+      ? rewardsDistributors
+          .filter((distributor) => distributor.isRegistered)
+          .filter(
+            (distributor) =>
+              !distributor.collateralType ||
+              (distributor.collateralType &&
+                distributor.collateralType.address.toLowerCase() ===
+                  collateralAddress.toLowerCase())
+          )
+      : [];
 
   const distributorsCacheKey = filteredDistributors.map((distributor) =>
     distributor.address.slice(2, 6)

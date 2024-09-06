@@ -100,10 +100,8 @@ export const Rewards = ({ ...props }: FlexProps) => {
                     key={item.address}
                     symbol={item.symbol}
                     claimableAmount={item.claimableAmount.toNumber()}
-                    frequency={item.duration}
                     lifetimeClaimed={item.lifetimeClaimed}
                     address={item.distributorAddress}
-                    total={item.total}
                   />
                 ))}
               </Tbody>

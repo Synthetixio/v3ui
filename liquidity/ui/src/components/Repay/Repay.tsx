@@ -1,39 +1,44 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import Wei, { wei } from '@synthetixio/wei';
-import { FC, useContext } from 'react';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { RepayAllDebt } from './';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useSystemToken } from '@snx-v3/useSystemToken';
-import { TokenIcon } from '../TokenIcon';
-import { ZEROWEI } from '../../utils/constants';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
+import { wei } from '@synthetixio/wei';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { ZEROWEI } from '../../utils/constants';
+import { TokenIcon } from '../TokenIcon';
+import { RepayAllDebt } from './';
 
-export const RepayUi: FC<{
-  debtChange: Wei;
-  max?: Wei;
-  snxUSDBalance?: Wei;
-  availableUSDCollateral?: Wei;
-  currentDebt?: Wei;
-  setDebtChange: (val: Wei) => void;
-  symbol: string;
-}> = ({
-  symbol,
-  debtChange,
-  setDebtChange,
-  max,
-  currentDebt,
-  snxUSDBalance,
-  availableUSDCollateral,
-}) => {
+export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
+  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
+  const { network } = useNetwork();
+  const { collateralSymbol } = useParams();
+
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
+  const { data: systemToken } = useSystemToken();
+  const { data: balance } = useTokenBalance(systemToken?.address);
+
+  const symbol = isBase ? collateralSymbol : systemToken?.symbol;
+
   const price = useTokenPrice(symbol);
+
+  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
+    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
+  }
+
+  const debtExists = liquidityPosition?.debt.gt(0);
+  const snxUSDBalance = balance?.gt(0.01) ? balance : wei(0);
+  const currentDebt = debtExists ? liquidityPosition?.debt : wei(0);
+  const max = debtExists ? liquidityPosition?.debt : ZEROWEI;
+
   return (
     <Flex flexDirection="column">
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
@@ -100,36 +105,5 @@ export const RepayUi: FC<{
         {debtChange.gte(0) ? 'Enter Amount' : 'Repay'}
       </Button>
     </Flex>
-  );
-};
-
-export const Repay = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
-  const { debtChange, setDebtChange } = useContext(ManagePositionContext);
-  const { network } = useNetwork();
-  const { collateralSymbol } = useParams();
-
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const availableUSDCollateral = liquidityPosition?.usdCollateral.availableCollateral;
-  const { data: systemToken } = useSystemToken();
-  const { data: balance } = useTokenBalance(systemToken?.address);
-
-  const debtExists = liquidityPosition?.debt.gt(0);
-  const flooredBalance = balance?.gt(0.01) ? balance : wei(0);
-  const symbol = isBase ? collateralSymbol : systemToken?.symbol;
-
-  if (liquidityPosition?.debt.gt(0.01) && isBaseAndromeda(network?.id, network?.preset)) {
-    return <RepayAllDebt liquidityPosition={liquidityPosition} />;
-  }
-
-  return (
-    <RepayUi
-      symbol={symbol}
-      setDebtChange={setDebtChange}
-      debtChange={debtChange}
-      snxUSDBalance={flooredBalance}
-      availableUSDCollateral={availableUSDCollateral}
-      currentDebt={debtExists ? liquidityPosition?.debt : wei(0)}
-      max={debtExists ? liquidityPosition?.debt : ZEROWEI}
-    />
   );
 };

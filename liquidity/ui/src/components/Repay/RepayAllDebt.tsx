@@ -1,18 +1,18 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { wei } from '@synthetixio/wei';
-import { getRepayerContract, getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { useCallback, useMemo } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { getRepayerContract, getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { useApprove } from '@snx-v3/useApprove';
+import { useNetwork } from '@snx-v3/useBlockchain';
 import { useClearDebt } from '@snx-v3/useClearDebt';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { useTokenBalance } from '@snx-v3/useTokenBalance';
+import { wei } from '@synthetixio/wei';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: LiquidityPosition }) => {
   const { network } = useNetwork();
@@ -88,7 +88,7 @@ export const RepayAllDebt = ({ liquidityPosition }: { liquidityPosition: Liquidi
   return (
     <Flex flexDirection="column">
       <Text fontSize="md" fontWeight="700" mb="0.5">
-        Repay {isBase ? params.collateralSymbol : systemToken.symbol}
+        Repay {isBase ? params.collateralSymbol : systemToken?.symbol}
       </Text>
       <Text fontSize="sm" color="gray.400" mb="4">
         Your account currently has a positive debt. This amount must be paid to initiate collateral

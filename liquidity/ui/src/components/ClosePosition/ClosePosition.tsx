@@ -1,28 +1,28 @@
-import { Button, Divider, Flex, Text } from '@chakra-ui/react';
-import { BorderBox } from '@snx-v3/BorderBox';
-import { NumberInput } from '@snx-v3/NumberInput';
-import { FC, useContext, useEffect, useState } from 'react';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import Wei from '@synthetixio/wei';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { TokenIcon } from '../TokenIcon';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { useParams } from 'react-router-dom';
-import { useSystemToken } from '@snx-v3/useSystemToken';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { ZEROWEI } from '../../utils/constants';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import { ClosePositionTransactions } from './ClosePositionTransactions';
+import { Button, Divider, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
+import { BorderBox } from '@snx-v3/BorderBox';
+import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { NumberInput } from '@snx-v3/NumberInput';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
+import Wei from '@synthetixio/wei';
+import { FC, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ZEROWEI } from '../../utils/constants';
+import { TokenIcon } from '../TokenIcon';
+import { ClosePositionTransactions } from './ClosePositionTransactions';
 
 const ClosePositionUi: FC<{
   debt: Wei;
   collateralAmount: Wei;
   onClose: () => void;
   onSubmit: () => void;
-  debtSymbol: string;
+  debtSymbol?: string;
   collateralSymbol: string;
 }> = ({ onSubmit, debt, collateralAmount, collateralSymbol, onClose, debtSymbol }) => {
   const debtPrice = useTokenPrice(debtSymbol);
@@ -141,7 +141,7 @@ export const ClosePosition = ({
           debt={liquidityPosition?.debt || ZEROWEI}
           collateralAmount={liquidityPosition?.collateralAmount || ZEROWEI}
           onClose={onClose}
-          debtSymbol={isBase ? params.collateralSymbol : systemToken.symbol}
+          debtSymbol={isBase ? params.collateralSymbol : systemToken?.symbol}
           collateralSymbol={collateralType.displaySymbol}
           onSubmit={() => setTransactions(true)}
         />
