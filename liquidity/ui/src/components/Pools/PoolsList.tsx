@@ -261,34 +261,37 @@ export const PoolsList = () => {
           </Text>
           <Flex minW="159px" flex="1" />
         </Flex>
-        {isLoading && <PoolCardsLoading />}
-        {!isLoading && showToros && (
-          <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} />
-        )}
-        {!isLoading &&
-          filteredPools.map(({ network, poolInfo, apr, collateralTypes, rewardsDistributors }) => {
-            const { pool } = poolInfo[0];
+        {isLoading && !filteredPools?.length ? <PoolCardsLoading /> : null}
+        {showToros ? <TorosPoolCard tvl={data?.toros.tvl || ''} apy={data?.toros.apy} /> : null}
+        {filteredPools?.length > 0
+          ? filteredPools.map(
+              ({ network, poolInfo, apr, collateralTypes, rewardsDistributors }) => {
+                const { pool } = poolInfo[0];
 
-            const rewardsPayoutTokens = [
-              ...new Set(
-                rewardsDistributors?.map(({ payoutToken }: any) => payoutToken.symbol.toUpperCase())
-              ),
-            ] as string[];
+                const rewardsPayoutTokens = [
+                  ...new Set(
+                    rewardsDistributors?.map(({ payoutToken }: any) =>
+                      payoutToken.symbol.toUpperCase()
+                    )
+                  ),
+                ] as string[];
 
-            return (
-              <PoolCard
-                key={network.hexId}
-                collateralTypes={collateralTypes}
-                collateralPrices={allCollateralPrices}
-                apr={apr}
-                network={network}
-                pool={pool}
-                rewardsPayoutTokens={rewardsPayoutTokens}
-              />
-            );
-          })}
+                return (
+                  <PoolCard
+                    key={network.hexId}
+                    collateralTypes={collateralTypes}
+                    collateralPrices={allCollateralPrices}
+                    apr={apr}
+                    network={network}
+                    pool={pool}
+                    rewardsPayoutTokens={rewardsPayoutTokens}
+                  />
+                );
+              }
+            )
+          : null}
 
-        {!isLoading && !filteredPools.length && (
+        {!isLoading && !filteredPools?.length && (
           <Flex flexDir="column" alignItems="center">
             <Balloon mb={12} mt={6} />
             <Text mb={2} color="gray.500">

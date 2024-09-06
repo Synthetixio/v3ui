@@ -144,8 +144,8 @@ export function WithdrawModal({
     amount: withdrawAmount,
     accountId,
     collateralTypeAddress: isDebtWithdrawal
-      ? systemToken.address
-      : liquidityPosition?.accountCollateral.tokenAddress,
+      ? systemToken?.address
+      : liquidityPosition?.accountCollateral?.tokenAddress,
   });
 
   const { mutation: withdrawAndromeda } = useWithdrawBaseAndromeda({
@@ -246,7 +246,7 @@ export function WithdrawModal({
       amount={withdrawAmount}
       isOpen={isOpen}
       onClose={onClose}
-      symbol={isDebtWithdrawal ? systemToken.symbol : collateralType?.symbol}
+      symbol={isDebtWithdrawal ? systemToken?.symbol : collateralType?.symbol}
       state={txState}
       onSubmit={onSubmit}
       isDebtWithdrawal={isDebtWithdrawal}

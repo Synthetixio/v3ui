@@ -1,31 +1,30 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { FC, useContext, useState } from 'react';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { DebtStats } from './DebtStats';
-import { ZEROWEI } from '../../utils/constants';
-import { CollateralType } from '@snx-v3/useCollateralTypes';
-import { CollateralStats } from './CollateralStats';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
-import { InitialDeposit } from '../InitialDeposit';
-import { CRatioBar } from '../CRatioBar/CRatioBar';
 import DepositModal from '@snx-v3/DepositModal';
-import { useAccounts } from '@snx-v3/useAccounts';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { Rewards } from '../Rewards';
-import { RewardsType } from '@snx-v3/useRewards';
-import { PositionTitle } from './PositionTitle';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { useAccounts } from '@snx-v3/useAccounts';
 import { useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { useParams } from '@snx-v3/useParams';
+import { FC, useContext, useState } from 'react';
+import { ZEROWEI } from '../../utils/constants';
+import { CRatioBar } from '../CRatioBar/CRatioBar';
+import { InitialDeposit } from '../InitialDeposit';
+import { Rewards } from '../Rewards';
+import { CollateralStats } from './CollateralStats';
+import { DebtStats } from './DebtStats';
 import { PnlStats } from './PnlStats';
+import { PositionTitle } from './PositionTitle';
 
 export const NoPosition: FC<{
-  collateralSymbol?: string;
   poolName?: string;
-  collateralType?: CollateralType;
-  accountId: string | undefined;
   liquidityPosition?: LiquidityPosition;
-  rewards?: RewardsType;
-}> = ({ rewards, liquidityPosition, collateralSymbol, poolName, collateralType, accountId }) => {
+}> = ({ liquidityPosition, poolName }) => {
+  const { collateralSymbol, accountId } = useParams();
+  const { data: collateralType } = useCollateralType(collateralSymbol);
+
   const { refetch } = useAccounts();
   const { collateralChange, setCollateralChange, setDebtChange } =
     useContext(ManagePositionContext);
@@ -78,7 +77,7 @@ export const NoPosition: FC<{
               />
             </BorderBox>
           )}
-          {rewards && <Rewards isLoading={false} rewards={rewards} />}
+          <Rewards />
         </BorderBox>
         <BorderBox
           flex={1}

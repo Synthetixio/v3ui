@@ -1,28 +1,28 @@
-import { Button, Divider, Flex, Skeleton, Text, useToast, Link } from '@chakra-ui/react';
-import { FC, ReactNode, useCallback, useEffect, useState, useContext } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { Button, Divider, Flex, Link, Skeleton, Text, useToast } from '@chakra-ui/react';
+import { Amount } from '@snx-v3/Amount';
+import { ContractError } from '@snx-v3/ContractError';
+import { parseUnits } from '@snx-v3/format';
+import { getRepayerContract, getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { Multistep } from '@snx-v3/Multistep';
+import { useApprove } from '@snx-v3/useApprove';
+import { useNetwork } from '@snx-v3/useBlockchain';
+import { useBorrow } from '@snx-v3/useBorrow';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
+import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
+import { useCoreProxy } from '@snx-v3/useCoreProxy';
+import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
+import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useRepay } from '@snx-v3/useRepay';
-import { ZEROWEI } from '../../utils/constants';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useNetwork } from '@snx-v3/useBlockchain';
-import { getRepayerContract, getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { useBorrow } from '@snx-v3/useBorrow';
-import { Amount } from '@snx-v3/Amount';
-import { useApprove } from '@snx-v3/useApprove';
-import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
-import { parseUnits } from '@snx-v3/format';
-import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useUndelegate } from '@snx-v3/useUndelegate';
 import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
-import { Multistep } from '@snx-v3/Multistep';
-import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { ContractError } from '@snx-v3/ContractError';
-import { LiquidityPositionUpdated } from '../Manage/LiquidityPositionUpdated';
 import { useQueryClient } from '@tanstack/react-query';
-import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
+import { FC, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { ZEROWEI } from '../../utils/constants';
+import { LiquidityPositionUpdated } from '../Manage/LiquidityPositionUpdated';
 
 export const ClosePositionTransactions: FC<{
   onClose: () => void;
@@ -46,7 +46,7 @@ export const ClosePositionTransactions: FC<{
   const toast = useToast({ isClosable: true, duration: 9000 });
   const isBase = isBaseAndromeda(network?.id, network?.preset);
 
-  const debtSymbol = isBase ? collateralType.symbol : systemToken.symbol;
+  const debtSymbol = isBase ? collateralType.symbol : systemToken?.symbol;
   const collateralSymbol = collateralType.displaySymbol;
 
   const [txState, setTxState] = useState({

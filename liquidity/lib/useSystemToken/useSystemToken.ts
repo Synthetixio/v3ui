@@ -2,7 +2,7 @@ import { importSystemToken } from '@snx-v3/contracts';
 import { Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
-export function useSystemToken(customNetwork?: Network | null) {
+export function useSystemToken(customNetwork?: Network) {
   const { network } = useNetwork();
   const targetNetwork = customNetwork || network;
 

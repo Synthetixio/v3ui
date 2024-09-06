@@ -1,17 +1,4 @@
-import { convertToReadableInterval, unlockDateString, formatTimeToUnlock } from './date';
-
-describe('convertToReadableInterval', () => {
-  it('should return null when seconds is 0', () => {
-    expect(convertToReadableInterval(100, 0)).toStrictEqual({ amount: 100, frequencyString: null });
-  });
-
-  it('should return "20,000 per week" when seconds is 2592000 and amount 94,172.72', () => {
-    expect(convertToReadableInterval(94_172.72, 2847783)).toStrictEqual({
-      amount: 20000,
-      frequencyString: 'per week',
-    });
-  });
-});
+import { unlockDateString, formatTimeToUnlock } from './date';
 
 describe('unlockDateString function', () => {
   // Test case 1: accountCollateralUnlockDate is undefined

@@ -6,7 +6,6 @@ export * from './Stats';
 export * from './Positions';
 export * from './Balance';
 export * from './TokenIcon';
-export * from './PoolStats';
 export * from './Borrow';
 export * from './Deposit';
 export * from './Manage';

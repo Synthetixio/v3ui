@@ -8,7 +8,7 @@ export function useWithdrawTimer(accountId: string | undefined) {
       accountId,
     });
   const { minutes, hours, seconds, isRunning, restart } = useTimer({
-    expiryTimestamp: new Date(0),
+    expiryTimestamp: new Date(),
     autoStart: false,
   });
 

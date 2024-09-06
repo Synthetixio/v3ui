@@ -9,7 +9,7 @@ import {
 } from '@snx-v3/useBlockchain';
 import { importV2x } from '@snx-v3/contracts';
 
-export function useV2xSynthetix(customNetwork?: Network | null) {
+export function useV2xSynthetix(customNetwork?: Network) {
   const providerForChain = useProviderForChain(customNetwork);
   const { network } = useNetwork();
   const provider = useProvider();
