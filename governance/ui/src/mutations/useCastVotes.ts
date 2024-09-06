@@ -128,8 +128,8 @@ export function useCastVotes(
           const gas = (
             await Promise.all(
               prepareBallotData
-                .map(async (tx) => await signer.provider.estimateGas(tx))
-                .concat(castData.map(async (tx) => await signer.provider.estimateGas(tx)))
+                .map(async (tx) => await signer.provider.estimateGas({ ...tx }))
+                .concat(castData.map(async (tx) => await signer.provider.estimateGas({ ...tx })))
             )
           ).reduce((cur, next) => cur.add(next), BigNumber.from(0));
           await multicall
