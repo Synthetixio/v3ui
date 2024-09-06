@@ -120,7 +120,9 @@ export default function UserTableView({
           {totalVotingPowerPercentage ? totalVotingPowerPercentage + '%' : 'N/A'}
           <Text color="gray.500" fontSize="x-small">
             {totalVotingPowerPercentage && user.voteResult
-              ? formatNumber(utils.formatEther(user.voteResult.votePower || '0'))
+              ? activeCouncil === 'ambassador'
+                ? formatNumber(user.voteResult.votePower.toString())
+                : formatNumber(utils.formatEther(user.voteResult.votePower || '0'))
               : '—'}
           </Text>
         </Td>
