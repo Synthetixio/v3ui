@@ -9,7 +9,8 @@ import { prettyString } from '@snx-v3/format';
 import { useGetEpochIndex, useGetUserBallot, useNetwork } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { useVoteContext } from '../../context/VoteContext';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
+import { formatNumber } from '@snx-v3/formatters';
 import { renderCorrectBorder } from '../../utils/table-border';
 
 export default function UserTableView({
@@ -129,7 +130,9 @@ export default function UserTableView({
         >
           {totalVotingPowerPercentage ? totalVotingPowerPercentage + '%' : 'N/A'}
           <Text color="gray.500" fontSize="x-small">
-            {totalVotingPowerPercentage ? user.voteResult?.votePower.toString() : '—'}
+            {totalVotingPowerPercentage && user.voteResult
+              ? formatNumber(utils.formatEther(user.voteResult?.votePower))
+              : '—'}
           </Text>
         </Td>
       )}
@@ -144,7 +147,7 @@ export default function UserTableView({
           fontSize="sm"
           fontWeight={700}
         >
-          {ballot?.votedCandidates.includes(voteAddressState) ? (
+          {ballot?.votedCandidates.includes(user.address) ? (
             <Badge w="fit-content" data-cy="your-vote-badge-table">
               Your Vote
             </Badge>
