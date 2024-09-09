@@ -7,12 +7,21 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
-import { EditIcon, ShareIcon } from '../Icons';
-import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
+import { EditIcon, EthereumIcon, OPIcon, ShareIcon } from '../Icons';
+import {
+  useGetEpochIndex,
+  useGetUserBallot,
+  useGetUserVotingPowerForAllChains,
+  useNetwork,
+  useWallet,
+} from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
 import { getVoteSelectionState } from '../../utils/localstorage';
+import { isMotherchain } from '../../utils/contracts';
+import VotePower from './VotePower';
+import { BigNumber } from 'ethers';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -31,6 +40,7 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const [showVotePower, setShowVoteBanner] = useState(false);
   const [_, setVoteCard] = useRecoilState(voteCardState);
   const { activeWallet } = useWallet();
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
@@ -38,6 +48,7 @@ export const UserProfileDetails = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
+  const { data: votePowers } = useGetUserVotingPowerForAllChains(activeCouncil);
   const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
@@ -98,6 +109,10 @@ export const UserProfileDetails = ({
       }
     };
   }, []);
+
+  if (showVotePower) {
+    return <VotePower activeCouncil={activeCouncil} networks={votePowerToNetwork(votePowers)} />;
+  }
 
   return (
     <>
@@ -296,38 +311,42 @@ export const UserProfileDetails = ({
             data-cy="select-user-to-vote-button"
             onClick={async () => {
               const parsedNetwork = network?.id ? network.id.toString() : '2192';
-              if (isAlreadyVoted) {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: 'remove',
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
-              } else if (isSelected) {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: undefined,
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
+              if (isMotherchain(network?.id)) {
+                setShowVoteBanner(true);
               } else {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: userData?.address.toLowerCase(),
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
+                if (isAlreadyVoted) {
+                  dispatch({
+                    type: activeCouncil.toUpperCase(),
+                    payload: {
+                      action: 'remove',
+                      network: parsedNetwork,
+                      epochId: epochId?.toString(),
+                      wallet: activeWallet?.address,
+                    },
+                  });
+                } else if (isSelected) {
+                  dispatch({
+                    type: activeCouncil.toUpperCase(),
+                    payload: {
+                      action: undefined,
+                      network: parsedNetwork,
+                      epochId: epochId?.toString(),
+                      wallet: activeWallet?.address,
+                    },
+                  });
+                } else {
+                  dispatch({
+                    type: activeCouncil.toUpperCase(),
+                    payload: {
+                      action: userData?.address.toLowerCase(),
+                      network: parsedNetwork,
+                      epochId: epochId?.toString(),
+                      wallet: activeWallet?.address,
+                    },
+                  });
+                }
+                setVoteCard(true);
               }
-              setVoteCard(true);
             }}
           >
             <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
@@ -352,3 +371,27 @@ export const UserProfileDetails = ({
     </>
   );
 };
+
+interface VotePowerToNetwork {
+  power: BigNumber;
+  isDeclared: boolean;
+}
+
+function votePowerToNetwork(
+  power?:
+    | {
+        L1: VotePowerToNetwork | undefined;
+        Optimism: VotePowerToNetwork | undefined;
+      }
+    | undefined
+) {
+  if (!power) return [];
+  const networks = [];
+  if (power.L1?.power.gt(0)) {
+    networks.push({ icon: EthereumIcon, chainId: 1 });
+  }
+  if (power.Optimism?.power.gt(0)) {
+    networks.push({ icon: OPIcon, chainId: 10 });
+  }
+  return networks;
+}
