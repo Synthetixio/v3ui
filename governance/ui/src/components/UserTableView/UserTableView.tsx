@@ -55,7 +55,7 @@ export default function UserTableView({
             {place === undefined ? (
               '-'
             ) : place <
-              (activeCouncil === 'spartan' ? 8 : activeCouncil === 'ambassador' ? 5 : 4) ? (
+              (activeCouncil === 'spartan' ? 9 : activeCouncil === 'ambassador' ? 6 : 5) ? (
               <Flex gap="1" alignItems="center">
                 {place}
                 <CrownIcon />
