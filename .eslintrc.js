@@ -52,7 +52,6 @@ module.exports = {
         'liquidity/components/**/*',
         'liquidity/lib/**/*',
         'theme/**/*',
-        'oracle-manager/ui/**/*',
         'governance/ui/**/*',
       ],
 
