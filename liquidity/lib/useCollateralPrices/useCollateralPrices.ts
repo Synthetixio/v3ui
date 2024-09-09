@@ -14,7 +14,7 @@ import { ZodBigNumber } from '@snx-v3/zod';
 import Wei, { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 const PriceSchema = ZodBigNumber.transform((x) => wei(x));
 

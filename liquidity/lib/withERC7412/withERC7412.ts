@@ -9,7 +9,7 @@ import type { Modify } from '@snx-v3/tsHelpers';
 import { importCoreProxy, importMulticall3, importAllErrors } from '@snx-v3/contracts';
 import { withMemoryCache } from './withMemoryCache';
 import * as viem from 'viem';
-import { parseTxError } from '../parser';
+import { parseTxError } from '@snx-v3/parser';
 
 export const ERC7412_ABI = [
   'error OracleDataRequired(address oracleContract, bytes oracleQuery)',

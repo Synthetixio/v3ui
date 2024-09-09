@@ -13,7 +13,7 @@ import { NumberInput } from '@snx-v3/NumberInput';
 import { Network } from '@snx-v3/useBlockchain';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import Wei from '@synthetixio/wei';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { TokenIcon } from '../TokenIcon';

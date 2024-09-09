@@ -14,10 +14,10 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useApprove } from '@snx-v3/useApprove';
 import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
-import { DEBT_REPAYER_ABI } from '../useClearDebt';
-import { useSpotMarketProxy } from '../useSpotMarketProxy';
+import { DEBT_REPAYER_ABI } from '@snx-v3/useClearDebt';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { notNil } from '@snx-v3/tsHelpers';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useUndelegateBaseAndromeda = ({

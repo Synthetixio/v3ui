@@ -14,7 +14,7 @@ import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { TokenIcon } from '../TokenIcon';
 
 export const Withdraw = ({

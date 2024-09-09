@@ -1,7 +1,7 @@
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useMemo } from 'react';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { wei } from '@synthetixio/wei';
 import { useOraclePrice } from '@snx-v3/useOraclePrice';
 

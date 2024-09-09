@@ -9,7 +9,7 @@ import { useV2sUSD } from '@snx-v3/useV2sUSD';
 import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
 import { useMigrateUSD } from '@snx-v3/useMigrateUSD';
 import { StepSuccess } from './StepSuccess';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDProxyForChain } from '@snx-v3/useUSDProxy';
 

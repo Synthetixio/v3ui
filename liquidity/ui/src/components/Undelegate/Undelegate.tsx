@@ -23,7 +23,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { TokenIcon } from '../TokenIcon';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
 import { ChangeStat } from '../Manage';
 import { currency } from '@snx-v3/format';

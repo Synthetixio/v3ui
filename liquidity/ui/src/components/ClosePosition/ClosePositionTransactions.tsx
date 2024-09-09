@@ -21,7 +21,7 @@ import { useUndelegate } from '@snx-v3/useUndelegate';
 import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
 import { useQueryClient } from '@tanstack/react-query';
 import { FC, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { LiquidityPositionUpdated } from '../Manage/LiquidityPositionUpdated';
 
 export const ClosePositionTransactions: FC<{

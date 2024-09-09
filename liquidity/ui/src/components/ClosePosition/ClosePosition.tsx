@@ -13,7 +13,7 @@ import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import Wei from '@synthetixio/wei';
 import { FC, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { TokenIcon } from '../TokenIcon';
 import { ClosePositionTransactions } from './ClosePositionTransactions';
 

@@ -7,10 +7,10 @@
     "@pythnetwork/pyth-evm-js": "^1.42.0",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/contracts": "workspace:*",
+    "@snx-v3/parser": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/zod": "workspace:*",
-    "@synthetixio/wei": "^2.74.4",
     "ethers": "^5.7.2",
     "viem": "^2.13.5",
     "zod": "^3.22.4"

@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   node-version:
     type: string
-    default: '20.11.0'
+    default: '20.17.0'
 
   cypress-version:
     type: string
@@ -12,20 +12,62 @@ parameters:
 commands:
   yarn-install:
     steps:
-      - run: yarn install --immutable --immutable-cache
+      - run: date +"%Y-%m" > /tmp/month.txt && cat /tmp/month.txt
+      - restore_cache:
+          keys:
+            - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
+            - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-
+      - run:
+          name: 'corepack enable'
+          command: |-
+            if command -v sudo; then
+              sudo corepack enable
+            else
+              corepack enable
+            fi
+      - run: corepack install
+      - run: yarn -v
+      - run: yarn install --immutable
+      - save_cache:
+          key: yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
+          paths:
+            - '~/.yarn/berry'
 
   install-foundry:
     steps:
+      - restore_cache:
+          keys:
+            - foundry-{{ .Environment.FOUNDRY_CACHE_VERSION }}
+
       - run:
-          name: Install foundry used for cannon and e2e tests
-          environment:
-            SHELL: /bin/bash
+          name: 'Add .foundry/bin to PATH'
           command: |-
-            apt update && apt install --yes curl
-            curl -L https://foundry.paradigm.xyz | bash
             export PATH="$PATH:$HOME/.foundry/bin"
-            echo export PATH="$PATH:$HOME/.foundry/bin" > $BASH_ENV
-            foundryup
+            echo 'export PATH=$PATH:$HOME/.foundry/bin' >> $BASH_ENV
+
+      - run:
+          name: 'forge --version'
+          command: |-
+            if command -v curl; then
+              curl --version
+            else
+              apt update && apt install --yes curl
+            fi
+
+            if command -v forge; then
+              forge --version
+            else
+              echo "Forge needs to be installed"
+
+              curl -L https://foundry.paradigm.xyz | bash
+              foundryup
+              forge --version
+            fi
+
+      - save_cache:
+          key: foundry-{{ .Environment.FOUNDRY_CACHE_VERSION }}
+          paths:
+            - '~/.foundry/bin'
 
   ipfs-deploy:
     parameters:

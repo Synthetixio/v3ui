@@ -14,7 +14,7 @@ import { useSystemToken } from '@snx-v3/useSystemToken';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { wei } from '@synthetixio/wei';
 import { useContext } from 'react';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const Borrow = ({ liquidityPosition }: { liquidityPosition?: LiquidityPosition }) => {
   const params = useParams();
