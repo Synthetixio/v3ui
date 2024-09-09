@@ -25,7 +25,7 @@ import type { StateFrom } from 'xstate';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { ChangeStat } from '../../ui/src/components';

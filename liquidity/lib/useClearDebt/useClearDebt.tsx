@@ -11,9 +11,9 @@ import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { useSpotMarketProxy } from '../useSpotMarketProxy';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { USDC_BASE_MARKET, getRepayerContract } from '@snx-v3/isBaseAndromeda';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export const DEBT_REPAYER_ABI = [
   {

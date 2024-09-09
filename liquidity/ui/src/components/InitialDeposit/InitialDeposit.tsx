@@ -31,7 +31,7 @@ import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { MigrationBanner } from '../Migration/MigrationBanner';
 

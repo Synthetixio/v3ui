@@ -25,7 +25,7 @@ import type { StateFrom } from 'xstate';
 import { Events, RepayMachine, ServiceNames, State } from './RepayMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const RepayModalUi: React.FC<{
   onClose: () => void;

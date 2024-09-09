@@ -10,11 +10,11 @@ import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { notNil } from '@snx-v3/tsHelpers';
-import { useSpotMarketProxy } from '../useSpotMarketProxy';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { parseUnits } from '@snx-v3/format';
 import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { approveAbi } from '@snx-v3/useApprove';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 

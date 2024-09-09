@@ -18,7 +18,7 @@ import { useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { Amount } from '@snx-v3/Amount';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { wei } from '@synthetixio/wei';
 
 export const StatsList = () => {

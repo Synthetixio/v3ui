@@ -8,7 +8,7 @@ import { Network, useNetwork, useProviderForChain } from '@snx-v3/useBlockchain'
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { stringToHash } from '@snx-v3/tsHelpers';
 
 const VaultCollateralSchema = z

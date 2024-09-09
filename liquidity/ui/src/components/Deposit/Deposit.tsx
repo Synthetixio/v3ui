@@ -27,7 +27,7 @@ import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { formatNumber } from '@snx-v3/formatters';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 import { currency } from '@snx-v3/format';

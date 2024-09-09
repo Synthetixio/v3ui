@@ -8,7 +8,7 @@ import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import Wei, { wei } from '@synthetixio/wei';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { TokenIcon } from '../TokenIcon';
 import { validatePosition } from '@snx-v3/validatePosition';

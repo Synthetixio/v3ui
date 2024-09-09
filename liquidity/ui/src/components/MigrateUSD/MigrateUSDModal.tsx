@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { StepIntro } from './StepIntro';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { MigrateUSDTransaction } from './MigrateUSDTransaction';
 import { Network } from '@snx-v3/useBlockchain';
 import { StepSuccessFinal } from '../Migration/StepSuccessFinal';

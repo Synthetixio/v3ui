@@ -5014,6 +5014,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5039,6 +5040,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5088,6 +5090,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
@@ -5202,6 +5205,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
@@ -5263,6 +5267,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5300,6 +5305,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
@@ -5327,6 +5333,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/calculations@workspace:liquidity/lib/calculations"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/usePoolData": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     zod: "npm:^3.22.4"
@@ -5336,6 +5343,9 @@ __metadata:
 "@snx-v3/constants@workspace:*, @snx-v3/constants@workspace:liquidity/lib/constants":
   version: 0.0.0-use.local
   resolution: "@snx-v3/constants@workspace:liquidity/lib/constants"
+  dependencies:
+    "@synthetixio/wei": "npm:^2.74.4"
+    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -5695,7 +5705,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/parser@workspace:liquidity/lib/parser":
+"@snx-v3/parser@workspace:*, @snx-v3/parser@workspace:liquidity/lib/parser":
   version: 0.0.0-use.local
   resolution: "@snx-v3/parser@workspace:liquidity/lib/parser"
   dependencies:
@@ -5721,6 +5731,7 @@ __metadata:
   dependencies:
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
@@ -5924,10 +5935,12 @@ __metadata:
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -5961,6 +5974,7 @@ __metadata:
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
@@ -6044,12 +6058,14 @@ __metadata:
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6157,6 +6173,7 @@ __metadata:
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAccountCollateral": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -6178,6 +6195,7 @@ __metadata:
     "@snx-v3/calculations": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
@@ -6224,6 +6242,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMigrate@workspace:liquidity/lib/useMigrate"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/parser": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
@@ -6239,6 +6259,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useMigrateUSD@workspace:liquidity/lib/useMigrateUSD"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/parser": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
@@ -6304,6 +6326,7 @@ __metadata:
     "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@snx-v3/zod": "workspace:*"
@@ -6371,6 +6394,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useRepay@workspace:liquidity/lib/useRepay"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/fetchPythPrices": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
@@ -6399,11 +6423,13 @@ __metadata:
     "@snx-v3/txnReducer": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6485,6 +6511,7 @@ __metadata:
   resolution: "@snx-v3/useTokenBalance@workspace:liquidity/lib/useTokenBalance"
   dependencies:
     "@snx-v3/assertAddressType": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6509,6 +6536,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTokenPrice@workspace:liquidity/lib/useTokenPrice"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useOraclePrice": "workspace:*"
@@ -6581,12 +6609,15 @@ __metadata:
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useClearDebt": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useGasOptions": "workspace:*"
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
@@ -6640,6 +6671,7 @@ __metadata:
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useAllCollateralPriceIds": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
@@ -6676,6 +6708,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/useWithdrawBaseAndromeda@workspace:liquidity/lib/useWithdrawBaseAndromeda"
   dependencies:
+    "@snx-v3/constants": "workspace:*"
     "@snx-v3/isBaseAndromeda": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/txnReducer": "workspace:*"
@@ -6687,6 +6720,7 @@ __metadata:
     "@snx-v3/useGasPrice": "workspace:*"
     "@snx-v3/useGasSpeed": "workspace:*"
     "@snx-v3/useGetUSDTokens": "workspace:*"
+    "@snx-v3/useSpotMarketProxy": "workspace:*"
     "@snx-v3/useUSDProxy": "workspace:*"
     "@snx-v3/withERC7412": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
@@ -6737,10 +6771,10 @@ __metadata:
     "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/parser": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/zod": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
     viem: "npm:^2.13.5"
     zod: "npm:^3.22.4"

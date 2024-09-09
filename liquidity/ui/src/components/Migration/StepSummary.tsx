@@ -26,7 +26,7 @@ import { formatEther } from 'ethers/lib/utils';
 import { Amount } from '@snx-v3/Amount';
 import { CRatioBadge } from '../CRatioBar/CRatioBadge';
 import { useRates } from '@snx-v3/useRates';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 export const StepSummary = ({

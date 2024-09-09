@@ -20,7 +20,7 @@ import type { StateFrom } from 'xstate';
 import { Events, ServiceNames, State, UndelegateMachine } from './UndelegateMachine';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { ChangeStat } from '../../ui/src/components';
 import { currency } from '@snx-v3/format';
 import { CRatioChangeStat } from '../../ui/src/components/CRatioBar/CRatioChangeStat';

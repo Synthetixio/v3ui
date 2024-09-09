@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export const MarketConfigurationSchema = z.object({
   id: SmallIntSchema,

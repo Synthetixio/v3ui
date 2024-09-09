@@ -1,7 +1,7 @@
 import type { MarketSnapshotByWeekSchema, PoolType } from '@snx-v3/usePoolData';
 import { z } from 'zod';
 import { wei, Wei } from '@synthetixio/wei';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 type MarketSnapshotByWeek = z.infer<typeof MarketSnapshotByWeekSchema>;
 
