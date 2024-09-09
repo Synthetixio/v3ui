@@ -17,7 +17,14 @@ commands:
           keys:
             - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
             - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-
-      - run: sudo corepack enable
+      - run:
+          name: 'corepack enable'
+          command: |-
+            if command -v sudo; then
+              sudo corepack enable
+            else
+              corepack enable
+            fi
       - run: corepack install
       - run: yarn -v
       - run: yarn install --immutable
@@ -41,14 +48,19 @@ commands:
       - run:
           name: 'forge --version'
           command: |-
+            if command -v curl; then
+              curl --version
+            else
+              apt update && apt install --yes curl
+            fi
+
             if command -v forge; then
               forge --version
             else
               echo "Forge needs to be installed"
 
               curl -L https://foundry.paradigm.xyz | bash
-              cd .foundry/bin
-              ./foundryup
+              foundryup
               forge --version
             fi
 
