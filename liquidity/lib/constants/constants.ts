@@ -1,3 +1,13 @@
+import { constants } from 'ethers';
+import Wei from '@synthetixio/wei';
+
+export const LOCAL_STORAGE_KEYS = {
+  SHOW_TESTNETS: 'SHOW_TESTNETS',
+};
+export const ZEROWEI = new Wei(0);
+export const ONEWEI = new Wei(1);
+export const MAXUINT = new Wei(constants.MaxUint256);
+
 export const GWEI_DECIMALS = 9;
 export const GAS_LIMIT_MULTIPLIER = 1.5;
 

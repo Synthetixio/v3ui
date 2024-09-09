@@ -10,7 +10,7 @@ import {
 } from '@snx-v3/useBlockchain';
 import { ethers, providers } from 'ethers';
 import { ZodBigNumber } from '@snx-v3/zod';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const BalanceSchema = ZodBigNumber.transform((x) => wei(x));
 

@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "dependencies": {
     "@snx-v3/assertAddressType": "workspace:*",
+    "@snx-v3/constants": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@snx-v3/zod": "workspace:*",
     "@synthetixio/wei": "^2.74.4",

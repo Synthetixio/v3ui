@@ -11,11 +11,11 @@ import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
-import { useSpotMarketProxy } from '../useSpotMarketProxy';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { parseUnits } from '@snx-v3/format';
 import { approveAbi } from '@snx-v3/useApprove';
-import { useCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
 
 export const useRepayBaseAndromeda = ({

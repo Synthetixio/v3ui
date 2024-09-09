@@ -9,7 +9,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
 import { FC, useContext, useState } from 'react';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { CRatioBar } from '../CRatioBar/CRatioBar';
 import { InitialDeposit } from '../InitialDeposit';
 import { Rewards } from '../Rewards';

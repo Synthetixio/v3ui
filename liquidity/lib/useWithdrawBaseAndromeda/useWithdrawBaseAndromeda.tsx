@@ -8,14 +8,14 @@ import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { withERC7412 } from '@snx-v3/withERC7412';
-import { useSpotMarketProxy } from '../useSpotMarketProxy';
+import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { Wei } from '@synthetixio/wei';
 import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 
 export const useWithdrawBaseAndromeda = ({

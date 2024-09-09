@@ -9,7 +9,7 @@ import { loadPrices } from '@snx-v3/useCollateralPrices';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { erc7412Call } from '@snx-v3/withERC7412';
 import { keyBy, stringToHash } from '@snx-v3/tsHelpers';
-import { useAllCollateralPriceUpdates } from '../useCollateralPriceUpdates';
+import { useAllCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 
 export type LiquidityPositionType = {
   id: `${string}-${string}`;

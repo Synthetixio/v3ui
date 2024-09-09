@@ -13,7 +13,7 @@ import { notNil } from '@snx-v3/tsHelpers';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { useAllCollateralPriceIds } from '@snx-v3/useAllCollateralPriceIds';
 import { fetchPriceUpdates, priceUpdatesToPopulatedTx } from '@snx-v3/fetchPythPrices';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const useRepay = ({
   accountId,

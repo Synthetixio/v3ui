@@ -3,7 +3,7 @@ import { FC } from 'react';
 import Wei from '@synthetixio/wei';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { Amount } from '@snx-v3/Amount';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const CRatioChangeStat: FC<{
   collateralChange: Wei;

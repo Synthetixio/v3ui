@@ -3,10 +3,10 @@ import { useLegacyMarket } from '@snx-v3/useLegacyMarket';
 import { useCallback, useState } from 'react';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import Wei, { wei } from '@synthetixio/wei';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
-import { parseTxError } from '../parser';
+import { parseTxError } from '@snx-v3/parser';
 import { useQueryClient } from '@tanstack/react-query';
 
 export function useMigrateUSD({ amount }: { amount: Wei }) {

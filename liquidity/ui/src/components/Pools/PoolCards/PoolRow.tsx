@@ -19,7 +19,7 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { useTokenBalanceForChain } from '@snx-v3/useTokenBalance';
 import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
-import { ZEROWEI } from '../../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { MigrationBanner } from '../../Migration/MigrationBanner';
 import { Specifics } from './Specifics';
 

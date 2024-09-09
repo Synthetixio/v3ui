@@ -1,7 +1,7 @@
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import Wei, { wei } from '@synthetixio/wei';
-import { ONEWEI, ZEROWEI } from './constants';
+import { ONEWEI, ZEROWEI } from '@snx-v3/constants';
 
 export interface Asset {
   collateral: AccountCollateralType;

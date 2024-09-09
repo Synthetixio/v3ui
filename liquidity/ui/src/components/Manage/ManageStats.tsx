@@ -14,7 +14,7 @@ import { CRatioBar } from '../CRatioBar/CRatioBar';
 import { PnlStats } from './PnlStats';
 import { DebtStats } from './DebtStats';
 import { CollateralStats } from './CollateralStats';
-import { ZEROWEI } from '../../utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 
 export const ManageStatsUi: FC<{
   liquidityPosition?: LiquidityPosition;

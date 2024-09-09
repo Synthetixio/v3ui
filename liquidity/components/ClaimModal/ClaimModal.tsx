@@ -17,7 +17,7 @@ import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 import { useSystemToken } from '@snx-v3/useSystemToken';
-import { ZEROWEI } from '../../ui/src/utils/constants';
+import { ZEROWEI } from '@snx-v3/constants';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 
 export const ClaimModalUi: React.FC<{
