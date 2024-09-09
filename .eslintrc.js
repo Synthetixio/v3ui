@@ -54,7 +54,6 @@ module.exports = {
         'theme/**/*',
         'oracle-manager/ui/**/*',
         'governance/ui/**/*',
-        'ultrasound/ui/**/*',
       ],
 
       env: {

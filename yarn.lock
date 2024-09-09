@@ -4047,13 +4047,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kurkle/color@npm:^0.3.0":
-  version: 0.3.2
-  resolution: "@kurkle/color@npm:0.3.2"
-  checksum: 10/079c4b7688061070f1d570cee4cf0e7c4085867b940688ff80356a56825a5ace7077257c9ec5863eb344a8eae78379388ab57cdf9d75c491389fad56f411cd43
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/connect-kit@npm:1.1.12":
   version: 1.1.12
   resolution: "@ledgerhq/connect-kit@npm:1.1.12"
@@ -5726,75 +5719,6 @@ __metadata:
 "@snx-v3/txnReducer@workspace:*, @snx-v3/txnReducer@workspace:liquidity/lib/txnReducer":
   version: 0.0.0-use.local
   resolution: "@snx-v3/txnReducer@workspace:liquidity/lib/txnReducer"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/ultrasound@workspace:ultrasound/ui":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/ultrasound@workspace:ultrasound/ui"
-  dependencies:
-    "@babel/core": "npm:^7.24.6"
-    "@babel/plugin-transform-runtime": "npm:^7.24.6"
-    "@babel/preset-env": "npm:^7.24.6"
-    "@babel/preset-react": "npm:^7.24.6"
-    "@babel/preset-typescript": "npm:^7.24.6"
-    "@babel/runtime-corejs3": "npm:^7.24.6"
-    "@chakra-ui/icons": "npm:^2.1.1"
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@emotion/react": "npm:^11.11.1"
-    "@emotion/styled": "npm:^11.11.0"
-    "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/isBaseAndromeda": "workspace:*"
-    "@snx-v3/tsHelpers": "workspace:*"
-    "@snx-v3/useApprove": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useGasOptions": "workspace:*"
-    "@snx-v3/useGasPrice": "workspace:*"
-    "@snx-v3/useGasSpeed": "workspace:*"
-    "@snx-v3/useSpotMarketProxy": "workspace:*"
-    "@snx-v3/useTokenBalance": "workspace:*"
-    "@snx-v3/useUSDProxy": "workspace:*"
-    "@snx-v3/withERC7412": "workspace:*"
-    "@synthetixio/safe-import": "workspace:*"
-    "@synthetixio/v3-theme": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    "@tanstack/react-query-devtools": "npm:^5.8.3"
-    "@types/react": "npm:^18.2.37"
-    "@types/react-dom": "npm:^18.2.15"
-    "@web3-onboard/coinbase": "npm:^2.4.1"
-    "@web3-onboard/injected-wallets": "npm:^2.11.1"
-    "@web3-onboard/ledger": "npm:2.7.1"
-    "@web3-onboard/react": "npm:^2.9.1"
-    "@web3-onboard/trezor": "npm:^2.4.6"
-    "@web3-onboard/walletconnect": "npm:^2.6.1"
-    babel-loader: "npm:^9.1.3"
-    babel-plugin-istanbul: "npm:^6.1.1"
-    bn.js: "npm:^5.2.1"
-    chart.js: "npm:^4.0.0"
-    copy-webpack-plugin: "npm:^11.0.0"
-    core-js: "npm:^3.33.2"
-    crypto-browserify: "npm:^3.12.0"
-    css-loader: "npm:^6.8.1"
-    dotenv: "npm:^16.4.3"
-    ethers: "npm:^5.7.2"
-    framer-motion: "npm:^10.16.5"
-    html-webpack-plugin: "npm:^5.5.3"
-    process: "npm:^0.11.10"
-    react: "npm:^18.2.0"
-    react-chartjs-2: "npm:^5.2.0"
-    react-dom: "npm:^18.2.0"
-    react-refresh: "npm:^0.14.0"
-    recoil: "npm:^0.7.7"
-    stream-browserify: "npm:^3.0.0"
-    style-loader: "npm:^3.3.3"
-    terser-webpack-plugin: "npm:^5.3.9"
-    webpack: "npm:^5.89.0"
-    webpack-bundle-analyzer: "npm:^4.10.0"
-    webpack-cli: "npm:^5.1.4"
-    webpack-dev-server: "npm:^4.15.1"
   languageName: unknown
   linkType: soft
 
@@ -11347,15 +11271,6 @@ __metadata:
   version: 1.0.2
   resolution: "char-regex@npm:1.0.2"
   checksum: 10/1ec5c2906adb9f84e7f6732a40baef05d7c85401b82ffcbc44b85fbd0f7a2b0c2a96f2eb9cf55cae3235dc12d4023003b88f09bcae8be9ae894f52ed746f4d48
-  languageName: node
-  linkType: hard
-
-"chart.js@npm:^4.0.0":
-  version: 4.4.2
-  resolution: "chart.js@npm:4.4.2"
-  dependencies:
-    "@kurkle/color": "npm:^0.3.0"
-  checksum: 10/609444dfc9e847e4c891884309d6083464333e39a7266996fa15f622a44d0c5202c20c86b3bfb1d72b3769096f71c80e131860270c39ce1291cac52b9f45dc6d
   languageName: node
   linkType: hard
 
@@ -20121,16 +20036,6 @@ __metadata:
   peerDependencies:
     react: ">=15.0.0"
   checksum: 10/2b15f8640e8991518a56cfab272fab4b35c3506fe20846afa423e75be464cd22d94bb655b0eae6affe4761d1e9fde22ff1f1eb1f9e24769a72651e072da494de
-  languageName: node
-  linkType: hard
-
-"react-chartjs-2@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "react-chartjs-2@npm:5.2.0"
-  peerDependencies:
-    chart.js: ^4.1.1
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/0a70b60e1a0d1f0cecdd69d70d9ac1c191618c1033d8f942d4728f5eb84c893c82c9e3318be8a3158eb3a7186c0251a8fe0356c9610ea0f0f3f2d4a9c4a0b388
   languageName: node
   linkType: hard
 
