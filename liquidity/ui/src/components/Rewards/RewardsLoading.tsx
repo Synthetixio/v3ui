@@ -1,7 +1,7 @@
-import { Tbody, Tr, Td, SkeletonCircle, Skeleton, Text } from '@chakra-ui/react';
+import { Skeleton, SkeletonCircle, Td, Text, Tr } from '@chakra-ui/react';
 
 export const RewardsLoading = () => (
-  <Tbody width="100%">
+  <>
     <Tr borderBottom="1px solid #2D2D38">
       <Td pl="16px" border="none">
         <SkeletonCircle startColor="whiteAlpha.500" endColor="whiteAlpha.200" h="30px" w="30px" />
@@ -47,5 +47,5 @@ export const RewardsLoading = () => (
         </Skeleton>
       </Td>
     </Tr>
-  </Tbody>
+  </>
 );
