@@ -35,13 +35,14 @@ pids
 
 /build/stats.json
 
+# Yarn v3
+.pnp.*
 .yarn/*
-!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
-.yarn/versions
+!.yarn/versions
 
 **/artifacts
 **/coverage
