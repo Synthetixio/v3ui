@@ -7,6 +7,7 @@ import { useVoteContext } from '../../context/VoteContext';
 import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
 import { getVoteSelectionState } from '../../utils/localstorage';
 import { Badge } from '../Badge';
+import { utils } from 'ethers';
 
 export default function MyVoteRow({
   councilSlug,
@@ -24,15 +25,63 @@ export default function MyVoteRow({
   const { dispatch, state } = useVoteContext();
   const { network } = useNetwork();
 
-  const networkForState = getVoteSelectionState(
+  const votedCandidate = ballot?.votedCandidates[0] || '';
+  const voteSelection = getVoteSelectionState(
     state,
     activeWallet?.address,
     epochId?.toString(),
     network?.id.toString(),
     councilSlug
   );
+  const voteAddressState = typeof voteSelection === 'string' ? voteSelection : '';
 
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
+  const hasVoted =
+    utils.isAddress(votedCandidate) &&
+    utils.isAddress(voteAddressState) &&
+    votedCandidate.toLowerCase() === voteAddressState.toLowerCase();
+  const isDisabled = period !== '2';
+  const shouldHideName = utils.isAddress(votedCandidate) ? !(votedCandidate && hasVoted) : false;
+
+  const handleAddVote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/councils/${councilSlug}`);
+  };
+
+  const handleRemoveVote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (
+      utils.isAddress(votedCandidate) &&
+      utils.isAddress(voteAddressState) &&
+      votedCandidate.toLowerCase() !== voteAddressState.toLowerCase()
+    ) {
+      dispatch({
+        type: councilSlug.toUpperCase(),
+        payload: {
+          action: votedCandidate,
+          network: network?.id.toString(),
+          epochId: epochId?.toString(),
+          wallet: activeWallet?.address,
+        },
+      });
+    } else {
+      dispatch({
+        type: councilSlug.toUpperCase(),
+        payload: {
+          action: votedCandidate
+            ? voteAddressState === 'remove'
+              ? votedCandidate
+              : 'remove'
+            : voteAddressState === 'remove'
+              ? 'remove'
+              : undefined,
+          network: network?.id.toString(),
+          epochId: epochId?.toString(),
+          wallet: activeWallet?.address,
+        },
+      });
+    }
+  };
+
   return (
     <Flex
       key={`vote-${councilSlug}-cart`}
@@ -43,41 +92,38 @@ export default function MyVoteRow({
       borderTop="1px solid"
       borderBottom={isLast ? '1px solid' : ''}
       borderColor="gray.900"
-      opacity={period !== '2' ? '0.2' : '1'}
+      opacity={isDisabled ? '0.2' : '1'}
     >
       <Flex ml="4" alignItems="center" mr="auto">
         <CouncilUser
           councilSlug={councilSlug}
-          address={ballot?.votedCandidates[0] ? ballot?.votedCandidates[0] : voteAddressState}
-          hideName={!!(ballot?.votedCandidates[0] && voteAddressState)}
+          address={votedCandidate || voteAddressState}
+          hideName={shouldHideName}
         />
-        {ballot?.votedCandidates[0] &&
-          voteAddressState &&
-          ballot.votedCandidates[0].toLowerCase() !== voteAddressState.toLowerCase() && (
-            <>
-              <ArrowForwardIcon mx="2" />
-              <CouncilUser councilSlug={councilSlug} address={voteAddressState} hideName />
-            </>
-          )}
+        {!hasVoted && votedCandidate && voteAddressState && (
+          <>
+            <ArrowForwardIcon mx="2" />
+            <CouncilUser councilSlug={councilSlug} address={voteAddressState} hideName />
+          </>
+        )}
       </Flex>
-      {ballot?.votedCandidates.includes(voteAddressState) ? (
+
+      {hasVoted ? (
         <Badge mr="2">Your Vote</Badge>
       ) : voteAddressState ? (
         <Badge color="gray" mr="2" data-cy="selected-badge-my-row">
           Selected
         </Badge>
       ) : null}
-      {!networkForState && !ballot?.votedCandidates[0] ? (
+
+      {!voteAddressState && !votedCandidate ? (
         <IconButton
           aria-label="action-button"
           icon={<AddIcon />}
           variant="outlined"
           mr="4"
-          isDisabled={period !== '2'}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/councils/${councilSlug}`);
-          }}
+          isDisabled={isDisabled}
+          onClick={handleAddVote}
         />
       ) : (
         <IconButton
@@ -87,34 +133,8 @@ export default function MyVoteRow({
           data-cy={`remove-vote-button-${councilSlug}`}
           variant="outline"
           mr="4"
-          isDisabled={period !== '2'}
-          onClick={(e) => {
-            e.stopPropagation();
-
-            if (network?.id) {
-              if (!!ballot?.votedCandidates[0]) {
-                dispatch({
-                  type: councilSlug.toUpperCase(),
-                  payload: {
-                    action: 'remove',
-                    network: network.id.toString(),
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
-              } else {
-                dispatch({
-                  type: councilSlug.toUpperCase(),
-                  payload: {
-                    action: networkForState === 'remove' ? 'remove' : undefined,
-                    network: network.id.toString(),
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
-              }
-            }
-          }}
+          isDisabled={isDisabled}
+          onClick={handleRemoveVote}
         />
       )}
     </Flex>
