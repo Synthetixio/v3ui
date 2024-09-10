@@ -220,7 +220,7 @@ export const StepSummary = ({
           <AlertIcon />
           <AlertDescription fontSize="16px">
             The minimal locked amount on V3 is <Amount value={snxCollateral?.minDelegationD18} />{' '}
-            SNX. You can manually unstaked your V2 SNX on the{' '}
+            SNX. You can manually unstake your V2 SNX on the{' '}
             <Link
               textDecoration="underline"
               href="https://staking.synthetix.io/staking/burn"
