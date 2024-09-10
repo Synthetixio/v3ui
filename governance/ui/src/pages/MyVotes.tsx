@@ -233,7 +233,9 @@ export default function MyVotes() {
               data-cy="cast-my-vote-button"
               size="md"
               isLoading={isPending}
-              isDisabled={period !== '2' || !councilToCastVote.length}
+              isDisabled={
+                period !== '2' || !councilToCastVote.length || formattedVotePower === '0.00'
+              }
               onClick={async () => {
                 if (!network?.id) {
                   connect();

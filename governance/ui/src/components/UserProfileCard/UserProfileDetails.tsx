@@ -308,6 +308,7 @@ export const UserProfileDetails = ({
             {!isNominated && isOwn && (
               <Button
                 variant="solid"
+                data-cy="nominate-self-button-in-user-profile"
                 onClick={() => {
                   navigate({
                     pathname: `/councils/${activeCouncil}`,

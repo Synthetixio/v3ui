@@ -175,7 +175,6 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                 onClick={() => setSortConfig([!sortConfig[0], 'name'])}
               >
                 Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
-                {sortConfig[1] === 'start' && <SortArrows up={sortConfig[0]} />}
               </Th>
               {councilPeriod === '2' && (
                 <Th
