@@ -28,9 +28,6 @@ jobs:
           ref: '${{ github.sha }}'
           ssh-key: '${{ secrets.V3UI_SSH_KEY }}'
 
-      - run: corepack enable && corepack install
-        working-directory: v3ui
-
       - run: yarn workspaces focus @snx-v3/liquidity
         working-directory: v3ui
 
