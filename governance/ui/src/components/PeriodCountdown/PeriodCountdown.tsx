@@ -21,7 +21,7 @@ export default function PeriodCountdown({ council }: { council: CouncilSlugs }) 
         maxW="fit-content"
         h="fit-content"
       >
-        <Text fontSize="12px" lineHeight="short" data-cy="period-countdown">
+        <Text fontSize="12px" lineHeight="short" data-cy="period-countdown" pt="1">
           CLOSED
         </Text>
       </Box>
