@@ -35,7 +35,7 @@ import { sortUsers } from '../../utils/sort-users';
 
 export default function CouncilNominees({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [search, setSearch] = useState('');
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'name']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([true, 'votingPower']);
 
   const { network } = useNetwork();
   const { data: epochId } = useGetEpochIndex(activeCouncil);

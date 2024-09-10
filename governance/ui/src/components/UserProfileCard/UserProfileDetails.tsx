@@ -269,7 +269,7 @@ export const UserProfileDetails = ({
       <Flex mt="auto" gap="2" flexDir="column">
         {isOwn && (
           <>
-            {councilPeriod === '2' ? (
+            {councilPeriod === '2' && isNominated ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button
                   mt="4"
