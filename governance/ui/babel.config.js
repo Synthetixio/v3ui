@@ -57,7 +57,7 @@ module.exports = {
             cwd: path.resolve('../..'),
             all: true,
             excludeNodeModules: false,
-            include: ['liquidity', 'theme', 'governance'],
+            include: ['governance'],
             exclude: ['**/*.test.*', '**/*.cy.*', '**/*.e2e.*'],
           },
           'istanbul',

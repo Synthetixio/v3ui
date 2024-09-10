@@ -27,11 +27,10 @@ const babelRule = {
   include: [
     // Need to list all the folders in v3 and outside (if used)
     /contracts/,
-    /theme/,
 
-    /liquidity\/lib/,
-    /liquidity\/components/,
     /governance\/cypress/,
+    /governance\/components/,
+    /governance\/lib/,
     /governance\/ui/,
 
     // fixes for borked 3rd party bundles
@@ -143,13 +142,6 @@ module.exports = {
         require.resolve('@tanstack/react-query')
       ),
       new webpack.NormalModuleReplacementPlugin(/^bn.js$/, require.resolve('bn.js')),
-    ])
-
-    .concat([
-      new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-theme$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
-      ),
     ])
 
     .concat([
