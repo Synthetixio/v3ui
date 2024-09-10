@@ -1,20 +1,22 @@
 import { CheckIcon } from '@chakra-ui/icons';
 import {
-  ModalContent,
-  ModalBody,
-  Modal,
-  Text,
-  Flex,
-  ModalOverlay,
-  CircularProgress,
-  Link,
   Button,
+  CircularProgress,
   Divider,
+  Flex,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Amount } from '@snx-v3/Amount';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
+import { wei } from '@synthetixio/wei';
+import { useEffect, useState } from 'react';
 
 interface RewardsModalInterface {
   collateralSymbol?: string;
@@ -99,7 +101,11 @@ export const RewardsModal = ({
               ml={2}
             >
               <Text fontSize="14px" fontWeight={700} lineHeight="20px" color="white">
-                Claiming {amount ? amount : ''} {collateralSymbol ? collateralSymbol : ''}
+                <Amount
+                  value={wei(amount)}
+                  prefix="Claiming "
+                  suffix={collateralSymbol ? ` ${collateralSymbol}` : undefined}
+                />
               </Text>
               <Text fontSize="12px" lineHeight="16px" color="gray.500">
                 Claim your rewards
