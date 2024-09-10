@@ -304,59 +304,83 @@ export const UserProfileDetails = ({
           </>
         )}
         {councilPeriod === '2' && (
-          <Button
-            variant={!isAlreadyVoted && !isSelected ? 'solid' : 'outline'}
-            colorScheme={!isAlreadyVoted && !isSelected ? 'cyan' : 'gray'}
-            w="100%"
-            mt={!isOwn ? 4 : 0}
-            data-cy="select-user-to-vote-button"
-            onClick={async () => {
-              const parsedNetwork = network?.id ? network.id.toString() : '2192';
-              if (isMotherchain(parsedNetwork)) {
-                setShowVoteBanner(true);
-              } else {
-                if (isAlreadyVoted) {
-                  dispatch({
-                    type: activeCouncil.toUpperCase(),
-                    payload: {
-                      action: 'remove',
-                      network: parsedNetwork,
-                      epochId: epochId?.toString(),
-                      wallet: activeWallet?.address,
-                    },
+          <>
+            {!isNominated && isOwn && (
+              <Button
+                variant="solid"
+                onClick={() => {
+                  navigate({
+                    pathname: `/councils/${activeCouncil}`,
+                    search: `view=${walletAddress}&nominate=true`,
                   });
-                } else if (isSelected) {
-                  dispatch({
-                    type: activeCouncil.toUpperCase(),
-                    payload: {
-                      action: undefined,
-                      network: parsedNetwork,
-                      epochId: epochId?.toString(),
-                      wallet: activeWallet?.address,
-                    },
-                  });
-                } else {
-                  dispatch({
-                    type: activeCouncil.toUpperCase(),
-                    payload: {
-                      action: userData?.address.toLowerCase(),
-                      network: parsedNetwork,
-                      epochId: epochId?.toString(),
-                      wallet: activeWallet?.address,
-                    },
-                  });
-                }
-                setVoteCard(true);
+                }}
+              >
+                Nominate Self
+              </Button>
+            )}
+            <Button
+              variant={
+                !isNominated && isOwn
+                  ? 'outline'
+                  : !isAlreadyVoted && !isSelected
+                    ? 'solid'
+                    : 'outline'
               }
-            }}
-          >
-            <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
-              {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-              {userData?.ens || userData?.username
-                ? userData.username
-                : prettyString(userData!.address)}
-            </Text>
-          </Button>
+              colorScheme={
+                !isNominated && isOwn ? 'gray' : !isAlreadyVoted && !isSelected ? 'cyan' : 'gray'
+              }
+              isDisabled={!isNominated && isOwn}
+              w="100%"
+              mt={!isOwn ? 4 : 0}
+              data-cy="select-user-to-vote-button"
+              onClick={async () => {
+                const parsedNetwork = network?.id ? network.id.toString() : '2192';
+                if (isMotherchain(parsedNetwork)) {
+                  setShowVoteBanner(true);
+                } else {
+                  if (isAlreadyVoted) {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: 'remove',
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  } else if (isSelected) {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: undefined,
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  } else {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: userData?.address.toLowerCase(),
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  }
+                  setVoteCard(true);
+                }
+              }}
+            >
+              <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
+                {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
+                {userData?.ens || userData?.username
+                  ? userData.username
+                  : prettyString(userData!.address)}
+              </Text>
+            </Button>
+          </>
         )}
 
         {!isOwn && councilPeriod !== '2' && (
