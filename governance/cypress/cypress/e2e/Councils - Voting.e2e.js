@@ -19,6 +19,7 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="sort-arrow-down"]').should('exist');
   cy.get('[data-cy="sort-arrow-down"]').click();
   cy.get('[data-cy="sort-arrow-up"]').should('exist');
+  cy.get('[data-cy="sort-arrow-up"]').click();
   cy.get('[data-cy="own-user-list-item"]').click();
   cy.get('[data-cy="nominate-self-button-user-profile-details-voting-period"]').click();
   cy.get('[data-cy="nominate-self-button-in-user-profile"]').click();

@@ -42,9 +42,12 @@ export default function MyVotes() {
   const { data: epochId } = useGetEpochIndex('spartan');
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
-  const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
-  const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
-  const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
+  const { data: votingPowerSpartan, isLoading: spartanVotingPowerIsLoading } =
+    useGetUserVotingPower('spartan');
+  const { data: votingPowerAmbassador, isLoading: ambassadorVotingPowerIsLoading } =
+    useGetUserVotingPower('ambassador');
+  const { data: votingPowerTreassury, isLoading: treasuryVotingPowerIsLoading } =
+    useGetUserVotingPower('treasury');
   const { data: spartanBallot } = useGetUserBallot('spartan');
   const { data: ambassadorBallot } = useGetUserBallot('ambassador');
   const { data: treasuryBallot } = useGetUserBallot('treasury');
@@ -234,7 +237,11 @@ export default function MyVotes() {
               size="md"
               isLoading={isPending}
               isDisabled={
-                period !== '2' || !councilToCastVote.length || formattedVotePower === '0.00'
+                period !== '2' ||
+                !councilToCastVote.length ||
+                (spartanVotingPowerIsLoading &&
+                  ambassadorVotingPowerIsLoading &&
+                  treasuryVotingPowerIsLoading)
               }
               onClick={async () => {
                 if (!network?.id) {

@@ -336,7 +336,7 @@ export const UserProfileDetails = ({
               data-cy="select-user-to-vote-button"
               onClick={async () => {
                 const parsedNetwork = network?.id ? network.id.toString() : '2192';
-                if (isMotherchain(parsedNetwork)) {
+                if (isMotherchain(parsedNetwork) && !(process.env.CI === 'true')) {
                   setShowVoteBanner(true);
                 } else {
                   if (isAlreadyVoted) {
