@@ -24,7 +24,11 @@ export default function useNominateSelf(council: CouncilSlugs, address?: string)
           return true;
         } catch (err: any) {
           toast({
-            description: err?.message ? err.message : 'Something went wrong.',
+            description: err?.data?.message
+              ? err.data?.message
+              : err?.message
+                ? err?.message
+                : 'Something went wrong.',
             status: 'error',
             isClosable: true,
           });

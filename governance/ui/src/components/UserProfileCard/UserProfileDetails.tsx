@@ -250,6 +250,7 @@ export const UserProfileDetails = ({
             fontSize="14px"
             lineHeight="20px"
             overflowY="scroll"
+            whiteSpace="pre-wrap"
             ref={elementRef}
           >
             {userData?.delegationPitch}
@@ -311,7 +312,7 @@ export const UserProfileDetails = ({
             data-cy="select-user-to-vote-button"
             onClick={async () => {
               const parsedNetwork = network?.id ? network.id.toString() : '2192';
-              if (isMotherchain(network?.id)) {
+              if (isMotherchain(parsedNetwork)) {
                 setShowVoteBanner(true);
               } else {
                 if (isAlreadyVoted) {
