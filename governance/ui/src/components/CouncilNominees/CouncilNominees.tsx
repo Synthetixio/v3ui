@@ -149,7 +149,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
         <Table style={{ borderCollapse: 'separate', borderSpacing: '0 1px' }}>
           <Thead>
             <Tr>
-              {councilPeriod === '2' && (
+              {(councilPeriod === '2' || councilPeriod === '3') && (
                 <Th
                   cursor="pointer"
                   w="50px"
@@ -176,7 +176,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
               >
                 Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
               </Th>
-              {councilPeriod === '2' && (
+              {(councilPeriod === '2' || councilPeriod === '3') && (
                 <Th
                   cursor="pointer"
                   w="150px"
@@ -191,7 +191,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   Votes {sortConfig[1] === 'votes' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
-              {councilPeriod === '2' && (
+              {(councilPeriod === '2' || councilPeriod === '3') && (
                 <Th
                   cursor="pointer"
                   userSelect="none"
@@ -205,7 +205,7 @@ export default function CouncilNominees({ activeCouncil }: { activeCouncil: Coun
                   {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
-              {councilPeriod === '2' && (
+              {(councilPeriod === '2' || councilPeriod === '3') && (
                 <Th cursor="pointer" userSelect="none" textTransform="capitalize" pl="6"></Th>
               )}
             </Tr>
