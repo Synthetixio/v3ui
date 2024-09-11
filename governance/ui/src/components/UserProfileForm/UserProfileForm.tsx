@@ -361,7 +361,7 @@ export function UserProfileForm() {
                 flexDirection="column"
                 bg="navy.700"
                 minW="100%"
-                borderColor="cyan.500"
+                borderColor="gray.900"
                 borderWidth="1px"
                 borderStyle="solid"
                 rounded="base"
@@ -379,8 +379,8 @@ export function UserProfileForm() {
                   colorScheme="whiteAlpha"
                   color="white"
                   position="absolute"
-                  top="10px"
-                  right="10px"
+                  top="16px"
+                  right="16px"
                 />
                 <Heading fontSize="md">You have unsaved changes</Heading>
                 <Text fontSize="sm" color="gray.500" mb="auto">
