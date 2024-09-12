@@ -3,12 +3,17 @@ import { CouncilSlugs } from '../utils/councils';
 import { motherShipProvider } from '../utils/providers';
 import { getCouncilContract } from '../utils/contracts';
 import { useNetwork } from './useWallet';
+import { useGetEpochSchedule } from './useGetEpochSchedule';
 
 export function useGetCurrentPeriod(council?: CouncilSlugs) {
   const { network } = useNetwork();
+  const { data: schedule } = useGetEpochSchedule(council);
   return useQuery({
-    queryKey: ['period', council, network?.id],
+    queryKey: ['period', council, network?.id, schedule?.endDate],
     queryFn: async () => {
+      if (schedule?.endDate && schedule.endDate < 0) {
+        return '3';
+      }
       return (
         await getCouncilContract(council!)
           .connect(motherShipProvider(network?.id || 2192))

@@ -175,7 +175,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                         address={userInformation[index].userInformation?.address}
                         size={9}
                         newVoteCast={newVoteCast}
-                        isCouncilTabs
+                        isCouncilTabs={false}
                       />
                       {userInformation[index]?.userInformation?.address
                         ? newVoteCast?.toLowerCase() !==
@@ -186,7 +186,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                                 address={newVoteCast}
                                 size={9}
                                 newVoteCast={newVoteCast}
-                                isCouncilTabs
+                                isCouncilTabs={true}
                               />
                             </>
                           )
@@ -200,23 +200,25 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                             address={userInformation[index].userInformation?.address}
                             size={9}
                             newVoteCast={newVoteCast}
-                            isCouncilTabs
+                            isCouncilTabs={false}
                           />
                         )}
 
                         {newVoteCast && userInformation[index].userInformation?.address && (
                           <ArrowForwardIcon mx="2" />
                         )}
-                        <Box
-                          data-cy="council-tab-vote-circle"
-                          borderRadius="50%"
-                          w="9"
-                          h="9"
-                          borderWidth="1px"
-                          bg="navy.700"
-                          borderStyle="dashed"
-                          borderColor="gray.500"
-                        />
+                        {!userInformation[index].userInformation?.address && (
+                          <Box
+                            data-cy="council-tab-vote-circle"
+                            borderRadius="50%"
+                            w="9"
+                            h="9"
+                            borderWidth="1px"
+                            bg="navy.700"
+                            borderStyle="dashed"
+                            borderColor="gray.500"
+                          />
+                        )}
                       </>
                     )
                   )}
