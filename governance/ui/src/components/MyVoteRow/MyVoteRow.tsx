@@ -40,7 +40,6 @@ export default function MyVoteRow({
     utils.isAddress(voteAddressState) &&
     votedCandidate.toLowerCase() === voteAddressState.toLowerCase();
   const isDisabled = period !== '2';
-  const shouldHideName = utils.isAddress(votedCandidate) ? !(votedCandidate && hasVoted) : false;
 
   const handleAddVote = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -94,16 +93,24 @@ export default function MyVoteRow({
       borderColor="gray.900"
       opacity={isDisabled ? '0.2' : '1'}
     >
-      <Flex ml="4" alignItems="center" mr="auto">
-        <CouncilUser
-          councilSlug={councilSlug}
-          address={votedCandidate || voteAddressState}
-          hideName={shouldHideName}
-        />
+      <Flex
+        ml="4"
+        alignItems="center"
+        mr="auto"
+        overflowX="scroll"
+        sx={{
+          '::-webkit-scrollbar': {
+            display: 'none',
+          },
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+        }}
+      >
+        <CouncilUser councilSlug={councilSlug} address={votedCandidate || voteAddressState} />
         {!hasVoted && votedCandidate && voteAddressState && (
           <>
             <ArrowForwardIcon mx="2" />
-            <CouncilUser councilSlug={councilSlug} address={voteAddressState} hideName />
+            <CouncilUser councilSlug={councilSlug} address={voteAddressState} />
           </>
         )}
       </Flex>

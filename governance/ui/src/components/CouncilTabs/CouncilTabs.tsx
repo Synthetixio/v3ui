@@ -207,7 +207,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                         {newVoteCast && userInformation[index].userInformation?.address && (
                           <ArrowForwardIcon mx="2" />
                         )}
-                        {!userInformation[index].userInformation?.address && (
+                        {(newVoteCast === 'remove' || !newVoteCast) && (
                           <Box
                             data-cy="council-tab-vote-circle"
                             borderRadius="50%"
