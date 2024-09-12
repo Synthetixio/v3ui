@@ -338,7 +338,7 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {councilsToAddress[council.slug] ? (
+                  {utils.isAddress(councilsToAddress[council.slug]) ? (
                     <ProfilePicture address={councilsToAddress[council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />

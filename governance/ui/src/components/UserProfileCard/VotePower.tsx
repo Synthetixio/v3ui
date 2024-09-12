@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNetwork } from '../../queries';
 import { BigNumber } from 'ethers';
+import { formatNumber } from '@snx-v3/formatters';
 
 export default function VotePower({
   activeCouncil,
@@ -57,7 +58,7 @@ export default function VotePower({
                   color="white"
                   fontWeight={700}
                 >
-                  {network.power?.toString() || '0'}
+                  {formatNumber(network.power?.toString() || '0') || '0'}
                 </Text>
               </Flex>
             </Flex>
