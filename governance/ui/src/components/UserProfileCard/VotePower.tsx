@@ -57,7 +57,7 @@ export default function VotePower({
                   color="white"
                   fontWeight={700}
                 >
-                  {network.power.toString()}
+                  {network.power?.toString() || '0'}
                 </Text>
               </Flex>
             </Flex>
