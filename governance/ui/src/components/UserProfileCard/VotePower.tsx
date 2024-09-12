@@ -3,18 +3,19 @@ import { Button, Flex, Heading, IconButton, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNetwork } from '../../queries';
+import { BigNumber } from 'ethers';
 
 export default function VotePower({
   activeCouncil,
   networks,
 }: {
-  networks: { icon: ReactNode; chainId: number }[];
+  networks: { icon: ReactNode; chainId: number; power: BigNumber }[];
   activeCouncil: string;
 }) {
   const navigate = useNavigate();
   const { setNetwork } = useNetwork();
   return (
-    <Flex flexDir="column" position="relative" p="6" h="100%">
+    <Flex flexDir="column" position="relative" py="6" h="100%">
       <IconButton
         onClick={() => navigate(`/councils/${activeCouncil}`)}
         size="sm"
@@ -36,10 +37,33 @@ export default function VotePower({
       </Text>
       <Flex justifyContent="space-evenly" w="100%">
         {networks.map((network) => (
-          <Flex key={`network-selection-${network.chainId}`} flexDir="column" alignItems="center">
-            {network.icon}
+          <Flex
+            key={`network-selection-${network.chainId}`}
+            flexDir="column"
+            alignItems="center"
+            p="2"
+          >
+            <Flex border="1px solid" color="gray.900" rounded="base" p="2" alignItems="center">
+              {network.icon}
+              <Flex flexDir="column" gap="2" ml="2">
+                <Text color="gray" fontSize="xs">
+                  Total Voting Power
+                </Text>
+                <Text
+                  maxW="100px"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  color="white"
+                  fontWeight={700}
+                >
+                  {network.power.toString()}
+                </Text>
+              </Flex>
+            </Flex>
             <Button
-              mt="12"
+              mt="4"
+              w="100%"
               variant="outline"
               colorScheme="gray"
               onClick={() => setNetwork(network.chainId)}

@@ -413,11 +413,7 @@ function votePowerToNetwork(
 ) {
   if (!power) return [];
   const networks = [];
-  if (power.L1?.power.gt(0)) {
-    networks.push({ icon: EthereumIcon, chainId: 1 });
-  }
-  if (power.Optimism?.power.gt(0)) {
-    networks.push({ icon: OPIcon, chainId: 10 });
-  }
+  networks.push({ icon: EthereumIcon, chainId: 1, power: power.L1?.power });
+  networks.push({ icon: OPIcon, chainId: 10, power: power.Optimism?.power });
   return networks;
 }
