@@ -30,7 +30,8 @@ export default function UserTableView({
   const { data: ballot } = useGetUserBallot(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const isSelected = searchParams.get('view') === user.address;
-  const councilIsInAdminOrVoting = councilPeriod === '2' || councilPeriod === '0';
+  const councilIsInAdminOrVotinOrEval =
+    councilPeriod === '2' || councilPeriod === '0' || councilPeriod === '3';
   const totalVotingPowerPercentage =
     totalVotingPower && user.voteResult
       ? formatNumber(user.voteResult?.votePower.mul(100).div(totalVotingPower).toString())
@@ -43,7 +44,7 @@ export default function UserTableView({
       onClick={() => navigate(`/councils/${activeCouncil}?view=${user.address}`)}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
     >
-      {councilIsInAdminOrVoting && (
+      {councilIsInAdminOrVotinOrEval && (
         <Td
           borderTop="1px solid"
           borderLeft={renderCorrectBorder('place', 'left', councilPeriod, isSelected)}
@@ -96,7 +97,7 @@ export default function UserTableView({
           </Text>
         </Flex>
       </Td>
-      {councilIsInAdminOrVoting && (
+      {councilIsInAdminOrVotinOrEval && (
         <Td
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('votes', 'bottom', councilPeriod, isSelected)}
@@ -108,7 +109,7 @@ export default function UserTableView({
           {user.voteResult?.votesReceived || 0}
         </Td>
       )}
-      {councilIsInAdminOrVoting && (
+      {councilIsInAdminOrVotinOrEval && (
         <Td
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('power', 'bottom', councilPeriod, isSelected)}

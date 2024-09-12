@@ -12,17 +12,6 @@ module.exports = {
           },
         ],
       ],
-      plugins: [
-        [
-          require.resolve('babel-plugin-module-resolver'),
-          {
-            root: ['.'],
-            alias: {
-              '@synthetixio/v3-theme': './theme/src',
-            },
-          },
-        ],
-      ],
     },
   },
 };

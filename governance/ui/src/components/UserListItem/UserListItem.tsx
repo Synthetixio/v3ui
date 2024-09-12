@@ -88,19 +88,13 @@ export default function UserListItem({
           colorScheme="gray"
           data-cy="nominate-self-button-user-profile-details-voting-period"
           _hover={{}}
+          _active={{}}
           onClick={(e) => {
             e.stopPropagation();
-            if (nominationInformation?.isNominated) {
-              navigate({
-                pathname: `/councils/${activeCouncil}`,
-                search: `view=${address}`,
-              });
-            } else {
-              navigate({
-                pathname: `/councils/${activeCouncil}`,
-                search: `view=${address}&nominate=true`,
-              });
-            }
+            navigate({
+              pathname: `/councils/${activeCouncil}`,
+              search: `view=${address}`,
+            });
           }}
           color="white"
         >
