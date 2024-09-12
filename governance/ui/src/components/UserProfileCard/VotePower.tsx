@@ -9,7 +9,7 @@ export default function VotePower({
   activeCouncil,
   networks,
 }: {
-  networks: { icon: ReactNode; chainId: number; power: BigNumber }[];
+  networks: { icon: ReactNode; chainId: number; power?: BigNumber }[];
   activeCouncil: string;
 }) {
   const navigate = useNavigate();
