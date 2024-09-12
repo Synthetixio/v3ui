@@ -13,9 +13,10 @@ it('Councils - Administration', () => {
   cy.get('[data-cy="period-countdown"]').should('exist');
   cy.get('[data-cy="period-countdown"]').contains('Voting starts');
   cy.get('[data-cy="name-table-header"]').click();
+  cy.get('[data-cy="sort-arrow-down"]').should('exist');
+  cy.get('[data-cy="sort-arrow-down"]').click();
   cy.get('[data-cy="sort-arrow-up"]').should('exist');
   cy.get('[data-cy="sort-arrow-up"]').click();
-  cy.get('[data-cy="sort-arrow-down"]').should('exist');
   cy.get('[data-cy="own-user-list-item"]').should(
     'have.css',
     'border-top',

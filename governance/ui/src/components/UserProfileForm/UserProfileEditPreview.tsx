@@ -143,6 +143,7 @@ export default function UserProfileEditPreview({
             fontSize="14px"
             data-cy="governance-pitch-preview"
             lineHeight="20px"
+            whiteSpace="pre-wrap"
             overflowY="scroll"
             h="330px"
             mb="auto"

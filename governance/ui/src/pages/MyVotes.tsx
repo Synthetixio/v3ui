@@ -42,9 +42,12 @@ export default function MyVotes() {
   const { data: epochId } = useGetEpochIndex('spartan');
   const { network } = useNetwork();
   const { activeWallet, connect } = useWallet();
-  const { data: votingPowerSpartan } = useGetUserVotingPower('spartan');
-  const { data: votingPowerAmbassador } = useGetUserVotingPower('ambassador');
-  const { data: votingPowerTreassury } = useGetUserVotingPower('treasury');
+  const { data: votingPowerSpartan, isLoading: spartanVotingPowerIsLoading } =
+    useGetUserVotingPower('spartan');
+  const { data: votingPowerAmbassador, isLoading: ambassadorVotingPowerIsLoading } =
+    useGetUserVotingPower('ambassador');
+  const { data: votingPowerTreassury, isLoading: treasuryVotingPowerIsLoading } =
+    useGetUserVotingPower('treasury');
   const { data: spartanBallot } = useGetUserBallot('spartan');
   const { data: ambassadorBallot } = useGetUserBallot('ambassador');
   const { data: treasuryBallot } = useGetUserBallot('treasury');
@@ -79,7 +82,7 @@ export default function MyVotes() {
     },
     {} as Record<CouncilSlugs, string>
   );
-  const { mutateAsync, isPending } = useCastVotes(councilToCastVote, councilsToAddress);
+  const { mutateAsync, isPending, isSuccess } = useCastVotes(councilToCastVote, councilsToAddress);
   const navigate = useNavigate();
   const formattedVotePower = formatNumber(
     votingPowerSpartan?.power && votingPowerAmbassador?.power && votingPowerTreassury?.power
@@ -198,59 +201,100 @@ export default function MyVotes() {
             flexDir="column"
             h="fit-content"
           >
-            <Heading fontSize="large">
-              {period === '2' ? 'Cast Your Votes' : 'Voting Power'}
-            </Heading>
-            <Text fontSize="sm" color="gray.500" display="inline">
-              Your voting power is determined by your staked SNX on Synthetix V2x and represents the
-              influence you hold in the governance process.
-            </Text>
-            <Flex
-              flexDir="column"
-              bg="navy.900"
-              p="2"
-              rounded="base"
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor="gray.900"
-              mb="12"
-            >
-              <Text fontSize="sm" color="gray.500">
-                Total Voting Power
-              </Text>
-              <Text fontSize="sm" color="white" fontWeight="bold" data-cy="my-votes-voting-power">
-                {formattedVotePower === '0.00'
-                  ? formatNumber(
-                      votingPowerSpartan?.power
-                        .add(votingPowerAmbassador?.power || 0)
-                        .add(votingPowerTreassury?.power || 0)
-                        .toString() || 0
-                    )
-                  : formattedVotePower}
-              </Text>
-            </Flex>
-            <Button
-              data-cy="cast-my-vote-button"
-              size="md"
-              isLoading={isPending}
-              isDisabled={period !== '2' || !councilToCastVote.length}
-              onClick={async () => {
-                if (!network?.id) {
-                  connect();
-                } else {
-                  if (councilToCastVote.length !== 3) {
-                    setShowConfirmation(true);
-                  } else {
-                    await mutateAsync();
+            {isSuccess ? (
+              <>
+                <Heading fontSize="large">Your votes has been casted!</Heading>
+                <Text fontSize="sm" color="gray.500" display="inline">
+                  Your voting power is determined by your staked SNX on Synthetix V2x and represents
+                  the influence you hold in the governance process.
+                </Text>
+                <Alert
+                  colorScheme="blue"
+                  opacity={period !== '2' ? '0.2' : '1'}
+                  rounded="base"
+                  mt="6"
+                >
+                  <WarningIcon color="cyan" mr="4" />
+                  It can take up to 45 minutes for Snaxchain to receive your vote. Refresh the page
+                  to see when your vote has been received
+                </Alert>
+                <Button
+                  variant="outline"
+                  colorScheme="gray"
+                  onClick={() => navigate('/councils/spartan')}
+                >
+                  Back to Homepage
+                </Button>
+              </>
+            ) : (
+              <>
+                <Heading fontSize="large">
+                  {period === '2' ? 'Cast Your Votes' : 'Voting Power'}
+                </Heading>
+                <Text fontSize="sm" color="gray.500" display="inline">
+                  Your voting power is determined by your staked SNX on Synthetix V2x and represents
+                  the influence you hold in the governance process.
+                </Text>
+                <Flex
+                  flexDir="column"
+                  bg="navy.900"
+                  p="2"
+                  rounded="base"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="gray.900"
+                  mb="12"
+                >
+                  <Text fontSize="sm" color="gray.500">
+                    Total Voting Power
+                  </Text>
+                  <Text
+                    fontSize="sm"
+                    color="white"
+                    fontWeight="bold"
+                    data-cy="my-votes-voting-power"
+                  >
+                    {formattedVotePower === '0.00'
+                      ? formatNumber(
+                          votingPowerSpartan?.power
+                            .add(votingPowerAmbassador?.power || 0)
+                            .add(votingPowerTreassury?.power || 0)
+                            .toString() || 0
+                        )
+                      : formattedVotePower}
+                  </Text>
+                </Flex>
+                <Button
+                  data-cy="cast-my-vote-button"
+                  size="md"
+                  isLoading={isPending}
+                  isDisabled={
+                    period !== '2' ||
+                    !councilToCastVote.length ||
+                    (spartanVotingPowerIsLoading &&
+                      ambassadorVotingPowerIsLoading &&
+                      treasuryVotingPowerIsLoading)
                   }
-                }
-              }}
-            >
-              {!network?.id ? 'Connect Wallet' : 'Cast Votes'}
-            </Button>
+                  onClick={async () => {
+                    if (!network?.id) {
+                      connect();
+                    } else {
+                      if (councilToCastVote.length !== 3) {
+                        setShowConfirmation(true);
+                      } else {
+                        await mutateAsync();
+                      }
+                    }
+                  }}
+                >
+                  {!network?.id ? 'Connect Wallet' : 'Cast Votes'}
+                </Button>
+              </>
+            )}
           </Flex>
         </Flex>
       </Flex>
+
       <Modal
         isOpen={showConfirmation}
         onClose={() => {
@@ -294,7 +338,7 @@ export default function MyVotes() {
                     {council.title}
                   </Text>
 
-                  {councilsToAddress[council.slug] ? (
+                  {utils.isAddress(councilsToAddress[council.slug]) ? (
                     <ProfilePicture address={councilsToAddress[council.slug]} size={9} />
                   ) : (
                     <Box w={9} h={9} border="1px dashed" borderColor="gray.900" rounded="50%" />

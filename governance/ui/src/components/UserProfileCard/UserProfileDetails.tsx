@@ -7,12 +7,21 @@ import { CouncilSlugs } from '../../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { useVoteContext } from '../../context/VoteContext';
 import { ProfilePicture } from './ProfilePicture';
-import { EditIcon, ShareIcon } from '../Icons';
-import { useGetEpochIndex, useGetUserBallot, useNetwork, useWallet } from '../../queries';
+import { EditIcon, EthereumIcon, OPIcon, ShareIcon } from '../Icons';
+import {
+  useGetEpochIndex,
+  useGetUserBallot,
+  useGetUserVotingPowerForAllChains,
+  useNetwork,
+  useWallet,
+} from '../../queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { voteCardState } from '../../state/vote-card';
 import { getVoteSelectionState } from '../../utils/localstorage';
+import { isMotherchain } from '../../utils/contracts';
+import VotePower from './VotePower';
+import { BigNumber } from 'ethers';
 
 interface UserProfileDetailsProps {
   userData?: GetUserDetails;
@@ -31,6 +40,7 @@ export const UserProfileDetails = ({
   isNominated,
   councilPeriod,
 }: UserProfileDetailsProps) => {
+  const [showVotePower, setShowVoteBanner] = useState(false);
   const [_, setVoteCard] = useRecoilState(voteCardState);
   const { activeWallet } = useWallet();
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
@@ -38,6 +48,7 @@ export const UserProfileDetails = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
   const { network } = useNetwork();
+  const { data: votePowers } = useGetUserVotingPowerForAllChains(activeCouncil);
   const { data: epochId } = useGetEpochIndex(activeCouncil);
   const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
@@ -98,6 +109,10 @@ export const UserProfileDetails = ({
       }
     };
   }, []);
+
+  if (showVotePower) {
+    return <VotePower activeCouncil={activeCouncil} networks={votePowerToNetwork(votePowers)} />;
+  }
 
   return (
     <>
@@ -235,6 +250,7 @@ export const UserProfileDetails = ({
             fontSize="14px"
             lineHeight="20px"
             overflowY="scroll"
+            whiteSpace="pre-wrap"
             ref={elementRef}
           >
             {userData?.delegationPitch}
@@ -254,7 +270,7 @@ export const UserProfileDetails = ({
       <Flex mt="auto" gap="2" flexDir="column">
         {isOwn && (
           <>
-            {councilPeriod === '2' ? (
+            {councilPeriod === '2' && isNominated ? (
               <Tooltip label="You cannot edit nor remove your nomination during the voting period">
                 <Button
                   mt="4"
@@ -288,55 +304,84 @@ export const UserProfileDetails = ({
           </>
         )}
         {councilPeriod === '2' && (
-          <Button
-            variant={!isAlreadyVoted && !isSelected ? 'solid' : 'outline'}
-            colorScheme={!isAlreadyVoted && !isSelected ? 'cyan' : 'gray'}
-            w="100%"
-            mt={!isOwn ? 4 : 0}
-            data-cy="select-user-to-vote-button"
-            onClick={async () => {
-              const parsedNetwork = network?.id ? network.id.toString() : '2192';
-              if (isAlreadyVoted) {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: 'remove',
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
-              } else if (isSelected) {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: undefined,
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
-              } else {
-                dispatch({
-                  type: activeCouncil.toUpperCase(),
-                  payload: {
-                    action: userData?.address.toLowerCase(),
-                    network: parsedNetwork,
-                    epochId: epochId?.toString(),
-                    wallet: activeWallet?.address,
-                  },
-                });
+          <>
+            {!isNominated && isOwn && (
+              <Button
+                variant="solid"
+                data-cy="nominate-self-button-in-user-profile"
+                onClick={() => {
+                  navigate({
+                    pathname: `/councils/${activeCouncil}`,
+                    search: `view=${walletAddress}&nominate=true`,
+                  });
+                }}
+              >
+                Nominate Self
+              </Button>
+            )}
+            <Button
+              variant={
+                !isNominated && isOwn
+                  ? 'outline'
+                  : !isAlreadyVoted && !isSelected
+                    ? 'solid'
+                    : 'outline'
               }
-              setVoteCard(true);
-            }}
-          >
-            <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
-              {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-              {userData?.ens || userData?.username
-                ? userData.username
-                : prettyString(userData!.address)}
-            </Text>
-          </Button>
+              colorScheme={
+                !isNominated && isOwn ? 'gray' : !isAlreadyVoted && !isSelected ? 'cyan' : 'gray'
+              }
+              isDisabled={!isNominated && isOwn}
+              w="100%"
+              mt={!isOwn ? 4 : 0}
+              data-cy="select-user-to-vote-button"
+              onClick={async () => {
+                const parsedNetwork = network?.id ? network.id.toString() : '2192';
+                if (isMotherchain(parsedNetwork) && !(process.env.CI === 'true')) {
+                  setShowVoteBanner(true);
+                } else {
+                  if (isAlreadyVoted) {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: 'remove',
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  } else if (isSelected) {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: undefined,
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  } else {
+                    dispatch({
+                      type: activeCouncil.toUpperCase(),
+                      payload: {
+                        action: userData?.address.toLowerCase(),
+                        network: parsedNetwork,
+                        epochId: epochId?.toString(),
+                        wallet: activeWallet?.address,
+                      },
+                    });
+                  }
+                  setVoteCard(true);
+                }
+              }}
+            >
+              <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
+                {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
+                {userData?.ens || userData?.username
+                  ? userData.username
+                  : prettyString(userData!.address)}
+              </Text>
+            </Button>
+          </>
         )}
 
         {!isOwn && councilPeriod !== '2' && (
@@ -352,3 +397,23 @@ export const UserProfileDetails = ({
     </>
   );
 };
+
+interface VotePowerToNetwork {
+  power: BigNumber;
+  isDeclared: boolean;
+}
+
+function votePowerToNetwork(
+  power?:
+    | {
+        L1: VotePowerToNetwork | undefined;
+        Optimism: VotePowerToNetwork | undefined;
+      }
+    | undefined
+) {
+  if (!power) return [];
+  const networks = [];
+  networks.push({ icon: EthereumIcon, chainId: 1, power: power.L1?.power });
+  networks.push({ icon: OPIcon, chainId: 10, power: power.Optimism?.power });
+  return networks;
+}
