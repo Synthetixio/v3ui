@@ -203,7 +203,7 @@ export default function MyVotes() {
           >
             {isSuccess ? (
               <>
-                <Heading fontSize="large"></Heading>
+                <Heading fontSize="large">Your votes has been casted!</Heading>
                 <Text fontSize="sm" color="gray.500" display="inline">
                   Your voting power is determined by your staked SNX on Synthetix V2x and represents
                   the influence you hold in the governance process.
