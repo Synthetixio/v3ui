@@ -34,7 +34,7 @@ export default function UserTableView({
     councilPeriod === '2' || councilPeriod === '0' || councilPeriod === '3';
   const totalVotingPowerPercentage =
     totalVotingPower && user.voteResult
-      ? formatNumber(user.voteResult?.votePower.mul(100).div(totalVotingPower).toString())
+      ? formatNumber(user.voteResult?.votePower.mul(10000).div(totalVotingPower).toNumber() / 100)
       : 'N/A';
 
   return (
@@ -122,7 +122,7 @@ export default function UserTableView({
           <Text color="gray.500" fontSize="x-small">
             {totalVotingPowerPercentage && user.voteResult
               ? activeCouncil === 'ambassador'
-                ? formatNumber(user.voteResult.votePower.toString())
+                ? formatNumber(utils.formatUnits(user.voteResult.votePower || '0', 'gwei'))
                 : formatNumber(utils.formatEther(user.voteResult.votePower || '0'))
               : '—'}
           </Text>
