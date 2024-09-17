@@ -25,7 +25,6 @@ const calculateTimeLeft = (timestamp: number): TimeLeft => {
 
 const useCountdown = (id: string, timestamp: number) => {
   const [countdowns, setCountdowns] = useState<{ [key: string]: TimeLeft }>({});
-  const [timers, setTimers] = useState<ReturnType<typeof setInterval>[]>([]);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -36,10 +35,10 @@ const useCountdown = (id: string, timestamp: number) => {
     };
 
     updateCountdown();
-    setTimers([...timers, setInterval(updateCountdown, 60000)]);
+    const timer = setInterval(updateCountdown, 60000);
 
-    return () => timers.forEach((timer) => clearInterval(timer));
-  }, [id, timestamp, timers]);
+    return () => clearInterval(timer);
+  }, [id, timestamp]);
   return countdowns[id] || { days: 0, hours: 0, minutes: 0 };
 };
 

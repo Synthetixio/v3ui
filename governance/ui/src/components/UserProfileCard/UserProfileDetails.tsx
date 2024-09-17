@@ -338,7 +338,10 @@ export const UserProfileDetails = ({
                     dispatch({
                       type: activeCouncil.toUpperCase(),
                       payload: {
-                        action: 'remove',
+                        action:
+                          voteAddressState === 'remove'
+                            ? ballot?.votedCandidates[0].toLowerCase()
+                            : 'remove',
                         network: parsedNetwork,
                         epochId: epochId?.toString(),
                         wallet: activeWallet?.address,
@@ -348,7 +351,9 @@ export const UserProfileDetails = ({
                     dispatch({
                       type: activeCouncil.toUpperCase(),
                       payload: {
-                        action: undefined,
+                        action: ballot?.votedCandidates[0].toLowerCase()
+                          ? ballot?.votedCandidates[0].toLowerCase()
+                          : undefined,
                         network: parsedNetwork,
                         epochId: epochId?.toString(),
                         wallet: activeWallet?.address,

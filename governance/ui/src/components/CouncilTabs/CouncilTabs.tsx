@@ -172,22 +172,22 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
                     <>
                       <ProfilePicture
-                        address={userInformation[index].userInformation?.address}
+                        address={
+                          userInformation[index]?.userInformation?.address
+                            ? userInformation[index]?.userInformation?.address
+                            : newVoteCast
+                        }
                         size={9}
-                        newVoteCast={newVoteCast}
-                        isCouncilTabs={false}
+                        isCouncilTabs={
+                          !utils.isAddress(userInformation[index]?.userInformation?.address || '')
+                        }
                       />
                       {userInformation[index]?.userInformation?.address
                         ? newVoteCast?.toLowerCase() !==
                             userInformation[index]?.userInformation?.address?.toLowerCase() && (
                             <>
                               <ArrowForwardIcon mx="2" />
-                              <ProfilePicture
-                                address={newVoteCast}
-                                size={9}
-                                newVoteCast={newVoteCast}
-                                isCouncilTabs={true}
-                              />
+                              <ProfilePicture address={newVoteCast} size={9} isCouncilTabs={true} />
                             </>
                           )
                         : null}
@@ -199,7 +199,6 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                           <ProfilePicture
                             address={userInformation[index].userInformation?.address}
                             size={9}
-                            newVoteCast={newVoteCast}
                             isCouncilTabs={false}
                           />
                         )}
@@ -207,7 +206,8 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                         {newVoteCast && userInformation[index].userInformation?.address && (
                           <ArrowForwardIcon mx="2" />
                         )}
-                        {(newVoteCast === 'remove' || !newVoteCast) && (
+                        {(newVoteCast === 'remove' ||
+                          (!newVoteCast && !userInformation[index].userInformation?.address)) && (
                           <Box
                             data-cy="council-tab-vote-circle"
                             borderRadius="50%"
