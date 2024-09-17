@@ -24,6 +24,7 @@ export default function UserListItem({
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const { activeWallet } = useWallet();
   const isOwn = activeWallet?.address.toLowerCase() === user?.address.toLowerCase();
+  const isNominationOrVoting = councilPeriod === '1' || councilPeriod === '2';
 
   return (
     <Flex
@@ -110,7 +111,10 @@ export default function UserListItem({
             _hover={{}}
             onClick={(e) => {
               e.stopPropagation();
-              if (nominationInformation?.isNominated && isNominatedFetched) {
+              if (
+                (nominationInformation?.isNominated && isNominatedFetched) ||
+                !isNominationOrVoting
+              ) {
                 navigate({ pathname: `/councils/${activeCouncil}`, search: `view=${address}` });
               } else {
                 navigate({
@@ -121,7 +125,11 @@ export default function UserListItem({
             }}
             color="white"
           >
-            {nominationInformation?.isNominated ? 'View' : 'Nominate Self'}
+            {isNominationOrVoting
+              ? nominationInformation?.isNominated
+                ? 'View'
+                : 'Nominate Self'
+              : 'View'}
           </Button>
         )
       )}
