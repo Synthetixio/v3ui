@@ -11,7 +11,6 @@ export function useGetCurrentPeriod(council?: CouncilSlugs) {
   return useQuery({
     queryKey: ['period', council, network?.id, schedule?.endDate],
     queryFn: async () => {
-      return '2';
       return (
         await getCouncilContract(council!)
           .connect(motherShipProvider(network?.id || 2192))
