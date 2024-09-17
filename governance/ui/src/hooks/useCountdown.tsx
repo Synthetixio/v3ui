@@ -25,6 +25,8 @@ const calculateTimeLeft = (timestamp: number): TimeLeft => {
 
 const useCountdown = (id: string, timestamp: number) => {
   const [countdowns, setCountdowns] = useState<{ [key: string]: TimeLeft }>({});
+  // eslint-disable-next-line
+  const [timers, setTimers] = useState<NodeJS.Timer[]>([]);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -34,12 +36,11 @@ const useCountdown = (id: string, timestamp: number) => {
       }));
     };
 
-    // Update immediately and then set an interval to update every minute
     updateCountdown();
-    const timer = setInterval(updateCountdown, 60000);
+    setTimers([...timers, setInterval(updateCountdown, 60000)]);
 
-    return () => clearInterval(timer);
-  }, [id, timestamp]);
+    return () => timers.forEach((timer) => clearInterval(timer));
+  }, [id, timestamp, timers]);
   return countdowns[id] || { days: 0, hours: 0, minutes: 0 };
 };
 
