@@ -18,6 +18,9 @@ export function renderCorrectBorder(
       if (period === '0') {
         return '';
       }
+      if (period === '3') {
+        return '';
+      }
       return isSelected ? '1px solid' : '';
     } else if (position === 'bottom') {
       return isSelected ? '1px solid' : '';
