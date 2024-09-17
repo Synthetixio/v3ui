@@ -351,7 +351,7 @@ export const UserProfileDetails = ({
                     dispatch({
                       type: activeCouncil.toUpperCase(),
                       payload: {
-                        action: ballot?.votedCandidates[0].toLowerCase()
+                        action: ballot?.votedCandidates[0]?.toLowerCase()
                           ? ballot?.votedCandidates[0].toLowerCase()
                           : undefined,
                         network: parsedNetwork,
