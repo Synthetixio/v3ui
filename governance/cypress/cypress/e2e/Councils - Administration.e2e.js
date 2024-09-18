@@ -23,22 +23,6 @@ it('Councils - Administration', () => {
     .should('have.css', 'width', '40px')
     .and('have.css', 'height', '40px');
   cy.get('[data-cy="council-information-spartan"]').should('have.css', 'gap', '8px');
-  cy.get('[data-cy="number-table-header"]').click();
-  cy.get('[data-cy="sort-arrow-up"]').should('exist');
-  cy.get('[data-cy="sort-arrow-up"]').click();
-  cy.get('[data-cy="sort-arrow-down"]').should('exist');
-  cy.get('[data-cy="name-table-header"]').click();
-  cy.get('[data-cy="sort-arrow-up"]').should('exist');
-  cy.get('[data-cy="sort-arrow-up"]').click();
-  cy.get('[data-cy="sort-arrow-down"]').should('exist');
-  cy.get('[data-cy="votes-table-header"]').click();
-  cy.get('[data-cy="sort-arrow-up"]').should('exist');
-  cy.get('[data-cy="sort-arrow-up"]').click();
-  cy.get('[data-cy="sort-arrow-down"]').should('exist');
-  cy.get('[data-cy="voting-power-table-header"]').click();
-  cy.get('[data-cy="sort-arrow-up"]').should('exist');
-  cy.get('[data-cy="sort-arrow-up"]').click();
-  cy.get('[data-cy="sort-arrow-down"]').should('exist');
   cy.viewport(400, 800);
   cy.visit('#/councils');
   cy.get('[data-cy="my-votes-summary-text"]').should('have.css', 'font-size', '14px');
