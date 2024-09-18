@@ -116,7 +116,9 @@ export default function MyVoteRow({
       </Flex>
 
       {hasVoted ? (
-        <Badge mr="2">Your Vote</Badge>
+        <Badge variant="outline" mr="2">
+          Your Vote
+        </Badge>
       ) : voteAddressState ? (
         <Badge color="gray" variant="outline" mr="2" data-cy="selected-badge-my-row">
           Selected

@@ -1,5 +1,6 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Button, Text, Tooltip, Box } from '@chakra-ui/react';
+import { Badge } from '../Badge';
 import { prettyString } from '@snx-v3/format';
 import { Socials } from '../Socials';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
@@ -147,8 +148,8 @@ export const UserProfileDetails = ({
           />
         )}
         <ProfilePicture address={userData?.address} />
-        <Flex flexDir="column" w="100%" ml="2">
-          <Flex justifyContent="space-between">
+        <Flex flexDir="column" ml="2">
+          <Flex justifyContent="flex-start">
             <Text
               fontSize="16px"
               fontWeight="700"
@@ -157,9 +158,47 @@ export const UserProfileDetails = ({
               textOverflow="ellipsis"
               whiteSpace="nowrap"
               overflow="hidden"
+              mr="2"
             >
               {userData?.username ? userData.username : prettyString(userData?.address || '')}
             </Text>
+            {isAlreadyVoted ? (
+              <Badge
+                color="cyan"
+                variant="outline"
+                lineHeight="14px"
+                h="fit-content"
+                w="fit-content"
+                alignSelf="center"
+                data-cy="your-vote-badge-table"
+              >
+                Your Vote
+              </Badge>
+            ) : isSelected ? (
+              <Badge
+                color="gray"
+                variant="outline"
+                lineHeight="14px"
+                h="fit-content"
+                w="fit-content"
+                alignSelf="center"
+                data-cy="selected-badge-table"
+              >
+                Selected
+              </Badge>
+            ) : isNominated ? (
+              <Badge
+                color="green"
+                variant="outline"
+                lineHeight="14px"
+                h="fit-content"
+                w="fit-content"
+                alignSelf="center"
+                data-cy="selected-badge-table"
+              >
+                Nominee
+              </Badge>
+            ) : null}
           </Flex>
           <Text
             fontSize="12px"

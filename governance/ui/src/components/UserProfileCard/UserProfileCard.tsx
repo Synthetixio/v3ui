@@ -28,7 +28,6 @@ export function UserProfileCard({
   );
 
   const isLoading = useDataLoading || councilPeriodLoading || isNominatedLoading;
-
   return (
     <Flex
       flexDir="column"
@@ -55,7 +54,9 @@ export function UserProfileCard({
           councilPeriod={councilPeriod}
           walletAddress={walletAddress}
           isOwn={isOwn}
-          isNominated={!!isNominated?.isNominated}
+          isNominated={
+            isNominated?.council.slug === activeCouncil ? !!isNominated?.isNominated : false
+          }
           userData={userData}
         />
       )}
