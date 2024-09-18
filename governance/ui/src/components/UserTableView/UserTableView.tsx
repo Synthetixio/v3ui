@@ -6,7 +6,7 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { CouncilSlugs } from '../../utils/councils';
 import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 import { prettyString } from '@snx-v3/format';
-import { useGetUserBallot } from '../../queries';
+import { useGetEpochIndex, useGetUserBallot } from '../../queries';
 import { BigNumber, utils } from 'ethers';
 import { formatNumber } from '@snx-v3/formatters';
 import { renderCorrectBorder } from '../../utils/table-border';
@@ -28,7 +28,8 @@ export default function UserTableView({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { data: ballot } = useGetUserBallot(activeCouncil);
+  const { data: epochIndex } = useGetEpochIndex(activeCouncil);
+  const { data: ballot } = useGetUserBallot(activeCouncil, (epochIndex?.toNumber() || 1) - 1);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const isSelected = searchParams.get('view') === user.address;
   const councilIsInAdminOrVotinOrEval =
@@ -129,7 +130,7 @@ export default function UserTableView({
           </Text>
         </Td>
       )}
-      {councilPeriod === '2' && (
+      {(councilPeriod === '2' || councilPeriod === '0') && (
         <Td
           borderTop="1px solid"
           borderBottom={renderCorrectBorder('badge', 'bottom', councilPeriod, isSelected)}

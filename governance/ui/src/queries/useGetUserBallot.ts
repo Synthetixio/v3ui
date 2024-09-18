@@ -5,7 +5,10 @@ import { getCouncilContract } from '../utils/contracts';
 import { useNetwork, useSigner } from './useWallet';
 import { motherShipProvider } from '../utils/providers';
 
-export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(council: T) {
+export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(
+  council: T,
+  epochIndex?: number
+) {
   const { network } = useNetwork();
   const signer = useSigner();
 
@@ -13,11 +16,11 @@ export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(counci
     queryFn: async () => {
       if (signer && network?.id) {
         const address = await signer.getAddress();
-        return await getBallot(council, address, network.id);
+        return await getBallot(council, address, network.id, epochIndex);
       }
     },
     enabled: !!signer,
-    queryKey: ['userBallot', council.toString(), network?.id],
+    queryKey: ['userBallot', council.toString(), network?.id, epochIndex],
     staleTime: 900000,
   });
 }
@@ -25,7 +28,8 @@ export function useGetUserBallot<T extends CouncilSlugs | CouncilSlugs[]>(counci
 async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
   council: T,
   address: string,
-  chainId: number
+  chainId: number,
+  epochIndex?: number
 ): Promise<
   T extends CouncilSlugs
     ? {
@@ -47,14 +51,14 @@ async function getBallot<T extends CouncilSlugs | CouncilSlugs[]>(
     ballot = (await Promise.all(
       council.map(async (c) => {
         const electionModule = getCouncilContract(c).connect(provider);
-        const electionId = await electionModule.getEpochIndex();
+        const electionId = epochIndex ?? (await electionModule.getEpochIndex());
         const temp = await electionModule.getBallot(address, chainId, electionId);
         return { ...temp, council: c };
       })
     )) as { votingPower: BigNumber; votedCandidates: string[]; amounts: BigNumber[] }[];
   } else {
     const electionModule = getCouncilContract(council).connect(provider);
-    const electionId = electionModule.getEpochIndex();
+    const electionId = epochIndex ?? (await electionModule.getEpochIndex());
     const temp = (await electionModule.getBallot(address, chainId, electionId)) as {
       votingPower: BigNumber;
       votedCandidates: string[];
