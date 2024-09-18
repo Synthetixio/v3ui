@@ -81,12 +81,6 @@ export const UserProfileDetails = ({
     };
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
-    return () => {
-      window.removeEventListener('resize', checkOverflow);
-    };
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
       if (elementRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
@@ -107,6 +101,7 @@ export const UserProfileDetails = ({
       if (refCurrent) {
         refCurrent.removeEventListener('scroll', handleScroll);
       }
+      window.removeEventListener('resize', checkOverflow);
     };
   }, []);
 
@@ -343,7 +338,10 @@ export const UserProfileDetails = ({
                     dispatch({
                       type: activeCouncil.toUpperCase(),
                       payload: {
-                        action: 'remove',
+                        action:
+                          voteAddressState === 'remove'
+                            ? ballot?.votedCandidates[0].toLowerCase()
+                            : 'remove',
                         network: parsedNetwork,
                         epochId: epochId?.toString(),
                         wallet: activeWallet?.address,
@@ -353,7 +351,9 @@ export const UserProfileDetails = ({
                     dispatch({
                       type: activeCouncil.toUpperCase(),
                       payload: {
-                        action: undefined,
+                        action: ballot?.votedCandidates[0]?.toLowerCase()
+                          ? ballot?.votedCandidates[0].toLowerCase()
+                          : undefined,
                         network: parsedNetwork,
                         epochId: epochId?.toString(),
                         wallet: activeWallet?.address,

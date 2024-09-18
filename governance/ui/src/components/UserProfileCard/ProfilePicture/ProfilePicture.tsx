@@ -33,18 +33,11 @@ export const ProfilePicture = ({
         filter={isCouncilTabs ? 'grayscale(1)' : ''}
         zIndex={10}
         position="relative"
-        data-cy={`user-blockies-council-tabs-${address || newVoteCast}`}
+        data-cy={`user-blockies-council-tabs-${address}`}
       >
-        {!!newVoteCast && (
-          <Box h={size} w={size} borderRadius="100%" position="absolute" zIndex={11} />
-        )}
-        <Blockies
-          size={size}
-          seed={address?.toLowerCase() || newVoteCast?.toLowerCase() || ''}
-          className="fully-rounded"
-        />
+        <Blockies size={size} seed={address?.toLowerCase() || ''} className="fully-rounded" />
       </Box>
     );
   }
-  return null;
+  return <Box h={size} w={size} borderRadius="100%" position="absolute" zIndex={11} />;
 };

@@ -35,10 +35,11 @@ export default function MyVoteRow({
   );
   const voteAddressState = typeof voteSelection === 'string' ? voteSelection : '';
 
-  const hasVoted =
-    utils.isAddress(votedCandidate) &&
-    utils.isAddress(voteAddressState) &&
-    votedCandidate.toLowerCase() === voteAddressState.toLowerCase();
+  const hasVoted = utils.isAddress(voteAddressState)
+    ? utils.isAddress(votedCandidate) &&
+      utils.isAddress(voteAddressState) &&
+      votedCandidate.toLowerCase() === voteAddressState.toLowerCase()
+    : utils.isAddress(votedCandidate);
   const isDisabled = period !== '2';
 
   const handleAddVote = (e: React.MouseEvent) => {
@@ -107,7 +108,7 @@ export default function MyVoteRow({
         }}
       >
         <CouncilUser councilSlug={councilSlug} address={votedCandidate || voteAddressState} />
-        {!hasVoted && votedCandidate && voteAddressState && (
+        {((!hasVoted && votedCandidate && voteAddressState) || voteAddressState === 'remove') && (
           <>
             <ArrowForwardIcon mx="2" />
             <CouncilUser councilSlug={councilSlug} address={voteAddressState} />
@@ -115,7 +116,7 @@ export default function MyVoteRow({
         )}
       </Flex>
 
-      {hasVoted ? (
+      {hasVoted && voteAddressState !== 'remove' ? (
         <Badge mr="2">Your Vote</Badge>
       ) : voteAddressState ? (
         <Badge color="gray" mr="2" data-cy="selected-badge-my-row">

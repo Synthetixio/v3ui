@@ -6,3 +6,4 @@ export * from './EditIcon';
 export * from './ShareIcon';
 export * from './Optimism';
 export * from './Ethereum';
+export * from './CrownIcon';

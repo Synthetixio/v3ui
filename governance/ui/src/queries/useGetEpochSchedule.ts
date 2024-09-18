@@ -17,8 +17,7 @@ export function useGetEpochSchedule(council?: CouncilSlugs) {
         startDate: Number(schedule.startDate.toString()),
         nominationPeriodStartDate: Number(schedule.nominationPeriodStartDate.toString()),
         votingPeriodStartDate: Number(schedule.votingPeriodStartDate.toString()),
-        // Todo @dev remove after "bug" is resolved
-        endDate: Number((schedule.endDate - 3600).toString()),
+        endDate: Number(schedule.endDate.toString()),
       } as
         | {
             startDate: number;

@@ -31,12 +31,6 @@ export default function UserProfileEditPreview({
     };
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
-    return () => {
-      window.removeEventListener('resize', checkOverflow);
-    };
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
       if (elementRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
@@ -57,6 +51,7 @@ export default function UserProfileEditPreview({
       if (refCurrent) {
         refCurrent.removeEventListener('scroll', handleScroll);
       }
+      window.removeEventListener('resize', checkOverflow);
     };
   }, []);
 

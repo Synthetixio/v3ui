@@ -34,7 +34,6 @@ const useCountdown = (id: string, timestamp: number) => {
       }));
     };
 
-    // Update immediately and then set an interval to update every minute
     updateCountdown();
     const timer = setInterval(updateCountdown, 60000);
 

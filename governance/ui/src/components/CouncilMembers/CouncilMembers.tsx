@@ -18,12 +18,12 @@ import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import SortArrows from '../SortArrows/SortArrows';
-import { useGetCouncilMembers, useGetUserDetailsQuery } from '../../queries';
+import { useGetCouncilMembers, useGetHistoricalVotes, useGetUserDetailsQuery } from '../../queries';
 import TableLoading from '../TableLoading/TableLoading';
 import { sortUsers } from '../../utils/sort-users';
 
 export default function CouncilMembers({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([false, 'start']);
+  const [sortConfig, setSortConfig] = useState<[boolean, string]>([true, 'votingPower']);
 
   const { data: councilMembers } = useGetCouncilMembers(activeCouncil);
   const { data: councilMemberDetails, isLoading: userDetailsLoading } = useGetUserDetailsQuery(
@@ -31,12 +31,13 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
   );
   const { data: councilSchedule } = useGetEpochSchedule(activeCouncil);
   const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
+  const { data: votes } = useGetHistoricalVotes();
 
   const nextEpoch = calculateNextEpoch(councilSchedule);
 
   const sortedNominees = useMemo(() => {
-    return sortUsers(activeCouncil, '', sortConfig, councilMemberDetails);
-  }, [sortConfig, councilMemberDetails, activeCouncil]);
+    return sortUsers(activeCouncil, '', sortConfig, councilMemberDetails, votes);
+  }, [sortConfig, councilMemberDetails, activeCouncil, votes]);
 
   return (
     <Flex
@@ -129,9 +130,9 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                   {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
-              {councilPeriod === '0' && (
-                <Th userSelect="none" textTransform="capitalize" textAlign="center" px="0"></Th>
-              )}
+              {/*  {councilPeriod === '0' && (
+                 <Th userSelect="none" textTransform="capitalize" textAlign="center" px="0"></Th>
+               )}*/}
             </Tr>
           </Thead>
           <Tbody>
@@ -142,10 +143,11 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
               sortedNominees.map((councilNominee, index) => {
                 return (
                   <UserTableView
-                    place={index}
+                    place={councilNominee.place}
                     user={councilNominee!}
                     isNomination
                     activeCouncil={activeCouncil}
+                    totalVotingPower={votes && votes[totalVotingPowerForCouncil(activeCouncil)]}
                     key={councilNominee?.address
                       .concat('council-nominees')
                       .concat(index.toString())}
@@ -158,4 +160,15 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
       </TableContainer>
     </Flex>
   );
+}
+
+function totalVotingPowerForCouncil(council: CouncilSlugs) {
+  switch (council) {
+    case 'spartan':
+      return 'totalVotingPowerSpartan';
+    case 'ambassador':
+      return 'totalVotingPowerAmbassador';
+    case 'treasury':
+      return 'totalVotingPowerTreasury';
+  }
 }
