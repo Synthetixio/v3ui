@@ -140,11 +140,22 @@ export default function UserTableView({
           fontWeight={700}
         >
           {ballot?.votedCandidates.includes(user.address) ? (
-            <Badge w="fit-content" data-cy="your-vote-badge-table">
+            <Badge
+              variant="outline"
+              lineHeight="14px"
+              w="fit-content"
+              data-cy="your-vote-badge-table"
+            >
               Your Vote
             </Badge>
           ) : isSelectedForVoting ? (
-            <Badge color="gray" w="fit-content" data-cy="selected-badge-table">
+            <Badge
+              color="gray"
+              variant="outline"
+              lineHeight="14px"
+              w="fit-content"
+              data-cy="selected-badge-table"
+            >
               Selected
             </Badge>
           ) : null}

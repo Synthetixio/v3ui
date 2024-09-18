@@ -9,7 +9,9 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  IconButton,
 } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 import councils, { CouncilSlugs } from '../utils/councils';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -308,7 +310,7 @@ export default function MyVotes() {
             flexDirection="column"
             bg="navy.700"
             minW="100%"
-            borderColor="cyan.500"
+            borderColor="gray.900"
             borderWidth="1px"
             borderStyle="solid"
             rounded="base"
@@ -317,7 +319,20 @@ export default function MyVotes() {
             h="500px"
             gap="2"
           >
-            <Heading fontSize="md">Your haven&apos;t complete your selection</Heading>
+            <IconButton
+              onClick={() => onClose()}
+              size="xs"
+              aria-label="close button"
+              icon={<CloseIcon />}
+              variant="ghost"
+              colorScheme="whiteAlpha"
+              color="white"
+              position="absolute"
+              top="16px"
+              right="16px"
+            />
+
+            <Heading fontSize="md">You haven&apos;t completed your selection</Heading>
             <Text color="gray.500" fontSize="sm">
               You can now vote for multiple councils and cast all your votes in one unique
               transaction:
