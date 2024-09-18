@@ -22,12 +22,11 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
               borderColor="gray.900"
               alignItems="center"
               data-cy="menu-button-flex-council-select"
-              w="100%"
             >
               <CouncilImage imageUrl={slugToImageUrl(activeCouncil)} mr="10px" />
               <Text
                 fontFamily="heading"
-                fontSize={{ base: 'xs', md: 'md' }}
+                fontSize={{ base: 'sm', md: 'md' }}
                 lineHeight="28px"
                 fontWeight={700}
                 mr="12px"
