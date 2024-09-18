@@ -130,9 +130,9 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                   {sortConfig[1] === 'votingPower' && <SortArrows up={sortConfig[0]} />}
                 </Th>
               )}
-              {/*  {councilPeriod === '0' && (
-                 <Th userSelect="none" textTransform="capitalize" textAlign="center" px="0"></Th>
-               )}*/}
+              {councilPeriod === '0' && (
+                <Th userSelect="none" textTransform="capitalize" textAlign="center" px="0"></Th>
+              )}
             </Tr>
           </Thead>
           <Tbody>
