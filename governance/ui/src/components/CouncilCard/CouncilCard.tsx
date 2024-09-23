@@ -96,7 +96,7 @@ export function CouncilCard({ council, votesReceived }: CouncilCardProps) {
             <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
               <Fade in>
                 <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
-                  0
+                  {votesReceived}
                 </Text>
               </Fade>
             </Skeleton>
