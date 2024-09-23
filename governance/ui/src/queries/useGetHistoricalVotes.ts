@@ -54,9 +54,6 @@ export function useGetHistoricalVotes() {
     queryFn: async () => {
       const res = await fetch(mainnetURL);
       const votesRaw: Record<CouncilSlugs, VoteRaw[]> = await res.json();
-      // TODO @dev remove for prod
-      // if (window.location.host.includes('localhost'))
-      // votesRaw.spartan = votesRaw.spartan.concat(fakeData);
       const sortedEvents = councils.reduce(
         (cur, next) => {
           cur[next.slug] = votesRaw[next.slug].sort((a, b) => {
@@ -150,93 +147,3 @@ const parseVotes = (votes: VoteRaw[]) => {
       {} as Record<string, Candidate>
     );
 };
-
-// const fakeData: VoteRaw[] = [
-//   {
-//     eventName: 'VoteRecorded',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     votingPower: '10',
-//     blockNumber: 595468,
-//     candidates: ['0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345'],
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteRecorded',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x47872B16557875850a02C94B28d959515F894913',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     votingPower: '10',
-//     blockNumber: 595469,
-//     candidates: ['0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345'],
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteWithdrawn',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     blockNumber: 5954610,
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteWithdrawn',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x47872B16557875850a02C94B28d959515F894913',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     blockNumber: 595469,
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteRecorded',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x48914229deDd5A9922f44441ffCCfC2Cb7856Ee9',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     votingPower: '10',
-//     blockNumber: 595468,
-//     candidates: ['0x98Ab20307fdABa1ce8b16d69d22461c6dbe85459'],
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteRecorded',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0x47872B16557875850a02C94B28d959515F894913',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     votingPower: '10',
-//     blockNumber: 595469,
-//     candidates: ['0x8F876c97AD1090004dC28294237003e571C76Ba7'],
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-//   {
-//     eventName: 'VoteRecorded',
-//     chainId: 2192,
-//     epochId: 0,
-//     voter: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-//     blockTimestamp: 1724766356000,
-//     id: '0000595468-a8656-000000',
-//     transactionHash: '0x3a995d6f45cd0f00c1a24aa4f9e4c816d39056c9dcb2ab61f9a864d6880b058b',
-//     votingPower: '10',
-//     blockNumber: 595499,
-//     candidates: ['0x8F876c97AD1090004dC28294237003e571C76Ba7'],
-//     contract: '0xbc85f11300a8ef619592fd678418ec4ef26fbdfd',
-//   },
-// ];
