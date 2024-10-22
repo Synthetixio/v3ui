@@ -1,69 +1,14 @@
-import { Box, Button, Flex, Hide, Show, Text } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../../utils/councils';
+import { Flex, Hide, Show, Text } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
-import { CouncilsSelect } from './CouncilSelect';
+import councils, { CouncilSlugs } from '../../utils/councils';
 import { CouncilImage } from '../CouncilImage';
-import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
-import { MyVotesSummary } from '../MyVotesSummary';
-import {
-  useGetUserDetailsQuery,
-  useGetUserBallot,
-  useNetwork,
-  useGetEpochIndex,
-  useWallet,
-} from '../../queries';
-import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import { utils } from 'ethers';
-import { useVoteContext } from '../../context/VoteContext';
-import { getVoteSelectionState } from '../../utils/localstorage';
+import { CouncilsSelect } from './CouncilSelect';
 
 export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const location = useLocation();
-  const { activeWallet } = useWallet();
   const isInMyVotesPage = location.pathname.includes('my-votes');
   const isInMyProfilePage = location.pathname.includes('profile');
-  const { data: schedule, isLoading } = useGetEpochSchedule(activeCouncil);
-  const { network } = useNetwork();
-  const { data: epochId } = useGetEpochIndex(activeCouncil);
-  const { state } = useVoteContext();
-  // @dev dont put activeCounil in here cause its always spartan for the timer
-  const networkForState = getVoteSelectionState(
-    state,
-    activeWallet?.address,
-    epochId?.toString(),
-    network?.id.toString()
-  );
-
-  const votedNomineesData = [
-    useGetUserBallot('spartan'),
-    useGetUserBallot('ambassador'),
-    useGetUserBallot('treasury'),
-  ];
-
   const navigate = useNavigate();
-  const votedNominees = votedNomineesData.map(({ data }) => data);
-
-  const userInformationData = [
-    {
-      council: votedNominees[0]?.council,
-      userInformation: useGetUserDetailsQuery(votedNominees[0]?.votedCandidates[0]),
-    },
-    {
-      council: votedNominees[1]?.council,
-      userInformation: useGetUserDetailsQuery(votedNominees[1]?.votedCandidates[0]),
-    },
-    {
-      council: votedNominees[2]?.council,
-      userInformation: useGetUserDetailsQuery(votedNominees[2]?.votedCandidates[0]),
-    },
-  ];
-  const userInformation = userInformationData.map((data) => ({
-    ...data,
-    userInformation: data.userInformation.data,
-  }));
 
   return (
     <>
@@ -83,28 +28,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           alignItems="center"
           zIndex={99}
         >
-          {isInMyVotesPage ? (
-            <Button
-              colorScheme="gray"
-              variant="outline"
-              leftIcon={<ArrowBackIcon />}
-              onClick={() => {
-                navigate('/councils/spartan');
-              }}
-            >
-              Back to Councils
-            </Button>
-          ) : (
-            <>
-              <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
-              <MyVotesSummary
-                isLoading={isLoading}
-                councilPeriod={councilPeriod}
-                schedule={schedule}
-                isInMyVotesPage={false}
-              />
-            </>
-          )}
+          <CouncilsSelect activeCouncil={activeCouncil || councils[0].slug} />
         </Flex>
       </Hide>
       <Show above="xl">
@@ -124,12 +48,7 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
           zIndex={99}
         >
           <Flex maxW="1440px" w="100%" justifyContent="center" gap="3">
-            {councils.map((council, index) => {
-              const newVoteCast =
-                networkForState && typeof networkForState !== 'string'
-                  ? networkForState[council.slug]
-                  : '';
-
+            {councils.map((council) => {
               return (
                 <Flex
                   key={`tab-${council.slug}`}
@@ -169,68 +88,9 @@ export default function CouncilTabs({ activeCouncil }: { activeCouncil: CouncilS
                   <Text fontSize="14px" fontWeight="bold" mr="auto">
                     {council.title}
                   </Text>
-                  {councilPeriod === '2' && utils.isAddress(newVoteCast || '') ? (
-                    <>
-                      <ProfilePicture
-                        address={
-                          userInformation[index]?.userInformation?.address
-                            ? userInformation[index]?.userInformation?.address
-                            : newVoteCast
-                        }
-                        size={9}
-                        isCouncilTabs={
-                          !utils.isAddress(userInformation[index]?.userInformation?.address || '')
-                        }
-                      />
-                      {userInformation[index]?.userInformation?.address
-                        ? newVoteCast?.toLowerCase() !==
-                            userInformation[index]?.userInformation?.address?.toLowerCase() && (
-                            <>
-                              <ArrowForwardIcon mx="2" />
-                              <ProfilePicture address={newVoteCast} size={9} isCouncilTabs={true} />
-                            </>
-                          )
-                        : null}
-                    </>
-                  ) : (
-                    councilPeriod === '2' && (
-                      <>
-                        {userInformation[index].userInformation?.address && (
-                          <ProfilePicture
-                            address={userInformation[index].userInformation?.address}
-                            size={9}
-                            isCouncilTabs={false}
-                          />
-                        )}
-
-                        {newVoteCast && userInformation[index].userInformation?.address && (
-                          <ArrowForwardIcon mx="2" />
-                        )}
-                        {(newVoteCast === 'remove' ||
-                          (!newVoteCast && !userInformation[index].userInformation?.address)) && (
-                          <Box
-                            data-cy="council-tab-vote-circle"
-                            borderRadius="50%"
-                            w="9"
-                            h="9"
-                            borderWidth="1px"
-                            bg="navy.700"
-                            borderStyle="dashed"
-                            borderColor="gray.500"
-                          />
-                        )}
-                      </>
-                    )
-                  )}
                 </Flex>
               );
             })}
-            <MyVotesSummary
-              isLoading={isLoading}
-              councilPeriod={councilPeriod}
-              schedule={schedule}
-              isInMyVotesPage={isInMyVotesPage}
-            />
           </Flex>
         </Flex>
       </Show>

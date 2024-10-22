@@ -1,45 +1,29 @@
-import { Button, Flex, Text, Td, Tr, Image, ImageProps } from '@chakra-ui/react';
-import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
-import { Badge } from '../Badge';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
-import { CouncilSlugs } from '../../utils/councils';
-import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
+import { Button, Flex, Image, Td, Text, Tr } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import { useGetEpochIndex, useGetUserBallot } from '../../queries';
-import { BigNumber, utils } from 'ethers';
-import { formatNumber } from '@snx-v3/formatters';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CouncilSlugs } from '../../utils/councils';
 import { renderCorrectBorder } from '../../utils/table-border';
-import { CrownIcon } from '../Icons';
-import { Members } from '../../Test';
+import { ProfilePicture } from '../UserProfileCard/ProfilePicture';
 
-export default function MemberTableView({
+export function MemberTableView({
   name,
   activeCouncil,
   place,
   address,
-  image, //   totalVotingPower,
-} //   isSelectedForVoting,
-: {
-  //   isSelectedForVoting?: boolean;
+  image,
+}: {
   place?: string;
   name: string;
   activeCouncil: CouncilSlugs;
   address: string;
   image: string;
-  //   isNomination?: boolean;
-  //   totalVotingPower?: BigNumber;
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const { data: epochIndex } = useGetEpochIndex(activeCouncil);
-  // const { data: ballot } = useGetUserBallot(activeCouncil, (epochIndex?.toNumber() || 1) - 1);
-  // const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
   const isSelected = searchParams.get('view') === address;
 
   return (
     <Tr
-      //   data-cy={`user-table-row-${place}`}
       cursor="pointer"
       onClick={() => navigate(`/councils/${activeCouncil}?view=${address}`)}
       _hover={{ background: 'rgba(255,255,255,0.12)' }}
@@ -52,16 +36,6 @@ export default function MemberTableView({
         borderLeftRadius={isSelected ? 'base' : ''}
       >
         <Text color="white" fontSize="sm" fontWeight={700}>
-          {/* {place === undefined ? (
-            '-'
-          ) : place < (activeCouncil === 'spartan' ? 9 : activeCouncil === 'ambassador' ? 6 : 5) ? (
-            <Flex gap="1" alignItems="center">
-              {place}
-              <CrownIcon />
-            </Flex>
-          ) : (
-            '-'
-          )} */}
           {place}
         </Text>
       </Td>
@@ -77,12 +51,7 @@ export default function MemberTableView({
           {image ? (
             <Image src={image} w="9" h="9" />
           ) : (
-            <ProfilePicture
-              address={address}
-              size={9}
-              mr="0"
-              ImageProps={{ w: '32px', h: '32px' }}
-            />
+            <ProfilePicture address={address} size={9} mr="0" />
           )}
 
           <Text
@@ -98,26 +67,7 @@ export default function MemberTableView({
           </Text>
         </Flex>
       </Td>
-      <Td
-        borderTop="1px solid"
-        borderBottom={renderCorrectBorder('votes', 'bottom', isSelected)}
-        borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-        color="white"
-        fontSize="sm"
-        fontWeight={700}
-      >
-        <Text>N/A</Text>
-      </Td>
-      <Td
-        borderTop="1px solid"
-        borderBottom={renderCorrectBorder('power', 'bottom', isSelected)}
-        borderColor={isSelected ? 'cyan.500' : 'gray.900'}
-        color="white"
-        fontSize="sm"
-        fontWeight={700}
-      >
-        <Text>N/A</Text>
-      </Td>
+
       <Td
         textAlign="end"
         borderTop="1px solid"

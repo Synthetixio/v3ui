@@ -1,19 +1,14 @@
-import { Container, Flex } from '@chakra-ui/react';
-import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
-import { CouncilSlugs } from '../utils/councils';
+import { Alert, AlertDescription, AlertIcon, Container, Flex, Link } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import UserActionBox from '../components/UserActionBox/UserActionBox';
 import CouncilInformation from '../components/CouncilInformation/CouncilInformation';
-import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
-import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
 import CouncilMembers from '../components/CouncilMembers/CouncilMembers';
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
-import { Link } from '@chakra-ui/react';
+import CouncilTabs from '../components/CouncilTabs/CouncilTabs';
+import UserActionBox from '../components/UserActionBox/UserActionBox';
+import { CouncilSlugs } from '../utils/councils';
 
 export default function Councils() {
   const { council } = useParams();
   const activeCouncil = council as CouncilSlugs;
-  const { data: councilPeriod } = useGetCurrentPeriod(activeCouncil);
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -39,16 +34,7 @@ export default function Councils() {
         mb="4"
       >
         <Flex flexDir="column" w="100%">
-          {councilPeriod === '0' ? (
-            <CouncilMembers activeCouncil={activeCouncil} />
-          ) : (
-            <CouncilNominees activeCouncil={activeCouncil} />
-          )}
-          {/* <PassedElectionAccordion
-            activeCouncil={councils.find(
-              (council) => council.slug === (activeCouncil)
-            )}
-          /> */}
+          <CouncilMembers activeCouncil={activeCouncil} />
         </Flex>
         <UserActionBox activeCouncil={activeCouncil} />
       </Container>

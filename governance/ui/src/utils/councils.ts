@@ -33,7 +33,7 @@ const councils: {
     docLink: 'https://docs.synthetix.io/dao/governance-framework/ambassador-council',
   },
   {
-    title: 'Strategy, Technical & Ops Seats',
+    title: 'Strategy Seats',
     slug: 'strategy',
     seats: 3,
     image: '/councils/strategy.svg',

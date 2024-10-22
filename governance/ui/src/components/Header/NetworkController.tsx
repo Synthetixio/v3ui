@@ -158,7 +158,7 @@ export function NetworkController() {
               whiteSpace="nowrap"
               overflow="hidden"
             >
-              {user?.username || prettyString(activeWallet?.address || '')}
+              {user?.name || prettyString(activeWallet?.address || '')}
             </Text>
           </Flex>
         </MenuButton>
@@ -212,7 +212,7 @@ export function NetworkController() {
             <Flex alignItems="center" gap="4" maxW="200px">
               <Blockies seed={activeWallet?.address || ''} scale={7} className="blockies-rounded" />
 
-              {user?.username ? (
+              {user?.name ? (
                 <Flex flexDir="column" maxW="200px">
                   <Text
                     fontSize="16px"
@@ -222,7 +222,7 @@ export function NetworkController() {
                     whiteSpace="nowrap"
                     overflow="hidden"
                   >
-                    {user.username}
+                    {user.name}
                   </Text>
                   <Text
                     fontWeight={400}
@@ -232,7 +232,7 @@ export function NetworkController() {
                     whiteSpace="nowrap"
                     overflow="hidden"
                   >
-                    {user.about}
+                    {user.description}
                   </Text>
                 </Flex>
               ) : (

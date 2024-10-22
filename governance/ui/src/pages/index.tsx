@@ -1,20 +1,17 @@
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Fonts, theme } from '@snx-v3/theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Web3OnboardProvider } from '@web3-onboard/react';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { theme, Fonts } from '@snx-v3/theme';
-import { RouterProvider, Navigate, createHashRouter } from 'react-router-dom';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Councils from './Councils';
-import MyVotes from './MyVotes';
 import { Layout } from '../components/Layout';
-import { Web3OnboardProvider } from '@web3-onboard/react';
 import { onboard } from '../utils/onboard';
 import './index.css';
-import { VoteProvider } from '../context/VoteContext';
-import MyProfile from './MyProfile';
+import App from './App';
+import Councils from './Councils';
 
 const router = createHashRouter([
   {
@@ -25,8 +22,6 @@ const router = createHashRouter([
       { path: '/', element: <App /> },
       { path: '/councils/:council', element: <Councils /> },
       { path: '/councils', element: <Navigate to="/councils/spartan" /> },
-      { path: '/my-votes', element: <MyVotes /> },
-      { path: '/profile', element: <MyProfile /> },
     ],
   },
 ]);
@@ -70,9 +65,7 @@ root.render(
           <ChakraProvider theme={customTheme}>
             <ReactQueryDevtools initialIsOpen={false} />
             <Fonts />
-            <VoteProvider>
-              <RouterProvider router={router} />
-            </VoteProvider>
+            <RouterProvider router={router} />
           </ChakraProvider>
         </QueryClientProvider>
       </RecoilRoot>

@@ -1,13 +1,18 @@
-import { Container, Flex, Heading, Text } from '@chakra-ui/react';
-import councils, { CouncilSlugs } from '../utils/councils';
-import { CouncilCard } from '../components/CouncilCard';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Container,
+  Flex,
+  Heading,
+  Link,
+  Text,
+} from '@chakra-ui/react';
 import Head from 'react-helmet';
-import { useGetHistoricalVotes } from '../queries';
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
-import { Link } from '@chakra-ui/react';
+import { CouncilCard } from '../components/CouncilCard';
+import councils from '../utils/councils';
 
 function App() {
-  const { data: votes } = useGetHistoricalVotes();
   return (
     <>
       <Head>
@@ -44,7 +49,7 @@ function App() {
 
           <Flex flexDir="column">
             <Heading color="gray.50" fontSize={{ base: '4xl', md: '5xl' }} mb="2">
-              Spartan Council{' '}
+              Spartan Council
             </Heading>
             <Text fontSize="14px" lineHeight="20px" color="gray.500">
               A consolidated council of 7 delegates, each with equal voting power, replacing the
@@ -53,15 +58,7 @@ function App() {
           </Flex>
           <Flex wrap={{ base: 'wrap', lg: 'nowrap' }} w="100%" gap={{ base: 4, lg: 6 }} mt="8">
             {councils.map((council) => (
-              <CouncilCard
-                council={council}
-                votesReceived={
-                  votes && votes[totalVotesForCouncil(council.slug)]
-                    ? votes[totalVotesForCouncil(council.slug)].toNumber()
-                    : 0
-                }
-                key={council.address.concat('council-card')}
-              />
+              <CouncilCard council={council} key={council.address.concat('council-card')} />
             ))}
           </Flex>
         </Container>
@@ -71,14 +68,3 @@ function App() {
 }
 
 export default App;
-
-function totalVotesForCouncil(council: CouncilSlugs) {
-  switch (council) {
-    case 'treasury':
-      return 'totalVotesSpartan';
-    case 'advisory':
-      return 'totalVotesAmbassador';
-    case 'strategy':
-      return 'totalVotesTreasury';
-  }
-}

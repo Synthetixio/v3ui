@@ -3,31 +3,18 @@ import { useQuery } from '@tanstack/react-query';
 import { motherShipProvider } from '../utils/providers';
 import { profileContract } from '../utils/contracts';
 import { utils } from 'ethers';
-import { Candidate } from './useGetHistoricalVotes';
 
 export type GetUserDetails = {
-  address: string;
-  email: string;
-  ens: string;
-  username: string;
-  twitter: string;
-  about: string;
-  website: string;
-  notificationPreferences: string;
-  associatedAddresses: string;
-  type: string;
-  pfpUrl: string;
-  pfpImageId: string;
-  bannerThumbnailUrl: string;
-  bannerImageId: string;
-  pfpThumbnailUrl: string;
-  bannerUrl: string;
-  discord: string;
+  council: string;
+  seat: string;
+  name: string;
+  image: string;
+  description: string;
   delegationPitch: string;
-  github: string;
-  council?: string;
-  voteResult?: Candidate;
-  place?: number;
+  address: string;
+  twitter?: string;
+  discord?: string;
+  github?: string;
 };
 
 type UserPitch = {
