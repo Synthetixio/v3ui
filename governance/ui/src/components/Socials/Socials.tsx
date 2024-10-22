@@ -17,7 +17,7 @@ export const Socials: FC<Props> = ({ discord, github, twitter }) => {
     <Flex gap={3} alignItems="center">
       {discord && (
         <Link
-          href={'https://discord.com/user/' + discord}
+          href={'https://discord.com/users/' + discord}
           target="_blank"
           data-cy="discord-social-link"
         >

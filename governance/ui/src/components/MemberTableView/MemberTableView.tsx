@@ -56,7 +56,6 @@ export function MemberTableView({
 
           <Text
             whiteSpace="nowrap"
-            overflow="hidden"
             textOverflow="ellipsis"
             maxW="200px"
             data-cy={`user-table-view-${address}`}
