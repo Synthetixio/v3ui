@@ -7,6 +7,8 @@ import CouncilInformation from '../components/CouncilInformation/CouncilInformat
 import { useGetCurrentPeriod } from '../queries/useGetCurrentPeriod';
 import CouncilNominees from '../components/CouncilNominees/CouncilNominees';
 import CouncilMembers from '../components/CouncilMembers/CouncilMembers';
+import { Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
+import { Link } from '@chakra-ui/react';
 
 export default function Councils() {
   const { council } = useParams();
@@ -17,6 +19,15 @@ export default function Councils() {
     <Flex flexDirection="column" alignItems="center">
       <CouncilTabs activeCouncil={activeCouncil} />
       <Container maxW={{ base: '100%', lg: '1280px' }} justifyContent="flex-start" w="100%">
+        <Alert status="info" variant="left-accent" mb="6" colorScheme="blue">
+          <AlertIcon />
+          <AlertDescription>
+            Synthetix Governance has undergone significant changes. Learn about our&nbsp;
+            <Link color="cyan.500" target="_blank" href="https://sips.synthetix.io/srs/sr-2/">
+              new streamlined structure.
+            </Link>
+          </AlertDescription>
+        </Alert>
         <CouncilInformation activeCouncil={activeCouncil} />
       </Container>
       <Container

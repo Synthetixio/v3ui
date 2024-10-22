@@ -14,6 +14,7 @@ import {
 import { calculateNextEpoch, CouncilSlugs } from '../../utils/councils';
 import { useGetEpochSchedule } from '../../queries/useGetEpochSchedule';
 import UserTableView from '../UserTableView/UserTableView';
+import MemberTableView from '../UserTableView/MemberTableView';
 import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
 import { useMemo, useState } from 'react';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
@@ -21,6 +22,7 @@ import SortArrows from '../SortArrows/SortArrows';
 import { useGetCouncilMembers, useGetHistoricalVotes, useGetUserDetailsQuery } from '../../queries';
 import TableLoading from '../TableLoading/TableLoading';
 import { sortUsers } from '../../utils/sort-users';
+import { Members } from '../../Test';
 
 export default function CouncilMembers({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
   const [sortConfig, setSortConfig] = useState<[boolean, string]>([true, 'votingPower']);
@@ -52,11 +54,10 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
       <Flex p={{ base: 4, md: 6 }} justifyContent="space-between">
         <Flex flexDir="column" alignItems="center">
           <Heading fontSize="lg" w="100%">
-            Election for {nextEpoch.quarter}
+            Election for Q4 2023 - Q1 2024
           </Heading>
           <Text fontSize="xs" w="100%">
-            {nextEpoch.startDay} {nextEpoch.startMonth} {nextEpoch.startYear} - {nextEpoch.endDay}{' '}
-            {nextEpoch.endMonth} {nextEpoch.endYear}
+            01 Oct 2023 - 01 April 2024
           </Text>
         </Flex>
         <Flex justifyContent="flex-end">
@@ -71,6 +72,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
           <Thead>
             <Tr>
               <Th
+                textTransform="none"
                 cursor="pointer"
                 w="50px"
                 userSelect="none"
@@ -81,10 +83,10 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 }}
                 data-cy="number-table-header"
               >
-                N° {sortConfig[1] === 'ranking' && <SortArrows up={sortConfig[0]} />}
+                Seat {sortConfig[1] === 'ranking' && <SortArrows up={sortConfig[0]} />}
               </Th>
               <Th
-                textTransform="capitalize"
+                textTransform="none"
                 w="200px"
                 cursor="pointer"
                 userSelect="none"
@@ -104,7 +106,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                   cursor="pointer"
                   w="120px"
                   userSelect="none"
-                  textTransform="capitalize"
+                  textTransform="none"
                   data-cy="votes-table-header"
                   px="6"
                   onClick={() => {
@@ -118,7 +120,7 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 <Th
                   cursor="pointer"
                   userSelect="none"
-                  textTransform="capitalize"
+                  textTransform="none"
                   data-cy="voting-power-table-header"
                   w="180px"
                   px="6"
@@ -131,30 +133,28 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 </Th>
               )}
               {councilPeriod === '0' && (
-                <Th userSelect="none" textTransform="capitalize" textAlign="center" px="0"></Th>
+                <Th userSelect="none" textTransform="none" textAlign="center" px="0"></Th>
               )}
             </Tr>
           </Thead>
           <Tbody>
-            {userDetailsLoading || !councilMemberDetails ? (
-              <TableLoading />
-            ) : (
-              !!sortedNominees?.length &&
-              sortedNominees.map((councilNominee, index) => {
+            {!!Members?.length &&
+              Members.map((member, index) => {
                 return (
-                  <UserTableView
-                    place={councilNominee.place}
-                    user={councilNominee!}
-                    isNomination
+                  // <Text> {member.name!} </Text>
+                  <MemberTableView
+                    name={member.name}
+                    place={member.seat}
+                    address={member.address}
+                    image={member.image}
+                    //   user={member.name!}
+                    //   // isNomination
                     activeCouncil={activeCouncil}
-                    totalVotingPower={votes && votes[totalVotingPowerForCouncil(activeCouncil)]}
-                    key={councilNominee?.address
-                      .concat('council-nominees')
-                      .concat(index.toString())}
+                    //   totalVotingPower={votes && votes[totalVotingPowerForCouncil(activeCouncil)]}
+                    //   key={member?.address.concat('council-nominees').concat(index.toString())}
                   />
                 );
-              })
-            )}
+              })}
           </Tbody>
         </Table>
       </TableContainer>
@@ -164,11 +164,11 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
 
 function totalVotingPowerForCouncil(council: CouncilSlugs) {
   switch (council) {
-    case 'spartan':
-      return 'totalVotingPowerSpartan';
-    case 'ambassador':
-      return 'totalVotingPowerAmbassador';
     case 'treasury':
+      return 'totalVotingPowerSpartan';
+    case 'advisory':
+      return 'totalVotingPowerAmbassador';
+    case 'strategy':
       return 'totalVotingPowerTreasury';
   }
 }

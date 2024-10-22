@@ -27,18 +27,18 @@ const TreasuryCouncilContract = new Contract(
 
 export function getCouncilContract(council: CouncilSlugs) {
   switch (council) {
-    case 'spartan': {
+    case 'treasury': {
       if (process.env.CI === 'true') {
         return new Contract('0xBC85F11300A8EF619592fD678418Ec4eF26FBdFD', electionModuleABITest);
       }
       return SpartanCouncilContract;
     }
-    case 'ambassador':
+    case 'advisory':
       if (process.env.CI === 'true') {
         return new Contract('0xCdbEf5753cE3CEbF361e143117e345ADd7498F80', electionModuleABITest);
       }
       return AmbassadorCouncilContract;
-    case 'treasury':
+    case 'strategy':
       if (process.env.CI === 'true') {
         return new Contract('0xe3aB2C6F1C9E46Fb53eD6b297c6fff68e935B161', electionModuleABITest);
       }
@@ -52,27 +52,27 @@ export const SnapshotRecordContract = (chainId: number, council: CouncilSlugs) =
   switch (chainId) {
     case 1: {
       switch (council) {
-        case 'spartan':
-        case 'ambassador':
         case 'treasury':
+        case 'advisory':
+        case 'strategy':
           return new Contract('0x89FCb32F29e509cc42d0C8b6f058C993013A843F', abiForSnapshotMock);
       }
     }
     case 10: {
       switch (council) {
-        case 'spartan':
-        case 'ambassador':
         case 'treasury':
+        case 'advisory':
+        case 'strategy':
           return new Contract('0x45c55BF488D3Cb8640f12F63CbeDC027E8261E79', abiForSnapshotMock);
       }
     }
     case 13001: {
       switch (council) {
-        case 'spartan':
-          return new Contract('0x552E469B7C88cd501C08e7759d35dC58f08C9648', abiForSnapshotMock);
-        case 'ambassador':
-          return new Contract('0x3a0186E03137B9b971EC911350A0F2D88D24FDF2', abiForSnapshotMock);
         case 'treasury':
+          return new Contract('0x552E469B7C88cd501C08e7759d35dC58f08C9648', abiForSnapshotMock);
+        case 'advisory':
+          return new Contract('0x3a0186E03137B9b971EC911350A0F2D88D24FDF2', abiForSnapshotMock);
+        case 'strategy':
           return new Contract('0xC0bFA9aC792cF691734F7b2BD252d1c2B9fBa343', abiForSnapshotMock);
       }
     }

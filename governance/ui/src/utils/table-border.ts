@@ -1,7 +1,7 @@
 export function renderCorrectBorder(
   column: 'place' | 'name' | 'votes' | 'power' | 'badge',
   position: 'left' | 'right' | 'bottom',
-  period: string | undefined,
+  // period: string | undefined,
   isSelected: boolean
 ) {
   if (column === 'place') {
@@ -12,15 +12,6 @@ export function renderCorrectBorder(
     }
   } else if (column === 'name') {
     if (position === 'left') {
-      if (period === '2') {
-        return '';
-      }
-      if (period === '0') {
-        return '';
-      }
-      if (period === '3') {
-        return '';
-      }
       return isSelected ? '1px solid' : '';
     } else if (position === 'bottom') {
       return isSelected ? '1px solid' : '';
