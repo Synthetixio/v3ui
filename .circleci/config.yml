@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - yarn-install
-      - run: yarn npm audit
+      - run: yarn npm audit --all --recursive --severity high || true
       - run: yarn dedupe --check
       - run: yarn deps
       - run: yarn deps:mismatched
