@@ -1,9 +1,0 @@
-{
-  "name": "@snx-v3/formatters",
-  "private": true,
-  "main": "index.ts",
-  "version": "0.0.0",
-  "dependencies": {
-    "date-fns": "^2.30.0"
-  }
-}

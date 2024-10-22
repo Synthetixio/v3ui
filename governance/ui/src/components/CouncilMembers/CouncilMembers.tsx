@@ -1,4 +1,3 @@
-import { ArrowUpDownIcon } from '@chakra-ui/icons';
 import {
   Divider,
   Flex,
@@ -12,15 +11,11 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 import { CouncilSlugs } from '../../utils/councils';
-import SortArrows from '../SortArrows/SortArrows';
 import { MemberTableView } from '../MemberTableView/MemberTableView';
 import { Members } from './Members';
 
 export default function CouncilMembers({ activeCouncil }: { activeCouncil: CouncilSlugs }) {
-  const [sortConfig, setSortConfig] = useState<[boolean, string]>([true, 'votingPower']);
-
   return (
     <Flex
       borderWidth="1px"
@@ -58,12 +53,9 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 userSelect="none"
                 px="0"
                 textAlign="center"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'ranking']);
-                }}
                 data-cy="number-table-header"
               >
-                Seat {sortConfig[1] === 'ranking' && <SortArrows up={sortConfig[0]} />}
+                Seat
               </Th>
               <Th
                 textTransform="none"
@@ -71,15 +63,8 @@ export default function CouncilMembers({ activeCouncil }: { activeCouncil: Counc
                 cursor="pointer"
                 userSelect="none"
                 data-cy="name-table-header"
-                onClick={() => {
-                  setSortConfig([!sortConfig[0], 'name']);
-                }}
               >
-                Name {sortConfig[1] === 'name' && <SortArrows up={sortConfig[0]} />}
-                {/* @ts-ignore */}
-                {sortConfig[1] === 'start' && sortConfig[1] !== 'name' && (
-                  <ArrowUpDownIcon color="cyan" />
-                )}
+                Name
               </Th>
               <Th userSelect="none" textTransform="none" textAlign="center" px="0"></Th>
             </Tr>

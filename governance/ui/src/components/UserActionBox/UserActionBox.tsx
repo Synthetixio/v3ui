@@ -1,6 +1,5 @@
 import { Flex, Show, Text, useDisclosure } from '@chakra-ui/react';
 import { useSearchParams } from 'react-router-dom';
-import { useWallet } from '../../queries/useWallet';
 import { CouncilSlugs } from '../../utils/councils';
 import { SelectedContainer } from '../UserProfileCard/SelectedContainer';
 
@@ -9,7 +8,6 @@ interface UserActionBoxProps {
 }
 
 export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
-  const { activeWallet } = useWallet();
   const [searchParams] = useSearchParams();
 
   const selectedUserAddress = searchParams.get('view') as string;
@@ -22,7 +20,6 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
-        isOwn={selectedUserAddress?.toLowerCase() === activeWallet?.address.toLowerCase()}
       />
     );
   }

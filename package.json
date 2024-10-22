@@ -59,14 +59,10 @@
   "resolutions": {
     "@synthetixio/v3-contracts": "synthetixio/v3-contracts#master",
     "@emotion/is-prop-valid": "^1.2.0",
-    "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/bignumber": "^5.7.0",
-    "@ethersproject/bytes": "^5.7.0",
     "big.js": "^6.1.1",
     "bn.js": "^5.2.1",
     "browserslist": "4",
     "caniuse-lite": "1",
-    "ethers": "^5.7.2",
     "classnames": "2.3.2"
   },
   "husky": {

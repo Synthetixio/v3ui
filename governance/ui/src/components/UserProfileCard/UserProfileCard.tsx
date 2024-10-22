@@ -6,7 +6,6 @@ import { UserProfileDetails } from './UserProfileDetails';
 interface UserProfileCardInterface extends FlexProps {
   walletAddress: string;
   activeCouncil: CouncilSlugs;
-  isOwn: boolean;
 }
 
 export function UserProfileCard({

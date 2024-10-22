@@ -2,13 +2,10 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { Fonts, theme } from '@snx-v3/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Web3OnboardProvider } from '@web3-onboard/react';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { Layout } from '../components/Layout';
-import { onboard } from '../utils/onboard';
 import './index.css';
 import App from './App';
 import Councils from './Councils';
@@ -59,16 +56,12 @@ const root = createRoot(container!);
 
 root.render(
   <React.StrictMode>
-    <Web3OnboardProvider web3Onboard={onboard}>
-      <RecoilRoot>
-        <QueryClientProvider client={new QueryClient()}>
-          <ChakraProvider theme={customTheme}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <Fonts />
-            <RouterProvider router={router} />
-          </ChakraProvider>
-        </QueryClientProvider>
-      </RecoilRoot>
-    </Web3OnboardProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <ChakraProvider theme={customTheme}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Fonts />
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
