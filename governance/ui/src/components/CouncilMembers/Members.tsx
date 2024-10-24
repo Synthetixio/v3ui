@@ -7,7 +7,7 @@ export const Members = [
     description: 'OG Spartan',
     delegationPitch:
       "coKaiynne invested in the Havven ICO and has remained close to the project ever since. Recognising the need for change he nominated for the Treasury Council and was elected at the start of 2024. He's been instrumental in streamlining, organising, and consolidating the Treasury so that management and operations are simpler and more transparent moving forward.",
-    address: '0xAA',
+    address: '0x8525dfd2fdF70F8639299e5751A8E56c5e0075A9',
     discord: '1190187490057920555',
     twitter: '',
   },
@@ -20,7 +20,7 @@ export const Members = [
     description: 'Synthetix Founder / OG Spartan / Infinex Founder',
     delegationPitch:
       'The once benevolent dictator played an instrumental role in digging Synthetix out of the 2018 bear market, was the creator of yield farming and helped kick off DeFi summer. We’re luring him back as an advisor to kick of the Synthetix revenge arc!',
-    address: '0xBB',
+    address: '0x4640828749C1993DeC4dec8c8F32FFEC1a433BeA',
     discord: '420339322785366019',
     twitter: 'kaiynne',
   },
@@ -33,7 +33,7 @@ export const Members = [
     description: 'Synthetix Founder / OG Spartan',
     delegationPitch:
       'Jordan carries a wealth of Synthetix knowledge and continues to stay close to updates and get involved where he can help. Jordan’s history running commercial and BD functions and his connectivity to crypto and VC networks from running Bodhi Ventures will be core to this transition and executing on several 2025 vision agenda items.',
-    address: '0xCC',
+    address: '0xA26546560578EA86D5A758B20bC15079bFc7A059',
     discord: '432712910242840607',
     twitter: '',
   },
@@ -47,7 +47,7 @@ export const Members = [
     description: 'OG Spartan',
     delegationPitch:
       'SG invested in the Havven ICO and has remained an active member in the community since 2017. Through his engagement on the Treasury Council, SG has developed a deep knowledge of Synthetix and will help maintain continuity in operations and treasury management through the transition. Additionally, he has strong networks in the crypto community that will come in handy as we look to expand our footprint.',
-    address: '0xDD',
+    address: '0x4DE86d2C9171F046C4ce91d8De9d2dc723Bf4A9F',
     discord: '889913506906927124',
     twitter: '',
   },
@@ -60,7 +60,7 @@ export const Members = [
     description: 'OG Spartan',
     delegationPitch:
       "Benjamin is a Synthetix OG, having invested in the Havven ICO in 2017 and remained in the community ever since. Before entering crypto professionally as an asset manager in 2017, he worked as a consultant, specifically working on strategy design and managing complex business transformations. Benjamin's knowledge of and experience in crypto, combined with his background managing complex business transitions, allows him to bring objective insight to Synthetix, enabling him to identify key challenges and design fresh and tailored solutions to successfully turn Synthetix around.",
-    address: '0xEE',
+    address: '0xD5be1632170c2428Ab6298Ed05E32a278b465ad7',
     discord: '854163348677591090',
     twitter: '',
   },
@@ -73,7 +73,7 @@ export const Members = [
     description: 'Core Contributor',
     delegationPitch:
       'Cavalier has been a Core Contributor at Synthetix for nearly three years, bringing a wealth of experience and a deep understanding of both the team and decentralised systems. He was elected to Spartan Council and Treasury Council, and ultimately proposed as the CC Lead role to improve protocol coordination. Cav’s relationships with Synthetix partners and integrators, combined with his knowledge of the ecosystem, make him a key asset in driving forward the next phase of Synthetix’s evolution.',
-    address: '0xFF',
+    address: '0x6B28209660F63EBfD1c62b66B428961Bbc8715Bc',
     discord: '567239949372489739',
     twitter: 'cavalier_eth',
   },
