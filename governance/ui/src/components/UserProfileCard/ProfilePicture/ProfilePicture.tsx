@@ -1,9 +1,8 @@
-import { Box, ImageProps } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import Blockies from 'react-blockies';
 
 interface ProfilePictureInterface {
   address?: string;
-  ImageProps?: ImageProps;
   size?: number;
   mr?: string;
   ml?: string;

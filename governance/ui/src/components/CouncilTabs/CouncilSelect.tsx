@@ -53,7 +53,7 @@ export const CouncilsSelect = ({ activeCouncil }: { activeCouncil: CouncilSlugs 
             >
               {councils.map((council) => (
                 <MenuItem
-                  key={council.address.concat('council-select')}
+                  key={council.slug}
                   value={council.slug}
                   onClick={() => navigate(`/councils/${council.slug}`)}
                 >

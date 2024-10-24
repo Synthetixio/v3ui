@@ -1,20 +1,14 @@
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Fonts, theme } from '@snx-v3/theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { theme, Fonts } from '@snx-v3/theme';
-import { RouterProvider, Navigate, createHashRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Councils from './Councils';
-import MyVotes from './MyVotes';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { Layout } from '../components/Layout';
-import { Web3OnboardProvider } from '@web3-onboard/react';
-import { onboard } from '../utils/onboard';
 import './index.css';
-import { VoteProvider } from '../context/VoteContext';
-import MyProfile from './MyProfile';
+import App from './App';
+import Councils from './Councils';
 
 const router = createHashRouter([
   {
@@ -25,8 +19,6 @@ const router = createHashRouter([
       { path: '/', element: <App /> },
       { path: '/councils/:council', element: <Councils /> },
       { path: '/councils', element: <Navigate to="/councils/spartan" /> },
-      { path: '/my-votes', element: <MyVotes /> },
-      { path: '/profile', element: <MyProfile /> },
     ],
   },
 ]);
@@ -64,18 +56,12 @@ const root = createRoot(container!);
 
 root.render(
   <React.StrictMode>
-    <Web3OnboardProvider web3Onboard={onboard}>
-      <RecoilRoot>
-        <QueryClientProvider client={new QueryClient()}>
-          <ChakraProvider theme={customTheme}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <Fonts />
-            <VoteProvider>
-              <RouterProvider router={router} />
-            </VoteProvider>
-          </ChakraProvider>
-        </QueryClientProvider>
-      </RecoilRoot>
-    </Web3OnboardProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <ChakraProvider theme={customTheme}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Fonts />
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

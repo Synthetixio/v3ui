@@ -1,113 +1,29 @@
 import { CloseIcon, CopyIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, Button, Text, Tooltip, Box } from '@chakra-ui/react';
+import { Button, Flex, IconButton, Image, Text, Tooltip } from '@chakra-ui/react';
 import { prettyString } from '@snx-v3/format';
-import { Socials } from '../Socials';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GetUserDetails } from '../../queries/useGetUserDetailsQuery';
 import { CouncilSlugs } from '../../utils/councils';
-import { useNavigate } from 'react-router-dom';
-import { useVoteContext } from '../../context/VoteContext';
+import { ShareIcon } from '../Icons';
+import { Socials } from '../Socials';
 import { ProfilePicture } from './ProfilePicture';
-import { EditIcon, EthereumIcon, OPIcon, ShareIcon } from '../Icons';
-import {
-  useGetEpochIndex,
-  useGetUserBallot,
-  useGetUserVotingPowerForAllChains,
-  useNetwork,
-  useWallet,
-} from '../../queries';
-import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { voteCardState } from '../../state/vote-card';
-import { getVoteSelectionState } from '../../utils/localstorage';
-import { isMotherchain } from '../../utils/contracts';
-import VotePower from './VotePower';
-import { BigNumber } from 'ethers';
 
-interface UserProfileDetailsProps {
-  userData?: GetUserDetails;
-  activeCouncil: CouncilSlugs;
-  walletAddress: string;
-  isOwn?: boolean;
-  isNominated?: boolean;
-  councilPeriod?: string;
-}
-
-export const UserProfileDetails = ({
+export function UserProfileDetails({
   userData,
   activeCouncil,
   walletAddress,
-  isOwn,
-  isNominated,
-  councilPeriod,
-}: UserProfileDetailsProps) => {
-  const [showVotePower, setShowVoteBanner] = useState(false);
-  const [_, setVoteCard] = useRecoilState(voteCardState);
-  const { activeWallet } = useWallet();
+}: {
+  userData?: GetUserDetails;
+  activeCouncil: CouncilSlugs;
+  walletAddress: string;
+}) {
   const [tooltipLabel, setTooltipLabel] = useState('Copy Profile Link');
   const [walletToolTipLabel, setWalletTooltipLabel] = useState('Copy');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isWalletTooltipOpen, setWalletIsTooltipOpen] = useState(false);
-  const { network } = useNetwork();
-  const { data: votePowers } = useGetUserVotingPowerForAllChains(activeCouncil);
-  const { data: epochId } = useGetEpochIndex(activeCouncil);
-  const { dispatch, state } = useVoteContext();
   const navigate = useNavigate();
-  const { data: ballot } = useGetUserBallot(activeCouncil);
   const elementRef = useRef<HTMLParagraphElement | null>(null);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const networkForState = getVoteSelectionState(
-    state,
-    activeWallet?.address,
-    epochId?.toString(),
-    network?.id.toString(),
-    activeCouncil
-  );
-  const voteAddressState = typeof networkForState === 'string' ? networkForState : '';
-  const isSelected = voteAddressState
-    ? voteAddressState?.toLowerCase().trim() === userData?.address?.toLowerCase().trim()
-    : false;
-
-  const isAlreadyVoted =
-    !!ballot?.votedCandidates &&
-    ballot?.votedCandidates[0]?.toLowerCase() === userData?.address?.toLowerCase();
-
-  useEffect(() => {
-    const checkOverflow = () => {
-      const el = elementRef.current;
-      if (el) {
-        const isOverflowing = el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
-        setIsOverflowing(isOverflowing);
-      }
-    };
-    checkOverflow();
-    window.addEventListener('resize', checkOverflow);
-    const handleScroll = () => {
-      if (elementRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = elementRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 10) {
-          setIsOverflowing(false);
-        } else {
-          setIsOverflowing(true);
-        }
-      }
-    };
-
-    const refCurrent = elementRef.current;
-    if (refCurrent) {
-      refCurrent.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (refCurrent) {
-        refCurrent.removeEventListener('scroll', handleScroll);
-      }
-      window.removeEventListener('resize', checkOverflow);
-    };
-  }, []);
-
-  if (showVotePower) {
-    return <VotePower activeCouncil={activeCouncil} networks={votePowerToNetwork(votePowers)} />;
-  }
 
   return (
     <>
@@ -125,23 +41,11 @@ export const UserProfileDetails = ({
           right="0px"
           _hover={{}}
         />
-        {isOwn && (
-          <IconButton
-            size="xs"
-            icon={<EditIcon />}
-            mr="1"
-            variant="ghost"
-            position="absolute"
-            top="4px"
-            right="32px"
-            aria-label="edit-profile"
-            onClick={() => navigate(`/profile`)}
-            data-cy="edit-icon-user-profile-details"
-            color="white"
-            _hover={{}}
-          />
+        {userData?.image ? (
+          <Image src={userData?.image} w="14" h="14" />
+        ) : (
+          <ProfilePicture address={userData?.address} size={14} mr="0" />
         )}
-        <ProfilePicture address={userData?.address} />
         <Flex flexDir="column" w="100%" ml="2">
           <Flex justifyContent="space-between">
             <Text
@@ -153,7 +57,7 @@ export const UserProfileDetails = ({
               whiteSpace="nowrap"
               overflow="hidden"
             >
-              {userData?.username ? userData.username : prettyString(userData?.address || '')}
+              {userData?.name ? userData.name : prettyString(userData?.address || '')}
             </Text>
           </Flex>
           <Text
@@ -165,7 +69,7 @@ export const UserProfileDetails = ({
             whiteSpace="nowrap"
             overflow="hidden"
           >
-            {userData?.about}
+            {userData?.description}
           </Text>
         </Flex>
       </Flex>
@@ -249,171 +153,18 @@ export const UserProfileDetails = ({
             ref={elementRef}
           >
             {userData?.delegationPitch}
-            {isOverflowing && (
-              <Box
-                position="sticky"
-                bottom="-1px"
-                left="0"
-                right="0"
-                height="50px"
-                background="linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #0b0b22 100%)"
-              />
-            )}
           </Text>
         </>
       )}
       <Flex mt="auto" gap="2" flexDir="column">
-        {isOwn && (
-          <>
-            {councilPeriod === '2' && isNominated ? (
-              <Tooltip label="You cannot edit nor remove your nomination during the voting period">
-                <Button
-                  mt="4"
-                  variant="outline"
-                  colorScheme="gray"
-                  w="100%"
-                  isDisabled={councilPeriod === '2'}
-                >
-                  Edit Nomination
-                </Button>
-              </Tooltip>
-            ) : councilPeriod === '1' ? (
-              <Button
-                variant={!isNominated ? 'solid' : 'outline'}
-                colorScheme={!isNominated ? 'cyan' : 'gray'}
-                w="100%"
-                mt="4"
-                color={!isNominated ? 'black' : 'white'}
-                data-cy="nominate-self-button-user-profile-details"
-                onClick={() =>
-                  navigate(
-                    `/councils/${activeCouncil}?${
-                      !isNominated ? 'nominate=true' : 'editNomination=true'
-                    }`
-                  )
-                }
-              >
-                {isNominated ? 'Edit Nomination' : 'Nominate Self'}
-              </Button>
-            ) : null}
-          </>
-        )}
-        {councilPeriod === '2' && (
-          <>
-            {!isNominated && isOwn && (
-              <Button
-                variant="solid"
-                data-cy="nominate-self-button-in-user-profile"
-                onClick={() => {
-                  navigate({
-                    pathname: `/councils/${activeCouncil}`,
-                    search: `view=${walletAddress}&nominate=true`,
-                  });
-                }}
-              >
-                Nominate Self
-              </Button>
-            )}
-            <Button
-              variant={
-                !isNominated && isOwn
-                  ? 'outline'
-                  : !isAlreadyVoted && !isSelected
-                    ? 'solid'
-                    : 'outline'
-              }
-              colorScheme={
-                !isNominated && isOwn ? 'gray' : !isAlreadyVoted && !isSelected ? 'cyan' : 'gray'
-              }
-              isDisabled={!isNominated && isOwn}
-              w="100%"
-              mt={!isOwn ? 4 : 0}
-              data-cy="select-user-to-vote-button"
-              onClick={async () => {
-                const parsedNetwork = network?.id ? network.id.toString() : '2192';
-                if (isMotherchain(parsedNetwork) && !(process.env.CI === 'true')) {
-                  setShowVoteBanner(true);
-                } else {
-                  if (isAlreadyVoted) {
-                    dispatch({
-                      type: activeCouncil.toUpperCase(),
-                      payload: {
-                        action:
-                          voteAddressState === 'remove'
-                            ? ballot?.votedCandidates[0].toLowerCase()
-                            : 'remove',
-                        network: parsedNetwork,
-                        epochId: epochId?.toString(),
-                        wallet: activeWallet?.address,
-                      },
-                    });
-                  } else if (isSelected) {
-                    dispatch({
-                      type: activeCouncil.toUpperCase(),
-                      payload: {
-                        action: ballot?.votedCandidates[0]?.toLowerCase()
-                          ? ballot?.votedCandidates[0].toLowerCase()
-                          : undefined,
-                        network: parsedNetwork,
-                        epochId: epochId?.toString(),
-                        wallet: activeWallet?.address,
-                      },
-                    });
-                  } else {
-                    dispatch({
-                      type: activeCouncil.toUpperCase(),
-                      payload: {
-                        action: userData?.address.toLowerCase(),
-                        network: parsedNetwork,
-                        epochId: epochId?.toString(),
-                        wallet: activeWallet?.address,
-                      },
-                    });
-                  }
-                  setVoteCard(true);
-                }
-              }}
-            >
-              <Text maxW="250px" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
-                {isAlreadyVoted ? 'Withdraw Vote ' : isSelected ? 'Remove ' : 'Select '}
-                {userData?.ens || userData?.username
-                  ? userData.username
-                  : prettyString(userData!.address)}
-              </Text>
-            </Button>
-          </>
-        )}
-
-        {!isOwn && councilPeriod !== '2' && (
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            onClick={() => navigate('/councils/' + activeCouncil)}
-          >
-            Close
-          </Button>
-        )}
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={() => navigate('/councils/' + activeCouncil)}
+        >
+          Close
+        </Button>
       </Flex>
     </>
   );
-};
-
-interface VotePowerToNetwork {
-  power: BigNumber;
-  isDeclared: boolean;
-}
-
-function votePowerToNetwork(
-  power?:
-    | {
-        L1: VotePowerToNetwork | undefined;
-        Optimism: VotePowerToNetwork | undefined;
-      }
-    | undefined
-) {
-  if (!power) return [];
-  const networks = [];
-  networks.push({ icon: EthereumIcon, chainId: 1, power: power.L1?.power });
-  networks.push({ icon: OPIcon, chainId: 10, power: power.Optimism?.power });
-  return networks;
 }

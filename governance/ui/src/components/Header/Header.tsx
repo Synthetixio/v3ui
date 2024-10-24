@@ -1,15 +1,10 @@
-import { Button, Flex, useColorMode, Show } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Flex, Show, useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import PeriodCountdown from '../PeriodCountdown/PeriodCountdown';
-import councils from '../../utils/councils';
-import { useWallet } from '../../queries/useWallet';
-import { NetworkController } from './NetworkController';
+import { useNavigate } from 'react-router-dom';
 import { SNXHeaderIcon, SNXHeaderIconSmall } from '../Icons';
 
 export function Header() {
   const navigate = useNavigate();
-  const { activeWallet, walletsInfo, connect } = useWallet();
   const { colorMode, toggleColorMode } = useColorMode();
 
   useEffect(() => {
@@ -17,22 +12,6 @@ export function Header() {
       toggleColorMode();
     }
   }, [colorMode, toggleColorMode]);
-
-  useEffect(() => {
-    if (!walletsInfo) {
-      const defaultWallet = localStorage.getItem('connectedWallets');
-
-      if (defaultWallet) {
-        connect({
-          autoSelect: { disableModals: true, label: JSON.parse(defaultWallet) },
-        });
-      }
-    }
-
-    if (walletsInfo) {
-      localStorage.setItem('connectedWallets', JSON.stringify(walletsInfo.label));
-    }
-  }, [walletsInfo, connect]);
 
   return (
     <Flex
@@ -54,15 +33,6 @@ export function Header() {
             <SNXHeaderIcon />
           </Show>
         </Flex>
-
-        <PeriodCountdown council={councils[0].slug} />
-        {activeWallet ? (
-          <NetworkController />
-        ) : (
-          <Button onClick={() => connect()} ml="2" data-cy="connect-wallet-button">
-            Connect Wallet
-          </Button>
-        )}
       </Flex>
     </Flex>
   );

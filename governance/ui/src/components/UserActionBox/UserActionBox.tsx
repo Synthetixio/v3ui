@@ -1,31 +1,18 @@
 import { Flex, Show, Text, useDisclosure } from '@chakra-ui/react';
 import { useSearchParams } from 'react-router-dom';
 import { CouncilSlugs } from '../../utils/councils';
-import { NominateSelfContainer } from '../NominateSelf/NominateSelfContainer';
-import { EditNominationContainer } from '../EditNomination/EditNominationContainer';
 import { SelectedContainer } from '../UserProfileCard/SelectedContainer';
-import { useWallet } from '../../queries/useWallet';
 
 interface UserActionBoxProps {
   activeCouncil: CouncilSlugs;
 }
 
 export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
-  const { activeWallet } = useWallet();
   const [searchParams] = useSearchParams();
 
-  const editNomination = searchParams.get('editNomination') === 'true' ? true : false;
-  const nominate = searchParams.get('nominate') === 'true' ? true : false;
   const selectedUserAddress = searchParams.get('view') as string;
 
   const { onClose } = useDisclosure();
-  if (nominate && activeWallet?.address) {
-    return <NominateSelfContainer activeCouncil={activeCouncil} onClose={onClose} />;
-  }
-
-  if (editNomination && activeWallet?.address) {
-    return <EditNominationContainer activeCouncil={activeCouncil} onClose={onClose} />;
-  }
 
   if (selectedUserAddress) {
     return (
@@ -33,7 +20,6 @@ export default function UserActionBox({ activeCouncil }: UserActionBoxProps) {
         activeCouncil={activeCouncil}
         onClose={onClose}
         selectedUserAddress={selectedUserAddress}
-        isOwn={selectedUserAddress?.toLowerCase() === activeWallet?.address.toLowerCase()}
       />
     );
   }

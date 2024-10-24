@@ -1,32 +1,12 @@
-import { Button, Divider, Flex, Heading, Image, Text, Skeleton, Fade } from '@chakra-ui/react';
-import { Council } from '../../utils/councils';
+import { Button, Divider, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useGetCurrentPeriod } from '../../queries/useGetCurrentPeriod';
-import { useGetCouncilMembers } from '../../queries/useGetCouncilMembers';
-import { useGetCouncilNominees } from '../../queries/useGetCouncilNominees';
+import { Council } from '../../utils/councils';
+import { Members } from '../CouncilMembers/Members';
 import { CouncilPeriodBadge } from './CouncilPeriodBadge';
-import { useGetIsNominated } from '../../queries/useGetIsNominated';
-import { useWallet } from '../../queries/useWallet';
 
-interface CouncilCardProps {
-  council: Council;
-  votesReceived?: number;
-}
-
-export function CouncilCard({ council, votesReceived }: CouncilCardProps) {
+export function CouncilCard({ council }: { council: Council }) {
   const navigate = useNavigate();
-  const { activeWallet } = useWallet();
-
-  const { data: councilPeriod, isLoading: isPeriodLoading } = useGetCurrentPeriod(council.slug);
-  const { data: electedCouncilMembers, isLoading: isCouncilMembersLoading } = useGetCouncilMembers(
-    council.slug
-  );
-  const { data: nominationInformation } = useGetIsNominated(activeWallet?.address);
-  const { data: councilNominees, isLoading: isCouncilNomineesLoading } = useGetCouncilNominees(
-    council.slug
-  );
-
-  const isLoading = isPeriodLoading || isCouncilMembersLoading || isCouncilNomineesLoading;
+  const count = Members.filter((member) => member.council === council.slug).length;
 
   return (
     <Flex
@@ -58,137 +38,39 @@ export function CouncilCard({ council, votesReceived }: CouncilCardProps) {
       >
         {council.title}
       </Heading>
-      <CouncilPeriodBadge councilPeriod={councilPeriod} isLoading={isLoading} />
+      <CouncilPeriodBadge councilPeriod="0" isLoading={false} />
       <Divider />
       <Flex justifyContent="space-between" w="100%" my="6" mb="auto">
-        {councilPeriod === '0' || councilPeriod === '1' ? (
-          <Flex flexDir="column">
-            <Text color="gray.500" fontSize="12px" lineHeight="16px">
-              Members
-            </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
-              <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-                  {electedCouncilMembers?.length}
-                </Text>
-              </Fade>
-            </Skeleton>
-          </Flex>
-        ) : (
-          <Flex flexDir="column">
-            <Text color="gray.500" fontSize="12px" lineHeight="16px">
-              Nominees
-            </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1}>
-              <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
-                  {councilNominees?.length}
-                </Text>
-              </Fade>
-            </Skeleton>
-          </Flex>
-        )}
-        {councilPeriod === '0' ? (
-          <Flex flexDir="column">
-            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
-              Votes Received
-            </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
-              <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
-                  {votesReceived}
-                </Text>
-              </Fade>
-            </Skeleton>
-          </Flex>
-        ) : councilPeriod === '1' ? (
-          <Flex flexDir="column">
-            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
-              Nominees
-            </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
-              <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="right">
-                  {councilNominees?.length}
-                </Text>
-              </Fade>
-            </Skeleton>
-          </Flex>
-        ) : (
-          <Flex flexDir="column">
-            <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
-              Votes Received
-            </Text>
-            <Skeleton isLoaded={!isLoading} height="24px" mt={1} placeholder="0000">
-              <Fade in>
-                <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
-                  {votesReceived}
-                </Text>
-              </Fade>
-            </Skeleton>
-          </Flex>
-        )}
+        <Flex flexDir="column">
+          <Text color="gray.500" fontSize="12px" lineHeight="16px">
+            Members
+          </Text>
+          <Text fontSize="24px" lineHeight="32px" fontWeight={700}>
+            {count}
+          </Text>
+        </Flex>
+        <Flex flexDir="column">
+          <Text color="gray.500" fontSize="12px" lineHeight="16px" textAlign="end">
+            Votes Received
+          </Text>
+          <Text fontSize="24px" lineHeight="32px" fontWeight={700} textAlign="end">
+            N/A
+          </Text>
+        </Flex>
       </Flex>
       <Flex flexDir="column" w="100%" mt="8">
-        {councilPeriod === '1' ? (
-          <>
-            <Button
-              data-cy={`nominate-council-button-${council.slug}`}
-              size="md"
-              mb="1"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!activeWallet?.address) {
-                  navigate(`/councils/${council.slug}`);
-                } else {
-                  navigate(`/councils/${council.slug}?view=${activeWallet?.address}`);
-                }
-              }}
-            >
-              {nominationInformation?.isNominated &&
-              nominationInformation.council.slug === council.slug
-                ? 'Edit Nomination'
-                : 'Nominate Self'}
-            </Button>
-            <Button
-              size="md"
-              variant="outline"
-              colorScheme="gray"
-              data-cy={`view-council-button-${council.slug}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/councils/${council.slug}`);
-              }}
-            >
-              View Council
-            </Button>
-          </>
-        ) : councilPeriod === '2' ? (
-          <Button
-            size="md"
-            mb="1"
-            data-cy={`vote-council-button-${council.slug}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/councils/${council.slug}`);
-            }}
-          >
-            Vote
-          </Button>
-        ) : (
-          <Button
-            data-cy={`view-council-button-${council.slug}`}
-            size="md"
-            variant="outline"
-            colorScheme="gray"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/councils/${council.slug}`);
-            }}
-          >
-            View Council
-          </Button>
-        )}
+        <Button
+          data-cy={`view-council-button-${council.slug}`}
+          size="md"
+          variant="outline"
+          colorScheme="gray"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/councils/${council.slug}`);
+          }}
+        >
+          View Council
+        </Button>
       </Flex>
     </Flex>
   );

@@ -1,33 +1,19 @@
-import { Flex, Spinner, Text, FlexProps } from '@chakra-ui/react';
-import { useGetCurrentPeriod, useGetUserDetailsQuery } from '../../queries';
+import { Flex, FlexProps } from '@chakra-ui/react';
 import { CouncilSlugs } from '../../utils/councils';
+import { Members } from '../CouncilMembers/Members';
 import { UserProfileDetails } from './UserProfileDetails';
-import { useGetIsNominated } from '../../queries/useGetIsNominated';
 
 interface UserProfileCardInterface extends FlexProps {
   walletAddress: string;
   activeCouncil: CouncilSlugs;
-  isOwn: boolean;
 }
 
 export function UserProfileCard({
   walletAddress,
   activeCouncil,
-  isOwn,
   ...props
 }: UserProfileCardInterface) {
-  const {
-    data: userData,
-    error,
-    isLoading: useDataLoading,
-  } = useGetUserDetailsQuery(walletAddress);
-  const { data: councilPeriod, isLoading: councilPeriodLoading } =
-    useGetCurrentPeriod(activeCouncil);
-  const { data: isNominated, isLoading: isNominatedLoading } = useGetIsNominated(
-    isOwn ? walletAddress : ''
-  );
-
-  const isLoading = useDataLoading || councilPeriodLoading || isNominatedLoading;
+  const userData = Members.find((member) => member.address === walletAddress);
 
   return (
     <Flex
@@ -44,21 +30,11 @@ export function UserProfileCard({
       data-cy={`user-profile-card-${walletAddress}`}
       {...props}
     >
-      {error && <Text>{error.message}</Text>}
-      {isLoading ? (
-        <Flex w="100%" justifyContent="center" h="100%" alignItems="center">
-          <Spinner colorScheme="cyan" />
-        </Flex>
-      ) : (
-        <UserProfileDetails
-          activeCouncil={activeCouncil}
-          councilPeriod={councilPeriod}
-          walletAddress={walletAddress}
-          isOwn={isOwn}
-          isNominated={!!isNominated?.isNominated}
-          userData={userData}
-        />
-      )}
+      <UserProfileDetails
+        activeCouncil={activeCouncil}
+        walletAddress={walletAddress}
+        userData={userData}
+      />
     </Flex>
   );
 }
